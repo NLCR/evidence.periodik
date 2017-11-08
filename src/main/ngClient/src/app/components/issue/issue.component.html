@@ -1,0 +1,40 @@
+<section>
+    <h1>Issue:</h1>
+    <form (ngSubmit)="onSubmit()" #issueForm="ngForm">
+      <div class="form-group">
+        <label for="nazev">Nazev</label>
+        <input type="text" class="form-control" id="nazev" name="nazev" [(ngModel)]="issue.nazev" required>
+      </div>
+ 
+      <div class="form-group">
+        <label for="podnazev">podnazev</label>
+        <input type="text" class="form-control" id="podnazev" name="podnazev" [(ngModel)]="issue.podnazev">
+      </div>
+ 
+      <div class="form-group">
+        <label for="mutace">mutace</label>
+        <input type="text" class="form-control" id="mutace" name="mutace" [(ngModel)]="issue.mutace">
+      </div>
+ 
+      <div class="form-group">
+      <select class="form-control" id="stav" name="stav" [(ngModel)]="issue.stav">
+          <option *ngFor="let stav of stavy" [value]="stav.key">{{stav.value}}</option>
+      </select>
+      </div>
+ 
+      <div class="form-group">
+ 
+      <select class="form-control" id="state" name="state" [(ngModel)]="issue.state">
+          <option *ngFor="let state of states" [value]="state.key">{{state.value}}</option>
+      </select>
+      </div>
+ 
+      <div class="form-group">
+      
+      <button type="submit" class="btn btn-success">Submit</button>
+      <button (click)="clone()" class="btn btn-success">Clone</button>
+      </div>
+ 
+ 
+    </form>
+</section>

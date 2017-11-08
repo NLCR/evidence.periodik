@@ -1,0 +1,8 @@
+.calendar {
+  display: flex;
+  height: 40em;
+}
+
+/deep/ .fc-widget-content.fc-sat, /deep/ .fc-widget-content.fc-sun {
+    background-color: #e3fce7 !important;
+}

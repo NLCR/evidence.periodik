@@ -1,0 +1,12 @@
+{
+  "/search/**": {
+    "target": "http://localhost:8983/solr/",
+    "ignorePath": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/search":""
+    },
+    "changeOrigin": false,
+    "secure": false
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "ex": [
+    {
+      "id": "oai:aleph.mzk.cz:MZK01-000059177",
+      "zdroj": "MZK",
+      "file": "",
+      "ex": [
+        {
+          "carkod": "2620002854",
+          "status": "A",
+          "signatura": "TK-0258.215",
+          "isNKF": false,
+          "svazek": "",
+          "rok": "",
+          "dilciKnih": "PP2",
+          "cislo": "",
+          "md5": "47627bef065ca86b663ad43f8662d010"
+        }
+      ]
+    },
+    {
+      "id": "oai:aleph.mzk.cz:MZK01-000068221",
+      "zdroj": "MZK",
+      "file": "",
+      "ex": [
+        {
+          "carkod": "3119003342",
+          "status": "A",
+          "signatura": "PK-0124.963",
+          "isNKF": false,
+          "svazek": "",
+          "rok": "",
+          "dilciKnih": "SK3",
+          "cislo": "",
+          "md5": "2b416a1d07c2e44fafe7dd2ee12d6357"
+        }
+      ]
+    },
+    {
+      "id": "oai:aleph-nkp.cz:NKC01-000106873",
+      "zdroj": "UKF",
+      "file": "",
+      "ex": [
+        {
+          "carkod": "1000079042",
+          "status": "P",
+          "signatura": "54 H 164338",
+          "isNKF": false,
+          "svazek": "",
+          "rok": "",
+          "dilciKnih": "SKLAD KLEMENTINUM 3",
+          "cislo": "",
+          "md5": "7e24b13212b499100d082a005812aa8a"
+        },
+        {
+          "carkod": "1000079043",
+          "status": "AR",
+          "signatura": "I 348299",
+          "isNKF": true,
+          "svazek": "",
+          "rok": "",
+          "dilciKnih": "NÁRODNÍ KONZERVAČNÍ FOND",
+          "cislo": "",
+          "md5": "00a37585dd4b87757119c0f6a760f5c9"
+        }
+      ]
+    }        
+  ]
+}

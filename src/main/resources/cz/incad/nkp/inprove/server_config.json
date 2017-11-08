@@ -1,0 +1,8 @@
+{
+  "morpho.host": "lindat.mff.cuni.cz/services/morphodita/api",
+  "users":{
+    "test": "test"
+  },
+  "jobs": {}
+}
+
