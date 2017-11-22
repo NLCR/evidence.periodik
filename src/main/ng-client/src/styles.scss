@@ -1,0 +1,16 @@
+@import "sass/app-pallete";
+@import "sass/app-color";
+
+@import "sass/app-variables";
+
+@import "../node_modules/materialize-css/sass/materialize.scss";
+@import "../node_modules/mdi/scss/materialdesignicons.scss";
+@import "../node_modules/fullcalendar/dist/fullcalendar.min.css";
+
+@import "sass/fontface/roboto-condensed/roboto-condensed-fontface";
+
+@import "sass/app-mixins";
+@import "sass/app-mdi";
+@import "sass/app-layout";
+@import "sass/app-global";
+@import "sass/app-navbar";

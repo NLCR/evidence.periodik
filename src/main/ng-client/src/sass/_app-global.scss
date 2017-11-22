@@ -1,0 +1,61 @@
+// --- GLOBAL ---
+
+* {
+  box-sizing: border-box;    
+}
+
+h1, h2, h3, h4, h5 {
+  color: $secondary-color;
+  margin-top: 0 !important;
+}
+
+a,
+.app-cursor-pointer {
+  cursor: pointer !important;
+}
+
+
+// font
+.app-font-bold {
+  font-family: 'Roboto-Condensed-Bold';
+}
+
+
+//cleaners
+.app-clean-mg {
+  margin: 0 !important;
+}
+
+.app-clean-pd {
+  padding: 0 !important;
+}
+
+.app-clean-radius {
+  border-radius: 0 !important;
+}
+
+
+// clearfix
+.clearfix {
+  @include clearfix();
+}
+
+
+// app preloader wrapper
+.app-preloader-wrapper {
+  margin-top: 100px;
+}
+
+
+// others
+button {
+  @extend .z-depth-0;
+  i {
+    &.left {
+      margin-right: 5px;
+    }
+    &.right {
+      margin-left: 5px;
+    } 
+  }
+}

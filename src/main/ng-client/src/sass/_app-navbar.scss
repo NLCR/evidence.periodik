@@ -1,0 +1,53 @@
+// --- NAVBAR ---
+
+app-navbar {
+  nav {
+    @extend .z-depth-0;
+    padding-left: 1.5rem;
+    
+    .nav-wrapper {
+      .brand-logo {
+        font-size: 1.8rem;
+        font-family: 'Roboto-Condensed-Light';
+      }
+      ul {
+        li {
+          a {
+            i[class^="app-mdi"] {
+              display: inline-block;
+              font-size: inherit;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  .side-nav {
+    .sidenav-header {
+      background-color: color("teal", "base");
+      color: color("shades", "white");
+      padding: 20px 32px;
+      font-size: 1.6rem;
+      
+      .app-mdi-settings {
+        &:before {
+          font-size: 24px; 
+        }
+      }
+    }
+    
+    mz-sidenav-link {
+      &:last-child {
+        li {
+          a {
+            &:hover {
+              background-color: transparent;
+            }
+          } 
+        }
+      }
+    }
+  }
+}
+

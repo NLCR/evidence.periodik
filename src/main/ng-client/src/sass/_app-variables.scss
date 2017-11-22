@@ -1,0 +1,41 @@
+// --- VARIABLES --
+
+// font path
+$roboto-font-path:                "~/assets/fonts" !default;
+$mdi-font-path:                   "~/assets/fonts" !default;
+
+// colors
+$primary-color:                   color("teal", "darken-3") !default;
+$primary-color-light:             lighten($primary-color, 15%) !default;
+$primary-color-dark:              darken($primary-color, 15%) !default;
+
+$secondary-color:                 lighten($primary-color, 10%) !default;
+$link-color:                      $primary-color !default;
+
+$app-color-white:                 color("shades", "white") !default;
+
+// score colors
+$app-score-1:                     color("yellow", "base") !default;
+$app-score-2:                     color("yellow", "lighten-2") !default;
+$app-score-3:                     color("yellow", "lighten-4") !default;
+$app-score-4:                     color("yellow", "lighten-5") !default;
+
+// global
+$app-border-radius:               2px !default;
+
+// toolbar
+$app-toolbar-height:              55px !default;
+
+// materialize variables
+$navbar-font-color:               lighten($primary-color, 65%) !default;
+$navbar-height:                   68px !default;
+
+$button-padding:                  0 1rem !default;
+
+$collection-active-bg-color:      color("grey", "lighten-3") !default;
+$collection-active-color:         darken($collection-active-bg-color, 55%) !default;
+$collection-hover-bg-color:       color("grey", "lighten-5") !default;
+
+$table-striped-color:             color("grey", "lighten-4") !default;
+
+$spinner-default-color:           color("orange", "base") !default;
