@@ -16,10 +16,11 @@ import { AppState } from './app.state';
 import { AppService } from './app.service';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { KalendarComponent } from './components/kalendar/kalendar.component';
-import { KalendarDayComponent } from './components/kalendar/kalendar-day/kalendar-day.component';
-import { KalendarFullComponent } from './components/kalendar-full/kalendar-full.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { CalendarDayComponent } from './components/calendar/calendar-day/calendar-day.component';
+//import { KalendarFullComponent } from './components/kalendar-full/kalendar-full.component';
 import { IssueComponent } from './components/issue/issue.component';
+import { FacetComponent } from './components/facet/facet.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -33,10 +34,11 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     AppComponent,
     NavbarComponent,
-    KalendarComponent,
-    KalendarDayComponent,
-    KalendarFullComponent,
-    IssueComponent
+    CalendarComponent,
+    CalendarDayComponent,
+    //KalendarFullComponent,
+    IssueComponent,
+    FacetComponent
   ],
   imports: [
     BrowserModule,
@@ -57,8 +59,8 @@ export function createTranslateLoader(http: HttpClient) {
     RouterModule.forRoot([
       { path: 'issue', component: IssueComponent },
       { path: 'issue/:id', component: IssueComponent },
-      { path: 'kalendar', component: KalendarComponent },
-      { path: '', redirectTo: 'kalendar', pathMatch: 'full' }
+      { path: 'calendar', component: CalendarComponent },
+      { path: '', redirectTo: 'calendar', pathMatch: 'full' }
     ])
   ],
   providers: [HttpClient, DatePipe, AppState, AppService],

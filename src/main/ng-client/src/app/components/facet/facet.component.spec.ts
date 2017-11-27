@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { KalendarDayComponent } from './kalendar-day.component';
+import { FacetComponent } from './facet.component';
 
-describe('KalendarDayComponent', () => {
-  let component: KalendarDayComponent;
-  let fixture: ComponentFixture<KalendarDayComponent>;
+describe('FacetComponent', () => {
+  let component: FacetComponent;
+  let fixture: ComponentFixture<FacetComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ KalendarDayComponent ]
+      declarations: [ FacetComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(KalendarDayComponent);
+    fixture = TestBed.createComponent(FacetComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

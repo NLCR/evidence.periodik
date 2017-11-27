@@ -9,11 +9,11 @@ import {AppService} from '../../app.service';
 import * as $ from 'jquery';
 
 @Component({
-  selector: 'app-kalendar',
-  templateUrl: './kalendar.component.html',
-  styleUrls: ['./kalendar.component.scss']
+  selector: 'app-calendar',
+  templateUrl: './calendar.component.html',
+  styleUrls: ['./calendar.component.scss']
 })
-export class KalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit {
 
   subscriptions: Subscription[] = [];
 

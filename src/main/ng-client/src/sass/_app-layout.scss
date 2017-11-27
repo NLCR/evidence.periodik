@@ -11,3 +11,20 @@ app-root {
 body {
   font-family: 'Roboto-Condensed-Regular';
 }
+
+main {
+  height: calc(100% - 68px);
+  display: flex;
+  
+  app-facet {
+    order: 1;
+    width: 300px;
+    background-color: red;
+  }
+  
+  app-calendar {
+    order: 2;
+    width: 100%;
+    background-color: green;
+  }
+}
