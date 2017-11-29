@@ -12,19 +12,40 @@ body {
   font-family: 'Roboto-Condensed-Regular';
 }
 
-main {
-  height: calc(100% - 68px);
-  display: flex;
-  
-  app-facet {
-    order: 1;
-    width: 300px;
-    background-color: red;
-  }
-  
-  app-calendar {
-    order: 2;
+
+app-root {
+  main {
     width: 100%;
-    background-color: green;
-  }
+    height: calc(100% - (68px + 50px));
+    
+    app-toolbar {
+      height: 50px;
+      line-height: 50px;
+    }
+    
+    section {
+      display: flex;
+      height: 100%;
+      
+      app-facet {
+        order: 1;
+        width: 300px;
+        
+        .app-facet-wrapper {
+          height: 100%;
+          overflow: auto;
+        }
+      }
+
+      app-calendar {
+        order: 2;
+        width: 100%;
+        
+        .app-calendar-wrapper {
+          height: 100%;
+          overflow: auto;
+        }
+      } 
+    }
+  }  
 }

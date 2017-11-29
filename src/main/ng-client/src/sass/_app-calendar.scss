@@ -1,5 +1,57 @@
 // --- KALENDAR ---
 
 .app-calendar-wrapper {
-  background-color: silver;
+  background-color: color("grey", "lighten-4");
+  padding: 20px;
+  height: 100%;
+  
+  .calendar{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    height: calc(100% - 20px);
+    
+    .weekday {
+      width: 14.28%;
+      height: 20px;
+      margin: 0px;
+      border: solid 1px #eeeeee;
+      background: gray;
+      color: white;
+      text-align: center;
+    }
+
+    .day {
+      width: 14.28%;
+      height: 16.6666%;
+      margin: 0px;
+      border: solid 1px #eeeeee;
+      
+      .day-content{
+        background: white;
+        color: black;
+        font-size: 1em;
+        height: 100%;
+      }
+
+      .day-content .title{
+        font-weight: bold;
+        font-size: .8em;
+      }
+
+      .other-month{
+        opacity: .3;
+      }
+
+      .state-ok{
+        color: green;
+      }
+
+      .state-auto{
+        color: orange;
+      }
+    }
+  }
 }

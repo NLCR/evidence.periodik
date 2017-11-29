@@ -1,0 +1,7 @@
+// --- TOOLBAR ---
+
+app-toolbar {
+  .app-toolbar-wrapper {
+    @include set-border(bottom, 1, solid, color("grey", "lighten-3"));
+  }
+}

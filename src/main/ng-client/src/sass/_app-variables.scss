@@ -5,7 +5,7 @@ $roboto-font-path:                "~/assets/fonts" !default;
 $mdi-font-path:                   "~/assets/fonts" !default;
 
 // colors
-$primary-color:                   color("purple", "base") !default;
+$primary-color:                   color("cyan", "base") !default;
 $primary-color-light:             lighten($primary-color, 15%) !default;
 $primary-color-dark:              darken($primary-color, 15%) !default;
 
@@ -25,6 +25,9 @@ $app-border-radius:               2px !default;
 
 // toolbar
 $app-toolbar-height:              55px !default;
+
+// search bar 
+$app-search-bar-height:           44px !default;
 
 // materialize variables
 $navbar-font-color:               lighten($primary-color, 65%) !default;

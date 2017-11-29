@@ -9,6 +9,8 @@ app-navbar {
       .brand-logo {
         font-size: 1.8rem;
         font-family: 'Roboto-Condensed-Light';
+        position: inherit;
+        margin-right: 20px;
       }
       ul {
         li {
@@ -50,4 +52,3 @@ app-navbar {
     }
   }
 }
-

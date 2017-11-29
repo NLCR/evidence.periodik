@@ -21,6 +21,8 @@ import { CalendarDayComponent } from './components/calendar/calendar-day/calenda
 //import { KalendarFullComponent } from './components/kalendar-full/kalendar-full.component';
 import { IssueComponent } from './components/issue/issue.component';
 import { FacetComponent } from './components/facet/facet.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -38,7 +40,9 @@ export function createTranslateLoader(http: HttpClient) {
     CalendarDayComponent,
     //KalendarFullComponent,
     IssueComponent,
-    FacetComponent
+    FacetComponent,
+    ToolbarComponent,
+    SearchBarComponent
   ],
   imports: [
     BrowserModule,

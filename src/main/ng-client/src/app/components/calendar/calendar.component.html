@@ -1,9 +1,8 @@
 <div class="app-calendar-wrapper">
-  calendar
-<!--
-  <div class="weekday" *ngFor="let day of weekdays">{{day}}</div>     
-  <div class="day" *ngFor="let day of days">
-    <app-kalendar-day [day]="day" [current]="currentDay" [issues]="issuesOfDay(day)"></app-kalendar-day>
+  <div class="calendar">
+    <div class="weekday" *ngFor="let day of weekdays">{{day}}</div>     
+    <div class="day" *ngFor="let day of days">
+      <app-calendar-day [day]="day" [current]="currentDay" [issues]="issuesOfDay(day)"></app-calendar-day>
+    </div>
   </div>
--->
-</div>
+</div><!--/.app-results-wrapper -->
