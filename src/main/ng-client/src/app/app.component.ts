@@ -45,6 +45,12 @@ export class AppComponent {
         this.titleService.setTitle(newTitle);
       });
     });
+    
+    this.router.events.subscribe(val => {
+      if (val instanceof NavigationEnd) {
+        this.state.activePage = val.url;
+      }
+    });
   }
 
   ngOnDestroy() {

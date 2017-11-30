@@ -3,5 +3,13 @@
 app-toolbar {
   .app-toolbar-wrapper {
     @include set-border(bottom, 1, solid, color("grey", "lighten-3"));
+    
+    > div {
+      padding: 0 1.25rem;
+      
+      a {
+        padding-left: 0.75rem;
+      }
+    }
   }
 }

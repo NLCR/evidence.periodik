@@ -29,6 +29,9 @@ $app-toolbar-height:              55px !default;
 // search bar 
 $app-search-bar-height:           44px !default;
 
+// global container
+$app-container:                   1.25rem !default;
+
 // materialize variables
 $navbar-font-color:               lighten($primary-color, 65%) !default;
 $navbar-height:                   68px !default;

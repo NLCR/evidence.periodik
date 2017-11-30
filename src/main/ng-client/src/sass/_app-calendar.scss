@@ -1,9 +1,10 @@
-// --- KALENDAR ---
+// --- CALENDAR ---
 
 .app-calendar-wrapper {
+  @extend .app-full-wrapper;
+  @extend .app-container;
+  
   background-color: color("grey", "lighten-4");
-  padding: 20px;
-  height: 100%;
   
   .calendar{
     display: flex;
@@ -11,7 +12,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
-    height: calc(100% - 20px);
+    height: calc(100% - #{$app-container});
     
     .weekday {
       width: 14.28%;

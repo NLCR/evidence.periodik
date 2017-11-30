@@ -47,6 +47,17 @@ a,
 }
 
 
+// global wrapper, container
+.app-full-wrapper {
+  height: 100%;
+  overflow: auto;
+}
+
+.app-container {
+  padding: $app-container;
+}
+
+
 // others
 button {
   @extend .z-depth-0;

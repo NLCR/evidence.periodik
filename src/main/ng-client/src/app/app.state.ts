@@ -4,7 +4,8 @@ import { Subject } from 'rxjs/Subject';
   
 @Injectable()
 export class AppState {
-
+  public activePage = '';
+  
   private _stateSubject = new Subject();
   public stateChangedSubject: Observable<any> = this._stateSubject.asObservable();
   

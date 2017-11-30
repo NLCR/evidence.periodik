@@ -1,6 +1,9 @@
 // --- FACET ---
 
 .app-facet-wrapper {
+  @extend .app-full-wrapper;
+  @extend .app-container;
+  
   position: relative;
   background-color: white;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);

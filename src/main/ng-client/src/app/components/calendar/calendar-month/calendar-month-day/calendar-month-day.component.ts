@@ -1,17 +1,16 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-calendar-day',
-  templateUrl: './calendar-day.component.html',
-  styleUrls: ['./calendar-day.component.scss']
+  selector: 'app-calendar-month-day',
+  templateUrl: './calendar-month-day.component.html',
+  styleUrls: ['./calendar-month-day.component.scss']
 })
-export class CalendarDayComponent implements OnInit {
-  
+export class CalendarMonthDayComponent implements OnInit {
+
   @Input('day') day: Date;
   @Input('current') current: Date;
   @Input('issues') issues: any[];
   
-
   constructor() { }
 
   ngOnInit() {

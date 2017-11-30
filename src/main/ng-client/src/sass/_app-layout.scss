@@ -31,21 +31,22 @@ app-root {
         order: 1;
         width: 300px;
         
-        .app-facet-wrapper {
-          height: 100%;
-          overflow: auto;
-        }
+        @import "app-facet";
       }
 
       app-calendar {
         order: 2;
         width: 100%;
         
-        .app-calendar-wrapper {
-          height: 100%;
-          overflow: auto;
-        }
-      } 
+        @import "app-calendar";
+      }
+      
+      app-result {
+        order: 2;
+        width: 100%;
+        
+        @import "app-result";
+      }
     }
   }  
 }
