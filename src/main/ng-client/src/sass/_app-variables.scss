@@ -14,11 +14,19 @@ $link-color:                      $primary-color !default;
 
 $app-color-white:                 color("shades", "white") !default;
 
-// score colors
-$app-score-1:                     color("yellow", "base") !default;
-$app-score-2:                     color("yellow", "lighten-2") !default;
-$app-score-3:                     color("yellow", "lighten-4") !default;
-$app-score-4:                     color("yellow", "lighten-5") !default;
+// custom
+$app-grey:                        color("grey", "base") !default; // 9e9e9e -> arrow back next to logo
+$app-grey-l-5:                    color("grey", "lighten-5") !default; // fafafa -> bg navbar, bg facets, bg metadata
+$app-grey-l-2:                    color("grey", "lighten-2") !default; // e0e0e0 -> item border, search box border, facet separator line
+$app-grey-l-1:                    color("grey", "lighten-1") !default; // bdbdbd -> light mdi color
+
+$app-grey-d-1:                    color("grey", "darken-1") !default; // 757575 -> text color, dark mdi color
+$app-grey-d-2:                    color("grey", "darken-2") !default; // 616161 -> text color darker
+$app-grey-d-3:                    color("grey", "darken-3") !default; // 424242 -> metadada subtitle
+$app-grey-d-4:                    color("grey", "darken-4") !default; // 212121 -> text color black - facet title, arrows etc.
+
+$app-grey-c-2:                    color("custom", "grey-l-2") !default; // d2d2d2 -> navbar bottom border
+$app-grey-c-1:                    color("custom", "grey-l-1") !default; // ebebeb -> tabs line, tabs of document type line
 
 // global
 $app-border-radius:               2px !default;
@@ -31,6 +39,9 @@ $app-search-bar-height:           44px !default;
 
 // global container
 $app-container:                   1.25rem !default;
+
+// facet col widht
+$app-facet-width:                  320px;
 
 // materialize variables
 $navbar-font-color:               lighten($primary-color, 65%) !default;

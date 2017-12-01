@@ -1,7 +1,13 @@
 <div class="app-toolbar-wrapper clearfix">
   <div class="right">
-    <a [routerLink]="['calendar', 'month']">Month</a>
-    <a [routerLink]="['calendar', 'year']">Yaear</a>
-    <a [routerLink]="['calendar', 'list']">List</a>
+    <a [routerLink]="['calendar', 'month']">
+      <i mz-icon-mdi [icon]="'calendar-today'" mz-tooltip [tooltip]="'Zobrazit měsíc'"></i>
+    </a>
+    <a [routerLink]="['calendar', 'year']">
+      <i mz-icon-mdi [icon]="'calendar-range'" mz-tooltip [tooltip]="'Zobrazit rok'"></i>
+    </a>
+    <a [routerLink]="['calendar', 'list']">
+      <i mz-icon-mdi [icon]="'calendar-text'" mz-tooltip [tooltip]="'Zobrazit seznam'"></i>
+    </a>
   </div>
 </div>

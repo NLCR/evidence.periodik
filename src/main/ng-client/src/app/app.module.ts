@@ -29,6 +29,8 @@ import { CalendarMonthComponent } from './components/calendar/calendar-month/cal
 import { CalendarYearComponent } from './components/calendar/calendar-year/calendar-year.component';
 import { CalendarListComponent } from './components/calendar/calendar-list/calendar-list.component';
 import { CalendarMonthDayComponent } from './components/calendar/calendar-month/calendar-month-day/calendar-month-day.component';
+import { LoginComponent } from './components/login/login.component';
+import { AddRecordComponent } from './components/add-record/add-record.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -54,7 +56,9 @@ export function createTranslateLoader(http: HttpClient) {
     CalendarMonthComponent,
     CalendarYearComponent,
     CalendarListComponent,
-    CalendarMonthDayComponent
+    CalendarMonthDayComponent,
+    LoginComponent,
+    AddRecordComponent
   ],
   imports: [
     BrowserModule,
@@ -85,6 +89,8 @@ export function createTranslateLoader(http: HttpClient) {
           { path: 'list', component: CalendarListComponent }
         ]
       },
+      { path: 'add-record', component: AddRecordComponent },
+      { path: 'login', component: LoginComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ])
   ],

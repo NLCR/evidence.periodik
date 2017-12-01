@@ -18,18 +18,24 @@ app-root {
     width: 100%;
     height: calc(100% - (68px + 50px));
     
+    app-home {
+      width: 100%;
+      
+      @import "app-home";
+    }
+    
     app-toolbar {
       height: 50px;
       line-height: 50px;
     }
     
-    section {
+    & > section {
       display: flex;
       height: 100%;
       
       app-facet {
         order: 1;
-        width: 300px;
+        width: $app-facet-width;
         
         @import "app-facet";
       }
