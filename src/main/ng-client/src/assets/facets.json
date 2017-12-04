@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "title": "Titul",
+    "items": [
+      {"name": "item 1", "count": "2343"},
+      {"name": "item 2", "count": "789"},
+      {"name": "item 3", "count": "234"},
+      {"name": "item 4", "count": "68"},
+      {"name": "item 5", "count": "2"}
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Mutace",
+    "items": [
+      {"name": "item 1", "count": "2343"},
+      {"name": "item 2", "count": "789"},
+      {"name": "item 3", "count": "234"},
+      {"name": "item 4", "count": "68"},
+      {"name": "item 5", "count": "2"}
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Vlastnik",
+    "items": [
+      {"name": "item 1", "count": "2343"},
+      {"name": "item 2", "count": "789"},
+      {"name": "item 3", "count": "234"},
+      {"name": "item 4", "count": "68"},
+      {"name": "item 5", "count": "2"}
+    ]
+  }
+]

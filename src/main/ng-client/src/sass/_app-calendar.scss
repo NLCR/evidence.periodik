@@ -4,7 +4,7 @@
   @extend .app-full-wrapper;
   @extend .app-container;
   
-  background-color: color("grey", "lighten-4");
+  background-color: $app-grey-l-5;
   
   .calendar{
     display: flex;

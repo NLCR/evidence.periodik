@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "title": "Lorem ipsum dolor sit amet",
+    "date": "1.4.1920",
+    "exemplar": "20",
+    "mutace": "2",
+    "vlastnik": "34",
+    "stav": "49"
+  },
+  {
+    "id": 2,
+    "title": "Consectetuer adipiscing elit",
+    "date": "21.12.1900",
+    "exemplar": "23",
+    "mutace": "9",
+    "vlastnik": "44",
+    "stav": "90"
+  },
+  {
+    "id": 3,
+    "title": "Aenean vel massa quis mauris",
+    "date": "30.10.1690",
+    "exemplar": "53",
+    "mutace": "92",
+    "vlastnik": "22",
+    "stav": "2"
+  },
+  {
+    "id": 4,
+    "title": "Lorem ipsum dolor sit amet",
+    "date": "1.4.1920",
+    "exemplar": "20",
+    "mutace": "2",
+    "vlastnik": "34",
+    "stav": "49"
+  },
+  {
+    "id": 5,
+    "title": "Consectetuer adipiscing elit",
+    "date": "21.12.1900",
+    "exemplar": "23",
+    "mutace": "9",
+    "vlastnik": "44",
+    "stav": "90"
+  },
+  {
+    "id": 6,
+    "title": "Aenean vel massa quis mauris",
+    "date": "30.10.1690",
+    "exemplar": "53",
+    "mutace": "92",
+    "vlastnik": "22",
+    "stav": "2"
+  },
+  {
+    "id": 7,
+    "title": "Lorem ipsum dolor sit amet",
+    "date": "1.4.1920",
+    "exemplar": "20",
+    "mutace": "2",
+    "vlastnik": "34",
+    "stav": "49"
+  },
+  {
+    "id": 8,
+    "title": "Consectetuer adipiscing elit",
+    "date": "21.12.1900",
+    "exemplar": "23",
+    "mutace": "9",
+    "vlastnik": "44",
+    "stav": "90"
+  },
+  {
+    "id": 9,
+    "title": "Aenean vel massa quis mauris",
+    "date": "30.10.1690",
+    "exemplar": "53",
+    "mutace": "92",
+    "vlastnik": "22",
+    "stav": "2"
+  },
+  {
+    "id": 10,
+    "title": "Lorem ipsum dolor sit amet",
+    "date": "1.4.1920",
+    "exemplar": "20",
+    "mutace": "2",
+    "vlastnik": "34",
+    "stav": "49"
+  },
+  {
+    "id": 11,
+    "title": "Consectetuer adipiscing elit",
+    "date": "21.12.1900",
+    "exemplar": "23",
+    "mutace": "9",
+    "vlastnik": "44",
+    "stav": "90"
+  },
+  {
+    "id": 12,
+    "title": "Aenean vel massa quis mauris",
+    "date": "30.10.1690",
+    "exemplar": "53",
+    "mutace": "92",
+    "vlastnik": "22",
+    "stav": "2"
+  },
+  {
+    "id": 13,
+    "title": "Lorem ipsum dolor sit amet",
+    "date": "1.4.1920",
+    "exemplar": "20",
+    "mutace": "2",
+    "vlastnik": "34",
+    "stav": "49"
+  },
+  {
+    "id": 14,
+    "title": "Consectetuer adipiscing elit",
+    "date": "21.12.1900",
+    "exemplar": "23",
+    "mutace": "9",
+    "vlastnik": "44",
+    "stav": "90"
+  },
+  {
+    "id": 15,
+    "title": "Aenean vel massa quis mauris",
+    "date": "30.10.1690",
+    "exemplar": "53",
+    "mutace": "92",
+    "vlastnik": "22",
+    "stav": "2"
+  }
+]

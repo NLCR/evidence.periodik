@@ -2,13 +2,19 @@
 
 app-toolbar {
   .app-toolbar-wrapper {
-    @include set-border(bottom, 1, solid, color("grey", "lighten-3"));
+    @include set-border(bottom, 1, solid, #{$app-grey-l-3});
     
     > div {
       padding: 0 1.25rem;
       
       a {
         padding-left: 0.75rem;
+        
+        &:hover, &.active {
+          i[class*="mdi-"] {
+            color: $app-grey-c-1;
+          } 
+        }
       }
     }
   }

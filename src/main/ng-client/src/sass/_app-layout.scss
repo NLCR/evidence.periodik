@@ -37,6 +37,7 @@ app-root {
         order: 1;
         width: $app-facet-width;
         
+        @import "app-facet-used";
         @import "app-facet";
       }
 

@@ -2,11 +2,11 @@
 
 .app-facet-wrapper {
   @extend .app-full-wrapper;
-  @extend .app-container;
+  //@extend .app-container;
   
   position: relative;
-  background-color: white;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  background-color: color("shades", "white");
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   
   .collapsible {
     margin: 0 0 0px 0;
@@ -81,9 +81,6 @@
         }
         &.selected {
           @extend .app-font-bold;
-          span, a {
-            //color: $primary-color !important;
-          }
         }
       }
     }

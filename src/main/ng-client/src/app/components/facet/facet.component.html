@@ -1,77 +1,26 @@
 <div class="app-facet-wrapper">
+  <app-facet-used></app-facet-used>
+  
   <mz-collapsible [mode]="'expandable'">
-    <mz-collapsible-item [active]="true">
+    <mz-collapsible-item [active]="true" *ngFor="let facet of facets | async">
       <mz-collapsible-item-header>
-        Facet title 1
+        {{facet.title}}
         <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg'"></i>
         <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg'"></i>
       </mz-collapsible-item-header>
       <mz-collapsible-item-body>
-      <mz-collection>
-        <ng-container>
-          <mz-collection-item>
-            <span class="app-row">
-              <a>item 1</a>
-              <span>
-                133
+        <mz-collection>
+          <ng-container>
+            <mz-collection-item *ngFor="let item of facet.items">
+              <span class="app-row">
+                <a>{{item.name}}</a>
+                <span>
+                  {{item.count}}
+                </span>
               </span>
-            </span>
-          </mz-collection-item>
-          <mz-collection-item>
-            <span class="app-row">
-              <a>item 1</a>
-              <span>
-                133
-              </span>
-            </span>
-          </mz-collection-item>
-          <mz-collection-item>
-            <span class="app-row">
-              <a>item 1</a>
-              <span>
-                133
-              </span>
-            </span>
-          </mz-collection-item>
-        </ng-container>
-      </mz-collection>
-      </mz-collapsible-item-body>
-    </mz-collapsible-item>
-    <mz-collapsible-item [active]="true">
-      <mz-collapsible-item-header>
-        Facet title 1
-        <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg'"></i>
-        <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg'"></i>
-      </mz-collapsible-item-header>
-      <mz-collapsible-item-body>
-      <mz-collection>
-        <ng-container>
-          <mz-collection-item>
-            <span class="app-row">
-              <a>item 1</a>
-              <span>
-                133
-              </span>
-            </span>
-          </mz-collection-item>
-          <mz-collection-item>
-            <span class="app-row">
-              <a>item 1</a>
-              <span>
-                133
-              </span>
-            </span>
-          </mz-collection-item>
-          <mz-collection-item>
-            <span class="app-row">
-              <a>item 1</a>
-              <span>
-                133
-              </span>
-            </span>
-          </mz-collection-item>
-        </ng-container>
-      </mz-collection>
+            </mz-collection-item>
+          </ng-container>
+        </mz-collection>
       </mz-collapsible-item-body>
     </mz-collapsible-item>
   </mz-collapsible>

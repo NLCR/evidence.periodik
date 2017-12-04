@@ -2,5 +2,10 @@
 
 .app-result-wrapper {
   @extend .app-full-wrapper;
-  @extend .app-container;
+  @import "app-result-item";
+  
+  padding: 0.75rem;
+  background-color: $app-grey-l-5;
+  
+  
 }

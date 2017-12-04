@@ -1,27 +1,5 @@
 <div class="app-result-wrapper">
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
-  result page<br />
+  <div class="row">
+    <app-result-item *ngFor="let item of results | async" [item]="item" class="col s3"></app-result-item>
+  </div>
 </div><!--/.app-results-wrapper -->

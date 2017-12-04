@@ -25,10 +25,10 @@
     }
 
     .app-search-bar-wrapper {
-      border-color: color("grey", "lighten-3");
+      border-color: $app-grey-l-3;
 
       &:hover {
-        border-color: color("grey", "lighten-2");
+        border-color: $app-grey-l-2;
       }
     } 
   }

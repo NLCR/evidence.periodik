@@ -1,3 +1,31 @@
-<p>
-  result-item works!
-</p>
+<mz-card [hoverable]="true" class="app-cursor-pointer">
+  <mz-card-title>
+    {{item.title}}
+  </mz-card-title>
+  <mz-card-content>
+    Datum: {{item.date}}
+  </mz-card-content>
+  <mz-card-action>
+    <mz-badge
+      [value]="20"
+      [caption]="'exemplaru'"
+      [badgeClass]="'blue'">
+    </mz-badge>
+    <mz-badge
+      [value]="4"
+      [caption]="'mutace'"
+      [badgeClass]="'red'">
+    </mz-badge>
+    <mz-badge
+      [value]="11"
+      [caption]="'vlastniku'"
+      [badgeClass]="'teal'">
+    </mz-badge>
+    <mz-badge
+      [value]="22"
+      [caption]="'vyrizeno'"
+      [badgeClass]="'orange'">
+    </mz-badge>
+    <div class="clearfix"></div>
+  </mz-card-action>
+</mz-card>

@@ -31,6 +31,7 @@ import { CalendarListComponent } from './components/calendar/calendar-list/calen
 import { CalendarMonthDayComponent } from './components/calendar/calendar-month/calendar-month-day/calendar-month-day.component';
 import { LoginComponent } from './components/login/login.component';
 import { AddRecordComponent } from './components/add-record/add-record.component';
+import { FacetUsedComponent } from './components/facet/facet-used/facet-used.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -58,7 +59,8 @@ export function createTranslateLoader(http: HttpClient) {
     CalendarListComponent,
     CalendarMonthDayComponent,
     LoginComponent,
-    AddRecordComponent
+    AddRecordComponent,
+    FacetUsedComponent
   ],
   imports: [
     BrowserModule,
