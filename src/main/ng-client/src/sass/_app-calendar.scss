@@ -2,57 +2,5 @@
 
 .app-calendar-wrapper {
   @extend .app-full-wrapper;
-  @extend .app-container;
-  
-  background-color: $app-grey-l-5;
-  
-  .calendar{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-    height: calc(100% - #{$app-container});
-    
-    .weekday {
-      width: 14.28%;
-      height: 20px;
-      margin: 0px;
-      border: solid 1px #eeeeee;
-      background: gray;
-      color: white;
-      text-align: center;
-    }
-
-    .day {
-      width: 14.28%;
-      height: 16.6666%;
-      margin: 0px;
-      border: solid 1px #eeeeee;
-      
-      .day-content{
-        background: white;
-        color: black;
-        font-size: 1em;
-        height: 100%;
-      }
-
-      .day-content .title{
-        font-weight: bold;
-        font-size: .8em;
-      }
-
-      .other-month{
-        opacity: .3;
-      }
-
-      .state-ok{
-        color: green;
-      }
-
-      .state-auto{
-        color: orange;
-      }
-    }
-  }
+  @import "app-calendar-month";
 }

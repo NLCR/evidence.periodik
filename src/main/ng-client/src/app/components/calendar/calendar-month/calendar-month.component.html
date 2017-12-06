@@ -1,6 +1,6 @@
-<div class="calendar">
-  <div class="weekday" *ngFor="let day of weekdays">{{day}}</div>     
-  <div class="day" *ngFor="let day of days">
+<div class="app-calendar-month">
+  <div class="app-calendar-weekday" *ngFor="let day of weekdays">{{day}}</div>     
+  <div class="app-calendar-day" *ngFor="let day of days">
     <app-calendar-month-day [day]="day" [current]="currentDay" [issues]="issuesOfDay(day)"></app-calendar-month-day>
   </div>
 </div>

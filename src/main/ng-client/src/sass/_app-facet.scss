@@ -2,6 +2,7 @@
 
 .app-facet-wrapper {
   @extend .app-full-wrapper;
+  @import "app-facet-used";
   //@extend .app-container;
   
   position: relative;

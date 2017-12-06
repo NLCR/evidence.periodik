@@ -1,12 +1,12 @@
 // --- FACET USED ---
 
 app-facet-used {
-  .collection {
+ .collection {
     padding: 15px 0;
     margin: 0;
     border: none;
     @include set-border(bottom, 1, solid, $app-grey-l-2);
-    
+
     .collection-header {
       position: relative;
       @extend .app-font-bold;
@@ -16,13 +16,13 @@ app-facet-used {
       background-color: transparent !important;
       min-height: 1.6rem;
       line-height: 1.6rem;
-      
+
       .mdi-close-circle {
         position: absolute;
         top: 0;
         right: 15px;
         color: $app-red;
-        
+
         &:before {
           font-size: 18px;
         }
@@ -34,7 +34,7 @@ app-facet-used {
       border: none;
       color: $app-grey-d-1;
       line-height: 1.35rem;
-      
+
       span {
         .mdi {
           &:before {
@@ -51,7 +51,7 @@ app-facet-used {
         }
         &:hover {
           color: $app-red;
-          
+
           i[class*="mdi-"]:not(.mdi-close) {
             display: none;
           }
@@ -63,5 +63,5 @@ app-facet-used {
         }
       }
     }
-  }
+  } 
 }

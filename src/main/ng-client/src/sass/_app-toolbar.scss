@@ -3,7 +3,7 @@
 .app-toolbar-wrapper {
   display: flex;
   height: $app-toolbar-height;
-  @include set-border(bottom, 1, solid, #{$app-grey-l-3});
+  @include set-border(bottom, 1, solid, #{$app-grey-l-2});
 
   .app-col-count {
     padding: 0 $app-container;

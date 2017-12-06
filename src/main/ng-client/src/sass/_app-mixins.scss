@@ -27,6 +27,11 @@
     border-style: solid;
     border-color: $color;	
   }
+  @else if ($position == "right-bottom") {
+    border-width: 0 #{$height}px #{$height}px 0; 
+    border-style: solid;
+    border-color: $color;	
+  }
   @else {
     border-width: #{$height}px #{$height}px #{$height}px #{$height}px; 
     border-style: solid;

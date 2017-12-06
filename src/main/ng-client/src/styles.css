@@ -5175,7 +5175,7 @@ td, th {
   .collection a.collection-item {
     display: block;
     transition: .25s;
-    color: #08e3ff; }
+    color: #00a5bb; }
     /* line 558, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_global.scss */
     .collection a.collection-item:not(.active):hover {
       background-color: #fafafa; }
@@ -5194,7 +5194,7 @@ td, th {
 /* line 580, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_global.scss */
 .secondary-content {
   float: right;
-  color: #08e3ff; }
+  color: #00a5bb; }
 
 /* line 584, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_global.scss */
 .collapsible .collection {
@@ -5221,7 +5221,7 @@ td, th {
   height: 4px;
   display: block;
   width: 100%;
-  background-color: #d4faff;
+  background-color: #88f1ff;
   border-radius: 2px;
   margin: 0.5rem 0 1rem 0;
   overflow: hidden; }
@@ -5231,11 +5231,11 @@ td, th {
     top: 0;
     left: 0;
     bottom: 0;
-    background-color: #08e3ff;
+    background-color: #00a5bb;
     transition: width .3s linear; }
   /* line 625, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_global.scss */
   .progress .indeterminate {
-    background-color: #08e3ff; }
+    background-color: #00a5bb; }
     /* line 627, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_global.scss */
     .progress .indeterminate:before {
       content: '';
@@ -5350,7 +5350,7 @@ span.badge {
     font-weight: 300;
     font-size: 0.8rem;
     color: #fff;
-    background-color: #08e3ff;
+    background-color: #00a5bb;
     border-radius: 2px; }
   /* line 21, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_badges.scss */
   span.badge.new:after {
@@ -6951,20 +6951,20 @@ small {
 /* line 58, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_buttons.scss */
 .btn:focus, .btn-large:focus,
 .btn-floating:focus {
-  background-color: #00bcd4; }
+  background-color: #007888; }
 
 /* line 64, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_buttons.scss */
 .btn, .btn-large {
   text-decoration: none;
   color: #fff;
-  background-color: #08e3ff;
+  background-color: #00a5bb;
   text-align: center;
   letter-spacing: .5px;
   transition: .2s ease-out;
   cursor: pointer; }
   /* line 74, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_buttons.scss */
   .btn:hover, .btn-large:hover {
-    background-color: #22e6ff; }
+    background-color: #00bcd4; }
 
 /* line 81, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_buttons.scss */
 .btn-floating {
@@ -6977,14 +6977,14 @@ small {
   height: 40px;
   line-height: 40px;
   padding: 0;
-  background-color: #08e3ff;
+  background-color: #00a5bb;
   border-radius: 50%;
   transition: .3s;
   cursor: pointer;
   vertical-align: middle; }
   /* line 82, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_buttons.scss */
   .btn-floating:hover {
-    background-color: #08e3ff; }
+    background-color: #00a5bb; }
   /* line 87, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_buttons.scss */
   .btn-floating:before {
     border-radius: 0; }
@@ -7106,7 +7106,7 @@ button.btn-floating {
     z-index: -1;
     width: 40px;
     height: 40px;
-    background-color: #08e3ff;
+    background-color: #00a5bb;
     border-radius: 50%;
     transform: scale(0); }
 
@@ -7176,7 +7176,7 @@ button.btn-floating {
     /* line 37, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_dropdown.scss */
     .dropdown-content li > a, .dropdown-content li > span {
       font-size: 16px;
-      color: #08e3ff;
+      color: #00a5bb;
       display: block;
       line-height: 22px;
       padding: 14px 16px; }
@@ -7588,12 +7588,12 @@ button.btn-floating {
 
 /* line 2, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_forms.scss */
 select:focus {
-  outline: 1px solid #f8feff; }
+  outline: 1px solid #abf6ff; }
 
 /* line 6, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_forms.scss */
 button:focus {
   outline: none;
-  background-color: #1ce5ff; }
+  background-color: #00b7cf; }
 
 /* line 11, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_forms.scss */
 label {
@@ -7705,8 +7705,8 @@ textarea.materialize-textarea {
   input[type=number]:not(.browser-default):focus:not([readonly]),
   input[type=search]:not(.browser-default):focus:not([readonly]),
   textarea.materialize-textarea:focus:not([readonly]) {
-    border-bottom: 1px solid #08e3ff;
-    box-shadow: 0 1px 0 0 #08e3ff; }
+    border-bottom: 1px solid #00a5bb;
+    box-shadow: 0 1px 0 0 #00a5bb; }
   /* line 61, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_input-fields.scss */
   input:not([type]):focus:not([readonly]) + label,
   input[type=text]:not(.browser-default):focus:not([readonly]) + label,
@@ -7721,7 +7721,7 @@ textarea.materialize-textarea {
   input[type=number]:not(.browser-default):focus:not([readonly]) + label,
   input[type=search]:not(.browser-default):focus:not([readonly]) + label,
   textarea.materialize-textarea:focus:not([readonly]) + label {
-    color: #08e3ff; }
+    color: #00a5bb; }
   /* line 90, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_input-fields.scss */
   input:not([type]).validate + label,
   input[type=text]:not(.browser-default).validate + label,
@@ -7985,7 +7985,7 @@ textarea.materialize-textarea + label:after, .select-wrapper + label:after {
     transition: color .2s; }
     /* line 200, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_input-fields.scss */
     .input-field .prefix.active {
-      color: #08e3ff; }
+      color: #00a5bb; }
   /* line 203, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_input-fields.scss */
   .input-field .prefix ~ input,
   .input-field .prefix ~ textarea,
@@ -8162,12 +8162,12 @@ textarea {
 [type="radio"]:checked + label:after,
 [type="radio"].with-gap:checked + label:before,
 [type="radio"].with-gap:checked + label:after {
-  border: 2px solid #08e3ff; }
+  border: 2px solid #00a5bb; }
 
 /* line 68, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_radio-buttons.scss */
 [type="radio"]:checked + label:after,
 [type="radio"].with-gap:checked + label:after {
-  background-color: #08e3ff; }
+  background-color: #00a5bb; }
 
 /* line 73, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_radio-buttons.scss */
 [type="radio"]:checked + label:after {
@@ -8284,8 +8284,8 @@ form p:last-child {
   height: 22px;
   border-top: 2px solid transparent;
   border-left: 2px solid transparent;
-  border-right: 2px solid #08e3ff;
-  border-bottom: 2px solid #08e3ff;
+  border-right: 2px solid #00a5bb;
+  border-bottom: 2px solid #00a5bb;
   transform: rotate(40deg);
   backface-visibility: hidden;
   transform-origin: 100% 100%; }
@@ -8304,7 +8304,7 @@ form p:last-child {
   height: 22px;
   border-top: none;
   border-left: none;
-  border-right: 2px solid #08e3ff;
+  border-right: 2px solid #00a5bb;
   border-bottom: none;
   transform: rotate(90deg);
   backface-visibility: hidden;
@@ -8366,8 +8366,8 @@ form p:last-child {
   top: 0;
   width: 20px;
   height: 20px;
-  border: 2px solid #08e3ff;
-  background-color: #08e3ff;
+  border: 2px solid #00a5bb;
+  background-color: #00a5bb;
   z-index: 0; }
 
 /* line 179, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_checkboxes.scss */
@@ -8379,8 +8379,8 @@ form p:last-child {
 /* line 185, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_checkboxes.scss */
 [type="checkbox"].filled-in.tabbed:checked:focus + label:after {
   border-radius: 2px;
-  background-color: #08e3ff;
-  border-color: #08e3ff; }
+  background-color: #00a5bb;
+  border-color: #00a5bb; }
 
 /* line 192, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_checkboxes.scss */
 [type="checkbox"].filled-in:disabled:not(:checked) + label:before {
@@ -8420,13 +8420,13 @@ form p:last-child {
   height: 0; }
   /* line 19, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_switches.scss */
   .switch label input[type=checkbox]:checked + .lever {
-    background-color: #96e6f0; }
+    background-color: #54d6e7; }
     /* line 22, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_switches.scss */
     .switch label input[type=checkbox]:checked + .lever:before, .switch label input[type=checkbox]:checked + .lever:after {
       left: 18px; }
     /* line 26, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_switches.scss */
     .switch label input[type=checkbox]:checked + .lever:after {
-      background-color: #08e3ff; }
+      background-color: #00a5bb; }
 
 /* line 32, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_switches.scss */
 .switch label .lever {
@@ -8454,7 +8454,7 @@ form p:last-child {
     transition: left 0.3s ease, background .3s ease, box-shadow 0.1s ease, transform .1s ease; }
   /* line 57, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_switches.scss */
   .switch label .lever:before {
-    background-color: rgba(8, 227, 255, 0.15); }
+    background-color: rgba(0, 165, 187, 0.15); }
   /* line 61, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_switches.scss */
   .switch label .lever:after {
     background-color: #F1F1F1;
@@ -8464,7 +8464,7 @@ form p:last-child {
 input[type=checkbox]:checked:not(:disabled) ~ .lever:active::before,
 input[type=checkbox]:checked:not(:disabled).tabbed:focus ~ .lever::before {
   transform: scale(2.4);
-  background-color: rgba(8, 227, 255, 0.15); }
+  background-color: rgba(0, 165, 187, 0.15); }
 
 /* line 74, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_switches.scss */
 input[type=checkbox]:not(:disabled) ~ .lever:active:before,
@@ -8696,7 +8696,7 @@ input[type=range] + .thumb {
   height: 0;
   width: 0;
   border-radius: 50%;
-  background-color: #08e3ff;
+  background-color: #00a5bb;
   margin-left: 7px;
   transform-origin: 50% 50%;
   transform: rotate(-45deg); }
@@ -8705,7 +8705,7 @@ input[type=range] + .thumb {
     display: block;
     width: 30px;
     text-align: center;
-    color: #08e3ff;
+    color: #00a5bb;
     font-size: 0;
     transform: rotate(45deg); }
   /* line 51, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_range.scss */
@@ -8735,7 +8735,7 @@ input[type=range]::-webkit-slider-thumb {
   height: 14px;
   width: 14px;
   border-radius: 50%;
-  background-color: #08e3ff;
+  background-color: #00a5bb;
   transform-origin: 50% 50%;
   margin: -5px 0 0 0;
   transition: .3s; }
@@ -8762,7 +8762,7 @@ input[type=range]::-moz-range-thumb {
   height: 14px;
   width: 14px;
   border-radius: 50%;
-  background: #08e3ff;
+  background: #00a5bb;
   margin-top: -5px; }
 
 /* line 114, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_range.scss */
@@ -8797,7 +8797,7 @@ input[type=range]::-ms-thumb {
   height: 14px;
   width: 14px;
   border-radius: 50%;
-  background: #08e3ff; }
+  background: #00a5bb; }
 
 /* line 154, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/forms/_range.scss */
 input[type=range]:focus::-ms-fill-lower {
@@ -8896,10 +8896,10 @@ input[type=range]:focus::-ms-fill-upper {
       color: #343434; }
     /* line 61, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_sideNav.scss */
     .side-nav li > a.btn:hover, .side-nav li > a.btn-large:hover, .side-nav li > a.btn-large:hover {
-      background-color: #22e6ff; }
+      background-color: #00bcd4; }
     /* line 63, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_sideNav.scss */
     .side-nav li > a.btn-floating:hover {
-      background-color: #08e3ff; }
+      background-color: #00a5bb; }
     /* line 65, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/_sideNav.scss */
     .side-nav li > a > i,
     .side-nav li > a > [class^="mdi-"], .side-nav li > a li > a > [class*="mdi-"],
@@ -10193,7 +10193,7 @@ input[type=range]:focus::-ms-fill-upper {
 /* line 313, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.date.scss */
 .picker__date-display {
   text-align: left;
-  background-color: #08e3ff;
+  background-color: #00a5bb;
   color: #fff;
   padding: 18px;
   font-weight: 300; }
@@ -10214,7 +10214,7 @@ input[type=range]:focus::-ms-fill-upper {
 .picker__nav--next:hover {
   cursor: pointer;
   color: #000000;
-  background: #c0f3fa; }
+  background: #79e6f4; }
 
 /* line 340, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.date.scss */
 .picker__weekday-display {
@@ -10270,7 +10270,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 /* line 395, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.date.scss */
 .picker__day.picker__day--today {
-  color: #08e3ff; }
+  color: #00a5bb; }
 
 /* line 399, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.date.scss */
 .picker__day.picker__day--today.picker__day--selected {
@@ -10286,13 +10286,13 @@ input[type=range]:focus::-ms-fill-upper {
 .picker--focused .picker__day--selected {
   border-radius: 50%;
   transform: scale(0.9);
-  background-color: #08e3ff;
+  background-color: #00a5bb;
   color: #ffffff; }
   /* line 416, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.date.scss */
   .picker__day--selected.picker__day--outfocus,
   .picker__day--selected:hover.picker__day--outfocus,
   .picker--focused .picker__day--selected.picker__day--outfocus {
-    background-color: #c0f3fa; }
+    background-color: #79e6f4; }
 
 /* line 422, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.date.scss */
 .picker__footer {
@@ -10303,7 +10303,7 @@ input[type=range]:focus::-ms-fill-upper {
 .picker__close, .picker__today, .picker__clear {
   font-size: 1.1rem;
   padding: 0 1rem;
-  color: #08e3ff; }
+  color: #00a5bb; }
 
 /* line 433, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.date.scss */
 .picker__clear {
@@ -10329,7 +10329,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 /* line 454, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.date.scss */
 button.picker__today:focus, button.picker__clear:focus, button.picker__close:focus {
-  background-color: #c0f3fa; }
+  background-color: #79e6f4; }
 
 /* ==========================================================================
    $BASE-TIME-PICKER
@@ -10564,7 +10564,7 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 /* line 213, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.time.scss */
 .clockpicker-tick.active,
 .clockpicker-tick:hover {
-  background-color: rgba(8, 227, 255, 0.25); }
+  background-color: rgba(0, 165, 187, 0.25); }
 
 /* line 217, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.time.scss */
 .clockpicker-dial {
@@ -10609,20 +10609,20 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
 /* line 251, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.time.scss */
 .clockpicker-canvas-bearing {
   stroke: none;
-  fill: #08e3ff; }
+  fill: #00a5bb; }
 
 /* line 255, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.time.scss */
 .clockpicker-canvas-bg {
   stroke: none;
-  fill: #08e3ff; }
+  fill: #00a5bb; }
 
 /* line 259, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.time.scss */
 .clockpicker-canvas-bg-trans {
-  fill: #08e3ff; }
+  fill: #00a5bb; }
 
 /* line 262, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/node_modules/materialize-css/sass/components/date_picker/_default.time.scss */
 .clockpicker-canvas line {
-  stroke: #08e3ff;
+  stroke: #00a5bb;
   stroke-width: 4;
   stroke-linecap: round;
   /*shape-rendering: crispEdges;*/ }
@@ -19142,49 +19142,49 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   src: url("Roboto-~/assets/fonts/Roboto-Condensed/Roboto-Condensed-BoldItalic.eot");
   src: local("Roboto Condensed BoldItalic"), local("Roboto-Condensed BoldItalic"), local("Roboto-Condensed-BoldItalic"), url("~/assets/fonts/Roboto-Condensed/Roboto-Condensed-BoldItalic.eot?#iefix") format("embedded-opentype"), url("~/assets/fonts/Roboto-Condensed/Roboto-Condensed-BoldItalic.woff2") format("woff2"), url("~/assets/fonts/Roboto-Condensed/Roboto-Condensed-BoldItalic.woff") format("woff"), url("~/assets/fonts/Roboto-Condensed/Roboto-Condensed-BoldItalic.ttf") format("truetype"), url("~/assets/fonts/Roboto-Condensed/Roboto-Condensed-BoldItalic.svg#Condensed") format("svg"); }
 
-/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+/* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
 .app-mdi-folder:before {
   content: "\F24B";
   font: normal normal normal 24px/1 "Material Design Icons";
   vertical-align: middle; }
 
-/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+/* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
 .app-mdi-file-plus:before {
   content: "\F751";
   font: normal normal normal 20px/1 "Material Design Icons";
   vertical-align: middle; }
 
-/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+/* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
 .app-mdi-check:before {
   content: "\F12C";
   font: normal normal normal 20px/1 "Material Design Icons";
   vertical-align: middle; }
 
-/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+/* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
 .app-mdi-settings:before {
   content: "\F493";
   font: normal normal normal 20px/1 "Material Design Icons";
   vertical-align: middle; }
 
-/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+/* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
 .app-mdi-cancel:before {
   content: "\F739";
   font: normal normal normal 20px/1 "Material Design Icons";
   vertical-align: small; }
 
-/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+/* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
 .app-mdi-calendar-today:before {
   content: "\F0F6";
   font: normal normal normal 24px/1 "Material Design Icons";
   vertical-align: small; }
 
-/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+/* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
 .app-mdi-calendar-range:before {
   content: "\F678";
   font: normal normal normal 24px/1 "Material Design Icons";
   vertical-align: small; }
 
-/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+/* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
 .app-mdi-calendar-text:before {
   content: "\F0F5";
   font: normal normal normal 24px/1 "Material Design Icons";
@@ -19208,34 +19208,47 @@ app-root main {
   height: calc(100% - (68px + 50px)); }
   /* line 21, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
   app-root main app-home {
-    width: 100%; }
+    width: 100%;
+    height: calc(100% + 50px); }
     /* line 3, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
     app-root main app-home .app-home-wrapper {
-      height: calc(100% - 68px); }
-      /* line 6, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
-      app-root main app-home .app-home-wrapper.valign-wrapper {
-        padding-top: 68px;
-        padding-bottom: 100px; }
-      /* line 15, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
+      height: calc(100% - 68px);
+      padding-top: 200px; }
+      /* line 12, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
       app-root main app-home .app-home-wrapper section:first-child > .row:first-child, app-root main app-home .app-home-wrapper section:first-child > .row:nth-child(2) {
         margin-bottom: 10px; }
-      /* line 22, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
+      /* line 19, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
       app-root main app-home .app-home-wrapper section .brand-logo {
         font-size: 1.8rem;
         font-family: 'Roboto-Condensed-Light'; }
-      /* line 27, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
+      /* line 24, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
       app-root main app-home .app-home-wrapper section .app-search-bar-wrapper {
         border-color: #eeeeee; }
-        /* line 30, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
+        /* line 27, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
         app-root main app-home .app-home-wrapper section .app-search-bar-wrapper:hover {
           border-color: #e0e0e0; }
+  /* line 28, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
+  app-root main app-add-record {
+    width: 100%;
+    height: calc(100% + 50px); }
+    /* line 7, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-add-record.scss */
+    app-root main app-add-record .app-add-record-wrapper h5 {
+      margin-bottom: 1.25rem; }
+  /* line 35, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
+  app-root main app-login {
+    width: 100%;
+    height: calc(100% + 50px); }
+    /* line 3, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-login.scss */
+    app-root main app-login .app-login-wrapper {
+      height: calc(100% - 68px);
+      padding-top: 200px; }
   /* line 3, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
   app-root main app-toolbar .app-toolbar-wrapper {
     display: flex;
     height: 50px;
     border-width: 0 0 1px 0;
     border-style: solid;
-    border-color: #eeeeee; }
+    border-color: #e0e0e0; }
     /* line 8, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
     app-root main app-toolbar .app-toolbar-wrapper .app-col-count {
       padding: 0 1.25rem;
@@ -19274,81 +19287,81 @@ app-root main {
           /* line 54, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
           app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right a .mdi:before {
             line-height: normal; }
-  /* line 34, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
+  /* line 49, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
   app-root main > section {
     display: flex;
     height: 100%; }
-    /* line 38, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
+    /* line 53, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
     app-root main > section app-facet {
       order: 1;
       width: 320px; }
-      /* line 4, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-      app-root main > section app-facet app-facet-used .collection {
-        padding: 15px 0;
-        margin: 0;
-        border: none;
-        border-width: 0 0 1px 0;
-        border-style: solid;
-        border-color: #e0e0e0; }
-        /* line 10, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-        app-root main > section app-facet app-facet-used .collection .collection-header {
-          position: relative;
-          color: #00bcd4;
-          padding: 0 20px !important;
-          border: none !important;
-          background-color: transparent !important;
-          min-height: 1.6rem;
-          line-height: 1.6rem; }
-          /* line 20, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-          app-root main > section app-facet app-facet-used .collection .collection-header .mdi-close-circle {
-            position: absolute;
-            top: 0;
-            right: 15px;
-            color: #D50000; }
-            /* line 26, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-            app-root main > section app-facet app-facet-used .collection .collection-header .mdi-close-circle:before {
-              font-size: 18px; }
-        /* line 31, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-        app-root main > section app-facet app-facet-used .collection .collection-item {
-          background-color: transparent;
-          padding: 0 20px !important;
-          border: none;
-          color: #757575;
-          line-height: 1.35rem; }
-          /* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-          app-root main > section app-facet app-facet-used .collection .collection-item span .mdi:before {
-            font-size: 18px; }
-          /* line 44, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-          app-root main > section app-facet app-facet-used .collection .collection-item span .mdi.mdi-close:before {
-            display: none !important; }
-          /* line 48, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-          app-root main > section app-facet app-facet-used .collection .collection-item span .mdi.mdi-check {
-            color: #00bcd4; }
-          /* line 52, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-          app-root main > section app-facet app-facet-used .collection .collection-item span:hover {
-            color: #D50000; }
-            /* line 55, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-            app-root main > section app-facet app-facet-used .collection .collection-item span:hover i[class*="mdi-"]:not(.mdi-close) {
-              display: none; }
-            /* line 59, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
-            app-root main > section app-facet app-facet-used .collection .collection-item span:hover .mdi-close:before {
-              display: inline-block !important; }
       /* line 3, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
       app-root main > section app-facet .app-facet-wrapper {
         position: relative;
         background-color: #FFFFFF;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); }
-        /* line 11, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+        /* line 4, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+        app-root main > section app-facet .app-facet-wrapper app-facet-used .collection {
+          padding: 15px 0;
+          margin: 0;
+          border: none;
+          border-width: 0 0 1px 0;
+          border-style: solid;
+          border-color: #e0e0e0; }
+          /* line 10, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+          app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-header {
+            position: relative;
+            color: #00bcd4;
+            padding: 0 20px !important;
+            border: none !important;
+            background-color: transparent !important;
+            min-height: 1.6rem;
+            line-height: 1.6rem; }
+            /* line 20, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+            app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-header .mdi-close-circle {
+              position: absolute;
+              top: 0;
+              right: 15px;
+              color: #D50000; }
+              /* line 26, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+              app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-header .mdi-close-circle:before {
+                font-size: 18px; }
+          /* line 31, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+          app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-item {
+            background-color: transparent;
+            padding: 0 20px !important;
+            border: none;
+            color: #757575;
+            line-height: 1.35rem; }
+            /* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+            app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-item span .mdi:before {
+              font-size: 18px; }
+            /* line 44, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+            app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-item span .mdi.mdi-close:before {
+              display: none !important; }
+            /* line 48, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+            app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-item span .mdi.mdi-check {
+              color: #00bcd4; }
+            /* line 52, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+            app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-item span:hover {
+              color: #D50000; }
+              /* line 55, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+              app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-item span:hover i[class*="mdi-"]:not(.mdi-close) {
+                display: none; }
+              /* line 59, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
+              app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-item span:hover .mdi-close:before {
+                display: inline-block !important; }
+        /* line 12, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
         app-root main > section app-facet .app-facet-wrapper .collapsible {
           margin: 0 0 0px 0;
           border: none !important; }
-          /* line 16, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+          /* line 17, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
           app-root main > section app-facet .app-facet-wrapper .collapsible > li {
             padding: 15px 0 !important;
             border-width: 0 0 1px 0;
             border-style: solid;
             border-color: #e0e0e0; }
-          /* line 21, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+          /* line 22, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
           app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header {
             position: relative;
             color: #212121;
@@ -19357,109 +19370,126 @@ app-root main {
             min-height: 1.6rem;
             line-height: 1.6rem;
             border: none; }
-            /* line 31, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 32, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header .mdi-chevron-down, app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header .mdi-chevron-left, app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header .mdi-close-circle {
               position: absolute;
               top: 0;
               right: 10px;
               line-height: 1.6rem; }
-            /* line 38, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 39, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header .mdi-chevron-down {
               display: none; }
-            /* line 41, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 42, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header .mdi-chevron-left {
               display: block; }
-            /* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 46, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header.active .mdi-chevron-down {
               display: block; }
-            /* line 48, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 49, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header.active .mdi-chevron-left {
               display: none; }
-          /* line 53, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+          /* line 54, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
           app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body {
             border: none; }
-            /* line 57, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 58, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .collection-item {
               background-color: transparent;
               border: none;
               padding: 0 20px; }
-            /* line 63, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 64, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row {
               display: table;
               width: 100%; }
-              /* line 66, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+              /* line 67, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
               app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row a {
                 display: table-cell;
                 width: 90%;
                 vertical-align: top;
                 color: #757575; }
-                /* line 71, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+                /* line 72, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
                 app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row a:hover {
                   color: #212121; }
-              /* line 75, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+              /* line 76, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
               app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row span {
                 display: table-cell;
                 width: 10%;
                 text-align: right;
                 vertical-align: top;
                 color: #757575; }
-    /* line 46, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
+    /* line 60, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
     app-root main > section app-calendar {
       order: 2;
       width: 100%; }
-      /* line 3, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
-      app-root main > section app-calendar .app-calendar-wrapper {
-        background-color: #fafafa; }
-        /* line 9, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
-        app-root main > section app-calendar .app-calendar-wrapper .calendar {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: flex-start;
-          align-items: flex-start;
-          width: 100%;
-          height: calc(100% - 1.25rem); }
-          /* line 17, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
-          app-root main > section app-calendar .app-calendar-wrapper .calendar .weekday {
-            width: 14.28%;
-            height: 20px;
-            margin: 0px;
-            border: solid 1px #eeeeee;
-            background: gray;
-            color: white;
-            text-align: center; }
-          /* line 27, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
-          app-root main > section app-calendar .app-calendar-wrapper .calendar .day {
-            width: 14.28%;
-            height: 16.6666%;
-            margin: 0px;
-            border: solid 1px #eeeeee; }
-            /* line 33, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
-            app-root main > section app-calendar .app-calendar-wrapper .calendar .day .day-content {
-              background: white;
-              color: black;
-              font-size: 1em;
-              height: 100%; }
-            /* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
-            app-root main > section app-calendar .app-calendar-wrapper .calendar .day .day-content .title {
-              font-weight: bold;
-              font-size: .8em; }
-            /* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
-            app-root main > section app-calendar .app-calendar-wrapper .calendar .day .other-month {
-              opacity: .3; }
-            /* line 49, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
-            app-root main > section app-calendar .app-calendar-wrapper .calendar .day .state-ok {
-              color: green; }
-            /* line 53, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
-            app-root main > section app-calendar .app-calendar-wrapper .calendar .day .state-auto {
-              color: orange; }
-    /* line 53, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
+      /* line 3, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+      app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 100%;
+        height: calc(100% - 1.25rem); }
+        /* line 11, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+        app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-weekday {
+          width: 14.28%;
+          height: 25px;
+          margin: 0px;
+          color: #00a5bb;
+          padding: 0.3rem 0.5rem;
+          border-width: 0 1px 0 0;
+          border-style: solid;
+          border-color: #e0e0e0; }
+          /* line 19, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+          app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-weekday::first-letter {
+            text-transform: uppercase; }
+          /* line 23, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+          app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-weekday:nth-child(7n) {
+            border-right: none !important; }
+        /* line 28, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+        app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day {
+          width: 14.28%;
+          height: 16.6666%;
+          margin: 0px;
+          border-width: 0 1px 1px 0;
+          border-style: solid;
+          border-color: #e0e0e0; }
+          /* line 34, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+          app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day:nth-child(7n) {
+            border-right: none !important; }
+          /* line 38, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+          app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content {
+            color: #000000;
+            font-size: 0.9rem;
+            height: 100%;
+            overflow: hidden; }
+            /* line 44, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+            app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-title {
+              font-size: 1rem;
+              color: #616161;
+              padding: 0.3rem 0.5rem; }
+            /* line 51, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+            app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item > div {
+              padding: 0.1rem 0.5rem; }
+            /* line 55, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+            app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item > div[class*="app-state-"] {
+              width: calc(100% - 1.25rem);
+              border-radius: 2px;
+              color: #FFFFFF; }
+            /* line 61, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+            app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item .app-state-ok {
+              background-color: #00C853; }
+            /* line 65, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+            app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item .app-state-auto {
+              background-color: #ffab40; }
+            /* line 71, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+            app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content.app-disabled .app-calendar-day-content-title {
+              color: #bdbdbd; }
+    /* line 67, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
     app-root main > section app-result {
       order: 2;
       width: 100%; }
       /* line 3, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-result.scss */
       app-root main > section app-result .app-result-wrapper {
-        padding: 0.75rem;
-        background-color: #fafafa; }
+        padding: 0.75rem; }
         /* line 4, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-result-item.scss */
         app-root main > section app-result .app-result-wrapper app-result-item .card {
           margin: 0.75rem 0 0.75rem 0; }
@@ -19479,7 +19509,7 @@ app-root main {
 
 /* line 7, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 h1, h2, h3, h4, h5 {
-  color: #08e3ff;
+  color: #00a5bb;
   margin-top: 0 !important; }
 
 /* line 12, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
@@ -19490,7 +19520,7 @@ app-search-bar .app-search-bar-wrapper .mdi-close {
   cursor: pointer !important; }
 
 /* line 19, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
-.app-font-bold, app-root main > section app-facet app-facet-used .collection .collection-header, app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header, app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row.selected {
+.app-font-bold, app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-header, app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header, app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row.selected {
   font-family: 'Roboto-Condensed-Bold'; }
 
 /* line 25, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
@@ -19505,12 +19535,12 @@ app-search-bar .app-search-bar-wrapper .mdi-close {
 .app-clean-radius {
   border-radius: 0 !important; }
 
-/* line 49, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+/* line 54, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
 .clearfix:before, .clearfix:after {
   content: " ";
   display: table; }
 
-/* line 54, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+/* line 59, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
 .clearfix:after {
   clear: both; }
 
@@ -19519,12 +19549,12 @@ app-search-bar .app-search-bar-wrapper .mdi-close {
   margin-top: 100px; }
 
 /* line 51, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
-.app-full-wrapper, app-root main > section app-facet .app-facet-wrapper, app-root main > section app-calendar .app-calendar-wrapper, app-root main > section app-result .app-result-wrapper {
+.app-full-wrapper, app-root main app-home .app-home-wrapper, app-root main app-add-record .app-add-record-wrapper, app-root main app-login .app-login-wrapper, app-root main > section app-facet .app-facet-wrapper, app-root main > section app-calendar .app-calendar-wrapper, app-root main > section app-result .app-result-wrapper {
   height: 100%;
   overflow: auto; }
 
 /* line 56, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
-.app-container, app-root main > section app-calendar .app-calendar-wrapper {
+.app-container, app-root main app-add-record .app-add-record-wrapper {
   padding: 1.25rem; }
 
 /* line 65, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */

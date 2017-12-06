@@ -2,30 +2,63 @@
   <mz-card-title>
     {{item.title}}
   </mz-card-title>
-  <mz-card-content>
-    Datum: {{item.date}}
+  <mz-card-content class="grey-text text-darken-1">
+    <i mz-icon-mdi [icon]="'calendar-check'" [size]="'20'"></i>
+    {{item.date}}
   </mz-card-content>
   <mz-card-action>
     <mz-badge
-      [value]="20"
-      [caption]="'exemplaru'"
+      *ngIf="item.exemplar > 0"
+      [value]="item.exemplar"
+      [caption]="'exemplářů'"
       [badgeClass]="'blue'">
     </mz-badge>
     <mz-badge
-      [value]="4"
-      [caption]="'mutace'"
+      *ngIf="item.exemplar == 0"
+      [value]="item.exemplar"
+      [caption]="'exemplářů'"
+      [badgeClass]="'grey lighten-1'">
+    </mz-badge><!--/exemplar -->
+    
+    <mz-badge
+      *ngIf="item.mutace > 0"
+      [value]="item.mutace"
+      [caption]="'mutací'"
       [badgeClass]="'red'">
     </mz-badge>
     <mz-badge
-      [value]="11"
-      [caption]="'vlastniku'"
+      *ngIf="item.mutace == 0"
+      [value]="item.mutace"
+      [caption]="'mutací'"
+      [badgeClass]="'grey lighten-1'">
+    </mz-badge><!--/mutace -->
+    
+    <mz-badge
+      *ngIf="item.vlastnik > 0"
+      [value]="item.vlastnik"
+      [caption]="'vlastníků'"
       [badgeClass]="'teal'">
     </mz-badge>
     <mz-badge
-      [value]="22"
-      [caption]="'vyrizeno'"
+      *ngIf="item.vlastnik == 0"
+      [value]="item.vlastnik"
+      [caption]="'vlastníků'"
+      [badgeClass]="'grey lighten-1'">
+    </mz-badge><!--/vlastnik -->
+    
+    <mz-badge
+      *ngIf="item.digitalizovano > 0"
+      [value]="item.digitalizovano"
+      [caption]="'digitalizováno'"
       [badgeClass]="'orange'">
     </mz-badge>
+    <mz-badge
+      *ngIf="item.digitalizovano == 0"
+      [value]="item.digitalizovano"
+      [caption]="'digitalizováno'"
+      [badgeClass]="'grey lighten-1'">
+    </mz-badge><!--/digitalizovano -->
+    
     <div class="clearfix"></div>
   </mz-card-action>
 </mz-card>

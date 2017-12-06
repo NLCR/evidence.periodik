@@ -1,0 +1,10 @@
+// --- ADD RECORD ---
+
+.app-add-record-wrapper {
+  @extend .app-full-wrapper;
+  @extend .app-container;
+  
+  h5 {
+    margin-bottom: 1.25rem;
+  }
+}

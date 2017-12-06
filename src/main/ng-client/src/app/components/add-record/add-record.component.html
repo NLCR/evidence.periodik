@@ -1,3 +1,86 @@
-<p>
-  add-record works!
-</p>
+<div class="app-add-record-wrapper grey lighten-5">
+  <h5>Vložit záznam</h5>
+  <div class="row">
+    <div class="col s12 app-clean-pd">
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s4 app-clean-pd">
+      <form>
+        <mz-input-container>
+          <input mz-input [label]="'Meta název'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Název na titulní straně'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Podnázev na titulní straně'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Vydání'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Mutace'" id="" type="text">
+        </mz-input-container>
+        <mz-datepicker-container>
+          <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
+          <input mz-datepicker
+            [label]="'Datum vydání'"
+            [ngModel]
+            id=""
+            type="tel" />
+        </mz-datepicker-container>
+        <mz-select-container>
+          <select mz-select id="" [placeholder]="'Čas vydání'">
+            <option>Ranní</option>
+            <option>Odpolední</option>
+            <option>Večerní</option>
+          </select>
+        </mz-select-container>
+        <mz-input-container>
+          <input mz-input [label]="'Počet stran'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Stav'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Ročník'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Číslo'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Druhé číslo'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Stav - popis'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Vlastnictví'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Čárový kód'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Signatura'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Id bib záznamu'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Uuid čísla'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Uuid titulu'" id="" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'URL krameria'" id="" type="text">
+        </mz-input-container>
+        <button mz-button>
+          Uložit
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

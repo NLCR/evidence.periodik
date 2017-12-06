@@ -1,12 +1,9 @@
 // --- HOME ---
 
 .app-home-wrapper {
+  @extend .app-full-wrapper;
   height: calc(100% - #{$navbar-height});
-  
-  &.valign-wrapper {
-    padding-top: $navbar-height;
-    padding-bottom: 100px;
-  }
+  padding-top: 200px;
   
   section {
     

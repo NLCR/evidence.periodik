@@ -20,8 +20,23 @@ app-root {
     
     app-home {
       width: 100%;
+      height: calc(100% + #{$app-toolbar-height});
       
       @import "app-home";
+    }
+    
+     app-add-record {
+      width: 100%;
+      height: calc(100% + #{$app-toolbar-height});
+      
+      @import "app-add-record";
+    }
+    
+    app-login {
+      width: 100%;
+      height: calc(100% + #{$app-toolbar-height});
+      
+      @import "app-login";
     }
     
     app-toolbar {
@@ -38,8 +53,7 @@ app-root {
       app-facet {
         order: 1;
         width: $app-facet-width;
-        
-        @import "app-facet-used";
+              
         @import "app-facet";
       }
 

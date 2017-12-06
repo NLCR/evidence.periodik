@@ -1,0 +1,77 @@
+// --- CALENDAR MONTH ---
+
+.app-calendar-month {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  height: calc(100% - #{$app-container});
+
+  .app-calendar-weekday {
+    width: 14.28%;
+    height: 25px;
+    margin: 0px;
+    color: $secondary-color;
+    padding: 0.3rem 0.5rem;
+    @include set-border(right, 1, solid, #{$app-grey-l-2});
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+
+    &:nth-child(7n) {
+      border-right: none !important;
+    }
+  }
+
+  .app-calendar-day {
+    width: 14.28%;
+    height: 16.6666%;
+    margin: 0px;
+    @include set-border(right-bottom, 1, solid, #{$app-grey-l-2});
+
+    &:nth-child(7n) {
+      border-right: none !important;
+    }
+
+    .app-calendar-day-content {
+      color: color("shades", "black");
+      font-size: 0.9rem;
+      height: 100%;
+      overflow: hidden;
+
+      .app-calendar-day-content-title {
+        font-size: 1rem;
+        color: $app-grey-d-2;
+        padding: 0.3rem 0.5rem;
+      }
+
+      .app-calendar-day-content-item {
+        & > div {
+          padding: 0.1rem 0.5rem;
+        }
+
+        & > div[class*="app-state-"] {
+          width: calc(100% - #{$app-container});
+          border-radius: $app-border-radius;
+          color: color("shades", "white");
+        }
+
+        .app-state-ok {
+          background-color: $app-state-ok;
+        }
+
+        .app-state-auto {
+          background-color: $app-state-auto; 
+        }
+      }
+
+      &.app-disabled {
+        .app-calendar-day-content-title {
+          color: $app-grey-l-1;
+        }
+      }
+    }
+  }
+}
