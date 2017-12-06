@@ -19,7 +19,7 @@ export class FacetComponent implements OnInit {
   loadFacetItems() {
     this.facets = this.http.get("../../assets/facets.json")
     .map(res => res.json())
-    .do(data => console.log("Debug:" + data));
+    .do(data => console.log("Debug facet component:" + data));
   }
 
 }

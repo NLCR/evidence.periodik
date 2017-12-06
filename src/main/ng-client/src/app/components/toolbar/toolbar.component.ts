@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppState } from '../../app.state';
 
 @Component({
   selector: 'app-toolbar',
@@ -7,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ToolbarComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public state: AppState) { }
 
   ngOnInit() {
   }

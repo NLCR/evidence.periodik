@@ -19,7 +19,7 @@ export class ResultComponent implements OnInit {
   loadResultItems() {
     this.results = this.http.get("../../assets/results.json")
     .map(res => res.json())
-    .do(data => console.log("Debug:" + data));
+    .do(data => console.log("Debug result comonent:" + data));
   }
   
 }

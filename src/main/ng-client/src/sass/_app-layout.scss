@@ -16,7 +16,7 @@ body {
 app-root {
   main {
     width: 100%;
-    height: calc(100% - (68px + 50px));
+    height: calc(100% - (#{$navbar-height} + #{$app-toolbar-height}));
     
     app-home {
       width: 100%;
@@ -25,8 +25,10 @@ app-root {
     }
     
     app-toolbar {
-      height: 50px;
-      line-height: 50px;
+      //height: $app-toolbar-height;
+      //line-height: $app-toolbar-height;
+      
+      @import "app-toolbar";
     }
     
     & > section {

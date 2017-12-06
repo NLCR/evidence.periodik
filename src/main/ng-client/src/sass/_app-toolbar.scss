@@ -1,19 +1,58 @@
 // --- TOOLBAR ---
 
-app-toolbar {
-  .app-toolbar-wrapper {
-    @include set-border(bottom, 1, solid, #{$app-grey-l-3});
+.app-toolbar-wrapper {
+  display: flex;
+  height: $app-toolbar-height;
+  @include set-border(bottom, 1, solid, #{$app-grey-l-3});
+
+  .app-col-count {
+    padding: 0 $app-container;
+    order: 1;
+    width: $app-facet-width;
+  }
+  
+  .app-col-nav {
+    padding: 0 $app-container;
+    order: 2;
+    width: 100%;
     
-    > div {
-      padding: 0 1.25rem;
+    .left {
+      .btn {
+        background-color: $app-grey-l-5;
+        @include set-border(all, 1, solid, #{$app-grey-l-3});
+        height: 34px;
+        line-height: 34px;
+        padding: 0 0.5rem;
+        color: $app-grey;
+      
+        &:hover {
+          background-color: $app-grey-l-3;
+        }
+      }
+      
+      span {
+        margin-left: $app-container; 
+      }
+    
+      .pagination {
+        @extend .app-clean-mg;
+      }
+    }
+
+    .right {
+      padding-top: 4px;
       
       a {
         padding-left: 0.75rem;
-        
+
         &:hover, &.active {
           i[class*="mdi-"] {
             color: $app-grey-c-1;
           } 
+        }
+
+        .mdi:before {
+          line-height: normal;
         }
       }
     }

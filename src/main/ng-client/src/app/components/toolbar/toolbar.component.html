@@ -1,13 +1,14 @@
-<div class="app-toolbar-wrapper clearfix">
-  <div class="right">
-    <a [routerLink]="['calendar', 'month']" routerLinkActive="active">
-      <i mz-icon-mdi [icon]="'calendar-today'" mz-tooltip [tooltip]="'Zobrazit měsíc'" class="app-cursor-pointer"></i>
-    </a>
-    <a [routerLink]="['calendar', 'year']" routerLinkActive="active">
-      <i mz-icon-mdi [icon]="'calendar-range'" mz-tooltip [tooltip]="'Zobrazit rok'" class="app-cursor-pointer"></i>
-    </a>
-    <a [routerLink]="['calendar', 'list']" routerLinkActive="active">
-      <i mz-icon-mdi [icon]="'calendar-text'" mz-tooltip [tooltip]="'Zobrazit seznam'" class="app-cursor-pointer"></i>
-    </a>
-  </div>
-</div>
+<div class="app-toolbar-wrapper valign-wrapper">
+  <div class="app-col-count">
+    <app-toolbar-count></app-toolbar-count>
+  </div><!--/.app-col-count -->
+  <div class="app-col-nav">
+    <div class="left">
+      <app-toolbar-pagination-calendar *ngIf="state.activePage == '/calendar' || state.activePage == '/calendar/month' || state.activePage == '/calendar/year' || state.activePage == '/calendar/list'"></app-toolbar-pagination-calendar>
+      <app-toolbar-pagination-result *ngIf="state.activePage == '/result'"></app-toolbar-pagination-result>
+    </div><!--/.left -->
+    <div class="right" *ngIf="state.activePage == '/calendar' || state.activePage == '/calendar/month' || state.activePage == '/calendar/year' || state.activePage == '/calendar/list'">
+      <app-toolbar-nav-views></app-toolbar-nav-views>
+    </div><!--/.right -->
+  </div><!--/.app-col-nav -->
+</div><!--/.app-toolbar-wrapper -->

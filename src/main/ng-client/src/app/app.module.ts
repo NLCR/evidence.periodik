@@ -32,6 +32,10 @@ import { CalendarMonthDayComponent } from './components/calendar/calendar-month/
 import { LoginComponent } from './components/login/login.component';
 import { AddRecordComponent } from './components/add-record/add-record.component';
 import { FacetUsedComponent } from './components/facet/facet-used/facet-used.component';
+import { ToolbarPaginationResultComponent } from './components/toolbar/toolbar-pagination-result/toolbar-pagination-result.component';
+import { ToolbarPaginationCalendarComponent } from './components/toolbar/toolbar-pagination-calendar/toolbar-pagination-calendar.component';
+import { ToolbarNavViewsComponent } from './components/toolbar/toolbar-nav-views/toolbar-nav-views.component';
+import { ToolbarCountComponent } from './components/toolbar/toolbar-count/toolbar-count.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -60,7 +64,11 @@ export function createTranslateLoader(http: HttpClient) {
     CalendarMonthDayComponent,
     LoginComponent,
     AddRecordComponent,
-    FacetUsedComponent
+    FacetUsedComponent,
+    ToolbarPaginationResultComponent,
+    ToolbarPaginationCalendarComponent,
+    ToolbarNavViewsComponent,
+    ToolbarCountComponent
   ],
   imports: [
     BrowserModule,

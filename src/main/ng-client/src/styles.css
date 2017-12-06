@@ -19172,6 +19172,24 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   font: normal normal normal 20px/1 "Material Design Icons";
   vertical-align: small; }
 
+/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+.app-mdi-calendar-today:before {
+  content: "\F0F6";
+  font: normal normal normal 24px/1 "Material Design Icons";
+  vertical-align: small; }
+
+/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+.app-mdi-calendar-range:before {
+  content: "\F678";
+  font: normal normal normal 24px/1 "Material Design Icons";
+  vertical-align: small; }
+
+/* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-mixins.scss */
+.app-mdi-calendar-text:before {
+  content: "\F0F5";
+  font: normal normal normal 24px/1 "Material Design Icons";
+  vertical-align: small; }
+
 /* line 3, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
 html,
 body,
@@ -19211,15 +19229,56 @@ app-root main {
         /* line 30, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-home.scss */
         app-root main app-home .app-home-wrapper section .app-search-bar-wrapper:hover {
           border-color: #e0e0e0; }
-  /* line 27, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
-  app-root main app-toolbar {
+  /* line 3, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+  app-root main app-toolbar .app-toolbar-wrapper {
+    display: flex;
     height: 50px;
-    line-height: 50px; }
-  /* line 32, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
+    border-width: 0 0 1px 0;
+    border-style: solid;
+    border-color: #eeeeee; }
+    /* line 8, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+    app-root main app-toolbar .app-toolbar-wrapper .app-col-count {
+      padding: 0 1.25rem;
+      order: 1;
+      width: 320px; }
+    /* line 14, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+    app-root main app-toolbar .app-toolbar-wrapper .app-col-nav {
+      padding: 0 1.25rem;
+      order: 2;
+      width: 100%; }
+      /* line 20, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+      app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left .btn, app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left .btn-large {
+        background-color: #fafafa;
+        border-width: 1px 1px 1px 1px;
+        border-style: solid;
+        border-color: #eeeeee;
+        height: 34px;
+        line-height: 34px;
+        padding: 0 0.5rem;
+        color: #9e9e9e; }
+        /* line 28, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+        app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left .btn:hover, app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left .btn-large:hover {
+          background-color: #eeeeee; }
+      /* line 33, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+      app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left span {
+        margin-left: 1.25rem; }
+      /* line 42, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+      app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right {
+        padding-top: 4px; }
+        /* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+        app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right a {
+          padding-left: 0.75rem; }
+          /* line 49, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+          app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right a:hover i[class*="mdi-"], app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right a.active i[class*="mdi-"] {
+            color: #d2d2d2; }
+          /* line 54, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+          app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right a .mdi:before {
+            line-height: normal; }
+  /* line 34, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
   app-root main > section {
     display: flex;
     height: 100%; }
-    /* line 36, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
+    /* line 38, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
     app-root main > section app-facet {
       order: 1;
       width: 320px; }
@@ -19344,7 +19403,7 @@ app-root main {
                 text-align: right;
                 vertical-align: top;
                 color: #757575; }
-    /* line 44, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
+    /* line 46, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
     app-root main > section app-calendar {
       order: 2;
       width: 100%; }
@@ -19393,7 +19452,7 @@ app-root main {
             /* line 53, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
             app-root main > section app-calendar .app-calendar-wrapper .calendar .day .state-auto {
               color: orange; }
-    /* line 51, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
+    /* line 53, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
     app-root main > section app-result {
       order: 2;
       width: 100%; }
@@ -19404,6 +19463,15 @@ app-root main {
         /* line 4, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-result-item.scss */
         app-root main > section app-result .app-result-wrapper app-result-item .card {
           margin: 0.75rem 0 0.75rem 0; }
+          /* line 7, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-result-item.scss */
+          app-root main > section app-result .app-result-wrapper app-result-item .card .card-action {
+            padding: 0.75rem; }
+            /* line 10, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-result-item.scss */
+            app-root main > section app-result .app-result-wrapper app-result-item .card .card-action .badge {
+              margin-left: 2px; }
+              /* line 13, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-result-item.scss */
+              app-root main > section app-result .app-result-wrapper app-result-item .card .card-action .badge:hover {
+                background-color: #757575 !important; }
 
 /* line 3, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 * {
@@ -19426,7 +19494,7 @@ app-search-bar .app-search-bar-wrapper .mdi-close {
   font-family: 'Roboto-Condensed-Bold'; }
 
 /* line 25, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
-.app-clean-mg {
+.app-clean-mg, app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left .pagination {
   margin: 0 !important; }
 
 /* line 29, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
@@ -19548,20 +19616,5 @@ app-search-bar .app-search-bar-wrapper {
       /* line 53, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-search-bar.scss */
       app-search-bar .app-search-bar-wrapper .input-field input[type=search]::-ms-clear {
         display: none; }
-
-/* line 4, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-app-toolbar .app-toolbar-wrapper {
-  border-width: 0 0 1px 0;
-  border-style: solid;
-  border-color: #eeeeee; }
-  /* line 7, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-  app-toolbar .app-toolbar-wrapper > div {
-    padding: 0 1.25rem; }
-    /* line 10, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-    app-toolbar .app-toolbar-wrapper > div a {
-      padding-left: 0.75rem; }
-      /* line 14, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-      app-toolbar .app-toolbar-wrapper > div a:hover i[class*="mdi-"], app-toolbar .app-toolbar-wrapper > div a.active i[class*="mdi-"] {
-        color: #d2d2d2; }
 
 /*# sourceMappingURL=styles.css.map */
