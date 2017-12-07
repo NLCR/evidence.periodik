@@ -59,7 +59,7 @@ a,
 
 
 // others
-button {
+button:not(.btn-floating) {
   @extend .z-depth-0;
   i {
     &.left {

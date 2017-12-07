@@ -48,6 +48,7 @@
       }
 
       .app-calendar-day-content-item {
+        margin-bottom: 2px;
         & > div {
           padding: 0.1rem 0.5rem;
         }
@@ -56,14 +57,33 @@
           width: calc(100% - #{$app-container});
           border-radius: $app-border-radius;
           color: color("shades", "white");
+          
+          .app-count-ex {
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            line-height: 14px;
+            display: inline-block;
+            text-align: center;
+            background-color: color("shades", "white");
+            margin-top: 0.15rem;
+          }
         }
 
         .app-state-ok {
           background-color: $app-state-ok;
+          
+          .app-count-ex  {
+            color: $app-state-ok;
+          }
         }
 
         .app-state-auto {
-          background-color: $app-state-auto; 
+          background-color: $app-state-auto;
+          
+          .app-count-ex  {
+            color: $app-state-auto;
+          }
         }
       }
 

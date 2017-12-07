@@ -3,4 +3,11 @@
 .app-calendar-wrapper {
   @extend .app-full-wrapper;
   @import "app-calendar-month";
+  position: relative;
+  
+  .btn-floating {
+    position: absolute;
+    right: $app-container;
+    bottom: $app-container;
+  }
 }
