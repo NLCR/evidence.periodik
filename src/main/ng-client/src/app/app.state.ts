@@ -18,11 +18,21 @@ export class AppState {
   currentLang: string = 'cs';
   configured: boolean = false;
   
+  specialDays: any = {};
+  
+  
+  currentDay: Date = new Date();
+  private _currentDaySubject = new Subject();
+  public currentDayChanged: Observable<any> = this._currentDaySubject.asObservable();
   
   setConfig(cfg){
-    this.config = cfg;
     this.configured = true;
     this._configSubject.next(cfg);
+  }
+  
+  changeCurrentDay(d: Date){
+      this.currentDay = d;
+      this._currentDaySubject.next(this.currentDay);
   }
   
 }

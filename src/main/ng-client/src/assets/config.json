@@ -2,6 +2,6 @@
   "context": "/",
   "searchParams": {
     "rows": 100
-  }
-            
+  },
+  "test": true          
 }

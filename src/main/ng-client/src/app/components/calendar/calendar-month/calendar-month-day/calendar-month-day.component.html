@@ -1,5 +1,5 @@
 <div class="app-calendar-day-content" [class.app-disabled]="isOtherMonth()">
-  <div class="app-calendar-day-content-title">{{day | date: 'dd'}}</div>
+  <div class="app-calendar-day-content-title">{{day | date: 'dd'}} {{special.title}}</div>
   <div *ngFor="let e of issues" class="app-calendar-day-content-item">
     <div [class]="'app-state-'+e.state" [routerLink]="['/issue', e.id]">
       {{e.nazev}} ({{e.mutace}})
