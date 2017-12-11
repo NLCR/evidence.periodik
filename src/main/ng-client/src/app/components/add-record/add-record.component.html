@@ -9,10 +9,10 @@
     <div class="col s4 app-clean-pd">
       <form>
         <mz-input-container>
-          <input mz-input [label]="'Meta název'" id="" type="text">
+          <input mz-input [label]="'Meta název'" id="meta_nazev" name="meta_nazev" type="text" [(ngModel)]="state.currentTitul.meta_nazev">
         </mz-input-container>
         <mz-input-container>
-          <input mz-input [label]="'Název na titulní straně'" id="" type="text">
+          <input mz-input [label]="'Název na titulní straně'" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
         </mz-input-container>
         <mz-input-container>
           <input mz-input [label]="'Podnázev na titulní straně'" id="" type="text">

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {Router} from '@angular/router';
+import {AppState} from '../../../app.state';
 
 @Component({
   selector: 'app-toolbar-nav-views',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ToolbarNavViewsComponent implements OnInit {
 
-  constructor() { }
+  constructor(public state: AppState,
+  private router: Router) { }
 
   ngOnInit() {
+  }
+  
+  changeView(view: string){
+      this.state.calendarView = view;
+      this.router.navigate(['/calendar', this.state.currentTitul.id, view]);
   }
 
 }

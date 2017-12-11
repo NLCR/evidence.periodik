@@ -13,5 +13,13 @@ export class ToolbarComponent implements OnInit {
 
   ngOnInit() {
   }
+  
+  showCalendar(){
+      return this.state.activePage.indexOf('/calendar') > -1;
+  }
+  
+  showResult(){
+      return this.state.activePage.indexOf('/result') > -1;
+  }
 
 }

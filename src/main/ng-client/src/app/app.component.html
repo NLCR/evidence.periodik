@@ -4,7 +4,7 @@
 <main>
   <app-toolbar *ngIf="state.activePage != '/' && state.activePage != '/home' && state.activePage != '/login' && state.activePage != '/add-record'"></app-toolbar>
   <section>
-    <app-facet *ngIf="state.activePage != '/' && state.activePage != '/home' && state.activePage != '/login' && state.activePage != '/add-record'"></app-facet>
+    <app-facet *ngIf="showToolbarAndFacets()"></app-facet>
     <router-outlet></router-outlet>
   </section>
 </main>

@@ -3,7 +3,7 @@ import { StavIssue } from './stav-issue.enum';
 
 
 export class Issue {
-  titul: Titul = new Titul();
+  titul_id: string = "";
   nazev: string = ""; //název na titulní straně	text	Název tak jak je na konkrétním čísle novin
   podnazev: string = ""; //podnázev na titulní straně	text	Podnázev tak jak je na konkrétním čísle novin.
   vydani: string = ""; //vydání	text	název vydání tak jak je uveden na titulní straně

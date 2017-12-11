@@ -5,19 +5,13 @@
   <div class="app-col-nav">
     <div class="left">
       <app-toolbar-pagination-calendar 
-        *ngIf="state.activePage == '/calendar' || 
-               state.activePage == '/calendar/month' || 
-               state.activePage == '/calendar/year' || 
-               state.activePage == '/calendar/list'">
+        *ngIf="showCalendar()">
       </app-toolbar-pagination-calendar>
-      <app-toolbar-pagination-result *ngIf="state.activePage == '/result'"></app-toolbar-pagination-result>
+      <app-toolbar-pagination-result *ngIf="showResult()"></app-toolbar-pagination-result>
     </div><!--/.left -->
     <div class="right">
       <app-toolbar-nav-views 
-        *ngIf="state.activePage == '/calendar' || 
-               state.activePage == '/calendar/month' || 
-               state.activePage == '/calendar/year' || 
-               state.activePage == '/calendar/list'">
+        *ngIf="showCalendar()">
       </app-toolbar-nav-views>
     </div><!--/.right -->
   </div><!--/.app-col-nav -->

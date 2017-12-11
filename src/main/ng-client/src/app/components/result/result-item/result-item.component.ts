@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {AppState} from '../../../app.state';
 
 @Component({
   selector: 'app-result-item',
@@ -8,7 +9,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ResultItemComponent implements OnInit {
   @Input() item: any;
 
-  constructor() { }
+  constructor(public state : AppState) { }
 
   ngOnInit() {
   }

@@ -95,10 +95,11 @@ export function createTranslateLoader(http: HttpClient) {
       { path: 'issue/:id', component: IssueComponent },
       { path: 'home', component: HomeComponent },
       { path: 'result', component: ResultComponent },
-      { path: 'calendar', component: CalendarComponent, 
+      { path: 'calendar/:id', component: CalendarComponent, 
         children: [
           { path: '', redirectTo: 'month', pathMatch: 'full' },
           { path: 'month', component: CalendarMonthComponent },
+         // { path: ':id/month', component: CalendarMonthComponent },
           { path: 'year', component: CalendarYearComponent },
           { path: 'list', component: CalendarListComponent }
         ]

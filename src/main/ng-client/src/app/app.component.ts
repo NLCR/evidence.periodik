@@ -19,7 +19,7 @@ import {AppState} from './app.state';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-    title = 'app works!';
+    title = 'Evidence periodik';
     stavy = [];
 
     init: boolean = false;
@@ -96,6 +96,11 @@ export class AppComponent {
             return this.state.config;
         });
     }
+  
+  showToolbarAndFacets(){
+      //state.activePage != '/' && state.activePage != '/home' && state.activePage != '/login' && state.activePage != '/add-record'
+      return this.state.activePage.indexOf('/calendar') > -1 || this.state.activePage.indexOf('/result') > -1;
+  }
 
 
 }

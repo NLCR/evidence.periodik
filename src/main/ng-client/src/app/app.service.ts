@@ -50,15 +50,6 @@ export class AppService {
         }).subscribe();
     }
 
-    isSpecial2(d: Date): string {
-        let key = this.datePipe.transform(d, 'yyyyMMdd');
-        if (this.state.specialDays.hasOwnProperty(key)) {
-            return this.state.specialDays[key];
-        } else {
-            return "";
-        }
-    }
-
     getSpecialDaysOfMonth(d: Date) {
         var url = this.state.config['context'] + 'search/calendar/select';
         let params: URLSearchParams = new URLSearchParams();
@@ -69,9 +60,9 @@ export class AppService {
         } else {
             let month = this.datePipe.transform(d, 'M');
             let year = this.datePipe.transform(d, 'yyyy');
-            let q = '(month:' + month + ' AND year:' + year + ') OR (month:' + month + ' AND -year:[* TO *])';
+            let q = '(month:' + month + ' AND year:' + year + ') OR (month:' + month + ' AND year:0)';
             params.set('q', q);
-            params.set('rows', '40');
+            params.set('rows', '50');
         }
         return this.http.get(url, {search: params}).map((res: Response) => {
             return res.json()['response']['docs'];
@@ -89,7 +80,7 @@ export class AppService {
             let day = this.datePipe.transform(d, 'd');
             let month = this.datePipe.transform(d, 'M');
             let year = this.datePipe.transform(d, 'yyyy');
-            let q = '(day:' + day + ' AND month:' + month + ' AND year:' + year + ') OR (day:' + day + ' AND month:' + month + ' AND -year:[* TO *])';
+            let q = '(day:' + day + ' AND month:' + month + ' AND year:' + year + ') OR (day:' + day + ' AND month:' + month + ' AND year:0)';
             params.set('q', q);
             params.set('rows', '1');
         }
@@ -111,6 +102,22 @@ export class AppService {
             url = this.state.config['context'] + 'search/issue/select';
         }
         //params.set('fl', 'start:datum_vydani,title:nazev,*')
+        return this.http.get(url, {search: params}).map((res: Response) => {
+            return res.json()['response']['docs'];
+        });
+    }
+
+    getTitul(id: string) {
+        var url = this.state.config['context'] + 'search/titul/select';
+        let params: URLSearchParams = new URLSearchParams();
+        let test = this.state.config['test'];
+        if (test) {
+            url = this.state.config['context'] + 'assets/titul.json';
+        } else {
+            params.set('q', '*');
+            params.set('fq', 'id:"' + id + '"');
+            //params.set('fl', 'start:datum_vydani,title:nazev,*')
+        }
         return this.http.get(url, {search: params}).map((res: Response) => {
             return res.json()['response']['docs'];
         });

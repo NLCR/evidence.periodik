@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import {Titul} from './models/titul';
+import {Issue} from './models/issue';
   
 @Injectable()
 export class AppState {
@@ -14,16 +16,20 @@ export class AppState {
   
   //Holds client configuration
   config: any;
-  
-  currentLang: string = 'cs';
   configured: boolean = false;
   
-  specialDays: any = {};
+  currentLang: string = 'cs';
   
+  calendarView: string = 'month';
+  
+  specialDays: any = {};
   
   currentDay: Date = new Date();
   private _currentDaySubject = new Subject();
   public currentDayChanged: Observable<any> = this._currentDaySubject.asObservable();
+  
+  currentTitul: Titul = new Titul();
+  currentIssue: Issue = new Issue();
   
   setConfig(cfg){
     this.configured = true;

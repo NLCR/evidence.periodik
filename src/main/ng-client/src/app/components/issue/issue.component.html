@@ -1,30 +1,30 @@
 <section>
-    <h1>Issue:</h1>
+    <h1>Issue: {{state.currentTitul.meta_nazev}}</h1>
     <form (ngSubmit)="onSubmit()" #issueForm="ngForm">
       <div class="form-group">
         <label for="nazev">Nazev</label>
-        <input type="text" class="form-control" id="nazev" name="nazev" [(ngModel)]="issue.nazev" required>
+        <input type="text" class="form-control" id="nazev" name="nazev" [(ngModel)]="state.currentIssue.nazev" required>
       </div>
  
       <div class="form-group">
         <label for="podnazev">podnazev</label>
-        <input type="text" class="form-control" id="podnazev" name="podnazev" [(ngModel)]="issue.podnazev">
+        <input type="text" class="form-control" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev">
       </div>
  
       <div class="form-group">
         <label for="mutace">mutace</label>
-        <input type="text" class="form-control" id="mutace" name="mutace" [(ngModel)]="issue.mutace">
+        <input type="text" class="form-control" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace">
       </div>
  
       <div class="form-group">
-      <select class="form-control" id="stav" name="stav" [(ngModel)]="issue.stav">
+      <select class="form-control" id="stav" name="stav" [(ngModel)]="state.currentIssue.stav">
           <option *ngFor="let stav of stavy" [value]="stav.key">{{stav.value}}</option>
       </select>
       </div>
  
       <div class="form-group">
  
-      <select class="form-control" id="state" name="state" [(ngModel)]="issue.state">
+      <select class="form-control" id="state" name="state" [(ngModel)]="state.currentIssue.state">
           <option *ngFor="let state of states" [value]="state.key">{{state.value}}</option>
       </select>
       </div>
