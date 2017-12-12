@@ -7,7 +7,7 @@
                 "id_titul": "d2677fbe-f660-4da2-a55d-035c12c09aab",
                 "nazev": "Lidové noviny",
                 "podnazev": "",
-                "vydani": "večerní vydání",
+                "vydani": "Ranní vydání",
                 "mutace": "Čechy",
                 "periodicita": "Deník",
                 "datum_vydani": "2017-12-02",
@@ -38,7 +38,8 @@
                 "url_krameria": "",
                 "typ": "tištěné",
                 "state": "ok" 
-              },{
+              },
+              {
                 "id": "8746e555-136d-44ef-aa91-a6ca894f93bb",
                 "id_titul": "d2677fbe-f660-4da2-a55d-035c12c09aab",
                 "nazev": "Lidové noviny",

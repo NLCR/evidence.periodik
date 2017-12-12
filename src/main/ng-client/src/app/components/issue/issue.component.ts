@@ -22,6 +22,10 @@ export class IssueComponent implements OnInit {
     states = [];
 
     issue: Issue = new Issue();
+    public options: Pickadate.DateOptions = {
+        format: 'dd/mm/yyyy',
+        formatSubmit: 'yyyy-mm-dd',
+    };
 
     constructor(
         private route: ActivatedRoute,
@@ -36,13 +40,15 @@ export class IssueComponent implements OnInit {
     }
 
     setData(res: any[]) {
+        console.log(res);
         if (res.length > 0) {
             //this.issue = res[0];
             this.state.currentIssue = res[0];
+            console.log(this.state.currentIssue.exemplare);
             this.service.getTitul(this.state.currentIssue.titul_id).subscribe(res2 => {
-                if (res2.length > 0){
-                this.state.currentTitul = res2[0];
-            }
+                if (res2.length > 0) {
+                    this.state.currentTitul = res2[0];
+                }
             });
         } else {
             this.issue = new Issue();

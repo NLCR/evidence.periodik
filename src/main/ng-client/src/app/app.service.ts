@@ -127,6 +127,8 @@ export class AppService {
         var url = this.state.config['context'] + 'search/issue/select';
         let params: URLSearchParams = new URLSearchParams();
         params.set('q', '*');
+        params.set('wt', 'json');
+        params.set('fl', '*,exemplare:[json]');
         params.set('fq', 'id:"' + id + '"');
         //params.set('fl', 'start:datum_vydani,title:nazev,*')
         return this.http.get(url, {search: params}).map((res: Response) => {
