@@ -8,7 +8,7 @@ import 'rxjs/add/operator/catch';
 import {Observable} from 'rxjs/Rx';
 import {Subject} from 'rxjs/Subject';
 
-import {Http, Response, URLSearchParams, Headers, RequestOptions} from '@angular/http';
+import {Http, Response, URLSearchParams} from '@angular/http';
 
 import {AppState} from './app.state';
 
@@ -73,7 +73,6 @@ export class AppService {
         var url = this.state.config['context'] + 'search/calendar/select';
         let params: URLSearchParams = new URLSearchParams();
         let test = this.state.config['test'];
-        test = false;
         if (test) {
             url = this.state.config['context'] + 'assets/special.json';
         } else {
@@ -92,11 +91,14 @@ export class AppService {
     getIssuesOfTitul(uuid: string, month: string) {
         let params: URLSearchParams = new URLSearchParams();
         var url = '';
-        let test = true;
+        let test = this.state.config['test'];
         if (test) {
             url = this.state.config['context'] + 'assets/issues.json';
         } else {
             params.set('q', '*');
+        params.set('wt', 'json');
+        params.set('rows', '50');
+        params.set('fl', '*,exemplare:[json]');
             params.set('fq', 'uuid_titulu:"' + uuid + '"');
             params.set('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
             url = this.state.config['context'] + 'search/issue/select';

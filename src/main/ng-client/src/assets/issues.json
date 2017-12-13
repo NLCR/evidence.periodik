@@ -16,7 +16,9 @@
                 "rocnik": "",
                 "cislo": 1,
                 "druhe_cislo": 2,
-                "exemplare": [
+                "exemplare": ["{\"vlastnik\":\"NKP\",\"carovy_kod\":\"26000001\",\"stav\":\"PC\",\"stav_popis\":\"je to na hore poškozeno, ale presto čitelné\",\"signatura\":\"54 J 015285\"}",
+          "{\"vlastnik\":\"MZK\",\"carovy_kod\":\"26000002\",\"stav\":\"OK\",\"stav_popis\":\"jdobry\",\"signatura\":\"54 J 015285\"}"],
+                "exemplarej": [
                   {
                     "vlastnik": "NKP",
                     "carovy_kod": "26000001",
