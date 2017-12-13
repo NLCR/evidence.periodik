@@ -12,7 +12,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { MaterializeModule } from 'ng2-materialize';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { CalendarModule } from "ap-angular2-fullcalendar";
+//import { CalendarModule } from "ap-angular2-fullcalendar";
 
 import { AppState } from './app.state';
 import { AppService } from './app.service';
@@ -88,7 +88,7 @@ export function createTranslateLoader(http: HttpClient) {
     }),
     MaterializeModule.forRoot(),
     BrowserAnimationsModule,
-    CalendarModule,
+    //CalendarModule,
     
     RouterModule.forRoot([
       { path: 'issue', component: IssueComponent },
