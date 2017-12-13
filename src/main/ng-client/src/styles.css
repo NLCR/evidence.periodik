@@ -19259,8 +19259,8 @@ app-root main {
       padding: 0 1.25rem;
       order: 2;
       width: 100%; }
-      /* line 20, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-      app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left .btn, app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left .btn-large {
+      /* line 21, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+      app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:first-child .btn, app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:first-child .btn-large {
         background-color: #fafafa;
         border-width: 1px 1px 1px 1px;
         border-style: solid;
@@ -19269,24 +19269,32 @@ app-root main {
         line-height: 34px;
         padding: 0 0.5rem;
         color: #9e9e9e; }
-        /* line 28, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-        app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left .btn:hover, app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left .btn-large:hover {
+        /* line 29, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+        app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:first-child .btn:hover, app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:first-child .btn-large:hover {
           background-color: #eeeeee; }
-      /* line 33, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-      app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left span {
+      /* line 34, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+      app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:first-child span {
         margin-left: 1.25rem; }
-      /* line 42, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-      app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right {
+      /* line 44, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+      app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:nth-child(2) span {
+        height: 34px;
+        line-height: 34px;
+        font-size: 1.2rem;
+        color: #9e9e9e; }
+      /* line 52, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+      app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:last-child {
         padding-top: 4px; }
-        /* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-        app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right a {
-          padding-left: 0.75rem; }
-          /* line 49, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-          app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right a:hover i[class*="mdi-"], app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right a.active i[class*="mdi-"] {
+        /* line 55, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+        app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:last-child a {
+          padding-left: 0.75rem;
+          vertical-align: -webkit-baseline-middle; }
+          /* line 60, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+          app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:last-child a:hover i[class*="mdi-"], app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:last-child a.active i[class*="mdi-"] {
             color: #d2d2d2; }
-          /* line 54, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
-          app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .right a .mdi:before {
-            line-height: normal; }
+          /* line 65, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-toolbar.scss */
+          app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:last-child a .mdi:before {
+            line-height: normal;
+            vertical-align: middle; }
   /* line 49, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-layout.scss */
   app-root main > section {
     display: flex;
@@ -19299,7 +19307,8 @@ app-root main {
       app-root main > section app-facet .app-facet-wrapper {
         position: relative;
         background-color: #FFFFFF;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); }
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        z-index: 997; }
         /* line 4, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
         app-root main > section app-facet .app-facet-wrapper app-facet-used .collection {
           padding: 15px 0;
@@ -19351,17 +19360,17 @@ app-root main {
               /* line 59, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet-used.scss */
               app-root main > section app-facet .app-facet-wrapper app-facet-used .collection .collection-item span:hover .mdi-close:before {
                 display: inline-block !important; }
-        /* line 12, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+        /* line 13, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
         app-root main > section app-facet .app-facet-wrapper .collapsible {
           margin: 0 0 0px 0;
           border: none !important; }
-          /* line 17, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+          /* line 18, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
           app-root main > section app-facet .app-facet-wrapper .collapsible > li {
             padding: 15px 0 !important;
             border-width: 0 0 1px 0;
             border-style: solid;
             border-color: #e0e0e0; }
-          /* line 22, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+          /* line 23, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
           app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header {
             position: relative;
             color: #212121;
@@ -19370,46 +19379,46 @@ app-root main {
             min-height: 1.6rem;
             line-height: 1.6rem;
             border: none; }
-            /* line 32, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 33, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header .mdi-chevron-down, app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header .mdi-chevron-left, app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header .mdi-close-circle {
               position: absolute;
               top: 0;
               right: 10px;
               line-height: 1.6rem; }
-            /* line 39, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 40, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header .mdi-chevron-down {
               display: none; }
-            /* line 42, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 43, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header .mdi-chevron-left {
               display: block; }
-            /* line 46, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 47, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header.active .mdi-chevron-down {
               display: block; }
-            /* line 49, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 50, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-header.active .mdi-chevron-left {
               display: none; }
-          /* line 54, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+          /* line 55, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
           app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body {
             border: none; }
-            /* line 58, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 59, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .collection-item {
               background-color: transparent;
               border: none;
               padding: 0 20px; }
-            /* line 64, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+            /* line 65, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
             app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row {
               display: table;
               width: 100%; }
-              /* line 67, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+              /* line 68, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
               app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row a {
                 display: table-cell;
                 width: 90%;
                 vertical-align: top;
                 color: #757575; }
-                /* line 72, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+                /* line 73, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
                 app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row a:hover {
                   color: #212121; }
-              /* line 76, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
+              /* line 77, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-facet.scss */
               app-root main > section app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row span {
                 display: table-cell;
                 width: 10%;
@@ -19436,18 +19445,19 @@ app-root main {
             width: 14.28%;
             height: 25px;
             margin: 0px;
-            color: #00a5bb;
+            color: #757575;
             padding: 0.3rem 0.5rem;
+            font-size: 16px;
             border-width: 0 1px 0 0;
             border-style: solid;
             border-color: #e0e0e0; }
-            /* line 19, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+            /* line 20, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
             app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-weekday::first-letter {
               text-transform: uppercase; }
-            /* line 23, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+            /* line 24, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
             app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-weekday:nth-child(7n) {
               border-right: none !important; }
-          /* line 28, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+          /* line 29, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
           app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day {
             width: 14.28%;
             height: 16.6666%;
@@ -19455,35 +19465,73 @@ app-root main {
             border-width: 0 1px 1px 0;
             border-style: solid;
             border-color: #e0e0e0; }
-            /* line 34, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+            /* line 35, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
             app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day:nth-child(7n) {
               border-right: none !important; }
-            /* line 38, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+            /* line 39, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
             app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content {
               color: #000000;
               font-size: 0.9rem;
               height: 100%;
               overflow: hidden; }
-              /* line 44, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+              /* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+              app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content.app-calendar-day-holiday {
+                background-color: #fafafa; }
+                /* line 51, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+                app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content.app-calendar-day-holiday .app-calendar-day-content-title span {
+                  display: block;
+                  border-radius: 50%;
+                  width: 22px;
+                  height: 22px;
+                  line-height: 22px;
+                  text-align: center;
+                  background-color: #00bcd4;
+                  color: #FFFFFF; }
+              /* line 64, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
               app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-title {
                 font-size: 1rem;
                 color: #616161;
                 padding: 0.3rem 0.5rem; }
-              /* line 51, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
-              app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item > div {
-                padding: 0.1rem 0.5rem; }
-              /* line 55, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
-              app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item > div[class*="app-state-"] {
-                width: calc(100% - 1.25rem);
-                border-radius: 2px;
-                color: #FFFFFF; }
-              /* line 61, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
-              app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item .app-state-ok {
-                background-color: #00C853; }
-              /* line 65, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
-              app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item .app-state-auto {
-                background-color: #ffab40; }
-              /* line 71, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+              /* line 70, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+              app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item {
+                margin-bottom: 2px; }
+                /* line 74, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+                app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item > div {
+                  padding: 0.1rem 0.5rem; }
+                /* line 78, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+                app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item > div[class*="app-state-"] {
+                  width: calc(100% - 1.25rem);
+                  border-radius: 2px;
+                  color: #FFFFFF; }
+                  /* line 83, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+                  app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item > div[class*="app-state-"] .app-count-ex {
+                    border-radius: 50%;
+                    width: 14px;
+                    height: 14px;
+                    line-height: 14px;
+                    display: inline-block;
+                    text-align: center;
+                    background-color: #FFFFFF;
+                    margin-top: 0.15rem; }
+                /* line 95, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+                app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item .app-state-ok {
+                  background-color: #00C853; }
+                  /* line 98, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+                  app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item .app-state-ok:hover {
+                    background-color: #00e25e; }
+                  /* line 102, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+                  app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item .app-state-ok .app-count-ex {
+                    color: #00C853; }
+                /* line 107, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+                app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item .app-state-auto {
+                  background-color: #ffab40; }
+                  /* line 110, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+                  app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item .app-state-auto:hover {
+                    background-color: #ffb65a; }
+                  /* line 114, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
+                  app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item .app-state-auto .app-count-ex {
+                    color: #ffab40; }
+              /* line 121, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar-month.scss */
               app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content.app-disabled .app-calendar-day-content-title {
                 color: #bdbdbd; }
         /* line 8, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-calendar.scss */
@@ -19523,6 +19571,8 @@ h1, h2, h3, h4, h5 {
 /* line 12, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 a,
 .app-cursor-pointer,
+app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content.app-calendar-day-holiday .app-calendar-day-content-title,
+app-root main > section app-calendar .app-calendar-wrapper .app-calendar-month .app-calendar-day .app-calendar-day-content .app-calendar-day-content-item,
 app-search-bar .app-search-bar-wrapper .mdi-magnify,
 app-search-bar .app-search-bar-wrapper .mdi-close {
   cursor: pointer !important; }
@@ -19532,7 +19582,7 @@ app-search-bar .app-search-bar-wrapper .mdi-close {
   font-family: 'Roboto-Condensed-Bold'; }
 
 /* line 25, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
-.app-clean-mg, app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .left .pagination {
+.app-clean-mg, app-root main app-toolbar .app-toolbar-wrapper .app-col-nav .col:first-child .pagination {
   margin: 0 !important; }
 
 /* line 29, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */

@@ -16,43 +16,56 @@
     order: 2;
     width: 100%;
     
-    .left {
-      .btn {
-        background-color: $app-grey-l-5;
-        @include set-border(all, 1, solid, #{$app-grey-l-3});
-        height: 34px;
-        line-height: 34px;
-        padding: 0 0.5rem;
-        color: $app-grey;
-      
-        &:hover {
-          background-color: $app-grey-l-3;
+    .col {
+      &:first-child {
+        .btn {
+          background-color: $app-grey-l-5;
+          @include set-border(all, 1, solid, #{$app-grey-l-3});
+          height: 34px;
+          line-height: 34px;
+          padding: 0 0.5rem;
+          color: $app-grey;
+
+          &:hover {
+            background-color: $app-grey-l-3;
+          }
         }
-      }
-      
-      span {
-        margin-left: $app-container; 
+
+        span {
+          margin-left: $app-container; 
+        }
+
+        .pagination {
+          @extend .app-clean-mg;
+        }
       }
     
-      .pagination {
-        @extend .app-clean-mg;
-      }
-    }
-
-    .right {
-      padding-top: 4px;
-      
-      a {
-        padding-left: 0.75rem;
-
-        &:hover, &.active {
-          i[class*="mdi-"] {
-            color: $app-grey-c-1;
-          } 
+      &:nth-child(2) {
+        span {
+          height: 34px;
+          line-height: 34px;
+          font-size: 1.2rem;
+          color: $app-grey;
         }
+      }
+    
+      &:last-child {
+        padding-top: 4px;
+      
+        a {
+          padding-left: 0.75rem;
+          vertical-align: -webkit-baseline-middle;
 
-        .mdi:before {
-          line-height: normal;
+          &:hover, &.active {
+            i[class*="mdi-"] {
+              color: $app-grey-c-1;
+            } 
+          }
+
+          .mdi:before {
+            line-height: normal;
+            vertical-align: middle;
+          }
         }
       }
     }

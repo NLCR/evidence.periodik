@@ -8,6 +8,7 @@
   position: relative;
   background-color: color("shades", "white");
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  z-index: 997;
   
   .collapsible {
     margin: 0 0 0px 0;
