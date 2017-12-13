@@ -12,8 +12,9 @@
     width: 14.28%;
     height: 25px;
     margin: 0px;
-    color: $secondary-color;
+    color: $app-grey-d-1;
     padding: 0.3rem 0.5rem;
+    font-size: 16px;
     @include set-border(right, 1, solid, #{$app-grey-l-2});
 
     &::first-letter {
@@ -36,10 +37,29 @@
     }
 
     .app-calendar-day-content {
-      color: color("shades", "black");
+      color: $app-color-black;
       font-size: 0.9rem;
       height: 100%;
       overflow: hidden;
+      
+      &.app-calendar-day-holiday {
+        background-color: $app-grey-l-5;
+        
+        .app-calendar-day-content-title {
+          @extend .app-cursor-pointer;
+          
+          span {
+            display: block;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            text-align: center;
+            background-color: $primary-color;
+            color: $app-color-white; 
+          }
+        }
+      }
 
       .app-calendar-day-content-title {
         font-size: 1rem;
@@ -48,7 +68,9 @@
       }
 
       .app-calendar-day-content-item {
+        @extend .app-cursor-pointer;
         margin-bottom: 2px;
+        
         & > div {
           padding: 0.1rem 0.5rem;
         }
@@ -56,7 +78,7 @@
         & > div[class*="app-state-"] {
           width: calc(100% - #{$app-container});
           border-radius: $app-border-radius;
-          color: color("shades", "white");
+          color: $app-color-white;
           
           .app-count-ex {
             border-radius: 50%;
@@ -65,13 +87,17 @@
             line-height: 14px;
             display: inline-block;
             text-align: center;
-            background-color: color("shades", "white");
+            background-color: $app-color-white;
             margin-top: 0.15rem;
           }
         }
 
         .app-state-ok {
           background-color: $app-state-ok;
+          
+          &:hover {
+            background-color: lighten($app-state-ok, 5%);
+          }
           
           .app-count-ex  {
             color: $app-state-ok;
@@ -80,6 +106,10 @@
 
         .app-state-auto {
           background-color: $app-state-auto;
+          
+          &:hover {
+            background-color: lighten($app-state-auto, 5%);
+          }
           
           .app-count-ex  {
             color: $app-state-auto;

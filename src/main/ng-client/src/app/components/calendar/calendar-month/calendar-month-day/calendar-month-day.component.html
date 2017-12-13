@@ -1,10 +1,14 @@
-<div class="app-calendar-day-content" [class.app-disabled]="isOtherMonth()"><!-- {{special.type}} -->
-  <div class="app-calendar-day-content-title">{{day | date: 'dd'}} {{special.title}}</div>
+<div class="app-calendar-day-content" [class.app-disabled]="isOtherMonth()" [class.app-calendar-day-holiday]="special.type == 'svatek'">
+  <div *ngIf="special.type == 'svatek'" class="app-calendar-day-content-title" mz-tooltip [tooltip]="special.title" [position]="'top'">
+    <span>{{day | date: 'dd'}}</span>
+  </div>
+  <div *ngIf="special.type != 'svatek'" class="app-calendar-day-content-title">
+    {{day | date: 'dd'}}
+  </div>
   <div *ngFor="let e of issues" class="app-calendar-day-content-item">
     <div [class]="'app-state-'+e.state" [routerLink]="['/issue', e.id]">
       {{e.mutace}}
       <span class="app-count-ex right app-cursor-pointer" mz-tooltip [tooltip]="'Počet exemplářů'" [position]="'top'">{{e.exemplare.length}}</span>
     </div>
-    <!--<div class="app-desc">Počet exemplářů: {{e.exemplare.length}}</div>-->
   </div>
 </div>

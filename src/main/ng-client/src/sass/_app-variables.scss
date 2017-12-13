@@ -13,6 +13,7 @@ $secondary-color:                 darken($primary-color, 5%) !default;
 $link-color:                      $primary-color !default;
 
 $app-color-white:                 color("shades", "white") !default;
+$app-color-black:                 color("shades", "black") !default;
 
 // custom
 $app-grey:                        color("grey", "base") !default; // 9e9e9e
