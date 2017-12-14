@@ -69,6 +69,44 @@ public class IndexServlet extends HttpServlet {
   }
 
   enum Actions {
+    ADD_ISSUE {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          CloneParams jo = new CloneParams(new JSONObject(req.getParameter("cfg")));
+          indexer.clone(jo);
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+          json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
+    SAVE_ISSUE {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          LOGGER.log(Level.INFO, "getParameterMap: {0}", req.getParameterMap());
+          //indexer.save(req.getParameter("id"), req.getParameterMap());
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+          json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
     CLONE {
       @Override
       void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
@@ -98,6 +136,24 @@ public class IndexServlet extends HttpServlet {
         try {
           Indexer indexer = new Indexer();
           indexer.delete(req.getParameter("id"));
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+          json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
+    SET_STATE {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          indexer.setState(req.getParameter("id"));
 
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);

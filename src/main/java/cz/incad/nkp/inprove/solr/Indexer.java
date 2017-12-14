@@ -15,6 +15,8 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,11 +50,31 @@ public class Indexer {
         return DEFAULT_HOST;
     }
 
+    private SolrClient getClient() throws IOException {
+        SolrClient client = new HttpSolrClient.Builder(Options.getInstance().getString("solr.host", DEFAULT_HOST)).build();
+        return client;
+    }
+
     private SolrClient getClient(String core) throws IOException {
         SolrClient client = new HttpSolrClient.Builder(String.format("%s%s",
                 Options.getInstance().getString("solr.host", DEFAULT_HOST),
                 core)).build();
         return client;
+    }
+    
+    private boolean isSpecial(SolrClient solr, LocalDate date){
+        try {
+            SolrQuery query = new SolrQuery();
+            query.setRows(1);
+            query.set("wt", "json");
+            query.setQuery("id:\"" + date.format(DateTimeFormatter.ofPattern("yyyyMMdd"))  + "\" OR id:\"" + date.format(DateTimeFormatter.ofPattern("MMdd"))  + "\"");
+            return solr.query("calendar", query).getResults().getNumFound() > 0;
+        } catch (SolrServerException ex) {
+            Logger.getLogger(Indexer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Indexer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     /**
@@ -61,7 +83,8 @@ public class Indexer {
      * @param cfg : JsonObject with the clone parameters
      */
     public void clone(CloneParams cfg) {
-        try (SolrClient solr = getClient("issue")) {
+        try (SolrClient solr = getClient()) {
+            
             SolrQuery query = new SolrQuery();
             query.setRows(1);
             query.set("wt", "json");
@@ -69,7 +92,7 @@ public class Indexer {
             query.setFields("*,exemplare:[json]");
             //JSONObject doc = json(query, "issue").getJSONObject("response").getJSONArray("docs").getJSONObject(0);
             //LOGGER.log(Level.INFO,doc.toString(2));
-            SolrDocument doc = solr.getById(cfg.id);
+            SolrDocument doc = solr.getById("issue", cfg.id);
             LOGGER.log(Level.INFO, doc.toString());
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
             Date startDate = sdf1.parse(cfg.start_date);
@@ -81,18 +104,21 @@ public class Indexer {
             Period period = Period.parse(cfg.periodicity);
 
             for (LocalDate date = start; date.isBefore(end); date = date.plus(period)) {
+                if(!cfg.onSpecialDays && isSpecial(solr, date)){
+                    continue;
+                }
                 if (cfg.mutations.size() > 0) {
                     for (String mutation : cfg.mutations) {
                         SolrInputDocument idoc = cloneOne(doc, date, mutation);
-                        solr.add(idoc);
+                        solr.add("issue", idoc);
                     }
                 } else {
                     SolrInputDocument idoc = cloneOne(doc, date, null);
-                    solr.add(idoc);
+                    solr.add("issue", idoc);
                 }
             }
 
-            solr.commit();
+            solr.commit("issue");
         } catch (SolrServerException | IOException | ParseException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -162,6 +188,19 @@ public class Indexer {
     public void delete(String id) {
         try (SolrClient solr = getClient("issue")) {
             solr.deleteById(id, 10);
+        } catch (IOException | SolrServerException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void setState(String id) {
+        try (SolrClient solr = getClient("issue")) {
+            SolrInputDocument doc = new SolrInputDocument();
+            Map<String, String> partialUpdate = new HashMap<>();
+            partialUpdate.put("set", "ok");
+            doc.addField("id", id);
+            doc.addField("state", partialUpdate);
+            solr.add(doc, 10);
         } catch (IOException | SolrServerException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
