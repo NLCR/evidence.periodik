@@ -25,11 +25,15 @@ public class CloneParams {
 
     /**
      * Valid string for java.time.Period.parse() method, which is based on the
-     * ISO-8601 period formats PnYnMnD and PnW "P2Y" -- Period.ofYears(2) "P3M"
-     * -- Period.ofMonths(3) "P4W" -- Period.ofWeeks(4) "P5D" --
-     * Period.ofDays(5) "P1Y2M3D" -- Period.of(1, 2, 3) "P1Y2M3W4D" --
-     * Period.of(1, 2, 25) "P-1Y2M" -- Period.of(-1, 2, 0) "-P1Y2M" --
-     * Period.of(-1, -2, 0)
+     * ISO-8601 period formats PnYnMnD and PnW 
+     * "P2Y" -- Period.ofYears(2) 
+     * "P3M"     * -- Period.ofMonths(3) 
+     * "P4W" -- Period.ofWeeks(4) 
+     * "P5D" -- Period.ofDays(5) 
+     * "P1Y2M3D" -- Period.of(1, 2, 3) 
+     * "P1Y2M3W4D" -- Period.of(1, 2, 25) 
+     * "P-1Y2M" -- Period.of(-1, 2, 0) 
+     * "-P1Y2M" -- Period.of(-1, -2, 0)
    *
      */
     public String periodicity;
