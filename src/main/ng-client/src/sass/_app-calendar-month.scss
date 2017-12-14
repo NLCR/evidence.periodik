@@ -41,6 +41,12 @@
       font-size: 0.9rem;
       height: 100%;
       overflow: hidden;
+
+      .app-calendar-day-content-title {
+        font-size: 1rem;
+        color: $app-grey-d-2;
+        padding: 0.3rem 0.5rem;
+      }
       
       &.app-calendar-day-holiday {
         background-color: $app-grey-l-5;
@@ -59,12 +65,6 @@
             color: $app-color-white; 
           }
         }
-      }
-
-      .app-calendar-day-content-title {
-        font-size: 1rem;
-        color: $app-grey-d-2;
-        padding: 0.3rem 0.5rem;
       }
 
       .app-calendar-day-content-item {
@@ -92,28 +92,16 @@
           }
         }
 
-        .app-state-ok {
-          background-color: $app-state-ok;
-          
-          &:hover {
-            background-color: lighten($app-state-ok, 5%);
-          }
-          
-          .app-count-ex  {
-            color: $app-state-ok;
-          }
-        }
-
-        .app-state-auto {
-          background-color: $app-state-auto;
-          
-          &:hover {
-            background-color: lighten($app-state-auto, 5%);
-          }
-          
-          .app-count-ex  {
-            color: $app-state-auto;
-          }
+        // set states
+        .app-state-ok {@include setState($app-state-ok, 5);}
+        .app-state-auto {@include setState($app-state-auto, 7);}
+      }
+      
+      
+      .app-calendar-day-content-menu {
+        .mdi-dots-vertical {
+          @extend .app-cursor-pointer;
+          color: $app-grey;
         }
       }
 

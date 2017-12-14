@@ -21,8 +21,8 @@
         .btn {
           background-color: $app-grey-l-5;
           @include set-border(all, 1, solid, #{$app-grey-l-3});
-          height: 34px;
-          line-height: 34px;
+          height: $app-toolbar-height-elements;
+          line-height: $app-toolbar-height-elements;
           padding: 0 0.5rem;
           color: $app-grey;
 
@@ -42,8 +42,8 @@
     
       &:nth-child(2) {
         span {
-          height: 34px;
-          line-height: 34px;
+          height: $app-toolbar-height-elements;
+          line-height: $app-toolbar-height-elements;
           font-size: 1.2rem;
           color: $app-grey;
         }

@@ -1,5 +1,5 @@
 <div class="app-toolbar-wrapper valign-wrapper">
-  <div class="app-col-count">
+  <div class="app-col-count" *ngIf="showCalendar() || showResult()">
     <app-toolbar-count></app-toolbar-count>
   </div><!--/.app-col-count -->
   <div class="app-col-nav row app-clean-mg">
@@ -11,7 +11,7 @@
       <span *ngIf="showCalendar()">
         {{state.currentTitul.meta_nazev}}
       </span>
-    </div>
+    </div><!--/.col -->
     <div class="col s3 app-clean-pd right-align">
       <app-toolbar-nav-views *ngIf="showCalendar()"></app-toolbar-nav-views>
     </div><!--/.col -->

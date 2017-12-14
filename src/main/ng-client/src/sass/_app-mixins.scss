@@ -49,6 +49,21 @@
   }
 }
 
+
+// set state
+@mixin setState($color, $percent) {
+  background-color: $color;
+          
+  &:hover {
+    background-color: lighten($color, $percent);
+  }
+  
+  .app-count-ex  {
+    color: $color;
+  }
+}
+
+
 // clearfix
 @mixin clearfix() {
   &:before,

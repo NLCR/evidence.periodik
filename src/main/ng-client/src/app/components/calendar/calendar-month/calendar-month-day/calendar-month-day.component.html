@@ -1,10 +1,21 @@
-<div class="app-calendar-day-content" [class.app-disabled]="isOtherMonth()" [class.app-calendar-day-holiday]="special.type == 'svatek'">
-  <div *ngIf="special.type == 'svatek'" class="app-calendar-day-content-title" mz-tooltip [tooltip]="special.title" [position]="'top'">
+<div class="app-calendar-day-content" [class.app-disabled]="isOtherMonth()" [class.app-calendar-day-holiday]="special.type == 'svatek'"><!--[class.app-calendar-day-event]="special.type == 'event'"-->
+  <div *ngIf="special.type == 'svatek'" class="app-calendar-day-content-title left" mz-tooltip [tooltip]="special.title" [position]="'top'">
     <span>{{day | date: 'dd'}}</span>
   </div>
-  <div *ngIf="special.type != 'svatek'" class="app-calendar-day-content-title">
+  <div *ngIf="special.type != 'svatek'" class="app-calendar-day-content-title left">
     {{day | date: 'dd'}}
   </div>
+  <div class="app-calendar-day-content-menu right">
+    <a id="{{day | date: 'dd'}}">
+       <i mz-icon-mdi [icon]="'dots-vertical'"></i>
+    </a>
+    <mz-dropdown [id]="'calendar-menu'" [constrainWidth]="false" [dropdownButtonId]="day | date: 'dd'">
+      <mz-dropdown-item><a href="javascript:void(0)">Přidat mutaci</a></mz-dropdown-item>
+      <mz-dropdown-item><a href="javascript:void(0)">Přiřadit pozadí</a></mz-dropdown-item>
+      <mz-dropdown-item><a href="javascript:void(0)">Smazat všechny mutace</a></mz-dropdown-item>
+    </mz-dropdown>
+  </div>
+  <div class="clearfix"></div>
   <div *ngFor="let e of issues" class="app-calendar-day-content-item">
     <div [class]="'app-state-'+e.state" [routerLink]="['/issue', e.id]">
       {{e.mutace}}
