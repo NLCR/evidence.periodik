@@ -34,12 +34,15 @@ public class CloneParams {
      */
     public String periodicity;
     public List<String> mutations = new ArrayList<>();
+    
+    public boolean onSpecialDays;
 
     public CloneParams(JSONObject jo) {
         this.id = jo.getString("id");
         this.start_date = jo.getString("start_date");
         this.end_date = jo.getString("end_date");
         this.periodicity = jo.getString("periodicity");
+        this.onSpecialDays = jo.optBoolean(id, false);
         if (jo.has("mutations")) {
             JSONArray arr = jo.getJSONArray("mutations");
             for (int i = 0; i < arr.length(); i++) {
