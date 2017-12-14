@@ -132,6 +132,7 @@ public class Indexer {
         idoc.removeField("_version_");
         idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
         idoc.setField("state", "auto");
+        idoc.setField("exemplare", "");
         if (mutace != null) {
             idoc.setField("mutace", mutace);
         }
