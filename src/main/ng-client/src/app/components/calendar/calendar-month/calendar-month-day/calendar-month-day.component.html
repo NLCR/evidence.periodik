@@ -5,7 +5,7 @@
   <div *ngIf="special.type == 'svatek' || special.type == 'udalost'" class="app-calendar-day-content-title left" mz-tooltip [tooltip]="special.title" [position]="'top'">
     <span>{{day | date: 'dd'}}</span>
   </div>
-  <div *ngIf="special.type != 'svatek'" class="app-calendar-day-content-title left">
+  <div *ngIf="!special.type" class="app-calendar-day-content-title left">
     {{day | date: 'dd'}}
   </div>
   <div class="app-calendar-day-content-menu right">
@@ -22,7 +22,7 @@
   <div *ngFor="let e of issues" class="app-calendar-day-content-item">
     <div [class]="'app-state-'+e.state" [routerLink]="['/issue', e.id]">
       {{e.mutace}}
-      <span class="app-count-ex right app-cursor-pointer" mz-tooltip [tooltip]="'Počet exemplářů'" [position]="'top'">{{e.exemplare.length}}</span>
+      <span *ngIf="e.exemplare" class="app-count-ex right app-cursor-pointer" mz-tooltip [tooltip]="'Počet exemplářů'" [position]="'top'">{{e.exemplare.length}}</span>
     </div>
   </div>
 </div>

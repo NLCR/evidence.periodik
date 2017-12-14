@@ -1,5 +1,5 @@
 <section>
-    <h1>Issue: {{state.currentTitul.meta_nazev}}</h1>
+    <h1>Issue: {{state.currentTitul.meta_nazev}} {{state.currentIssue.datum_vydani | date: "dd/MM/yyyy"}}</h1>
     <form (ngSubmit)="onSubmit()" #issueForm="ngForm">
         <mz-input-container>
             <input mz-input [label]="'Meta název'" id="meta_nazev" name="meta_nazev" type="text" [(ngModel)]="state.currentTitul.meta_nazev">
@@ -15,6 +15,9 @@
         </mz-input-container>
         <mz-input-container>
             <input mz-input [label]="'Mutace'" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace" type="text">
+        </mz-input-container>
+        <mz-input-container>
+            <input mz-input [label]="'Periodicita'" id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita" type="text">
         </mz-input-container>
         <mz-datepicker-container>
             <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
