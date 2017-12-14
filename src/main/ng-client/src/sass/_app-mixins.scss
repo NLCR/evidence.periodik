@@ -64,6 +64,17 @@
 }
 
 
+// set special day
+@mixin setSpecialDay($bgDay, $bgCircle, $color) {
+  background-color: $bgDay;
+        
+  span {
+    background-color: $bgCircle;
+    color: $color; 
+  }
+}
+
+
 // clearfix
 @mixin clearfix() {
   &:before,

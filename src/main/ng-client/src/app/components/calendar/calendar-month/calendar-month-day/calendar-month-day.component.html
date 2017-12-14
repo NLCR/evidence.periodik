@@ -1,5 +1,8 @@
-<div class="app-calendar-day-content" [class.app-disabled]="isOtherMonth()" [class.app-calendar-day-holiday]="special.type == 'svatek'"><!--[class.app-calendar-day-event]="special.type == 'event'"-->
-  <div *ngIf="special.type == 'svatek'" class="app-calendar-day-content-title left" mz-tooltip [tooltip]="special.title" [position]="'top'">
+<div class="app-calendar-day-content app-calendar-day-special" 
+     [class.app-disabled]="isOtherMonth()" 
+     [class.app-calendar-day-holiday]="special.type == 'svatek'" 
+     [class.app-calendar-day-event]="special.type == 'udalost'">
+  <div *ngIf="special.type == 'svatek' || special.type == 'udalost'" class="app-calendar-day-content-title left" mz-tooltip [tooltip]="special.title" [position]="'top'">
     <span>{{day | date: 'dd'}}</span>
   </div>
   <div *ngIf="special.type != 'svatek'" class="app-calendar-day-content-title left">

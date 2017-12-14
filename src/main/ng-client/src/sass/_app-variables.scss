@@ -38,6 +38,10 @@ $app-orange:                      color("orange", "accent-2") !default; // ffab4
 $app-state-ok:                    color("green", "accent-4") !default;
 $app-state-auto:                  color("orange", "accent-2") !default;
 
+// day special
+$app-day-holiday:                 color("teal", "lighten-2") !default;
+$app-day-event:                   color("purple", "lighten-2") !default;
+
 // global
 $app-border-radius:               2px !default;
 
