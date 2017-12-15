@@ -2,7 +2,7 @@
      [class.app-disabled]="isOtherMonth()" 
      [class.app-calendar-day-holiday]="special.type == 'svatek'" 
      [class.app-calendar-day-event]="special.type == 'udalost'">
-  <div *ngIf="special.type == 'svatek' || special.type == 'udalost'" class="app-calendar-day-content-title left" mz-tooltip [tooltip]="special.title" [position]="'top'">
+  <div *ngIf="special.type" class="app-calendar-day-content-title left" mz-tooltip [tooltip]="special.title" [position]="'top'">
     <span>{{day | date: 'dd'}}</span>
   </div>
   <div *ngIf="!special.type" class="app-calendar-day-content-title left">
@@ -23,6 +23,7 @@
     <div [class]="'app-state-'+e.state" [routerLink]="['/issue', e.id]">
       {{e.mutace}}
       <span *ngIf="e.exemplare" class="app-count-ex right app-cursor-pointer" mz-tooltip [tooltip]="'Počet exemplářů'" [position]="'top'">{{e.exemplare.length}}</span>
+      <span *ngIf="e.digitalizovano" class="right"><i mz-icon-mdi [icon]="'credit-card-scan'" [size]="'22'"></i></span>
     </div>
   </div>
 </div>

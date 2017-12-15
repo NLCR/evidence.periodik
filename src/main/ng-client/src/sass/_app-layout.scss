@@ -36,7 +36,7 @@ app-root {
       width: 100%;
       height: calc(100% + #{$app-toolbar-height});
       
-      @import "app-add-record";
+      @import "app-issue";
     }
     
     app-login {
