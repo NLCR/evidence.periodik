@@ -44,8 +44,8 @@
         span {
           height: $app-toolbar-height-elements;
           line-height: $app-toolbar-height-elements;
-          font-size: 1.2rem;
-          color: $app-grey;
+          font-size: 1.3rem;
+          color: $primary-color;
         }
       }
     
@@ -55,10 +55,11 @@
         a {
           padding-left: 0.75rem;
           vertical-align: -webkit-baseline-middle;
+          color: $app-grey-c-1;
 
           &:hover, &.active {
             i[class*="mdi-"] {
-              color: $app-grey-c-1;
+              color: $primary-color;
             } 
           }
 

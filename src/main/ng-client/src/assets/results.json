@@ -35,6 +35,8 @@
     },
     {
         "id": 4,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],
         "title": "Lorem ipsum dolor sit amet",
         "date": "1805",
         "exemplar": "0",
@@ -44,6 +46,8 @@
     },
     {
         "id": 5,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],      
         "title": "Consectetuer adipiscing elit",
         "date": "1918 - 1919",
         "exemplar": "23",
@@ -53,6 +57,8 @@
     },
     {
         "id": 6,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],
         "title": "Aenean vel massa quis mauris",
         "date": "1899 - 1900",
         "exemplar": "53",
@@ -62,6 +68,8 @@
     },
     {
         "id": 7,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],
         "title": "Lorem ipsum dolor sit amet",
         "date": "1930 - 1954",
         "exemplar": "28",
@@ -71,6 +79,8 @@
     },
     {
         "id": 8,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],
         "title": "Consectetuer adipiscing elit",
         "date": "1805 - 1808",
         "exemplar": "23",
@@ -80,6 +90,8 @@
     },
     {
         "id": 9,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],
         "title": "Aenean vel massa quis mauris",
         "date": "1908 - 1998",
         "exemplar": "53",
@@ -89,6 +101,8 @@
     },
     {
         "id": 10,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],
         "title": "Lorem ipsum dolor sit amet",
         "date": "1908 - 1998",
         "exemplar": "20",
@@ -98,6 +112,8 @@
     },
     {
         "id": 11,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],
         "title": "Consectetuer adipiscing elit",
         "date": "1908 - 1998",
         "exemplar": "0",
@@ -107,6 +123,8 @@
     },
     {
         "id": 12,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],
         "title": "Aenean vel massa quis mauris",
         "date": "1908 - 1998",
         "exemplar": "53",
@@ -116,6 +134,8 @@
     },
     {
         "id": 13,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],
         "title": "Lorem ipsum dolor sit amet",
         "date": "11908 - 1998",
         "exemplar": "20",
@@ -125,6 +145,8 @@
     },
     {
         "id": 14,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],      
         "title": "Consectetuer adipiscing elit",
         "date": "1908 - 1998",
         "exemplar": "23",
@@ -134,6 +156,8 @@
     },
     {
         "id": 15,
+        "meta_nazev": "Lidové noviny",
+        "prilohy": [],
         "title": "Aenean vel massa quis mauris",
         "date": "1908 - 1998",
         "exemplar": "53",

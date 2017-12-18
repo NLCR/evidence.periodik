@@ -48,11 +48,11 @@
         padding: 0.3rem 0.5rem;
       }
       
-      &.app-calendar-day-special {
+      &[class*="app-calendar-day-special"] {
         .app-calendar-day-content-title {
           @extend .app-cursor-pointer;
           
-          span {
+          > span {
             display: block;
             border-radius: 50%;
             width: 22px;
@@ -64,8 +64,8 @@
       }
       
       // set day special
-      &.app-calendar-day-holiday {@include setSpecialDay($app-grey-l-5, $app-day-holiday, $app-color-white);}
-      &.app-calendar-day-event {@include setSpecialDay($app-grey-l-5, $app-day-event, $app-color-white);}
+      &.app-calendar-day-special-holiday {@include setSpecialDay($app-day-special-bg, $app-day-holiday-circle, $app-color-white);}
+      &.app-calendar-day-special-event {@include setSpecialDay($app-day-special-bg, $app-day-event-circle, $app-color-white);}
 
       .app-calendar-day-content-item {
         @extend .app-cursor-pointer;
