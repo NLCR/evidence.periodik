@@ -38,6 +38,7 @@ import { ToolbarPaginationResultComponent } from './components/toolbar/toolbar-p
 import { ToolbarPaginationCalendarComponent } from './components/toolbar/toolbar-pagination-calendar/toolbar-pagination-calendar.component';
 import { ToolbarNavViewsComponent } from './components/toolbar/toolbar-nav-views/toolbar-nav-views.component';
 import { ToolbarCountComponent } from './components/toolbar/toolbar-count/toolbar-count.component';
+import { CalendarListItemComponent } from './components/calendar/calendar-list/calendar-list-item/calendar-list-item.component';
 
 registerLocaleData(localeCs, 'cs');
 
@@ -72,7 +73,8 @@ export function createTranslateLoader(http: HttpClient) {
     ToolbarPaginationResultComponent,
     ToolbarPaginationCalendarComponent,
     ToolbarNavViewsComponent,
-    ToolbarCountComponent
+    ToolbarCountComponent,
+    CalendarListItemComponent
   ],
   imports: [
     BrowserModule,

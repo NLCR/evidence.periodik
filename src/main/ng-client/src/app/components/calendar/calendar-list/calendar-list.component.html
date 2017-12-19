@@ -1,3 +1,1 @@
-<p>
-  calendar-list works!
-</p>
+<app-calendar-list-item *ngFor="let day of days" [day]="day" [current]="state.currentDay" [issues]="issuesOfDay(day)" [special]="getSpecial(day)"></app-calendar-list-item>

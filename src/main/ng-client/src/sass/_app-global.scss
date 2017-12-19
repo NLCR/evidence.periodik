@@ -70,3 +70,8 @@ button:not(.btn-floating) {
     } 
   }
 }
+
+.app-pipe {
+  @include set-border(right, 1, solid, $app-grey-l-2);
+  margin: 0 10px;
+}

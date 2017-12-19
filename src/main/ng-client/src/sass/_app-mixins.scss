@@ -67,10 +67,13 @@
 // set special day
 @mixin setSpecialDay($bgDay, $bgCircle, $color) {
   background-color: $bgDay;
-        
-  span {
-    background-color: $bgCircle;
-    color: $color; 
+
+  .app-calendar-day-content-title,
+  .app-calendar-list-item-title {
+    span {
+      background-color: $bgCircle;
+      color: $color; 
+    } 
   }
 }
 
