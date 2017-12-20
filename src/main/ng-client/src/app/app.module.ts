@@ -4,7 +4,6 @@ import { DatePipe } from '@angular/common';
 import { registerLocaleData } from '@angular/common';
 import localeCs from '@angular/common/locales/cs';
 import { FormsModule } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
 import { HttpClientModule, HttpClient} from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -39,6 +38,7 @@ import { ToolbarPaginationCalendarComponent } from './components/toolbar/toolbar
 import { ToolbarNavViewsComponent } from './components/toolbar/toolbar-nav-views/toolbar-nav-views.component';
 import { ToolbarCountComponent } from './components/toolbar/toolbar-count/toolbar-count.component';
 import { CalendarListItemComponent } from './components/calendar/calendar-list/calendar-list-item/calendar-list-item.component';
+import { CloneDialogComponent } from './components/clone-dialog/clone-dialog.component';
 
 registerLocaleData(localeCs, 'cs');
 
@@ -74,12 +74,12 @@ export function createTranslateLoader(http: HttpClient) {
     ToolbarPaginationCalendarComponent,
     ToolbarNavViewsComponent,
     ToolbarCountComponent,
-    CalendarListItemComponent
+    CalendarListItemComponent,
+    CloneDialogComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {
