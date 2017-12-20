@@ -9,6 +9,8 @@ import {Issue} from '../../models/issue';
 import {Titul} from '../../models/titul';
 import {StavIssue} from '../../models/stav-issue.enum';
 import {StateIssue} from '../../models/state-issue.enum';
+import {MzModalService} from 'ng2-materialize';
+import {CloneDialogComponent} from '../clone-dialog/clone-dialog.component';
 
 @Component({
     selector: 'app-issue',
@@ -28,6 +30,7 @@ export class IssueComponent implements OnInit {
     };
 
     constructor(
+    private modalService: MzModalService,
         private route: ActivatedRoute,
         public state: AppState,
         private service: AppService) {
@@ -78,8 +81,8 @@ export class IssueComponent implements OnInit {
         }
     }
 
-    clone() {
-
+    openCloneDialog() {
+        this.modalService.open(CloneDialogComponent);
     }
 
 }

@@ -49,6 +49,12 @@ export class AppComponent {
         this.router.events.subscribe(val => {
             if (val instanceof NavigationEnd) {
                 this.state.activePage = val.url;
+                
+                if(this.state.activePage.indexOf('/calendar') > -1){
+                    this.state.calendarView = this.state.activePage.substring(this.state.activePage.lastIndexOf('/')+1);
+                }
+      
+      
             }
         });
     }

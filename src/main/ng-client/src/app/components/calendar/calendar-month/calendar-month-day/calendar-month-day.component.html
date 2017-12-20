@@ -9,10 +9,10 @@
     {{day | date: 'dd'}}
   </div>
   <div class="app-calendar-day-content-menu right">
-    <a id="{{day | date: 'dd'}}">
+    <a id="{{day | date: 'MMdd'}}">
        <i mz-icon-mdi [icon]="'dots-vertical'"></i>
     </a>
-    <mz-dropdown [id]="'calendar-menu'" [constrainWidth]="false" [dropdownButtonId]="day | date: 'dd'">
+    <mz-dropdown [id]="'calendar-menu'" [constrainWidth]="false" [dropdownButtonId]="day | date: 'MMdd'">
       <mz-dropdown-item><a href="javascript:void(0)">Přidat mutaci</a></mz-dropdown-item>
       <mz-dropdown-item><a href="javascript:void(0)">Přiřadit pozadí</a></mz-dropdown-item>
       <mz-dropdown-item><a href="javascript:void(0)">Smazat všechny mutace</a></mz-dropdown-item>
