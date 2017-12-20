@@ -3,7 +3,6 @@ import {Component, OnInit} from '@angular/core';
 import {StavIssue} from './models/stav-issue.enum';
 
 import {Title} from '@angular/platform-browser';
-import {Http, URLSearchParams} from '@angular/http';
 import {ActivatedRoute, Router, Params, NavigationEnd, NavigationStart} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs/Rx';
@@ -11,6 +10,7 @@ import {Subscription} from 'rxjs/Subscription';
 
 import {AppService} from './app.service';
 import {AppState} from './app.state';
+import {HttpClient} from '@angular/common/http';
 
 
 @Component({
@@ -31,7 +31,7 @@ export class AppComponent {
         private service: AppService,
         private translate: TranslateService,
         private titleService: Title,
-        private http: Http,
+        private http: HttpClient,
         private route: ActivatedRoute,
         private router: Router) {}
 
@@ -89,7 +89,7 @@ export class AppComponent {
 
     getConfig() {
         return this.http.get("assets/config.json").map(res => {
-            let cfg = res.json();
+            let cfg = res;
             this.state.config = cfg;
             this.service.getSpecialDays();
             var userLang = navigator.language.split('-')[0]; // use navigator lang if available

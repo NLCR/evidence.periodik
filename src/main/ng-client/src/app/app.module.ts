@@ -39,6 +39,7 @@ import { ToolbarNavViewsComponent } from './components/toolbar/toolbar-nav-views
 import { ToolbarCountComponent } from './components/toolbar/toolbar-count/toolbar-count.component';
 import { CalendarListItemComponent } from './components/calendar/calendar-list/calendar-list-item/calendar-list-item.component';
 import { CloneDialogComponent } from './components/clone-dialog/clone-dialog.component';
+import {HttpModule} from '@angular/http';
 
 registerLocaleData(localeCs, 'cs');
 
@@ -77,9 +78,11 @@ export function createTranslateLoader(http: HttpClient) {
     CalendarListItemComponent,
     CloneDialogComponent
   ],
+  entryComponents: [CloneDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,
+    HttpModule,
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {

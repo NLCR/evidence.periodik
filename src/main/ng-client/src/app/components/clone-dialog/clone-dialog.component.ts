@@ -6,7 +6,7 @@ import { MzBaseModal, MzModalComponent } from 'ng2-materialize';
   templateUrl: './clone-dialog.component.html',
   styleUrls: ['./clone-dialog.component.scss']
 })
-export class CloneDialogComponent  extends MzBaseModal {
+export class CloneDialogComponent extends MzBaseModal {
 
 
 }
