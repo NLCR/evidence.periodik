@@ -5,7 +5,7 @@
   },
   "periodicity":{
         "P1W": "Tydennik",
-        "P1D": "Dennik",
+        "P1D": "Deník",
         "P1Y": "Rocnik",
         "P1M": "Mesicnik",
         "P6M": "Dvakrat za rok"

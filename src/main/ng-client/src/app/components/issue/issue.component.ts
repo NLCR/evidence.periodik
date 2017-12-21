@@ -82,7 +82,8 @@ export class IssueComponent implements OnInit {
     }
 
     openCloneDialog() {
-        this.modalService.open(CloneDialogComponent);
+        let periods = Object.keys(this.state.config['periodicity']);
+        this.modalService.open(CloneDialogComponent, {"periods": periods, "state": this.state});
     }
 
 }

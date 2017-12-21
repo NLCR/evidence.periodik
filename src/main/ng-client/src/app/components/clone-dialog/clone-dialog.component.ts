@@ -8,5 +8,11 @@ import { MzBaseModal, MzModalComponent } from 'ng2-materialize';
 })
 export class CloneDialogComponent extends MzBaseModal {
 
-
+    periods: string[] = [];
+    state: any;
+    
+    
+//    ngOnInit(){
+//        this.periods = Object.keys(this.state.cfg.periodicity)
+//    }
 }
