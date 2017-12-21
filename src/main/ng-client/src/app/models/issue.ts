@@ -10,6 +10,7 @@ export class Issue {
   vydani: string = ""; //vydání	text	název vydání tak jak je uveden na titulní straně
   mutace: string = ""; //mutace	text	název mutace
   datum_vydani: Date = new Date(); //datum vydání	datum	
+  periodicita: string;
   cas_vydani: number = 0; //čas vydání	čas	generuje se (hlavně důležité v případě více vydání téže mutace v jednom dni) na základě názvu vydání. Bude existovat tabulka, která každému názvu vydání přiřadí čas kvůli řazení
   pocet_stran: number = 0; //počet stran	celé číslo	předpokládám, že vždy sudé. 0 může znamenat že nevyšlo, -1 že není znám počet stran
   rocnik: string = ""; //ročník	text	jak je uveden na exempláři

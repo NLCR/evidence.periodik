@@ -11,6 +11,7 @@ import {StavIssue} from '../../models/stav-issue.enum';
 import {StateIssue} from '../../models/state-issue.enum';
 import {MzModalService} from 'ng2-materialize';
 import {CloneDialogComponent} from '../clone-dialog/clone-dialog.component';
+import {CloneParams} from '../../models/clone-params';
 
 @Component({
     selector: 'app-issue',
@@ -22,6 +23,7 @@ export class IssueComponent implements OnInit {
 
     stavy = [];
     states = [];
+    periods = [];
 
     issue: Issue = new Issue();
     public options: Pickadate.DateOptions = {
@@ -43,8 +45,8 @@ export class IssueComponent implements OnInit {
     }
 
     setData(res: any[]) {
-        console.log(res);
         if (res.length > 0) {
+            Object.keys(this.state.config['periodicity']).map(k => {this.periods.push({key: k, value: this.state.config['periodicity'][k]});});
             //this.issue = res[0];
             this.state.currentIssue = res[0];
             console.log(this.state.currentIssue.exemplare);
@@ -82,8 +84,12 @@ export class IssueComponent implements OnInit {
     }
 
     openCloneDialog() {
-        let periods = Object.keys(this.state.config['periodicity']);
-        this.modalService.open(CloneDialogComponent, {"periods": periods, "state": this.state});
+        let cloneParams = new CloneParams();
+        cloneParams.cloneOd = this.state.currentIssue.datum_vydani;
+        cloneParams.cloneDo = this.state.currentIssue.datum_vydani;
+        cloneParams.periodicity = this.state.currentIssue.periodicita;
+        console.log(cloneParams);
+        this.modalService.open(CloneDialogComponent, {"periods": this.periods, "state": this.state, "params": cloneParams});
     }
 
 }
