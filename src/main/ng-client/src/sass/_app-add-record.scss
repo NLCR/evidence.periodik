@@ -2,9 +2,17 @@
 
 .app-add-record-wrapper {
   @extend .app-full-wrapper;
-  @extend .app-container;
+  padding: $app-container 0.5rem;
   
-  h5 {
-    margin-bottom: 1.25rem;
+  .row {
+    .col {
+      &:nth-child(1) {
+        padding-right: $app-container;
+      }
+      
+      &:nth-child(2) {
+        padding-left: $app-container;
+      }
+    }
   }
 }

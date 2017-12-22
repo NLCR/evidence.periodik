@@ -2,9 +2,5 @@
   <app-navbar></app-navbar>
 </header>
 <main>
-  <app-toolbar *ngIf="state.activePage != '/' && state.activePage != '/home' && state.activePage != '/login' && state.activePage != '/add-record'"></app-toolbar>
-  <section>
-    <app-facet *ngIf="showToolbarAndFacets()"></app-facet>
-    <router-outlet></router-outlet>
-  </section>
+  <router-outlet></router-outlet>
 </main>

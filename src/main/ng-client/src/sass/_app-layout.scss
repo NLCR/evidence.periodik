@@ -16,67 +16,67 @@ body {
 app-root {
   main {
     width: 100%;
-    height: calc(100% - (#{$navbar-height} + #{$app-toolbar-height}));
+    height: calc(100% - #{$navbar-height});
     
     app-home {
+      display: block;
       width: 100%;
-      height: calc(100% + #{$app-toolbar-height});
+      height: 100%;
       
       @import "app-home";
     }
     
-     app-add-record {
+    app-login {
+      display: block;
       width: 100%;
-      height: calc(100% + #{$app-toolbar-height});
+      height: 100%;
+      
+      @import "app-login";
+    }
+    
+    app-add-record {
+      display: block;
+      width: 100%;
+      height: calc(100% - #{$app-toolbar-height});
       
       @import "app-add-record";
     }
     
     app-issue {
+      display: block;
       width: 100%;
-      height: calc(100% + #{$app-toolbar-height});
+      height: calc(100% - #{$app-toolbar-height});
       
       @import "app-issue";
     }
     
-    app-login {
+    app-result {
+      display: block;
       width: 100%;
-      height: calc(100% + #{$app-toolbar-height});
-      
-      @import "app-login";
+      height: calc(100% - #{$app-toolbar-height});
+
+      @import "app-result";
+    }
+    
+    app-calendar {
+      display: block;
+      width: 100%;
+      height: calc(100% - #{$app-toolbar-height});
+
+      @import "app-calendar";
     }
     
     app-toolbar {
-      //height: $app-toolbar-height;
-      //line-height: $app-toolbar-height;
-      
       @import "app-toolbar";
     }
     
-    & > section {
-      display: flex;
+    app-facet {
+      display: block;
+      width: $app-facet-width;
       height: 100%;
-      
-      app-facet {
-        order: 1;
-        width: $app-facet-width;
-              
-        @import "app-facet";
-      }
+      float: left;
 
-      app-calendar {
-        order: 2;
-        width: 100%;
-        
-        @import "app-calendar";
-      }
-      
-      app-result {
-        order: 2;
-        width: 100%;
-        
-        @import "app-result";
-      }
+      @import "app-facet";
     }
   }  
 }

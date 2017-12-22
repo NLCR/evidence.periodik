@@ -1,4 +1,43 @@
 {
-    "q_placeholder": "Vyhledávejte slova, články, rubriky, autory...",
-    "dummy": ""
+  "app": {
+    "title": "Evidence periodik",
+    "title1": "Evidence",
+    "title2": "periodik",
+    "desc": "systém pro vyhledávání v evidenci periodik"
+  },
+  "navbar": {
+    "home": "Domovská stánka",
+    "add_record": "Vložit záznam",
+    "login": "Přihlášení"
+  },
+  "searchbox": {
+    "placeholder": "Hledání v evidenci periodik"
+  },
+  "record": {
+    "meta_title": "Meta název",
+    "name_title_page": "Název na titulní straně",
+    "subname_title_page": "Podnázev na titulní straně",
+    "publication": "Vydání",
+    "mutation": "Mutace",
+    "date_publication": "Datum vydání",
+    "time_publication": {
+      "placeholder": "Čas vydání",
+      "morning": "Ranní",
+      "afternoon": "Odpolední",
+      "evening": "Večerní"
+    },
+    "pages_count": "Počet stran",
+    "state": "Stav",
+    "year": "Ročník",
+    "number": "Číslo",
+    "second_number": "Druhé číslo",
+    "state_desc": "Stav - popis",
+    "ownership": "Vlastnictví",
+    "barcode": "Čárový kód",
+    "signatura": "Signatura",
+    "id_bib_record": "Id bib záznamu",
+    "uuid_number": "Uuid čísla",
+    "uuid_title": "Uuid titulu",
+    "url_kramerius": "URL Krameria"
+  }
 }

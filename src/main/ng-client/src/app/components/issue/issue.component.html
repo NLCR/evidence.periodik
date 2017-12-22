@@ -1,119 +1,106 @@
+<app-toolbar></app-toolbar>
+
 <div class="app-issue-wrapper grey lighten-5">
-  <h5>Issue: {{state.currentTitul.meta_nazev}} {{state.currentIssue.datum_vydani | date: "dd/MM/yyyy"}}</h5>
   <div class="row">
-    <div class="col s12 app-clean-pd">
-      <div class="divider"></div>
+    <div class="col s4">
+        <mz-input-container>
+          <input mz-input [label]="'Meta název'" id="meta_nazev" name="meta_nazev" type="text" [(ngModel)]="state.currentTitul.meta_nazev">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Název na titulní straně'" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Podnázev na titulní straně'" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Vydání'" id="vydani" name="vydani" [(ngModel)]="state.currentIssue.vydani" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Mutace'" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace" type="text">
+        </mz-input-container>
+        <mz-input-container>
+          <input mz-input [label]="'Periodicita'" id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita" type="text">
+        </mz-input-container>
+        <mz-datepicker-container>
+          <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
+          <input mz-datepicker
+                 [options]="options"
+                 [label]="'Datum vydání'"
+                 [(ngModel)]="state.currentIssue.datum_vydani"
+                 id="datum_vydani" name="datum_vydani"
+                 type="text" />
+        </mz-datepicker-container>
+        <mz-select-container>
+          <select mz-select id="cas_vydani" name="cas_vydani" [placeholder]="'Čas vydání'" [(ngModel)]="state.currentIssue.cas_vydani">
+            <option>Ranní</option>
+            <option>Odpolední</option>
+            <option>Večerní</option>
+          </select>
+        </mz-select-container>
     </div><!--/.col -->
-  </div><!--/.row -->
-  <div class="row">
-    <div class="col s4 app-clean-pd">
-      <form (ngSubmit)="onSubmit()" #issueForm="ngForm">
-        <section>
-          <mz-input-container>
-            <input mz-input [label]="'Meta název'" id="meta_nazev" name="meta_nazev" type="text" [(ngModel)]="state.currentTitul.meta_nazev">
-          </mz-input-container>
-          <mz-input-container>
-            <input mz-input [label]="'Název na titulní straně'" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
-          </mz-input-container>
-          <mz-input-container>
-            <input mz-input [label]="'Podnázev na titulní straně'" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev" type="text">
-          </mz-input-container>
-          <mz-input-container>
-            <input mz-input [label]="'Vydání'" id="vydani" name="vydani" [(ngModel)]="state.currentIssue.vydani" type="text">
-          </mz-input-container>
-          <mz-input-container>
-            <input mz-input [label]="'Mutace'" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace" type="text">
-          </mz-input-container>
-          <mz-input-container>
-            <input mz-input [label]="'Periodicita'" id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita" type="text">
-          </mz-input-container>
-          <mz-datepicker-container>
-            <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
-            <input mz-datepicker
-                   [options]="options"
-                   [label]="'Datum vydání'"
-                   [(ngModel)]="state.currentIssue.datum_vydani"
-                   id="datum_vydani" name="datum_vydani"
-                   type="text" />
-          </mz-datepicker-container>
-          <mz-select-container>
-            <select mz-select id="cas_vydani" name="cas_vydani" [placeholder]="'Čas vydání'" [(ngModel)]="state.currentIssue.cas_vydani">
-              <option>Ranní</option>
-              <option>Odpolední</option>
-              <option>Večerní</option>
-            </select>
-          </mz-select-container>
-          <mz-input-container>
-            <input mz-input [label]="'Počet stran'" id="pocet_stran" name="pocet_stran" [(ngModel)]="state.currentIssue.pocet_stran" type="text">
-          </mz-input-container>
-          <mz-input-container>
-            <input mz-input [label]="'Ročník'" id="rocnik" name="rocnik" [(ngModel)]="state.currentIssue.rocnik" type="text">
-          </mz-input-container>
-          <mz-input-container>
-            <input mz-input [label]="'Číslo'" id="cislo" name="cislo" [(ngModel)]="state.currentIssue.cislo" type="text">
-          </mz-input-container>
-          <mz-input-container>
-            <input mz-input [label]="'Druhé číslo'" id="druhe_cislo" name="druhe_cislo" [(ngModel)]="state.currentIssue.druhe_cislo" type="text">
-          </mz-input-container>
-        </section>
-        
-        <section class="app-exemplar-wrapper clearfix">
-          <button mz-button [float]="true" mz-tooltip [tooltip]="'Přidat exemplář'" [position]="'top'">
-            <i mz-icon-mdi [icon]="'plus'"></i>
-          </button>
-          <h5>Počet exemplářů: {{state.currentIssue.exemplare.length}}</h5>
-          <mz-collapsible [mode]="'expandable'" [onClose]="closeFunctionCallback">
-            <mz-collapsible-item  *ngFor="let ex of state.currentIssue.exemplare;let idx= index" [active]="false">
-              <mz-collapsible-item-header>
-                <span>
-                  Exemplář číslo {{idx + 1}}
-                </span>
-                <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg right'"></i>
-                <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg right'"></i>
-              </mz-collapsible-item-header>
-              <mz-collapsible-item-body>
-                <mz-select-container>
-                  <select mz-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav">
-                    <option *ngFor="let stav of stavy" [value]="stav.key">{{stav.value}}</option>
-                  </select>
-                </mz-select-container>
-                <mz-input-container>
-                  <input mz-input [label]="'Stav - popis'" [id]="'stav_popis'+idx" [name]="'stav_popis'+idx" [(ngModel)]="ex.stav_popis" type="text">
-                </mz-input-container>
-                <mz-input-container>
-                  <input mz-input [label]="'Vlastnictví'" [id]="'vlastnik'+idx" [name]="'vlastnik'+idx" [(ngModel)]="ex.vlastnik" type="text">
-                </mz-input-container>
-                <mz-input-container>
-                  <input mz-input [label]="'Čárový kód'" [id]="'carovy_kod'+idx" [name]="'carovy_kod'+idx" [(ngModel)]="ex.carovy_kod" type="text">
-                </mz-input-container>
-                <mz-input-container>
-                  <input mz-input [label]="'Signatura'" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura" type="text">
-                </mz-input-container>
-                <button mz-button>Smazat exemplář</button>
-              </mz-collapsible-item-body>
-            </mz-collapsible-item>
-          </mz-collapsible>
-          <div class="clearfix"></div>
-        </section>
-        
-        <section>
-          <mz-input-container>
-            <input mz-input [label]="'Id bib záznamu'" id="id_bib_zaznamu" name="id_bib_zaznamu" [(ngModel)]="state.currentIssue.id_bib_zaznamu" type="text">
-          </mz-input-container>
-          <mz-input-container>
-            <input mz-input [label]="'Uuid čísla'" id="uuid_cisla" name="uuid_cisla" [(ngModel)]="state.currentIssue.uuid_cisla" type="text">
-          </mz-input-container>
-          <mz-input-container>
-            <input mz-input [label]="'URL krameria'" id="url_krameria" name="url_krameria" [(ngModel)]="state.currentIssue.url_krameria" type="text">
-          </mz-input-container>
-        </section>
-        
-        <section>
-          <button mz-button>Uložit</button>
-          <button (click)="openCloneDialog()" class="btn btn-success">Klonovat</button>
-          <button mz-button>Smazat</button>
-        </section>
-      </form>
+    
+    <div class="col s4">
+      <mz-input-container>
+        <input mz-input [label]="'Počet stran'" id="pocet_stran" name="pocet_stran" [(ngModel)]="state.currentIssue.pocet_stran" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'Ročník'" id="rocnik" name="rocnik" [(ngModel)]="state.currentIssue.rocnik" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'Číslo'" id="cislo" name="cislo" [(ngModel)]="state.currentIssue.cislo" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'Druhé číslo'" id="druhe_cislo" name="druhe_cislo" [(ngModel)]="state.currentIssue.druhe_cislo" type="text">
+      </mz-input-container>
+
+      <mz-input-container>
+        <input mz-input [label]="'Id bib záznamu'" id="id_bib_zaznamu" name="id_bib_zaznamu" [(ngModel)]="state.currentIssue.id_bib_zaznamu" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'Uuid čísla'" id="uuid_cisla" name="uuid_cisla" [(ngModel)]="state.currentIssue.uuid_cisla" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'URL krameria'" id="url_krameria" name="url_krameria" [(ngModel)]="state.currentIssue.url_krameria" type="text">
+      </mz-input-container>
+    </div><!--/.col -->
+    
+    <div class="col s4 app-exemplar-wrapper">
+        <button mz-button [float]="true" mz-tooltip [tooltip]="'Přidat exemplář'" [position]="'top'">
+          <i mz-icon-mdi [icon]="'plus'"></i>
+        </button>
+        <h5>Počet exemplářů: {{state.currentIssue.exemplare.length}}</h5>
+        <mz-collapsible [mode]="'expandable'" [onClose]="closeFunctionCallback">
+          <mz-collapsible-item  *ngFor="let ex of state.currentIssue.exemplare;let idx= index" [active]="false">
+            <mz-collapsible-item-header>
+              <span>
+                Exemplář číslo {{idx + 1}}
+              </span>
+              <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg right'"></i>
+              <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg right'"></i>
+            </mz-collapsible-item-header>
+            <mz-collapsible-item-body>
+              <mz-select-container>
+                <select mz-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav">
+                  <option *ngFor="let stav of stavy" [value]="stav.key">{{stav.value}}</option>
+                </select>
+              </mz-select-container>
+              <mz-input-container>
+                <input mz-input [label]="'Stav - popis'" [id]="'stav_popis'+idx" [name]="'stav_popis'+idx" [(ngModel)]="ex.stav_popis" type="text">
+              </mz-input-container>
+              <mz-input-container>
+                <input mz-input [label]="'Vlastnictví'" [id]="'vlastnik'+idx" [name]="'vlastnik'+idx" [(ngModel)]="ex.vlastnik" type="text">
+              </mz-input-container>
+              <mz-input-container>
+                <input mz-input [label]="'Čárový kód'" [id]="'carovy_kod'+idx" [name]="'carovy_kod'+idx" [(ngModel)]="ex.carovy_kod" type="text">
+              </mz-input-container>
+              <mz-input-container>
+                <input mz-input [label]="'Signatura'" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura" type="text">
+              </mz-input-container>
+              <button mz-button>Smazat exemplář</button>
+            </mz-collapsible-item-body>
+          </mz-collapsible-item>
+        </mz-collapsible>
+        <div class="clearfix"></div>
     </div><!--/.col -->
   </div><!--/row -->
 </div><!--/.app-add-record-wrapper -->

@@ -3,7 +3,8 @@
 app-navbar {
   nav {
     @extend .z-depth-0;
-    padding-left: 1.5rem;
+    padding-left: $app-container;
+    padding-right: 0.75rem;
     
     .nav-wrapper {
       .brand-logo {

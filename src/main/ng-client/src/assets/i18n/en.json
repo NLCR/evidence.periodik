@@ -1,4 +1,45 @@
 {
-    "q_placeholder": "Search keywords, articles, genres, authors...",
-    "dummy": ""
+  "app": {
+    "title": "Registration of periodicals",
+    "title1": "Registration",
+    "title2": "of periodicals",
+    "desc": "system for searching in the registration of periodicals"
+  },
+  "navbar": {
+    "home": "Home",
+    "add_record": "Add record",
+    "login": "Login"
+  },
+  "searchbox": {
+    "placeholder": "Search in registration of the periodicals"
+  },
+  "q_placeholder": "Search keywords, articles, genres, authors...",
+  "dummy": "",
+  "record": {
+    "meta_title": "Meta title",
+    "name_title_page": "Name on title page",
+    "subname_title_page": "Subname on title page",
+    "publication": "Publication",
+    "mutation": "Mutation",
+    "date_publication": "Date of publication",
+    "time_publication": {
+      "placeholder": "Time of publication",
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "evening": "Evening"
+    },
+    "pages_count": "Pages count",
+    "state": "State",
+    "year": "Year",
+    "number": "Number",
+    "second_number": "Second number",
+    "state_desc": "State - description",
+    "ownership": "Ownership",
+    "barcode": "Barcode",
+    "signatura": "Signature",
+    "id_bib_record": "Id bib record",
+    "uuid_number": "Uuid number",
+    "uuid_title": "Uuid title",
+    "url_kramerius": "URL of Kramerius"
+  }
 }

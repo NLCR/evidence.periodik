@@ -1,19 +1,54 @@
-<div class="app-toolbar-wrapper valign-wrapper" *ngIf="showCalendar() || showResult()">
-  <div class="app-col-count">
+<div class="app-toolbar-wrapper app-toolbar-calendar valign-wrapper" *ngIf="showCalendar()">
+  <div class="app-row-count">
     <app-toolbar-count></app-toolbar-count>
-  </div><!--/.app-col-count -->
-  <div class="app-col-nav row app-clean-mg">
+  </div><!--/.app-row-count -->
+  <div class="app-row-nav row app-clean-mg">
     <div class="col s3 app-clean-pd">
-      <app-toolbar-pagination-calendar *ngIf="showCalendar()"></app-toolbar-pagination-calendar>
-      <app-toolbar-pagination-result *ngIf="showResult()"></app-toolbar-pagination-result>
+      <app-toolbar-pagination-calendar></app-toolbar-pagination-calendar>
     </div><!--/.col -->
     <div class="col s6 center-align">
-      <span *ngIf="showCalendar()">
-        {{state.currentTitul.meta_nazev}}
-      </span>
+      <span>{{state.currentTitul.meta_nazev}}</span>
     </div><!--/.col -->
     <div class="col s3 app-clean-pd right-align">
-      <app-toolbar-nav-views *ngIf="showCalendar()"></app-toolbar-nav-views>
+      <app-toolbar-nav-views></app-toolbar-nav-views>
     </div><!--/.col -->
-  </div><!--/.app-col-nav -->
+  </div><!--/.app-row-nav -->
+</div><!--/.app-toolbar-wrapper-calendar -->
+
+
+<div class="app-toolbar-wrapper app-toolbar-result valign-wrapper" *ngIf="showResult()">
+  <div class="app-row-count">
+    <app-toolbar-count></app-toolbar-count>
+  </div><!--/.app-row-count -->
+  <div class="app-row-nav row app-clean-mg">
+    <div class="col s12 app-clean-pd">
+      <app-toolbar-pagination-result></app-toolbar-pagination-result>
+    </div><!--/.col -->
+  </div><!--/.app-row-nav -->
+</div><!--/.app-toolbar-wrapper -->
+
+
+<div class="app-toolbar-wrapper app-toolbar-issue" *ngIf="showIssue()">
+  <div class="row">
+    <div class="col s4">
+      <span>Issue: {{state.currentTitul.meta_nazev}} {{state.currentIssue.datum_vydani | date: "dd/MM/yyyy"}}</span>
+    </div><!--/.col -->
+    <div class="col s8 right-align">
+      <button mz-button>Uložit</button>
+      <button mz-button (click)="openCloneDialog()">Klonovat</button>
+      <button mz-button>Smazat</button>
+    </div><!--/.col -->
+  </div><!--/.row -->
+</div><!--/.app-toolbar-wrapper -->
+
+
+<div class="app-toolbar-wrapper app-toolbar-issue" *ngIf="showAddRecord()">
+  <div class="row">
+    <div class="col s4">
+      <span>Vložit záznam</span>
+    </div><!--/.col -->
+    <div class="col s8 right-align">
+      <button mz-button>Uložit</button>
+    </div><!--/.col -->
+  </div><!--/.row -->
 </div><!--/.app-toolbar-wrapper -->

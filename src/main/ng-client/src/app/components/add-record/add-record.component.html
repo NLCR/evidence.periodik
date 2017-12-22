@@ -1,86 +1,77 @@
+<app-toolbar></app-toolbar>
+
 <div class="app-add-record-wrapper grey lighten-5">
-  <h5>Vložit záznam</h5>
   <div class="row">
-    <div class="col s12 app-clean-pd">
-      <div class="divider"></div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col s4 app-clean-pd">
-      <form>
-        <mz-input-container>
-          <input mz-input [label]="'Meta název'" id="meta_nazev" name="meta_nazev" type="text" [(ngModel)]="state.currentTitul.meta_nazev">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Název na titulní straně'" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Podnázev na titulní straně'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Vydání'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Mutace'" id="" type="text">
-        </mz-input-container>
-        <mz-datepicker-container>
-          <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
-          <input mz-datepicker
-            [label]="'Datum vydání'"
-            [ngModel]
-            id=""
-            type="tel" />
-        </mz-datepicker-container>
-        <mz-select-container>
-          <select mz-select id="" [placeholder]="'Čas vydání'">
-            <option>Ranní</option>
-            <option>Odpolední</option>
-            <option>Večerní</option>
-          </select>
-        </mz-select-container>
-        <mz-input-container>
-          <input mz-input [label]="'Počet stran'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Stav'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Ročník'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Číslo'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Druhé číslo'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Stav - popis'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Vlastnictví'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Čárový kód'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Signatura'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Id bib záznamu'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Uuid čísla'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Uuid titulu'" id="" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'URL krameria'" id="" type="text">
-        </mz-input-container>
-        <button mz-button>
-          Uložit
-        </button>
-      </form>
-    </div>
-  </div>
-</div>
+    <div class="col s6">
+      <mz-input-container>
+        <input mz-input [label]="'record.meta_title' | translate" id="meta_nazev" name="meta_nazev" type="text" [(ngModel)]="state.currentTitul.meta_nazev">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.name_title_page' | translate" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.subname_title_page' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.publication' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.mutation' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-datepicker-container>
+        <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
+        <input mz-datepicker [label]="'record.date_publication' | translate" [ngModel] id="" type="tel" />
+      </mz-datepicker-container>
+      <mz-select-container>
+        <select mz-select id="" [placeholder]="'record.time_publication.placeholder' | translate">
+          <option>{{ 'record.time_publication.morning' | translate }}</option>
+          <option>{{ 'record.time_publication.afternoon' | translate }}</option>
+          <option>{{ 'record.time_publication.evening' | translate }}</option>
+        </select>
+        <div class="clearfix"></div>
+      </mz-select-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.pages_count' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.state' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.year' | translate" id="" type="text">
+      </mz-input-container>
+    </div><!--/.col -->
+    
+    <div class="col s6">
+      <mz-input-container>
+        <input mz-input [label]="'record.number' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.second_number' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.state_desc' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.ownership' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.barcode' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.signatura' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.id_bib_record' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.uuid_number' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.uuid_title' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.url_kramerius' | translate" id="" type="text">
+      </mz-input-container>
+    </div><!--/.col -->
+  </div><!--/.row -->
+</div><!--/.app-add-record-wrapper -->

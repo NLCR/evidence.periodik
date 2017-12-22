@@ -2,7 +2,7 @@
 
 .app-issue-wrapper {
   @extend .app-full-wrapper;
-  @extend .app-container;
+  padding: $app-container 0.5rem;
   
   h5 {
     margin-bottom: $app-container;
@@ -10,57 +10,63 @@
   
   .row {
     .col {
-      form {
-        section {
-          margin-bottom: $app-container;
-          
-          &.app-exemplar-wrapper {
-            position: relative;
-            
-            h5 {
-              margin-top: 0.5rem !important;
-            }
-            
-            .btn-floating {
-              position: absolute;
-              top: 0;
-              right: 0;
-            }
-          }
-          
-          .collapsible {
-            .collapsible-header {
-              position: relative;
-              min-height: 1.6rem;
-              line-height: 1.6rem;
-              @extend .app-font-bold;
-              padding: 1rem $app-container;
+      &.app-exemplar-wrapper {
+        position: relative;
 
-              mz-collapsible-item-header {
-                width: 100%;
-              }
-              
-             .mdi-chevron-down {
-                display: none;
-              }
-              .mdi-chevron-left {
-                display: block;
-              }
-              &.active {
-                .mdi-chevron-down {
-                  display: block;
-                }
-                .mdi-chevron-left {
-                  display: none;
-                }
-              } 
-            }
-
-            .collapsible-body {
-              padding: 0 $app-container $app-container $app-container;
-            }
-          }     
+        h5 {
+          margin-top: 0.5rem !important;
         }
+
+        .btn-floating {
+          position: absolute;
+          top: 0;
+          right: 0.75rem;
+        }
+      }
+
+      .collapsible {
+        .collapsible-header {
+          position: relative;
+          min-height: 1.6rem;
+          line-height: 1.6rem;
+          @extend .app-font-bold;
+          padding: 1rem $app-container;
+
+          mz-collapsible-item-header {
+            width: 100%;
+          }
+
+         .mdi-chevron-down {
+            display: none;
+          }
+          .mdi-chevron-left {
+            display: block;
+          }
+          &.active {
+            .mdi-chevron-down {
+              display: block;
+            }
+            .mdi-chevron-left {
+              display: none;
+            }
+          } 
+        }
+
+        .collapsible-body {
+          padding: 0 $app-container $app-container $app-container;
+        }
+      }     
+      
+      &:nth-child(1) {
+        padding-right: $app-container !important;
+      }
+      
+      &:nth-child(2) {
+        padding: 0 $app-container !important;
+      }
+      
+      &:nth-child(3) {
+        padding-left: $app-container !important;
       }
     }
   }

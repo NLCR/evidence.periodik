@@ -41,7 +41,7 @@ export class AppComponent {
         this.getConfig().subscribe(cfg => {});
 
         this.service.langSubject.subscribe(() => {
-            this.translate.get('title.app').subscribe((newTitle: string) => {
+            this.translate.get('app.title').subscribe((newTitle: string) => {
                 this.titleService.setTitle(newTitle);
             });
         });
@@ -97,7 +97,7 @@ export class AppComponent {
             if (cfg.hasOwnProperty('defaultLang')) {
                 userLang = cfg['defaultLang'];
             }
-
+            this.service.changeLang(userLang);
             this.state.setConfig(cfg);
             return this.state.config;
         });
