@@ -34,9 +34,9 @@
       <span>Issue: {{state.currentTitul.meta_nazev}} {{state.currentIssue.datum_vydani | date: "dd/MM/yyyy"}}</span>
     </div><!--/.col -->
     <div class="col s8 right-align">
-      <button mz-button>Uložit</button>
-      <button mz-button (click)="openCloneDialog()">Klonovat</button>
-      <button mz-button>Smazat</button>
+      <button mz-button>{{'button.save' | translate}}</button>
+      <button mz-button (click)="openCloneDialog()">{{'button.clone' | translate}}</button>
+      <button mz-button>{{'button.delete' | translate}}</button>
     </div><!--/.col -->
   </div><!--/.row -->
 </div><!--/.app-toolbar-wrapper -->
@@ -45,10 +45,10 @@
 <div class="app-toolbar-wrapper app-toolbar-issue" *ngIf="showAddRecord()">
   <div class="row">
     <div class="col s4">
-      <span>Vložit záznam</span>
+      <span>{{'navbar.add_record' | translate}}</span>
     </div><!--/.col -->
     <div class="col s8 right-align">
-      <button mz-button>Uložit</button>
+      <button mz-button>{{'button.save' | translate}}</button>
     </div><!--/.col -->
   </div><!--/.row -->
 </div><!--/.app-toolbar-wrapper -->

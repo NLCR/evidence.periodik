@@ -1,43 +1,43 @@
 <mz-modal [fixedFooter]="true">
-    <mz-modal-header>
-        Clone options
-    </mz-modal-header>
-    <mz-modal-content>
-        <mz-datepicker-container>
-            <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
-            <input mz-datepicker
-                   [options]="options"
-                   [label]="'Od'"
-                   [(ngModel)]="params.cloneOd"
-                   id="cloneOd" name="cloneOd"
-                   type="text" />
-        </mz-datepicker-container>
-        <mz-datepicker-container>
-            <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
-            <input mz-datepicker
-                   [options]="options"
-                   [label]="'Do'"
-                   [(ngModel)]="params.cloneDo"
-                   id="cloneDo" name="cloneDo"
-                   type="text" />
-        </mz-datepicker-container>
-        <mz-select-container>
-            <select mz-select id="Periodicita" name="Periodicita" [placeholder]="'Periodicita'" [(ngModel)]="params.periodicity">
-                <option *ngFor="let p of periods" [value]="p.key">{{p.value}}</option>
-            </select>
-        </mz-select-container>
-
-        <mz-checkbox-container>
-            <input mz-checkbox
-                   [(ngModel)]="params.onSpecialDays"
-                   [label]="'onSpecialDays'"
-                   id="onSpecialDays"
-                   type="checkbox">
-        </mz-checkbox-container>
-
-    </mz-modal-content>
-    <mz-modal-footer>
-        <button mz-button [flat]="true" mz-modal-close>OK</button>
-        <button mz-button [flat]="true" mz-modal-close>Cancel</button>
-    </mz-modal-footer>
+  <mz-modal-header>
+    {{'modal.clone_options' | translate}}
+  </mz-modal-header>
+  
+  <mz-modal-content>
+    <mz-datepicker-container>
+      <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
+      <input mz-datepicker
+             [options]="options"
+             [label]="'modal.from' | translate"
+             [(ngModel)]="params.cloneOd"
+             id="cloneOd" name="cloneOd"
+             type="text" />
+    </mz-datepicker-container>
+    <mz-datepicker-container>
+      <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
+      <input mz-datepicker
+             [options]="options"
+             [label]="'modal.till' | translate"
+             [(ngModel)]="params.cloneDo"
+             id="cloneDo" name="cloneDo"
+             type="text" />
+    </mz-datepicker-container>
+    <mz-select-container>
+      <select mz-select id="Periodicita" name="Periodicita" [placeholder]="'modal.periodicity' | translate" [(ngModel)]="params.periodicity">
+        <option *ngFor="let p of periods" [value]="p.key">{{p.value}}</option>
+      </select>
+    </mz-select-container>
+    <mz-checkbox-container>
+      <input mz-checkbox
+             [(ngModel)]="params.onSpecialDays"
+             [label]="'modal.on_special_days' | translate"
+             id="onSpecialDays"
+             type="checkbox" />
+    </mz-checkbox-container>
+  </mz-modal-content>
+  
+  <mz-modal-footer>
+      <button mz-button [flat]="true" mz-modal-close>OK</button>
+      <button mz-button [flat]="true" mz-modal-close>{{'button.cancel' | translate}}</button>
+  </mz-modal-footer>
 </mz-modal>

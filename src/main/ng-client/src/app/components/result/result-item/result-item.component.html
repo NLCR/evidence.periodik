@@ -10,54 +10,58 @@
     <mz-badge
       *ngIf="item.exemplar > 0"
       [value]="item.exemplar"
-      [caption]="'exemplářů'"
+      [caption]="'result.badge.specimens' | translate"
       [badgeClass]="'blue'">
     </mz-badge>
+    
     <mz-badge
       *ngIf="item.exemplar == 0"
       [value]="item.exemplar"
-      [caption]="'exemplářů'"
+      [caption]="'result.badge.specimens' | translate"
       [badgeClass]="'grey lighten-1'">
-    </mz-badge><!--/exemplar -->
+    </mz-badge>
     
     <mz-badge
       *ngIf="item.mutace > 0"
       [value]="item.mutace"
-      [caption]="'mutací'"
+      [caption]="'result.badge.mutations' | translate"
       [badgeClass]="'red'">
     </mz-badge>
+    
     <mz-badge
       *ngIf="item.mutace == 0"
       [value]="item.mutace"
-      [caption]="'mutací'"
+      [caption]="'result.badge.mutations' | translate"
       [badgeClass]="'grey lighten-1'">
     </mz-badge><!--/mutace -->
     
     <mz-badge
       *ngIf="item.vlastnik > 0"
       [value]="item.vlastnik"
-      [caption]="'vlastníků'"
+      [caption]="'result.badge.owners' | translate"
       [badgeClass]="'teal'">
     </mz-badge>
+    
     <mz-badge
       *ngIf="item.vlastnik == 0"
       [value]="item.vlastnik"
-      [caption]="'vlastníků'"
+      [caption]="'result.badge.owners' | translate"
       [badgeClass]="'grey lighten-1'">
     </mz-badge><!--/vlastnik -->
     
     <mz-badge
       *ngIf="item.digitalizovano > 0"
       [value]="item.digitalizovano"
-      [caption]="'digitalizováno'"
+      [caption]="'result.badge.digitized' | translate"
       [badgeClass]="'orange'">
     </mz-badge>
+    
     <mz-badge
       *ngIf="item.digitalizovano == 0"
       [value]="item.digitalizovano"
-      [caption]="'digitalizováno'"
+      [caption]="'result.badge.digitized' | translate"
       [badgeClass]="'grey lighten-1'">
-    </mz-badge><!--/digitalizovano -->
+    </mz-badge>
     
     <div class="clearfix"></div>
   </mz-card-action>

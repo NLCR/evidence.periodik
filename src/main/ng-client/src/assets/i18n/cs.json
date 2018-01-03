@@ -38,6 +38,64 @@
     "id_bib_record": "Id bib záznamu",
     "uuid_number": "Uuid čísla",
     "uuid_title": "Uuid titulu",
-    "url_kramerius": "URL Krameria"
+    "url_kramerius": "URL Krameria",
+    "specimen_count": "Počet exemplářů",
+    "specimen_number": "Exemplář číslo"
+  },
+  "button": {
+    "save": "Uložit",
+    "clone": "Klonovat",
+    "delete": "Smazat",
+    "add_specimen": "Přidat exemplář",
+    "add_mutation": "Přidat mutaci",
+    "add_background": "Přiřadit pozadí",
+    "delete_all_mutations": "Smazat všechny mutace",
+    "delete_specimen": "Smazat exemplář",
+    "add_specimen": "Přidat exemplář",
+    "cancel": "Zrušit"
+  },
+  "facet": {
+    "title": {
+      "active_filters": "Aktivní filtry",
+      "caption": "Titul",
+      "mutation": "Mutace",
+      "ownership": "Vlastník"
+    },
+    "tooltip": {
+      "delete_all_filters": "Odstranit všechny filtry",
+      "delete_this_filter": "Odstranit tento filtr"
+    }
+  },
+  "result": {
+    "found_records": "Nalezeno záznamů",
+    "pagination": {
+      "previous_page": "Předchozí stánka",
+      "next_page": "Další stánka"
+    },
+    "badge": {
+      "specimens": "exemplářů",
+      "mutations": "mutací",
+      "owners": "vlastníků",
+      "digitized": "digitalizováno"
+    }
+  },
+  "calendar": {
+    "tooltip": {
+      "previous_month": "Předchozí měsíc",
+      "next_month": "Další měsíc",
+      "display_month": "Zobrazit měsíc",
+      "display_year": "Zobrazit rok",
+      "display_list": "Zobrazit seznam",
+      "specimen_count": "Počet exemplářů",
+      "add_record": "Vložit záznam",
+      "digitized": "Digitalizováno"
+    }
+  },
+  "modal": {
+    "clone_options": "Možnosti klonování",
+    "from": "Od",
+    "till": "Do",
+    "periodicity": "Periodicita",
+    "on_special_days": "Ve speciální dny"
   }
 }

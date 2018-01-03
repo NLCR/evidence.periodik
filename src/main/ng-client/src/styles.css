@@ -19758,18 +19758,22 @@ app-search-bar .app-search-bar-wrapper .mdi-close {
   cursor: pointer !important; }
 
 /* line 19, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
-.app-font-bold, app-root main app-issue .app-issue-wrapper .row .col .collapsible .collapsible-header, app-root main app-facet .app-facet-wrapper app-facet-used .collection .collection-header, app-root main app-facet .app-facet-wrapper .collapsible .collapsible-header, app-root main app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row.selected {
+.app-font-bold, app-root main app-issue .app-issue-wrapper .row .col .collapsible .collapsible-header, app-root main app-facet .app-facet-wrapper app-facet-used .collection .collection-header, app-root main app-facet .app-facet-wrapper .collapsible .collapsible-header, app-root main app-facet .app-facet-wrapper .collapsible .collapsible-body .app-row.selected, app-clone-dialog .modal .modal-content h4 {
   font-family: 'Roboto-Condensed-Bold'; }
 
-/* line 25, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
+/* line 23, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
+.app-font-light {
+  font-family: 'Roboto-Condensed-Light'; }
+
+/* line 29, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 .app-clean-mg, app-root main app-toolbar .app-toolbar-wrapper.app-toolbar-issue .row, app-root main app-toolbar .app-toolbar-wrapper .app-row-nav .pagination, app-root main app-toolbar .app-toolbar-wrapper.app-toolbar-calendar .app-row-nav .col:first-child .pagination {
   margin: 0 !important; }
 
-/* line 29, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
+/* line 33, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 .app-clean-pd, app-root main app-facet .app-facet-wrapper .collapsible .collapsible-body {
   padding: 0 !important; }
 
-/* line 33, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
+/* line 37, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 .app-clean-radius {
   border-radius: 0 !important; }
 
@@ -19782,28 +19786,28 @@ app-search-bar .app-search-bar-wrapper .mdi-close {
 .clearfix:after {
   clear: both; }
 
-/* line 45, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
+/* line 49, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 .app-preloader-wrapper {
   margin-top: 100px; }
 
-/* line 51, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
+/* line 55, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 .app-full-wrapper, app-root main app-home .app-home-wrapper, app-root main app-login .app-login-wrapper, app-root main app-add-record .app-add-record-wrapper, app-root main app-issue .app-issue-wrapper, app-root main app-result .app-result-wrapper, app-root main app-calendar .app-calendar-wrapper, app-root main app-facet .app-facet-wrapper {
   height: 100%;
   overflow: auto; }
 
-/* line 56, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
+/* line 60, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 .app-container {
   padding: 1.25rem; }
 
-/* line 65, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
+/* line 69, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 button:not(.btn-floating) i.left {
   margin-right: 5px; }
 
-/* line 68, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
+/* line 72, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 button:not(.btn-floating) i.right {
   margin-left: 5px; }
 
-/* line 74, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
+/* line 78, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-global.scss */
 .app-pipe {
   border-width: 0 1px 0 0;
   border-style: solid;
@@ -19892,5 +19896,7 @@ app-search-bar .app-search-bar-wrapper {
       /* line 53, /Users/petr.kudela/Projects/evidencePeriodik/github/src/main/ng-client/src/sass/_app-search-bar.scss */
       app-search-bar .app-search-bar-wrapper .input-field input[type=search]::-ms-clear {
         display: none; }
+
+/*** MODAL ***/
 
 /*# sourceMappingURL=styles.css.map */
