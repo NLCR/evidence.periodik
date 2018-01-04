@@ -27,7 +27,7 @@
     </div>
     <div *ngIf="idx == 3" class="app-btn-show-more right-align">
       <a [routerLink]="['/calendar', id, 'list']" mz-tooltip [tooltip]="'calendar.tooltip.show_all_issues' | translate">
-        <i mz-icon-mdi [icon]="'link-variant'" [size]="'20'"></i> {{'calendar.next_issues' | translate}}: +<span>{{issues.length - 3}}</span>
+        <i mz-icon-mdi [icon]="'link-variant'" [size]="'20'"></i> <span>{{issues.length - 3}}</span> {{'calendar.next_issues' | translate}}
       </a>
     </div>
   </div>

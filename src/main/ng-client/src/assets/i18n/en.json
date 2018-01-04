@@ -83,7 +83,7 @@
     }
   },
   "calendar": {
-    "next_issues": "Next issues",
+    "next_issues": "next issues",
     "tooltip": {
       "previous_month": "Previous month",
       "next_month": "Next month",
