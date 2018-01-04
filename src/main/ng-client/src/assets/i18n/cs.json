@@ -52,7 +52,8 @@
     "delete_all_mutations": "Smazat všechny mutace",
     "delete_specimen": "Smazat exemplář",
     "add_specimen": "Přidat exemplář",
-    "cancel": "Zrušit"
+    "cancel": "Zrušit",
+    "login": "Přihlásit"
   },
   "facet": {
     "title": {
@@ -80,6 +81,7 @@
     }
   },
   "calendar": {
+    "next_issues": "Další vydání",
     "tooltip": {
       "previous_month": "Předchozí měsíc",
       "next_month": "Další měsíc",
@@ -88,7 +90,8 @@
       "display_list": "Zobrazit seznam",
       "specimen_count": "Počet exemplářů",
       "add_record": "Vložit záznam",
-      "digitized": "Digitalizováno"
+      "digitized": "Digitalizováno",
+      "show_all_issues": "Zobraz všechna vydání"
     }
   },
   "modal": {
@@ -97,5 +100,10 @@
     "till": "Do",
     "periodicity": "Periodicita",
     "on_special_days": "Ve speciální dny"
+  },
+  "login": {
+    "desc": "Prosím, přihlašte se",
+    "user": "Uživatel",
+    "password": "Heslo"
   }
 }

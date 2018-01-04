@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
+import {Router, ActivatedRoute} from '@angular/router';
+
 import {AppState} from '../../../../app.state';
 import {AppService} from '../../../../app.service';
 
@@ -8,6 +10,7 @@ import {AppService} from '../../../../app.service';
   templateUrl: './calendar-month-day.component.html',
   styleUrls: ['./calendar-month-day.component.scss']
 })
+
 export class CalendarMonthDayComponent implements OnInit {
 
   @Input('day') day: Date;
@@ -16,19 +19,18 @@ export class CalendarMonthDayComponent implements OnInit {
   @Input('issues') issues: any[];
   
   isSpecial: boolean;
-  //special: any = {};
+  id: string;
   
   constructor(
-        public state: AppState,
-        private service: AppService) { }
+    private route: ActivatedRoute,
+    public state: AppState,
+    private service: AppService) { }
 
   ngOnInit() {
-//    this.service.isSpecial(this.day).subscribe(res => {
-//        if(res.length > 0){
-//            this.special = res[0];
-//            this.isSpecial = true;
-//        }
-//    });
+    let id = this.route.snapshot.parent.paramMap.get('id');
+    if (id) {
+      this.id = id;
+    }
   }
   
   isOtherMonth(){

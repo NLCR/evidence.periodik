@@ -54,7 +54,8 @@
     "delete_all_mutations": "Delete all mutations",
     "delete_specimen": "Delete specimen",
     "add_specimen": "Add specimen",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "login": "Login"
   },
   "facet": {
     "title": {
@@ -82,6 +83,7 @@
     }
   },
   "calendar": {
+    "next_issues": "Next issues",
     "tooltip": {
       "previous_month": "Previous month",
       "next_month": "Next month",
@@ -90,7 +92,8 @@
       "display_list": "Display list",
       "specimen_count": "Specimen count",
       "add_record": "Add record",
-      "digitized": "Digitized"
+      "digitized": "Digitized",
+      "show_all_issues": "Show all issues"
     }
   },
   "modal": {
@@ -99,5 +102,10 @@
     "till": "Till",
     "periodicity": "Periodicity",
     "on_special_days": "On special days"
+  },
+  "login": {
+    "desc": "Please, login",
+    "user": "User",
+    "password": "Password"
   }
 }

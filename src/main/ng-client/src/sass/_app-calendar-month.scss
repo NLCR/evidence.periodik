@@ -71,7 +71,7 @@
         @extend .app-cursor-pointer;
         margin-bottom: 2px;
         
-        & > div {
+        & > div:not(.app-btn-show-more) {
           padding: 0.1rem 0.5rem;
         }
 
@@ -96,6 +96,22 @@
         // set states
         .app-state-ok {@include setState($app-state-ok, 5);}
         .app-state-auto {@include setState($app-state-auto, 7);}
+        
+        // show more issues
+        .app-btn-show-more {
+          a {
+            margin-right: $app-container;
+            color: $app-grey-d-4;
+            
+            &:hover {
+              color: lighten($app-grey-d-4, 50%); 
+            }
+            
+            span {
+              @extend .app-font-bold;
+            }
+          }
+        }
       }
       
       

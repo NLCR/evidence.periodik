@@ -5,7 +5,7 @@
         <mz-card [hoverable]="true">
           <mz-card-title>
             <div class="center-align">
-              Prosím, přihlašte se ...
+              {{'login.desc' | translate}} ...
             </div>
           </mz-card-title>
           <mz-card-content>
@@ -13,19 +13,19 @@
               <div class="row app-clean-mg">
                 <mz-input-container class="col s12">
                   <i mz-icon-mdi mz-input-prefix [icon]="'account'"></i>
-                  <input mz-input type="text" [label]="'Uživatel'" class="form-control" />   
+                  <input mz-input type="text" [label]="'login.user' | translate" class="form-control" />   
                 </mz-input-container>
               </div>
               <div class="row app-clean-mg">
                 <mz-input-container class="col s12">
                   <i mz-icon-mdi mz-input-prefix [icon]="'lock-outline'"></i>
-                  <input mz-input type="password" [label]="'Heslo'" class="form-control" />
+                  <input mz-input type="password" [label]="'login.password' | translate" class="form-control" />
                 </mz-input-container>
               </div>
               <div class="row app-clean-mg">
                 <div class="input-field col s12">
                   <button mz-button [large]="'true'" class="col s12">
-                    Login
+                    {{'button.login' | translate}}
                   </button>
                 </div>
               </div>

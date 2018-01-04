@@ -19,11 +19,16 @@
     </mz-dropdown>
   </div>
   <div class="clearfix"></div>
-  <div *ngFor="let e of issues" class="app-calendar-day-content-item">
-    <div [class]="'app-state-'+e.state" [routerLink]="['/issue', e.id]">
+  <div *ngFor="let e of issues; let idx = index" class="app-calendar-day-content-item">
+    <div *ngIf="idx < 3" [class]="'app-state-'+e.state" [routerLink]="['/issue', e.id]">
       {{e.mutace}}
       <span *ngIf="e.exemplare" class="app-count-ex right app-cursor-pointer" mz-tooltip [tooltip]="'calendar.tooltip.specimen_count' | translate" [position]="'top'">{{e.exemplare.length}}</span>
       <span *ngIf="e.digitalizovano" class="right"><i mz-icon-mdi [icon]="'credit-card-scan'" [size]="'22'" mz-tooltip [tooltip]="'calendar.tooltip.digitized' | translate" [position]="'top'"></i></span>
+    </div>
+    <div *ngIf="idx == 3" class="app-btn-show-more right-align">
+      <a [routerLink]="['/calendar', id, 'list']" mz-tooltip [tooltip]="'calendar.tooltip.show_all_issues' | translate">
+        <i mz-icon-mdi [icon]="'link-variant'" [size]="'20'"></i> {{'calendar.next_issues' | translate}}: +<span>{{issues.length - 3}}</span>
+      </a>
     </div>
   </div>
 </div>
