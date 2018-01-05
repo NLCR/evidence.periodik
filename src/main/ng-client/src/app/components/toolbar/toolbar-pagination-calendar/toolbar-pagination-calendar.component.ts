@@ -33,7 +33,7 @@ export class ToolbarPaginationCalendarComponent implements OnInit {
   }
     
     setMonth(){
-        this.month = this.datePipe.transform(this.state.currentDay, 'LLLL yyyy',null, 'cs');
+        this.month = this.datePipe.transform(this.state.currentDay, 'LLLL yyyy',null, this.state.currentLang);
     }
     
     changeMonth(dir: number){

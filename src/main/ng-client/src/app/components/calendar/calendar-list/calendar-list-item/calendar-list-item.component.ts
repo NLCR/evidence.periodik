@@ -34,5 +34,4 @@ export class CalendarListItemComponent implements OnInit {
   isOtherMonth(){
     return this.day.getMonth() !== this.current.getMonth();
   }
-
 }

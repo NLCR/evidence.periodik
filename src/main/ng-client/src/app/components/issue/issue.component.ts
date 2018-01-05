@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import {Router, ActivatedRoute, ParamMap} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 
@@ -23,6 +23,7 @@ export class IssueComponent implements OnInit {
 
     stavy = [];
     states = [];
+    vydani = [];
     periods = [];
 
     issue: Issue = new Issue();
@@ -32,6 +33,7 @@ export class IssueComponent implements OnInit {
     };
 
     constructor(
+    private cdRef: ChangeDetectorRef,
     private modalService: MzModalService,
         private route: ActivatedRoute,
         public state: AppState,
@@ -45,11 +47,12 @@ export class IssueComponent implements OnInit {
     }
 
     setData(res: any[]) {
+        this.vydani = [];
+        this.state.config["vydani"].map(k => {this.vydani.push(k);});
         if (res.length > 0) {
             Object.keys(this.state.config['periodicity']).map(k => {this.periods.push({key: k, value: this.state.config['periodicity'][k]});});
-            //this.issue = res[0];
             this.state.currentIssue = res[0];
-            console.log(this.state.currentIssue.exemplare);
+            console.log(this.state.currentIssue);
             this.service.getTitul(this.state.currentIssue.titul_id).subscribe(res2 => {
                 if (res2.length > 0) {
                     this.state.currentTitul = res2[0];
@@ -59,6 +62,17 @@ export class IssueComponent implements OnInit {
             this.issue = new Issue();
         }
     }
+    
+    langChanged() {
+      this.stavy = [];
+      this.states = [];
+      this.vydani = [];
+      this.cdRef.detectChanges();
+      this.state.config["vydani"].map(k => {this.vydani.push(k);});
+      Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
+      Object.keys(StateIssue).map(k => {this.states.push({key: k, value: StateIssue[k]});});
+      this.cdRef.detectChanges();
+}
 
 
     ngOnDestroy() {
@@ -69,6 +83,8 @@ export class IssueComponent implements OnInit {
     }
 
     ngOnInit() {
+      this.state.currentTitul = new Titul();
+      this.state.currentIssue = new Issue();
         let id = this.route.snapshot.paramMap.get('id');
         if (this.state.config) {
             this.service.getIssue(id).subscribe(res => {
@@ -81,6 +97,12 @@ export class IssueComponent implements OnInit {
                 });
             }));
         }
+        
+        
+            this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
+              
+                this.langChanged();
+            }));
     }
 
     openCloneDialog() {

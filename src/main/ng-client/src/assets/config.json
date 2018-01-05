@@ -10,5 +10,6 @@
         "P1M": "Mesicnik",
         "P6M": "Dvakrat za rok"
   },
+  "vydani":["morning", "afternoon", "evening"],
   "test": false          
 }

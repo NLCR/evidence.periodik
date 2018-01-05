@@ -1,5 +1,5 @@
 <div class="app-calendar-month">
-  <div class="app-calendar-weekday" *ngFor="let day of weekdays">{{day}}</div>     
+  <div class="app-calendar-weekday" *ngFor="let day of weekdays; let idx = index">{{days[idx] | date : 'E' : null : state.currentLang}}</div>     
   <div class="app-calendar-day" *ngFor="let day of days">
     <app-calendar-month-day [day]="day" [current]="state.currentDay" [issues]="issuesOfDay(day)" [special]="getSpecial(day)"></app-calendar-month-day>
   </div>

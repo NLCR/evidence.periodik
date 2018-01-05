@@ -4,6 +4,7 @@ import {Exemplar} from './exemplar';
 
 
 export class Issue {
+  id: string = "";
   titul_id: string = "";
   nazev: string = ""; //název na titulní straně	text	Název tak jak je na konkrétním čísle novin
   podnazev: string = ""; //podnázev na titulní straně	text	Podnázev tak jak je na konkrétním čísle novin.

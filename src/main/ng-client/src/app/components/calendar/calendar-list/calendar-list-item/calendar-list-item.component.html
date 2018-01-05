@@ -15,7 +15,7 @@
   <div class="row app-clean-mg">
     <div class="col">
       <div class="app-calendar-list-item-weekday">
-        Po
+        {{day | date : 'E' : null : state.currentLang}}
       </div>
       <div *ngIf="special.type" class="app-calendar-list-item-title" mz-tooltip [tooltip]="special.title" [position]="'top'">
         <span>{{day | date: 'dd'}}</span>

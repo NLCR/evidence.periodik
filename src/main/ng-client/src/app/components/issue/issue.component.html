@@ -1,6 +1,6 @@
 <app-toolbar></app-toolbar>
 
-<div class="app-issue-wrapper grey lighten-5">
+<div class="app-issue-wrapper grey lighten-5" *ngIf="state.currentIssue.id">
   <div class="row">
     <div class="col s4">
         <mz-input-container>
@@ -12,8 +12,15 @@
         <mz-input-container>
           <input mz-input [label]="'record.subname_title_page' | translate" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev" type="text">
         </mz-input-container>
+        <mz-select-container>
+          <select mz-select id="vydani" name="vydani" [placeholder]="'record.publication.placeholder' | translate" 
+                  [ngModel]="'' + state.currentIssue.vydani | translate" 
+                  (ngModelChange)="state.currentIssue.vydani=$event">
+            <option *ngFor="let v of vydani">{{'record.publication.' + v | translate }}</option>
+          </select>
+        </mz-select-container>
         <mz-input-container>
-          <input mz-input [label]="'record.publication' | translate" id="vydani" name="vydani" [(ngModel)]="state.currentIssue.vydani" type="text">
+          <input mz-input [label]="'record.time_publication' | translate" id="cas_vydani" name="cas_vydani" [(ngModel)]="state.currentIssue.cas_vydani" type="text">
         </mz-input-container>
         <mz-input-container>
           <input mz-input [label]="'record.mutation' | translate" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace" type="text">
@@ -30,13 +37,6 @@
                  id="datum_vydani" name="datum_vydani"
                  type="text" />
         </mz-datepicker-container>
-        <mz-select-container>
-          <select mz-select id="cas_vydani" name="cas_vydani" [placeholder]="'record.time_publication.placeholder' | translate" [(ngModel)]="state.currentIssue.cas_vydani">
-            <option>{{ 'record.time_publication.morning' | translate }}</option>
-            <option>{{ 'record.time_publication.afternoon' | translate }}</option>
-            <option>{{ 'record.time_publication.evening' | translate }}</option>
-          </select>
-        </mz-select-container>
     </div><!--/.col -->
     
     <div class="col s4">
@@ -81,7 +81,7 @@
             <mz-collapsible-item-body>
               <mz-select-container>
                 <select mz-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav">
-                  <option *ngFor="let stav of stavy" [value]="stav.key">{{stav.value}}</option>
+                  <option *ngFor="let stav of stavy" [value]="stav.key">{{'record.StavIssue.' + stav.key | translate}}</option>
                 </select>
               </mz-select-container>
               <mz-input-container>

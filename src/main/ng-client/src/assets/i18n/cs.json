@@ -17,17 +17,24 @@
     "meta_title": "Meta název",
     "name_title_page": "Název na titulní straně",
     "subname_title_page": "Podnázev na titulní straně",
-    "publication": "Vydání",
+    "ptime_ublication": "Čas vydání",
     "mutation": "Mutace",
     "date_publication": "Datum vydání",
-    "time_publication": {
-      "placeholder": "Čas vydání",
+    "publication": {
+      "placeholder": "Vydání",
       "morning": "Ranní",
       "afternoon": "Odpolední",
       "evening": "Večerní"
     },
     "pages_count": "Počet stran",
     "state": "Stav",
+    "StavIssue": {
+      "OK" : "ok",
+      "PC" : "poškozeno - čitelné", 
+      "PZ" : "poškozeno - ztráta informace",
+      "CCS" : "chybí celé stránky",
+      "Z" : "není vůbec (zničeno/ztráta)"
+    },
     "year": "Ročník",
     "number": "Číslo",
     "second_number": "Druhé číslo",

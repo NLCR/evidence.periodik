@@ -14,6 +14,9 @@ export class AppState {
   public _configSubject = new Subject();
   public configSubject: Observable<any> = this._configSubject.asObservable();
   
+  public _langSubject = new Subject();
+  public langSubject: Observable<any> = this._langSubject.asObservable();
+  
   //Holds client configuration
   config: any;
   configured: boolean = false;
@@ -34,6 +37,11 @@ export class AppState {
   setConfig(cfg){
     this.configured = true;
     this._configSubject.next(cfg);
+  }
+  
+  changeLang(lang){
+    this.currentLang = lang;
+    this._langSubject.next(lang);
   }
   
   changeCurrentDay(d: Date){

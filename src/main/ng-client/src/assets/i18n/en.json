@@ -19,17 +19,24 @@
     "meta_title": "Meta title",
     "name_title_page": "Name on title page",
     "subname_title_page": "Subname on title page",
-    "publication": "Publication",
+    "time_publication": "Time of publication",
     "mutation": "Mutation",
     "date_publication": "Date of publication",
-    "time_publication": {
-      "placeholder": "Time of publication",
+    "publication": {
+      "placeholder": "Publication",
       "morning": "Morning",
       "afternoon": "Afternoon",
       "evening": "Evening"
     },
     "pages_count": "Pages count",
     "state": "State",
+    "StavIssue": {
+      "OK" : "ok",
+      "PC" : "damaged - readable", 
+      "PZ" : "damaged - loss of information",
+      "CCS" : "missing entire pages",
+      "Z" : "missing at all (destroyed / lost)"
+    },
     "year": "Year",
     "number": "Number",
     "second_number": "Second number",
