@@ -9,8 +9,8 @@
       <input mz-datepicker
              [options]="options"
              [label]="'modal.from' | translate"
-             [(ngModel)]="params.cloneOd"
-             id="cloneOd" name="cloneOd"
+             [(ngModel)]="params.start_date"
+             id="start_date" name="start_date"
              type="text" />
     </mz-datepicker-container>
     <mz-datepicker-container>
@@ -18,8 +18,8 @@
       <input mz-datepicker
              [options]="options"
              [label]="'modal.till' | translate"
-             [(ngModel)]="params.cloneDo"
-             id="cloneDo" name="cloneDo"
+             [(ngModel)]="params.end_date"
+             id="end_date" name="end_date"
              type="text" />
     </mz-datepicker-container>
     <mz-select-container>
@@ -27,6 +27,12 @@
         <option *ngFor="let p of periods" [value]="p.key">{{p.value}}</option>
       </select>
     </mz-select-container>
+    <mz-input-container>
+      <input mz-input [label]="'clone.start_number' | translate" id="start_number" name="start_number" [(ngModel)]="params.start_number" type="text">
+    </mz-input-container>
+    <mz-input-container>
+      <input mz-input [label]="'clone.start_year' | translate" id="start_year" name="start_year" [(ngModel)]="params.start_year" type="text">
+    </mz-input-container>
     <mz-checkbox-container>
       <input mz-checkbox
              [(ngModel)]="params.onSpecialDays"
@@ -37,7 +43,7 @@
   </mz-modal-content>
   
   <mz-modal-footer>
-      <button mz-button [flat]="true" mz-modal-close>OK</button>
-      <button mz-button [flat]="true" mz-modal-close>{{'button.cancel' | translate}}</button>
+      <button mz-button [flat]="true" (click)="ok()">OK</button>
+      <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{'button.cancel' | translate}}</button>
   </mz-modal-footer>
 </mz-modal>

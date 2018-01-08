@@ -8,5 +8,15 @@
     },
     "changeOrigin": false,
     "secure": false
+  },
+  "/index": {
+    "target": "http://localhost:8080/inprove/index",
+    "ignorePath": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/index":""
+    },
+    "changeOrigin": false,
+    "secure": false
   }
 }

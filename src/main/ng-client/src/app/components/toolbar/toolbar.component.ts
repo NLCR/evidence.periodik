@@ -23,6 +23,7 @@ export class ToolbarComponent implements OnInit {
 
   constructor(
     public state: AppState,
+    public service: AppService,
     private modalService: MzModalService) { }
 
   ngOnInit() {
@@ -48,10 +49,12 @@ export class ToolbarComponent implements OnInit {
   
   openCloneDialog() {
     let cloneParams = new CloneParams();
-    cloneParams.cloneOd = this.state.currentIssue.datum_vydani;
-    cloneParams.cloneDo = this.state.currentIssue.datum_vydani;
-    cloneParams.periodicity = this.state.currentIssue.periodicita;
-    console.log(cloneParams);
-    this.modalService.open(CloneDialogComponent, {"periods": this.periods, "state": this.state, "params": cloneParams});
+    cloneParams.id = this.state.currentIssue.id;
+    cloneParams.start_date = this.state.currentIssue.datum_vydani;
+    cloneParams.end_date = this.state.currentIssue.datum_vydani;
+    cloneParams.start_number = this.state.currentIssue.cislo;
+    cloneParams.start_year = this.state.currentIssue.rocnik_number;
+    
+    this.modalService.open(CloneDialogComponent, {"periods": this.periods, "state": this.state, "service": this.service, "params": cloneParams});
   }
 }

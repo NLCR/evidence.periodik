@@ -11,6 +11,7 @@ import {Subject} from 'rxjs/Subject';
 import {Http, Response, URLSearchParams} from '@angular/http';
 
 import {AppState} from './app.state';
+import {CloneParams} from './models/clone-params';
 
 @Injectable()
 export class AppService {
@@ -135,6 +136,17 @@ export class AppService {
         //params.set('fl', 'start:datum_vydani,title:nazev,*')
         return this.http.get(url, {search: params}).map((res: Response) => {
             return res.json()['response']['docs'];
+        });
+    }
+
+    clone(cfg: CloneParams) {
+        var url = this.state.config['context'] + 'index';
+        let params: URLSearchParams = new URLSearchParams();
+        params.set('action', 'CLONE');
+        params.set('cfg', JSON.stringify(cfg));
+        //params.set('fl', 'start:datum_vydani,title:nazev,*')
+        return this.http.get(url, {search: params}).map((res: Response) => {
+            return res;
         });
     }
 

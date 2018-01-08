@@ -37,14 +37,24 @@ public class CloneParams {
    *
      */
     public String periodicity;
+    
+    //Cislo pri start
+    public int start_number;
+    
+    //Cislo rocniku pri startu
+    public int start_year;
+    
     public List<String> mutations = new ArrayList<>();
     
     public boolean onSpecialDays;
+    
 
     public CloneParams(JSONObject jo) {
         this.id = jo.getString("id");
         this.start_date = jo.getString("start_date");
         this.end_date = jo.getString("end_date");
+        this.start_number = jo.optInt("start_number", 0);
+        this.start_year = jo.optInt("start_year", 0);
         this.periodicity = jo.getString("periodicity");
         this.onSpecialDays = jo.optBoolean(id, false);
         if (jo.has("mutations")) {

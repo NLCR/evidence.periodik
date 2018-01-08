@@ -103,19 +103,24 @@ public class Indexer {
 
             Period period = Period.parse(cfg.periodicity);
 
+            int number = cfg.start_number;
+            int year = cfg.start_year;
+
             for (LocalDate date = start; date.isBefore(end); date = date.plus(period)) {
                 if(!cfg.onSpecialDays && isSpecial(solr, date)){
                     continue;
                 }
                 if (cfg.mutations.size() > 0) {
                     for (String mutation : cfg.mutations) {
-                        SolrInputDocument idoc = cloneOne(doc, date, mutation);
+                        SolrInputDocument idoc = cloneOne(doc, date, mutation, number, year);
                         solr.add("issue", idoc);
                     }
                 } else {
-                    SolrInputDocument idoc = cloneOne(doc, date, null);
+                    SolrInputDocument idoc = cloneOne(doc, date, null, number, year);
                     solr.add("issue", idoc);
                 }
+                number++;
+                year = Period.between(start, date).getYears() + cfg.start_year;
             }
 
             solr.commit("issue");
@@ -124,7 +129,8 @@ public class Indexer {
         }
     }
 
-    private SolrInputDocument cloneOne(SolrDocument doc, LocalDate date, String mutace) {
+    
+    private SolrInputDocument cloneOne(SolrDocument doc, LocalDate date, String mutace, int number, int year) {
         SolrInputDocument idoc = new SolrInputDocument();
         doc.getFieldNames().forEach((name) -> {
             idoc.addField(name, doc.getFieldValue(name));
@@ -133,6 +139,8 @@ public class Indexer {
         idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
         idoc.setField("state", "auto");
         idoc.setField("exemplare", "");
+        idoc.setField("cislo", number);
+        idoc.setField("rocnik", year);
         if (mutace != null) {
             idoc.setField("mutace", mutace);
         }

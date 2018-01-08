@@ -14,7 +14,7 @@
                 "datum_vydani": "2017-12-02",
                 "cas_vydani": 10,
                 "pocet_stran": 12,
-                "rocnik": "",
+                "rocnik": 2017,
                 "cislo": 1,
                 "druhe_cislo": 2,
                 "exemplare": ["{\"vlastnik\":\"NKP\",\"carovy_kod\":\"26000001\",\"stav\":\"PC\",\"stav_popis\":\"je to na hore poškozeno, ale presto čitelné\",\"signatura\":\"54 J 015285\"}",

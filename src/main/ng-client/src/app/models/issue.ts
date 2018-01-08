@@ -15,6 +15,7 @@ export class Issue {
   cas_vydani: number = 0; //čas vydání	čas	generuje se (hlavně důležité v případě více vydání téže mutace v jednom dni) na základě názvu vydání. Bude existovat tabulka, která každému názvu vydání přiřadí čas kvůli řazení
   pocet_stran: number = 0; //počet stran	celé číslo	předpokládám, že vždy sudé. 0 může znamenat že nevyšlo, -1 že není znám počet stran
   rocnik: string = ""; //ročník	text	jak je uveden na exempláři
+  rocnik_number: number;
   cislo: number = 0; //číslo	číslo	pořadové číslo uvedené na čísle
   druhe_cislo: number = 0; //druhé číslo	číslo	další paralelní číslování, kdyby bylo třeba
   id_bib_zaznamu: string = ""; //id bib záznamu	id	prolink na bib. záznam (id, URL)

@@ -106,12 +106,11 @@ export class IssueComponent implements OnInit {
     }
 
     openCloneDialog() {
-        let cloneParams = new CloneParams();
-        cloneParams.cloneOd = this.state.currentIssue.datum_vydani;
-        cloneParams.cloneDo = this.state.currentIssue.datum_vydani;
-        cloneParams.periodicity = this.state.currentIssue.periodicita;
-        console.log(cloneParams);
-        this.modalService.open(CloneDialogComponent, {"periods": this.periods, "state": this.state, "params": cloneParams});
+//        let cloneParams = new CloneParams();
+//        cloneParams.start_date = this.state.currentIssue.datum_vydani;
+//        cloneParams.end_date = this.state.currentIssue.datum_vydani;
+//        cloneParams.periodicity = this.state.currentIssue.periodicita;
+//        this.modalService.open(CloneDialogComponent, {"periods": this.periods, "state": this.state, "params": cloneParams});
     }
 
 }
