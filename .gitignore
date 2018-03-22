@@ -16,3 +16,7 @@ buildNumber.properties
 /src/main/ng-client/nbproject/private/
 /src/main/ngClient/node_modules/
 /src/main/ngClient/
+/src/main/webapp/index.html
+/src/main/webapp/*.bundle.js
+/src/main/webapp/*.bundle.css
+/src/main/webapp/assets/*
