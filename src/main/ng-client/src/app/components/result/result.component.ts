@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-result',
@@ -9,7 +9,7 @@ import { Http, Response } from '@angular/http';
 export class ResultComponent implements OnInit {
   results: any; // temporary for facets
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.loadResultItems(); // temporary for facets
@@ -17,9 +17,9 @@ export class ResultComponent implements OnInit {
 
   // temporary for facets
   loadResultItems() {
-    this.results = this.http.get("../../assets/results.json")
-    .map(res => res.json())
-    .do(data => console.log("Debug result comonent:" + data));
+  
+  this.results = this.http.get("../../assets/results.json");
+//    .do(data => console.log("Debug result comonent:" + data));
   }
   
 }

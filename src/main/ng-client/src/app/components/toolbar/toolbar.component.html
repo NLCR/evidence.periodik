@@ -7,7 +7,7 @@
       <app-toolbar-pagination-calendar></app-toolbar-pagination-calendar>
     </div><!--/.col -->
     <div class="col s6 center-align">
-      <span>{{state.currentTitul.meta_nazev}}</span>
+      <span *ngIf="state.currentTitul">{{state.currentTitul.meta_nazev}}</span>
     </div><!--/.col -->
     <div class="col s3 app-clean-pd right-align">
       <app-toolbar-nav-views></app-toolbar-nav-views>

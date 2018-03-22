@@ -37,7 +37,6 @@ export class ToolbarPaginationCalendarComponent implements OnInit {
     }
     
     changeMonth(dir: number){
-        
         this.state.changeCurrentDay(new Date(this.state.currentDay.getFullYear(), this.state.currentDay.getMonth() + dir, 1));
     }
 

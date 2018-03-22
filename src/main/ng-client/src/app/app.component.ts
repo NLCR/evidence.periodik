@@ -5,7 +5,7 @@ import {StavIssue} from './models/stav-issue.enum';
 import {Title} from '@angular/platform-browser';
 import {ActivatedRoute, Router, Params, NavigationEnd, NavigationStart} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
-import {Observable} from 'rxjs/Rx';
+import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 
 import {AppService} from './app.service';

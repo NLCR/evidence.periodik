@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-facet',
@@ -9,7 +9,7 @@ import { Http, Response } from '@angular/http';
 export class FacetComponent implements OnInit {
   facets: any; // temporary for facets
   
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.loadFacetItems(); // temporary for facets
@@ -17,9 +17,8 @@ export class FacetComponent implements OnInit {
   
   // temporary for facets
   loadFacetItems() {
-    this.facets = this.http.get("../../assets/facets.json")
-    .map(res => res.json())
-    .do(data => console.log("Debug facet component:" + data));
+    this.facets = this.http.get("../../assets/facets.json");
+    //.do(data => console.log("Debug facet component:" + data));
   }
 
 }
