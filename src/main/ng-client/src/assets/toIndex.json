@@ -14,7 +14,8 @@
         "uuid_titulu":"d2677fbe-f660-4da2-a55d-035c12c09aab",
         "typ":"tištěné",
         "state":"auto",
-        "datum_vydani":"2017-12-06T00:00:00Z"},
+        "datum_vydani":"2017-12-06T00:00:00Z",
+        "datum_vydani_den":"20171206"},
       {
         "id":"C4E2F1D313E1D407B33E1AD88C64BDED1043605X",
         "id_titul":"d2677fbe-f660-4da2-a55d-035c12c09aab",
@@ -32,7 +33,8 @@
         "uuid_titulu":"d2677fbe-f660-4da2-a55d-035c12c09aab",
         "typ":"tištěné",
         "state":"auto",
-        "datum_vydani":"2017-12-06T00:00:00Z"},
+        "datum_vydani":"2017-12-06T00:00:00Z",
+        "datum_vydani_den":"20171206"},
       {
         "id":"EE03D60FC4E4EE0CC70C0BA121B200285139A0DX",
         "id_titul":"d2677fbe-f660-4da2-a55d-035c12c09aab",
@@ -49,7 +51,8 @@
         "uuid_titulu":"d2677fbe-f660-4da2-a55d-035c12c09aab",
         "typ":"tištěné",
         "state":"auto",
-        "datum_vydani":"2017-12-13T00:00:00Z"},
+        "datum_vydani":"2017-12-13T00:00:00Z",
+        "datum_vydani_den":"20171213"},
       {
         "id":"B121AF557C98EC1B72EF648941F036C7F219ADX",
         "id_titul":"d2677fbe-f660-4da2-a55d-035c12c09aab",
@@ -66,7 +69,8 @@
         "uuid_titulu":"d2677fbe-f660-4da2-a55d-035c12c09aab",
         "typ":"tištěné",
         "state":"auto",
-        "datum_vydani":"2017-12-13T00:00:00Z"},
+        "datum_vydani":"2017-12-13T00:00:00Z",
+        "datum_vydani_den":"20171213"},
       {
         "id":"24F7891E20C4FED67191CBD68590C041645074DX",
         "id_titul":"d2677fbe-f660-4da2-a55d-035c12c09aab",
@@ -84,7 +88,8 @@
         "uuid_titulu":"d2677fbe-f660-4da2-a55d-035c12c09aab",
         "typ":"tištěné",
         "state":"auto",
-        "datum_vydani":"2017-12-20T00:00:00Z"},
+        "datum_vydani":"2017-12-20T00:00:00Z",
+        "datum_vydani_den":"20171220"},
       {
         "id":"861677979DEB382F3E160A8DCE4C9BB2500E550X",
         "id_titul":"d2677fbe-f660-4da2-a55d-035c12c09aab",
@@ -101,7 +106,8 @@
         "uuid_titulu":"d2677fbe-f660-4da2-a55d-035c12c09aab",
         "typ":"tištěné",
         "state":"auto",
-        "datum_vydani":"2017-12-20T00:00:00Z"},
+        "datum_vydani":"2017-12-20T00:00:00Z",
+        "datum_vydani_den":"20171220"},
       {
         "id":"A2165C646474D1ED1A0D11E3C960EF0120128ECX",
         "id_titul":"d2677fbe-f660-4da2-a55d-035c12c09aab",
@@ -118,7 +124,8 @@
         "uuid_titulu":"d2677fbe-f660-4da2-a55d-035c12c09aab",
         "typ":"tištěné",
         "state":"auto",
-        "datum_vydani":"2017-12-27T00:00:00Z"},
+        "datum_vydani":"2017-12-27T00:00:00Z",
+        "datum_vydani_den":"20171227"},
       {
         "id":"754F402EAA274874F96CC97F3E901F276FADFFAX",
         "id_titul":"d2677fbe-f660-4da2-a55d-035c12c09aab",
@@ -153,7 +160,8 @@
         "uuid_titulu":"d2677fbe-f660-4da2-a55d-035c12c09aab",
         "typ":"tištěné",
         "state":"ok",
-        "datum_vydani":"2017-12-19T00:00:00Z"
+        "datum_vydani":"2017-12-19T00:00:00Z",
+        "datum_vydani_den":"20171219"
   },
   {
         "id":"754F402EAA274874F96CC97F3E901F276FADFFAX",

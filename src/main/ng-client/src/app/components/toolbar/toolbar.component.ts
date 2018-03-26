@@ -45,7 +45,18 @@ export class ToolbarComponent implements OnInit {
     return this.state.activePage.indexOf('/add-record') > -1;
   }
   
+  addRecord(){
+    this.service.saveIssue().subscribe(res => {
+      console.log(res);
+    });
+  }
   
+  saveRecord(){
+    this.service.saveIssue().subscribe(res => {
+      console.log(res);
+    });
+    
+  }
   
   openCloneDialog() {
     let cloneParams = new CloneParams();

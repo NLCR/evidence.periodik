@@ -1,10 +1,10 @@
 <mz-card [hoverable]="true" class="app-cursor-pointer">
   <mz-card-title>
-      <a [routerLink]="['/calendar' , item.id, state.calendarView]">{{item.meta_nazev}}</a>
+      <a [routerLink]="['/calendar' , item.id, state.calendarView]">{{item.meta_nazev}}{{item.nazev}}</a>
   </mz-card-title>
   <mz-card-content class="grey-text text-darken-1">
     <i mz-icon-mdi [icon]="'calendar-check'" [size]="'20'"></i>
-    {{item.date}}
+    {{item.den_od}} - {{item.den_do}}
   </mz-card-content>
   <mz-card-action>
     <mz-badge

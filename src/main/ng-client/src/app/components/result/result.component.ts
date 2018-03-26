@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
+import {AppService} from '../../app.service';
+import {AppState} from '../../app.state';
 
 @Component({
   selector: 'app-result',
@@ -9,17 +10,25 @@ import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 export class ResultComponent implements OnInit {
   results: any; // temporary for facets
 
-  constructor(private http: HttpClient) { }
+  constructor(private service: AppService, public state: AppState) { }
 
   ngOnInit() {
-    this.loadResultItems(); // temporary for facets
+    if (this.state.config){
+      this.loadResultItems();
+    } else {
+      this.state.configSubject.subscribe(cfg => {
+        this.loadResultItems();
+      });
+    }
   }
 
   // temporary for facets
   loadResultItems() {
   
-  this.results = this.http.get("../../assets/results.json");
-//    .do(data => console.log("Debug result comonent:" + data));
+//  this.results = this.http.get("../../assets/results.json");
+  this.service.search().subscribe(res => {
+    this.results = res['response']['docs'];
+  });
   }
   
 }

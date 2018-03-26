@@ -47,7 +47,6 @@ export class AppService {
     }
     this.http.get(url, {params: params}).map((res) => {
       this.state.specialDays = res;
-      console.log(this.state.specialDays);
     }).subscribe();
   }
 
@@ -126,6 +125,15 @@ export class AppService {
       return res['response']['docs'];
     });
   }
+  
+  saveIssue(){
+    var url = this.state.config['context'] + 'index';
+    let params: HttpParams = new HttpParams()
+    .set('action', 'SAVE_ISSUE')
+      .set('json', JSON.stringify(this.state.currentIssue));
+    //params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return this.http.get(url, {params: params});
+  }
 
   getIssue(id: string) {
     var url = this.state.config['context'] + 'search/issue/select';
@@ -138,6 +146,39 @@ export class AppService {
     return this.http.get(url, {params: params}).map((res) => {
       return res['response']['docs'];
     });
+  }
+  
+  getIssueTotals(id: string, datum: string) {
+    var url = this.state.config['context'] + 'search/issue/select';
+    let params: HttpParams = new HttpParams()
+    .set('q', '*')
+    .set('wt', 'json')
+//    .set('fq', 'datum_vydani:"' + datum + '"')
+    .append('fq', 'id_titul:"' + id + '"')
+    .set('stats','true')
+    .set('stats.field','{!key=mutace countDistinct=true count=true}mutace')
+    .append('stats.field','{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
+    .append('stats.field','exemplare')
+    return this.http.get(url, {params: params});
+  }
+
+  search() {
+    var url = this.state.config['context'] + 'search/issue/select';
+    let params: HttpParams = new HttpParams()
+    .set('q', '*')
+    .set('wt', 'json')
+    .set('fq', '{!collapse field=id_titul}');
+    //params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return this.http.get(url, {params: params});
+  }
+
+  searchTituly() {
+    var url = this.state.config['context'] + 'search/titul/select';
+    let params: HttpParams = new HttpParams()
+    .set('q', '*')
+    .set('wt', 'json');
+    //params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return this.http.get(url, {params: params});
   }
 
   clone(cfg: CloneParams) {
