@@ -128,6 +128,8 @@ public class Indexer {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
+    
+    
 
     
     private SolrInputDocument cloneOne(SolrDocument doc, LocalDate date, String mutace, int number, int year) {
@@ -137,6 +139,10 @@ public class Indexer {
         });
         idoc.removeField("_version_");
         idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
+        
+            
+        idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
+        LOGGER.info(date.format(DateTimeFormatter.BASIC_ISO_DATE));
         idoc.setField("state", "auto");
         idoc.setField("exemplare", "");
         idoc.setField("cislo", number);
@@ -168,6 +174,13 @@ public class Indexer {
             LOGGER.log(Level.SEVERE, null, ex);
             return null;
         }
+    }
+    
+    public void fromJSON(JSONObject json){
+      SolrInputDocument idoc = new SolrInputDocument();
+      json.keySet().forEach((name) -> {
+            idoc.addField((String) name, json.get((String) name));
+        });
     }
 
     public JSONObject json(SolrQuery query, String core) throws MalformedURLException, IOException {

@@ -97,7 +97,7 @@ public class IndexServlet extends HttpServlet {
         JSONObject json = new JSONObject();
         try {
           Indexer indexer = new Indexer();
-          LOGGER.log(Level.INFO, "getParameterMap: {0}", req.getParameterMap());
+          LOGGER.log(Level.INFO, "getParameterMap: {0}", req.getParameter("json"));
           //indexer.save(req.getParameter("id"), req.getParameterMap());
 
         } catch (Exception ex) {
