@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {AppState} from '../../../app.state';
 
 @Component({
   selector: 'app-facet-used',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FacetUsedComponent implements OnInit {
 
-  constructor() { }
+  constructor(public state: AppState) { }
 
   ngOnInit() {
+  }
+  
+  remove(idx: number){
+    this.state.removeFilter(idx);
+  }
+  
+  removeAll(){
+    this.state.removeAllFilters();
   }
 
 }

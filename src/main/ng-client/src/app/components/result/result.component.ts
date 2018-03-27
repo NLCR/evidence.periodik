@@ -8,7 +8,6 @@ import {AppState} from '../../app.state';
   styleUrls: ['./result.component.scss']
 })
 export class ResultComponent implements OnInit {
-  results: any; // temporary for facets
 
   constructor(private service: AppService, public state: AppState) { }
 
@@ -20,6 +19,9 @@ export class ResultComponent implements OnInit {
         this.loadResultItems();
       });
     }
+      this.state.searchParamsChanged.subscribe(cfg => {
+        this.loadResultItems();
+      });
   }
 
   // temporary for facets
@@ -27,7 +29,8 @@ export class ResultComponent implements OnInit {
   
 //  this.results = this.http.get("../../assets/results.json");
   this.service.search().subscribe(res => {
-    this.results = res['response']['docs'];
+    this.state.setSearchResults(res);
+   //this.docs = this.state.
   });
   }
   

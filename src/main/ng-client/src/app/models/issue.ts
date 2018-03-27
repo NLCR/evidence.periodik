@@ -5,7 +5,7 @@ import {Exemplar} from './exemplar';
 
 export class Issue {
   id: string = "";
-  titul_id: string = "";
+  id_titul: string = "";
   nazev: string = ""; //název na titulní straně	text	Název tak jak je na konkrétním čísle novin
   podnazev: string = ""; //podnázev na titulní straně	text	Podnázev tak jak je na konkrétním čísle novin.
   vydani: string = ""; //vydání	text	název vydání tak jak je uveden na titulní straně
@@ -34,4 +34,15 @@ export class Issue {
   */
   
   state: string = "0"; // Slouzi pro oznaceni aktualinho stavu v ramci aplikace. Tj, automaticke generovane, podtverzeno
+  
+  fromJSON(json: any){
+    let array = Object.getOwnPropertyNames(this);
+    array.forEach(i => {
+      
+      if(json.hasOwnProperty(i)){
+        this[i] = json[i];
+      }
+    });
+    return this;
+  }
 }

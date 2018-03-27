@@ -27,7 +27,7 @@ export class IssueComponent implements OnInit {
   vydani = [];
   periods = [];
 
-  issue: Issue = new Issue();
+  //issue: Issue = new Issue();
   public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
     formatSubmit: 'yyyy-mm-dd',
@@ -44,7 +44,7 @@ export class IssueComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.issue);
+    //console.log(this.issue);
   }
 
   setData(res: any[]) {
@@ -52,18 +52,18 @@ export class IssueComponent implements OnInit {
     this.state.config["vydani"].map(k => {this.vydani.push(k);});
     if (res.length > 0) {
       Object.keys(this.state.config['periodicity']).map(k => {this.periods.push({key: k, value: this.state.config['periodicity'][k]});});
-      this.state.currentIssue = res[0];
+      this.state.currentIssue = new Issue().fromJSON(res[0]);
       if (!this.state.currentIssue.hasOwnProperty('exemplare')) {
         this.state.currentIssue['exemplare'] = [];
       }
       console.log(this.state.currentIssue);
-      this.service.getTitul(this.state.currentIssue.titul_id).subscribe(res2 => {
+      this.service.getTitul(this.state.currentIssue.id_titul).subscribe(res2 => {
         if (res2.length > 0) {
           this.state.currentTitul = res2[0];
         }
       });
     } else {
-      this.issue = new Issue();
+      this.state.currentIssue = new Issue();
     }
   }
 

@@ -12,6 +12,7 @@ import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 
 import {CloneParams} from './models/clone-params';
 import {AppState} from './app.state';
+import {Filter} from './models/filter';
 
 @Injectable()
 export class AppService {
@@ -98,10 +99,10 @@ export class AppService {
       params = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
-      .set('rows', '50')
+      .set('rows', '500')
       .set('fl', '*,exemplare:[json]')
-      .set('fq', 'uuid_titulu:"' + uuid + '"')
-      .set('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
+      .set('fq', 'id_titul:"' + uuid + '"')
+      .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
       url = this.state.config['context'] + 'search/issue/select';
     }
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
@@ -158,6 +159,7 @@ export class AppService {
     .set('stats','true')
     .set('stats.field','{!key=mutace countDistinct=true count=true}mutace')
     .append('stats.field','{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
+    .append('stats.field','vlastnik')
     .append('stats.field','exemplare')
     return this.http.get(url, {params: params});
   }
@@ -167,7 +169,17 @@ export class AppService {
     let params: HttpParams = new HttpParams()
     .set('q', '*')
     .set('wt', 'json')
-    .set('fq', '{!collapse field=id_titul}');
+    .set('fq', '{!collapse field=id_titul}')
+    .set('facet', 'true')
+    .set('json.nl', 'arrntv')
+    .set('facet.field', 'nazev')
+    .append('facet.field', 'mutace')
+    .append('facet.field', 'vlastnik');
+    
+    this.state.filters.forEach((f: Filter) => {
+//    for (let f in this.state.filters){
+      params = params.append('fq', f.field + ':"' + f.value + '"');
+    });
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params});
   }

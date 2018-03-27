@@ -39,7 +39,9 @@ export class CalendarComponent implements OnInit {
         if (id) {
             setTimeout(() => {
                 this.service.getTitul(id).subscribe(res => {
-                    this.state.currentTitul = res[0];
+                  this.state.setCurrentTitul(res[0])
+                    //this.state.currentTitul = res[0];
+                    
                 });
             }, 10);
         }
