@@ -141,7 +141,7 @@ public class Indexer {
     idoc.removeField("_version_");
     idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
     idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
-    LOGGER.info(date.format(DateTimeFormatter.BASIC_ISO_DATE));
+    
     idoc.setField("state", "auto");
     idoc.setField("exemplare", "");
     idoc.setField("cislo", number);
@@ -181,34 +181,44 @@ public class Indexer {
       SolrInputDocument idoc = new SolrInputDocument();
       for (Object key : json.keySet()) {
         String name = (String) key;
-//      json.keySet().forEach((String name) -> {
-        if ("datum_vydani".equals(name)) {
-//          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-
-//          LocalDate date = LocalDate.now();
-          DateTimeFormatter f = DateTimeFormatter.ISO_INSTANT.withResolverStyle(ResolverStyle.SMART);
-          Instant i = Instant.from(f.parse(json.getString(name)));
-          LocalDateTime date = LocalDateTime.ofInstant(i, ZoneId.systemDefault());
-          idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
-          idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
-        } else if ("_version_".equals(name)) {
-          //Skip this
-        } else if ("exemplare".equals(name)) {
-          //Extract vlastnik
-          JSONArray ex = new JSONArray(json.get(name));
-          for(int i = 0; i<ex.length(); i++){
-            String vl = ex.getJSONObject(i).getString("vlastnik");
-            idoc.addField("vlastnik", vl);
-            idoc.addField("exemplare", ex.getJSONObject(i));
-          }
-        } else {
+        if (null == name) {
           idoc.addField(name, json.get(name));
+        } else//      json.keySet().forEach((String name) -> {
+        switch (name) {
+          case "datum_vydani":
+            //          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+            
+//          LocalDate date = LocalDate.now();
+            DateTimeFormatter f = DateTimeFormatter.ISO_INSTANT.withResolverStyle(ResolverStyle.SMART);
+            Instant ins = Instant.from(f.parse(json.getString(name)));
+            LocalDateTime date = LocalDateTime.ofInstant(ins, ZoneId.systemDefault());
+            idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
+            idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
+            break;
+        //Skip this
+          case "_version_":
+            break;
+          case "exemplare":
+            //Extract vlastnik and index each exemplar
+            JSONArray ex = json.getJSONArray(name);
+            for(int i = 0; i<ex.length(); i++){
+              String vl = ex.getJSONObject(i).getString("vlastnik");
+              idoc.addField("vlastnik", vl);
+              idoc.addField("exemplare", ex.getJSONObject(i).toString());
+            } break;
+          default:
+            idoc.addField(name, json.get(name));
+            break;
         }
+      }
+      
+      if("".equals(json.optString("id", ""))){
+        idoc.setField("id", generateId(idoc));
       }
       LOGGER.info(idoc.toString());
       solr.add("issue", idoc);
       solr.commit("issue");
-      ret.put("success", "JSON added");
+      ret.put("success", "issue saved");
     } catch (SolrServerException | IOException ex) {
       ret.put("error", ex);
       LOGGER.log(Level.SEVERE, null, ex);
