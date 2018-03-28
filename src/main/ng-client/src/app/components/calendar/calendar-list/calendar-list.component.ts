@@ -29,6 +29,7 @@ export class CalendarListComponent implements OnInit {
         private datePipe: DatePipe) {}
 
     ngOnInit() {
+    this.state.calendarView = "list";
         if (this.state.config) {
             this.setDays();
         } else {

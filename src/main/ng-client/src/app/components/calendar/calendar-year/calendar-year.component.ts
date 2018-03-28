@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {AppState} from '../../../app.state';
 
 @Component({
   selector: 'app-calendar-year',
@@ -7,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CalendarYearComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+        public state: AppState) { }
 
   ngOnInit() {
+    this.state.calendarView = "year";
   }
 
 }

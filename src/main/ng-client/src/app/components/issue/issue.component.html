@@ -1,8 +1,11 @@
 <app-toolbar></app-toolbar>
 
-<div class="app-issue-wrapper grey lighten-5" *ngIf="state.currentIssue.id">
+<div class="app-issue-wrapper grey lighten-5" *ngIf="state.currentIssue.id || isNew">
   <div class="row">
     <div class="col s4">
+        <mz-input-container>
+          <input mz-input [label]="'record.id_titulu' | translate" id="id_titulu" name="id_titulu" type="text" [(ngModel)]="state.currentTitul.id_titulu">
+        </mz-input-container>
         <mz-input-container>
           <input mz-input [label]="'record.meta_title' | translate" id="meta_nazev" name="meta_nazev" type="text" [(ngModel)]="state.currentTitul.meta_nazev">
         </mz-input-container>
@@ -16,7 +19,7 @@
           <select mz-select id="vydani" name="vydani" [placeholder]="'record.publication.placeholder' | translate" 
                   [ngModel]="'' + state.currentIssue.vydani | translate" 
                   (ngModelChange)="state.currentIssue.vydani=$event">
-            <option *ngFor="let v of vydani">{{'record.publication.' + v | translate }}</option>
+            <option *ngFor="let v of state.vydani">{{'record.publication.' + v | translate }}</option>
           </select>
         </mz-select-container>
         <mz-input-container>
@@ -69,8 +72,8 @@
           <i mz-icon-mdi [icon]="'plus'"></i>
         </button>
         <h5>{{'record.specimen_count' | translate}}: {{state.currentIssue.exemplare.length}}</h5>
-        <mz-collapsible [mode]="'expandable'" [onClose]="closeFunctionCallback">
-          <mz-collapsible-item  *ngFor="let ex of state.currentIssue.exemplare;let idx= index" [active]="false">
+        <mz-collapsible [mode]="'expandable'" [onClose]="closeFunctionCallback" *ngIf="!addingEx">
+          <mz-collapsible-item [active]="false"  *ngFor="let ex of state.currentIssue.exemplare;let idx= index;">
             <mz-collapsible-item-header>
               <span>
                 {{'record.specimen_number' | translate}} {{idx + 1}}
@@ -96,7 +99,7 @@
               <mz-input-container>
                 <input mz-input [label]="'record.signatura' | translate" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura" type="text">
               </mz-input-container>
-              <button mz-button>{{'button.delete_specimen' | translate}}</button>
+              <button mz-button (click)="removeExemplar(idx)">{{'button.delete_specimen' | translate}}</button>
             </mz-collapsible-item-body>
           </mz-collapsible-item>
         </mz-collapsible>

@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {DatePipe} from '@angular/common';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 
 import {AppState} from '../../../app.state';
@@ -26,21 +26,26 @@ export class CalendarMonthComponent implements OnInit {
     public state: AppState,
     private service: AppService,
     private router: Router,
+    private route: ActivatedRoute,
     private datePipe: DatePipe) {}
 
   ngOnInit() {
-    if (this.state.config) {
-      this.setDays();
-    } else {
-      this.subscriptions.push(this.state.configSubject.subscribe((state) => {
-        this.setDays();
-      }));
-    }
-
+    this.state.calendarView = "month";
     this.subscriptions.push(this.state.currentDayChanged.subscribe((state) => {
       this.setDays();
     }));
-
+    
+      this.subscriptions.push(this.state.configSubject.subscribe((state) => {
+        this.setDays();
+      }));
+    
+    let day = this.route.snapshot.paramMap.get('day');
+        if (day) {
+          let d: Date = new Date(parseInt(day.substr(0,4)), parseInt(day.substr(4,2)) - 1, parseInt(day.substr(6,2)));
+          this.state.changeCurrentDay(d); 
+          return;
+        }
+    
   }
 
   ngOnDestroy() {
@@ -62,6 +67,9 @@ export class CalendarMonthComponent implements OnInit {
   }
 
   setDays() {
+    if (!this.state.config) {
+      return;
+    }
     this.days = [];
     this.service.getSpecialDaysOfMonth(this.state.currentDay).subscribe(res => {
 

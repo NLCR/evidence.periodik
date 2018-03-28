@@ -102,7 +102,7 @@ export function createTranslateLoader(http: HttpClient) {
       { path: 'calendar/:id', component: CalendarComponent, 
         children: [
           { path: '', redirectTo: 'month', pathMatch: 'full' },
-          { path: 'month', component: CalendarMonthComponent },
+          { path: 'month/:day', component: CalendarMonthComponent },
          // { path: ':id/month', component: CalendarMonthComponent },
           { path: 'year', component: CalendarYearComponent },
           { path: 'list', component: CalendarListComponent }

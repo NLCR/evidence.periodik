@@ -23,8 +23,7 @@ export class ResultComponent implements OnInit {
         this.loadResultItems();
       });
   }
-
-  // temporary for facets
+  
   loadResultItems() {
   
 //  this.results = this.http.get("../../assets/results.json");

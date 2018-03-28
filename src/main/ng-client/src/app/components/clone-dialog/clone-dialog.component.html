@@ -24,7 +24,7 @@
     </mz-datepicker-container>
     <mz-select-container>
       <select mz-select id="Periodicita" name="Periodicita" [placeholder]="'modal.periodicity' | translate" [(ngModel)]="params.periodicity">
-        <option *ngFor="let p of periods" [value]="p.key">{{p.value}}</option>
+        <option *ngFor="let p of state.periods" [value]="p.key">{{p.value}}</option>
       </select>
     </mz-select-container>
     <mz-input-container>

@@ -52,6 +52,7 @@ export class ToolbarComponent implements OnInit {
   }
   
   saveRecord(){
+    this.state.currentIssue.state = 'ok';
     this.service.saveIssue().subscribe(res => {
       console.log(res);
     });
@@ -65,6 +66,7 @@ export class ToolbarComponent implements OnInit {
     cloneParams.end_date = this.state.currentIssue.datum_vydani;
     cloneParams.start_number = this.state.currentIssue.cislo;
     cloneParams.start_year = this.state.currentIssue.rocnik_number;
+    cloneParams.periodicity = this.state.currentIssue.periodicita;
     
     this.modalService.open(CloneDialogComponent, {"periods": this.periods, "state": this.state, "service": this.service, "params": cloneParams});
   }

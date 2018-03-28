@@ -13,6 +13,7 @@ import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 import {CloneParams} from './models/clone-params';
 import {AppState} from './app.state';
 import {Filter} from './models/filter';
+import {Titul} from './models/titul';
 
 @Injectable()
 export class AppService {
@@ -111,7 +112,7 @@ export class AppService {
     });
   }
 
-  getTitul(id: string) {
+  getTitulOld(id: string) {
     var url = this.state.config['context'] + 'search/titul/select';
     let params: HttpParams = new HttpParams();
     let test = this.state.config['test'];
@@ -123,7 +124,28 @@ export class AppService {
       //params.set('fl', 'start:datum_vydani,title:nazev,*')
     }
     return this.http.get(url, {params: params}).map((res) => {
-      return res['response']['docs'];
+      return res['response']['docs'][0];
+    });
+  }
+  
+
+  getTitul(id: string): Observable<Titul> {
+    var url = this.state.config['context'] + 'search/issue/select';
+    let params: HttpParams = new HttpParams();
+    let test = this.state.config['test'];
+    if (test) {
+      url = this.state.config['context'] + 'assets/titul.json';
+    } else {
+      params = params.set('q', '*').set('rows', '1').set('fq', 'id_titul:"' + id + '"');
+      //params.set('fl', 'start:datum_vydani,title:nazev,*')
+    }
+    return this.http.get(url, {params: params}).map((res) => {
+      let t = new Titul();
+        t.id = id;
+      if(res['response']['numFound']>0){
+        t.meta_nazev = res['response']['docs'][0]['nazev'];
+      }
+      return t;
     });
   }
   
@@ -149,7 +171,7 @@ export class AppService {
     });
   }
   
-  getIssueTotals(id: string, datum: string) {
+  getIssueTotals(id: string) {
     var url = this.state.config['context'] + 'search/issue/select';
     let params: HttpParams = new HttpParams()
     .set('q', '*')
@@ -159,7 +181,7 @@ export class AppService {
     .set('stats','true')
     .set('stats.field','{!key=mutace countDistinct=true count=true}mutace')
     .append('stats.field','{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
-    .append('stats.field','vlastnik')
+    .append('stats.field','{!key=vlastnik countDistinct=true count=true max=true min=true}vlastnik')
     .append('stats.field','exemplare')
     return this.http.get(url, {params: params});
   }

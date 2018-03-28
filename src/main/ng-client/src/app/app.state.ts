@@ -20,6 +20,8 @@ export class AppState {
   
   //Holds client configuration
   config: any;
+  periods: {key: string, value: string}[] = [];
+  vydani = [];
   configured: boolean = false;
   
   currentLang: string = 'cs';
@@ -50,6 +52,10 @@ export class AppState {
   public filters: Filter[] = []; 
   
   setConfig(cfg){
+    this.config = cfg;
+    
+    Object.keys(this.config['periodicity']).map(k => {this.periods.push({key: k, value: this.config['periodicity'][k]});});
+    this.config["vydani"].map(k => {this.vydani.push(k);});
     this.configured = true;
     this._configSubject.next(cfg);
   }

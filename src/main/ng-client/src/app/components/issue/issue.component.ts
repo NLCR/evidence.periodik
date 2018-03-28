@@ -24,10 +24,9 @@ export class IssueComponent implements OnInit {
 
   stavy = [];
   states = [];
-  vydani = [];
-  periods = [];
 
-  //issue: Issue = new Issue();
+  addingEx: boolean = false;
+  isNew = false;
   public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
     formatSubmit: 'yyyy-mm-dd',
@@ -48,19 +47,14 @@ export class IssueComponent implements OnInit {
   }
 
   setData(res: any[]) {
-    this.vydani = [];
-    this.state.config["vydani"].map(k => {this.vydani.push(k);});
     if (res.length > 0) {
-      Object.keys(this.state.config['periodicity']).map(k => {this.periods.push({key: k, value: this.state.config['periodicity'][k]});});
       this.state.currentIssue = new Issue().fromJSON(res[0]);
       if (!this.state.currentIssue.hasOwnProperty('exemplare')) {
         this.state.currentIssue['exemplare'] = [];
       }
       console.log(this.state.currentIssue);
       this.service.getTitul(this.state.currentIssue.id_titul).subscribe(res2 => {
-        if (res2.length > 0) {
-          this.state.currentTitul = res2[0];
-        }
+          this.state.currentTitul = res2;
       });
     } else {
       this.state.currentIssue = new Issue();
@@ -70,9 +64,7 @@ export class IssueComponent implements OnInit {
   langChanged() {
     this.stavy = [];
     this.states = [];
-    this.vydani = [];
     this.cdRef.detectChanges();
-    this.state.config["vydani"].map(k => {this.vydani.push(k);});
     Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
     Object.keys(StateIssue).map(k => {this.states.push({key: k, value: StateIssue[k]});});
     this.cdRef.detectChanges();
@@ -90,26 +82,46 @@ export class IssueComponent implements OnInit {
     this.state.currentTitul = new Titul();
     this.state.currentIssue = new Issue();
     let id = this.route.snapshot.paramMap.get('id');
-    if (this.state.config) {
-      this.service.getIssue(id).subscribe(res => {
-        this.setData(res);
-      });
-    } else {
-      this.subscriptions.push(this.state.configSubject.subscribe((state) => {
+    if(id){
+    this.isNew = false;
+      if (this.state.config) {
         this.service.getIssue(id).subscribe(res => {
           this.setData(res);
         });
-      }));
+      } else {
+        this.subscriptions.push(this.state.configSubject.subscribe((state) => {
+          this.service.getIssue(id).subscribe(res => {
+            this.setData(res);
+          });
+        }));
+      }
+    } else {
+      
+    this.isNew = true;
     }
 
 
     this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
-
       this.langChanged();
     }));
   }
   
   addExemplar() {
-    this.state.currentIssue.exemplare.push(new Exemplar());
+    this.addingEx = true;
+    setTimeout(() => {
+      
+      this.state.currentIssue.exemplare.push(new Exemplar());
+      this.addingEx = false;
+    }, 1);
+  }
+  
+  removeExemplar(idx: number){
+    this.addingEx = true;
+    setTimeout(() => {
+      
+      this.state.currentIssue.exemplare.splice(idx, 1);
+      this.addingEx = false;
+    }, 1);
+    
   }
 }

@@ -15,16 +15,14 @@ export class CloneDialogComponent extends MzBaseModal {
         format: 'dd/mm/yyyy',
         formatSubmit: 'yyyy-mm-dd',
     };
-//Input properties
+    
+    //Input properties
     periods: string[] = [];
     state: AppState;
     service: AppService;
     
     //Clone parameters
     params: CloneParams = new CloneParams();
-//    cloneOd: string;
-//    cloneDo: string;
-//    clonePeriodicity: string;
     
     
 //    ngOnInit(){

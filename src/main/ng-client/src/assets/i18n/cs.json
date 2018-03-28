@@ -35,6 +35,13 @@
       "CCS" : "chybí celé stránky",
       "Z" : "není vůbec (zničeno/ztráta)"
     },
+    "periodicita":{
+        "P1W": "Tydennik",
+        "P1D": "Deník",
+        "P1Y": "Rocnik",
+        "P1M": "Mesicnik",
+        "P6M": "Dvakrat za rok"
+    },
     "year": "Ročník",
     "number": "Číslo",
     "second_number": "Druhé číslo",
@@ -80,6 +87,7 @@
       "next_page": "Další stánka"
     },
     "badge": {
+      "issues": "záznamů",
       "specimens": "exemplářů",
       "mutations": "mutací",
       "owners": "vlastníků",
