@@ -1,0 +1,107 @@
+// --- TOOLBAR ---
+
+.app-toolbar-wrapper {
+  display: flex;
+  height: $app-toolbar-height;
+  @include set-border(bottom, 1, solid, #{$app-grey-l-2});
+
+  &.app-toolbar-issue {
+    display: block;
+    line-height: $app-toolbar-height;
+    
+    .row {
+      @extend .app-clean-mg;
+      
+      .col {
+        height: $app-toolbar-height;
+        line-height: $app-toolbar-height;
+        padding: 0 $app-container;
+        
+        &:first-child {
+          span {
+            font-size: 1.2rem;  
+            color: $primary-color;
+          }
+        }
+        
+        .btn {
+          vertical-align: unset;
+        }
+      }
+    }
+  }
+
+  .app-row-count {
+    padding: 0 $app-container;
+    width: $app-facet-width;
+    flex: none;
+  }
+  
+  .app-row-nav {
+    padding: 0 $app-container;
+    width: 100%;
+    
+    .pagination {
+      @extend .app-clean-mg;
+    }
+  }
+
+  &.app-toolbar-calendar {
+    .app-row-nav {
+      .col {
+        &:first-child {
+          .btn {
+            background-color: $app-grey-l-5;
+            @include set-border(all, 1, solid, #{$app-grey-l-3});
+            height: $app-toolbar-height-elements;
+            line-height: $app-toolbar-height-elements;
+            padding: 0 0.5rem;
+            color: $app-grey;
+
+            &:hover {
+              background-color: $app-grey-l-3;
+            }
+          }
+
+          span {
+            margin-left: $app-container; 
+          }
+
+          .pagination {
+            @extend .app-clean-mg;
+          }
+        }
+
+        &:nth-child(2) {
+          span {
+            height: $app-toolbar-height-elements;
+            line-height: $app-toolbar-height-elements;
+            font-size: 1.3rem;
+            color: $primary-color;
+          }
+        }
+
+        &:last-child {
+          padding-top: 4px;
+
+          a {
+            padding-left: 0.75rem;
+            vertical-align: -webkit-baseline-middle;
+            color: $app-grey-c-1;
+
+            &:hover, &.active {
+              i[class*="mdi-"] {
+                color: $primary-color;
+              } 
+            }
+
+            .mdi:before {
+              line-height: normal;
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+    }
+  }
+}

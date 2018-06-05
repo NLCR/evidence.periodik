@@ -1,0 +1,11 @@
+<app-toolbar></app-toolbar>
+<app-facet></app-facet>
+
+<div class="app-result-wrapper grey lighten-5">
+  <div class="row" *ngIf="state.searchResults">
+    <!--
+    <app-result-item *ngFor="let item of state.searchResults['response']['docs']" [item]="item" class="col s3"></app-result-item>
+    -->
+    <app-results-table></app-results-table>
+  </div>
+</div><!--/.app-results-wrapper -->

@@ -1,0 +1,8 @@
+// --- RESULT ---
+
+.app-result-wrapper {
+  @extend .app-full-wrapper;
+  @import "app-result-item";
+  
+  padding: 0.75rem;
+}

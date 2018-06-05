@@ -1,0 +1,82 @@
+// --- LAYOUT ---
+
+html,
+body, 
+app-root {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+body {
+  font-family: 'Roboto-Condensed-Regular';
+}
+
+
+app-root {
+  main {
+    width: 100%;
+    height: calc(100% - #{$navbar-height});
+    
+    app-home {
+      display: block;
+      width: 100%;
+      height: 100%;
+      
+      @import "app-home";
+    }
+    
+    app-login {
+      display: block;
+      width: 100%;
+      height: 100%;
+      
+      @import "app-login";
+    }
+    
+    app-add-record {
+      display: block;
+      width: 100%;
+      height: calc(100% - #{$app-toolbar-height});
+      
+      @import "app-add-record";
+    }
+    
+    app-issue {
+      display: block;
+      width: 100%;
+      height: calc(100% - #{$app-toolbar-height});
+      
+      @import "app-issue";
+    }
+    
+    app-result {
+      display: block;
+      width: 100%;
+      height: calc(100% - #{$app-toolbar-height});
+
+      @import "app-result";
+    }
+    
+    app-calendar {
+      display: block;
+      width: 100%;
+      height: calc(100% - #{$app-toolbar-height});
+
+      @import "app-calendar";
+    }
+    
+    app-toolbar {
+      @import "app-toolbar";
+    }
+    
+    app-facet {
+      display: block;
+      width: $app-facet-width;
+      height: 100%;
+      float: left;
+
+      @import "app-facet";
+    }
+  }  
+}

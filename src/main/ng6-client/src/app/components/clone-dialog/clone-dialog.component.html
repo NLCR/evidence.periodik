@@ -1,0 +1,49 @@
+<mz-modal [fixedFooter]="true">
+  <mz-modal-header>
+    {{'modal.clone_options' | translate}}
+  </mz-modal-header>
+  
+  <mz-modal-content>
+    <mz-datepicker-container>
+      <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
+      <input mz-datepicker
+             [options]="options"
+             [label]="'modal.from' | translate"
+             [(ngModel)]="params.start_date"
+             id="start_date" name="start_date"
+             type="text" />
+    </mz-datepicker-container>
+    <mz-datepicker-container>
+      <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
+      <input mz-datepicker
+             [options]="options"
+             [label]="'modal.till' | translate"
+             [(ngModel)]="params.end_date"
+             id="end_date" name="end_date"
+             type="text" />
+    </mz-datepicker-container>
+    <mz-select-container>
+      <select mz-select id="Periodicita" name="Periodicita" [placeholder]="'modal.periodicity' | translate" [(ngModel)]="params.periodicity">
+        <option *ngFor="let p of state.periods" [value]="p.key">{{p.value}}</option>
+      </select>
+    </mz-select-container>
+    <mz-input-container>
+      <input mz-input [label]="'clone.start_number' | translate" id="start_number" name="start_number" [(ngModel)]="params.start_number" type="text">
+    </mz-input-container>
+    <mz-input-container>
+      <input mz-input [label]="'clone.start_year' | translate" id="start_year" name="start_year" [(ngModel)]="params.start_year" type="text">
+    </mz-input-container>
+    <mz-checkbox-container>
+      <input mz-checkbox
+             [(ngModel)]="params.onSpecialDays"
+             [label]="'modal.on_special_days' | translate"
+             id="onSpecialDays"
+             type="checkbox" />
+    </mz-checkbox-container>
+  </mz-modal-content>
+  
+  <mz-modal-footer>
+      <button mz-button [flat]="true" (click)="ok()">OK</button>
+      <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{'button.cancel' | translate}}</button>
+  </mz-modal-footer>
+</mz-modal>

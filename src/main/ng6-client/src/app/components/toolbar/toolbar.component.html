@@ -1,0 +1,54 @@
+<div class="app-toolbar-wrapper app-toolbar-calendar valign-wrapper" *ngIf="showCalendar()">
+  <div class="app-row-count">
+    <app-toolbar-count></app-toolbar-count>
+  </div><!--/.app-row-count -->
+  <div class="app-row-nav row app-clean-mg">
+    <div class="col s3 app-clean-pd">
+      <app-toolbar-pagination-calendar></app-toolbar-pagination-calendar>
+    </div><!--/.col -->
+    <div class="col s6 center-align">
+      <span *ngIf="state.currentTitul">{{state.currentTitul.meta_nazev}}</span>
+    </div><!--/.col -->
+    <div class="col s3 app-clean-pd right-align">
+      <app-toolbar-nav-views></app-toolbar-nav-views>
+    </div><!--/.col -->
+  </div><!--/.app-row-nav -->
+</div><!--/.app-toolbar-wrapper-calendar -->
+
+
+<div class="app-toolbar-wrapper app-toolbar-result valign-wrapper" *ngIf="showResult()">
+  <div class="app-row-count">
+    <app-toolbar-count></app-toolbar-count>
+  </div><!--/.app-row-count -->
+  <div class="app-row-nav row app-clean-mg">
+    <div class="col s12 app-clean-pd">
+      <app-toolbar-pagination-result></app-toolbar-pagination-result>
+    </div><!--/.col -->
+  </div><!--/.app-row-nav -->
+</div><!--/.app-toolbar-wrapper -->
+
+
+<div class="app-toolbar-wrapper app-toolbar-issue" *ngIf="showIssue()">
+  <div class="row">
+    <div class="col s4">
+      <span>Issue: {{state.currentTitul.meta_nazev}} {{state.currentIssue.datum_vydani | date: "dd/MM/yyyy"}}</span>
+    </div><!--/.col -->
+    <div class="col s8 right-align">
+      <button mz-button (click)="saveRecord()">{{'button.save' | translate}}</button>
+      <button mz-button (click)="openCloneDialog()">{{'button.clone' | translate}}</button>
+      <button mz-button>{{'button.delete' | translate}}</button>
+    </div><!--/.col -->
+  </div><!--/.row -->
+</div><!--/.app-toolbar-wrapper -->
+
+
+<div class="app-toolbar-wrapper app-toolbar-issue" *ngIf="showAddRecord()">
+  <div class="row">
+    <div class="col s4">
+      <span>{{'navbar.add_record' | translate}}</span>
+    </div><!--/.col -->
+    <div class="col s8 right-align">
+      <button mz-button (click)="addRecord()">{{'button.save' | translate}}</button>
+    </div><!--/.col -->
+  </div><!--/.row -->
+</div><!--/.app-toolbar-wrapper -->

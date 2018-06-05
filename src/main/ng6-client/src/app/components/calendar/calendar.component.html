@@ -1,0 +1,9 @@
+<app-toolbar></app-toolbar>
+<app-facet></app-facet>
+
+<div class="app-calendar-wrapper">
+  <router-outlet></router-outlet>
+  <a routerLink="/add-record" mz-button [float]="true" [large]="true" class="red z-depth-2" mz-tooltip [tooltip]="'calendar.tooltip.add_record' | translate" [position]="'top'">
+    <i mz-icon-mdi [icon]="'plus'"></i>
+  </a><!--/.btn-float -->
+</div><!--/.app-results-wrapper -->

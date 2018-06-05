@@ -1,0 +1,21 @@
+<mz-navbar>
+  <a routerLink="home" *ngIf="state.activePage != '/' && state.activePage != '/home'" href="./" class="brand-logo">
+    <span class="cyan-text text-lighten-4">{{'app.title1' | translate}}</span> {{'app.title2' | translate}}
+  </a>
+  <app-search-bar *ngIf="state.activePage != '/' && state.activePage != '/home'"></app-search-bar>
+  <mz-navbar-item-container [align]="'right'">
+    <mz-navbar-item routerLinkActive="active" #home="routerLinkActive" [active]="home.isActive">
+      <a routerLink="home">{{'navbar.home' | translate}}</a>
+    </mz-navbar-item>
+    <mz-navbar-item routerLinkActive="active" #addRecord="routerLinkActive" [active]="addRecord.isActive">
+      <a routerLink="issue">{{'navbar.add_record' | translate}}</a>
+    </mz-navbar-item>
+    <mz-navbar-item routerLinkActive="active" #login="routerLinkActive" [active]="login.isActive">
+      <a routerLink="login">{{'navbar.login' | translate}}</a>
+    </mz-navbar-item>
+    <mz-navbar-item>
+      <a *ngIf="currLang !== 'en'" (click)="changeLang('en')" title="Switch to english">English</a>
+      <a *ngIf="currLang !== 'cs'" (click)="changeLang('cs')" title="Přepni na češtinu">Česky</a>
+    </mz-navbar-item>
+  </mz-navbar-item-container>
+</mz-navbar>

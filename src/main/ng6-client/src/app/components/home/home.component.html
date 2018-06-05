@@ -1,0 +1,22 @@
+<div class="app-home-wrapper grey lighten-5">
+  <section class="container center-align">
+    <div class="row">
+      <div class="col s12">
+        <a [routerLink]="['']" class="brand-logo" mz-tooltip [tooltip]="'Systém pro vyhledávání preiodik'" [position]="'bottom'">
+          <span class="cyan-text text-lighten-3">{{'app.title1' | translate}}</span> {{'app.title2' | translate}}
+        </a>
+      </div><!--/.col -->
+    </div><!--/.row -->
+    <div class="row">
+      <div class="col offset-s4 s4 offset-s4">
+        <div class="divider"></div>
+      </div><!--/.col -->
+    </div><!--/.row -->
+    <div class="row">
+      <div class="col s12 grey-text text-darken-5">
+        {{'app.desc' | translate}}
+      </div><!--/.col -->
+    </div><!--/.row -->
+    <app-search-bar></app-search-bar>
+  </section>
+</div>

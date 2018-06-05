@@ -1,0 +1,77 @@
+<app-toolbar></app-toolbar>
+
+<div class="app-add-record-wrapper grey lighten-5">
+  <div class="row">
+    <div class="col s6">
+      <mz-input-container>
+        <input mz-input [label]="'record.meta_title' | translate" id="meta_nazev" name="meta_nazev" type="text" [(ngModel)]="state.currentTitul.meta_nazev">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.name_title_page' | translate" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.subname_title_page' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.publication' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.mutation' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-datepicker-container>
+        <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
+        <input mz-datepicker [label]="'record.date_publication' | translate" [ngModel] id="" type="tel" />
+      </mz-datepicker-container>
+      <mz-select-container>
+        <select mz-select id="" [placeholder]="'record.time_publication.placeholder' | translate">
+          <option>{{ 'record.time_publication.morning' | translate }}</option>
+          <option>{{ 'record.time_publication.afternoon' | translate }}</option>
+          <option>{{ 'record.time_publication.evening' | translate }}</option>
+        </select>
+        <div class="clearfix"></div>
+      </mz-select-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.pages_count' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.state' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.year' | translate" id="" type="text">
+      </mz-input-container>
+    </div><!--/.col -->
+    
+    <div class="col s6">
+      <mz-input-container>
+        <input mz-input [label]="'record.number' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.second_number' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.state_desc' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.ownership' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.barcode' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.signatura' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.id_bib_record' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.uuid_number' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.uuid_title' | translate" id="" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.url_kramerius' | translate" id="" type="text">
+      </mz-input-container>
+    </div><!--/.col -->
+  </div><!--/.row -->
+</div><!--/.app-add-record-wrapper -->

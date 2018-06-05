@@ -1,0 +1,11 @@
+{
+    "response": {
+        "docs":
+                [
+                    {"id" : "20171204", "type": "udalost", "title": "Mikulas", "year":2017, "month": 12, "day":4},
+                    {"id" : "1224", "type": "svatek", "title": "Štědrý den", "year":0, "month": 12, "day":24},
+                    {"id" : "1225", "type": "svatek", "title": "Vánoce", "year":0, "month": 12, "day":25},
+                    {"id" : "1226", "type": "svatek", "title": "Svatý Štěpán", "year":0, "month": 12, "day":26}
+                ]
+    }
+}

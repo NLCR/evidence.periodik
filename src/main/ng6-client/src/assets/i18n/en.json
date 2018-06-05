@@ -1,0 +1,117 @@
+{
+  "app": {
+    "title": "Registration of periodicals",
+    "title1": "Registration",
+    "title2": "of periodicals",
+    "desc": "system for searching in the registration of periodicals"
+  },
+  "navbar": {
+    "home": "Home",
+    "add_record": "Add record",
+    "login": "Login"
+  },
+  "searchbox": {
+    "placeholder": "Search in registration of the periodicals"
+  },
+  "q_placeholder": "Search keywords, articles, genres, authors...",
+  "dummy": "",
+  "record": {
+    "meta_title": "Meta title",
+    "name_title_page": "Name on title page",
+    "subname_title_page": "Subname on title page",
+    "time_publication": "Time of publication",
+    "mutation": "Mutation",
+    "date_publication": "Date of publication",
+    "publication": {
+      "placeholder": "Publication",
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "evening": "Evening"
+    },
+    "pages_count": "Pages count",
+    "state": "State",
+    "StavIssue": {
+      "OK" : "ok",
+      "PC" : "damaged - readable", 
+      "PZ" : "damaged - loss of information",
+      "CCS" : "missing entire pages",
+      "Z" : "missing at all (destroyed / lost)"
+    },
+    "year": "Year",
+    "number": "Number",
+    "second_number": "Second number",
+    "state_desc": "State - description",
+    "ownership": "Ownership",
+    "barcode": "Barcode",
+    "signatura": "Signature",
+    "id_bib_record": "Id bib record",
+    "uuid_number": "Uuid number",
+    "uuid_title": "Uuid title",
+    "url_kramerius": "URL of Kramerius",
+    "specimen_count": "Specimen count",
+    "specimen_number": "Specimen number"
+  },
+  "button": {
+    "save": "Save",
+    "clone": "Clone",
+    "delete": "Delete",
+    "add_specimen": "Add specimen",
+    "add_mutation": "Add mutation",
+    "add_background": "Add background",
+    "delete_all_mutations": "Delete all mutations",
+    "delete_specimen": "Delete specimen",
+    "cancel": "Cancel",
+    "login": "Login"
+  },
+  "facet": {
+    "title": {
+      "active_filters": "Active filters",
+      "caption": "Caption",
+      "mutation": "Mutation",
+      "ownership": "Ownership"
+    },
+    "tooltip": {
+      "delete_all_filters": "Delete all filters",
+      "delete_this_filter": "Delete this filter"
+    }
+  },
+  "result": {
+    "found_records": "Found records",
+    "pagination": {
+      "previous_page": "Previous page",
+      "next_page": "Next page"
+    },
+    "badge": {
+      "specimens": "specimens",
+      "mutations": "mutations",
+      "owners": "owners",
+      "digitized": "digitized"
+    }
+  },
+  "calendar": {
+    "next_issues": "next issues",
+    "tooltip": {
+      "previous_month": "Previous month",
+      "next_month": "Next month",
+      "display_month": "Display month",
+      "display_year": "Display year",
+      "display_list": "Display list",
+      "specimen_count": "Specimen count",
+      "add_record": "Add record",
+      "digitized": "Digitized",
+      "show_all_issues": "Show all issues"
+    }
+  },
+  "modal": {
+    "clone_options": "Clone options",
+    "from": "From",
+    "till": "Till",
+    "periodicity": "Periodicity",
+    "on_special_days": "On special days"
+  },
+  "login": {
+    "desc": "Please, login",
+    "user": "User",
+    "password": "Password"
+  }
+}

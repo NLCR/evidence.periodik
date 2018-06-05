@@ -1,0 +1,38 @@
+<div class="app-login-wrapper grey lighten-5">
+  <div class="container">
+    <div class="row">
+      <div class="col s12 offset-m2 m8 offset-m2 offset-l3 l6 offset-l3 offset-xl4 xl4 offset-xl4 ">
+        <mz-card [hoverable]="true">
+          <mz-card-title>
+            <div class="center-align">
+              {{'login.desc' | translate}} ...
+            </div>
+          </mz-card-title>
+          <mz-card-content>
+            <form>
+              <div class="row app-clean-mg">
+                <mz-input-container class="col s12">
+                  <i mz-icon-mdi mz-input-prefix [icon]="'account'"></i>
+                  <input mz-input type="text" [label]="'login.user' | translate" class="form-control" />   
+                </mz-input-container>
+              </div>
+              <div class="row app-clean-mg">
+                <mz-input-container class="col s12">
+                  <i mz-icon-mdi mz-input-prefix [icon]="'lock-outline'"></i>
+                  <input mz-input type="password" [label]="'login.password' | translate" class="form-control" />
+                </mz-input-container>
+              </div>
+              <div class="row app-clean-mg">
+                <div class="input-field col s12">
+                  <button mz-button [large]="'true'" class="col s12">
+                    {{'button.login' | translate}}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </mz-card-content>
+        </mz-card>
+      </div><!--/.col -->
+    </div><!--/.row -->
+  </div><!--/.container -->
+</div><!--/.app-login-wrapper -->

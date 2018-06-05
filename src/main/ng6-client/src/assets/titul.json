@@ -1,0 +1,21 @@
+{
+  "response": {
+    "docs":
+            [
+              {
+                "id": "d2677fbe-f660-4da2-a55d-035c12c09aab",
+                "meta_nazev": "Lidové noviny",
+                "prilohy":[]
+              },{
+                "id": "ae876087-435d-11dd-b505-00145e5790ea",
+                "meta_nazev": "Národní listy",
+                "prilohy":[]
+              },
+              {
+                "id": "13f650ad-6447-11e0-8ad7-0050569d679d",
+                "meta_nazev": "Duha",
+                "prilohy":[]
+              }
+            ]
+  }
+}

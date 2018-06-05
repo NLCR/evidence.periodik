@@ -1,0 +1,14 @@
+// --- CALENDAR ---
+
+.app-calendar-wrapper {
+  @extend .app-full-wrapper;
+  @import "app-calendar-month";
+  @import "app-calendar-list";
+  position: relative;
+  
+  .btn-floating {
+    position: fixed;
+    right: $app-container;
+    bottom: $app-container;
+  }
+}

@@ -1,0 +1,18 @@
+<mz-collection>
+  <mz-collection-header>
+    {{'facet.title.active_filters' | translate}}
+    <i mz-icon-mdi [icon]="'close-circle'" [class]="'app-clean-mg app-cursor-pointer'" 
+       mz-tooltip [tooltip]="'facet.tooltip.delete_all_filters' | translate" [position]="'top'"
+       (click)="removeAll()"></i>
+  </mz-collection-header>
+
+  <mz-collection-item *ngFor="let filter of state.filters; let idx= index">
+    <span class="app-cursor-pointer" mz-tooltip 
+          [tooltip]="'facet.tooltip.delete_this_filter' | translate" [position]="'top'"
+          (click)="remove(idx)">
+      <i mz-icon-mdi [icon]="'check'" [class]="'app-clean-mg'"></i>
+      <i mz-icon-mdi [icon]="'close'" [class]="'app-clean-mg'"></i>
+      {{filter.field}} : {{filter.value}}
+    </span>
+  </mz-collection-item>
+</mz-collection>

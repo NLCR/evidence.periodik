@@ -1,0 +1,27 @@
+<div class="app-facet-wrapper">
+  <app-facet-used></app-facet-used>
+  <mz-collapsible [mode]="'expandable'"  *ngIf="state.searchResults">
+    <mz-collapsible-item [active]="true" *ngFor="let facet of state.searchResults['responseHeader']['params']['facet.field']">
+      <mz-collapsible-item-header>
+        
+        {{facet}}
+        <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg'"></i>
+        <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg'"></i>
+      </mz-collapsible-item-header>
+      <mz-collapsible-item-body>
+        <mz-collection>
+          <ng-container>
+            <mz-collection-item *ngFor="let item of state.searchResults['facet_counts']['facet_fields'][facet]">
+              <span class="app-row">
+                <a (click)="addFilter(facet, item.name)">{{item.name}}</a>
+                <span>
+                  {{item.count}}
+                </span>
+              </span>
+            </mz-collection-item>
+          </ng-container>
+        </mz-collection>
+      </mz-collapsible-item-body>
+    </mz-collapsible-item>
+  </mz-collapsible>
+</div>

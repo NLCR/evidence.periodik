@@ -1,0 +1,83 @@
+// --- CALENDAR LIST ---
+
+app-calendar-list {
+  app-calendar-list-item {    
+    .app-calendar-list-item-wrapper {
+      padding: 0.75rem $app-container;
+      font-size: 0.9rem;
+      @include set-border(bottom, 1, solid, $app-grey-l-2);
+      
+      .app-calendar-list-item-weekday {
+        color: $app-grey;
+      }
+
+      .app-calendar-list-item-title {
+        font-size: 1rem;
+        color: $app-color-black;
+      }
+      
+      &[class*="app-calendar-day-special"] {
+        .app-calendar-list-item-title {
+          @extend .app-cursor-pointer;
+          
+          span {
+            display: block;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            line-height: 22px;
+            text-align: center;
+            float: left;
+            margin-right: 5px;
+          }
+        }
+      }
+      
+      // set day special
+      &.app-calendar-day-special-holiday {@include setSpecialDay($app-day-special-bg, $app-day-holiday-circle, $app-color-white);}
+      &.app-calendar-day-special-event {@include setSpecialDay($app-day-special-bg, $app-day-event-circle, $app-color-white);}
+      
+      .app-calendar-list-item-issue {
+        @extend .app-cursor-pointer;
+        padding: 0 10px;
+        border-radius: $app-border-radius;
+        
+        &:hover {
+          background-color: $app-grey-l-4;
+        }
+        
+        > span {
+          &:nth-child(2) {
+            font-size: 1rem !important;
+          }
+          
+          &:not(:nth-child(2)) {
+            color: grey;
+          }
+          
+          &[class*="app-state-"] {
+            display: block;
+            float: left;
+            margin-right: 10px;
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            margin-top: 4px;
+          }
+          
+          // set states
+          &.app-state-ok {@include setState($app-state-ok, 5);}
+          &.app-state-auto {@include setState($app-state-auto, 7);}
+        }
+      }
+      
+      // menu
+      .app-calendar-list-item-menu {
+        .mdi-dots-vertical {
+          @extend .app-cursor-pointer;
+          color: $app-grey;
+        }
+      }
+    }
+  }
+}
