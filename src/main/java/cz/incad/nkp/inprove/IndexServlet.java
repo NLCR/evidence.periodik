@@ -7,7 +7,11 @@ package cz.incad.nkp.inprove;
 
 import cz.incad.nkp.inprove.solr.Indexer;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -122,6 +126,31 @@ public class IndexServlet extends HttpServlet {
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
           json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
+    CLONE_VDK {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          
+        Map<String, String> reqProps = new HashMap<>();
+        reqProps.put("Content-Type", "application/json");
+        reqProps.put("Accept", "application/json");
+        String url = "http://vdk.nkp.cz/vdk/search?action=BYQUERY&offset=0&q=code:" + req.getParameter("vdkCode");
+        InputStream inputStream = RESTHelper.inputStream(url, reqProps);
+        JSONObject vdkJson = new JSONObject(org.apache.commons.io.IOUtils.toString(inputStream, Charset.forName("UTF-8"))); 
+        indexer.fromVDK(new JSONObject(req.getParameter("cfg")), vdkJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0));
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            json.put("error", ex.toString());
         }
         out.println(json.toString(2));
       }

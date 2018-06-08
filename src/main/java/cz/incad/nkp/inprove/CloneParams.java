@@ -48,6 +48,8 @@ public class CloneParams {
     
     public boolean onSpecialDays;
     
+    public boolean cloneExemplare;
+    
 
     public CloneParams(JSONObject jo) {
         this.id = jo.getString("id");
