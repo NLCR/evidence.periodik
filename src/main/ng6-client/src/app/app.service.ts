@@ -196,7 +196,7 @@ export class AppService {
     let params: HttpParams = new HttpParams()
     .set('q', '*')
     .set('wt', 'json')
-    .set('rows', '100')
+    .set('rows', '500')
     .set('sort', 'datum_vydani_den asc')
     .set('fq', 'exemplare:[* TO *]')
     //.set('fq', '{!collapse field=id_titul}')

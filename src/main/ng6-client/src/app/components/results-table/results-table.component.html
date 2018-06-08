@@ -9,33 +9,45 @@
 
     <ng-container matColumnDef="nazev">
       <th mat-header-cell *matHeaderCellDef>Nazev</th>
-      <td mat-cell *matCellDef="let row"> {{row.nazev}} </td>
+      <td mat-cell *matCellDef="let row; let idx = index" style="white-space: nowrap;">
+        <span *ngIf="idx == 0 || data[idx-1]['nazev'] !== data[idx]['nazev']">{{row.nazev}}</span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="mutace">
       <th mat-header-cell *matHeaderCellDef> </th>
-      <td mat-cell *matCellDef="let row"> {{row.mutace}} </td>
+      <td mat-cell *matCellDef="let row; let idx = index" style="white-space: nowrap;">
+          <span *ngIf="idx == 0 || data[idx-1]['mutace'] !== data[idx]['mutace']">{{row.mutace}}</span>
+          <span *ngIf="idx !== 0 && data[idx-1]['mutace'] === data[idx]['mutace']"> -- || --</span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="vydani">
       <th mat-header-cell *matHeaderCellDef> vydani </th>
-      <td mat-cell *matCellDef="let row"> {{row.vydani}} </td>
+      <td mat-cell *matCellDef="let row; let idx = index" style="white-space: nowrap;">
+          <span *ngIf="idx == 0 || data[idx-1]['vydani'] !== data[idx]['vydani']">{{row.vydani}}</span>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="datum_vydani">
       <th mat-header-cell *matHeaderCellDef> Datum </th>
-      <td mat-cell *matCellDef="let row" > {{row.datum_vydani | date: 'dd.MM.yyyy'}} </td>
+      <td mat-cell *matCellDef="let row" style="white-space: nowrap;" > {{row.datum_vydani | date: 'dd.MM.yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="add">
+      <th mat-header-cell *matHeaderCellDef> + </th>
+      <td mat-cell *matCellDef="let row" style="white-space: nowrap;" (click)="addClick(row)" > + </td>
     </ng-container>
     
     <ng-container *ngFor="let ck of cks" [matColumnDef]="ck">
       <th mat-header-cell *matHeaderCellDef class="app-rotate app-table-cell-ex"><div>{{ck}}</div></th>
-      <td mat-cell *matCellDef="let row" [style.backgroundColor]="row[ck]?'green':''"class="app-table-cell-ex"></td>
+      <td mat-cell *matCellDef="let row; let idx = index" [style.backgroundColor]="cellColor(row, ck)" style="border: 1px solid black;" class="app-table-cell-ex"></td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+    <tr mat-row *matRowDef="let row; let idx = index; columns: displayedColumns;">
     </tr>
   </table>
 
-  <mat-paginator [pageSizeOptions]="[20, 25, 100]"></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[100, 200]"></mat-paginator>
 </div>

@@ -1,8 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort, MatTableDataSource, MatDialog} from '@angular/material';
 import {Input} from '@angular/core';
 import {Issue} from '../../models/issue';
 import {AppState} from '../../app.state';
+import {AddExemplarDialogComponent} from '../add-exemplar-dialog/add-exemplar-dialog.component';
 
 @Component({
   selector: 'app-results-table',
@@ -19,7 +20,9 @@ export class ResultsTableComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(public state: AppState) {
+  constructor(
+    public dialog: MatDialog,
+    public state: AppState) {
     
 
     // Assign the data to the data source for the table to render
@@ -38,20 +41,21 @@ export class ResultsTableComponent implements OnInit {
     //Extract exemplare
     this.cks = [];
     this.data = this.state.searchResults['response']['docs'];
-    this.displayedColumns = ['nazev', 'mutace', 'vydani', 'datum_vydani'];
+    this.displayedColumns = ['nazev', 'mutace', 'vydani', 'datum_vydani', 'add'];
     this.data.forEach((issue: Issue) => {
       if(issue.exemplare){
         let exs = issue.exemplare;
         for (let i = 0; i < exs.length; i++){
-          if (this.cks.indexOf(exs[i].carovy_kod) < 0){
-            this.cks.push(exs[i].carovy_kod);
-            this.displayedColumns.push(exs[i].carovy_kod);
+          let ck = exs[i].vlastnik + ' - ' + exs[i].carovy_kod;
+          if (this.cks.indexOf(ck) < 0){
+            this.cks.push(ck);
+            this.displayedColumns.push(ck);
           }
-          issue[exs[i].carovy_kod] = true;
+          issue[ck] = exs[i].vlastnik;
         }
       }
     });
-    console.log(this.cks);
+    
     this.data.forEach((issue: Issue) => {
       for (let i = 0; i < this.cks.length; i++){
         if(!issue.hasOwnProperty(this.cks[i])){
@@ -63,6 +67,22 @@ export class ResultsTableComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.state.searchResults['response']['docs']);
     this.dataSource.paginator = this.paginator;
   }
+  
+  cellColor(row, ck: string): string{
+    if(!row[ck]) return "";
+    
+      if(row[ck]==='MZK'){
+        return 'green';
+      } 
+      if(row[ck]==='NKP'){
+        return 'darkgreen';
+      } 
+      if(row[ck]==='VKOL'){
+        return 'darkred';
+      } 
+      return 'yellow';
+    
+  }
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
@@ -71,5 +91,13 @@ export class ResultsTableComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  
+  addClick(row){
+    let dialogRef = this.dialog.open(AddExemplarDialogComponent, {
+      width: '250px',
+      data: { row: row }
+    });
+    
   }
 }
