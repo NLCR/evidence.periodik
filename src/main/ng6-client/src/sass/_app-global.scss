@@ -84,8 +84,18 @@ button:not(.btn-floating) {
   
   width: 30px !important;
 }
-.app-rotate {
 
+tr.mat-row{
+  height: fit-content !important;
+  font-size: .85em;
+}
+
+tr.mat-row td{
+  padding: 3px !important;
+}
+
+.app-rotate {
+  font-size: .85em;
   height: 30px !important;
   white-space: nowrap;
 }

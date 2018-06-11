@@ -13,6 +13,7 @@ import {CloneParams} from './models/clone-params';
 import {AppState} from './app.state';
 import {Filter} from './models/filter';
 import {Titul} from './models/titul';
+import {Issue} from './models/issue';
 
 @Injectable()
 export class AppService {
@@ -101,7 +102,7 @@ export class AppService {
       params = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
-      .set('rows', '500')
+      .set('rows', '200')
       .set('fl', '*,exemplare:[json]')
       .set('fq', 'id_titul:"' + uuid + '"')
       .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
@@ -153,13 +154,18 @@ export class AppService {
     }));
   }
   
-  saveIssue(){
+  
+  saveIssue(issue: Issue){
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
     .set('action', 'SAVE_ISSUE')
-      .set('json', JSON.stringify(this.state.currentIssue));
+      .set('json', JSON.stringify(issue));
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params});
+  }
+  
+  saveCurrentIssue(){
+    return this.saveIssue(this.state.currentIssue);
   }
 
   getIssue(id: string): Observable<any[]> {

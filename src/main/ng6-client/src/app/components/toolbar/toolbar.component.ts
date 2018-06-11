@@ -46,14 +46,14 @@ export class ToolbarComponent implements OnInit {
   }
   
   addRecord(){
-    this.service.saveIssue().subscribe(res => {
+    this.service.saveCurrentIssue().subscribe(res => {
       console.log(res);
     });
   }
   
   saveRecord(){
     this.state.currentIssue.state = 'ok';
-    this.service.saveIssue().subscribe(res => {
+    this.service.saveCurrentIssue().subscribe(res => {
       console.log(res);
     });
     
