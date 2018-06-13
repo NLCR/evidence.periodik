@@ -207,12 +207,16 @@ export class AppService {
     .set('fq', 'exemplare:[* TO *]')
     //.set('fq', '{!collapse field=id_titul}')
     .set('facet', 'true')
+    .set('facet.mincount', '1')
     .set('json.nl', 'arrntv')
     .set('fl', '*, exemplare:[json]')
     .set('facet.field', 'nazev')
+    .set('stats', 'true')
+    .set('stats.field', 'datum_vydani_den')
     .append('facet.field', 'mutace')
+    .append('facet.field', 'vydani')
     .append('facet.field', 'vlastnik');
-    
+    console.log(params);
     this.state.filters.forEach((f: Filter) => {
 //    for (let f in this.state.filters){
       params = params.append('fq', f.field + ':"' + f.value + '"');

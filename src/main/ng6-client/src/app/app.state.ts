@@ -44,6 +44,8 @@ export class AppState {
   searchResults: any;
   
   
+  start_date;
+  end_date;
   
   
   private _searchParamsSubject = new Subject();
@@ -79,6 +81,11 @@ export class AppState {
   
   setSearchResults(res: any){
     this.searchResults = res;
+    
+    let stats = this.searchResults['stats']['stats_fields']['datum_vydani_den'];
+    this.start_date = stats['min'];
+    this.end_date = stats['max'];
+    
     this._searchSubject.next(this.searchResults);
   }
   
@@ -96,6 +103,23 @@ export class AppState {
   removeAllFilters(){
     this.filters = [];
     this._searchParamsSubject.next(null);
+  }
+  
+  hasFilter(field: string): boolean{
+    for(let i = 0; i< this.filters.length; i++){
+      if (this.filters[i].field === field){
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  hasFacet(field: string): boolean{
+    if (!this.searchResults) return false;
+    
+    if (!this.searchResults['facet_counts']['facet_fields'].hasOwnProperty(field)) return false;
+    
+    return this.searchResults['facet_counts']['facet_fields'][field].length > 1;
   }
   
 }

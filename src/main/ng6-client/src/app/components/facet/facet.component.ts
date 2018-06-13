@@ -7,11 +7,19 @@ import {AppState} from '../../app.state';
   styleUrls: ['./facet.component.scss']
 })
 export class FacetComponent implements OnInit {
+  
+    public options: Pickadate.DateOptions = {
+        format: 'dd/mm/yyyy',
+        formatSubmit: 'yyyymmdd',
+    };
+    
   facets: any; // temporary for facets
+  
   
   constructor(public state: AppState) { }
 
   ngOnInit() {
+    
 //    this.subscriptions.push(this.state.configSubject.subscribe((state) => {
 //        this.setDays();
 //      }));

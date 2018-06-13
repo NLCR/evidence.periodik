@@ -6,6 +6,8 @@ import {AppState} from '../../app.state';
 import {AddExemplarDialogComponent} from '../add-exemplar-dialog/add-exemplar-dialog.component';
 import {MzModalService} from 'ngx-materialize';
 import {AppService} from '../../app.service';
+import {Titul} from '../../models/titul';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-results-table',
@@ -18,11 +20,13 @@ export class ResultsTableComponent implements OnInit {
   cks: string[] = [];
   exs: any = {};
   displayedColumns = ['nazev', 'mutace', 'vydani', 'datum_vydani'];
+  header: string = '';
   dataSource: MatTableDataSource<Issue>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
+    private router: Router,
     public state: AppState,
     public service: AppService,
     private modalService: MzModalService) {
@@ -40,21 +44,39 @@ export class ResultsTableComponent implements OnInit {
     });
   }
 
+  addColumn(field: string) {
+    if (this.state.hasFacet(field)) {
+      this.displayedColumns.push(field);
+    } else {
+      this.header += field + ': ' + this.data[0][field] + '; ';
+    }
+  }
+
   setData() {
     //Extract exemplare
     this.cks = [];
     this.exs = {};
     this.data = this.state.searchResults['response']['docs'];
-    this.displayedColumns = ['nazev', 'mutace', 'vydani', 'datum_vydani', 'add'];
+    this.displayedColumns = [];
+    this.header = '';
+
+    this.addColumn('nazev');
+    this.addColumn('mutace');
+    this.addColumn('vydani');
+
+    this.displayedColumns.push('datum_vydani', 'add');
     this.data.forEach((issue: Issue) => {
       if (issue.exemplare) {
         let exs = issue.exemplare;
         for (let i = 0; i < exs.length; i++) {
-          let ck = exs[i].vlastnik + ' - ' + exs[i].carovy_kod;
+          //let ck = exs[i].vlastnik + ' - ' + exs[i].signatura;
+          let ck = exs[i].vlastnik;
           if (!this.exs.hasOwnProperty(ck)) {
             this.cks.push(ck);
             this.exs[ck] = exs[i];
             this.displayedColumns.push(ck);
+          } else {
+            
           }
           issue[ck] = i;
         }
@@ -69,7 +91,7 @@ export class ResultsTableComponent implements OnInit {
       }
     });
     //this.displayedColumns.push(cks);
-    this.dataSource = new MatTableDataSource(this.state.searchResults['response']['docs']);
+    this.dataSource = new MatTableDataSource(this.data);
     this.dataSource.paginator = this.paginator;
   }
 
@@ -123,6 +145,15 @@ export class ResultsTableComponent implements OnInit {
         {"issue": issue, "state": this.state, "service": this.service, "ex": issue[ck]}
       );
     }
+
+  }
+
+
+  onCalendarClick(issue: Issue) {
+    this.state.currentTitul = new Titul();
+    this.state.currentTitul.id = issue.id_titul;
+    this.state.currentTitul.meta_nazev = issue.nazev;
+    this.router.navigate(['/calendar', issue.id_titul, this.state.calendarView, issue['datum_vydani_den']]);
 
   }
 }

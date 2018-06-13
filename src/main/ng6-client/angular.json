@@ -27,6 +27,7 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/roboto-fontface/css/roboto-condensed/roboto-condensed-fontface.css",
               "node_modules/materialize-css/dist/css/materialize.min.css",
               "node_modules/@mdi/font/css/materialdesignicons.min.css",
               "src/styles.scss"
