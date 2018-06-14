@@ -1,31 +1,7 @@
 <div class="app-facet-wrapper">
   <app-facet-used></app-facet-used>
   <mz-collapsible [mode]="'expandable'"  *ngIf="state.searchResults">
-    <ng-container *ngFor="let facet of state.searchResults['responseHeader']['params']['facet.field']">
-      <mz-collapsible-item [active]="true" *ngIf="state.searchResults['facet_counts']['facet_fields'][facet].length > 1">
-        <mz-collapsible-item-header>
-          {{facet}}
-          <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg'"></i>
-          <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg'"></i>
-        </mz-collapsible-item-header>
-        <mz-collapsible-item-body>
-          <mz-collection>
-            <ng-container>
-              <mz-collection-item *ngFor="let item of state.searchResults['facet_counts']['facet_fields'][facet]">
-                <span class="app-row">
-                  <a (click)="addFilter(facet, item.name)">{{item.name}}</a>
-                  <span>
-                    ({{item.value}})
-                  </span>
-                </span>
-              </mz-collection-item>
-            </ng-container>
-          </mz-collection>
-        </mz-collapsible-item-body>
-      </mz-collapsible-item>
-    </ng-container>
-
-
+    
     <mz-collapsible-item [active]="true" >
       <mz-collapsible-item-header>
         Datum:
@@ -49,7 +25,33 @@
                  id="end_date" name="end_date"
                  type="text" />
         </mz-datepicker-container>
+        <i mz-icon-mdi [icon]="'arrow-right'" [class]="'app-clean-mg'" (click)="state.addDateFilter()">filter</i>
+        <i mz-icon-mdi *ngIf="state.filterByDate" [icon]="'close'" [class]="'app-clean-mg'" (click)="state.removeDateFilter()">remove</i>
       </mz-collapsible-item-body>
     </mz-collapsible-item>
+    
+    <ng-container *ngFor="let facet of state.searchResults['responseHeader']['params']['facet.field']">
+      <mz-collapsible-item [active]="true" *ngIf="state.searchResults['facet_counts']['facet_fields'][facet].length > 1">
+        <mz-collapsible-item-header>
+          {{facet}}
+          <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg'"></i>
+          <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg'"></i>
+        </mz-collapsible-item-header>
+        <mz-collapsible-item-body>
+          <mz-collection>
+            <ng-container>
+              <mz-collection-item *ngFor="let item of state.searchResults['facet_counts']['facet_fields'][facet]">
+                <span class="app-row">
+                  <a (click)="addFilter(facet, item.name)">{{item.name}}</a>
+                  <span>
+                    ({{item.value}})
+                  </span>
+                </span>
+              </mz-collection-item>
+            </ng-container>
+          </mz-collection>
+        </mz-collapsible-item-body>
+      </mz-collapsible-item>
+    </ng-container>
   </mz-collapsible>
 </div>

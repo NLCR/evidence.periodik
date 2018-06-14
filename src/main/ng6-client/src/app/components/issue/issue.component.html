@@ -4,22 +4,29 @@
   <div class="row">
     <div class="col s4">
         <mz-input-container>
-          <input mz-input [label]="'record.id_titulu' | translate" id="id_titulu" name="id_titulu" type="text" [(ngModel)]="state.currentTitul.id_titulu">
+          <input mz-input [label]="'record.id_titul' | translate" id="id_titulu" name="id_titulu" type="text" [(ngModel)]="state.currentIssue.id_titul">
         </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'record.meta_title' | translate" id="meta_nazev" name="meta_nazev" type="text" [(ngModel)]="state.currentTitul.meta_nazev">
-        </mz-input-container>
+        <mz-datepicker-container>
+          <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
+          <input mz-datepicker
+                 [options]="options"
+                 [label]="'record.date_publication' | translate"
+                 [(ngModel)]="state.currentIssue.datum_vydani"
+                 id="datum_vydani" name="datum_vydani"
+                 type="text" />
+        </mz-datepicker-container>
+      
         <mz-input-container>
           <input mz-input [label]="'record.name_title_page' | translate" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
         </mz-input-container>
         <mz-input-container>
           <input mz-input [label]="'record.subname_title_page' | translate" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev" type="text">
         </mz-input-container>
+      
         <mz-select-container>
           <select mz-select id="vydani" name="vydani" [placeholder]="'record.publication.placeholder' | translate" 
-                  [ngModel]="'' + state.currentIssue.vydani | translate" 
-                  (ngModelChange)="state.currentIssue.vydani=$event">
-            <option *ngFor="let v of state.vydani">{{'record.publication.' + v | translate }}</option>
+                  [(ngModel)]="state.currentIssue.vydani">
+            <option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}</option>
           </select>
         </mz-select-container>
         <mz-input-container>
@@ -31,15 +38,6 @@
         <mz-input-container>
           <input mz-input [label]="'Periodicita'" id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita" type="text">
         </mz-input-container>
-        <mz-datepicker-container>
-          <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
-          <input mz-datepicker
-                 [options]="options"
-                 [label]="'record.date_publication' | translate"
-                 [(ngModel)]="state.currentIssue.datum_vydani"
-                 id="datum_vydani" name="datum_vydani"
-                 type="text" />
-        </mz-datepicker-container>
     </div><!--/.col -->
     
     <div class="col s4">

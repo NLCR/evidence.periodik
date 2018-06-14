@@ -52,6 +52,7 @@
     "id_bib_record": "Id bib záznamu",
     "uuid_number": "Uuid čísla",
     "uuid_title": "Uuid titulu",
+    "id_titul": "id titulu",
     "url_kramerius": "URL Krameria",
     "specimen_count": "Počet exemplářů",
     "specimen_number": "Exemplář číslo"

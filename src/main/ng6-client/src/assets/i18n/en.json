@@ -17,6 +17,7 @@
   "dummy": "",
   "record": {
     "meta_title": "Meta title",
+    "id_titul": "title Id",
     "name_title_page": "Name on title page",
     "subname_title_page": "Subname on title page",
     "time_publication": "Time of publication",

@@ -8,6 +8,7 @@ import {MzModalService} from 'ngx-materialize';
 import {AppService} from '../../app.service';
 import {Titul} from '../../models/titul';
 import {Router} from '@angular/router';
+import {Exemplar} from '../../models/exemplar';
 
 @Component({
   selector: 'app-results-table',
@@ -63,8 +64,9 @@ export class ResultsTableComponent implements OnInit {
     this.addColumn('nazev');
     this.addColumn('mutace');
     this.addColumn('vydani');
-
-    this.displayedColumns.push('datum_vydani', 'add');
+    
+    
+    this.displayedColumns.push('pocet_stran', 'datum_vydani', 'add');
     this.data.forEach((issue: Issue) => {
       if (issue.exemplare) {
         let exs = issue.exemplare;
@@ -98,15 +100,20 @@ export class ResultsTableComponent implements OnInit {
   cellColor(row: Issue, ck: string): string {
     if (row[ck] === -1) return "";
     let vlastnik = row.exemplare[row[ck]]['vlastnik'];
+    return this.colorByVlastnik(vlastnik);
+  }
+  
+  colorByVlastnik(vlastnik: string): string{
+    
     switch (vlastnik) {
       case 'MZK': {
         return '#d1eff1';
       }
       case 'NKP': {
-        return 'darkred';
+        return 'rgb(197, 98, 98)';
       }
       case 'UKF': {
-        return 'darkred';
+        return 'rgb(197, 98, 98)';
       }
       case 'VKOL': {
         return '#3586c4';
@@ -115,8 +122,6 @@ export class ResultsTableComponent implements OnInit {
         return 'yellow';
       }
     }
-
-
   }
 
   applyFilter(filterValue: string) {
@@ -135,17 +140,10 @@ export class ResultsTableComponent implements OnInit {
 
   }
 
-  viewClick(issue: Issue, ck) {
-    //console.log(this.exs[ck]);
-    if (issue[ck] === -1) {
-      issue.exemplare.push(this.exs[ck]);
-      issue[ck] = issue.exemplare.length - 1;
-    } else {
+  viewClick(issue: Issue, ex: Exemplar) {
       this.modalService.open(AddExemplarDialogComponent,
-        {"issue": issue, "state": this.state, "service": this.service, "ex": issue[ck]}
+        {"issue": issue, "state": this.state, "service": this.service, "exemplar": ex}
       );
-    }
-
   }
 
 
@@ -154,6 +152,14 @@ export class ResultsTableComponent implements OnInit {
     this.state.currentTitul.id = issue.id_titul;
     this.state.currentTitul.meta_nazev = issue.nazev;
     this.router.navigate(['/calendar', issue.id_titul, this.state.calendarView, issue['datum_vydani_den']]);
+
+  }
+  
+  viewIssue(issue: Issue) {
+    this.state.currentTitul = new Titul();
+    this.state.currentTitul.id = issue.id_titul;
+    this.state.currentTitul.meta_nazev = issue.nazev;
+    this.router.navigate(['/issue', issue.id]);
 
   }
 }

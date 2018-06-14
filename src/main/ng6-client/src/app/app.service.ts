@@ -210,17 +210,23 @@ export class AppService {
     .set('facet.mincount', '1')
     .set('json.nl', 'arrntv')
     .set('fl', '*, exemplare:[json]')
-    .set('facet.field', 'nazev')
     .set('stats', 'true')
     .set('stats.field', 'datum_vydani_den')
+    .set('facet.field', 'nazev')
+    .append('facet.field', 'vlastnik')
     .append('facet.field', 'mutace')
-    .append('facet.field', 'vydani')
-    .append('facet.field', 'vlastnik');
-    console.log(params);
+    .append('facet.field', 'vydani');
+    
+    //facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
+    
     this.state.filters.forEach((f: Filter) => {
 //    for (let f in this.state.filters){
       params = params.append('fq', f.field + ':"' + f.value + '"');
     });
+    
+    if (this.state.filterByDate){
+      params = params.append('fq', 'datum_vydani_den:[' + this.state.start_date + ' TO ' + this.state.end_date+']');
+    }
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params});
   }

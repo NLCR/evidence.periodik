@@ -36,8 +36,7 @@ export class AppComponent implements OnInit {
 
         this.processUrl();
         this.getConfig().subscribe(cfg => {
-console.log(cfg);
-
+          
             this.state.config = cfg;
             this.service.getSpecialDays();
             var userLang = navigator.language.split('-')[0]; // use navigator lang if available

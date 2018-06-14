@@ -2,7 +2,7 @@
   {{header}}
 </div>
   <div class="mat-elevation-z8" *ngIf="data" >
-  <table mat-table [dataSource]="dataSource" style="margin-top: 100px;" >
+  <table mat-table [dataSource]="dataSource" >
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">
@@ -38,24 +38,33 @@
       <td mat-cell *matCellDef="let row" style="white-space: nowrap;" (click)="onCalendarClick(row)"> {{row.datum_vydani | date: 'dd.MM.yyyy'}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="pocet_stran">
+      <th mat-header-cell *matHeaderCellDef>pocet stran</th>
+      <td mat-cell *matCellDef="let row" > {{row.pocet_stran}} </td>
+    </ng-container>
+
     <ng-container matColumnDef="add">
       <th mat-header-cell *matHeaderCellDef class="app-rotate app-table-cell-ex"><div>celkem</div></th>
-      <td mat-cell *matCellDef="let row" style="white-space: nowrap;" >{{row.exemplare.length}} <a (click)="addClick(row)" title="pridat exemplar">+</a></td>
+      <td mat-cell *matCellDef="let row" style="white-space: nowrap;" >
+          {{row.exemplare.length}} <a (click)="addClick(row)" title="pridat exemplar">+</a>
+        <i mz-icon-mdi [icon]="'pencil'" [size]="20" (click)="viewIssue(row)"></i>
+      </td>
     </ng-container>
     
     <ng-container *ngFor="let ck of cks" [matColumnDef]="ck">
-      <th mat-header-cell *matHeaderCellDef ><div>{{ck}}</div></th>
+      <th mat-header-cell *matHeaderCellDef [style.backgroundColor]="colorByVlastnik(ck)" ><div>{{ck}}</div></th>
       <td mat-cell *matCellDef="let row; let idx = index" [style.backgroundColor]="cellColor(row, ck)" 
           style="border: 1px solid black;white-space: nowrap;" 
-          (click)="viewClick(row, ck)">
-          
+          >
           <ng-container *ngIf="row[ck] !== -1">
-            <span *ngFor="let ex of row.exemplare">
-              <span *ngIf="ex.vlastnik === ck">{{ex['carovy_kod']}} | </span>
+            <span *ngFor="let ex of row.exemplare" (click)="viewClick(row, ex)">
+              <ng-container *ngIf="ex.vlastnik === ck">(
+              {{ex['carovy_kod']}}
+              <i *ngIf="ex['stav'] && ex['stav'] !== 'OK'" mz-icon-mdi [icon]="'comment-outline'" [size]="20" [title]="ex['stav'] + ': ' + ex['stav_popis']"></i>
+              ) </ng-container>
             </span>
           </ng-container>
           
-          <i *ngIf="row[ck] !== -1 && row.exemplare[row[ck]]['stav'] !== '' && row.exemplare[row[ck]]['stav']" mz-icon-mdi [icon]="'comment-outline'" [size]="20"></i>
       
       </td>
     </ng-container>

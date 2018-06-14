@@ -42,7 +42,7 @@ export class AppState {
   private _searchSubject = new Subject();
   public searchChanged: Observable<any> = this._searchSubject.asObservable();
   searchResults: any;
-  
+  numFound: number;
   
   start_date;
   end_date;
@@ -53,8 +53,10 @@ export class AppState {
   
   public filters: Filter[] = []; 
   
+  public filterByDate: boolean;
+  
   setConfig(cfg){
-    console.log(cfg);
+    
     this.config = cfg;
     
     Object.keys(this.config['periodicity']).map(k => {this.periods.push({key: k, value: this.config['periodicity'][k]});});
@@ -81,7 +83,7 @@ export class AppState {
   
   setSearchResults(res: any){
     this.searchResults = res;
-    
+    this.numFound = this.searchResults['response']['numFound'];
     let stats = this.searchResults['stats']['stats_fields']['datum_vydani_den'];
     this.start_date = stats['min'];
     this.end_date = stats['max'];
@@ -92,6 +94,16 @@ export class AppState {
   addFilter(field: string, value: string){
     let f: Filter = new Filter(field, value);
     this.filters.push(f);
+    this._searchParamsSubject.next(null);
+  }
+  
+  addDateFilter(){
+    this.filterByDate = true;
+    this._searchParamsSubject.next(null);
+  }
+  
+  removeDateFilter(){
+    this.filterByDate = false;
     this._searchParamsSubject.next(null);
   }
   

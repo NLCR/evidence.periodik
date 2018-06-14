@@ -17,30 +17,28 @@ export class AddExemplarDialogComponent extends MzBaseModal {
     service: AppService;
 
   public issue: Issue;
-  public ex: number;
+  //public ex: number;
   public exemplar: Exemplar;
   
   public stavy: {key: string, value: StavIssue}[] = [];
   
   ngOnInit() {
-    console.log(this.ex);
-    if(this.ex === -1){
-      this.exemplar = new Exemplar();
-    } else {
-      this.exemplar = this.issue.exemplare[this.ex];
-    }
+//    console.log(this.ex);
+//    if(this.ex === -1){
+//      this.exemplar = new Exemplar();
+//    } else {
+//      this.exemplar = this.issue.exemplare[this.ex];
+//    }
     this.stavy = [];
     Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
   }
 
   ok(): void {
-    if(this.ex === -1){
-      this.issue.exemplare.push(this.exemplar);
-    }
-   // this.service.saveIssue(this.issue).subscribe(res => {
-   //     console.log(res);
+
+      this.service.saveIssue(this.issue).subscribe(res => {
+        console.log(res);
         this.modalComponent.closeModal();
-   //   });
+      });
   }
   
   cancel(){

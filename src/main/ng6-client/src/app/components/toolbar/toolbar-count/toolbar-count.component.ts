@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {AppState} from '../../../app.state';
 
 @Component({
   selector: 'app-toolbar-count',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ToolbarCountComponent implements OnInit {
 
-  constructor() { }
+  constructor(public state: AppState) { }
 
   ngOnInit() {
   }
