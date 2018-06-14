@@ -31,6 +31,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
 import org.json.JSONArray;
@@ -96,7 +97,7 @@ public class Indexer {
    * "pocet_stran": 12, "druhe_cislo": 2, "id_bib_zaznamu": "NKC01-000761161"
    *
    * }
-   * @param vdkRecord : JSONObject with vdk redocr data
+   * @param vdkRecord : JSONObject with vdk record data from solr
    *
    * We should generate next fields "id_bib_zaznamu", if it does not exists in
    * issueData "vlastnik" : [] "state": "auto", "datum_vydani": ,
@@ -175,11 +176,10 @@ public class Indexer {
               exemplare.put("vlastnik", vlastnik);
               exemplare.put("carovy_kod", ex.getString("carkod"));
               exemplare.put("signatura", ex.getString("signatura"));
-              
+
               idoc.addField("exemplare", exemplare.toString());
 
               //idoc.addField("exemplare", ex.toString());
-
             }
           }
         }
@@ -189,32 +189,146 @@ public class Indexer {
 //      }
 
       //if (generated > 9) {
-        for (Iterator it = issues.keySet().iterator(); it.hasNext();) {
-          String vydani = (String) it.next();
-          SolrInputDocument idoc = issues.get(vydani);
+      for (Iterator it = issues.keySet().iterator(); it.hasNext();) {
+        String vydani = (String) it.next();
+        SolrInputDocument idoc = issues.get(vydani);
 
-          //Generate each day in month  
-          Date startDate = sdf1.parse(vydani);
+        //Generate each day in month  
+        Date startDate = sdf1.parse(vydani);
 
-          LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-          LocalDate end = start.plus(Period.ofMonths(1));
+        LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate end = start.plus(Period.ofMonths(1));
 
-          for (LocalDate date = start; date.isBefore(end); date = date.plus(period)) {
-            SolrInputDocument idocDen = idoc.deepCopy();
+        for (LocalDate date = start; date.isBefore(end); date = date.plus(period)) {
+          SolrInputDocument idocDen = idoc.deepCopy();
 
-            idocDen.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
-            idocDen.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
+          idocDen.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
+          idocDen.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
 
-            idocDen.setField("id", generateId(idocDen));
-            solr.add("issue", idocDen);
+          idocDen.setField("id", generateId(idocDen));
+          solr.add("issue", idocDen);
+          if (generated++ % 1000 == 0) {
+            solr.commit("issue");
+            LOGGER.log(Level.INFO, "generated {0} from vdk", generated);
+          }
+        }
+
+      }
+      // }
+
+      solr.commit("issue");
+    } catch (SolrServerException | IOException | ParseException ex) {
+      LOGGER.log(Level.SEVERE, "Error generating issues from vdk", ex);
+    }
+  }
+
+  /**
+   * *
+   * Method generate issues from vdk records
+   *
+   * @param issueData : JSONObject with common issue data { "nazev": "Lidové
+   * noviny: Pražské vydání ", "id_titul":
+   * "d2677fbe-f660-4da2-a55d-035c12c09aab",
+   * "uuid_titulu":"d2677fbe-f660-4da2-a55d-035c12c09aab", "typ": "tištěné",
+   * "vydani": "Ranní vydání", "mutace": "Čechy", "periodicita": "P1D",
+   * "pocet_stran": 12, "druhe_cislo": 2, "id_bib_zaznamu": "NKC01-000761161"
+   *
+   * }
+   * @param vdkRecord : JSONObject with vdk record data from aleph
+   *
+   * We should generate next fields "id_bib_zaznamu", if it does not exists in
+   * issueData "vlastnik" : [] "state": "auto", "datum_vydani": ,
+   * "datum_vydani_den": , "cislo": ,
+   */
+  public void addExemplarsVDKSet(String id, JSONObject vdkRecord, String vlastnik) {
+    int generated = 0;
+    try (SolrClient solr = getClient()) {
+
+      //Find document to get common data
+      SolrDocument doc = solr.getById("issue", id);
+      Period period = Period.parse((String) doc.getFieldValue("periodicita"));
+      String id_titulu = (String) doc.getFieldValue("id_titulu");
+
+      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+
+      //Loop exemplars in record
+      for (int j = 0; j < vdkRecord.getJSONArray("ex").length(); j++) {
+        JSONObject ex = vdkRecord.getJSONArray("ex").getJSONObject(j);
+
+        //Extract and parse date
+        //Toto je rok. Muze byt cislo, nebo cislo - cislo
+        String yearstr = ex.optString("rok");
+        String[] years = yearstr.split("-");
+
+        //Toto je mesic. Muze byt cislo, nebo cislo - cislo
+        String monthstr = ex.optString("cislo", "01");
+        if ("".equals(monthstr)) {
+          monthstr = "01";
+        }
+        String[] months = monthstr.split("-");
+
+        //Toto je cislo rocniku
+        //Zatim nic s nim
+        String rocnik = ex.optString("svazek");
+        if ("".equals(rocnik)) {
+          rocnik = "1";
+        }
+
+        for (String year : years) {
+          for (String month : months) {
+            String vydani = year + String.format("%02d", Integer.parseInt(month)) + "01";
+            //System.out.println(vydani);
+            SolrInputDocument idoc;
+
+            SolrQuery query = new SolrQuery();
+            query.setRows(1);
+            query.set("rows", "1");
+            query.setQuery("id_titulu:\"" + id_titulu + "\"");
+            query.addFilterQuery("datum_vydani_den:" + vydani);
+            QueryResponse qr = solr.query(query);
+            if (qr.getResults().getNumFound() > 0) {
+              //Add exemplars
+              SolrDocument res_doc = qr.getResults().get(0);
+              idoc = new SolrInputDocument();
+              res_doc.getFieldNames().forEach((name) -> {
+                idoc.addField(name, res_doc.getFieldValue(name));
+              });
+              
+              idoc.removeField("_version_");
+
+            } else {
+              idoc = new SolrInputDocument();
+              idoc.setField("state", "auto");
+
+              idoc.setField("datum_vydani", sdf1.parse(vydani).toInstant().atZone(ZoneId.systemDefault()).toLocalDate().format(DateTimeFormatter.ISO_DATE));
+              idoc.setField("datum_vydani_den", vydani);
+
+              idoc.setField("cislo", rocnik);
+              idoc.setField("rocnik", year);
+              idoc.setField("id", generateId(idoc));
+
+            }
+            
+            if (!idoc.containsKey("vlastnik") || !idoc.getFieldValues("vlastnik").contains(vlastnik)) {
+                idoc.addField("vlastnik", vlastnik);
+            }
+
+            //Add fields based on ex
+            JSONObject exemplare = new JSONObject();
+            exemplare.put("vlastnik", vlastnik);
+            exemplare.put("carovy_kod", ex.getString("carkod"));
+            exemplare.put("signatura", ex.getString("signatura"));
+
+            idoc.addField("exemplare", exemplare.toString());
+            solr.add("issue", idoc);
             if (generated++ % 1000 == 0) {
               solr.commit("issue");
-              LOGGER.log(Level.INFO, "generated {0} from vdk", generated);
+              LOGGER.log(Level.INFO, "generated {0} from vdk-set", generated);
             }
-          }
 
+          }
         }
-     // }
+      }
 
       solr.commit("issue");
     } catch (SolrServerException | IOException | ParseException ex) {
@@ -285,7 +399,7 @@ public class Indexer {
 
     idoc.setField("state", "auto");
     idoc.setField("cislo", number);
-    idoc.setField("rocnik", year);
+    //idoc.setField("rocnik", year);
     if (mutace != null) {
       idoc.setField("mutace", mutace);
     }
@@ -330,14 +444,14 @@ public class Indexer {
         {
           switch (name) {
             case "datum_vydani":
-              //          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-
-//          LocalDate date = LocalDate.now();
-              DateTimeFormatter f = DateTimeFormatter.ISO_INSTANT.withResolverStyle(ResolverStyle.SMART);
-              Instant ins = Instant.from(f.parse(json.getString(name)));
-              LocalDateTime date = LocalDateTime.ofInstant(ins, ZoneId.systemDefault());
-              idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
-              idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
+              //SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+              
+//              DateTimeFormatter f = DateTimeFormatter.ISO_INSTANT.withResolverStyle(ResolverStyle.SMART);
+//              Instant ins = Instant.from(f.parse(json.getString(name)));
+//              LocalDateTime date = LocalDateTime.ofInstant(ins, ZoneId.systemDefault());
+//              idoc.setField("datum_vydani", date.format(DateTimeFormatter.BASIC_ISO_DATE));
+              idoc.setField("datum_vydani", json.getString(name));
+              idoc.setField("datum_vydani_den", json.getString(name).replaceAll("-", ""));
               break;
             //Skip this
             case "_version_":
