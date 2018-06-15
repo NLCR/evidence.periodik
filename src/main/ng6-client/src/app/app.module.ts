@@ -77,6 +77,7 @@ import { CalendarListItemComponent } from './components/calendar/calendar-list/c
 import { CloneDialogComponent } from './components/clone-dialog/clone-dialog.component';
 import { ResultsTableComponent } from './components/results-table/results-table.component';
 import { AddExemplarDialogComponent } from './components/add-exemplar-dialog/add-exemplar-dialog.component';
+import { AddTitulDialogComponent } from './components/add-titul-dialog/add-titul-dialog.component';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -116,9 +117,10 @@ export function createTranslateLoader(http: HttpClient) {
     CalendarListItemComponent,
     CloneDialogComponent,
     ResultsTableComponent,
-    AddExemplarDialogComponent
+    AddExemplarDialogComponent,
+    AddTitulDialogComponent
   ],
-  entryComponents: [CloneDialogComponent, AddExemplarDialogComponent],
+  entryComponents: [CloneDialogComponent, AddExemplarDialogComponent, AddTitulDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,

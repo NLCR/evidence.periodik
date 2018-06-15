@@ -1,0 +1,33 @@
+<mz-modal [fixedFooter]="true">
+  <mz-modal-header>
+    <span>{{'Add titul' | translate}}</span>
+  </mz-modal-header>
+
+  <mz-modal-content>
+    <mz-input-container>
+      <input mz-input [label]="'record.id_titul' | translate" id="id_titulu" name="id_titulu" type="text" [(ngModel)]="titul.id">
+    </mz-input-container>
+    <mz-input-container>
+      <input mz-input [label]="'record.meta_nazev' | translate" id="v" name="meta_nazev" type="text" [(ngModel)]="titul.meta_nazev">
+    </mz-input-container>
+    
+    
+      <mz-input-container>
+        <input mz-input [label]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" [(ngModel)]="titul.pocet_stran" type="text">
+      </mz-input-container>
+    
+    
+      <mz-select-container>
+        <select mz-select [label]="'Periodicita'" [id]="'periodicita'" [name]="'periodicita'" [(ngModel)]="titul.periodicita">
+          <option *ngFor="let p of state.periods" [value]="p">{{'record.periodicita.' + p | translate}}</option>
+        </select>
+      </mz-select-container>
+    
+    
+  </mz-modal-content>
+
+  <mz-modal-footer>
+    <button mz-button [flat]="true" (click)="ok()">OK</button>
+    <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{'button.cancel' | translate}}</button>
+  </mz-modal-footer>
+</mz-modal>

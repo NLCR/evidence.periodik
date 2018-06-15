@@ -10,6 +10,8 @@ import {Titul} from '../../models/titul';
 import {StavIssue} from '../../models/stav-issue.enum';
 import {StateIssue} from '../../models/state-issue.enum';
 import {Exemplar} from '../../models/exemplar';
+import {AddTitulDialogComponent} from '../add-titul-dialog/add-titul-dialog.component';
+import {MzModalService} from 'ngx-materialize';
 
 @Component({
   selector: 'app-issue',
@@ -30,6 +32,7 @@ export class IssueComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
+    private modalService: MzModalService,
     private route: ActivatedRoute,
     public state: AppState,
     private service: AppService) {
@@ -61,10 +64,17 @@ export class IssueComponent implements OnInit {
   }
 
   setTitul() {
+    if (this.titul_idx.toString() === '-1'){
+      //New titul dialog
+      this.modalService.open(AddTitulDialogComponent,
+        {"state": this.state, "service": this.service}
+      );
+    } else {
     this.state.currentIssue.titul = this.state.tituly[this.titul_idx];
     this.state.currentIssue.id_titul = this.state.currentIssue.titul.id;
     this.state.currentIssue.meta_nazev = this.state.currentIssue.titul.meta_nazev;
     this.state.currentTitul = this.state.currentIssue.titul;
+    }
   }
 
   langChanged() {

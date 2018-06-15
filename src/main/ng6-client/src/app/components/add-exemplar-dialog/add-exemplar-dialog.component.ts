@@ -20,6 +20,8 @@ export class AddExemplarDialogComponent extends MzBaseModal {
   //public ex: number;
   public exemplar: Exemplar;
   
+  isNew: boolean;
+  
   public stavy: {key: string, value: StavIssue}[] = [];
   
   ngOnInit() {

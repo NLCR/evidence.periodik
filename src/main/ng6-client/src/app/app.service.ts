@@ -168,6 +168,15 @@ export class AppService {
   }
 
 
+  saveTitul(titul: Titul) {
+    var url = this.state.config['context'] + 'index';
+    let params: HttpParams = new HttpParams()
+      .set('action', 'SAVE_TITUL')
+      .set('json', JSON.stringify(titul));
+    return this.http.get(url, {params: params});
+  }
+
+
   saveIssue(issue: Issue) {
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()

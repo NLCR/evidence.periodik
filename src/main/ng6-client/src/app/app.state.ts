@@ -22,7 +22,7 @@ export class AppState {
   
   //Holds client configuration
   config: any;
-  periods: {key: string, value: string}[] = [];
+  periods: string[] = [];
   vydani = [];
   configured: boolean = false;
   
@@ -67,7 +67,7 @@ export class AppState {
     
     this.config = cfg;
     
-    Object.keys(this.config['periodicity']).map(k => {this.periods.push({key: k, value: this.config['periodicity'][k]});});
+    this.periods =  this.config['periodicity'];
     
     Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
     Object.keys(StateIssue).map(k => {this.states.push({key: k, value: StateIssue[k]});});

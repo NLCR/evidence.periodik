@@ -1,7 +1,7 @@
 <mz-modal [fixedFooter]="true">
   <mz-modal-header>
-    <ng-container [ngSwitch]="ex">
-      <span *ngSwitchCase="-1">{{'Add exemplar' | translate}}</span>
+    <ng-container [ngSwitch]="isNew">
+      <span *ngSwitchCase="true">{{'Add exemplar' | translate}}</span>
       <span *ngSwitchDefault>{{'Edit exemplar' | translate}}</span>
     </ng-container>
   </mz-modal-header>
@@ -12,8 +12,8 @@
       </div>
     <div>
       
-    <ng-container [ngSwitch]="ex">
-      <span *ngSwitchCase="-1">
+    <ng-container [ngSwitch]="isNew">
+      <span *ngSwitchCase="true">
         <mz-input-container>
           <input mz-input [label]="'record.ownership' | translate" [id]="'vlastnik'" [name]="'vlastnik'" [(ngModel)]="exemplar.vlastnik" type="text">
         </mz-input-container>
