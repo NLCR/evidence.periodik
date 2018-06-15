@@ -1,5 +1,4 @@
 import { Titul } from './titul';
-import { StavIssue } from './stav-issue.enum';
 import {Exemplar} from './exemplar';
 
 
@@ -7,6 +6,7 @@ export class Issue {
   id: string = "";
   id_titul: string = "";
   meta_nazev: string = ""; //název na titulu
+  titul: Titul = new Titul();
   nazev: string = ""; //název na titulní straně	text	Název tak jak je na konkrétním čísle novin
   podnazev: string = ""; //podnázev na titulní straně	text	Podnázev tak jak je na konkrétním čísle novin.
   vydani: string = ""; //vydání	text	název vydání tak jak je uveden na titulní straně

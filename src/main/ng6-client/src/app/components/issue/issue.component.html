@@ -3,9 +3,16 @@
 <div class="app-issue-wrapper grey lighten-5" *ngIf="state.currentIssue.id || isNew">
   <div class="row">
     <div class="col s4">
+      <!--
         <mz-input-container>
           <input mz-input [label]="'record.id_titul' | translate" id="id_titulu" name="id_titulu" type="text" [(ngModel)]="state.currentIssue.id_titul">
         </mz-input-container>
+      -->           
+        <mz-select-container>
+          <select mz-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()" [label]="'Titul'">
+            <option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >{{tit.meta_nazev}}</option>
+          </select>
+        </mz-select-container>
         <mz-datepicker-container>
           <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
           <input mz-datepicker
@@ -82,7 +89,7 @@
             <mz-collapsible-item-body>
               <mz-select-container>
                 <select mz-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav">
-                  <option *ngFor="let stav of stavy" [value]="stav.key">{{'record.StavIssue.' + stav.key | translate}}</option>
+                  <option *ngFor="let stav of state.stavy" [value]="stav.key">{{'record.StavIssue.' + stav.key | translate}}</option>
                 </select>
               </mz-select-container>
               <mz-input-container>

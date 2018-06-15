@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 import {Titul} from './models/titul';
 import {Issue} from './models/issue';
 import {Filter} from './models/filter';
+import {StavIssue} from './models/stav-issue.enum';
+import {StateIssue} from './models/state-issue.enum';
   
 @Injectable()
 export class AppState {
@@ -24,6 +26,10 @@ export class AppState {
   vydani = [];
   configured: boolean = false;
   
+  
+  stavy = [];
+  states = [];
+  
   currentLang: string = 'cs';
   
   calendarView: string = 'month';
@@ -33,6 +39,8 @@ export class AppState {
   currentDay: Date = new Date();
   private _currentDaySubject = new Subject();
   public currentDayChanged: Observable<any> = this._currentDaySubject.asObservable();
+  
+  tituly: Titul[] = [];
   
   currentTitul: Titul = new Titul();
   private _currentTitulSubject = new Subject();
@@ -60,6 +68,10 @@ export class AppState {
     this.config = cfg;
     
     Object.keys(this.config['periodicity']).map(k => {this.periods.push({key: k, value: this.config['periodicity'][k]});});
+    
+    Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
+    Object.keys(StateIssue).map(k => {this.states.push({key: k, value: StateIssue[k]});});
+    
     this.config["vydani"].map(k => {this.vydani.push(k);});
     this.configured = true;
     this._configSubject.next(cfg);
@@ -67,6 +79,12 @@ export class AppState {
   
   changeLang(lang){
     this.currentLang = lang;
+    
+    this.stavy = [];
+    this.states = [];
+    Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
+    Object.keys(StateIssue).map(k => {this.states.push({key: k, value: StateIssue[k]});});
+    
     this._langSubject.next(lang);
   }
   

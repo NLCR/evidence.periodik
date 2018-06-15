@@ -57,9 +57,12 @@ export class ResultsTableComponent implements OnInit {
     //Extract exemplare
     this.cks = [];
     this.exs = {};
-    this.data = this.state.searchResults['response']['docs'];
     this.displayedColumns = [];
     this.header = '';
+    this.data = this.state.searchResults['response']['docs'];
+    if(this.data.length === 0){
+      return;
+    }
 
     this.addColumn('nazev');
     this.addColumn('mutace');

@@ -5,7 +5,7 @@ import {TranslateService} from '@ngx-translate/core';
 
 import {Observable} from 'rxjs';
 import {Subject} from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import {tap, map} from 'rxjs/operators';
 
 import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 
@@ -68,8 +68,8 @@ export class AppService {
     }
     return this.http.get(url, {params: params}).pipe(
       map((res) => {
-      return res['response']['docs'];
-    }));
+        return res['response']['docs'];
+      }));
   }
 
   isSpecial(d: Date): Observable<any[]> {
@@ -88,8 +88,8 @@ export class AppService {
     }
     return this.http.get(url, {params: params}).pipe(
       map((res) => {
-      return res['response']['docs'];
-    }));
+        return res['response']['docs'];
+      }));
   }
 
   getIssuesOfTitul(uuid: string, month: string): Observable<any[]> {
@@ -100,39 +100,39 @@ export class AppService {
       url = this.state.config['context'] + 'assets/issues.json';
     } else {
       params = new HttpParams()
-      .set('q', '*')
-      .set('wt', 'json')
-      .set('rows', '200')
-      .set('fl', '*,exemplare:[json]')
-      .set('fq', 'id_titul:"' + uuid + '"')
-      .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
+        .set('q', '*')
+        .set('wt', 'json')
+        .set('rows', '200')
+        .set('fl', '*,exemplare:[json]')
+        .set('fq', 'id_titul:"' + uuid + '"')
+        .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
       url = this.state.config['context'] + 'search/issue/select';
     }
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params}).pipe(
       map((res) => {
-      return res['response']['docs'];
-    }));
+        return res['response']['docs'];
+      }));
   }
-
-  getTitulOld(id: string) {
-    var url = this.state.config['context'] + 'search/titul/select';
-    let params: HttpParams = new HttpParams();
-    let test = this.state.config['test'];
-    if (test) {
-      url = this.state.config['context'] + 'assets/titul.json';
-    } else {
-      params = params.set('q', '*');
-      params = params.set('fq', 'id:"' + id + '"');
-      //params.set('fl', 'start:datum_vydani,title:nazev,*')
-    }
-    return this.http.get(url, {params: params}).pipe((res) => {
-      return res['response']['docs'][0];
-    });
-  }
-  
 
   getTitul(id: string): Observable<Titul> {
+    var url = this.state.config['context'] + 'search/titul/select';
+    let params: HttpParams = new HttpParams();
+    params = params.set('q', '*')
+      .set('fq', 'id:"' + id + '"');
+    return this.http.get<Titul>(url, {params: params}).pipe(
+      map((res) => {
+        let t = new Titul();
+        t.id = id;
+        if (res['response']['numFound'] > 0) {
+          t.meta_nazev = res['response']['docs'][0]['meta_nazev'];
+        }
+        return t;
+      }));
+  }
+
+
+  getTitul_(id: string): Observable<Titul> {
     var url = this.state.config['context'] + 'search/issue/select';
     let params: HttpParams = new HttpParams();
     let test = this.state.config['test'];
@@ -144,88 +144,101 @@ export class AppService {
     }
     return this.http.get<Titul>(url, {params: params}).pipe(
       tap((res) => {
-      let t = new Titul();
+        let t = new Titul();
         t.id = id;
-      if(res['response']['numFound']>0){
-        t.meta_nazev = res['response']['docs'][0]['nazev'];
-      }
-      return t;
-      
-    }));
+        if (res['response']['numFound'] > 0) {
+          t.meta_nazev = res['response']['docs'][0]['nazev'];
+        }
+        return t;
+
+      }));
   }
-  
-  
-  saveIssue(issue: Issue){
+
+
+  getTituly(): Observable<any> {
+    var url = this.state.config['context'] + 'search/titul/select';
+    let params: HttpParams = new HttpParams()
+      .set('q', '*')
+      .set('rows', '500');
+
+    return this.http.get(url, {params: params}).pipe(
+      map((res) => {
+        this.state.tituly = res['response']['docs'];
+      }));
+  }
+
+
+  saveIssue(issue: Issue) {
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
-    .set('action', 'SAVE_ISSUE')
+      .set('action', 'SAVE_ISSUE')
       .set('json', JSON.stringify(issue));
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params});
   }
-  
-  saveCurrentIssue(){
+
+  saveCurrentIssue() {
     return this.saveIssue(this.state.currentIssue);
   }
 
   getIssue(id: string): Observable<any[]> {
     var url = this.state.config['context'] + 'search/issue/select';
     let params: HttpParams = new HttpParams()
-    .set('q', '*')
-    .set('wt', 'json')
-    .set('fl', '*,exemplare:[json]')
-    .set('fq', 'id:"' + id + '"');
+      .set('q', '*')
+      .set('wt', 'json')
+      .set('fl', '*,exemplare:[json]')
+      .set('fq', 'id:"' + id + '"');
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params}).pipe(
       map((res) => {
-      return res['response']['docs'];
-    }));
+        return res['response']['docs'];
+      }));
   }
-  
+
   getIssueTotals(id: string) {
     var url = this.state.config['context'] + 'search/issue/select';
     let params: HttpParams = new HttpParams()
-    .set('q', '*')
-    .set('wt', 'json')
-//    .set('fq', 'datum_vydani:"' + datum + '"')
-    .append('fq', 'id_titul:"' + id + '"')
-    .set('stats','true')
-    .set('stats.field','{!key=mutace countDistinct=true count=true}mutace')
-    .append('stats.field','{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
-    .append('stats.field','{!key=vlastnik countDistinct=true count=true max=true min=true}vlastnik')
-    .append('stats.field','exemplare')
+      .set('q', '*')
+      .set('wt', 'json')
+      //    .set('fq', 'datum_vydani:"' + datum + '"')
+      .append('fq', 'id_titul:"' + id + '"')
+      .set('stats', 'true')
+      .set('stats.field', '{!key=mutace countDistinct=true count=true}mutace')
+      .append('stats.field', '{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
+      .append('stats.field', '{!key=vlastnik countDistinct=true count=true max=true min=true}vlastnik')
+      .append('stats.field', 'exemplare')
     return this.http.get(url, {params: params});
   }
 
   search() {
     var url = this.state.config['context'] + 'search/issue/select';
     let params: HttpParams = new HttpParams()
-    .set('q', '*')
-    .set('wt', 'json')
-    .set('rows', '500')
-    .set('sort', 'datum_vydani_den asc')
-    .set('fq', 'exemplare:[* TO *]')
-    //.set('fq', '{!collapse field=id_titul}')
-    .set('facet', 'true')
-    .set('facet.mincount', '1')
-    .set('json.nl', 'arrntv')
-    .set('fl', '*, exemplare:[json]')
-    .set('stats', 'true')
-    .set('stats.field', 'datum_vydani_den')
-    .set('facet.field', 'nazev')
-    .append('facet.field', 'vlastnik')
-    .append('facet.field', 'mutace')
-    .append('facet.field', 'vydani');
-    
+      .set('q', '*')
+      .set('wt', 'json')
+      .set('rows', '500')
+      .set('sort', 'datum_vydani_den asc')
+      .set('fq', 'exemplare:[* TO *]')
+      //.set('fq', '{!collapse field=id_titul}')
+      .set('facet', 'true')
+      .set('facet.mincount', '1')
+      .set('json.nl', 'arrntv')
+      .set('fl', '*, exemplare:[json]')
+      .set('stats', 'true')
+      .set('stats.field', 'datum_vydani_den')
+      .set('facet.field', 'nazev')
+      .append('facet.field', 'vlastnik')
+      .append('facet.field', 'mutace')
+      .append('facet.field', 'vydani');
+
     //facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
-    
+
     this.state.filters.forEach((f: Filter) => {
-//    for (let f in this.state.filters){
+      //    for (let f in this.state.filters){
       params = params.append('fq', f.field + ':"' + f.value + '"');
     });
-    
-    if (this.state.filterByDate){
-      params = params.append('fq', 'datum_vydani_den:[' + this.state.start_date + ' TO ' + this.state.end_date+']');
+
+    if (this.state.filterByDate) {
+      params = params.append('fq', 'datum_vydani_den:[' + this.state.start_date + ' TO ' + this.state.end_date + ']');
     }
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params});
@@ -234,8 +247,8 @@ export class AppService {
   searchTituly() {
     var url = this.state.config['context'] + 'search/titul/select';
     let params: HttpParams = new HttpParams()
-    .set('q', '*')
-    .set('wt', 'json');
+      .set('q', '*')
+      .set('wt', 'json');
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params});
   }
@@ -243,8 +256,8 @@ export class AppService {
   clone(cfg: CloneParams) {
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
-    .set('action', 'CLONE')
-    .set('cfg', JSON.stringify(cfg));
+      .set('action', 'CLONE')
+      .set('cfg', JSON.stringify(cfg));
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params});
   }

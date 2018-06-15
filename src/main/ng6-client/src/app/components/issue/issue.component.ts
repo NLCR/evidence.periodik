@@ -9,9 +9,6 @@ import {Issue} from '../../models/issue';
 import {Titul} from '../../models/titul';
 import {StavIssue} from '../../models/stav-issue.enum';
 import {StateIssue} from '../../models/state-issue.enum';
-import {MzModalService} from 'ngx-materialize';
-import {CloneDialogComponent} from '../clone-dialog/clone-dialog.component';
-import {CloneParams} from '../../models/clone-params';
 import {Exemplar} from '../../models/exemplar';
 
 @Component({
@@ -22,11 +19,10 @@ import {Exemplar} from '../../models/exemplar';
 export class IssueComponent implements OnInit {
   subscriptions: Subscription[] = [];
 
-  stavy = [];
-  states = [];
-
   addingEx: boolean = false;
   isNew = false;
+  titul_idx: number;
+
   public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
     formatSubmit: 'yyyy-mm-dd',
@@ -34,12 +30,9 @@ export class IssueComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private modalService: MzModalService,
     private route: ActivatedRoute,
     public state: AppState,
     private service: AppService) {
-    Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
-    Object.keys(StateIssue).map(k => {this.states.push({key: k, value: StateIssue[k]});});
   }
 
   onSubmit() {
@@ -52,22 +45,38 @@ export class IssueComponent implements OnInit {
       if (!this.state.currentIssue.hasOwnProperty('exemplare')) {
         this.state.currentIssue['exemplare'] = [];
       }
-      console.log(this.state.currentIssue);
+      //console.log(this.state.currentIssue);
       this.service.getTitul(this.state.currentIssue.id_titul).subscribe(res2 => {
-          this.state.currentTitul = res2;
+        this.state.currentIssue.titul = res2;
+        this.state.currentTitul = res2;
+        for (let i = 0; i < this.state.tituly.length; i++) {
+          if (this.state.tituly[i].id === this.state.currentIssue.titul.id) {
+            this.titul_idx = i;
+          }
+        }
       });
     } else {
       this.state.currentIssue = new Issue();
     }
   }
 
+  setTitul() {
+    this.state.currentIssue.titul = this.state.tituly[this.titul_idx];
+    this.state.currentIssue.id_titul = this.state.currentIssue.titul.id;
+    this.state.currentIssue.meta_nazev = this.state.currentIssue.titul.meta_nazev;
+    this.state.currentTitul = this.state.currentIssue.titul;
+  }
+
   langChanged() {
-    this.stavy = [];
-    this.states = [];
+    //    this.cdRef.detectChanges();
     this.cdRef.detectChanges();
-    Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
-    Object.keys(StateIssue).map(k => {this.states.push({key: k, value: StateIssue[k]});});
-    this.cdRef.detectChanges();
+
+    this.addingEx = true;
+    setTimeout(() => {
+
+      this.cdRef.detectChanges();
+      this.addingEx = false;
+    }, 1);
   }
 
 
@@ -82,8 +91,8 @@ export class IssueComponent implements OnInit {
     this.state.currentTitul = new Titul();
     this.state.currentIssue = new Issue();
     let id = this.route.snapshot.paramMap.get('id');
-    if(id){
-    this.isNew = false;
+    if (id) {
+      this.isNew = false;
       if (this.state.config) {
         this.service.getIssue(id).subscribe(res => {
           this.setData(res);
@@ -96,8 +105,8 @@ export class IssueComponent implements OnInit {
         }));
       }
     } else {
-      
-    this.isNew = true;
+
+      this.isNew = true;
     }
 
 
@@ -105,23 +114,23 @@ export class IssueComponent implements OnInit {
       this.langChanged();
     }));
   }
-  
+
   addExemplar() {
     this.addingEx = true;
     setTimeout(() => {
-      
+
       this.state.currentIssue.exemplare.push(new Exemplar());
       this.addingEx = false;
     }, 1);
   }
-  
-  removeExemplar(idx: number){
+
+  removeExemplar(idx: number) {
     this.addingEx = true;
     setTimeout(() => {
-      
+
       this.state.currentIssue.exemplare.splice(idx, 1);
       this.addingEx = false;
     }, 1);
-    
+
   }
 }
