@@ -102,8 +102,26 @@ public class IndexServlet extends HttpServlet {
         try {
           Indexer indexer = new Indexer();
           JSONObject jo = new JSONObject(req.getParameter("json"));
-          LOGGER.log(Level.INFO, "getParameterMap: {0}", jo);
           json.put("save issue", indexer.fromJSON(jo));
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+          json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
+    SAVE_TITUL {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          JSONObject jo = new JSONObject(req.getParameter("json"));
+          LOGGER.log(Level.INFO, "getParameterMap: {0}", jo);
+          json.put("save titul", indexer.saveTitul(jo));
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
           json.put("error", ex.toString());

@@ -491,6 +491,49 @@ public class Indexer {
     return ret;
   }
 
+
+  public JSONObject saveTitul(JSONObject json) {
+    JSONObject ret = new JSONObject();
+    try (SolrClient solr = getClient()) {
+      SolrInputDocument idoc = new SolrInputDocument();
+      for (Object key : json.keySet()) {
+        String name = (String) key;
+        if (null == name) {
+          //idoc.addField(name, json.get(name));
+        } else {
+          switch (name) {
+            case "_version_":
+              break;
+            case "exemplare":
+              //Extract vlastnik and index each exemplar
+              JSONArray ex = json.getJSONArray(name);
+              for (int i = 0; i < ex.length(); i++) {
+                String vl = ex.getJSONObject(i).getString("vlastnik");
+                idoc.addField("vlastnik", vl);
+                idoc.addField("exemplare", ex.getJSONObject(i).toString());
+              }
+              break;
+            default:
+              idoc.addField(name, json.get(name));
+              break;
+          }
+        }
+      }
+
+      if ("".equals(json.optString("id", ""))) {
+        idoc.setField("id", generateId(idoc));
+      }
+      LOGGER.info(idoc.toString());
+      solr.add("titul", idoc);
+      solr.commit("titul");
+      ret.put("success", "titul saved");
+    } catch (SolrServerException | IOException ex) {
+      ret.put("error", ex);
+      LOGGER.log(Level.SEVERE, null, ex);
+    }
+    return ret;
+  }
+
   public JSONObject json(SolrQuery query, String core) throws MalformedURLException, IOException {
     query.set("wt", "json");
     String solrURL = String.format("%s%s/select",
