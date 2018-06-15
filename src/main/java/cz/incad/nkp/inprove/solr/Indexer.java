@@ -200,6 +200,10 @@ public class Indexer {
         LocalDate end = start.plus(Period.ofMonths(1));
 
         for (LocalDate date = start; date.isBefore(end); date = date.plus(period)) {
+          //TODO
+//          if (!cfg.onSpecialDays && isSpecial(solr, date)) {
+//            continue;
+//          }
           SolrInputDocument idocDen = idoc.deepCopy();
 
           idocDen.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
@@ -439,9 +443,8 @@ public class Indexer {
       for (Object key : json.keySet()) {
         String name = (String) key;
         if (null == name) {
-          idoc.addField(name, json.get(name));
-        } else//      json.keySet().forEach((String name) -> {
-        {
+          //idoc.addField(name, json.get(name));
+        } else {
           switch (name) {
             case "datum_vydani":
               //SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -454,6 +457,8 @@ public class Indexer {
               idoc.setField("datum_vydani_den", json.getString(name).replaceAll("-", ""));
               break;
             //Skip this
+            case "titul":
+              break;
             case "_version_":
               break;
             case "exemplare":
