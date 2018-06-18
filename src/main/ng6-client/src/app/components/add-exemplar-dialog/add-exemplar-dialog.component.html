@@ -27,8 +27,8 @@
     </ng-container>
     </div>
       <mz-select-container>
-        <select mz-select [id]="'stav'" [name]="'stav'" [(ngModel)]="exemplar.stav">
-          <option *ngFor="let stav of stavy" [value]="stav.key">{{'record.StavIssue.' + stav.key | translate}}</option>
+        <select mz-select [id]="'stav'" [name]="'stav'" [(ngModel)]="exemplar.stav" [multiple]="true">
+          <option *ngFor="let stav of state.stavy" [value]="stav">{{'record.StavIssue.' + stav | translate}}</option>
         </select>
       </mz-select-container>
       <mz-input-container>

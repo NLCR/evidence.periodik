@@ -7,8 +7,6 @@ import {AppService} from '../../app.service';
 
 import {Issue} from '../../models/issue';
 import {Titul} from '../../models/titul';
-import {StavIssue} from '../../models/stav-issue.enum';
-import {StateIssue} from '../../models/state-issue.enum';
 import {Exemplar} from '../../models/exemplar';
 import {AddTitulDialogComponent} from '../add-titul-dialog/add-titul-dialog.component';
 import {MzModalService} from 'ngx-materialize';

@@ -9,6 +9,28 @@
     "P1M",
     "P6M"
   ],
+  "stavy": [
+    "OK",
+      "Z",
+      "ChS",
+      "PP",
+      "PolS",
+      "NT",
+      "PopS",
+      "Cz",
+      "CzV",
+      "Prl",
+      "Deg",
+      "ChCl",
+      "ChCC",
+      "NS",
+      "ZV",
+      "NeS",
+      "ChPag",
+      "ChCisRoc",
+      "ChVV"
+  ],
+  "states":["ok", "auto"],
   "vydani": ["morning", "afternoon", "evening"],
   "test": false          
 }

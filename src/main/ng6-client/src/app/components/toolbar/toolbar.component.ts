@@ -5,8 +5,6 @@ import {AppService} from '../../app.service';
 
 import {Issue} from '../../models/issue';
 import {Titul} from '../../models/titul';
-import {StavIssue} from '../../models/stav-issue.enum';
-import {StateIssue} from '../../models/state-issue.enum';
 import {MzModalService} from 'ngx-materialize';
 import {CloneDialogComponent} from '../clone-dialog/clone-dialog.component';
 import {CloneParams} from '../../models/clone-params';
@@ -17,8 +15,6 @@ import {CloneParams} from '../../models/clone-params';
   styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent implements OnInit {
-  stavy = [];
-  states = [];
   periods = [];
 
   constructor(

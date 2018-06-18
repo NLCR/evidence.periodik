@@ -4,8 +4,6 @@ import { Subject } from 'rxjs';
 import {Titul} from './models/titul';
 import {Issue} from './models/issue';
 import {Filter} from './models/filter';
-import {StavIssue} from './models/stav-issue.enum';
-import {StateIssue} from './models/state-issue.enum';
   
 @Injectable()
 export class AppState {
@@ -27,7 +25,7 @@ export class AppState {
   configured: boolean = false;
   
   
-  stavy = [];
+  stavy : string[] = [];
   states = [];
   
   currentLang: string = 'cs';
@@ -68,9 +66,9 @@ export class AppState {
     this.config = cfg;
     
     this.periods =  this.config['periodicity'];
+    this.stavy = this.config['stavy'];
+    this.states = this.config['states'];
     
-    Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
-    Object.keys(StateIssue).map(k => {this.states.push({key: k, value: StateIssue[k]});});
     
     this.config["vydani"].map(k => {this.vydani.push(k);});
     this.configured = true;
@@ -80,10 +78,6 @@ export class AppState {
   changeLang(lang){
     this.currentLang = lang;
     
-    this.stavy = [];
-    this.states = [];
-    Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
-    Object.keys(StateIssue).map(k => {this.states.push({key: k, value: StateIssue[k]});});
     
     this._langSubject.next(lang);
   }

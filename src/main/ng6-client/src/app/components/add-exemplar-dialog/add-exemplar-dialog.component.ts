@@ -4,7 +4,6 @@ import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
 import {Issue} from '../../models/issue';
 import {Exemplar} from '../../models/exemplar';
-import {StavIssue} from '../../models/stav-issue.enum';
 
 @Component({
   selector: 'app-add-exemplar-dialog',
@@ -22,7 +21,6 @@ export class AddExemplarDialogComponent extends MzBaseModal {
   
   isNew: boolean;
   
-  public stavy: {key: string, value: StavIssue}[] = [];
   
   ngOnInit() {
 //    console.log(this.ex);
@@ -31,8 +29,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
 //    } else {
 //      this.exemplar = this.issue.exemplare[this.ex];
 //    }
-    this.stavy = [];
-    Object.keys(StavIssue).map(k => {this.stavy.push({key: k, value: StavIssue[k]});});
+    
   }
 
   ok(): void {

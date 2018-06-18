@@ -90,12 +90,12 @@
             </mz-collapsible-item-header>
             <mz-collapsible-item-body>
               <mz-select-container>
-                <select mz-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav">
-                  <option *ngFor="let stav of state.stavy" [value]="stav.key">{{'record.StavIssue.' + stav.key | translate}}</option>
+                <select mz-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav" [multiple]="true" [placeholder]="'Stav'">
+                  <option *ngFor="let stav of state.stavy" [value]="stav">{{'record.StavIssue.' + stav | translate}}</option>
                 </select>
               </mz-select-container>
               <mz-input-container>
-                <input mz-input [label]="'record.state' | translate" [id]="'stav_popis'+idx" [name]="'stav_popis'+idx" [(ngModel)]="ex.stav_popis" type="text">
+                <input mz-input [label]="'record.state_com' | translate" [id]="'stav_popis'+idx" [name]="'stav_popis'+idx" [(ngModel)]="ex.stav_popis" type="text">
               </mz-input-container>
               <mz-input-container>
                 <input mz-input [label]="'record.ownership' | translate" [id]="'vlastnik'+idx" [name]="'vlastnik'+idx" [(ngModel)]="ex.vlastnik" type="text">
