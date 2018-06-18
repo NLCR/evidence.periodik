@@ -5,6 +5,7 @@
  */
 package cz.incad.nkp.inprove;
 
+import cz.incad.nkp.inprove.importing.VDKSetProcessor;
 import cz.incad.nkp.inprove.solr.Indexer;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
+import org.json.XML;
 
 /**
  *
@@ -165,6 +167,39 @@ public class IndexServlet extends HttpServlet {
         InputStream inputStream = RESTHelper.inputStream(url, reqProps);
         JSONObject vdkJson = new JSONObject(org.apache.commons.io.IOUtils.toString(inputStream, Charset.forName("UTF-8"))); 
         indexer.fromVDK(new JSONObject(req.getParameter("cfg")), vdkJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0));
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
+    CLONE_VDK_SET {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          
+        Map<String, String> reqProps = new HashMap<>();
+        reqProps.put("Content-Type", "text/plain");
+        reqProps.put("Accept", "text/plain");
+        String url = req.getParameter("url");
+        
+            LOGGER.log(Level.INFO, url);
+          VDKSetProcessor vp = new VDKSetProcessor();
+        InputStream inputStream = RESTHelper.inputStream(url, reqProps);
+        String s = org.apache.commons.io.IOUtils.toString(inputStream, Charset.forName("UTF-8"));
+//        json = XML.toJSONObject(s);
+//          json.put("exemplars1" , XML.toJSONObject(s));
+          vp.getFromString(s);
+          json.put("exemplars" , vp.exemplarsToJson());
+        //JSONObject vdkJson = new JSONObject(s); 
+        //indexer.fromVDK(new JSONObject(req.getParameter("cfg")), vdkJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0));
 
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
