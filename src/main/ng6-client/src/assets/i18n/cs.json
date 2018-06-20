@@ -17,7 +17,7 @@
     "meta_title": "Meta název",
     "name_title_page": "Název na titulní straně",
     "subname_title_page": "Podnázev na titulní straně",
-    "ptime_ublication": "Čas vydání",
+    "time_publication": "Čas vydání",
     "mutation": "Mutace",
     "date_publication": "Datum vydání",
     "publication": {
@@ -130,7 +130,9 @@
     "from": "Od",
     "till": "Do",
     "periodicity": "Periodicita",
-    "on_special_days": "Ve speciální dny"
+    "on_special_days": "Ve speciální dny",
+    "start_year":"Startovaci rocnik",
+    "start_number": "Startovaci cislo"
   },
   "login": {
     "desc": "Prosím, přihlašte se",

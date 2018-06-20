@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MzBaseModal, MzModalComponent } from 'ngx-materialize';
+import { MzBaseModal } from 'ngx-materialize';
 import {CloneParams} from '../../models/clone-params';
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
@@ -17,7 +17,6 @@ export class CloneDialogComponent extends MzBaseModal {
     };
     
     //Input properties
-    periods: string[] = [];
     state: AppState;
     service: AppService;
     

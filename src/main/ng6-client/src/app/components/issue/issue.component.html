@@ -46,7 +46,7 @@
         </mz-input-container>
       
       <mz-select-container>
-          <select mz-select id="periodicita" name="periodicita" [placeholder]="'record.periodicita.placeholder' | translate" 
+          <select mz-select id="periodicita" name="periodicita" [label]="'record.periodicita.placeholder' | translate" 
                   [(ngModel)]="state.currentIssue.periodicita">
             <option *ngFor="let v of state.periods" [value]="v">{{'record.periodicita.' + v | translate }}</option>
           </select>

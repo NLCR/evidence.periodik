@@ -22,16 +22,19 @@
              id="end_date" name="end_date"
              type="text" />
     </mz-datepicker-container>
+    
     <mz-select-container>
-      <select mz-select id="Periodicita" name="Periodicita" [placeholder]="'modal.periodicity' | translate" [(ngModel)]="params.periodicity">
-        <option *ngFor="let p of state.periods" [value]="p.key">{{p.value}}</option>
-      </select>
-    </mz-select-container>
+          <select mz-select id="periodicita" name="periodicita" [label]="'record.periodicita.placeholder' | translate" 
+                  [(ngModel)]="state.currentIssue.periodicita">
+            <option *ngFor="let v of state.periods" [value]="v">{{'record.periodicita.' + v | translate }}</option>
+          </select>
+        </mz-select-container>
+    
     <mz-input-container>
-      <input mz-input [label]="'clone.start_number' | translate" id="start_number" name="start_number" [(ngModel)]="params.start_number" type="text">
+      <input mz-input [label]="'modal.start_number' | translate" id="start_number" name="start_number" [(ngModel)]="params.start_number" type="text">
     </mz-input-container>
     <mz-input-container>
-      <input mz-input [label]="'clone.start_year' | translate" id="start_year" name="start_year" [(ngModel)]="params.start_year" type="text">
+      <input mz-input [label]="'modal.start_year' | translate" id="start_year" name="start_year" [(ngModel)]="params.start_year" type="text">
     </mz-input-container>
     <mz-checkbox-container>
       <input mz-checkbox

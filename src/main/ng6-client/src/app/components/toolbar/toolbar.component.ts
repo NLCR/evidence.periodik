@@ -61,9 +61,9 @@ export class ToolbarComponent implements OnInit {
     cloneParams.start_date = this.state.currentIssue.datum_vydani;
     cloneParams.end_date = this.state.currentIssue.datum_vydani;
     cloneParams.start_number = this.state.currentIssue.cislo;
-    cloneParams.start_year = this.state.currentIssue.rocnik_number;
+    cloneParams.start_year = parseInt(this.state.currentIssue.rocnik);
     cloneParams.periodicity = this.state.currentIssue.periodicita;
     
-    this.modalService.open(CloneDialogComponent, {"periods": this.periods, "state": this.state, "service": this.service, "params": cloneParams});
+    this.modalService.open(CloneDialogComponent, {"state": this.state, "service": this.service, "params": cloneParams});
   }
 }

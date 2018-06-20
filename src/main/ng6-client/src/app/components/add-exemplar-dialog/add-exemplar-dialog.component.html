@@ -1,7 +1,8 @@
 <mz-modal [fixedFooter]="true">
   <mz-modal-header>
-    <ng-container [ngSwitch]="isNew">
-      <span *ngSwitchCase="true">{{'Add exemplar' | translate}}</span>
+    <ng-container [ngSwitch]="editType">
+      <span *ngSwitchCase="'new'">{{'Add exemplar' | translate}}</span>
+      <span *ngSwitchCase="'duplicate'">{{'Duplicate exemplar' | translate}}</span>
       <span *ngSwitchDefault>{{'Edit exemplar' | translate}}</span>
     </ng-container>
   </mz-modal-header>
