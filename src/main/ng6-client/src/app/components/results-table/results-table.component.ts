@@ -60,15 +60,15 @@ export class ResultsTableComponent implements OnInit {
     this.displayedColumns = [];
     this.header = '';
     this.data = this.state.searchResults['response']['docs'];
-    if(this.data.length === 0){
+    if (this.data.length === 0) {
       return;
     }
 
     this.addColumn('nazev');
     this.addColumn('mutace');
     this.addColumn('vydani');
-    
-    
+
+
     this.displayedColumns.push('pocet_stran', 'datum_vydani', 'add');
     this.data.forEach((issue: Issue) => {
       if (issue.exemplare) {
@@ -81,7 +81,7 @@ export class ResultsTableComponent implements OnInit {
             this.exs[ck] = exs[i];
             this.displayedColumns.push(ck);
           } else {
-            
+
           }
           issue[ck] = i;
         }
@@ -105,9 +105,9 @@ export class ResultsTableComponent implements OnInit {
     let vlastnik = row.exemplare[row[ck]]['vlastnik'];
     return this.colorByVlastnik(vlastnik);
   }
-  
-  colorByVlastnik(vlastnik: string): string{
-    
+
+  colorByVlastnik(vlastnik: string): string {
+
     switch (vlastnik) {
       case 'MZK': {
         return '#d1eff1';
@@ -138,15 +138,39 @@ export class ResultsTableComponent implements OnInit {
 
   addClick(issue: Issue) {
     this.modalService.open(AddExemplarDialogComponent,
-      {"issue": issue, "state": this.state, "service": this.service, "ex": -1}
+      {"issue": issue, "state": this.state, "service": this.service, editType: 'new'}
     );
 
   }
 
   viewClick(issue: Issue, ex: Exemplar) {
-      this.modalService.open(AddExemplarDialogComponent,
-        {"issue": issue, "state": this.state, "service": this.service, "exemplar": ex}
-      );
+    this.modalService.open(AddExemplarDialogComponent,
+      {"issue": issue, "state": this.state, "service": this.service, "exemplar": ex, editType: 'edit'}
+    );
+  }
+
+  duplicate(issue: Issue, ex: Exemplar) {
+    let a = this.modalService.open(AddExemplarDialogComponent,
+      {
+        "issue": issue,
+        "state": this.state,
+        "service": this.service,
+        "exemplar": ex,
+        editType: 'duplicate'
+      }
+    );
+    
+    a.onDestroy(() => {
+      let mm = <AddExemplarDialogComponent> a.instance;
+      if(mm.saved){
+        this.service.search().subscribe(res => {
+          this.state.setSearchResults(res);
+         //this.docs = this.state.
+        });
+      }
+    });
+
+
   }
 
 
@@ -157,7 +181,7 @@ export class ResultsTableComponent implements OnInit {
     this.router.navigate(['/calendar', issue.id_titul, this.state.calendarView, issue['datum_vydani_den']]);
 
   }
-  
+
   viewIssue(issue: Issue) {
     this.state.currentTitul = new Titul();
     this.state.currentTitul.id = issue.id_titul;

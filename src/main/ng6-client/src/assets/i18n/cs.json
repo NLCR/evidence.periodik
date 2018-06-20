@@ -51,6 +51,7 @@
       "ChVV": "Chyba ve vazbě"
     },
     "periodicita": {
+      "placeholder": "Periodicita",
       "P1W": "Tydennik",
       "P1D": "Deník",
       "P1Y": "Rocnik",

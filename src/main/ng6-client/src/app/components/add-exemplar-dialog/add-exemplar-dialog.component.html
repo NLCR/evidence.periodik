@@ -7,13 +7,12 @@
   </mz-modal-header>
   
   <mz-modal-content>
-      <div>
-        ISSUE: {{issue.nazev}}, {{issue.datum_vydani | date: 'dd.MM.yyyy'}}
-      </div>
     <div>
-      
-    <ng-container [ngSwitch]="isNew">
-      <span *ngSwitchCase="true">
+        ISSUE: {{issue.nazev}}, {{issue.datum_vydani | date: 'dd.MM.yyyy'}}
+    </div>
+    <div>
+    <ng-container [ngSwitch]="editType">
+      <span *ngSwitchCase="'new'">
         <mz-input-container>
           <input mz-input [label]="'record.ownership' | translate" [id]="'vlastnik'" [name]="'vlastnik'" [(ngModel)]="exemplar.vlastnik" type="text">
         </mz-input-container>
@@ -21,11 +20,33 @@
           <input mz-input [label]="'record.barcode' | translate" [id]="'carovy_kod'" [name]="'carovy_kod'" [(ngModel)]="exemplar.carovy_kod" type="text">
         </mz-input-container>
       </span>
+      <span *ngSwitchCase="'duplicate'">
+        <div>
+          Exemplar: {{exemplar.vlastnik}} {{exemplar.carovy_kod}}
+        </div>
+        <mz-datepicker-container [inline]="true">
+          <input mz-datepicker
+                 [options]="options"
+                 [label]="'modal.from' | translate"
+                 [(ngModel)]="duplicate_start_date"
+                 id="start_date" name="start_date"
+                 type="text" />
+        </mz-datepicker-container>
+        <mz-datepicker-container [inline]="true">
+          <input mz-datepicker
+                 [options]="options"
+                 [label]="'modal.till' | translate"
+                 [(ngModel)]="duplicate_end_date"
+                 id="end_date" name="end_date"
+                 type="text" />
+        </mz-datepicker-container>
+      </span>
       <span *ngSwitchDefault>
         Exemplar: {{exemplar.vlastnik}} {{exemplar.carovy_kod}}
       </span>
     </ng-container>
     </div>
+    <div>
       <mz-select-container>
         <select mz-select [id]="'stav'" [name]="'stav'" [(ngModel)]="exemplar.stav" [multiple]="true">
           <option *ngFor="let stav of state.stavy" [value]="stav">{{'record.StavIssue.' + stav | translate}}</option>
@@ -37,6 +58,8 @@
       <mz-input-container>
         <input mz-input [label]="'record.signatura' | translate" [id]="'signatura'" [name]="'signatura'" [(ngModel)]="exemplar.signatura" type="text">
       </mz-input-container>
+    </div>  
+      
   </mz-modal-content>
   
   <mz-modal-footer>

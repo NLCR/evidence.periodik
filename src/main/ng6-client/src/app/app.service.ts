@@ -14,6 +14,7 @@ import {AppState} from './app.state';
 import {Filter} from './models/filter';
 import {Titul} from './models/titul';
 import {Issue} from './models/issue';
+import {Exemplar} from './models/exemplar';
 
 @Injectable()
 export class AppService {
@@ -182,7 +183,20 @@ export class AppService {
     let params: HttpParams = new HttpParams()
       .set('action', 'SAVE_ISSUE')
       .set('json', JSON.stringify(issue));
-    //params.set('fl', 'start:datum_vydani,title:nazev,*')
+      
+    return this.http.get(url, {params: params});
+  }
+  
+  duplicateExemplar(issue: Issue, exemplar: Exemplar, start: string, end: string){
+    
+    var url = this.state.config['context'] + 'index';
+    let params: HttpParams = new HttpParams()
+      .set('action', 'DUPLICATE_EX')
+      .set('issue', JSON.stringify(issue))
+      .set('exemplar', JSON.stringify(exemplar))
+      .set('start', start)
+      .set('end', end);
+      
     return this.http.get(url, {params: params});
   }
 
@@ -232,6 +246,7 @@ export class AppService {
       .set('facet.mincount', '1')
       .set('json.nl', 'arrntv')
       .set('fl', '*, exemplare:[json]')
+      //.set('fl', '*')
       .set('stats', 'true')
       .set('stats.field', 'datum_vydani_den')
       .set('facet.field', 'nazev')

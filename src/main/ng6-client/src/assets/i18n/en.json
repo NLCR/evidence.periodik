@@ -29,6 +29,15 @@
       "afternoon": "Afternoon",
       "evening": "Evening"
     },
+    
+    "periodicita": {
+      "placeholder": "Periodicity",
+      "P1W": "Weekly",
+      "P1D": "Dayly",
+      "P1Y": "Per year",
+      "P1M": "Monthly",
+      "P6M": "Twice per year"
+    },
     "pages_count": "Pages count",
     "state": "State",
     "state_com": "State comment",

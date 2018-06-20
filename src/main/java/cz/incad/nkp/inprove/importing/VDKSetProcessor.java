@@ -97,14 +97,14 @@ public class VDKSetProcessor {
     return ret;
   }
   
-  public void getInterval(JSONObject ex){
+  public void getInterval(JSONObject ex, VDKSetImportOptions vdkOptions){
 /*    
   {
     "a": "02",
     "b": "2650327917",                    carovy kod
     "c": "III 302.100/ 15(2002)LED-ÚN",   signatura
     "d": "2002 15 1-50",
-    "i": "1-50",                          cislo
+    "i": "1-50",                          cislo 
     "j": "SVK50",
     "l": "Běžný fond",
     "m": "ISSBD",
@@ -124,18 +124,21 @@ public class VDKSetProcessor {
           String[] years = yearstr.split("-");
 
           //Toto je mesic. Muze byt cislo, nebo cislo - cislo
-          String monthstr = ex.optString("i", "01");
-          if ("".equals(monthstr)) {
-            monthstr = "01";
+          String cislo = ex.optString("i");
+          String[] months = new String[]{};
+          switch(vdkOptions.cisloFormat){
+            case CISLO:
+              break;
+            case MESIC :
+              months = new String[]{cislo};
+              break;
+            case MESIC_SLOVA:
+              months = cislo.split("-");
+              break;
+                    
           }
-          String[] months = monthstr.split("-");
-
-          //Toto je cislo rocniku
-          //Zatim nic s nim
-          String rocnik = ex.optString("s");
-          if ("".equals(rocnik)) {
-            rocnik = "1";
-          }
+          
+          
 
           for (String year : years) {
             for (String month : months) {
@@ -150,7 +153,6 @@ public class VDKSetProcessor {
                 
                 idoc.setField("state", "auto");
 
-                idoc.setField("cislo", rocnik);
                 idoc.setField("rocnik", year);
 
                 issues.put(vydani, idoc);

@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -291,7 +292,7 @@ public class Indexer {
               res_doc.getFieldNames().forEach((name) -> {
                 idoc.addField(name, res_doc.getFieldValue(name));
               });
-              
+
               idoc.removeField("_version_");
 
             } else {
@@ -306,9 +307,9 @@ public class Indexer {
               idoc.setField("id", generateId(idoc));
 
             }
-            
+
             if (!idoc.containsKey("vlastnik") || !idoc.getFieldValues("vlastnik").contains(vlastnik)) {
-                idoc.addField("vlastnik", vlastnik);
+              idoc.addField("vlastnik", vlastnik);
             }
 
             //Add fields based on ex
@@ -442,7 +443,7 @@ public class Indexer {
           switch (name) {
             case "datum_vydani":
               //SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-              
+
 //              DateTimeFormatter f = DateTimeFormatter.ISO_INSTANT.withResolverStyle(ResolverStyle.SMART);
 //              Instant ins = Instant.from(f.parse(json.getString(name)));
 //              LocalDateTime date = LocalDateTime.ofInstant(ins, ZoneId.systemDefault());
@@ -484,7 +485,6 @@ public class Indexer {
     }
     return ret;
   }
-
 
   public JSONObject saveTitul(JSONObject json) {
     JSONObject ret = new JSONObject();
@@ -570,6 +570,70 @@ public class Indexer {
       solr.add(doc, 10);
     } catch (IOException | SolrServerException ex) {
       LOGGER.log(Level.SEVERE, null, ex);
+    }
+  }
+
+  public void duplicateEx(JSONObject issue, JSONObject exemplar, String start_date, String end_date) {
+
+    try (SolrClient solr = getClient()) {
+
+      String carovy_kod = exemplar.getString("carovy_kod");
+      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+      Date startDate = sdf1.parse(start_date);
+      Date endDate = sdf1.parse(end_date);
+      LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+      LocalDate end = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+      Period period = Period.parse(issue.getString("periodicita"));
+
+      for (LocalDate date = start; date.isBefore(end) || date.isEqual(end); date = date.plus(period)) {
+
+        SolrQuery query = new SolrQuery();
+        query.setRows(1);
+        query.set("wt", "json");
+        query.setQuery("id_titul:\"" + issue.getString("id_titul") + "\"");
+        query.addFilterQuery("datum_vydani_den:" + date.format(DateTimeFormatter.BASIC_ISO_DATE));
+        query.setFields("*,exemplare:[json]");
+        QueryResponse qr = solr.query("issue", query);
+        if (!qr.getResults().isEmpty()) {
+          SolrDocument doc = qr.getResults().get(0);
+          JSONArray exs = new JSONArray();
+          if(doc.containsKey("exemplare")){
+           exs = new JSONArray(doc.getFieldValue("exemplare").toString());
+          }
+          boolean hasEx = false;
+
+          for (int i = 0; i < exs.length(); i++) {
+            if (exs.getJSONObject(i).getString("carovy_kod").equals(carovy_kod)) {
+              hasEx = true;
+              break;
+            }
+          }
+          if (!hasEx) {
+
+            SolrInputDocument idoc = new SolrInputDocument();
+            doc.getFieldNames().forEach((name) -> {
+              idoc.setField(name, doc.getFieldValues(name));
+            });
+            idoc.removeField("_version_");
+            idoc.removeField("index_time");
+            idoc.removeField("exemplare");
+
+            exs.put(exemplar);
+            
+            for (int i = 0; i < exs.length(); i++) {
+              idoc.addField("exemplare", exs.getJSONObject(i).toString());
+            }
+            
+            //idoc.setField("exemplare", exs.toString());
+            solr.add("issue", idoc);
+          }
+        }
+      }
+      solr.commit("issue");
+
+    } catch (SolrServerException | IOException | ParseException ex) {
+      LOGGER.log(Level.SEVERE, "Error cloning", ex);
     }
   }
 

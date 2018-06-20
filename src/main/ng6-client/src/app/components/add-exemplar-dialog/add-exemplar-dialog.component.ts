@@ -12,6 +12,12 @@ import {Exemplar} from '../../models/exemplar';
 })
 export class AddExemplarDialogComponent extends MzBaseModal {
 
+  
+    public options: Pickadate.DateOptions = {
+        format: 'dd/mm/yyyy',
+        formatSubmit: 'yyyymmdd',
+    };
+    
     state: AppState;
     service: AppService;
 
@@ -19,25 +25,40 @@ export class AddExemplarDialogComponent extends MzBaseModal {
   //public ex: number;
   public exemplar: Exemplar;
   
-  isNew: boolean;
+  editType: string = 'new';
+  
+  duplicate_start_date: string;
+  duplicate_end_date: string;
+  
+  saved: boolean = false;
   
   
   ngOnInit() {
-//    console.log(this.ex);
-//    if(this.ex === -1){
-//      this.exemplar = new Exemplar();
-//    } else {
-//      this.exemplar = this.issue.exemplare[this.ex];
-//    }
-    
+    if(this.issue){
+      this.duplicate_start_date = this.issue['datum_vydani_den'];
+      this.duplicate_end_date = this.issue['datum_vydani_den'];
+    }
   }
 
   ok(): void {
-
-      this.service.saveIssue(this.issue).subscribe(res => {
-        console.log(res);
-        this.modalComponent.closeModal();
-      });
+    switch (this.editType){
+      case 'new':
+      break;
+      case 'edit':
+        this.service.saveIssue(this.issue).subscribe(res => {
+          //console.log(res);
+          this.modalComponent.closeModal();
+        });
+      break;
+      case 'duplicate':
+        this.service.duplicateExemplar(this.issue, this.exemplar, this.duplicate_start_date, this.duplicate_end_date).subscribe(res => {
+          //console.log(res);
+          this.saved = true;
+          this.modalComponent.closeModal();
+        });
+      break;
+    }
+    
   }
   
   cancel(){

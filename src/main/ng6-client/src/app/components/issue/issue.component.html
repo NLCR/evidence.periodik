@@ -44,9 +44,14 @@
         <mz-input-container>
           <input mz-input [label]="'record.mutation' | translate" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace" type="text">
         </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'Periodicita'" id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita" type="text">
-        </mz-input-container>
+      
+      <mz-select-container>
+          <select mz-select id="periodicita" name="periodicita" [placeholder]="'record.periodicita.placeholder' | translate" 
+                  [(ngModel)]="state.currentIssue.periodicita">
+            <option *ngFor="let v of state.periods" [value]="v">{{'record.periodicita.' + v | translate }}</option>
+          </select>
+        </mz-select-container>
+      
     </div><!--/.col -->
     
     <div class="col s4">
@@ -83,7 +88,7 @@
           <mz-collapsible-item [active]="false"  *ngFor="let ex of state.currentIssue.exemplare;let idx= index;">
             <mz-collapsible-item-header>
               <span>
-                {{'record.specimen_number' | translate}} {{idx + 1}}
+                {{idx + 1}}.- {{ex.vlastnik}} {{ex.carovy_kod}} 
               </span>
               <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg right'"></i>
               <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg right'"></i>
