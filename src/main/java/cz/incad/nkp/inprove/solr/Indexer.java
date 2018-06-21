@@ -2,6 +2,8 @@ package cz.incad.nkp.inprove.solr;
 
 import cz.incad.nkp.inprove.CloneParams;
 import cz.incad.nkp.inprove.Options;
+import cz.incad.nkp.inprove.importing.VDKSetImportOptions;
+import cz.incad.nkp.inprove.importing.VDKSetProcessor;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -32,6 +34,7 @@ import org.apache.solr.common.SolrInputDocument;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -635,6 +638,33 @@ public class Indexer {
     } catch (SolrServerException | IOException | ParseException ex) {
       LOGGER.log(Level.SEVERE, "Error cloning", ex);
     }
+  }
+
+  public JSONObject addExFromVdkSet(JSONObject issue, String url, JSONObject options) {
+      JSONObject ret = new JSONObject();
+    try {
+      VDKSetProcessor vp = new VDKSetProcessor();
+      VDKSetImportOptions vdkOptions = VDKSetImportOptions.fromJSON(options);
+      vp.getFromUrl(url);
+      JSONArray exs = vp.exemplarsToJson();
+      
+      
+      for(int i =0; i<exs.length();i++){
+        JSONObject ex= exs.getJSONObject(i);
+        duplicateEx(issue,
+                vp.asPermonikEx(ex, vdkOptions.vlastnik),
+                vp.getStart(ex, vdkOptions),
+                vp.getEnd(ex, vdkOptions));
+        
+      }
+      
+      
+      
+    } catch (IOException | SAXException ex) {
+      LOGGER.log(Level.SEVERE, null, ex);
+      ret.put("error", ex); 
+    }
+    return ret;
   }
 
 }

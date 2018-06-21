@@ -69,8 +69,8 @@ public class VDKSetProcessor {
   }
 
   public void getFromString(String xmlstr) throws SAXException, IOException {
-      InputSource source = new InputSource(new StringReader(xmlstr));
-      doc = builder.parse(source);
+    InputSource source = new InputSource(new StringReader(xmlstr));
+    doc = builder.parse(source);
   }
 
   public JSONArray exemplarsToJson() {
@@ -96,9 +96,82 @@ public class VDKSetProcessor {
     }
     return ret;
   }
+
+  public String getStart(JSONObject ex, VDKSetImportOptions vdkOptions) {
+
+    //Extract and parse date
+    //Toto je rok. Muze byt cislo, nebo cislo - cislo
+    String yearstr = ex.optString("y");
+    String[] years = yearstr.split("-");
+
+    //Toto je mesic. Muze byt cislo, nebo cislo - cislo
+    String cislo = ex.optString("i", "01");
+    System.out.println(ex);
+    System.out.println(cislo);
+    String[] months = new String[]{};
+    String month;
+    switch (vdkOptions.cisloFormat) {
+      case CISLO:
+        return years[0] + "0101";
+      case MESIC:
+        months = cislo.split("-");
+        month = String.format("%02d", Integer.parseInt(months[0]));
+        return years[0] + month + "01";
+      case MESIC_SLOVA:
+        months = cislo.split("-");
+        month = String.format("%02d", Integer.parseInt(months[0]));
+        return years[0] + month + "01";
+
+    }
+
+    return years[years.length - 1] + String.format("%02d", Integer.parseInt(cislo)) + "01";
+  }
+
+  public String getEnd(JSONObject ex, VDKSetImportOptions vdkOptions) {
+
+    //Extract and parse date
+    //Toto je rok. Muze byt cislo, nebo cislo - cislo
+    String yearstr = ex.optString("y");
+    String[] years = yearstr.split("-");
+
+    //Toto je mesic. Muze byt cislo, nebo cislo - cislo
+    String cislo = ex.optString("i", "01");
+    String[] months = new String[]{};
+    String month;
+    switch (vdkOptions.cisloFormat) {
+      case CISLO:
+        return years[years.length - 1] + "0101";
+      case MESIC:
+        months = cislo.split("-");
+        month = String.format("%02d", Integer.parseInt(months[months.length - 1]));
+        return years[years.length - 1] + month + "01";
+      case MESIC_SLOVA:
+        months = cislo.split("-");
+        month = String.format("%02d", Integer.parseInt(months[months.length - 1]));
+        return years[years.length - 1] + month + "01";
+
+    }
+
+    return years[years.length - 1] + String.format("%02d", Integer.parseInt(cislo)) + "01";
+  }
   
-  public void getInterval(JSONObject ex, VDKSetImportOptions vdkOptions){
-/*    
+  public JSONObject asPermonikEx(JSONObject ex, String vlastnik){
+    JSONObject ret = new JSONObject();
+    ret.put("carovy_kod", ex.optString("b"));
+    ret.put("signatura", ex.optString("c"));
+    ret.put("vlastnik", vlastnik);
+    return ret;
+  }
+
+  /**
+   * *
+   *
+   * @param ex: one exemplar in vdk-set format (field 996)
+   * @param vdkOptions
+   * @param issues
+   */
+  public void exemplarToIDoc(JSONObject ex, VDKSetImportOptions vdkOptions, Map<String, SolrInputDocument> issues) {
+    /*    
   {
     "a": "02",
     "b": "2650327917",                    carovy kod
@@ -116,57 +189,52 @@ public class VDKSetProcessor {
     "w": "000502478",
     "y": "2002"                           rok
   }
-*/
-      Map<String, SolrInputDocument> issues = new HashMap<>();
-          //Extract and parse date
-          //Toto je rok. Muze byt cislo, nebo cislo - cislo
-          String yearstr = ex.optString("y");
-          String[] years = yearstr.split("-");
+     */
 
-          //Toto je mesic. Muze byt cislo, nebo cislo - cislo
-          String cislo = ex.optString("i");
-          String[] months = new String[]{};
-          switch(vdkOptions.cisloFormat){
-            case CISLO:
-              break;
-            case MESIC :
-              months = new String[]{cislo};
-              break;
-            case MESIC_SLOVA:
-              months = cislo.split("-");
-              break;
-                    
-          }
-          
-          
+    //Extract and parse date
+    //Toto je rok. Muze byt cislo, nebo cislo - cislo
+    String yearstr = ex.optString("y");
+    String[] years = yearstr.split("-");
 
-          for (String year : years) {
-            for (String month : months) {
-              String vydani = year + String.format("%02d", Integer.parseInt(month)) + "01";
-              //System.out.println(vydani);
-              SolrInputDocument idoc;
-              if (issues.containsKey(vydani)) {
-                idoc = issues.get(vydani);
-              } else {
-                idoc = new SolrInputDocument();
+    //Toto je mesic. Muze byt cislo, nebo cislo - cislo
+    String cislo = ex.optString("i"); 
+    String[] months = new String[]{};
+    switch (vdkOptions.cisloFormat) {
+      case CISLO:
+        break;
+      case MESIC:
+        months = new String[]{cislo};
+        break;
+      case MESIC_SLOVA:
+        months = cislo.split("-");
+        break;
 
-                
-                idoc.setField("state", "auto");
+    }
 
-                idoc.setField("rocnik", year);
+    for (String year : years) {
+      for (String month : months) {
+        String vydani = year + String.format("%02d", Integer.parseInt(month)) + "01";
+        //System.out.println(vydani);
+        SolrInputDocument idoc;
+        if (issues.containsKey(vydani)) {
+          idoc = issues.get(vydani);
+        } else {
+          idoc = new SolrInputDocument();
+          idoc.setField("state", "auto");
+          idoc.setField("rocnik", ex.optString("v"));
 
-                issues.put(vydani, idoc);
-              }
+          issues.put(vydani, idoc);
+        }
 
-              //Add fields based on ex
-              JSONObject exemplare = new JSONObject();
-              exemplare.put("carovy_kod", ex.getString("carkod"));
-              exemplare.put("signatura", ex.getString("signatura"));
+        //Add fields based on ex
+        JSONObject exemplare = new JSONObject();
+        exemplare.put("carovy_kod", ex.optString("b"));
+        exemplare.put("signatura", ex.optString("c"));
 
-              idoc.addField("exemplare", exemplare.toString());
+        idoc.addField("exemplare", exemplare.toString());
 
-              //idoc.addField("exemplare", ex.toString());
-            }
-          }
+        //idoc.addField("exemplare", ex.toString());
+      }
+    }
   }
 }

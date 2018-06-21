@@ -5,10 +5,20 @@
  */
 package cz.incad.nkp.inprove.importing;
 
+import org.json.JSONObject; 
+
 /**
  *
  * @author alberto.a.hernandez
  */
-class VDKSetImportOptions {
+public class VDKSetImportOptions {
   public VDKCisloFormat cisloFormat;
+  public String vlastnik;
+  
+  public static VDKSetImportOptions fromJSON(JSONObject j){
+    VDKSetImportOptions v = new VDKSetImportOptions();
+    v.cisloFormat = VDKCisloFormat.valueOf(j.getString("format"));
+    v.vlastnik = j.getString("vlastnik");
+    return v;
+  }
 }

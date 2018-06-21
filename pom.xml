@@ -12,7 +12,7 @@
   <properties>
     <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <context.name>evidence_periodik</context.name>
+    <context.name>permonik</context.name>
   </properties>
     
   <dependencies>
