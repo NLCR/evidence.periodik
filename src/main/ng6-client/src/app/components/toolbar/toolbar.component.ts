@@ -8,6 +8,7 @@ import {Titul} from '../../models/titul';
 import {MzModalService} from 'ngx-materialize';
 import {CloneDialogComponent} from '../clone-dialog/clone-dialog.component';
 import {CloneParams} from '../../models/clone-params';
+import {AddVdkExComponent} from '../add-vdk-ex/add-vdk-ex.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -65,5 +66,11 @@ export class ToolbarComponent implements OnInit {
     cloneParams.periodicity = this.state.currentIssue.periodicita;
     
     this.modalService.open(CloneDialogComponent, {"state": this.state, "service": this.service, "params": cloneParams});
+  }
+  
+  
+  
+  addVDKEx(){
+    this.modalService.open(AddVdkExComponent, {"state": this.state, "service": this.service});
   }
 }

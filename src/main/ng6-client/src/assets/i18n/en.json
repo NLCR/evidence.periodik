@@ -15,6 +15,11 @@
   },
   "q_placeholder": "Search keywords, articles, genres, authors...",
   "dummy": "",
+  "formatvdk":{
+    "CISLO": "Cislo", 
+    "MESIC": "mesic",
+    "MESIC_SLOVA":"Mesic slovy"
+  },
   "record": {
     "meta_title": "Meta title",
     "id_titul": "title Id",

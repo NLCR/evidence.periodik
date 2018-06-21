@@ -1,0 +1,30 @@
+<mz-modal [fixedFooter]="true">
+  <mz-modal-header>
+    {{'Add exemplars from vdk-set record' | translate}}
+  </mz-modal-header>
+  
+  <mz-modal-content>
+    <div>
+        ISSUE: {{state.currentIssue.nazev}}
+    </div>
+    <div>
+      <mz-input-container>
+        <input mz-input [label]="'record.ownership' | translate" [id]="'vlastnik'" [name]="'vlastnik'" [(ngModel)]="vlastnik" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'URL' | translate" [id]="'url'" [name]="'url'" [(ngModel)]="url" type="text">
+      </mz-input-container>
+      <mz-select-container>
+        <select mz-select [id]="'format'" [name]="'format'" [(ngModel)]="format">
+          <option *ngFor="let f of state.vdkFormats" [value]="f">{{'formatvdk.' + f | translate}}</option>
+        </select>
+      </mz-select-container>
+    </div>  
+      
+  </mz-modal-content>
+  
+  <mz-modal-footer>
+      <button mz-button [flat]="true" (click)="ok()">OK</button>
+      <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{'button.cancel' | translate}}</button>
+  </mz-modal-footer>
+</mz-modal>

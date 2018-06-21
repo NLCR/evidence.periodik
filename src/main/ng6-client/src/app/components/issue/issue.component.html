@@ -83,7 +83,8 @@
         <button mz-button [float]="true" mz-tooltip [tooltip]="'button.add_specimen' | translate" [position]="'top'" (click)="addExemplar()">
           <i mz-icon-mdi [icon]="'plus'"></i>
         </button>
-        <h5>{{'record.specimen_count' | translate}}: {{state.currentIssue.exemplare.length}}</h5>
+        <h5>{{'record.specimen_count' | translate}}: {{state.currentIssue.exemplare.length}}
+        </h5>
         <mz-collapsible [mode]="'expandable'" [onClose]="closeFunctionCallback" *ngIf="!addingEx">
           <mz-collapsible-item [active]="false"  *ngFor="let ex of state.currentIssue.exemplare;let idx= index;">
             <mz-collapsible-item-header>

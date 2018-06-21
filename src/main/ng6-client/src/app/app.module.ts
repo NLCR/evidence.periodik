@@ -78,6 +78,7 @@ import { CloneDialogComponent } from './components/clone-dialog/clone-dialog.com
 import { ResultsTableComponent } from './components/results-table/results-table.component';
 import { AddExemplarDialogComponent } from './components/add-exemplar-dialog/add-exemplar-dialog.component';
 import { AddTitulDialogComponent } from './components/add-titul-dialog/add-titul-dialog.component';
+import { AddVdkExComponent } from './components/add-vdk-ex/add-vdk-ex.component';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -118,9 +119,10 @@ export function createTranslateLoader(http: HttpClient) {
     CloneDialogComponent,
     ResultsTableComponent,
     AddExemplarDialogComponent,
-    AddTitulDialogComponent
+    AddTitulDialogComponent,
+    AddVdkExComponent
   ],
-  entryComponents: [CloneDialogComponent, AddExemplarDialogComponent, AddTitulDialogComponent],
+  entryComponents: [CloneDialogComponent, AddExemplarDialogComponent, AddTitulDialogComponent, AddVdkExComponent],
   imports: [
     BrowserModule,
     FormsModule,

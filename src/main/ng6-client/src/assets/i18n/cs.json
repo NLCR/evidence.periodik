@@ -13,6 +13,11 @@
   "searchbox": {
     "placeholder": "Hledání v evidenci periodik"
   },
+  "formatvdk":{
+    "CISLO": "Cislo", 
+    "MESIC": "mesic",
+    "MESIC_SLOVA":"Mesic slovy"
+  },
   "record": {
     "meta_title": "Meta název",
     "name_title_page": "Název na titulní straně",

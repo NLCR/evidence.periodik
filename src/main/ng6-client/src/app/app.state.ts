@@ -21,6 +21,7 @@ export class AppState {
   //Holds client configuration
   config: any;
   periods: string[] = [];
+  vdkFormats: string[] = [];
   vydani = [];
   configured: boolean = false;
   
@@ -68,6 +69,7 @@ export class AppState {
     this.periods =  this.config['periodicity'];
     this.stavy = this.config['stavy'];
     this.states = this.config['states'];
+    this.vdkFormats = this.config['vdkFormats'];
     
     
     this.config["vydani"].map(k => {this.vydani.push(k);});
