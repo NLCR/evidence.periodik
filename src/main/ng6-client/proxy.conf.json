@@ -10,7 +10,7 @@
     "secure": false
   },
   "/index": {
-    "target": "http://localhost:8080/evidence_periodik/index",
+    "target": "http://localhost:8080/permonik/index",
     "ignorePath": false,
     "logLevel": "debug",
     "pathRewrite": {

@@ -91,6 +91,7 @@
     "delete_all_mutations": "Delete all mutations",
     "delete_specimen": "Delete specimen",
     "cancel": "Cancel",
+    "close": "Close",
     "login": "Login"
   },
   "facet": {

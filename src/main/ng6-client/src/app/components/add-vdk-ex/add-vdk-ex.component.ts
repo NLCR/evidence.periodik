@@ -22,8 +22,9 @@ export class AddVdkExComponent extends MzBaseModal {
   public vlastnik: string;
   
   ok(){
-    this.service.addVdkEx(this.state.currentIssue, this.url, {format: this.format, vlastnik: this.vlastnik}).subscribe(res => {
-          //console.log(res);
+    let ops = {format: this.format, vlastnik: this.vlastnik, periodicity: this.state.currentIssue.periodicita};
+    this.service.addVdkEx(this.state.currentIssue, this.url, ops).subscribe(res => {
+          console.log(res);
           this.service.search().subscribe(res => {
             this.state.setSearchResults(res);
           });
