@@ -578,6 +578,9 @@ public class Indexer {
 
   public void duplicateEx(JSONObject issue, JSONObject exemplar, String start_date, String end_date) {
 
+    LOGGER.log(Level.INFO,
+            "Duplicate exemplar {0} from {1} to {2} for {3}",
+            new String[]{exemplar.getString("carovy_kod"), start_date, end_date, issue.getString("id_titul")});
     try (SolrClient solr = getClient()) {
 
       String carovy_kod = exemplar.getString("carovy_kod");
@@ -598,39 +601,56 @@ public class Indexer {
         query.addFilterQuery("datum_vydani_den:" + date.format(DateTimeFormatter.BASIC_ISO_DATE));
         query.setFields("*,exemplare:[json]");
         QueryResponse qr = solr.query("issue", query);
-        if (!qr.getResults().isEmpty()) {
-          SolrDocument doc = qr.getResults().get(0);
-          JSONArray exs = new JSONArray();
-          if(doc.containsKey("exemplare")){
-           exs = new JSONArray(doc.getFieldValue("exemplare").toString());
-          }
-          boolean hasEx = false;
 
+        SolrDocument doc = null;
+        boolean hasEx = false;
+        JSONArray exs = new JSONArray();
+        SolrInputDocument idoc = new SolrInputDocument();
+
+        if (!qr.getResults().isEmpty()) {
+          doc = qr.getResults().get(0);
+
+          for (String name : doc.getFieldNames()) {
+            idoc.setField(name, doc.getFieldValues(name));
+          }
+          idoc.removeField("_version_");
+          idoc.removeField("index_time");
+          idoc.removeField("exemplare");
+
+          if (doc.containsKey("exemplare")) {
+            exs = new JSONArray(doc.getFieldValue("exemplare").toString());
+          }
           for (int i = 0; i < exs.length(); i++) {
             if (exs.getJSONObject(i).getString("carovy_kod").equals(carovy_kod)) {
               hasEx = true;
               break;
             }
           }
-          if (!hasEx) {
+        } else {
+          //nemame toto vydani, musime pridat
 
-            SolrInputDocument idoc = new SolrInputDocument();
-            doc.getFieldNames().forEach((name) -> {
-              idoc.setField(name, doc.getFieldValues(name));
-            });
-            idoc.removeField("_version_");
-            idoc.removeField("index_time");
-            idoc.removeField("exemplare");
-
-            exs.put(exemplar);
-            
-            for (int i = 0; i < exs.length(); i++) {
-              idoc.addField("exemplare", exs.getJSONObject(i).toString());
-            }
-            
-            //idoc.setField("exemplare", exs.toString());
-            solr.add("issue", idoc);
+          for (Iterator it = issue.keySet().iterator(); it.hasNext();) {
+            String key = (String) it.next();
+            idoc.addField(key, issue.get(key));
           }
+          idoc.removeField("_version_");
+          idoc.removeField("index_time");
+          idoc.removeField("exemplare");
+          idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
+          idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
+          idoc.setField("id", generateId(idoc));
+        }
+        if (doc != null && !hasEx) {
+
+          exs.put(exemplar);
+
+          for (int i = 0; i < exs.length(); i++) {
+            idoc.addField("exemplare", exs.getJSONObject(i).toString());
+          }
+
+          //idoc.setField("exemplare", exs.toString());
+          solr.add("issue", idoc);
+
         }
       }
       solr.commit("issue");
@@ -641,28 +661,26 @@ public class Indexer {
   }
 
   public JSONObject addExFromVdkSet(JSONObject issue, String url, JSONObject options) {
-      JSONObject ret = new JSONObject();
+    JSONObject ret = new JSONObject();
     try {
       VDKSetProcessor vp = new VDKSetProcessor();
       VDKSetImportOptions vdkOptions = VDKSetImportOptions.fromJSON(options);
       vp.getFromUrl(url);
       JSONArray exs = vp.exemplarsToJson();
-      
-      
-      for(int i =0; i<exs.length();i++){
-        JSONObject ex= exs.getJSONObject(i);
+
+      for (int i = 0; i < exs.length(); i++) {
+        JSONObject ex = exs.getJSONObject(i);
         duplicateEx(issue,
                 vp.asPermonikEx(ex, vdkOptions.vlastnik),
                 vp.getStart(ex, vdkOptions),
                 vp.getEnd(ex, vdkOptions));
-        
+        ret.append("exs", ex.getString("b"));
+
       }
-      
-      
-      
+
     } catch (IOException | SAXException ex) {
       LOGGER.log(Level.SEVERE, null, ex);
-      ret.put("error", ex); 
+      ret.put("error", ex);
     }
     return ret;
   }

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <servlet>
+        <servlet-name>InitServlet</servlet-name>
+        <servlet-class>cz.incad.nkp.inprove.InitServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet>
         <servlet-name>IndexServlet</servlet-name>
         <servlet-class>cz.incad.nkp.inprove.IndexServlet</servlet-class>
@@ -8,9 +15,57 @@
         <servlet-name>IndexServlet</servlet-name>
         <url-pattern>/index</url-pattern>
     </servlet-mapping>
+	
+    <servlet>
+        <servlet-name>SearchServlet</servlet-name>
+        <servlet-class>cz.incad.nkp.inprove.SearchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SearchServlet</servlet-name>
+        <url-pattern>/search/*</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ConfigServlet</servlet-name>
+        <servlet-class>cz.incad.nkp.inprove.ConfigServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ConfigServlet</servlet-name>
+        <url-pattern>/config/*</url-pattern>
+        <url-pattern>/config</url-pattern>
+        <url-pattern>/assets/config.json</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>I18nServlet</servlet-name>
+        <servlet-class>cz.incad.nkp.inprove.I18nServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>I18nServlet</servlet-name>
+        <url-pattern>/assets/i18n/*</url-pattern>
+        <url-pattern>/i18n/*</url-pattern>
+    </servlet-mapping>
+	
+    <servlet>
+        <servlet-name>StaticServlet</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StaticServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
+        <url-pattern>/admin</url-pattern>
+        <url-pattern>/prihlaseni</url-pattern>
+        <url-pattern>/result/*</url-pattern>
+        <url-pattern>/issue/*</url-pattern>
+        <url-pattern>/calendar/*</url-pattern>
+    </servlet-mapping>
+	
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>

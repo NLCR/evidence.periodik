@@ -10,6 +10,13 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -103,24 +110,50 @@ public class VDKSetProcessor {
     //Toto je rok. Muze byt cislo, nebo cislo - cislo
     String yearstr = ex.optString("y");
     String[] years = yearstr.split("-");
-
+    String year = years[0];
     //Toto je mesic. Muze byt cislo, nebo cislo - cislo
     String cislo = ex.optString("i", "01");
-    System.out.println(ex);
-    System.out.println(cislo);
     String[] months = new String[]{};
     String month;
     switch (vdkOptions.cisloFormat) {
       case CISLO:
-        return years[0] + "0101";
+        
+        //cislo is a number from the begining of the year
+        //calculated day
+        //depends on periodicity and especial days
+
+        String[] nums = cislo.split("-");
+        int icislo = Integer.parseInt(nums[nums.length - 1]);
+        if (vdkOptions.periodicity == Period.ofDays(1)) {
+
+          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+          Date d;
+          try {
+            d = sdf1.parse(year + "0101");
+            LocalDate df = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(icislo);
+            return df.format(DateTimeFormatter.BASIC_ISO_DATE);
+          } catch (ParseException ex1) {
+            Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
+          }
+
+        } else if (vdkOptions.periodicity == Period.ofMonths(1)) {
+          return year + "0101";
+        } else {
+          return year + "0101";
+        }
       case MESIC:
         months = cislo.split("-");
         month = String.format("%02d", Integer.parseInt(months[0]));
-        return years[0] + month + "01";
+        return year + month + "01";
       case MESIC_SLOVA:
         months = cislo.split("-");
-        month = String.format("%02d", Integer.parseInt(months[0]));
-        return years[0] + month + "01";
+        try {
+          VDKSetMonths m = VDKSetMonths.valueOf(months[0]);
+          month = m.num();
+        } catch (IllegalArgumentException iex) {
+          month = "01";
+        }
+        return year + month + "01";
 
     }
 
@@ -133,6 +166,7 @@ public class VDKSetProcessor {
     //Toto je rok. Muze byt cislo, nebo cislo - cislo
     String yearstr = ex.optString("y");
     String[] years = yearstr.split("-");
+    String year = years[years.length - 1];
 
     //Toto je mesic. Muze byt cislo, nebo cislo - cislo
     String cislo = ex.optString("i", "01");
@@ -140,22 +174,63 @@ public class VDKSetProcessor {
     String month;
     switch (vdkOptions.cisloFormat) {
       case CISLO:
-        return years[years.length - 1] + "0101";
+        //cislo is a number from the begining of the year
+        //calculated day
+        //depends on periodicity and especial days
+
+        String[] nums = cislo.split("-");
+        int icislo = Integer.parseInt(nums[nums.length - 1]);
+        if (vdkOptions.periodicity == Period.ofDays(1)) {
+
+          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+          Date d;
+          try {
+            d = sdf1.parse(year + "0101");
+            LocalDate df = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(icislo);
+            return df.format(DateTimeFormatter.BASIC_ISO_DATE);
+          } catch (ParseException ex1) {
+            Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
+          }
+
+        } else if (vdkOptions.periodicity == Period.ofMonths(1)) {
+          return year + "0101";
+        } else {
+          return year + "0101";
+        }
+        
       case MESIC:
         months = cislo.split("-");
-        month = String.format("%02d", Integer.parseInt(months[months.length - 1]));
-        return years[years.length - 1] + month + "01";
+        if (months.length > 1) {
+          month = String.format("%02d", Integer.parseInt(months[months.length - 1]));
+          return year + month + "01";
+        } else {
+          int i = Integer.parseInt(months[0]);
+          if (i < 12) {
+            i++;
+            return year + String.format("%02d", i) + "01";
+          } else {
+            i = 1;
+            return year + "1231";
+          }
+
+        }
+
       case MESIC_SLOVA:
         months = cislo.split("-");
-        month = String.format("%02d", Integer.parseInt(months[months.length - 1]));
-        return years[years.length - 1] + month + "01";
+        try {
+          VDKSetMonths m = VDKSetMonths.valueOf(months[months.length - 1]);
+          month = m.num();
+        } catch (IllegalArgumentException iex) {
+          month = "12";
+        }
+        return year + month + "01";
 
     }
 
-    return years[years.length - 1] + String.format("%02d", Integer.parseInt(cislo)) + "01";
+    return year + String.format("%02d", Integer.parseInt(cislo)) + "01";
   }
-  
-  public JSONObject asPermonikEx(JSONObject ex, String vlastnik){
+
+  public JSONObject asPermonikEx(JSONObject ex, String vlastnik) {
     JSONObject ret = new JSONObject();
     ret.put("carovy_kod", ex.optString("b"));
     ret.put("signatura", ex.optString("c"));
@@ -197,7 +272,7 @@ public class VDKSetProcessor {
     String[] years = yearstr.split("-");
 
     //Toto je mesic. Muze byt cislo, nebo cislo - cislo
-    String cislo = ex.optString("i"); 
+    String cislo = ex.optString("i");
     String[] months = new String[]{};
     switch (vdkOptions.cisloFormat) {
       case CISLO:
