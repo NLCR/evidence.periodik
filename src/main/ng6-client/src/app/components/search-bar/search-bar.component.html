@@ -1,6 +1,9 @@
 <div class="app-search-bar-wrapper">
   <div class="input-field">
-    <input autocapitalize="off" autocomplete="off" autocorrect="off" class="" type="search" [placeholder]="'searchbox.placeholder' | translate">
+    <input autocapitalize="off"  type="search"
+           [(ngModel)]="state.q"
+           [placeholder]="'searchbox.placeholder' | translate"
+           (keyup.enter)="search($event)">
   </div><!--/.input-field -->
   <i mz-icon-mdi [icon]="'magnify'" class="app-cursor-pointer" (click)="search()"></i>
   <i mz-icon-mdi [icon]="'close'" class="app-cursor-pointer"></i>

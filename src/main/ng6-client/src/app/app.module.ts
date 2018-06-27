@@ -191,7 +191,7 @@ export function createTranslateLoader(http: HttpClient) {
       },
       { path: 'add-record', component: AddRecordComponent },
       { path: 'login', component: LoginComponent },
-      { path: '', redirectTo: 'result', pathMatch: 'full' }
+      { path: '', redirectTo: 'home', pathMatch: 'full' }
     ])
   ],
   providers: [HttpClient, DatePipe, AppState, AppService],

@@ -18,5 +18,9 @@
       </div><!--/.col -->
     </div><!--/.row -->
     <app-search-bar></app-search-bar>
+      
+  <div class="row" *ngIf="state.tituly">
+    <app-result-item *ngFor="let item of state.tituly" [item]="item" class="col s4"></app-result-item>
+  </div>
   </section>
 </div>

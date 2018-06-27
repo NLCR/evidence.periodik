@@ -230,7 +230,7 @@ export class AppService {
       }));
   }
 
-  getIssueTotals(id: string) {
+  getTitulTotals(id: string) {
     var url = this.state.config['context'] + 'search/issue/select';
     let params: HttpParams = new HttpParams()
       .set('q', '*')
@@ -248,7 +248,7 @@ export class AppService {
   search() {
     var url = this.state.config['context'] + 'search/issue/select';
     let params: HttpParams = new HttpParams()
-      .set('q', '*')
+      .set('q', this.state.q ? this.state.q : '*')
       .set('wt', 'json')
       .set('rows', '500')
       .set('sort', 'datum_vydani_den asc')
@@ -280,12 +280,17 @@ export class AppService {
     return this.http.get(url, {params: params});
   }
 
-  searchTituly() {
-    var url = this.state.config['context'] + 'search/titul/select';
+  searchTitulyHome() {
+    var url = this.state.config['context'] + 'search/issue/select';
+    
     let params: HttpParams = new HttpParams()
       .set('q', '*')
-      .set('wt', 'json');
-    //params.set('fl', 'start:datum_vydani,title:nazev,*')
+      .set('wt', 'json')
+      .set('rows', '500')
+      .set('sort', 'datum_vydani_den asc')
+      .set('fq', '{!collapse field=id_titul}')
+      .set('fl', '*, exemplare:[json]');
+      
     return this.http.get(url, {params: params});
   }
 

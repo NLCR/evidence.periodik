@@ -72,6 +72,10 @@ export class IssueComponent implements OnInit {
     this.state.currentIssue.id_titul = this.state.currentIssue.titul.id;
     this.state.currentIssue.meta_nazev = this.state.currentIssue.titul.meta_nazev;
     this.state.currentTitul = this.state.currentIssue.titul;
+    
+      this.state.currentIssue.periodicita = this.state.currentIssue.titul.periodicita;
+    
+      this.state.currentIssue.pocet_stran = this.state.currentIssue.titul.pocet_stran;
     }
   }
 
