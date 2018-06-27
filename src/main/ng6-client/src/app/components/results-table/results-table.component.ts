@@ -20,7 +20,7 @@ export class ResultsTableComponent implements OnInit {
   data: Issue[] = [];
   cks: string[] = [];
   exs: any = {};
-  displayedColumns = ['nazev', 'mutace', 'vydani', 'datum_vydani'];
+  displayedColumns = ['meta_nazev', 'mutace', 'vydani', 'datum_vydani'];
   header: string = '';
   dataSource: MatTableDataSource<Issue>;
 
@@ -49,7 +49,9 @@ export class ResultsTableComponent implements OnInit {
     if (this.state.hasFacet(field)) {
       this.displayedColumns.push(field);
     } else {
-      this.header += field + ': ' + this.data[0][field] + '; ';
+      if (this.data[0][field] && this.data[0][field] !== '') {
+        this.header += field + ': ' + this.data[0][field] + '; ';
+      }
     }
   }
 
@@ -64,7 +66,7 @@ export class ResultsTableComponent implements OnInit {
       return;
     }
 
-    this.addColumn('nazev');
+    this.addColumn('meta_nazev');
     this.addColumn('mutace');
     this.addColumn('vydani');
 
@@ -159,13 +161,13 @@ export class ResultsTableComponent implements OnInit {
         editType: 'duplicate'
       }
     );
-    
+
     a.onDestroy(() => {
       let mm = <AddExemplarDialogComponent> a.instance;
-      if(mm.saved){
+      if (mm.saved) {
         this.service.search().subscribe(res => {
           this.state.setSearchResults(res);
-         //this.docs = this.state.
+          //this.docs = this.state.
         });
       }
     });

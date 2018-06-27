@@ -45,13 +45,14 @@ export class ResultItemComponent implements OnInit {
   }
 
   onClick() {
-    this.addFilter(this.item['meta_nazev']);
+    
+          this.addFilter(this.item['meta_nazev']);
     this.router.navigate(['/result']);
-    //    if(this.item['total'] > 1){
-    //      this.addFilter(this.item['nazev']);
-    //    } else {
-    //      this.router.navigate(['/issue', this.item['id']]);
-    //    }
+//        if(this.item['num_exemplare'] > 1){
+//          this.addFilter(this.item['meta_nazev']);
+//        } else {
+//          this.router.navigate(['/issue', this.item['id']]);
+//        }
   }
 
   onCalendarClick() {

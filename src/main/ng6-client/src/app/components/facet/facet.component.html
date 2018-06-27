@@ -9,6 +9,7 @@
         <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg'"></i>
       </mz-collapsible-item-header>
       <mz-collapsible-item-body>
+      <!--  
         <mz-datepicker-container [inline]="true">
           <input mz-datepicker
                  [options]="options"
@@ -25,6 +26,23 @@
                  id="end_date" name="end_date"
                  type="text" />
         </mz-datepicker-container>
+      -->
+      
+      <mz-input-container [inline]="true"> 
+      <input mz-input
+            
+                 [label]="'modal.from' | translate"
+                 [(ngModel)]="state.start_date"
+                 id="start_date" name="start_date"
+                 type="text" />
+      </mz-input-container>
+      <mz-input-container [inline]="true"> 
+          <input mz-input
+                 [label]="'modal.till' | translate"
+                 [(ngModel)]="state.end_date"
+                 id="end_date" name="end_date"
+                 type="text" />
+      </mz-input-container>
         <i mz-icon-mdi [icon]="'arrow-right'" [class]="'app-clean-mg'" (click)="state.addDateFilter()">filter</i>
         <i mz-icon-mdi *ngIf="state.filterByDate" [icon]="'close'" [class]="'app-clean-mg'" (click)="state.removeDateFilter()">remove</i>
       </mz-collapsible-item-body>

@@ -179,6 +179,7 @@ export class AppService {
 
 
   saveIssue(issue: Issue) {
+    console.log(issue);
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
       .set('action', 'SAVE_ISSUE')
@@ -252,7 +253,7 @@ export class AppService {
       .set('wt', 'json')
       .set('rows', '500')
       .set('sort', 'datum_vydani_den asc')
-      .set('fq', 'exemplare:[* TO *]')
+      //.set('fq', 'exemplare:[* TO *]')
       //.set('fq', '{!collapse field=id_titul}')
       .set('facet', 'true')
       .set('facet.mincount', '1')
@@ -261,7 +262,7 @@ export class AppService {
       //.set('fl', '*')
       .set('stats', 'true')
       .set('stats.field', 'datum_vydani_den')
-      .set('facet.field', 'nazev')
+      .set('facet.field', 'meta_nazev')
       .append('facet.field', 'vlastnik')
       .append('facet.field', 'mutace')
       .append('facet.field', 'vydani');
