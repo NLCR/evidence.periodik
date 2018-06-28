@@ -1,7 +1,7 @@
 <div class="app-facet-wrapper">
   <app-facet-used></app-facet-used>
   <mz-collapsible [mode]="'expandable'"  *ngIf="state.searchResults">
-    
+
     <mz-collapsible-item [active]="true" >
       <mz-collapsible-item-header>
         Datum:
@@ -9,49 +9,60 @@
         <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg'"></i>
       </mz-collapsible-item-header>
       <mz-collapsible-item-body>
-      <!--  
-        <mz-datepicker-container [inline]="true">
-          <input mz-datepicker
-                 [options]="options"
+        <div class="row app-row">
+        <!--  
+          <mz-datepicker-container [inline]="true">
+            <input mz-datepicker
+                   [options]="options"
+                   [label]="'modal.from' | translate"
+                   [(ngModel)]="state.start_date"
+                   id="start_date" name="start_date"
+                   type="text" />
+          </mz-datepicker-container>
+          <mz-datepicker-container [inline]="true">
+            <input mz-datepicker
+                   [options]="options"
+                   [label]="'modal.till' | translate"
+                   [(ngModel)]="state.end_date"
+                   id="end_date" name="end_date"
+                   type="text" />
+          </mz-datepicker-container>
+        -->
+        <div class="col s3">
+        <mz-input-container [inline]="true"> 
+          <input mz-input
                  [label]="'modal.from' | translate"
-                 [(ngModel)]="state.start_date"
-                 id="start_date" name="start_date"
-                 type="text" />
-        </mz-datepicker-container>
-        <mz-datepicker-container [inline]="true">
-          <input mz-datepicker
-                 [options]="options"
-                 [label]="'modal.till' | translate"
-                 [(ngModel)]="state.end_date"
-                 id="end_date" name="end_date"
-                 type="text" />
-        </mz-datepicker-container>
-      -->
-      
-      <mz-input-container [inline]="true"> 
-      <input mz-input
-            
-                 [label]="'modal.from' | translate"
-                 [(ngModel)]="state.start_date"
-                 id="start_date" name="start_date"
-                 type="text" />
-      </mz-input-container>
-      <mz-input-container [inline]="true"> 
+                 [(ngModel)]="state.start_year"
+                 id="start_date" name="start_year"
+                 length="4"
+                 size="4"
+                 type="number" 
+                 validation="true" />
+        </mz-input-container>
+          </div>
+        <div class="col s3">
+        <mz-input-container [inline]="true"> 
           <input mz-input
                  [label]="'modal.till' | translate"
-                 [(ngModel)]="state.end_date"
-                 id="end_date" name="end_date"
-                 type="text" />
-      </mz-input-container>
-        <i mz-icon-mdi [icon]="'arrow-right'" [class]="'app-clean-mg'" (click)="state.addDateFilter()">filter</i>
-        <i mz-icon-mdi *ngIf="state.filterByDate" [icon]="'close'" [class]="'app-clean-mg'" (click)="state.removeDateFilter()">remove</i>
+                 [(ngModel)]="state.end_year"
+                 id="end_date" name="end_year"
+                 length="4"
+                 type="number" 
+                 validation="true"
+                 size="4" />
+        </mz-input-container>
+          </div>
+        <div class="col s6">
+        <i mz-icon-mdi [icon]="'arrow-right'" [class]="'app-clean-mg'" (click)="state.addDateFilter()" title="filter"></i>
+        <i mz-icon-mdi *ngIf="state.filterByDate" [icon]="'close'" [class]="'app-clean-mg'" (click)="state.removeDateFilter()" title="remove date filter"></i>
+        </div></div>
       </mz-collapsible-item-body>
     </mz-collapsible-item>
-    
+
     <ng-container *ngFor="let facet of state.searchResults['responseHeader']['params']['facet.field']">
       <mz-collapsible-item [active]="true" *ngIf="state.searchResults['facet_counts']['facet_fields'][facet].length > 1">
         <mz-collapsible-item-header>
-          {{facet}}
+          {{'facet.'+facet | translate}}
           <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg'"></i>
           <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg'"></i>
         </mz-collapsible-item-header>

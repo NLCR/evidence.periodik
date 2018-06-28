@@ -104,7 +104,12 @@
     "tooltip": {
       "delete_all_filters": "Delete all filters",
       "delete_this_filter": "Delete this filter"
-    }
+    },
+    "meta_nazev": "Title",
+    "date": "Date",
+    "vlastnik": "Owner",
+    "mutace": "Mutation",
+    "vydani":"Publication"
   },
   "result": {
     "found_records": "Found records",

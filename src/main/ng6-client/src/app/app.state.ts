@@ -51,8 +51,10 @@ export class AppState {
   searchResults: any;
   numFound: number;
 
-  start_date;
-  end_date;
+  start_date: string; //yyyyMMdd
+  end_date: string; 
+  start_year: string;
+  end_year: string;
 
 
   private _searchParamsSubject = new Subject();
@@ -104,6 +106,10 @@ export class AppState {
       let stats = this.searchResults['stats']['stats_fields']['datum_vydani_den'];
       this.start_date = stats['min'];
       this.end_date = stats['max'];
+      if(stats['min']){
+        this.start_year = this.start_date.substring(0,4);
+        this.end_year = this.end_date.substring(0,4);
+      }
     }
 
     this._searchSubject.next(this.searchResults);

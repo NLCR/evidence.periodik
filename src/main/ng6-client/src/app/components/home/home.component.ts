@@ -28,6 +28,8 @@ export class HomeComponent implements OnInit {
   }
 
   loadResultItems() {
+    this.state.filters = [];
+    this.state.filterByDate = false;
     this.service.getTituly().subscribe(res => {
       
     });

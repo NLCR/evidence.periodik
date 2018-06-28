@@ -160,6 +160,7 @@ export class AppService {
     var url = this.state.config['context'] + 'search/titul/select';
     let params: HttpParams = new HttpParams()
       .set('q', '*')
+      .set('sort', 'meta_nazev asc')
       .set('rows', '500');
 
     return this.http.get(url, {params: params}).pipe(
@@ -188,13 +189,14 @@ export class AppService {
     return this.http.get(url, {params: params});
   }
   
-  duplicateExemplar(issue: Issue, exemplar: Exemplar, start: string, end: string){
+  duplicateExemplar(issue: Issue, vlastnik: string, exemplar: Exemplar, start: string, end: string){
     
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
       .set('action', 'DUPLICATE_EX')
       .set('issue', JSON.stringify(issue))
       .set('exemplar', JSON.stringify(exemplar))
+      .set('vlastnik', vlastnik)
       .set('start', start)
       .set('end', end);
       
@@ -275,7 +277,7 @@ export class AppService {
     });
 
     if (this.state.filterByDate) {
-      params = params.append('fq', 'datum_vydani_den:[' + this.state.start_date + ' TO ' + this.state.end_date + ']');
+      params = params.append('fq', 'datum_vydani_den:[' + this.state.start_year + ' TO ' + this.state.end_year + ']');
     }
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params});

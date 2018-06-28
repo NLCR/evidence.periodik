@@ -12,7 +12,7 @@
           (click)="remove(idx)">
       <i mz-icon-mdi [icon]="'check'" [class]="'app-clean-mg'"></i>
       <i mz-icon-mdi [icon]="'close'" [class]="'app-clean-mg'"></i>
-      {{filter.field}} : {{filter.value}}
+      {{'facet.' + filter.field | translate}} : {{filter.value}}
     </span>
   </mz-collection-item>
 </mz-collection>

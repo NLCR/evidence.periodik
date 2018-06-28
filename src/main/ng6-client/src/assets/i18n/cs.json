@@ -101,7 +101,12 @@
     "tooltip": {
       "delete_all_filters": "Odstranit všechny filtry",
       "delete_this_filter": "Odstranit tento filtr"
-    }
+    },
+    "meta_nazev": "Titul",
+    "date": "Datum",
+    "vlastnik": "Vlastnik",
+    "mutace": "Mutace",
+    "vydani":"Vydani"
   },
   "result": {
     "found_records": "Nalezeno záznamů",
