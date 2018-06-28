@@ -142,6 +142,7 @@ public class IndexServlet extends HttpServlet {
           Indexer indexer = new Indexer();
 
           indexer.duplicateEx(new JSONObject(req.getParameter("issue")),
+                  req.getParameter("vlastnik"),
                   new JSONObject(req.getParameter("exemplar")),
                   req.getParameter("start"),
                   req.getParameter("end"));

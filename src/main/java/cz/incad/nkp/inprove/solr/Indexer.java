@@ -207,7 +207,7 @@ public class Indexer {
           idocDen.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
           idocDen.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
 
-          idocDen.setField("id", generateId(idocDen));
+          idocDen.setField("id", generateId(idocDen, Options.getInstance().getStrings("idfields")));
           solr.add("issue", idocDen);
           if (generated++ % 1000 == 0) {
             solr.commit("issue");
@@ -307,7 +307,7 @@ public class Indexer {
 
               idoc.setField("cislo", rocnik);
               idoc.setField("rocnik", year);
-              idoc.setField("id", generateId(idoc));
+              idoc.setField("id", generateId(idoc, Options.getInstance().getStrings("idfields")));
 
             }
 
@@ -391,34 +391,39 @@ public class Indexer {
   }
 
   private SolrInputDocument cloneOne(SolrDocument doc, LocalDate date, String mutace, int number, int year, boolean cloneExemplars) {
-    SolrInputDocument idoc = new SolrInputDocument();
-    doc.getFieldNames().forEach((name) -> {
-      idoc.addField(name, doc.getFieldValue(name));
-    });
-    idoc.removeField("_version_");
-    idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
-    idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
+    try {
+      SolrInputDocument idoc = new SolrInputDocument();
+      doc.getFieldNames().forEach((name) -> {
+        idoc.addField(name, doc.getFieldValue(name));
+      });
+      idoc.removeField("_version_");
+      idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
+      idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
 
-    idoc.setField("state", "auto");
-    idoc.setField("cislo", number);
-    //idoc.setField("rocnik", year);
-    if (mutace != null) {
-      idoc.setField("mutace", mutace);
+      idoc.setField("state", "auto");
+      idoc.setField("cislo", number);
+      //idoc.setField("rocnik", year);
+      if (mutace != null) {
+        idoc.setField("mutace", mutace);
+      }
+      if (!cloneExemplars) {
+        idoc.setField("exemplare", "");
+      }
+      //idoc.setField("id", UUID.randomUUID());
+      //idoc.removeField("id");
+      idoc.setField("id", generateId(idoc, Options.getInstance().getStrings("idfields")));
+      return idoc;
+    } catch (IOException | JSONException ex) {
+      LOGGER.log(Level.SEVERE, null, ex);
+      return null;
     }
-    if (!cloneExemplars) {
-      idoc.setField("exemplare", "");
-    }
-    //idoc.setField("id", UUID.randomUUID());
-    //idoc.removeField("id");
-    idoc.setField("id", generateId(idoc));
-    return idoc;
   }
 
-  private String generateId(SolrInputDocument doc) {
+  private String generateId(SolrInputDocument doc, String[] fields) {
     try {
       MessageDigest md = MessageDigest.getInstance("SHA-1");
       StringBuilder sb = new StringBuilder();
-      String[] fields = Options.getInstance().getStrings("idfields");
+
       for (String field : fields) {
         if (doc.containsKey(field)) {
           sb.append(doc.getFieldValue(field).toString()).append(" ");
@@ -428,7 +433,7 @@ public class Indexer {
       BigInteger id = new BigInteger(1, md.digest());
       return String.format("%032X", id);
 
-    } catch (NoSuchAlgorithmException | IOException | JSONException ex) {
+    } catch (NoSuchAlgorithmException | JSONException ex) {
       LOGGER.log(Level.SEVERE, null, ex);
       return null;
     }
@@ -476,7 +481,7 @@ public class Indexer {
       }
 
       if ("".equals(json.optString("id", ""))) {
-        idoc.setField("id", generateId(idoc));
+        idoc.setField("id", generateId(idoc, Options.getInstance().getStrings("idfields")));
       }
       LOGGER.info(idoc.toString());
       solr.add("issue", idoc);
@@ -518,7 +523,12 @@ public class Indexer {
       }
 
       if ("".equals(json.optString("id", ""))) {
-        idoc.setField("id", generateId(idoc));
+        if (json.has("uuid") && !"".equals(json.optString("uuid", ""))) {
+          idoc.setField("id", json.getString("uuid"));
+        } else {
+          idoc.setField("id", generateId(idoc, new String[]{"meta_nazev"}));
+        }
+
       }
       LOGGER.info(idoc.toString());
       solr.add("titul", idoc);
@@ -576,7 +586,7 @@ public class Indexer {
     }
   }
 
-  public void duplicateEx(JSONObject issue, JSONObject exemplar, String start_date, String end_date) {
+  public void duplicateEx(JSONObject issue, String vlastnik, JSONObject exemplar, String start_date, String end_date) {
 
     LOGGER.log(Level.INFO,
             "Duplicate exemplar {0} from {1} to {2} for {3}",
@@ -636,19 +646,22 @@ public class Indexer {
           idoc.removeField("_version_");
           idoc.removeField("index_time");
           idoc.removeField("exemplare");
+          idoc.removeField("titul");
           idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
           idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
-          idoc.setField("id", generateId(idoc));
+          idoc.setField("id", generateId(idoc, Options.getInstance().getStrings("idfields")));
         }
-        if (doc != null && !hasEx) {
+        if (!hasEx) {
 
           exs.put(exemplar);
 
           for (int i = 0; i < exs.length(); i++) {
             idoc.addField("exemplare", exs.getJSONObject(i).toString());
           }
+          
+          idoc.addField("vlastnik", vlastnik);
 
-          //idoc.setField("exemplare", exs.toString());
+          //System.out.println(idoc.getFieldValue("id"));
           solr.add("issue", idoc);
 
         }
@@ -670,12 +683,15 @@ public class Indexer {
 
       for (int i = 0; i < exs.length(); i++) {
         JSONObject ex = exs.getJSONObject(i);
-        duplicateEx(issue,
-                vp.asPermonikEx(ex, vdkOptions.vlastnik),
-                vp.getStart(ex, vdkOptions),
-                vp.getEnd(ex, vdkOptions));
-        ret.append("exs", ex.getString("b"));
-
+        if (vp.canProcess(ex)) {
+          duplicateEx(issue, vdkOptions.vlastnik,
+                  vp.asPermonikEx(ex, vdkOptions.vlastnik),
+                  vp.getStart(ex, vdkOptions),
+                  vp.getEnd(ex, vdkOptions));
+          ret.append("exs", ex.getString("b"));
+        } else {
+          ret.append("unprocessables", ex);
+        }
       }
 
     } catch (IOException | SAXException ex) {
