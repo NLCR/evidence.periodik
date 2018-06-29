@@ -16,10 +16,12 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +30,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
@@ -43,7 +46,7 @@ import org.xml.sax.SAXException;
 public class Indexer {
 
   static final Logger LOGGER = Logger.getLogger(Indexer.class.getName());
-  private final String DEFAULT_HOST = "http://localhost:8983/solr/";
+  public static final String DEFAULT_HOST = "http://localhost:8983/solr/";
 
   public String host() {
 
@@ -68,11 +71,12 @@ public class Indexer {
     return client;
   }
 
-  private boolean isSpecial(SolrClient solr, LocalDate date) {
+  public static boolean isSpecial(SolrClient solr, LocalDate date) {
     try {
       SolrQuery query = new SolrQuery();
       query.setRows(1);
       query.set("wt", "json");
+      //q = '(day:' + day + ' AND month:' + month + ' AND year:' + year + ') OR (day:' + day + ' AND month:' + month + ' AND year:0)';
       query.setQuery("id:\"" + date.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "\" OR id:\"" + date.format(DateTimeFormatter.ofPattern("MMdd")) + "\"");
       return solr.query("calendar", query).getResults().getNumFound() > 0;
     } catch (SolrServerException ex) {
@@ -81,6 +85,30 @@ public class Indexer {
       Logger.getLogger(Indexer.class.getName()).log(Level.SEVERE, null, ex);
     }
     return false;
+  }
+
+  public static int numSpecial(SolrClient solr, LocalDate start, LocalDate end) {
+    try {
+      int yearsBetween = (int) ChronoUnit.YEARS.between(end, start) + 1;
+      SolrQuery query = new SolrQuery();
+      query.setRows(1);
+      query.set("wt", "json");
+      //q = '(day:' + day + ' AND month:' + month + ' AND year:' + year + ') OR (day:' + day + ' AND month:' + month + ' AND year:0)';
+      query.setQuery("id:\"" + start.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "\" OR id:\"" + start.format(DateTimeFormatter.ofPattern("MMdd")) + "\"");
+      query.setFacet(true).setFields("year");
+      QueryResponse resp = solr.query("calendar", query); 
+      int ret = (int) resp.getResults().getNumFound();
+      List<FacetField.Count> vals = resp.getFacetField("year").getValues();
+      for(int i = 0; i<vals.size(); i++){
+        if(vals.get(i).getName().equals("0")){
+          ret += vals.get(i).getCount() * yearsBetween;
+        }
+      } 
+      return ret;
+    } catch (SolrServerException | IOException ex) {
+      Logger.getLogger(Indexer.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return -1;
   }
 
   /**
@@ -589,8 +617,8 @@ public class Indexer {
   public void duplicateEx(JSONObject issue, String vlastnik, JSONObject exemplar, String start_date, String end_date) {
 
     LOGGER.log(Level.INFO,
-            "Duplicate exemplar {0} from {1} to {2} for {3}",
-            new String[]{exemplar.getString("carovy_kod"), start_date, end_date, issue.getString("id_titul")});
+            "Duplicate exemplar {0} from {1} to {2} for {3} {4}",
+            new String[]{exemplar.toString(), start_date, end_date, vlastnik, issue.getString("id_titul")});
     try (SolrClient solr = getClient()) {
 
       String carovy_kod = exemplar.getString("carovy_kod");
@@ -700,5 +728,7 @@ public class Indexer {
     }
     return ret;
   }
+  
+  
 
 }
