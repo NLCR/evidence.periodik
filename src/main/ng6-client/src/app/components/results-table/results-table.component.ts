@@ -77,35 +77,39 @@ export class ResultsTableComponent implements OnInit {
         let exs = issue.exemplare;
         for (let i = 0; i < exs.length; i++) {
           //let ck = exs[i].vlastnik + ' - ' + exs[i].signatura;
-          let ck = exs[i].vlastnik;
-          if (!this.exs.hasOwnProperty(ck)) {
-            this.cks.push(ck);
-            this.exs[ck] = exs[i];
-            this.displayedColumns.push(ck);
+          let vlastnik = exs[i].vlastnik;
+          if (!this.exs.hasOwnProperty(vlastnik)) {
+            this.cks.push(vlastnik);
+            this.exs[vlastnik] = exs[i];
+            this.displayedColumns.push(vlastnik);
           } else {
 
           }
-          issue[ck] = i;
+          //issue[ck] = i;
         }
       }
     });
 
-    this.data.forEach((issue: Issue) => {
-      for (let i = 0; i < this.cks.length; i++) {
-        if (!issue.hasOwnProperty(this.cks[i])) {
-          issue[this.cks[i]] = -1;
-        }
-      }
-    });
-    //this.displayedColumns.push(cks);
+//    this.data.forEach((issue: Issue) => {
+//      for (let i = 0; i < this.cks.length; i++) {
+//        if (!issue.hasOwnProperty(this.cks[i])) {
+//          issue[this.cks[i]] = -1;
+//        }
+//      }
+//    });
+    
     this.dataSource = new MatTableDataSource(this.data);
     this.dataSource.paginator = this.paginator;
   }
 
-  cellColor(row: Issue, ck: string): string {
-    if (row[ck] === -1) return "";
-    let vlastnik = row.exemplare[row[ck]]['vlastnik'];
-    return this.colorByVlastnik(vlastnik);
+  cellColor(row: Issue, vlastnik: string): string {
+    
+    for(let i = 0; i<row.exemplare.length; i++){
+      if(row.exemplare[i]['vlastnik'] === vlastnik){
+        return this.colorByVlastnik(vlastnik);
+      }
+    }
+    return '';
   }
 
   colorByVlastnik(vlastnik: string): string {

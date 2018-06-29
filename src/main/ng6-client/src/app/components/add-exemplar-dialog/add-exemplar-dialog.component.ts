@@ -52,7 +52,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
       break;
       case 'duplicate':
       console.log(this.issue, this.exemplar.vlastnik, this.exemplar, this.duplicate_start_date, this.duplicate_end_date);
-      return;
+      
         this.service.duplicateExemplar(this.issue, this.exemplar.vlastnik, this.exemplar, this.duplicate_start_date, this.duplicate_end_date).subscribe(res => {
           //console.log(res);
           this.saved = true;

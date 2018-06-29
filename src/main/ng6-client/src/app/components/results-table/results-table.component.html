@@ -56,7 +56,7 @@
       <td mat-cell *matCellDef="let row; let idx = index" [style.backgroundColor]="cellColor(row, ck)" 
           style="border: 1px solid black;white-space: nowrap;" 
           >
-          <ng-container *ngIf="row[ck] !== -1">
+          
             <span *ngFor="let ex of row.exemplare">
               <ng-container *ngIf="ex.vlastnik === ck">[
                 <span (click)="viewClick(row, ex)">{{ex['carovy_kod']}}</span>
@@ -64,7 +64,7 @@
               <i *ngIf="ex['stav'] && ex['stav'] !== 'OK'" mz-icon-mdi [icon]="'comment-outline'" [size]="20" [title]="ex['stav'] + ': ' + ex['stav_popis']"></i>
               ] </ng-container>
             </span>
-          </ng-container>
+          
           
       
       </td>
