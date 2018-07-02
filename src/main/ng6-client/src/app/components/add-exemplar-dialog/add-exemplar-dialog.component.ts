@@ -45,6 +45,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
       case 'new':
       break;
       case 'edit':
+      console.log(this.issue);
         this.service.saveIssue(this.issue).subscribe(res => {
           //console.log(res);
           this.modalComponent.closeModal();

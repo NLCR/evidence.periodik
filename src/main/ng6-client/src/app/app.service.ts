@@ -267,6 +267,7 @@ export class AppService {
       .set('stats.field', 'datum_vydani_den')
       .set('facet.field', 'meta_nazev')
       .append('facet.field', 'vlastnik')
+      .append('facet.field', 'stav')
       .append('facet.field', 'mutace')
       .append('facet.field', 'vydani');
 

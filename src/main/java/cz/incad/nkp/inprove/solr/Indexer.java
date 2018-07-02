@@ -273,6 +273,8 @@ public class Indexer {
                 if (!idoc.containsKey("vlastnik") || !idoc.getFieldValues("vlastnik").contains(vlastnik)) {
                   idoc.addField("vlastnik", vlastnik);
                 }
+                
+                
                 idoc.setField("state", "auto");
 
                 idoc.setField("cislo", rocnik);
@@ -552,6 +554,7 @@ public class Indexer {
   }
 
   public JSONObject fromJSON(JSONObject json) {
+    
     JSONObject ret = new JSONObject();
     try (SolrClient solr = getClient()) {
       SolrInputDocument idoc = new SolrInputDocument();
@@ -561,13 +564,13 @@ public class Indexer {
           //idoc.addField(name, json.get(name));
         } else {
           switch (name) {
+            case "vlastnik":
+              break;
+            case "stav":
+              break;
+            case "datum_vydani_den":
+              break;
             case "datum_vydani":
-              //SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-
-//              DateTimeFormatter f = DateTimeFormatter.ISO_INSTANT.withResolverStyle(ResolverStyle.SMART);
-//              Instant ins = Instant.from(f.parse(json.getString(name)));
-//              LocalDateTime date = LocalDateTime.ofInstant(ins, ZoneId.systemDefault());
-//              idoc.setField("datum_vydani", date.format(DateTimeFormatter.BASIC_ISO_DATE));
               idoc.setField("datum_vydani", json.getString(name));
               idoc.setField("datum_vydani_den", json.getString(name).replaceAll("-", ""));
               break;
@@ -582,6 +585,11 @@ public class Indexer {
               for (int i = 0; i < ex.length(); i++) {
                 String vl = ex.getJSONObject(i).getString("vlastnik");
                 idoc.addField("vlastnik", vl);
+                if(ex.getJSONObject(i).optJSONArray("stav")!=null){
+                  for (int j = 0; j < ex.getJSONObject(i).optJSONArray("stav").length(); j++) {
+                    idoc.addField("stav", ex.getJSONObject(i).getJSONArray("stav").optString(j));
+                  }
+                }
                 idoc.addField("exemplare", ex.getJSONObject(i).toString());
               }
               break;
@@ -624,6 +632,14 @@ public class Indexer {
               for (int i = 0; i < ex.length(); i++) {
                 String vl = ex.getJSONObject(i).getString("vlastnik");
                 idoc.addField("vlastnik", vl);
+                
+                
+                if(ex.getJSONObject(i).optJSONArray("stav")!=null){
+                  for (int j = 0; j < ex.getJSONObject(i).optJSONArray("stav").length(); j++) {
+                    idoc.addField("stav", ex.getJSONObject(i).getJSONArray("stav").optString(j));
+                  }
+                }
+                
                 idoc.addField("exemplare", ex.getJSONObject(i).toString());
               }
               break;
@@ -772,6 +788,14 @@ public class Indexer {
 
           for (int i = 0; i < exs.length(); i++) {
             idoc.addField("exemplare", exs.getJSONObject(i).toString());
+            
+                
+                if(exs.getJSONObject(i).optJSONArray("stav")!=null){
+                  for (int j = 0; j < exs.getJSONObject(i).optJSONArray("stav").length(); j++) {
+                    idoc.addField("stav", exs.getJSONObject(i).getJSONArray("stav").optString(j));
+                  }
+                }
+                
           }
 
           idoc.addField("vlastnik", vlastnik);
