@@ -31,7 +31,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
   duplicate_end_date: string;
   
   saved: boolean = false;
-  
+  onspecial: boolean;
   
   ngOnInit() {
     if(this.issue){
@@ -53,7 +53,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
       case 'duplicate':
       console.log(this.issue, this.exemplar.vlastnik, this.exemplar, this.duplicate_start_date, this.duplicate_end_date);
       
-        this.service.duplicateExemplar(this.issue, this.exemplar.vlastnik, this.exemplar, this.duplicate_start_date, this.duplicate_end_date).subscribe(res => {
+        this.service.duplicateExemplar(this.issue, this.exemplar.vlastnik, this.onspecial,  this.exemplar, this.duplicate_start_date, this.duplicate_end_date).subscribe(res => {
           //console.log(res);
           this.saved = true;
           this.modalComponent.closeModal();

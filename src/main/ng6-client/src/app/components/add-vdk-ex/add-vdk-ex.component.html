@@ -19,6 +19,16 @@
           <option *ngFor="let f of state.vdkFormats" [value]="f">{{'formatvdk.' + f | translate}}</option>
         </select>
       </mz-select-container>
+    <mz-checkbox-container>
+      <input mz-checkbox
+             [(ngModel)]="onspecial"
+             [label]="'modal.on_special_days' | translate"
+             id="onSpecialDays"
+             type="checkbox" />
+    </mz-checkbox-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.barcode' | translate" [id]="'barcode'" [name]="'barcode'" [(ngModel)]="barcode" type="text">
+      </mz-input-container>
     </div>  
       
   </mz-modal-content>

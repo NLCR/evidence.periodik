@@ -20,9 +20,17 @@ export class AddVdkExComponent extends MzBaseModal {
   public url: string;
   public format: string;
   public vlastnik: string;
+  public barcode: string;
+  public onspecial: boolean;
   
   ok(){
-    let ops = {format: this.format, vlastnik: this.vlastnik, periodicity: this.state.currentIssue.periodicita};
+    let ops = {
+    format: this.format, 
+    vlastnik: this.vlastnik, 
+    periodicity: this.state.currentIssue.periodicita,
+    barcode: this.barcode,
+    onspecial: this.onspecial
+    };
     this.service.addVdkEx(this.state.currentIssue, this.url, ops).subscribe(res => {
           console.log(res);
           this.service.search().subscribe(res => {

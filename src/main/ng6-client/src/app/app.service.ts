@@ -189,7 +189,7 @@ export class AppService {
     return this.http.get(url, {params: params});
   }
   
-  duplicateExemplar(issue: Issue, vlastnik: string, exemplar: Exemplar, start: string, end: string){
+  duplicateExemplar(issue: Issue, vlastnik: string, onspecial: boolean, exemplar: Exemplar, start: string, end: string){
     
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
@@ -197,6 +197,7 @@ export class AppService {
       .set('issue', JSON.stringify(issue))
       .set('exemplar', JSON.stringify(exemplar))
       .set('vlastnik', vlastnik)
+      .set('onspecial', onspecial.toString())
       .set('start', start)
       .set('end', end);
       
@@ -277,7 +278,7 @@ export class AppService {
     });
 
     if (this.state.filterByDate) {
-      params = params.append('fq', 'datum_vydani_den:[' + this.state.start_year + ' TO ' + this.state.end_year + ']');
+      params = params.append('fq', 'datum_vydani_den:[' + this.state.start_year + '0101 TO ' + this.state.end_year + '1231]');
     }
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params});
