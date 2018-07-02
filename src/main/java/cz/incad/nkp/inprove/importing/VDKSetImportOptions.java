@@ -16,12 +16,16 @@ public class VDKSetImportOptions {
   public VDKCisloFormat cisloFormat;
   public String vlastnik;
   public Period periodicity;
+  public boolean onSpecialDays; 
+  public String barcode;
   
   public static VDKSetImportOptions fromJSON(JSONObject j){
     VDKSetImportOptions v = new VDKSetImportOptions();
     v.cisloFormat = VDKCisloFormat.valueOf(j.getString("format"));
     v.vlastnik = j.getString("vlastnik");
+    v.barcode = j.getString("barcode");
     v.periodicity = Period.parse(j.optString("periodicity", "P1D"));
+    v.onSpecialDays = j.optBoolean("onspecial", false);
     return v;
   }
 }

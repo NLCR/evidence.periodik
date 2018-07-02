@@ -143,6 +143,7 @@ public class IndexServlet extends HttpServlet {
 
           indexer.duplicateEx(new JSONObject(req.getParameter("issue")),
                   req.getParameter("vlastnik"),
+                  Boolean.parseBoolean(req.getParameter("onspecial")),
                   new JSONObject(req.getParameter("exemplar")),
                   req.getParameter("start"),
                   req.getParameter("end"));
@@ -273,6 +274,24 @@ public class IndexServlet extends HttpServlet {
         try {
           Indexer indexer = new Indexer();
           indexer.setState(req.getParameter("id"));
+
+        } catch (Exception ex) {
+          LOGGER.log(Level.SEVERE, null, ex);
+          json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
+    SPECIAL_DAYS {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          json.put("days",indexer.days(req.getParameter("start"), req.getParameter("end")));
 
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);

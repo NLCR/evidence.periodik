@@ -12,6 +12,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -33,6 +34,7 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,6 +74,9 @@ public class Indexer {
   }
 
   public static boolean isSpecial(SolrClient solr, LocalDate date) {
+    if(date.getDayOfWeek() == DayOfWeek.SUNDAY){
+      return true;
+    }
     try {
       SolrQuery query = new SolrQuery();
       query.setRows(1);
@@ -87,28 +92,107 @@ public class Indexer {
     return false;
   }
 
-  public static int numSpecial(SolrClient solr, LocalDate start, LocalDate end) {
+  public static List<String> getSpecialDays(SolrClient solr, LocalDate start, LocalDate end) {
+    List<String> ret = new ArrayList<>();
+
     try {
       int yearsBetween = (int) ChronoUnit.YEARS.between(end, start) + 1;
       SolrQuery query = new SolrQuery();
-      query.setRows(1);
+      query.setRows(100);
       query.set("wt", "json");
-      //q = '(day:' + day + ' AND month:' + month + ' AND year:' + year + ') OR (day:' + day + ' AND month:' + month + ' AND year:0)';
-      query.setQuery("id:\"" + start.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "\" OR id:\"" + start.format(DateTimeFormatter.ofPattern("MMdd")) + "\"");
-      query.setFacet(true).setFields("year");
-      QueryResponse resp = solr.query("calendar", query); 
-      int ret = (int) resp.getResults().getNumFound();
-      List<FacetField.Count> vals = resp.getFacetField("year").getValues();
-      for(int i = 0; i<vals.size(); i++){
-        if(vals.get(i).getName().equals("0")){
-          ret += vals.get(i).getCount() * yearsBetween;
+      //q = "(day:" + day + " AND month:" + month + " AND year:" + year + ") OR (day:" + day + " AND month:" + month + " AND year:0)";
+      String startFull = start.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+      int startMonth = start.getMonthValue();
+      String endFull = end.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+      int endMonth = end.getMonthValue();
+      int startYear = start.getYear();
+      int endYear = end.getYear();
+      String q = "id:[" + startFull + " TO " + endFull + "]";
+      boolean changingYear = endMonth < startMonth && endYear == startYear + 1;
+      //endYear > startYear;
+      if (changingYear) {
+        q += " OR id:[" + startMonth + " TO 1231] OR id:[0101 TO " + endMonth + "]";
+      } else if (endYear > startYear) {
+        q += " OR year:0";
+      } else {
+        q += " OR id:[" + startMonth + " TO " + endMonth + "]";
+      }
+      query.setQuery(q);
+//      query.setFacet(true).addFacetField("year");
+      QueryResponse resp = solr.query("calendar", query);
+      SolrDocumentList docs = resp.getResults();
+//      int days = (int) resp.getResults().getNumFound();
+//      List<FacetField.Count> vals = resp.getFacetField("year").getValues();
+//      for (int i = 0; i < vals.size(); i++) {
+//        if (vals.get(i).getName().equals("0")) {
+//          days += vals.get(i).getCount() * yearsBetween;
+//        }
+//      }
+      for (int i = 0; i < docs.size(); i++) {
+        SolrDocument doc = docs.get(i);
+        if (doc.getFirstValue("year").equals(0)) {
+          for (int y = startYear; y < endYear + 1; y++) {
+            //Control months and days are in beetwen period
+            String d = y + (String) doc.getFirstValue("id");
+
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+
+            LocalDate date = sdf1.parse(d).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if ((date.isBefore(end) || date.isEqual(end)) && (date.isAfter(start) || date.isEqual(start))) {
+              ret.add(d);
+            }
+          }
+        } else {
+          ret.add((String) doc.getFirstValue("id"));
         }
-      } 
-      return ret;
-    } catch (SolrServerException | IOException ex) {
+      }
+
+    } catch (SolrServerException | IOException | ParseException ex) {
       Logger.getLogger(Indexer.class.getName()).log(Level.SEVERE, null, ex);
     }
-    return -1;
+    return ret;
+  }
+
+  public static int getNumSpecialDays(LocalDate start, LocalDate end) {
+    int specialDays = 0;
+    try {
+      SolrClient solr = new HttpSolrClient.Builder(Options.getInstance().getString("solrhost", Indexer.DEFAULT_HOST)).build();
+
+      int daysBetween = (int) ChronoUnit.DAYS.between(start, end);
+      specialDays = daysBetween / 7;
+
+      LOGGER.log(Level.INFO, "daysBetween is {0}", daysBetween);
+      LOGGER.log(Level.INFO, "end is {0}", end.getDayOfWeek().getValue());
+      if (start.getDayOfWeek().getValue() > end.getDayOfWeek().getValue() || end.getDayOfWeek() == DayOfWeek.SUNDAY) {
+        specialDays++;
+      }
+      LOGGER.log(Level.INFO, "sundays {0}", specialDays);
+      List<String> days = Indexer.getSpecialDays(solr, start, end);
+      System.out.println(days);
+      specialDays += days.size();
+
+    } catch (IOException | JSONException ex) {
+      Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    return specialDays;
+  }
+
+  public JSONObject days(String start, String end) {
+    JSONObject ret = new JSONObject();
+    try {
+
+      SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+
+      LocalDate startDate = sdf1.parse(start).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+      LocalDate endDate = sdf1.parse(end).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+      ret.put("days", getNumSpecialDays(startDate, endDate));
+
+    } catch (ParseException ex) {
+      Logger.getLogger(Indexer.class.getName()).log(Level.SEVERE, null, ex);
+      ret.put("error", ex);
+    }
+    return ret;
   }
 
   /**
@@ -614,7 +698,8 @@ public class Indexer {
     }
   }
 
-  public void duplicateEx(JSONObject issue, String vlastnik, JSONObject exemplar, String start_date, String end_date) {
+  public void duplicateEx(JSONObject issue, String vlastnik, boolean onspecialdays,
+          JSONObject exemplar, String start_date, String end_date) {
 
     LOGGER.log(Level.INFO,
             "Duplicate exemplar {0} from {1} to {2} for {3} {4}",
@@ -631,7 +716,9 @@ public class Indexer {
       Period period = Period.parse(issue.getString("periodicita"));
 
       for (LocalDate date = start; date.isBefore(end) || date.isEqual(end); date = date.plus(period)) {
-
+        if (!onspecialdays && isSpecial(solr, date)) {
+          continue;
+        }
         SolrQuery query = new SolrQuery();
         query.setRows(1);
         query.set("wt", "json");
@@ -686,7 +773,7 @@ public class Indexer {
           for (int i = 0; i < exs.length(); i++) {
             idoc.addField("exemplare", exs.getJSONObject(i).toString());
           }
-          
+
           idoc.addField("vlastnik", vlastnik);
 
           //System.out.println(idoc.getFieldValue("id"));
@@ -711,14 +798,18 @@ public class Indexer {
 
       for (int i = 0; i < exs.length(); i++) {
         JSONObject ex = exs.getJSONObject(i);
-        if (vp.canProcess(ex)) {
-          duplicateEx(issue, vdkOptions.vlastnik,
-                  vp.asPermonikEx(ex, vdkOptions.vlastnik),
-                  vp.getStart(ex, vdkOptions),
-                  vp.getEnd(ex, vdkOptions));
-          ret.append("exs", ex.getString("b"));
-        } else {
-          ret.append("unprocessables", ex);
+        if (vdkOptions.barcode == null || vdkOptions.barcode.equals(ex.getString("b"))) {
+          System.out.println(ex.getString("b"));
+          System.out.println(vp.canProcess(ex));
+          if (vp.canProcess(ex)) {
+            duplicateEx(issue, vdkOptions.vlastnik, vdkOptions.onSpecialDays,
+                    vp.asPermonikEx(ex, vdkOptions.vlastnik),
+                    vp.getStart(ex, vdkOptions),
+                    vp.getEnd(ex, vdkOptions));
+            ret.append("exs", ex.getString("b"));
+          } else {
+            ret.append("unprocessables", ex);
+          }
         }
       }
 
@@ -728,7 +819,5 @@ public class Indexer {
     }
     return ret;
   }
-  
-  
 
 }

@@ -130,20 +130,29 @@ public class VDKSetProcessor {
         //calculated day
         //depends on periodicity and especial days
         String[] nums = cislo.split("-");
-        int icislo = Integer.parseInt(nums[nums.length - 1]);
-        if (vdkOptions.periodicity == Period.ofDays(1)) {
+        int icislo = Integer.parseInt(nums[0]);
+        if (vdkOptions.periodicity.getDays() == 1) {
 
           SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
           Date d;
           try {
             d = sdf1.parse(year + "0101");
-            LocalDate df = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(icislo);
+            int specialdays = 0;
+            LocalDate dfStart = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate df = dfStart.plusDays(icislo-1);
+    System.out.println(icislo);
+    System.out.println(df.format(DateTimeFormatter.BASIC_ISO_DATE));
+            if(!vdkOptions.onSpecialDays){
+              specialdays = Indexer.getNumSpecialDays(dfStart, df);
+              df = df.plusDays(specialdays);
+            }
+    System.out.println(df.format(DateTimeFormatter.BASIC_ISO_DATE));
             return df.format(DateTimeFormatter.BASIC_ISO_DATE);
           } catch (ParseException ex1) {
             Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
           }
 
-        } else if (vdkOptions.periodicity == Period.ofMonths(1)) {
+        } else if (vdkOptions.periodicity.getMonths() ==1) {
           return year + "0101";
         } else {
           return year + "0101";
@@ -187,19 +196,28 @@ public class VDKSetProcessor {
 
         String[] nums = cislo.split("-");
         int icislo = Integer.parseInt(nums[nums.length - 1]);
-        if (vdkOptions.periodicity == Period.ofDays(1)) {
+        if (vdkOptions.periodicity.getDays() == 1) {
 
           SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
           Date d;
           try {
             d = sdf1.parse(year + "0101");
-            LocalDate df = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(icislo);
+            int specialdays = 0;
+            LocalDate dfStart = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate df = dfStart.plusDays(icislo);
+    System.out.println(icislo);
+    System.out.println(df.format(DateTimeFormatter.BASIC_ISO_DATE));
+            if(!vdkOptions.onSpecialDays){
+              specialdays = Indexer.getNumSpecialDays(dfStart, df);
+              df = df.plusDays(specialdays);
+            }
+    System.out.println(df.format(DateTimeFormatter.BASIC_ISO_DATE));
             return df.format(DateTimeFormatter.BASIC_ISO_DATE);
           } catch (ParseException ex1) {
             Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
           }
 
-        } else if (vdkOptions.periodicity == Period.ofMonths(1)) {
+        } else if (vdkOptions.periodicity.getMonths() == 1) {
           return year + "0101";
         } else {
           return year + "0101";
@@ -320,52 +338,6 @@ public class VDKSetProcessor {
     }
   }
 
-  public static int getSpecialDaysBetweenTwoDates(Date startDate, Date endDate) {
-    int specialDays = 0;
-    try {
-      SolrClient solr = new HttpSolrClient.Builder(Options.getInstance().getString("solrhost", Indexer.DEFAULT_HOST)).build();
-
-      LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-      LocalDate end = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-      for (LocalDate date = start; date.isBefore(end); date = date.plus(Period.ofDays(1))) {
-        //excluding start date
-
-//        startCal.add(Calendar.DAY_OF_MONTH, 1);
-        if (date.getDayOfWeek() == DayOfWeek.SUNDAY || Indexer.isSpecial(solr, date)) {
-          ++specialDays;
-        }
-      }
-    } catch (IOException | JSONException ex) {
-      Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex);
-    }
-
-    return specialDays;
-  }
-
-  public static int getNumSpecialDays(Date startDate, Date endDate) {
-    int specialDays = 0;
-    try {
-      SolrClient solr = new HttpSolrClient.Builder(Options.getInstance().getString("solrhost", Indexer.DEFAULT_HOST)).build();
-
-      LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-      LocalDate end = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-      int daysBetween = (int) ChronoUnit.DAYS.between(end, start);
-      specialDays = daysBetween / 7;
-
-      if (start.getDayOfWeek().getValue() < end.getDayOfWeek().getValue()) {
-        ++specialDays;
-      }
-      
-      specialDays += Indexer.numSpecial(solr, start, end);
-      
-    } catch (IOException | JSONException ex) {
-      Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex);
-    }
-
-    return specialDays;
-  }
 
   public boolean canProcess(JSONObject ex) {
     return ex.has("i");
