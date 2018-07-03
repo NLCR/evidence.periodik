@@ -21,19 +21,23 @@ export class FacetComponent implements OnInit {
   constructor(public state: AppState) { }
 
   ngOnInit() {
-    
-//    this.subscriptions.push(this.state.configSubject.subscribe((state) => {
-//        this.setDays();
-//      }));
-    this.loadFacetItems(); // temporary for facets
   }
   
-  // temporary for facets
-  loadFacetItems() {
-  }
   
   addFilter(field: string, value: string){
+    if (this.isUsed(field, value)){
+      return;
+    }
     this.state.addFilter(field, value);
+  }
+  
+  isUsed(field: string, value: string): boolean{
+    for (let i = 0; i < this.state.filters.length; i++) {
+      if (this.state.filters[i].field === field && this.state.filters[i].value === value) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }

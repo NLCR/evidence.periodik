@@ -64,6 +64,19 @@
       }
 
       .app-row {
+          .mdi {
+          &:before {
+            font-size: 18px;
+          }
+          &.mdi-close {
+            &:before {
+              display: none !important; 
+            }
+          }
+          &.mdi-check {
+            color: $primary-color;
+          }
+        }
         display: table;
         width: 100%;
         a {
@@ -81,6 +94,7 @@
           text-align: right;
           vertical-align: top;
           color: $app-grey-d-1;
+          
         }
         &.selected {
           @extend .app-font-bold;

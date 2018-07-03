@@ -161,6 +161,7 @@ export class AppState {
     return false;
   }
 
+
   hasFacet(field: string): boolean {
     if (!this.searchResults) return false;
     if (!this.searchResults['facet_counts']) return false;

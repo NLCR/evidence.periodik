@@ -73,6 +73,7 @@
             <ng-container>
               <mz-collection-item *ngFor="let item of state.searchResults['facet_counts']['facet_fields'][facet]">
                 <span class="app-row">
+                  <i *ngIf="isUsed(facet, item.name)" mz-icon-mdi [icon]="'check'" [class]="'app-clean-mg'"></i>
                   <a (click)="addFilter(facet, item.name)" *ngIf="facet !== 'stav'">{{item.name}}</a>
                   <a (click)="addFilter(facet, item.name)" *ngIf="facet === 'stav'">{{'record.StavIssue.' + item.name | translate}}</a>
                   <span>
