@@ -4,6 +4,7 @@ import {AppService} from '../../../app.service';
 import {Router} from '@angular/router';
 import {Titul} from '../../../models/titul';
 import {Issue} from '../../../models/issue';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-result-item',
@@ -14,12 +15,19 @@ export class ResultItemComponent implements OnInit {
   @Input() item: Issue;
 
   constructor(
+  private datePipe: DatePipe,
     private router: Router,
     private service: AppService,
     public state: AppState) {}
 
   ngOnInit() {
     this.setTotals();
+  }
+  
+  dayToDate(d: string): string{
+    let date = Date.UTC(parseInt(d.substr(0, 4)), parseInt(d.substr(4,2)), parseInt(d.substr(6,2)));
+    return this.datePipe.transform(date, 'dd/MM/yyyy');
+    
   }
 
   setTotals() {
@@ -35,9 +43,9 @@ export class ResultItemComponent implements OnInit {
         this.item['den_do'] = res['stats']['stats_fields']['den']['max'];
         if (this.item['den_od'] !== null) {
           if (this.item['den_od'] === this.item['den_do']) {
-            this.item['date'] = this.item['den_do'].toString();
+            this.item['date'] = this.dayToDate(this.item['den_od']);
           } else {
-            this.item['date'] = this.item['den_od'].toString() + ' - ' + this.item['den_do'].toString();
+            this.item['date'] = this.dayToDate(this.item['den_od']) + ' - ' + this.dayToDate(this.item['den_do']);
           }
         }
       }

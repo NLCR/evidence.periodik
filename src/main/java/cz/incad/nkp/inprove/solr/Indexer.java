@@ -552,6 +552,7 @@ public class Indexer {
 
   public JSONObject fromJSON(JSONObject json) {
 
+      LOGGER.info(json.toString());
     JSONObject ret = new JSONObject();
     try (SolrClient solr = getClient()) {
       SolrInputDocument idoc = new SolrInputDocument();
@@ -566,10 +567,12 @@ public class Indexer {
             case "stav":
               break;
             case "datum_vydani_den":
+              //idoc.setField("datum_vydani_den", json.getString(name));
+              //idoc.setField("datum_vydani_den", json.getString(name).replaceAll("-", ""));
               break;
             case "datum_vydani":
               idoc.setField("datum_vydani", json.getString(name));
-              idoc.setField("datum_vydani_den", json.getString(name).replaceAll("-", ""));
+              idoc.setField("datum_vydani_den", json.getString(name).replaceAll("-", "").substring(0, 8));
               break;
             //Skip this
             case "titul":
