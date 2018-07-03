@@ -105,6 +105,7 @@
     "meta_nazev": "Titul",
     "date": "Datum",
     "vlastnik": "Vlastnik",
+    "stav": "Stav",
     "mutace": "Mutace",
     "vydani":"Vydani"
   },

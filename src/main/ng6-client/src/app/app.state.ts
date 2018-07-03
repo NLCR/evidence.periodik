@@ -61,7 +61,8 @@ export class AppState {
   public searchParamsChanged: Observable<any> = this._searchParamsSubject.asObservable();
 
   q: string;
-
+  currentPage: number = 0;
+  rows: number= 500;
   public filters: Filter[] = [];
 
   public filterByDate: boolean;
@@ -118,26 +119,36 @@ export class AppState {
   addFilter(field: string, value: string) {
     let f: Filter = new Filter(field, value);
     this.filters.push(f);
+    this.currentPage = 0;
+    this._searchParamsSubject.next(null);
+  }
+  
+  gotoPage(p: number){
+    this.currentPage = p;
     this._searchParamsSubject.next(null);
   }
 
   addDateFilter() {
     this.filterByDate = true;
+    this.currentPage = 0;
     this._searchParamsSubject.next(null);
   }
 
   removeDateFilter() {
     this.filterByDate = false;
+    this.currentPage = 0;
     this._searchParamsSubject.next(null);
   }
 
   removeFilter(idx: number) {
     this.filters.splice(idx, 1);
+    this.currentPage = 0;
     this._searchParamsSubject.next(null);
   }
 
   removeAllFilters() {
     this.filters = [];
+    this.currentPage = 0;
     this._searchParamsSubject.next(null);
   }
 

@@ -107,6 +107,7 @@
     },
     "meta_nazev": "Title",
     "date": "Date",
+    "stav": "State",
     "vlastnik": "Owner",
     "mutace": "Mutation",
     "vydani":"Publication"

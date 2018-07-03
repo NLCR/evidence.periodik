@@ -12,7 +12,9 @@
           (click)="remove(idx)">
       <i mz-icon-mdi [icon]="'check'" [class]="'app-clean-mg'"></i>
       <i mz-icon-mdi [icon]="'close'" [class]="'app-clean-mg'"></i>
-      {{'facet.' + filter.field | translate}} : {{filter.value}}
+      {{'facet.' + filter.field | translate}} : 
+      <span *ngIf="filter.field !== 'stav'">{{filter.value}}</span>
+      <span *ngIf="filter.field === 'stav'">{{'record.StavIssue.' + filter.value | translate}}</span>
     </span>
   </mz-collection-item>
 </mz-collection>
