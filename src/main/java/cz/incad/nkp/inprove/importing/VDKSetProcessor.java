@@ -140,13 +140,11 @@ public class VDKSetProcessor {
             int specialdays = 0;
             LocalDate dfStart = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate df = dfStart.plusDays(icislo-1);
-    System.out.println(icislo);
-    System.out.println(df.format(DateTimeFormatter.BASIC_ISO_DATE));
+            
             if(!vdkOptions.onSpecialDays){
               specialdays = Indexer.getNumSpecialDays(dfStart, df);
               df = df.plusDays(specialdays);
             }
-    System.out.println(df.format(DateTimeFormatter.BASIC_ISO_DATE));
             return df.format(DateTimeFormatter.BASIC_ISO_DATE);
           } catch (ParseException ex1) {
             Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
@@ -205,13 +203,12 @@ public class VDKSetProcessor {
             int specialdays = 0;
             LocalDate dfStart = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate df = dfStart.plusDays(icislo);
-    System.out.println(icislo);
-    System.out.println(df.format(DateTimeFormatter.BASIC_ISO_DATE));
+            
             if(!vdkOptions.onSpecialDays){
               specialdays = Indexer.getNumSpecialDays(dfStart, df);
               df = df.plusDays(specialdays);
             }
-    System.out.println(df.format(DateTimeFormatter.BASIC_ISO_DATE));
+            
             return df.format(DateTimeFormatter.BASIC_ISO_DATE);
           } catch (ParseException ex1) {
             Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);

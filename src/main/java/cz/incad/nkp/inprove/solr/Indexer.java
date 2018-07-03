@@ -74,7 +74,7 @@ public class Indexer {
   }
 
   public static boolean isSpecial(SolrClient solr, LocalDate date) {
-    if(date.getDayOfWeek() == DayOfWeek.SUNDAY){
+    if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
       return true;
     }
     try {
@@ -161,14 +161,12 @@ public class Indexer {
       int daysBetween = (int) ChronoUnit.DAYS.between(start, end);
       specialDays = daysBetween / 7;
 
-      LOGGER.log(Level.INFO, "daysBetween is {0}", daysBetween);
-      LOGGER.log(Level.INFO, "end is {0}", end.getDayOfWeek().getValue());
       if (start.getDayOfWeek().getValue() > end.getDayOfWeek().getValue() || end.getDayOfWeek() == DayOfWeek.SUNDAY) {
         specialDays++;
       }
-      LOGGER.log(Level.INFO, "sundays {0}", specialDays);
+
       List<String> days = Indexer.getSpecialDays(solr, start, end);
-      System.out.println(days);
+
       specialDays += days.size();
 
     } catch (IOException | JSONException ex) {
@@ -273,8 +271,7 @@ public class Indexer {
                 if (!idoc.containsKey("vlastnik") || !idoc.getFieldValues("vlastnik").contains(vlastnik)) {
                   idoc.addField("vlastnik", vlastnik);
                 }
-                
-                
+
                 idoc.setField("state", "auto");
 
                 idoc.setField("cislo", rocnik);
@@ -554,7 +551,7 @@ public class Indexer {
   }
 
   public JSONObject fromJSON(JSONObject json) {
-    
+
     JSONObject ret = new JSONObject();
     try (SolrClient solr = getClient()) {
       SolrInputDocument idoc = new SolrInputDocument();
@@ -585,7 +582,7 @@ public class Indexer {
               for (int i = 0; i < ex.length(); i++) {
                 String vl = ex.getJSONObject(i).getString("vlastnik");
                 idoc.addField("vlastnik", vl);
-                if(ex.getJSONObject(i).optJSONArray("stav")!=null){
+                if (ex.getJSONObject(i).optJSONArray("stav") != null) {
                   for (int j = 0; j < ex.getJSONObject(i).optJSONArray("stav").length(); j++) {
                     idoc.addField("stav", ex.getJSONObject(i).getJSONArray("stav").optString(j));
                   }
@@ -632,14 +629,13 @@ public class Indexer {
               for (int i = 0; i < ex.length(); i++) {
                 String vl = ex.getJSONObject(i).getString("vlastnik");
                 idoc.addField("vlastnik", vl);
-                
-                
-                if(ex.getJSONObject(i).optJSONArray("stav")!=null){
+
+                if (ex.getJSONObject(i).optJSONArray("stav") != null) {
                   for (int j = 0; j < ex.getJSONObject(i).optJSONArray("stav").length(); j++) {
                     idoc.addField("stav", ex.getJSONObject(i).getJSONArray("stav").optString(j));
                   }
                 }
-                
+
                 idoc.addField("exemplare", ex.getJSONObject(i).toString());
               }
               break;
@@ -788,14 +784,13 @@ public class Indexer {
 
           for (int i = 0; i < exs.length(); i++) {
             idoc.addField("exemplare", exs.getJSONObject(i).toString());
-            
-                
-                if(exs.getJSONObject(i).optJSONArray("stav")!=null){
-                  for (int j = 0; j < exs.getJSONObject(i).optJSONArray("stav").length(); j++) {
-                    idoc.addField("stav", exs.getJSONObject(i).getJSONArray("stav").optString(j));
-                  }
-                }
-                
+
+            if (exs.getJSONObject(i).optJSONArray("stav") != null) {
+              for (int j = 0; j < exs.getJSONObject(i).optJSONArray("stav").length(); j++) {
+                idoc.addField("stav", exs.getJSONObject(i).getJSONArray("stav").optString(j));
+              }
+            }
+
           }
 
           idoc.addField("vlastnik", vlastnik);
@@ -819,12 +814,12 @@ public class Indexer {
       VDKSetImportOptions vdkOptions = VDKSetImportOptions.fromJSON(options);
       vp.getFromUrl(url);
       JSONArray exs = vp.exemplarsToJson();
+      LOGGER.log(Level.INFO, "processing {0} exemplars", exs.length());
 
       for (int i = 0; i < exs.length(); i++) {
         JSONObject ex = exs.getJSONObject(i);
-        if (vdkOptions.barcode == null || vdkOptions.barcode.equals(ex.getString("b"))) {
-          System.out.println(ex.getString("b"));
-          System.out.println(vp.canProcess(ex));
+        if (vdkOptions.barcode.equals("") || vdkOptions.barcode.equals(ex.getString("b"))) {
+
           if (vp.canProcess(ex)) {
             duplicateEx(issue, vdkOptions.vlastnik, vdkOptions.onSpecialDays,
                     vp.asPermonikEx(ex, vdkOptions.vlastnik),
