@@ -71,7 +71,7 @@ export class ResultsTableComponent implements OnInit {
     this.addColumn('vydani');
 
 
-    this.displayedColumns.push('pocet_stran', 'datum_vydani', 'add');
+    this.displayedColumns.push('datum_vydani', 'pocet_stran', 'add');
     this.data.forEach((issue: Issue) => {
       if (issue.exemplare) {
         let exs = issue.exemplare;

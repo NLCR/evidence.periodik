@@ -33,14 +33,14 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="pocet_stran">
-      <th mat-header-cell *matHeaderCellDef>pocet stran</th>
-      <td mat-cell *matCellDef="let row" > {{row.pocet_stran}} </td>
-    </ng-container>
-
     <ng-container matColumnDef="datum_vydani">
       <th mat-header-cell *matHeaderCellDef>datum </th>
       <td mat-cell *matCellDef="let row" style="white-space: nowrap;" (click)="onCalendarClick(row)"> {{row.datum_vydani | date: 'dd.MM.yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="pocet_stran">
+      <th mat-header-cell *matHeaderCellDef>pocet stran</th>
+      <td mat-cell *matCellDef="let row" > {{row.pocet_stran}} </td>
     </ng-container>
 
     <ng-container matColumnDef="add">
