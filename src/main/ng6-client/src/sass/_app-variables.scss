@@ -2,7 +2,8 @@
 
 // font path
 $roboto-font-path:                "/assets/fonts/roboto/" !default;
-$mdi-font-path:                   "/assets/fonts" !default;
+//$mdi-font-path:                   "/assets/fonts" !default;
+$mdi-font-path:                   "" !default;
 
 // colors
 $primary-color:                   color("cyan", "base") !default;

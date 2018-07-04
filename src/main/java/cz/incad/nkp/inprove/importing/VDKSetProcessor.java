@@ -112,6 +112,73 @@ public class VDKSetProcessor {
     return ret;
   }
 
+  public int getStartCislo(JSONObject ex, VDKSetImportOptions vdkOptions) {
+
+    String yearstr = ex.optString("y");
+    String[] years = yearstr.split("-");
+    String year = years[0];
+    //Toto je mesic. Muze byt cislo, nebo cislo - cislo
+    String cislo = ex.optString("i", "01");
+    String[] months = new String[]{};
+    String month;
+    switch (vdkOptions.cisloFormat) {
+      case CISLO:
+
+        //cislo is a number from the begining of the year
+        //calculated day
+        //depends on periodicity and especial days
+        String[] nums = cislo.split("-");
+        return Integer.parseInt(nums[0]);
+      case MESIC:
+        months = cislo.split("-");
+        month = String.format("%02d", Integer.parseInt(months[0]));
+        try {
+          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+
+          LocalDate start = sdf1.parse(year + "0101").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+          LocalDate end = sdf1.parse(year + month + "01").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+          int days = (int) ChronoUnit.DAYS.between(start, end);
+          if (!vdkOptions.onSpecialDays) {
+            int specialdays = Indexer.getNumSpecialDays(start, end);
+            days = days - specialdays;
+          }
+
+          return days;
+        } catch (ParseException ex1) {
+          Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+        return 0;
+      case MESIC_SLOVA:
+        months = cislo.split("-");
+        try {
+          VDKSetMonths m = VDKSetMonths.valueOf(months[0]);
+          month = m.num();
+        } catch (IllegalArgumentException iex) {
+          month = "01";
+        }
+        month = String.format("%02d", Integer.parseInt(months[0]));
+        try {
+          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+
+          LocalDate start = sdf1.parse(year + "0101").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+          LocalDate end = sdf1.parse(year + month + "01").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+          int days = (int) ChronoUnit.DAYS.between(start, end);
+          if (!vdkOptions.onSpecialDays) {
+            int specialdays = Indexer.getNumSpecialDays(start, end);
+            days = days - specialdays;
+          }
+
+          return days;
+        } catch (ParseException ex1) {
+          Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+        return 0;
+
+    }
+
+    return 0;
+  }
+
   public String getStart(JSONObject ex, VDKSetImportOptions vdkOptions) {
 
     //Extract and parse date
@@ -139,9 +206,9 @@ public class VDKSetProcessor {
             d = sdf1.parse(year + "0101");
             int specialdays = 0;
             LocalDate dfStart = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate df = dfStart.plusDays(icislo-1);
-            
-            if(!vdkOptions.onSpecialDays){
+            LocalDate df = dfStart.plusDays(icislo - 1);
+
+            if (!vdkOptions.onSpecialDays) {
               specialdays = Indexer.getNumSpecialDays(dfStart, df);
               df = df.plusDays(specialdays);
             }
@@ -150,7 +217,7 @@ public class VDKSetProcessor {
             Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
           }
 
-        } else if (vdkOptions.periodicity.getMonths() ==1) {
+        } else if (vdkOptions.periodicity.getMonths() == 1) {
           return year + "0101";
         } else {
           return year + "0101";
@@ -164,14 +231,15 @@ public class VDKSetProcessor {
         try {
           VDKSetMonths m = VDKSetMonths.valueOf(months[0]);
           month = m.num();
+          return year + month + "01";
         } catch (IllegalArgumentException iex) {
-          month = "01";
+          LOGGER.log(Level.INFO, "invalid value: {0}", months);
         }
-        return year + month + "01";
+        return null;
 
     }
 
-    return years[years.length - 1] + String.format("%02d", Integer.parseInt(cislo)) + "01";
+    return null;
   }
 
   public String getEnd(JSONObject ex, VDKSetImportOptions vdkOptions) {
@@ -203,12 +271,12 @@ public class VDKSetProcessor {
             int specialdays = 0;
             LocalDate dfStart = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate df = dfStart.plusDays(icislo);
-            
-            if(!vdkOptions.onSpecialDays){
+
+            if (!vdkOptions.onSpecialDays) {
               specialdays = Indexer.getNumSpecialDays(dfStart, df);
               df = df.plusDays(specialdays);
             }
-            
+
             return df.format(DateTimeFormatter.BASIC_ISO_DATE);
           } catch (ParseException ex1) {
             Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
@@ -242,11 +310,12 @@ public class VDKSetProcessor {
         try {
           VDKSetMonths m = VDKSetMonths.valueOf(months[months.length - 1]);
           month = m.num();
+          return year + month + "01";
         } catch (IllegalArgumentException iex) {
-          month = "12";
+          LOGGER.log(Level.INFO, "invalid value: {0}", months);
         }
-        return year + month + "01";
-
+        return null;
+        
     }
 
     return year + String.format("%02d", Integer.parseInt(cislo)) + "01";
@@ -258,81 +327,6 @@ public class VDKSetProcessor {
     ret.put("signatura", ex.optString("c"));
     ret.put("vlastnik", vlastnik);
     return ret;
-  }
-
-  /**
-   * *
-   *
-   * @param ex: one exemplar in vdk-set format (field 996)
-   * @param vdkOptions
-   * @param issues
-   */
-  public void exemplarToIDoc(JSONObject ex, VDKSetImportOptions vdkOptions, Map<String, SolrInputDocument> issues) {
-    /*    
-  {
-    "a": "02",
-    "b": "2650327917",                    carovy kod
-    "c": "III 302.100/ 15(2002)LED-ÚN",   signatura
-    "d": "2002 15 1-50",
-    "i": "1-50",                          cislo 
-    "j": "SVK50",
-    "l": "Běžný fond",
-    "m": "ISSBD",
-    "n": "3",
-    "r": "Hlavní sklad-kostel",
-    "s": "P",
-    "u": "001590",
-    "v": "15",                            rocnik
-    "w": "000502478",
-    "y": "2002"                           rok
-  }
-     */
-
-    //Extract and parse date
-    //Toto je rok. Muze byt cislo, nebo cislo - cislo
-    String yearstr = ex.optString("y");
-    String[] years = yearstr.split("-");
-
-    //Toto je mesic. Muze byt cislo, nebo cislo - cislo
-    String cislo = ex.optString("i");
-    String[] months = new String[]{};
-    switch (vdkOptions.cisloFormat) {
-      case CISLO:
-        break;
-      case MESIC:
-        months = new String[]{cislo};
-        break;
-      case MESIC_SLOVA:
-        months = cislo.split("-");
-        break;
-
-    }
-
-    for (String year : years) {
-      for (String month : months) {
-        String vydani = year + String.format("%02d", Integer.parseInt(month)) + "01";
-        //System.out.println(vydani);
-        SolrInputDocument idoc;
-        if (issues.containsKey(vydani)) {
-          idoc = issues.get(vydani);
-        } else {
-          idoc = new SolrInputDocument();
-          idoc.setField("state", "auto");
-          idoc.setField("rocnik", ex.optString("v"));
-
-          issues.put(vydani, idoc);
-        }
-
-        //Add fields based on ex
-        JSONObject exemplare = new JSONObject();
-        exemplare.put("carovy_kod", ex.optString("b"));
-        exemplare.put("signatura", ex.optString("c"));
-
-        idoc.addField("exemplare", exemplare.toString());
-
-        //idoc.addField("exemplare", ex.toString());
-      }
-    }
   }
 
 

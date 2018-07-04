@@ -17,4 +17,15 @@
       <span *ngIf="filter.field === 'stav'">{{'record.StavIssue.' + filter.value | translate}}</span>
     </span>
   </mz-collection-item>
+  
+  <mz-collection-item *ngIf="state.filterByDate">
+    <span class="app-cursor-pointer" mz-tooltip 
+          [tooltip]="'facet.tooltip.delete_this_filter' | translate" [position]="'top'"
+          (click)="state.removeDateFilter()">
+      <i mz-icon-mdi [icon]="'check'" [class]="'app-clean-mg'"></i>
+      <i mz-icon-mdi [icon]="'close'" [class]="'app-clean-mg'"></i>
+      {{'facet.date' | translate}} : 
+      <span>{{start_year}} - {{end_year}}</span>
+    </span>
+  </mz-collection-item>
 </mz-collection>

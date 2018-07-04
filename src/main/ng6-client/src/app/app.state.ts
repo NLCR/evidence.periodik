@@ -135,6 +135,7 @@ export class AppState {
   }
 
   removeDateFilter() {
+    console.log('uuu');
     this.filterByDate = false;
     this.currentPage = 0;
     this._searchParamsSubject.next(null);
