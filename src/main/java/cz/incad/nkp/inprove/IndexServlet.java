@@ -144,6 +144,7 @@ public class IndexServlet extends HttpServlet {
           indexer.duplicateEx(new JSONObject(req.getParameter("issue")),
                   req.getParameter("vlastnik"),
                   Boolean.parseBoolean(req.getParameter("onspecial")),
+                  Integer.parseInt(req.getParameter("cislo")),
                   new JSONObject(req.getParameter("exemplar")),
                   req.getParameter("start"),
                   req.getParameter("end"));
@@ -235,6 +236,28 @@ public class IndexServlet extends HttpServlet {
           Indexer indexer = new Indexer();
           json.put("added",
                   indexer.addExFromVdkSet(
+                          new JSONObject(req.getParameter("issue")),
+                          req.getParameter("url"),
+                          new JSONObject(req.getParameter("options")))
+          );
+        } catch (Exception ex) {
+          LOGGER.log(Level.SEVERE, null, ex);
+          json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
+    COLLECT_VDK_SET {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          json.put("added",
+                  indexer.collectExFromVdkSet(
                           new JSONObject(req.getParameter("issue")),
                           req.getParameter("url"),
                           new JSONObject(req.getParameter("options")))

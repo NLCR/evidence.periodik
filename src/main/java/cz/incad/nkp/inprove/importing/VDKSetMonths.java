@@ -16,6 +16,7 @@ public enum VDKSetMonths {
   KVĚ("05"),
   KVĚT("05"),
   ČER("06"),
+  ČVN("06"),
   ČVC("07"),
   SRP("08"),
   ZAR("09"),

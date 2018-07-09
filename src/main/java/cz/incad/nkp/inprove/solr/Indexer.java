@@ -733,4 +733,40 @@ public class Indexer {
     return ret;
   }
 
+  public JSONObject collectExFromVdkSet(JSONObject issue, String url, JSONObject options) {
+    JSONObject ret = new JSONObject();
+    try {
+      VDKSetProcessor vp = new VDKSetProcessor();
+      VDKSetImportOptions vdkOptions = VDKSetImportOptions.fromJSON(options);
+      vp.getFromUrl(url);
+      JSONArray exs = vp.exemplarsToJson();
+      LOGGER.log(Level.INFO, "processing {0} exemplars", exs.length());
+
+      for (int i = 0; i < exs.length(); i++) {
+        JSONObject ex = exs.getJSONObject(i);
+        if (vdkOptions.barcode.equals("") || vdkOptions.barcode.equals(ex.getString("b"))) {
+
+          if (vp.canProcess(ex)) {
+            JSONObject vdk = new JSONObject();
+            vdk.put("orig", ex);
+            vdk.put("permonik", vp.asPermonikEx(ex, vdkOptions.vlastnik));
+            vdk.put("computed", new JSONObject()
+                    .put("year", ex.optString("y"))
+                    .put("volume", ex.optString("v"))
+                    .put("start_cislo", vp.getStartCislo(ex, vdkOptions))
+                    .put("start_date", vp.getStart(ex, vdkOptions))
+                    .put("end_date", vp.getEnd(ex, vdkOptions)));
+            ret.append("exs", vdk);
+          } else {
+            ret.append("unprocessables", ex);
+          }
+        }
+      }
+    } catch (IOException | SAXException ex) {
+      LOGGER.log(Level.SEVERE, null, ex);
+      ret.put("error", ex);
+    }
+    return ret;
+  }
+
 }

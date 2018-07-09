@@ -62,6 +62,8 @@ public class VDKSetProcessor {
   boolean nsAware = false;
   DocumentBuilder builder;
 
+  SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+
   public VDKSetProcessor() {
 
     try {
@@ -133,7 +135,6 @@ public class VDKSetProcessor {
         months = cislo.split("-");
         month = String.format("%02d", Integer.parseInt(months[0]));
         try {
-          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
 
           LocalDate start = sdf1.parse(year + "0101").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
           LocalDate end = sdf1.parse(year + month + "01").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -147,7 +148,7 @@ public class VDKSetProcessor {
         } catch (ParseException ex1) {
           Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
         }
-        return 0;
+        return -1;
       case MESIC_SLOVA:
         months = cislo.split("-");
         try {
@@ -156,9 +157,8 @@ public class VDKSetProcessor {
         } catch (IllegalArgumentException iex) {
           month = "01";
         }
-        month = String.format("%02d", Integer.parseInt(months[0]));
         try {
-          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+          month = String.format("%02d", Integer.parseInt(month));
 
           LocalDate start = sdf1.parse(year + "0101").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
           LocalDate end = sdf1.parse(year + month + "01").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -168,11 +168,11 @@ public class VDKSetProcessor {
             days = days - specialdays;
           }
 
-          return days;
+          return days + 1;
         } catch (ParseException ex1) {
-          Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
+          Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.WARNING, ex1.toString());
         }
-        return 0;
+        return -1;
 
     }
 
@@ -200,7 +200,6 @@ public class VDKSetProcessor {
         int icislo = Integer.parseInt(nums[0]);
         if (vdkOptions.periodicity.getDays() == 1) {
 
-          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
           Date d;
           try {
             d = sdf1.parse(year + "0101");
@@ -214,7 +213,7 @@ public class VDKSetProcessor {
             }
             return df.format(DateTimeFormatter.BASIC_ISO_DATE);
           } catch (ParseException ex1) {
-            Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
+            Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.WARNING, ex1.toString());
           }
 
         } else if (vdkOptions.periodicity.getMonths() == 1) {
@@ -264,7 +263,6 @@ public class VDKSetProcessor {
         int icislo = Integer.parseInt(nums[nums.length - 1]);
         if (vdkOptions.periodicity.getDays() == 1) {
 
-          SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
           Date d;
           try {
             d = sdf1.parse(year + "0101");
@@ -310,12 +308,14 @@ public class VDKSetProcessor {
         try {
           VDKSetMonths m = VDKSetMonths.valueOf(months[months.length - 1]);
           month = m.num();
-          return year + month + "01";
-        } catch (IllegalArgumentException iex) {
-          LOGGER.log(Level.INFO, "invalid value: {0}", months);
+          Date d = sdf1.parse(year + month + "01");
+          LocalDate df = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+          return df.plusMonths(1).minusDays(1).format(DateTimeFormatter.BASIC_ISO_DATE);
+        } catch (ParseException | IllegalArgumentException iex) {
+          LOGGER.log(Level.INFO, "invalid value: {0}", months[months.length - 1]);
         }
         return null;
-        
+
     }
 
     return year + String.format("%02d", Integer.parseInt(cislo)) + "01";
@@ -328,7 +328,6 @@ public class VDKSetProcessor {
     ret.put("vlastnik", vlastnik);
     return ret;
   }
-
 
   public boolean canProcess(JSONObject ex) {
     return ex.has("i");

@@ -215,6 +215,18 @@ export class AppService {
       
     return this.http.get(url, {params: params});
   }
+  
+  prepareVdkEx(issue: Issue, urlvdk: string, options: any){
+    
+    var url = this.state.config['context'] + 'index';
+    let params: HttpParams = new HttpParams()
+      .set('action', 'COLLECT_VDK_SET')
+      .set('issue', JSON.stringify(issue))
+      .set('options', JSON.stringify(options))
+      .set('url', urlvdk);
+      
+    return this.http.get(url, {params: params});
+  }
 
   saveCurrentIssue() {
     return this.saveIssue(this.state.currentIssue);
