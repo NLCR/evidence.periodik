@@ -1,41 +1,117 @@
 <mz-modal [fixedFooter]="true">
   <mz-modal-header>
-    {{'Add exemplars from vdk-set record' | translate}}
+    {{'Add exemplars from vdk-set record' | translate}}. {{state.currentIssue.nazev}}
   </mz-modal-header>
-  
+
   <mz-modal-content>
-    <div>
-        ISSUE: {{state.currentIssue.nazev}}
-    </div>
-    <div>
-      <mz-input-container>
-        <input mz-input [label]="'record.ownership' | translate" [id]="'vlastnik'" [name]="'vlastnik'" [(ngModel)]="vlastnik" type="text">
-      </mz-input-container>
-      <mz-input-container>
-        <input mz-input [label]="'URL' | translate" [id]="'url'" [name]="'url'" [(ngModel)]="url" type="text">
-      </mz-input-container>
-      <mz-select-container>
-        <select mz-select [id]="'format'" [name]="'format'" [(ngModel)]="format">
-          <option *ngFor="let f of state.vdkFormats" [value]="f">{{'formatvdk.' + f | translate}}</option>
-        </select>
-      </mz-select-container>
-    <mz-checkbox-container>
-      <input mz-checkbox
-             [(ngModel)]="onspecial"
-             [label]="'modal.on_special_days' | translate"
-             id="onSpecialDays"
-             type="checkbox" />
-    </mz-checkbox-container>
-      <mz-input-container>
-        <input mz-input [label]="'record.barcode' | translate" [id]="'barcode'" [name]="'barcode'" [(ngModel)]="barcode" type="text">
-      </mz-input-container>
+    <mz-input-container>
+      <input mz-input [label]="'URL' | translate" [id]="'url'" [name]="'url'" [(ngModel)]="url" type="text">
+    </mz-input-container>
+
+    <div class="row">
+      <div class="col s2">
+        <mz-input-container>
+          <input mz-input [label]="'record.ownership' | translate" [id]="'vlastnik'" [name]="'vlastnik'" [(ngModel)]="vlastnik" type="text">
+        </mz-input-container>
+      </div>
+      <div class="col s4">
+        <mz-select-container>
+          <select mz-select [id]="'format'" [name]="'format'" [(ngModel)]="format" [label]="'Format pod pole \'i\''">
+                  <option *ngFor="let f of state.vdkFormats" [value]="f">{{'formatvdk.' + f | translate}}</option>
+          </select>
+        </mz-select-container>
+      </div>
+      <div class="col s6">
+        <mz-checkbox-container>
+          <input mz-checkbox
+                 [(ngModel)]="onspecial"
+                 [label]="'modal.on_special_days' | translate"
+                 id="onSpecialDays"
+                 type="checkbox" />
+        </mz-checkbox-container>
+        <!--
+        <mz-input-container>
+          <input mz-input [label]="'record.barcode' | translate" [id]="'barcode'" [name]="'barcode'" [(ngModel)]="barcode" type="text">
+        </mz-input-container>
+        -->
+
+      </div>
     </div>  
-      
-  </mz-modal-content>
-  
-  <mz-modal-footer>
-      <button mz-button [flat]="true" (click)="ok()">OK</button>
-      <button mz-button [flat]="true" (click)="prepare()">Prepare</button>
-      <button mz-button [flat]="true" mz-modal-close>{{'button.close' | translate}}</button>
-  </mz-modal-footer>
+    <div class="mat-elevation-z8" *ngIf="prepared" >
+      <table mat-table [dataSource]="dataSource" >
+
+             <!-- ID Column -->
+             <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row"> {{row.permonik.carovy_kod}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="year">
+          <th mat-header-cell *matHeaderCellDef><mz-input-container>
+            <input mz-input [label]="'year' | translate" [id]="'yf'" [name]="'yf'" 
+                   [(ngModel)]="year_filter" type="text"
+                   (keyup.enter)="filter()" />
+          </mz-input-container></th>
+          <td mat-cell *matCellDef="let row" >{{row.add.year}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="volume">
+          <th mat-header-cell *matHeaderCellDef>{{'volume' | translate}}</th>
+          <td mat-cell *matCellDef="let row" >{{row.add.volume}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="start">
+          <th mat-header-cell *matHeaderCellDef>{{'start' | translate}}</th>
+          <td mat-cell *matCellDef="let row" >{{row.add.start_cislo}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="od">
+          <th mat-header-cell *matHeaderCellDef>Od</th>
+          <td mat-cell *matCellDef="let row" >
+              <input [(ngModel)]="row.add.start_date" type="text" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="do">
+          <th mat-header-cell *matHeaderCellDef>Do</th>
+          <td mat-cell *matCellDef="let row" >
+              <input [(ngModel)]="row.add.end_date" type="text" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="add">
+          <th mat-header-cell *matHeaderCellDef >
+        <mz-checkbox-container>
+              <input mz-checkbox
+                 (change)="toggleSelection()"
+                 [(ngModel)]="selection"
+                 [id]="'selection'"
+                 [indeterminate]="selection == null"
+                 type="checkbox" />
+                 </mz-checkbox-container>
+          </th>
+          <td mat-cell *matCellDef="let row" >
+        <mz-checkbox-container>
+          <input mz-checkbox
+                 (change)="checkSelection()"
+                 [(ngModel)]="row['selected']"
+                 [id]="'add_' + row.permonik.carovy_kod"
+                 type="checkbox" />
+        </mz-checkbox-container>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; let idx = index; columns: displayedColumns;">
+    </tr>
+  </table>
+
+</div>
+</mz-modal-content>
+
+<mz-modal-footer>
+  <button *ngIf="prepared" mz-button [flat]="true" (click)="ok()">OK</button>
+  <button mz-button [flat]="true" (click)="prepare()">Prepare</button>
+  <button mz-button [flat]="true" mz-modal-close>{{'button.close' | translate}}</button>
+</mz-modal-footer>
 </mz-modal>

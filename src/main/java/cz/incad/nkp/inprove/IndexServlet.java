@@ -256,11 +256,10 @@ public class IndexServlet extends HttpServlet {
         JSONObject json = new JSONObject();
         try {
           Indexer indexer = new Indexer();
-          json.put("added",
-                  indexer.collectExFromVdkSet(
+          json = indexer.collectExFromVdkSet(
                           new JSONObject(req.getParameter("issue")),
                           req.getParameter("url"),
-                          new JSONObject(req.getParameter("options")))
+                          new JSONObject(req.getParameter("options"))
           );
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);

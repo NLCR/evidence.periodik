@@ -29,6 +29,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
   
   duplicate_start_date: string;
   duplicate_end_date: string;
+  duplicate_start_cislo: number;
   
   saved: boolean = false;
   onspecial: boolean;
@@ -52,9 +53,11 @@ export class AddExemplarDialogComponent extends MzBaseModal {
         });
       break;
       case 'duplicate':
-      console.log(this.issue, this.exemplar.vlastnik, this.exemplar, this.duplicate_start_date, this.duplicate_end_date);
+      //console.log(this.issue, this.exemplar.vlastnik, this.exemplar, this.duplicate_start_date, this.duplicate_end_date);
       
-        this.service.duplicateExemplar(this.issue, this.exemplar.vlastnik, this.onspecial,  this.exemplar, this.duplicate_start_date, this.duplicate_end_date).subscribe(res => {
+        this.service.duplicateExemplar(this.issue, this.exemplar.vlastnik,
+          this.duplicate_start_cislo,
+          this.onspecial,  this.exemplar, this.duplicate_start_date, this.duplicate_end_date).subscribe(res => {
           //console.log(res);
           this.saved = true;
           this.modalComponent.closeModal();

@@ -189,7 +189,7 @@ export class AppService {
     return this.http.get(url, {params: params});
   }
   
-  duplicateExemplar(issue: Issue, vlastnik: string, onspecial: boolean, exemplar: Exemplar, start: string, end: string){
+  duplicateExemplar(issue: Issue, vlastnik: string, start_cislo: number, onspecial: boolean, exemplar: Exemplar, start: string, end: string){
     
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
@@ -197,6 +197,7 @@ export class AppService {
       .set('issue', JSON.stringify(issue))
       .set('exemplar', JSON.stringify(exemplar))
       .set('vlastnik', vlastnik)
+      .set('cislo', start_cislo.toString())
       .set('onspecial', onspecial.toString())
       .set('start', start)
       .set('end', end);

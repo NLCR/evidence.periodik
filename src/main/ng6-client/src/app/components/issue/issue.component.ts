@@ -59,7 +59,7 @@ export class IssueComponent implements OnInit {
     } else {
       this.state.currentIssue = new Issue();
     }
-      console.log(this.state.currentIssue);
+    //  console.log(this.state.currentIssue);
   }
 
   setTitul() {

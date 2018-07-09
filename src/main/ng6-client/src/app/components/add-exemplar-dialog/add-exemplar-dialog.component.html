@@ -41,6 +41,9 @@
                  id="end_date" name="end_date"
                  type="text" />
         </mz-datepicker-container>
+        <mz-input-container>
+          <input mz-input [label]="'record.number' | translate" [id]="'start_cislo'" [name]="'start_cislo'" [(ngModel)]="duplicate_start_cislo" type="number">
+        </mz-input-container>
         
     <mz-checkbox-container>
       <input mz-checkbox

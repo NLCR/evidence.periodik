@@ -14,9 +14,9 @@
     "placeholder": "Hledání v evidenci periodik"
   },
   "formatvdk":{
-    "CISLO": "Cislo", 
-    "MESIC": "mesic",
-    "MESIC_SLOVA":"Mesic slovy"
+    "CISLO": "Číslo (3)", 
+    "MESIC": "Mesic(e) číslem(y) (1-155)",
+    "MESIC_SLOVA":"Mesic(e) slovy (LED-DUB)"
   },
   "record": {
     "meta_title": "Meta název",
@@ -63,7 +63,8 @@
       "P1M": "Mesicnik",
       "P6M": "Dvakrat za rok"
     },
-    "year": "Ročník",
+    "year": "Rok",
+    "volume": "Ročník",
     "number": "Číslo",
     "second_number": "Druhé číslo",
     "state_desc": "Stav - popis",

@@ -750,7 +750,7 @@ public class Indexer {
             JSONObject vdk = new JSONObject();
             vdk.put("orig", ex);
             vdk.put("permonik", vp.asPermonikEx(ex, vdkOptions.vlastnik));
-            vdk.put("computed", new JSONObject()
+            vdk.put("add", new JSONObject()
                     .put("year", ex.optString("y"))
                     .put("volume", ex.optString("v"))
                     .put("start_cislo", vp.getStartCislo(ex, vdkOptions))

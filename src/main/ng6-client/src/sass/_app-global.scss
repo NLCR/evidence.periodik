@@ -94,6 +94,17 @@ tr.mat-row td{
   padding: 3px !important;
 }
 
+tr.mat-row td input, tr.mat-row td p {
+  border-bottom: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  height: 1.2em !important;
+}
+tr.mat-row td textarea:focus {
+  border-bottom: none!important;
+  box-shadow: none!important;
+}
+
 .app-rotate {
   font-size: .85em;
   height: 30px !important;
