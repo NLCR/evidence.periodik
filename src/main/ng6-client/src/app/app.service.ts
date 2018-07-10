@@ -178,6 +178,11 @@ export class AppService {
     return this.http.get(url, {params: params});
   }
 
+  
+  
+  isIssueValid(issue: Issue){
+    return false;
+  }
 
   saveIssue(issue: Issue) {
     console.log(issue);

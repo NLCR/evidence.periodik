@@ -83,6 +83,7 @@ public class VDKSetProcessor {
     URL url = new URL(urlString);
     InputStream stream = url.openStream();
     doc = builder.parse(stream);
+    stream.close();
   }
 
   public void getFromString(String xmlstr) throws SAXException, IOException {

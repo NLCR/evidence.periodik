@@ -51,14 +51,13 @@ public class ForwardServlet extends HttpServlet {
           throws ServletException, IOException {
     try {
 
-//      response.addHeader("Access-Control-Allow-Origin", "http://localhost:4200");
       response.setContentType("application/json;charset=UTF-8");
       Options opts = Options.getInstance();
       String raw = request.getRequestURI();
       raw = raw.substring(raw.indexOf("api") + 3);
       String solrhost = opts.getString("api.point", "http://localhost:8080/search/api/v5.0")
               + raw;
-      LOGGER.log(Level.INFO, "requesting url {0}", solrhost);
+      LOGGER.log(Level.FINE, "requesting url {0}", solrhost);
       Map<String, String> reqProps = new HashMap<>();
       reqProps.put("Content-Type", "application/json");
       reqProps.put("Accept", "application/json");

@@ -67,7 +67,7 @@ public class SearchServlet extends HttpServlet {
               + core  + handler + "?" + request.getQueryString();
       
 
-        LOGGER.log(Level.INFO, "requesting url {0}", solrhost);
+        LOGGER.log(Level.FINE, "requesting url {0}", solrhost);
         Map<String, String> reqProps = new HashMap<>();
         reqProps.put("Content-Type", "application/json");
         reqProps.put("Accept", "application/json");

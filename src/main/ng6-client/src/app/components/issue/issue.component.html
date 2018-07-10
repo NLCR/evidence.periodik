@@ -59,15 +59,16 @@
         <input mz-input [label]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" [(ngModel)]="state.currentIssue.pocet_stran" type="text">
       </mz-input-container>
       <mz-input-container>
-        <input mz-input [label]="'record.volume' | translate" id="rocnik" name="rocnik" [(ngModel)]="state.currentIssue.rocnik" type="text">
+        <input mz-input [label]="'record.volume' | translate" id="rocnik" name="rocnik" [(ngModel)]="state.currentIssue.rocnik" 
+               min="1" step="1" type="number"><span class="validity"></span>
       </mz-input-container>
       <mz-input-container>
-        <input mz-input [label]="'record.number' | translate" id="cislo" name="cislo" [(ngModel)]="state.currentIssue.cislo" type="text">
+        <input mz-input [label]="'record.number' | translate" id="cislo" name="cislo" [(ngModel)]="state.currentIssue.cislo" 
+               min="1" step="1" type="number"><span class="validity"></span>
       </mz-input-container>
       <mz-input-container>
         <input mz-input [label]="'record.second_number' | translate" id="druhe_cislo" name="druhe_cislo" [(ngModel)]="state.currentIssue.druhe_cislo" type="text">
       </mz-input-container>
-
       <mz-input-container>
         <input mz-input [label]="'record.id_bib_record' | translate" id="id_bib_zaznamu" name="id_bib_zaznamu" [(ngModel)]="state.currentIssue.id_bib_zaznamu" type="text">
       </mz-input-container>
