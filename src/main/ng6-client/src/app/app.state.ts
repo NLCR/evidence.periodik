@@ -135,7 +135,6 @@ export class AppState {
   }
 
   removeDateFilter() {
-    console.log('uuu');
     this.filterByDate = false;
     this.currentPage = 0;
     this._searchParamsSubject.next(null);
@@ -148,9 +147,24 @@ export class AppState {
   }
 
   removeAllFilters() {
-    this.filters = [];
-    this.currentPage = 0;
+    this.reset();
     this._searchParamsSubject.next(null);
+  }
+  
+  removeQuery(){
+    this.q = '';
+    this._searchParamsSubject.next(null);
+  }
+  
+  fireSearch(){
+    this._searchParamsSubject.next(null);
+  }
+  
+  reset(){
+    this.q = '';
+    this.filters = [];
+    this.filterByDate = false;
+    this.currentPage = 0;
   }
 
   hasFilter(field: string): boolean {

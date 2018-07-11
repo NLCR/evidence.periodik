@@ -268,7 +268,8 @@ export class AppService {
   }
 
   search() {
-    var url = this.state.config['context'] + 'search/issue/select';
+    console.log('kkk')
+    var url = this.state.config['context'] + 'search/issue/permonik';
     let params: HttpParams = new HttpParams()
       .set('q', this.state.q ? this.state.q : '*')
       .set('wt', 'json')

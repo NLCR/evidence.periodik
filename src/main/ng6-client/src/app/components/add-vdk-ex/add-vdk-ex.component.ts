@@ -18,9 +18,14 @@ export class AddVdkExComponent extends MzBaseModal {
 
   public issue: Issue;
 
-  public url: string = 'https://aleph.vkol.cz/OAI?verb=GetRecord&identifier=oai:aleph.vkol.cz:SVK01_VKOLOAI-000315244&metadataPrefix=marc21';
-  public format: string = 'MESIC_SLOVA';
-  public vlastnik: string = 'VKOL';
+//  public url: string = 'https://aleph.vkol.cz/OAI?verb=GetRecord&identifier=oai:aleph.vkol.cz:SVK01_VKOLOAI-000315244&metadataPrefix=marc21';
+//  public format: string = 'MESIC_SLOVA';
+//  public vlastnik: string = 'VKOL';
+  
+  public url: string = 'http://vdk.nkp.cz/vdk/original?id=oai:aleph.mzk.cz:MZK01-000244261&wt=xml';
+  public format: string = 'CISLO';
+  public vlastnik: string = 'MZK';
+  
   public barcode: string;
   public onspecial: boolean = false;
 
@@ -122,5 +127,11 @@ export class AddVdkExComponent extends MzBaseModal {
 
   stringify(ex: any): string {
     return JSON.stringify(ex);
+  }
+  
+  hasError(ex: any): boolean{
+    return ex['add']['start_cislo'] === '-1' ||
+           !ex['add'].hasOwnProperty('start_date') ||
+           !ex['add'].hasOwnProperty('end_date') ;
   }
 }

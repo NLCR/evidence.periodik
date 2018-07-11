@@ -71,7 +71,7 @@ export class ResultsTableComponent implements OnInit {
     this.addColumn('vydani');
 
 
-    this.displayedColumns.push('datum_vydani', 'pocet_stran', 'add');
+    this.displayedColumns.push('datum_vydani', 'cislo', 'pocet_stran', 'add');
     this.data.forEach((issue: Issue) => {
       if (issue.exemplare) {
         let exs = issue.exemplare;
@@ -103,10 +103,11 @@ export class ResultsTableComponent implements OnInit {
   }
 
   cellColor(row: Issue, vlastnik: string): string {
-    
-    for(let i = 0; i<row.exemplare.length; i++){
-      if(row.exemplare[i]['vlastnik'] === vlastnik){
-        return this.colorByVlastnik(vlastnik);
+    if(row.hasOwnProperty('exemplare')){
+      for(let i = 0; i<row.exemplare.length; i++){
+        if(row.exemplare[i]['vlastnik'] === vlastnik){
+          return this.colorByVlastnik(vlastnik);
+        }
       }
     }
     return '';

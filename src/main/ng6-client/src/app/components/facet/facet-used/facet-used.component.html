@@ -6,6 +6,16 @@
        (click)="removeAll()"></i>
   </mz-collection-header>
   
+  <mz-collection-item *ngIf="state.q && state.q !== ''">
+    <span class="app-cursor-pointer" mz-tooltip 
+          [tooltip]="'facet.tooltip.delete_this_filter' | translate" [position]="'top'"
+          (click)="state.removeQuery()">
+      <i mz-icon-mdi [icon]="'check'" [class]="'app-clean-mg'"></i>
+      <i mz-icon-mdi [icon]="'close'" [class]="'app-clean-mg'"></i> 
+      <span>{{state.q}}</span>
+    </span>
+  </mz-collection-item>
+  
   <mz-collection-item *ngFor="let filter of state.filters; let idx= index">
     <span class="app-cursor-pointer" mz-tooltip 
           [tooltip]="'facet.tooltip.delete_this_filter' | translate" [position]="'top'"
