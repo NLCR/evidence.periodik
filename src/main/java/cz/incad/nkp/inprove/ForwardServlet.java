@@ -64,7 +64,7 @@ public class ForwardServlet extends HttpServlet {
       InputStream inputStream = RESTHelper.inputStream(solrhost, reqProps);
       org.apache.commons.io.IOUtils.copy(inputStream, response.getOutputStream());
       //out.print(org.apache.commons.io.IOUtils.toString(inputStream, "UTF8"));
-
+      //inputStream.close();
     } catch (IOException ex) {
       LOGGER.log(Level.SEVERE, null, ex);
     } catch (JSONException ex) {

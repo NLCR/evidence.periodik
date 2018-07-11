@@ -35,8 +35,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
+//import org.apache.solr.client.solrj.SolrClient;
+//import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.common.SolrInputDocument;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -115,7 +115,7 @@ public class VDKSetProcessor {
     return ret;
   }
 
-  public int getStartCislo(JSONObject ex, VDKSetImportOptions vdkOptions) {
+  public int getStartCislo_(JSONObject ex, VDKSetImportOptions vdkOptions) {
 
     String yearstr = ex.optString("y");
     String[] years = yearstr.split("-");
@@ -131,7 +131,12 @@ public class VDKSetProcessor {
         //calculated day
         //depends on periodicity and especial days
         String[] nums = cislo.split("-");
-        return Integer.parseInt(nums[0]);
+        try {
+          return Integer.parseInt(nums[0]);
+        } catch (Exception ex1) {
+          LOGGER.log(Level.SEVERE, "Can't parse i as CISLO {0}", nums[0]);
+          return -1;
+        }
       case MESIC:
         months = cislo.split("-");
         month = String.format("%02d", Integer.parseInt(months[0]));
@@ -198,29 +203,35 @@ public class VDKSetProcessor {
         //calculated day
         //depends on periodicity and especial days
         String[] nums = cislo.split("-");
-        int icislo = Integer.parseInt(nums[0]);
-        if (vdkOptions.periodicity.getDays() == 1) {
+        try {
+          int icislo = Integer.parseInt(nums[0]);
+          if (vdkOptions.periodicity.getDays() == 1) {
 
-          Date d;
-          try {
-            d = sdf1.parse(year + "0101");
-            int specialdays = 0;
-            LocalDate dfStart = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate df = dfStart.plusDays(icislo - 1);
+            Date d;
+            try {
+              d = sdf1.parse(year + "0101");
+              int specialdays = 0;
+              LocalDate dfStart = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+              LocalDate df = dfStart.plusDays(icislo - 1);
 
-            if (!vdkOptions.onSpecialDays) {
-              specialdays = Indexer.getNumSpecialDays(dfStart, df);
-              df = df.plusDays(specialdays);
+              if (!vdkOptions.onSpecialDays) {
+                specialdays = Indexer.getNumSpecialDays(dfStart, df);
+                df = df.plusDays(specialdays);
+              }
+              return df.format(DateTimeFormatter.BASIC_ISO_DATE);
+            } catch (ParseException ex1) {
+              Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.WARNING, ex1.toString());
             }
-            return df.format(DateTimeFormatter.BASIC_ISO_DATE);
-          } catch (ParseException ex1) {
-            Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.WARNING, ex1.toString());
+
+          } else if (vdkOptions.periodicity.getMonths() == 1) {
+            return year + "0101";
+          } else {
+            return year + "0101";
           }
 
-        } else if (vdkOptions.periodicity.getMonths() == 1) {
-          return year + "0101";
-        } else {
-          return year + "0101";
+        } catch (Exception ex1) {
+          LOGGER.log(Level.SEVERE, "Can't parse i as CISLO {0}", nums[0]);
+          return null;
         }
       case MESIC:
         months = cislo.split("-");
@@ -261,32 +272,37 @@ public class VDKSetProcessor {
         //depends on periodicity and especial days
 
         String[] nums = cislo.split("-");
-        int icislo = Integer.parseInt(nums[nums.length - 1]);
-        if (vdkOptions.periodicity.getDays() == 1) {
+        try {
+          int icislo = Integer.parseInt(nums[nums.length - 1]);
+          if (vdkOptions.periodicity.getDays() == 1) {
 
-          Date d;
-          try {
-            d = sdf1.parse(year + "0101");
-            int specialdays = 0;
-            LocalDate dfStart = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate df = dfStart.plusDays(icislo);
+            Date d;
+            try {
+              d = sdf1.parse(year + "0101");
+              int specialdays = 0;
+              LocalDate dfStart = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+              LocalDate df = dfStart.plusDays(icislo);
 
-            if (!vdkOptions.onSpecialDays) {
-              specialdays = Indexer.getNumSpecialDays(dfStart, df);
-              df = df.plusDays(specialdays);
+              if (!vdkOptions.onSpecialDays) {
+                specialdays = Indexer.getNumSpecialDays(dfStart, df);
+                df = df.plusDays(specialdays);
+              }
+
+              return df.format(DateTimeFormatter.BASIC_ISO_DATE);
+            } catch (ParseException ex1) {
+              Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
             }
 
-            return df.format(DateTimeFormatter.BASIC_ISO_DATE);
-          } catch (ParseException ex1) {
-            Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex1);
+          } else if (vdkOptions.periodicity.getMonths() == 1) {
+            return year + "0101";
+          } else {
+            return year + "0101";
           }
 
-        } else if (vdkOptions.periodicity.getMonths() == 1) {
-          return year + "0101";
-        } else {
-          return year + "0101";
+        } catch (Exception ex1) {
+          LOGGER.log(Level.SEVERE, "Can't parse i as CISLO {0}", nums[0]);
+          return null;
         }
-
       case MESIC:
         months = cislo.split("-");
         if (months.length > 1) {

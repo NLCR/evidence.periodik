@@ -144,7 +144,7 @@ public class IndexServlet extends HttpServlet {
           indexer.duplicateEx(new JSONObject(req.getParameter("issue")),
                   req.getParameter("vlastnik"),
                   Boolean.parseBoolean(req.getParameter("onspecial")),
-                  Integer.parseInt(req.getParameter("cislo")),
+                  //Integer.parseInt(req.getParameter("cislo")),
                   new JSONObject(req.getParameter("exemplar")),
                   req.getParameter("start"),
                   req.getParameter("end"));
