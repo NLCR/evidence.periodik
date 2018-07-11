@@ -31,13 +31,21 @@
         <mz-input-container>
           <input mz-input [label]="'record.subname_title_page' | translate" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev" type="text">
         </mz-input-container>
-      
+      <div class="row">
+        <div class="col s10">
         <mz-select-container>
           <select mz-select id="vydani" name="vydani" [placeholder]="'record.publication.placeholder' | translate" 
                   [(ngModel)]="state.currentIssue.vydani">
             <option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}</option>
           </select>
         </mz-select-container>
+        </div>
+        <div class="col s2">
+          <button mz-button [float]="true" mz-tooltip [tooltip]="'pridat vydání' | translate" [position]="'top'" (click)="addPub()">
+            <i mz-icon-mdi [icon]="'plus'"></i>
+          </button>
+        </div>
+      </div>
         <mz-input-container>
           <input mz-input [label]="'record.time_publication' | translate" id="cas_vydani" name="cas_vydani" [(ngModel)]="state.currentIssue.cas_vydani" type="text">
         </mz-input-container>

@@ -1,0 +1,20 @@
+<mz-modal [fixedFooter]="true">
+  <mz-modal-header>
+    {{'Pridat vydání' | translate}}. {{state.currentIssue.nazev}}, {{state.currentIssue.datum_vydani | date: 'dd.MM.yyyy'}}
+  </mz-modal-header>
+
+  <mz-modal-content>
+    <mz-select-container>
+      <select mz-select id="vydani" name="vydani" [placeholder]="'record.publication.placeholder' | translate" 
+              [(ngModel)]="vydani">
+              
+              <option *ngFor="let v of state.vydani" [value]="v" [disabled]="v === state.currentIssue.vydani">{{'record.publication.' + v | translate }}</option>
+      </select>
+    </mz-select-container>
+  </mz-modal-content>
+
+  <mz-modal-footer>
+    <button mz-button [flat]="true" (click)="ok()">OK</button>
+    <button mz-button [flat]="true" mz-modal-close>{{'button.close' | translate}}</button>
+  </mz-modal-footer>
+</mz-modal>

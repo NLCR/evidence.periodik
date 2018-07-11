@@ -194,6 +194,21 @@ export class AppService {
     return this.http.get(url, {params: params});
   }
   
+  addVydani(issue: Issue, vydani: string){
+   let newIssue = new Issue();
+    newIssue.fromJSON(issue);
+    newIssue.id = null;
+    newIssue.vydani = vydani;
+   
+    console.log(newIssue);
+    var url = this.state.config['context'] + 'index';
+    let params: HttpParams = new HttpParams()
+      .set('action', 'SAVE_ISSUE')
+      .set('json', JSON.stringify(newIssue));
+      
+    return this.http.get(url, {params: params}); 
+  }
+  
   duplicateExemplar(issue: Issue, vlastnik: string, start_cislo: number, onspecial: boolean, exemplar: Exemplar, start: string, end: string){
     
     var url = this.state.config['context'] + 'index';
@@ -268,7 +283,6 @@ export class AppService {
   }
 
   search() {
-    console.log('kkk')
     var url = this.state.config['context'] + 'search/issue/permonik';
     let params: HttpParams = new HttpParams()
       .set('q', this.state.q ? this.state.q : '*')

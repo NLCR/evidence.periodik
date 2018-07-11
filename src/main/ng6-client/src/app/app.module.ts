@@ -79,6 +79,7 @@ import { ResultsTableComponent } from './components/results-table/results-table.
 import { AddExemplarDialogComponent } from './components/add-exemplar-dialog/add-exemplar-dialog.component';
 import { AddTitulDialogComponent } from './components/add-titul-dialog/add-titul-dialog.component';
 import { AddVdkExComponent } from './components/add-vdk-ex/add-vdk-ex.component';
+import { AddVydaniDialogComponent } from './components/add-vydani-dialog/add-vydani-dialog.component';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -120,9 +121,14 @@ export function createTranslateLoader(http: HttpClient) {
     ResultsTableComponent,
     AddExemplarDialogComponent,
     AddTitulDialogComponent,
-    AddVdkExComponent
+    AddVdkExComponent,
+    AddVydaniDialogComponent
   ],
-  entryComponents: [CloneDialogComponent, AddExemplarDialogComponent, AddTitulDialogComponent, AddVdkExComponent],
+  entryComponents: [CloneDialogComponent, 
+    AddExemplarDialogComponent, 
+    AddTitulDialogComponent, 
+    AddVdkExComponent,
+    AddVydaniDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,

@@ -10,6 +10,7 @@ import {Titul} from '../../models/titul';
 import {Exemplar} from '../../models/exemplar';
 import {AddTitulDialogComponent} from '../add-titul-dialog/add-titul-dialog.component';
 import {MzModalService} from 'ngx-materialize';
+import {AddVydaniDialogComponent} from '../add-vydani-dialog/add-vydani-dialog.component';
 
 @Component({
   selector: 'app-issue',
@@ -144,6 +145,13 @@ export class IssueComponent implements OnInit {
       this.state.currentIssue.exemplare.splice(idx, 1);
       this.addingEx = false;
     }, 1);
+
+  }
+  
+  addPub() {
+    this.modalService.open(AddVydaniDialogComponent,
+      {"issue": this.state.currentIssue, "state": this.state, "service": this.service}
+    );
 
   }
 }
