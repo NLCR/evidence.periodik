@@ -193,6 +193,15 @@ export class AppService {
       
     return this.http.get(url, {params: params});
   }
+
+  deleteIssue(issue: Issue) {
+    var url = this.state.config['context'] + 'index';
+    let params: HttpParams = new HttpParams()
+      .set('action', 'DELETE_ISSUE')
+      .set('id', issue.id);
+      
+    return this.http.get(url, {params: params});
+  }
   
   addVydani(issue: Issue, vydani: string){
    let newIssue = new Issue();

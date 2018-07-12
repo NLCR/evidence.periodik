@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AppState} from '../../../app.state';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-toolbar-nav-views',
@@ -9,15 +10,19 @@ import {AppState} from '../../../app.state';
 })
 export class ToolbarNavViewsComponent implements OnInit {
 
-  constructor(public state: AppState,
-  private router: Router) { }
+  constructor(
+    private datePipe: DatePipe,
+    public state: AppState,
+    private router: Router) {}
 
   ngOnInit() {
   }
-  
-  changeView(view: string){
-      this.state.calendarView = view;
-      this.router.navigate(['/calendar', this.state.currentTitul.id, view]);
+
+  changeView(view: string) {
+    this.state.calendarView = view;
+    let d = this.datePipe.transform(this.state.currentDay, 'yyyyMMdd');
+    
+    this.router.navigate(['/calendar', this.state.currentTitul.id, view, d]);
   }
 
 }

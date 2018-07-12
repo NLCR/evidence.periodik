@@ -34,18 +34,20 @@ export class CalendarMonthComponent implements OnInit {
     this.subscriptions.push(this.state.currentDayChanged.subscribe((state) => {
       this.setDays();
     }));
-    
-      this.subscriptions.push(this.state.configSubject.subscribe((state) => {
-        this.setDays();
-      }));
-    
+
+    this.subscriptions.push(this.state.configSubject.subscribe((state) => {
+      this.setDays();
+    }));
+
     let day = this.route.snapshot.paramMap.get('day');
-        if (day) {
-          let d: Date = new Date(parseInt(day.substr(0,4)), parseInt(day.substr(4,2)) - 1, parseInt(day.substr(6,2)));
-          this.state.changeCurrentDay(d); 
-          return;
-        }
     
+    if (day) {
+      let d: Date = new Date(parseInt(day.substr(0, 4)), parseInt(day.substr(4, 2)) - 1, parseInt(day.substr(6, 2)));
+      this.state.changeCurrentDay(d);
+    } else {
+      this.state.changeCurrentDay(new Date());
+    }
+
   }
 
   ngOnDestroy() {

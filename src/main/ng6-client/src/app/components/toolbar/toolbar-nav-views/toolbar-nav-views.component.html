@@ -1,9 +1,11 @@
 <a (click)="changeView('month')" [class.active]="state.calendarView === 'month'">
   <i mz-icon-mdi [icon]="'calendar-today'" mz-tooltip [tooltip]="'Zobrazit měsíc'" class="app-cursor-pointer"></i>
 </a>
+<!--
 <a (click)="changeView('year')" [class.active]="state.calendarView === 'year'">
   <i mz-icon-mdi [icon]="'calendar-range'" mz-tooltip [tooltip]="'Zobrazit rok'" class="app-cursor-pointer"></i>
 </a>
+-->
 <a (click)="changeView('list')" [class.active]="state.calendarView === 'list'">
   <i mz-icon-mdi [icon]="'calendar-text'" mz-tooltip [tooltip]="'Zobrazit seznam'" class="app-cursor-pointer"></i>
 </a>

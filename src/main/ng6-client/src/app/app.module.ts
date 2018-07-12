@@ -80,6 +80,7 @@ import { AddExemplarDialogComponent } from './components/add-exemplar-dialog/add
 import { AddTitulDialogComponent } from './components/add-titul-dialog/add-titul-dialog.component';
 import { AddVdkExComponent } from './components/add-vdk-ex/add-vdk-ex.component';
 import { AddVydaniDialogComponent } from './components/add-vydani-dialog/add-vydani-dialog.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -122,9 +123,11 @@ export function createTranslateLoader(http: HttpClient) {
     AddExemplarDialogComponent,
     AddTitulDialogComponent,
     AddVdkExComponent,
-    AddVydaniDialogComponent
+    AddVydaniDialogComponent,
+    ConfirmDialogComponent
   ],
-  entryComponents: [CloneDialogComponent, 
+  entryComponents: [ConfirmDialogComponent,
+    CloneDialogComponent, 
     AddExemplarDialogComponent, 
     AddTitulDialogComponent, 
     AddVdkExComponent,
@@ -190,9 +193,11 @@ export function createTranslateLoader(http: HttpClient) {
         children: [
           { path: '', redirectTo: 'month', pathMatch: 'full' },
           { path: 'month/:day', component: CalendarMonthComponent },
-         // { path: ':id/month', component: CalendarMonthComponent },
+          { path: 'month', component: CalendarMonthComponent },
           { path: 'year', component: CalendarYearComponent },
-          { path: 'list', component: CalendarListComponent }
+          { path: 'year/:day', component: CalendarYearComponent },
+          { path: 'list', component: CalendarListComponent },
+          { path: 'list/:day', component: CalendarListComponent }
         ]
       },
       { path: 'add-record', component: AddRecordComponent },

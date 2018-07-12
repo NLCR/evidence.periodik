@@ -144,7 +144,9 @@
     "from": "From",
     "till": "Till",
     "periodicity": "Periodicity",
-    "on_special_days": "On special days"
+    "on_special_days": "On special days",
+    "delete_record.caption": "Confirm delete",
+    "delete_record.text": "Are you sure you want delete record {{value}}?"
   },
   "login": {
     "desc": "Please, login",
