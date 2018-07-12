@@ -1,0 +1,14 @@
+<mz-modal [fixedFooter]="true">
+  <mz-modal-header>
+    <h3>{{caption | translate}}</h3>
+  </mz-modal-header>
+
+  <mz-modal-content>
+    {{text | translate: param}}
+  </mz-modal-content>
+
+  <mz-modal-footer>
+    <button mz-button [flat]="true" (click)="ok()">OK</button>
+    <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{'button.close' | translate}}</button>
+  </mz-modal-footer>
+</mz-modal>

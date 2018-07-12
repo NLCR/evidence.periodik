@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
@@ -9,6 +9,8 @@ import {MzModalService} from 'ngx-materialize';
 import {CloneDialogComponent} from '../clone-dialog/clone-dialog.component';
 import {CloneParams} from '../../models/clone-params';
 import {AddVdkExComponent} from '../add-vdk-ex/add-vdk-ex.component';
+import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-toolbar',
@@ -21,41 +23,67 @@ export class ToolbarComponent implements OnInit {
   constructor(
     public state: AppState,
     public service: AppService,
-    private modalService: MzModalService) { }
+    private router: Router,
+    private modalService: MzModalService) {}
 
   ngOnInit() {
   }
-  
-  showCalendar(){
+
+  showCalendar() {
     return this.state.activePage.indexOf('/calendar') > -1;
   }
-  
-  showResult(){
+
+  showResult() {
     return this.state.activePage.indexOf('/result') > -1;
   }
 
-  showIssue(){
+  showIssue() {
     return this.state.activePage.indexOf('/issue') > -1;
   }
-  
-  showAddRecord(){
+
+  showAddRecord() {
     return this.state.activePage.indexOf('/add-record') > -1;
   }
-  
-  addRecord(){
+
+  addRecord() {
     this.service.saveCurrentIssue().subscribe(res => {
       console.log(res);
     });
   }
-  
-  saveRecord(){
+
+  saveRecord() {
     this.state.currentIssue.state = 'ok';
     this.service.saveCurrentIssue().subscribe(res => {
       console.log(res);
     });
-    
+
   }
-  
+
+  deleteRecord() {
+
+    let a = this.modalService.open(ConfirmDialogComponent,
+      {
+        caption: 'modal.delete_record.caption',
+        text: "modal.delete_record.text",
+        param: {
+          value: this.state.currentIssue.titul.meta_nazev + 
+          ' ' + this.state.currentIssue.datum_vydani +
+          ' ' + this.state.currentIssue.mutace +
+          ' ' + this.state.currentIssue.vydani
+        }
+      });
+    a.onDestroy(() => {
+      let mm = <ConfirmDialogComponent> a.instance;
+      if (mm.confirmed) {
+        this.service.deleteIssue(this.state.currentIssue).subscribe(res => {
+          console.log(res);
+          this.router.navigate(['/result']);
+        });
+      }
+    });
+
+  }
+
   openCloneDialog() {
     let cloneParams = new CloneParams();
     cloneParams.id = this.state.currentIssue.id;
@@ -64,13 +92,13 @@ export class ToolbarComponent implements OnInit {
     cloneParams.start_number = this.state.currentIssue.cislo;
     cloneParams.start_year = parseInt(this.state.currentIssue.rocnik);
     cloneParams.periodicity = this.state.currentIssue.periodicita;
-    
+
     this.modalService.open(CloneDialogComponent, {"state": this.state, "service": this.service, "params": cloneParams});
   }
-  
-  
-  
-  addVDKEx(){
+
+
+
+  addVDKEx() {
     this.modalService.open(AddVdkExComponent, {"state": this.state, "service": this.service});
   }
 }

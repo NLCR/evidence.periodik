@@ -36,7 +36,7 @@
     <div class="col s8 right-align">
       <button mz-button (click)="saveRecord()">{{'button.save' | translate}}</button>
       <button mz-button (click)="openCloneDialog()">{{'button.clone' | translate}}</button>
-      <button mz-button>{{'button.delete' | translate}}</button>
+      <button mz-button (click)="deleteRecord()">{{'button.delete' | translate}}</button>
       <button mz-button (click)="addVDKEx()">{{'add from VDK' | translate}}</button>
     </div><!--/.col -->
   </div><!--/.row -->
