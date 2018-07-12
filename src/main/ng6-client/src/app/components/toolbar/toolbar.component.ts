@@ -55,6 +55,9 @@ export class ToolbarComponent implements OnInit {
     this.state.currentIssue.state = 'ok';
     this.service.saveCurrentIssue().subscribe(res => {
       console.log(res);
+      if(res === 'error'){
+        alert("invalid data!")
+      }
     });
 
   }

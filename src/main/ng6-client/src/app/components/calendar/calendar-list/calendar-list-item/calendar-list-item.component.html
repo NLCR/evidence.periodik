@@ -28,7 +28,7 @@
     <div class="col">
       <div *ngFor="let e of issues" class="app-calendar-list-item-issue" [routerLink]="['/issue', e.id]">
         <span [class]="'app-state-'+e.state"></span><!--
-        --><span>{{e.cislo}} {{e.mutace}}</span><!--
+        --><span>{{e.cislo}} {{e.mutace}} {{'record.publication.' + e.vydani | translate}}</span><!--
         --><span *ngIf="e.exemplare" class="app-pipe"></span><!--
         --><span *ngIf="e.exemplare">Počet exemplářů: {{e.exemplare.length}}</span><!--
         --><span *ngIf="e.digitalizovano" class="app-pipe"></span><!--

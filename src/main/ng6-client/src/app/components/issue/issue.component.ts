@@ -27,12 +27,14 @@ export class IssueComponent implements OnInit {
   public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
     formatSubmit: 'yyyy-mm-dd',
+    clear: null
   };
 
   constructor(
     private cdRef: ChangeDetectorRef,
     private modalService: MzModalService,
     private route: ActivatedRoute,
+    private router: Router,
     public state: AppState,
     private service: AppService) {
   }
@@ -64,19 +66,19 @@ export class IssueComponent implements OnInit {
   }
 
   setTitul() {
-    if (this.titul_idx.toString() === '-1'){
+    if (this.titul_idx.toString() === '-1') {
       //New titul dialog
       this.modalService.open(AddTitulDialogComponent,
         {"state": this.state, "service": this.service}
       );
     } else {
-    this.state.currentIssue.titul = this.state.tituly[this.titul_idx];
-    this.state.currentIssue.id_titul = this.state.currentIssue.titul.id;
-    this.state.currentIssue.meta_nazev = this.state.currentIssue.titul.meta_nazev;
-    this.state.currentTitul = this.state.currentIssue.titul;
-    
+      this.state.currentIssue.titul = this.state.tituly[this.titul_idx];
+      this.state.currentIssue.id_titul = this.state.currentIssue.titul.id;
+      this.state.currentIssue.meta_nazev = this.state.currentIssue.titul.meta_nazev;
+      this.state.currentTitul = this.state.currentIssue.titul;
+
       this.state.currentIssue.periodicita = this.state.currentIssue.titul.periodicita;
-    
+
       this.state.currentIssue.pocet_stran = this.state.currentIssue.titul.pocet_stran;
     }
   }
@@ -147,11 +149,15 @@ export class IssueComponent implements OnInit {
     }, 1);
 
   }
-  
+
   addPub() {
     this.modalService.open(AddVydaniDialogComponent,
       {"issue": this.state.currentIssue, "state": this.state, "service": this.service}
     );
 
+  }
+
+  onCalendarClick() {
+    this.router.navigate(['/calendar', this.state.currentIssue.id_titul, this.state.calendarView, this.state.currentIssue['datum_vydani_den']]);
   }
 }

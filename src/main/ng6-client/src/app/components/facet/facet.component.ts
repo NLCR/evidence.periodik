@@ -25,19 +25,21 @@ export class FacetComponent implements OnInit {
   
   
   addFilter(field: string, value: string){
-    if (this.isUsed(field, value)){
-      return;
+    let idx = this.isUsed(field, value); 
+    if (idx > -1){
+      this.state.removeFilter(idx);
+    } else {
+      this.state.addFilter(field, value);
     }
-    this.state.addFilter(field, value);
   }
   
-  isUsed(field: string, value: string): boolean{
+  isUsed(field: string, value: string): number{
     for (let i = 0; i < this.state.filters.length; i++) {
       if (this.state.filters[i].field === field && this.state.filters[i].value === value) {
-        return true;
+        return i;
       }
     }
-    return false;
+    return -1;
   }
 
 }

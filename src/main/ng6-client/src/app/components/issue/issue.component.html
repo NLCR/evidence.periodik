@@ -16,14 +16,16 @@
           </select>
         </mz-select-container>
         <mz-datepicker-container>
-          <i mz-icon-mdi mz-input-prefix [icon]="'calendar'"></i>
+          <i mz-icon-mdi mz-input-prefix [icon]="'calendar'" (click)="onCalendarClick()"></i>
           <input mz-datepicker
+                 [disabled]="!isNew"
                  [options]="options"
                  [label]="'record.date_publication' | translate"
                  [(ngModel)]="state.currentIssue.datum_vydani"
                  id="datum_vydani" name="datum_vydani"
                  type="text" />
         </mz-datepicker-container>
+          
       
         <mz-input-container>
           <input mz-input [label]="'record.name_title_page' | translate" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
@@ -72,10 +74,11 @@
       </mz-input-container>
       <mz-input-container>
         <input mz-input [label]="'record.number' | translate" id="cislo" name="cislo" [(ngModel)]="state.currentIssue.cislo" 
-               min="1" step="1" type="number"><span class="validity"></span>
+               min="1" step="1" type="number" pattern="[0-9]+"><span class="validity"></span>
       </mz-input-container>
       <mz-input-container>
-        <input mz-input [label]="'record.second_number' | translate" id="druhe_cislo" name="druhe_cislo" [(ngModel)]="state.currentIssue.druhe_cislo" type="text">
+        <input mz-input [label]="'record.second_number' | translate" id="druhe_cislo" name="druhe_cislo" [(ngModel)]="state.currentIssue.druhe_cislo" 
+               type="text"  pattern="[0-9]+"><span class="validity"></span>
       </mz-input-container>
       <mz-input-container>
         <input mz-input [label]="'record.id_bib_record' | translate" id="id_bib_zaznamu" name="id_bib_zaznamu" [(ngModel)]="state.currentIssue.id_bib_zaznamu" type="text">

@@ -6,6 +6,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {Subject} from 'rxjs';
 import {tap, map} from 'rxjs/operators';
+import {of} from "rxjs";
 
 import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 
@@ -178,20 +179,46 @@ export class AppService {
     return this.http.get(url, {params: params});
   }
 
-  
-  
-  isIssueValid(issue: Issue){
-    return false;
+  isValidAsInteger(o): boolean {
+    if (typeof (o) === 'string') {
+      if (parseInt(o) + '' !== o) {
+        return false;
+      }
+    }
+    return true
+  }
+
+
+  isIssueValid(issue: Issue): boolean {
+    try {
+      if (!this.isValidAsInteger(issue.rocnik)) {
+        return false;
+      }
+      if (!this.isValidAsInteger(issue.druhe_cislo)) {
+        return false;
+      }
+      if (!this.isValidAsInteger(issue.cislo)) {
+        return false;
+      }
+      return true;
+    } catch (ex) {
+      console.log(ex);
+      return false;
+    }
   }
 
   saveIssue(issue: Issue) {
     console.log(issue);
-    var url = this.state.config['context'] + 'index';
-    let params: HttpParams = new HttpParams()
-      .set('action', 'SAVE_ISSUE')
-      .set('json', JSON.stringify(issue));
-      
-    return this.http.get(url, {params: params});
+    if (this.isIssueValid(issue)) {
+      var url = this.state.config['context'] + 'index';
+      let params: HttpParams = new HttpParams()
+        .set('action', 'SAVE_ISSUE')
+        .set('json', JSON.stringify(issue));
+
+      return this.http.get(url, {params: params});
+    } else {
+      return of('error');
+    }
   }
 
   deleteIssue(issue: Issue) {
@@ -199,27 +226,27 @@ export class AppService {
     let params: HttpParams = new HttpParams()
       .set('action', 'DELETE_ISSUE')
       .set('id', issue.id);
-      
+
     return this.http.get(url, {params: params});
   }
-  
-  addVydani(issue: Issue, vydani: string){
-   let newIssue = new Issue();
+
+  addVydani(issue: Issue, vydani: string) {
+    let newIssue = new Issue();
     newIssue.fromJSON(issue);
     newIssue.id = null;
     newIssue.vydani = vydani;
-   
+
     console.log(newIssue);
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
       .set('action', 'SAVE_ISSUE')
       .set('json', JSON.stringify(newIssue));
-      
-    return this.http.get(url, {params: params}); 
+
+    return this.http.get(url, {params: params});
   }
-  
-  duplicateExemplar(issue: Issue, vlastnik: string, start_cislo: number, onspecial: boolean, exemplar: Exemplar, start: string, end: string){
-    
+
+  duplicateExemplar(issue: Issue, vlastnik: string, start_cislo: number, onspecial: boolean, exemplar: Exemplar, start: string, end: string) {
+
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
       .set('action', 'DUPLICATE_EX')
@@ -230,31 +257,31 @@ export class AppService {
       .set('onspecial', onspecial.toString())
       .set('start', start)
       .set('end', end);
-      
+
     return this.http.get(url, {params: params});
   }
-  
-  addVdkEx(issue: Issue, urlvdk: string, options: any){
-    
+
+  addVdkEx(issue: Issue, urlvdk: string, options: any) {
+
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
       .set('action', 'ADD_VDK_SET')
       .set('issue', JSON.stringify(issue))
       .set('options', JSON.stringify(options))
       .set('url', urlvdk);
-      
+
     return this.http.get(url, {params: params});
   }
-  
-  prepareVdkEx(issue: Issue, urlvdk: string, options: any){
-    
+
+  prepareVdkEx(issue: Issue, urlvdk: string, options: any) {
+
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
       .set('action', 'COLLECT_VDK_SET')
       .set('issue', JSON.stringify(issue))
       .set('options', JSON.stringify(options))
       .set('url', urlvdk);
-      
+
     return this.http.get(url, {params: params});
   }
 
@@ -296,8 +323,8 @@ export class AppService {
     let params: HttpParams = new HttpParams()
       .set('q', this.state.q ? this.state.q : '*')
       .set('wt', 'json')
-      .set('rows', ''+this.state.rows)
-      .set('start', ''+(this.state.currentPage*this.state.rows))
+      .set('rows', '' + this.state.rows)
+      .set('start', '' + (this.state.currentPage * this.state.rows))
       .set('sort', 'datum_vydani_den asc')
       //.set('fq', 'exemplare:[* TO *]')
       //.set('fq', '{!collapse field=id_titul}')
@@ -330,7 +357,7 @@ export class AppService {
 
   searchTitulyHome() {
     var url = this.state.config['context'] + 'search/issue/select';
-    
+
     let params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
@@ -338,7 +365,7 @@ export class AppService {
       .set('sort', 'datum_vydani_den asc')
       .set('fq', '{!collapse field=id_titul}')
       .set('fl', '*, exemplare:[json]');
-      
+
     return this.http.get(url, {params: params});
   }
 
