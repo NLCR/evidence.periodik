@@ -66,9 +66,9 @@
           
             <span *ngFor="let ex of row.exemplare">
               <ng-container *ngIf="ex.vlastnik === ck">[
-                <span (click)="viewClick(row, ex)" class="app-cursor-pointer">{{ex['carovy_kod']}}</span>
-              <i mz-icon-mdi [icon]="'content-duplicate'" [size]="16" [title]="'duplicate'" (click)="duplicate(row, ex)"></i>
-              <i *ngIf="ex['stav'] && ex['stav'] !== 'OK'" mz-icon-mdi [icon]="'comment-outline'" [size]="20" [title]="ex['stav'] + ': ' + ex['stav_popis']"></i>
+                <span (click)="viewClick(row, ex)" class="app-cursor-pointer">{{ex['carovy_kod']}}</span>&#160;
+              <i mz-icon-mdi class="app-cursor-pointer" [icon]="'content-duplicate'" [size]="16" [title]="'duplicate'" (click)="duplicate(row, ex)"></i>&#160;
+              <i class="app-cursor-pointer" *ngIf="ex['stav'] && ex['stav'] !== 'OK'" mz-icon-mdi [icon]="'comment-outline'" [size]="20" [title]="formatStav(ex)"></i>
               ] </ng-container>
             </span>
           

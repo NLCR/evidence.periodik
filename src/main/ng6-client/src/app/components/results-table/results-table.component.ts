@@ -9,6 +9,7 @@ import {AppService} from '../../app.service';
 import {Titul} from '../../models/titul';
 import {Router} from '@angular/router';
 import {Exemplar} from '../../models/exemplar';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-results-table',
@@ -30,6 +31,7 @@ export class ResultsTableComponent implements OnInit {
     private router: Router,
     public state: AppState,
     public service: AppService,
+    private translate: TranslateService,
     private modalService: MzModalService) {
 
 
@@ -195,5 +197,16 @@ export class ResultsTableComponent implements OnInit {
     this.state.currentTitul.meta_nazev = issue.nazev;
     this.router.navigate(['/issue', issue.id]);
 
+  }
+  
+  formatStav(ex): string{
+    let ret = '';
+    for(let i=0;i<ex['stav'].length;i++) {
+      ret += this.translate.instant('record.StavIssue.' + ex['stav'][i]) + '\n';
+    };
+    if(ex['stav_popis']){
+      ret += ' ' + ex['stav_popis'];
+    }
+    return ret;
   }
 }
