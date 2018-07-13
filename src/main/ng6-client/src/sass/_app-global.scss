@@ -94,7 +94,7 @@ tr.mat-row td{
   padding: 3px !important;
 }
 
-tr.mat-row td input, tr.mat-row td p {
+tr.mat-row  input, tr.mat-row td p {
   border-bottom: none !important;
   box-shadow: none !important;
   margin: 0 !important;
@@ -150,7 +150,7 @@ tr.mat-row.error {
   color: red;
 }
 
-.mat-elevation-z8{
+app-add-vdk-ex .mat-elevation-z8{
   border: 1px solid black;
   max-height: 300px;
   overflow: auto !important;
@@ -175,4 +175,16 @@ tr.mat-row.error {
       position: absolute;
     }
   }
+}
+
+app-add-vdk-ex .mat-table th {
+  position: sticky;
+  position: -webkit-sticky;
+  background: #EFEFEF !important;
+  z-index: 9;
+  top: 0px;
+}
+
+app-add-vdk-ex .mat-table th input {
+  margin: 5px !important;
 }

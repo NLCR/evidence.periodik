@@ -35,6 +35,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
   onspecial: boolean;
   
   ngOnInit() {
+    console.log(this.exemplar)
     if(this.issue){
       this.duplicate_start_date = this.issue['datum_vydani_den'];
       this.duplicate_end_date = this.issue['datum_vydani_den'];

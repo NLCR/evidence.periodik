@@ -26,6 +26,7 @@ export class AppState {
   configured: boolean = false;
 
 
+  owners: {name:string, url:string}[] = [];
   stavy: string[] = [];
   states = [];
 
@@ -73,6 +74,7 @@ export class AppState {
 
     this.periods = this.config['periodicity'];
     this.stavy = this.config['stavy'];
+    this.owners = this.config['owners'];
     this.states = this.config['states'];
     this.vdkFormats = this.config['vdkFormats'];
 

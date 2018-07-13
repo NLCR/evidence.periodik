@@ -145,7 +145,7 @@ export class ResultsTableComponent implements OnInit {
 
   addClick(issue: Issue) {
     this.modalService.open(AddExemplarDialogComponent,
-      {"issue": issue, "state": this.state, "service": this.service, editType: 'new'}
+      {"issue": issue, "state": this.state, "service": this.service, exemplar: new Exemplar(), editType: 'new'}
     );
 
   }

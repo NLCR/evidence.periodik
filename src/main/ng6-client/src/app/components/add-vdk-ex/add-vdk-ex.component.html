@@ -10,9 +10,11 @@
 
     <div class="row">
       <div class="col s2">
-        <mz-input-container>
-          <input mz-input [label]="'record.ownership' | translate" [id]="'vlastnik'" [name]="'vlastnik'" [(ngModel)]="vlastnik" type="text">
-        </mz-input-container>
+        <mz-select-container>
+          <select mz-select [id]="'owner'" [name]="'owner'" [(ngModel)]="vlastnik" [label]="'record.ownership' | translate">
+                  <option *ngFor="let owner of state.owners" [value]="owner.name">{{owner.name}}</option>
+          </select>
+        </mz-select-container>
       </div>
       <div class="col s4">
         <mz-select-container>
@@ -29,22 +31,17 @@
                  id="onSpecialDays"
                  type="checkbox" />
         </mz-checkbox-container>
-        <!--
-        <mz-input-container>
-          <input mz-input [label]="'record.barcode' | translate" [id]="'barcode'" [name]="'barcode'" [(ngModel)]="barcode" type="text">
-        </mz-input-container>
-        -->
 
       </div>
     </div>  
-    
+
     <div class="mat-elevation-z8 app-progressbar-wrapper">
       <ng-progress id="bar-1" #progressBar [color]="'#4285f4'"></ng-progress>
-    
+
       <table mat-table [dataSource]="dataSource" >
 
              <!-- ID Column -->
-        <ng-container matColumnDef="id">
+             <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let row" [title]="stringify(row.orig)"> {{row.permonik.carovy_kod}} </td>
         </ng-container>
@@ -84,7 +81,7 @@
         </ng-container>
 
         <ng-container matColumnDef="add">
-          <th mat-header-cell *matHeaderCellDef >
+          <th mat-header-cell *matHeaderCellDef>
         <mz-checkbox-container>
           <input mz-checkbox
                  (change)="toggleSelection()"
@@ -114,7 +111,7 @@
 </mz-modal-content>
 
 <mz-modal-footer>
-  <button *ngIf="prepared" mz-button [flat]="true" (click)="ok()">OK</button>
+  <button *ngIf="prepared" mz-button [flat]="true" (click)="ok()">Add</button>
   <button mz-button [flat]="true" (click)="prepare()">Prepare</button>
   <button mz-button [flat]="true" mz-modal-close>{{'button.close' | translate}}</button>
 </mz-modal-footer>
