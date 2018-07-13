@@ -149,3 +149,30 @@ input:valid+label+span:after {
 tr.mat-row.error {
   color: red;
 }
+
+.mat-elevation-z8{
+  border: 1px solid black;
+  max-height: 300px;
+  overflow: auto !important;
+// progress bar
+    @extend .app-progressbar-wrapper;
+
+}
+
+
+// progress bar
+.app-progressbar-wrapper {
+  position:relative;
+  overflow: hidden;
+
+  ng-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    .ng-progress-bar {
+      position: absolute;
+    }
+  }
+}

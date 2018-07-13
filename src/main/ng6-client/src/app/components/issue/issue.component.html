@@ -1,69 +1,64 @@
 <app-toolbar></app-toolbar>
 
 <div class="app-issue-wrapper grey lighten-5" *ngIf="state.currentIssue.id || isNew">
-  <div class="row">
+     <div class="row">
     <div class="col s4">
-      <!--
-        <mz-input-container>
-          <input mz-input [label]="'record.id_titul' | translate" id="id_titulu" name="id_titulu" type="text" [(ngModel)]="state.currentIssue.id_titul">
-        </mz-input-container>
-      -->
-      
-        <mz-select-container *ngIf="isNew">
-          <select mz-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()" [label]="'Titul'">
-            <option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >{{tit.meta_nazev}}</option>
-            <option [value]="-1" >{{'Add new titul' | translate}}</option>
-          </select>
-        </mz-select-container>
-        <mz-datepicker-container>
-          <i mz-icon-mdi mz-input-prefix [icon]="'calendar'" (click)="onCalendarClick()"></i>
-          <input mz-datepicker
-                 [disabled]="!isNew"
-                 [options]="options"
-                 [label]="'record.date_publication' | translate"
-                 [(ngModel)]="state.currentIssue.datum_vydani"
-                 id="datum_vydani" name="datum_vydani"
-                 type="text" />
-        </mz-datepicker-container>
-          
-      
-        <mz-input-container>
-          <input mz-input [label]="'record.name_title_page' | translate" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'record.subname_title_page' | translate" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev" type="text">
-        </mz-input-container>
-      <div class="row">
+
+      <mz-select-container *ngIf="isNew">
+        <select mz-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()" [label]="'Titul'">
+                <option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >{{tit.meta_nazev}}</option>
+          <option [value]="-1" >{{'Add new titul' | translate}}</option>
+        </select>
+      </mz-select-container>
+      <mz-datepicker-container>
+        <i mz-icon-mdi mz-input-prefix [icon]="'calendar'" (click)="onCalendarClick()"></i>
+        <input mz-datepicker
+               [disabled]="!isNew"
+               [options]="options"
+               [label]="'record.date_publication' | translate"
+               [(ngModel)]="state.currentIssue.datum_vydani"
+               id="datum_vydani" name="datum_vydani"
+               type="text" />
+      </mz-datepicker-container>
+
+
+      <mz-input-container>
+        <input mz-input [label]="'record.name_title_page' | translate" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.subname_title_page' | translate" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev" type="text">
+      </mz-input-container>
+      <div class="row" >
         <div class="col s10">
-        <mz-select-container>
-          <select mz-select id="vydani" name="vydani" [placeholder]="'record.publication.placeholder' | translate" 
-                  [(ngModel)]="state.currentIssue.vydani">
-            <option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}</option>
-          </select>
-        </mz-select-container>
+          <mz-select-container *ngIf="!changingLang">
+            <select mz-select id="vydani" name="vydani" [placeholder]="'record.publication.placeholder' | translate" 
+                    [(ngModel)]="state.currentIssue.vydani">
+                    <option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}</option>
+            </select>
+          </mz-select-container>
         </div>
         <div class="col s2">
-          <button mz-button [float]="true" mz-tooltip [tooltip]="'pridat vydání' | translate" [position]="'top'" (click)="addPub()">
-            <i mz-icon-mdi [icon]="'plus'"></i>
+          <button mz-button [float]="true" mz-tooltip [tooltip]="'Duplikovat vytisk v novem vydání' | translate" [position]="'top'" (click)="addPub()">
+                  <i mz-icon-mdi [icon]="'plus'"></i>
           </button>
         </div>
       </div>
-        <mz-input-container>
-          <input mz-input [label]="'record.time_publication' | translate" id="cas_vydani" name="cas_vydani" [(ngModel)]="state.currentIssue.cas_vydani" type="text">
-        </mz-input-container>
-        <mz-input-container>
-          <input mz-input [label]="'record.mutation' | translate" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace" type="text">
-        </mz-input-container>
-      
-      <mz-select-container>
-          <select mz-select id="periodicita" name="periodicita" [label]="'record.periodicita.placeholder' | translate" 
-                  [(ngModel)]="state.currentIssue.periodicita">
-            <option *ngFor="let v of state.periods" [value]="v">{{'record.periodicita.' + v | translate }}</option>
-          </select>
-        </mz-select-container>
-      
+      <mz-input-container>
+        <input mz-input [label]="'record.time_publication' | translate" id="cas_vydani" name="cas_vydani" [(ngModel)]="state.currentIssue.cas_vydani" type="text">
+      </mz-input-container>
+      <mz-input-container>
+        <input mz-input [label]="'record.mutation' | translate" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace" type="text">
+      </mz-input-container>
+
+      <mz-select-container *ngIf="!changingLang">
+        <select mz-select id="periodicita" name="periodicita" [label]="'record.periodicita.placeholder' | translate" 
+                [(ngModel)]="state.currentIssue.periodicita">
+                <option *ngFor="let v of state.periods" [value]="v">{{'record.periodicita.' + v | translate }}</option>
+        </select>
+      </mz-select-container>
+
     </div><!--/.col -->
-    
+
     <div class="col s4">
       <mz-input-container>
         <input mz-input [label]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" [(ngModel)]="state.currentIssue.pocet_stran" type="text">
@@ -90,45 +85,45 @@
         <input mz-input [label]="'record.url_kramerius' | translate" id="url_krameria" name="url_krameria" [(ngModel)]="state.currentIssue.url_krameria" type="text">
       </mz-input-container>
     </div><!--/.col -->
-    
+
     <div class="col s4 app-exemplar-wrapper">
-        <button mz-button [float]="true" mz-tooltip [tooltip]="'button.add_specimen' | translate" [position]="'top'" (click)="addExemplar()">
-          <i mz-icon-mdi [icon]="'plus'"></i>
-        </button>
-        <h5>{{'record.specimen_count' | translate}}: {{state.currentIssue.exemplare.length}}
-        </h5>
-        <mz-collapsible [mode]="'expandable'" [onClose]="closeFunctionCallback" *ngIf="!addingEx">
-          <mz-collapsible-item [active]="false"  *ngFor="let ex of state.currentIssue.exemplare;let idx= index;">
-            <mz-collapsible-item-header>
-              <span>
-                {{idx + 1}}.- {{ex.vlastnik}} {{ex.carovy_kod}} 
-              </span>
-              <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg right'"></i>
-              <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg right'"></i>
-            </mz-collapsible-item-header>
-            <mz-collapsible-item-body>
-              <mz-select-container>
-                <select mz-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav" [multiple]="true" [placeholder]="'Stav'">
-                  <option *ngFor="let stav of state.stavy" [value]="stav">{{'record.StavIssue.' + stav | translate}}</option>
-                </select>
-              </mz-select-container>
-              <mz-input-container>
-                <input mz-input [label]="'record.state_com' | translate" [id]="'stav_popis'+idx" [name]="'stav_popis'+idx" [(ngModel)]="ex.stav_popis" type="text">
-              </mz-input-container>
-              <mz-input-container>
-                <input mz-input [label]="'record.ownership' | translate" [id]="'vlastnik'+idx" [name]="'vlastnik'+idx" [(ngModel)]="ex.vlastnik" type="text">
-              </mz-input-container>
-              <mz-input-container>
-                <input mz-input [label]="'record.barcode' | translate" [id]="'carovy_kod'+idx" [name]="'carovy_kod'+idx" [(ngModel)]="ex.carovy_kod" type="text">
-              </mz-input-container>
-              <mz-input-container>
-                <input mz-input [label]="'record.signatura' | translate" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura" type="text">
-              </mz-input-container>
-              <button mz-button (click)="removeExemplar(idx)">{{'button.delete_specimen' | translate}}</button>
-            </mz-collapsible-item-body>
-          </mz-collapsible-item>
-        </mz-collapsible>
-        <div class="clearfix"></div>
+      <button mz-button [float]="true" mz-tooltip [tooltip]="'button.add_specimen' | translate" [position]="'top'" (click)="addExemplar()">
+              <i mz-icon-mdi [icon]="'plus'"></i>
+      </button>
+      <h5>{{'record.specimen_count' | translate}}: {{state.currentIssue.exemplare.length}}
+      </h5>
+      <mz-collapsible [mode]="'expandable'" [onClose]="closeFunctionCallback" *ngIf="!changingLang">
+        <mz-collapsible-item [active]="false"  *ngFor="let ex of state.currentIssue.exemplare;let idx= index;">
+          <mz-collapsible-item-header>
+            <span>
+              {{idx + 1}}.- {{ex.vlastnik}} {{ex.carovy_kod}} 
+            </span>
+            <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg right'"></i>
+            <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg right'"></i>
+          </mz-collapsible-item-header>
+          <mz-collapsible-item-body>
+            <mz-select-container>
+              <select mz-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav" [multiple]="true" [placeholder]="'Stav'">
+                      <option *ngFor="let stav of state.stavy" [value]="stav">{{'record.StavIssue.' + stav | translate}}</option>
+              </select>
+            </mz-select-container>
+            <mz-input-container>
+              <input mz-input [label]="'record.state_com' | translate" [id]="'stav_popis'+idx" [name]="'stav_popis'+idx" [(ngModel)]="ex.stav_popis" type="text">
+            </mz-input-container>
+            <mz-input-container>
+              <input mz-input [label]="'record.ownership' | translate" [id]="'vlastnik'+idx" [name]="'vlastnik'+idx" [(ngModel)]="ex.vlastnik" type="text">
+            </mz-input-container>
+            <mz-input-container>
+              <input mz-input [label]="'record.barcode' | translate" [id]="'carovy_kod'+idx" [name]="'carovy_kod'+idx" [(ngModel)]="ex.carovy_kod" type="text">
+            </mz-input-container>
+            <mz-input-container>
+              <input mz-input [label]="'record.signatura' | translate" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura" type="text">
+            </mz-input-container>
+            <button mz-button (click)="removeExemplar(idx)">{{'button.delete_specimen' | translate}}</button>
+          </mz-collapsible-item-body>
+        </mz-collapsible-item>
+      </mz-collapsible>
+      <div class="clearfix"></div>
     </div><!--/.col -->
   </div><!--/row -->
 </div><!--/.app-add-record-wrapper -->

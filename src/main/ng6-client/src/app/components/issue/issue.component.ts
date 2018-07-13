@@ -20,7 +20,7 @@ import {AddVydaniDialogComponent} from '../add-vydani-dialog/add-vydani-dialog.c
 export class IssueComponent implements OnInit {
   subscriptions: Subscription[] = [];
 
-  addingEx: boolean = false;
+  changingLang: boolean = false;
   isNew = false;
   titul_idx: number;
 
@@ -87,11 +87,10 @@ export class IssueComponent implements OnInit {
     //    this.cdRef.detectChanges();
     this.cdRef.detectChanges();
 
-    this.addingEx = true;
+    this.changingLang = true;
     setTimeout(() => {
-
       this.cdRef.detectChanges();
-      this.addingEx = false;
+      this.changingLang = false;
     }, 1);
   }
 
@@ -132,20 +131,20 @@ export class IssueComponent implements OnInit {
   }
 
   addExemplar() {
-    this.addingEx = true;
+    this.changingLang = true;
     setTimeout(() => {
 
       this.state.currentIssue.exemplare.push(new Exemplar());
-      this.addingEx = false;
+      this.changingLang = false;
     }, 1);
   }
 
   removeExemplar(idx: number) {
-    this.addingEx = true;
+    this.changingLang = true;
     setTimeout(() => {
 
       this.state.currentIssue.exemplare.splice(idx, 1);
-      this.addingEx = false;
+      this.changingLang = false;
     }, 1);
 
   }

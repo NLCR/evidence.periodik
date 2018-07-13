@@ -24,6 +24,7 @@
     "@angular/platform-browser-dynamic": "^6.0.3",
     "@angular/router": "^6.0.3",
     "@mdi/font": "^2.4.85",
+    "@ngx-progressbar/core": "^5.0.1",
     "@ngx-translate/core": "^10.0.2",
     "@ngx-translate/http-loader": "^3.0.1",
     "@swimlane/ngx-charts": "^8.0.2",

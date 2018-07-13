@@ -12,6 +12,8 @@ import { MaterializeModule } from 'ngx-materialize';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+import {NgProgressModule} from '@ngx-progressbar/core';
+
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -47,7 +49,6 @@ import {
   MatToolbarModule,
   MatTooltipModule} from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
-
 
 import { AppState } from './app.state';
 import { AppService } from './app.service';
@@ -145,8 +146,7 @@ export function createTranslateLoader(http: HttpClient) {
     }),
     MaterializeModule.forRoot(),
     BrowserAnimationsModule,
-    
-    
+    NgProgressModule.forRoot(),
   MatAutocompleteModule,
   MatButtonModule,
   MatButtonToggleModule,

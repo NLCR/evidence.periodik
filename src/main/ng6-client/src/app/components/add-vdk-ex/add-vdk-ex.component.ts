@@ -1,10 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {MzBaseModal} from 'ngx-materialize';
 import {MatSort, MatTableDataSource} from '@angular/material';
+import {NgProgress, NgProgressComponent} from '@ngx-progressbar/core';
 
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
 import {Issue} from '../../models/issue';
+import {ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-add-vdk-ex',
@@ -13,18 +15,20 @@ import {Issue} from '../../models/issue';
 })
 export class AddVdkExComponent extends MzBaseModal {
 
+  @ViewChild(NgProgressComponent) progressBar: NgProgressComponent;
+  
   state: AppState;
   service: AppService;
 
   public issue: Issue;
 
-//  public url: string = 'https://aleph.vkol.cz/OAI?verb=GetRecord&identifier=oai:aleph.vkol.cz:SVK01_VKOLOAI-000315244&metadataPrefix=marc21';
-//  public format: string = 'MESIC_SLOVA';
-//  public vlastnik: string = 'VKOL';
+  public url: string = 'https://aleph.vkol.cz/OAI?verb=GetRecord&identifier=oai:aleph.vkol.cz:SVK01_VKOLOAI-000315244&metadataPrefix=marc21';
+  public format: string = 'MESIC_SLOVA';
+  public vlastnik: string = 'VKOL';
   
-  public url: string = 'http://vdk.nkp.cz/vdk/original?id=oai:aleph.mzk.cz:MZK01-000244261&wt=xml';
-  public format: string = 'CISLO';
-  public vlastnik: string = 'MZK';
+//  public url: string = 'http://vdk.nkp.cz/vdk/original?id=oai:aleph.mzk.cz:MZK01-000244261&wt=xml';
+//  public format: string = 'CISLO';
+//  public vlastnik: string = 'MZK';
   
   public barcode: string;
   public onspecial: boolean = false;
@@ -37,9 +41,14 @@ export class AddVdkExComponent extends MzBaseModal {
   public selection: boolean = false;
   
   displayedColumns = ['id', 'year', 'volume', 'start', 'od', 'do', 'add'];
-  dataSource: MatTableDataSource<Issue>;
+  dataSource: MatTableDataSource<Issue> = new MatTableDataSource(this.exsFiltered);
+  
+  
 
   prepare() {
+    if (this.progressBar) {
+      this.progressBar.start();
+    }
     let ops = {
       format: this.format,
       vlastnik: this.vlastnik,
@@ -55,6 +64,9 @@ export class AddVdkExComponent extends MzBaseModal {
       });
       this.filter();
       this.prepared = true;
+      if (this.progressBar) {
+        this.progressBar.complete();
+      }
     });
 
   }

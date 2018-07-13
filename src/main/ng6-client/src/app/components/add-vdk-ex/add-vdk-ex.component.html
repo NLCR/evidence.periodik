@@ -37,7 +37,10 @@
 
       </div>
     </div>  
-    <div class="mat-elevation-z8" *ngIf="prepared" >
+    
+    <div class="mat-elevation-z8 app-progressbar-wrapper">
+      <ng-progress id="bar-1" #progressBar [color]="'#4285f4'"></ng-progress>
+    
       <table mat-table [dataSource]="dataSource" >
 
              <!-- ID Column -->

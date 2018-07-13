@@ -36,7 +36,7 @@
 
     <ng-container matColumnDef="datum_vydani">
       <th mat-header-cell *matHeaderCellDef>{{'record.date_publication' | translate}}</th>
-      <td mat-cell *matCellDef="let row" style="white-space: nowrap;" (click)="onCalendarClick(row)"> {{row.datum_vydani | date: 'dd.MM.yyyy'}} </td>
+      <td mat-cell *matCellDef="let row" style="white-space: nowrap;" class="app-cursor-pointer" (click)="onCalendarClick(row)"> {{row.datum_vydani | date: 'dd.MM.yyyy'}} </td>
     </ng-container>
 
     <ng-container matColumnDef="cislo">
