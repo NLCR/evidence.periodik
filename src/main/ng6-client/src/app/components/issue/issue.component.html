@@ -1,10 +1,10 @@
 <app-toolbar></app-toolbar>
 
-<div class="app-issue-wrapper grey lighten-5" *ngIf="state.currentIssue.id || isNew">
+<div class="app-issue-wrapper grey lighten-5" *ngIf="state.currentIssue.id || state.isNewIssue">
      <div class="row">
     <div class="col s4">
 
-      <mz-select-container *ngIf="isNew">
+      <mz-select-container *ngIf="state.isNewIssue">
         <select mz-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()" [label]="'Titul'">
                 <option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >{{tit.meta_nazev}}</option>
           <option [value]="-1" >{{'Add new titul' | translate}}</option>
@@ -13,7 +13,7 @@
       <mz-datepicker-container>
         <i mz-icon-mdi mz-input-prefix [icon]="'calendar'" (click)="onCalendarClick()"></i>
         <input mz-datepicker
-               [disabled]="!isNew"
+               [disabled]="!state.isNewIssue"
                [options]="options"
                [label]="'record.date_publication' | translate"
                [(ngModel)]="state.currentIssue.datum_vydani"

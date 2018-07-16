@@ -34,10 +34,10 @@
       <span>Issue: {{state.currentTitul.meta_nazev}} {{state.currentIssue.datum_vydani | date: "dd/MM/yyyy"}}</span>
     </div><!--/.col -->
     <div class="col s8 right-align">
-      <button mz-button (click)="saveRecord()">{{'button.save' | translate}}</button>
-      <button mz-button (click)="openCloneDialog()">{{'button.clone' | translate}}</button>
-      <button mz-button (click)="deleteRecord()">{{'button.delete' | translate}}</button>
-      <button mz-button (click)="addVDKEx()">{{'add from VDK' | translate}}</button>
+      <button mz-button (click)="saveRecord()" [disabled]="!state.logged">{{'button.save' | translate}}</button>
+      <button mz-button (click)="openCloneDialog()" [disabled]="!state.logged">{{'button.clone' | translate}}</button>
+      <button mz-button (click)="deleteRecord()" [disabled]="!state.logged">{{'button.delete' | translate}}</button>
+      <button mz-button (click)="addVDKEx()" [disabled]="!state.logged">{{'add from VDK' | translate}}</button>
     </div><!--/.col -->
   </div><!--/.row -->
 </div><!--/.app-toolbar-wrapper -->

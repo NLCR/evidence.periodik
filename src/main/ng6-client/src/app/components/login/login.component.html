@@ -13,23 +13,36 @@
               <div class="row app-clean-mg">
                 <mz-input-container class="col s12">
                   <i mz-icon-mdi mz-input-prefix [icon]="'account'"></i>
-                  <input mz-input type="text" [label]="'login.user' | translate" class="form-control" />   
+                  <input mz-input type="text" class="form-control" name="user"
+                      #loginuser
+                      [label]="'login.user' | translate"  
+                      (keyup.enter)="focusp($event, loginpwd)"
+                      [(ngModel)]="state.loginuser" />   
                 </mz-input-container>
               </div>
               <div class="row app-clean-mg">
                 <mz-input-container class="col s12">
                   <i mz-icon-mdi mz-input-prefix [icon]="'lock-outline'"></i>
-                  <input mz-input type="password" [label]="'login.password' | translate" class="form-control" />
+                  <input mz-input type="password" class="form-control" name="pwd"
+                      [label]="'login.password' | translate"
+                      #loginpwd
+                      (keyup.enter)="service.login()"
+                      [(ngModel)]="state.loginpwd"/>
                 </mz-input-container>
               </div>
               <div class="row app-clean-mg">
                 <div class="input-field col s12">
-                  <button mz-button [large]="'true'" class="col s12">
+                  <button mz-button class="col s12" [large]="'true'" 
+                    (keyup.enter)="service.login()">
                     {{'button.login' | translate}}
                   </button>
                 </div>
               </div>
             </form>
+            
+            <div class="alert alert-warning" *ngIf="state.loginError">
+              {{'Špatné přihlašovací údaje' | translate}}.
+            </div>
           </mz-card-content>
         </mz-card>
       </div><!--/.col -->

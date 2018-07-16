@@ -18,5 +18,15 @@
     },
     "changeOrigin": false,
     "secure": false
+  },
+  "/lg": {
+    "target": "http://localhost:8080/permonik/lg",
+    "ignorePath": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/lg":""
+    },
+    "changeOrigin": false,
+    "secure": false
   }
 }

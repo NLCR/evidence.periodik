@@ -5,12 +5,13 @@ import {AppService} from '../../app.service';
 
 import {Issue} from '../../models/issue';
 import {Titul} from '../../models/titul';
-import {MzModalService} from 'ngx-materialize';
+import {MzModalService, MzToastService} from 'ngx-materialize';
 import {CloneDialogComponent} from '../clone-dialog/clone-dialog.component';
 import {CloneParams} from '../../models/clone-params';
 import {AddVdkExComponent} from '../add-vdk-ex/add-vdk-ex.component';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-toolbar',
@@ -24,6 +25,7 @@ export class ToolbarComponent implements OnInit {
     public state: AppState,
     public service: AppService,
     private router: Router,
+    private toastService: MzToastService,
     private modalService: MzModalService) {}
 
   ngOnInit() {
@@ -48,6 +50,11 @@ export class ToolbarComponent implements OnInit {
   addRecord() {
     this.service.saveCurrentIssue().subscribe(res => {
       console.log(res);
+      if(res === 'error'){
+        alert("Invalid data!")
+      } else if(res['error']) {
+        this.toastService.show(res['error'], 4000, 'red');
+      }
     });
   }
 
@@ -57,6 +64,8 @@ export class ToolbarComponent implements OnInit {
       console.log(res);
       if(res === 'error'){
         alert("Invalid data!")
+      } else if(res['error']) {
+        this.toastService.show(res['error'], 4000, 'red');
       }
     });
 
@@ -80,7 +89,11 @@ export class ToolbarComponent implements OnInit {
       if (mm.confirmed) {
         this.service.deleteIssue(this.state.currentIssue).subscribe(res => {
           console.log(res);
-          this.router.navigate(['/result']);
+          if(res['error']) {
+            this.toastService.show(res['error'], 4000, 'red');
+          } else {
+            this.router.navigate(['/result']);
+          }
         });
       }
     });

@@ -82,6 +82,7 @@ import { AddTitulDialogComponent } from './components/add-titul-dialog/add-titul
 import { AddVdkExComponent } from './components/add-vdk-ex/add-vdk-ex.component';
 import { AddVydaniDialogComponent } from './components/add-vydani-dialog/add-vydani-dialog.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import {AuthGuard} from './auth-guard';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -185,7 +186,7 @@ export function createTranslateLoader(http: HttpClient) {
     CdkTableModule,
     
     RouterModule.forRoot([
-      { path: 'issue', component: IssueComponent },
+      { path: 'issue', component: IssueComponent, canActivate: [AuthGuard] },
       { path: 'issue/:id', component: IssueComponent },
       { path: 'home', component: HomeComponent },
       { path: 'result', component: ResultComponent },
@@ -205,7 +206,7 @@ export function createTranslateLoader(http: HttpClient) {
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ])
   ],
-  providers: [HttpClient, DatePipe, AppState, AppService],
+  providers: [HttpClient, DatePipe, AppState, AppService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

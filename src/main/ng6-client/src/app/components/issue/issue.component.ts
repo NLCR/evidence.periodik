@@ -21,7 +21,6 @@ export class IssueComponent implements OnInit {
   subscriptions: Subscription[] = [];
 
   changingLang: boolean = false;
-  isNew = false;
   titul_idx: number;
 
   public options: Pickadate.DateOptions = {
@@ -107,7 +106,7 @@ export class IssueComponent implements OnInit {
     this.state.currentIssue = new Issue();
     let id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.isNew = false;
+      this.state.isNewIssue = false;
       if (this.state.config) {
         this.service.getIssue(id).subscribe(res => {
           this.setData(res);
@@ -121,7 +120,7 @@ export class IssueComponent implements OnInit {
       }
     } else {
 
-      this.isNew = true;
+      this.state.isNewIssue = true;
     }
 
 

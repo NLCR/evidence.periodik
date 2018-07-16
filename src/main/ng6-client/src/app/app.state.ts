@@ -24,15 +24,22 @@ export class AppState {
   vdkFormats: string[] = [];
   vydani = [];
   configured: boolean = false;
-
-
   owners: {name:string, url:string}[] = [];
   stavy: string[] = [];
   states = [];
 
   currentLang: string = 'cs';
 
+
+  loginError: boolean = false;
+  logged: boolean = false;
+  redirectUrl: string = '/';
+  loginuser: string = '';
+  loginpwd: string = '';
+  
   calendarView: string = 'month';
+  
+  isNewIssue = false;
 
   specialDays: any = {};
 

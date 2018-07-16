@@ -317,8 +317,8 @@ export class AppService {
       .append('stats.field', 'exemplare')
     return this.http.get(url, {params: params});
   }
-  
-  doSearchParams():HttpParams{
+
+  doSearchParams(): HttpParams {
     let params: HttpParams = new HttpParams()
       .set('q', this.state.q ? this.state.q : '*')
       .set('wt', 'json')
@@ -387,6 +387,52 @@ export class AppService {
       .set('action', 'CLONE')
       .set('cfg', JSON.stringify(cfg));
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return this.http.get(url, {params: params});
+  }
+
+  login() {
+    this.state.loginError = false;
+    return this.doLogin().subscribe(res => {
+      if (res.hasOwnProperty('error')) {
+        this.state.loginError = true;
+        this.state.logged = false;
+      } else {
+
+        this.state.loginError = false;
+        this.state.loginuser = '';
+        this.state.loginpwd = '';
+        this.state.logged = true;
+        if (this.state.redirectUrl) {
+          this.router.navigate([this.state.redirectUrl]);
+        }
+      }
+    });
+  }
+
+  doLogin() {
+    var url = 'lg'
+    var params = new HttpParams()
+      .set('user', this.state.loginuser)
+      .set('pwd', this.state.loginpwd)
+      .set('action', 'LOGIN');
+    return this.http.get(url, {params: params});
+
+  }
+
+  logout() {
+    this.doLogout().subscribe(res => {
+      if (res.hasOwnProperty('error')) {
+        console.log(res['error']);
+      }
+      this.state.loginError = false;
+      this.state.logged = false;
+      this.router.navigate(['/home']);
+    });
+  }
+
+  doLogout() {
+    var url = 'lg';
+    var params = new HttpParams().set('action', 'LOGOUT');
     return this.http.get(url, {params: params});
   }
 
