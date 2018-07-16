@@ -230,7 +230,7 @@ public class VDKSetProcessor {
           }
 
         } catch (Exception ex1) {
-          LOGGER.log(Level.SEVERE, "Can't parse i as CISLO {0}", nums[0]);
+          LOGGER.log(Level.SEVERE, "Cant parse i as CISLO {0}", nums[0]);
           return null;
         }
       case MESIC:
@@ -300,7 +300,7 @@ public class VDKSetProcessor {
           }
 
         } catch (Exception ex1) {
-          LOGGER.log(Level.SEVERE, "Can't parse i as CISLO {0}", nums[0]);
+          LOGGER.log(Level.SEVERE, "Cant parse i as CISLO {0}", nums[0]);
           return null;
         }
       case MESIC:
