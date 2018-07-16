@@ -41,5 +41,10 @@ export class FacetComponent implements OnInit {
     }
     return -1;
   }
+  
+  isInResults(): boolean{
+    console.log(this.state.activePage);
+    return this.state.activePage.indexOf('/result') > -1;
+  }
 
 }

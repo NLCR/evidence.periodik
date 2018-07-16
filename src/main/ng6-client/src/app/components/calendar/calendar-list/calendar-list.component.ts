@@ -39,7 +39,10 @@ export class CalendarListComponent implements OnInit {
     this.subscriptions.push(this.state.configSubject.subscribe((state) => {
       this.setDays();
     }));
-    
+
+    this.subscriptions.push(this.state.searchChanged.subscribe(res => {
+      this.setIssues();
+    }));
     
     let day = this.route.snapshot.paramMap.get('day');
     
@@ -103,16 +106,20 @@ export class CalendarListComponent implements OnInit {
   getIssues() {
     let month = this.datePipe.transform(this.state.currentDay, 'yyyy-MM');
     if (this.state.currentTitul.id && this.state.currentTitul.id !== "") {
-      this.service.getIssuesOfTitul(this.state.currentTitul.id, month).subscribe(res => {
-        this.issues = res;
+      this.service.searchCalendar(month).subscribe(res => {
+        this.state.setSearchResults(res);
       });
     } else {
       this.subscriptions.push(this.state.currentTitulChanged.subscribe((state) => {
-        this.service.getIssuesOfTitul(this.state.currentTitul.id, month).subscribe(res => {
-          this.issues = res;
+        this.service.searchCalendar(month).subscribe(res => {
+          this.state.setSearchResults(res);
         });
       }));
     }
+  }
+
+  setIssues() {
+    this.issues = this.state.searchResults['response']['docs'];
   }
 
 }

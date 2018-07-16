@@ -2,7 +2,7 @@
   <app-facet-used></app-facet-used>
   <mz-collapsible [mode]="'expandable'"  *ngIf="state.searchResults">
 
-    <mz-collapsible-item [active]="true" >
+    <mz-collapsible-item [active]="true" *ngIf="isInResults()" >
       <mz-collapsible-item-header>
         Datum:
         <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg'"></i>

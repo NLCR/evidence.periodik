@@ -178,8 +178,6 @@ export class ResultsTableComponent implements OnInit {
         });
       }
     });
-
-
   }
 
 

@@ -317,9 +317,8 @@ export class AppService {
       .append('stats.field', 'exemplare')
     return this.http.get(url, {params: params});
   }
-
-  search() {
-    var url = this.state.config['context'] + 'search/issue/permonik';
+  
+  doSearchParams():HttpParams{
     let params: HttpParams = new HttpParams()
       .set('q', this.state.q ? this.state.q : '*')
       .set('wt', 'json')
@@ -352,6 +351,19 @@ export class AppService {
       params = params.append('fq', 'datum_vydani_den:[' + this.state.start_year + '0101 TO ' + this.state.end_year + '1231]');
     }
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return params;
+  }
+
+  search() {
+    var url = this.state.config['context'] + 'search/issue/permonik';
+    let params = this.doSearchParams();
+    return this.http.get(url, {params: params});
+  }
+
+  searchCalendar(month: string) {
+    var url = this.state.config['context'] + 'search/issue/permonik';
+    let params = this.doSearchParams();
+    params = params.append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
     return this.http.get(url, {params: params});
   }
 

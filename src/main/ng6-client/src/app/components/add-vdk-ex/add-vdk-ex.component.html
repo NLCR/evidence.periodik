@@ -43,7 +43,7 @@
              <!-- ID Column -->
              <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let row" [title]="stringify(row.orig)"> {{row.permonik.carovy_kod}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.permonik.carovy_kod}} </td>
         </ng-container>
 
         <ng-container matColumnDef="year">
@@ -103,7 +103,7 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; let idx = index; columns: displayedColumns;" [class.error]="hasError(row)">
+    <tr mat-row mz-tooltip *matRowDef="let row; let idx = index; columns: displayedColumns;" [class.error]="hasError(row)"  [tooltip]="stringify(row.orig)">
   </tr>
 </table>
 

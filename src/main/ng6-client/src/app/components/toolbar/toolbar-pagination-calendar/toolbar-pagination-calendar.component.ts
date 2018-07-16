@@ -14,6 +14,8 @@ export class ToolbarPaginationCalendarComponent implements OnInit {
 
   subscriptions: Subscription[] = [];
     month: string;
+    year: string;
+    
     constructor(
         public state: AppState,
         private datePipe: DatePipe) {}
@@ -33,11 +35,16 @@ export class ToolbarPaginationCalendarComponent implements OnInit {
   }
     
     setMonth(){
-        this.month = this.datePipe.transform(this.state.currentDay, 'LLLL yyyy',null, this.state.currentLang);
+      this.month = this.datePipe.transform(this.state.currentDay, 'LLLL',null, this.state.currentLang);
+      this.year = this.datePipe.transform(this.state.currentDay, 'yyyy');
     }
     
     changeMonth(dir: number){
         this.state.changeCurrentDay(new Date(this.state.currentDay.getFullYear(), this.state.currentDay.getMonth() + dir, 1));
+    }
+    
+    changeYear(){
+      this.state.changeCurrentDay(new Date(parseInt(this.year), this.state.currentDay.getMonth(), 1));
     }
 
 }

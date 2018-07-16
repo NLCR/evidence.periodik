@@ -6,4 +6,5 @@
 </button>
 <span>
   {{month}}
+  <input [(ngModel)]="year" pattern="[0-9]+" type="text" class="app-input-simple" (keyup.enter)="changeYear()" />
 </span>

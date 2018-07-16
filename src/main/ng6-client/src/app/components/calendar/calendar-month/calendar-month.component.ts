@@ -39,8 +39,12 @@ export class CalendarMonthComponent implements OnInit {
       this.setDays();
     }));
 
+    this.subscriptions.push(this.state.searchChanged.subscribe(res => {
+      this.setIssues();
+    }));
+
     let day = this.route.snapshot.paramMap.get('day');
-    
+
     if (day) {
       let d: Date = new Date(parseInt(day.substr(0, 4)), parseInt(day.substr(4, 2)) - 1, parseInt(day.substr(6, 2)));
       this.state.changeCurrentDay(d);
@@ -88,8 +92,6 @@ export class CalendarMonthComponent implements OnInit {
       this.getIssues();
 
     });
-
-
   }
 
   issuesOfDay(d: Date): any[] {
@@ -102,16 +104,20 @@ export class CalendarMonthComponent implements OnInit {
   getIssues() {
     let month = this.datePipe.transform(this.state.currentDay, 'yyyy-MM');
     if (this.state.currentTitul.id && this.state.currentTitul.id !== "") {
-      this.service.getIssuesOfTitul(this.state.currentTitul.id, month).subscribe(res => {
-        this.issues = res;
+      this.service.searchCalendar(month).subscribe(res => {
+        this.state.setSearchResults(res);
       });
     } else {
       this.subscriptions.push(this.state.currentTitulChanged.subscribe((state) => {
-        this.service.getIssuesOfTitul(this.state.currentTitul.id, month).subscribe(res => {
-          this.issues = res;
+        this.service.searchCalendar(month).subscribe(res => {
+          this.state.setSearchResults(res);
         });
       }));
     }
+  }
+
+  setIssues() {
+    this.issues = this.state.searchResults['response']['docs'];
   }
 
 }
