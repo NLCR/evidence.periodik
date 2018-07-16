@@ -10,18 +10,19 @@ import cz.incad.nkp.inprove.solr.Indexer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.json.XML;
 
 /**
  *
@@ -48,8 +49,26 @@ public class IndexServlet extends HttpServlet {
       String actionNameParam = req.getParameter(ACTION_NAME);
       if (actionNameParam != null) {
 
+        boolean isLocalhost = false;
+        Set<String> localAddresses = new HashSet<String>();
+        localAddresses.add(InetAddress.getLocalHost().getHostAddress());
+        for (InetAddress inetAddress : InetAddress.getAllByName("localhost")) {
+          localAddresses.add(inetAddress.getHostAddress());
+        }
+        if (localAddresses.contains(req.getRemoteAddr())) {
+          LOGGER.log(Level.INFO, "running from local address");
+        }
+
         Actions actionToDo = Actions.valueOf(actionNameParam.toUpperCase());
-        actionToDo.doPerform(req, resp);
+        if (LoginController.isLogged(req) || actionToDo.equals(Actions.SPECIAL_DAYS) || isLocalhost) {
+          actionToDo.doPerform(req, resp);
+        } else {
+          resp.setContentType("application/json;charset=UTF-8");
+
+          JSONObject json = new JSONObject();
+          json.put("error", "not logged");
+          resp.getWriter().print(json.toString());
+        }
 
       } else {
         PrintWriter out = resp.getWriter();
@@ -223,7 +242,7 @@ public class IndexServlet extends HttpServlet {
           json.put("error", ex.toString());
         }
         out.println(json.toString(2));
-      } 
+      }
     },
     ADD_VDK_SET {
       @Override
@@ -257,9 +276,9 @@ public class IndexServlet extends HttpServlet {
         try {
           Indexer indexer = new Indexer();
           json = indexer.collectExFromVdkSet(
-                          new JSONObject(req.getParameter("issue")),
-                          req.getParameter("url"),
-                          new JSONObject(req.getParameter("options"))
+                  new JSONObject(req.getParameter("issue")),
+                  req.getParameter("url"),
+                  new JSONObject(req.getParameter("options"))
           );
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);
@@ -313,7 +332,7 @@ public class IndexServlet extends HttpServlet {
         JSONObject json = new JSONObject();
         try {
           Indexer indexer = new Indexer();
-          json.put("days",indexer.days(req.getParameter("start"), req.getParameter("end")));
+          json.put("days", indexer.days(req.getParameter("start"), req.getParameter("end")));
 
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);
