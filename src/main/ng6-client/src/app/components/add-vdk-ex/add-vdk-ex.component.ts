@@ -127,20 +127,11 @@ export class AddVdkExComponent extends MzBaseModal {
         ex['permonik'],
         ex['add']['start_date'],
         ex['add']['end_date']).subscribe(res => {
-          console.log(res);
           if(res['error']) {
             this.toastService.show(res['error'], 4000, 'red');
           }
         });
     });
-
-    //    this.service.addVdkEx(this.state.currentIssue, this.url, ops).subscribe(res => {
-    //      console.log(res);
-    //      this.service.search().subscribe(res => {
-    //        this.state.setSearchResults(res);
-    //      });
-    //      //this.modalComponent.closeModal();
-    //    });
   }
 
   stringify(ex: any): string {

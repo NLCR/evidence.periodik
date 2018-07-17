@@ -376,7 +376,7 @@ export class AppService {
       .set('rows', '500')
       .set('sort', 'datum_vydani_den asc')
       .set('fq', '{!collapse field=id_titul}')
-      .set('fl', '*, exemplare:[json]');
+      .set('fl', '*, id_titul, exemplare:[json]');
 
     return this.http.get(url, {params: params});
   }

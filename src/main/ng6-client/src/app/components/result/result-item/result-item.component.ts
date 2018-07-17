@@ -65,9 +65,9 @@ export class ResultItemComponent implements OnInit {
 
   onCalendarClick() {
     this.state.currentTitul = new Titul();
-    this.state.currentTitul.id = this.item.id_titul;
+    this.state.currentTitul.id = this.item.id;
     this.state.currentTitul.meta_nazev = this.item.nazev;
-    this.router.navigate(['/calendar', this.item.id_titul, this.state.calendarView, this.item['den_od']]);
+    this.router.navigate(['/calendar', this.item.id, this.state.calendarView, this.item['den_od']]);
 
   }
 
