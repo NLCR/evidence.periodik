@@ -45,6 +45,9 @@ export class AppComponent implements OnInit {
         userLang = cfg['defaultLang'];
       }
       this.service.changeLang(userLang);
+      
+      this.state.logged = window.location.href.indexOf('localhost') > -1;
+    
       this.state.setConfig(cfg);
       this.service.getTituly().subscribe();
       return this.state.config;

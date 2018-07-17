@@ -111,7 +111,7 @@
 </mz-modal-content>
 
 <mz-modal-footer>
-  <button *ngIf="prepared" mz-button [flat]="true" (click)="ok()">Add</button>
+  <button *ngIf="prepared" mz-button [flat]="true" (click)="ok()" [disabled]="!state.logged">Add</button>
   <button mz-button [flat]="true" (click)="prepare()">Prepare</button>
   <button mz-button [flat]="true" mz-modal-close>{{'button.close' | translate}}</button>
 </mz-modal-footer>

@@ -16,7 +16,7 @@ import {ViewChild} from '@angular/core';
 export class AddVdkExComponent extends MzBaseModal {
 
   @ViewChild(NgProgressComponent) progressBar: NgProgressComponent;
-  
+
   state: AppState;
   service: AppService;
 
@@ -25,26 +25,26 @@ export class AddVdkExComponent extends MzBaseModal {
   public url: string = 'https://aleph.vkol.cz/OAI?verb=GetRecord&identifier=oai:aleph.vkol.cz:SVK01_VKOLOAI-000315244&metadataPrefix=marc21';
   public format: string = 'MESIC_SLOVA';
   public vlastnik: string = 'VKOL';
-  
-//  public url: string = 'http://vdk.nkp.cz/vdk/original?id=oai:aleph.mzk.cz:MZK01-000244261&wt=xml';
-//  public format: string = 'CISLO';
-//  public vlastnik: string = 'MZK';
-  
+
+  //  public url: string = 'http://vdk.nkp.cz/vdk/original?id=oai:aleph.mzk.cz:MZK01-000244261&wt=xml'  ;
+  //  public format: string = 'CISLO'  ;
+  //  public vlastnik: string = 'MZK';
+
   public barcode: string;
   public onspecial: boolean = false;
 
   public prepared: boolean = false;
   public exs: any[] = [];
   public exsFiltered: any[] = [];
-  
+
   public year_filter: string = '';
   public selection: boolean = false;
-  
-  displayedColumns = ['id', 'year', 'volume', 'start', 'od', 'do', 'add'];
+
+  displayedColumns = ['id', 'year', 'volume', 'od', 'do', 'add'];
   dataSource: MatTableDataSource<Issue> = new MatTableDataSource(this.exsFiltered);
-  
+
   constructor(
-    private toastService: MzToastService){
+    private toastService: MzToastService) {
     super();
   }
 
@@ -60,12 +60,21 @@ export class AddVdkExComponent extends MzBaseModal {
       onspecial: this.onspecial
     };
     this.service.prepareVdkEx(this.state.currentIssue, this.url, ops).subscribe(res => {
-      //console.log(res);
-      this.exs = res['exs'];
-      this.exs.sort((ex1, ex2) => {
-        return parseInt(ex1['add']['year']) - parseInt(ex2['add']['year']);
-      });
-      this.filter();
+
+      if (res['error']) {
+        this.toastService.show(res['error'], 4000, 'red');
+      } else {
+        this.exs = res['exs'];
+        this.exs.sort((ex1, ex2) => {
+          if(ex1['add']['start_date'] && ex2['add']['start_date']){
+            return parseInt(ex1['add']['start_date']) - parseInt(ex2['add']['start_date']);
+          } else {
+            return parseInt(ex1['add']['year']) - parseInt(ex2['add']['year']);
+          }
+        });
+        this.filter();
+      }
+
       this.prepared = true;
       if (this.progressBar) {
         this.progressBar.complete();
@@ -73,24 +82,24 @@ export class AddVdkExComponent extends MzBaseModal {
     });
 
   }
-  
-  toggleSelection(){
-//    this.selection = !this.selection;
+
+  toggleSelection() {
+    //    this.selection = !this.selection;
     this.exsFiltered.forEach(ex => {ex['selected'] = this.selection;});
   }
-  
-  checkSelection(){
+
+  checkSelection() {
     let all = this.exsFiltered.filter(ex => {
       return ex['selected'];
     }).length === this.exsFiltered.length;
-    
-      let none = this.exsFiltered.filter(ex => {
+
+    let none = this.exsFiltered.filter(ex => {
       return ex['selected'];
     }).length === 0;
-    
-    if(all){
+
+    if (all) {
       this.selection = true;
-    } else if(none){
+    } else if (none) {
       this.selection = false;
     } else {
       this.selection = null;
@@ -105,7 +114,7 @@ export class AddVdkExComponent extends MzBaseModal {
         return ex['add']['year'] === this.year_filter;
       });
     }
-    
+
     this.dataSource = new MatTableDataSource(this.exsFiltered);
   }
 
@@ -127,7 +136,7 @@ export class AddVdkExComponent extends MzBaseModal {
         ex['permonik'],
         ex['add']['start_date'],
         ex['add']['end_date']).subscribe(res => {
-          if(res['error']) {
+          if (res['error']) {
             this.toastService.show(res['error'], 4000, 'red');
           }
         });
@@ -137,10 +146,10 @@ export class AddVdkExComponent extends MzBaseModal {
   stringify(ex: any): string {
     return JSON.stringify(ex);
   }
-  
-  hasError(ex: any): boolean{
+
+  hasError(ex: any): boolean {
     return ex['add']['start_cislo'] === '-1' ||
-           !ex['add'].hasOwnProperty('start_date') ||
-           !ex['add'].hasOwnProperty('end_date') ;
+      !ex['add'].hasOwnProperty('start_date') ||
+      !ex['add'].hasOwnProperty('end_date');
   }
 }

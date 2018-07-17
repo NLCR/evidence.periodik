@@ -57,8 +57,9 @@ public class IndexServlet extends HttpServlet {
         }
         if (localAddresses.contains(req.getRemoteAddr())) {
           LOGGER.log(Level.INFO, "running from local address");
+          isLocalhost = true;
         }
-
+        
         Actions actionToDo = Actions.valueOf(actionNameParam.toUpperCase());
         if (LoginController.isLogged(req) || actionToDo.equals(Actions.SPECIAL_DAYS) || isLocalhost) {
           actionToDo.doPerform(req, resp);

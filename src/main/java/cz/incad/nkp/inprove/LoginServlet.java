@@ -79,6 +79,7 @@ public class LoginServlet extends HttpServlet {
             
             if(LoginController.login(req, user, req.getParameter("pwd"))){
               jo.put("logged", true);
+              
             }else{
               jo.put("logged", false);
               jo.put("error", "invalid user name or password");

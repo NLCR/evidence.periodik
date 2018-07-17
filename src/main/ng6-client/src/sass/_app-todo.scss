@@ -1,0 +1,115 @@
+// --- TODO ---
+// Tyto styly patri do jinych souboru
+
+//Componenta result-table
+.app-table-cell-ex{
+  
+  width: 30px !important;
+}
+
+tr.mat-row{
+  height: fit-content !important;
+  font-size: .85em;
+}
+
+tr.mat-row td{
+  padding: 3px !important;
+}
+
+tr.mat-row  input, tr.mat-row td p {
+  border-bottom: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  height: 1.2em !important;
+}
+tr.mat-row td textarea:focus {
+  border-bottom: none!important;
+  box-shadow: none!important;
+}
+
+.app-rotate {
+  font-size: .85em;
+  height: 30px !important;
+  white-space: nowrap;
+}
+.app-rotate > div{
+  width: 30px !important;
+  /* Safari */
+  -webkit-transform: rotate(-90deg);
+
+  /* Firefox */
+  -moz-transform: rotate(-90deg);
+
+  /* IE */
+  -ms-transform: rotate(-90deg);
+
+  /* Opera */
+  -o-transform: rotate(-90deg);
+
+  /* Internet Explorer */
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+  
+}
+
+//ikonky za input ukazujici validace
+//Componenta issue
+input+label+span.validity {
+    position: absolute;
+    bottom: 50%;
+}
+
+input:invalid+label+span.validity:after {
+  color: red;
+  content: '✖';
+  padding-left: 5px;
+}
+
+input:valid+label+span.validity:after {
+  content: '✓';
+  padding-left: 5px;
+}
+
+//Table pro pridani exemplare s vdk
+//Componenta add-vdk-ex
+tr.mat-row.error {
+  color: red;
+}
+
+app-add-vdk-ex .mat-elevation-z8{
+  border: 1px solid black;
+  max-height: 300px;
+  overflow: auto !important;
+// progress bar
+    @extend .app-progressbar-wrapper;
+
+}
+
+
+// progress bar
+.app-progressbar-wrapper {
+  position:relative;
+  overflow: hidden;
+
+  ng-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    .ng-progress-bar {
+      position: absolute;
+    }
+  }
+}
+
+app-add-vdk-ex .mat-table th {
+  position: sticky;
+  position: -webkit-sticky;
+  background: #EFEFEF !important;
+  z-index: 9;
+  top: 0px;
+}
+
+app-add-vdk-ex .mat-table th input {
+  margin: 5px !important;
+}

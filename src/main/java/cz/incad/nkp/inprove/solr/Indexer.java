@@ -112,12 +112,13 @@ public class Indexer {
       boolean changingYear = endMonth < startMonth && endYear == startYear + 1;
       //endYear > startYear;
       if (changingYear) {
-        q += " OR id:[" + String.format("%02d", startMonth) + " TO 1231] OR id:[0101 TO " + String.format("%02d", endMonth) + "]";
+        q += " OR id:[" + start.format(DateTimeFormatter.ofPattern("MMdd")) + " TO 1231] OR id:[0101 TO " + end.format(DateTimeFormatter.ofPattern("MMdd")) + "]";
       } else if (endYear > startYear) {
         q += " OR year:0";
       } else {
-        q += " OR id:[" + String.format("%02d", startMonth) + " TO " + String.format("%02d", endMonth) + "]";
+        q += " OR id:[" + start.format(DateTimeFormatter.ofPattern("MMdd")) + " TO " + end.format(DateTimeFormatter.ofPattern("MMdd")) + "]";
       }
+      
       query.setQuery(q);
 //      query.setFacet(true).addFacetField("year");
       QueryResponse resp = solr.query("calendar", query);
@@ -621,7 +622,6 @@ public class Indexer {
       
       int specialdays = Indexer.getNumSpecialDays(start.minusDays(start.getDayOfYear()), start);
       
-      
       int cislo = start.getDayOfYear() - specialdays;
       for (LocalDate date = start; date.isBefore(end) || date.isEqual(end); date = date.plus(period)) {
         if (!onspecialdays && isSpecial(solr, date)) {
@@ -650,7 +650,7 @@ public class Indexer {
           idoc.removeField("_version_");
           idoc.removeField("index_time");
           idoc.removeField("exemplare");
-
+          
           if (doc.containsKey("exemplare")) {
             exs = new JSONArray(doc.getFieldValue("exemplare").toString());
           }
@@ -671,6 +671,8 @@ public class Indexer {
           idoc.removeField("index_time");
           idoc.removeField("exemplare");
           idoc.removeField("titul");
+          idoc.setField("state", "auto");
+          
           idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
           idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
           idoc.setField("cislo", cislo);

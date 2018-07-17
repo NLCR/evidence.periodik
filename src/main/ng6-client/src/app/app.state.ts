@@ -85,8 +85,8 @@ export class AppState {
     this.states = this.config['states'];
     this.vdkFormats = this.config['vdkFormats'];
 
-
     this.config["vydani"].map(k => {this.vydani.push(k);});
+
     this.configured = true;
     this._configSubject.next(cfg);
   }

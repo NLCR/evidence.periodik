@@ -29,4 +29,8 @@ export class NavbarComponent implements OnInit {
     this.service.changeLang(lang);
   }
   
+  logout(){
+    this.service.logout();
+  }
+  
 }

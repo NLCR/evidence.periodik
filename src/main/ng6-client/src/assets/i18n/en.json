@@ -8,7 +8,8 @@
   "navbar": {
     "home": "Home",
     "add_record": "Add record",
-    "login": "Login"
+    "login": "Login",
+    "logout": "Logout"
   },
   "searchbox": {
     "placeholder": "Search in registration of the periodicals"
