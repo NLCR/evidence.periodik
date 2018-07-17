@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MzBaseModal} from 'ngx-materialize';
+import {MzBaseModal, MzToastService} from 'ngx-materialize';
 import {MatSort, MatTableDataSource} from '@angular/material';
 import {NgProgress, NgProgressComponent} from '@ngx-progressbar/core';
 
@@ -43,7 +43,10 @@ export class AddVdkExComponent extends MzBaseModal {
   displayedColumns = ['id', 'year', 'volume', 'start', 'od', 'do', 'add'];
   dataSource: MatTableDataSource<Issue> = new MatTableDataSource(this.exsFiltered);
   
-  
+  constructor(
+    private toastService: MzToastService){
+    super();
+  }
 
   prepare() {
     if (this.progressBar) {
@@ -125,6 +128,9 @@ export class AddVdkExComponent extends MzBaseModal {
         ex['add']['start_date'],
         ex['add']['end_date']).subscribe(res => {
           console.log(res);
+          if(res['error']) {
+            this.toastService.show(res['error'], 4000, 'red');
+          }
         });
     });
 

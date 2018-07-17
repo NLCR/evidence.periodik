@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import {MzBaseModal} from 'ngx-materialize';
+import {Component} from '@angular/core';
+import {MzBaseModal, MzToastService} from 'ngx-materialize';
 
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
@@ -10,20 +10,29 @@ import {Issue} from '../../models/issue';
   templateUrl: './add-vydani-dialog.component.html',
   styleUrls: ['./add-vydani-dialog.component.scss']
 })
-export class AddVydaniDialogComponent  extends MzBaseModal {
+export class AddVydaniDialogComponent extends MzBaseModal {
 
   state: AppState;
   service: AppService;
 
   vydani: string;
-  
-  
+
   public issue: Issue;
-  
-  ok(){
+
+  constructor(
+    private toastService: MzToastService) {
+    super();
+  }
+
+  ok() {
     this.service.addVydani(this.issue, this.vydani).subscribe(res => {
-      this.modalComponent.closeModal();
+
+      if (res['error']) {
+        this.toastService.show(res['error'], 4000, 'red');
+      } else {
+        this.modalComponent.closeModal();
+      }
     });
-    
+
   }
 }

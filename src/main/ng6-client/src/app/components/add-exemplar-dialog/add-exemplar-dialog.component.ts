@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject} from '@angular/core';
-import { MzBaseModal,  } from 'ngx-materialize';
+import {Component, OnInit, Inject} from '@angular/core';
+import {MzBaseModal, MzToastService, } from 'ngx-materialize';
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
 import {Issue} from '../../models/issue';
@@ -12,63 +12,76 @@ import {Exemplar} from '../../models/exemplar';
 })
 export class AddExemplarDialogComponent extends MzBaseModal {
 
-  
-    public options: Pickadate.DateOptions = {
-        format: 'dd/mm/yyyy',
-        formatSubmit: 'yyyymmdd',
-    };
-    
-    state: AppState;
-    service: AppService;
+
+  public options: Pickadate.DateOptions = {
+    format: 'dd/mm/yyyy',
+    formatSubmit: 'yyyymmdd',
+  };
+
+  state: AppState;
+  service: AppService;
 
   public issue: Issue;
   //public ex: number;
   public exemplar: Exemplar;
-  
+
   editType: string = 'new';
-  
+
   duplicate_start_date: string;
   duplicate_end_date: string;
   duplicate_start_cislo: number;
-  
+
   saved: boolean = false;
   onspecial: boolean;
-  
+
+
+  constructor(
+    private toastService: MzToastService) {
+    super();
+  }
+
   ngOnInit() {
     console.log(this.exemplar)
-    if(this.issue){
+    if (this.issue) {
       this.duplicate_start_date = this.issue['datum_vydani_den'];
       this.duplicate_end_date = this.issue['datum_vydani_den'];
     }
   }
 
   ok(): void {
-    switch (this.editType){
+    switch (this.editType) {
       case 'new':
-      break;
+        break;
       case 'edit':
-      console.log(this.issue);
+        console.log(this.issue);
         this.service.saveIssue(this.issue).subscribe(res => {
           //console.log(res);
-          this.modalComponent.closeModal();
+          if (res['error']) {
+            this.toastService.show(res['error'], 4000, 'red');
+          } else {
+            this.modalComponent.closeModal();
+          }
         });
-      break;
+        break;
       case 'duplicate':
-      //console.log(this.issue, this.exemplar.vlastnik, this.exemplar, this.duplicate_start_date, this.duplicate_end_date);
-      
         this.service.duplicateExemplar(this.issue, this.exemplar.vlastnik,
           this.duplicate_start_cislo,
-          this.onspecial,  this.exemplar, this.duplicate_start_date, this.duplicate_end_date).subscribe(res => {
-          //console.log(res);
-          this.saved = true;
-          this.modalComponent.closeModal();
-        });
-      break;
+          this.onspecial, this.exemplar, this.duplicate_start_date, this.duplicate_end_date).subscribe(res => {
+            //console.log(res);
+
+            if (res['error']) {
+              this.toastService.show(res['error'], 4000, 'red');
+            } else {
+              this.saved = true;
+              this.modalComponent.closeModal();
+            }
+          });
+        break;
     }
-    
+
   }
-  
-  cancel(){
-    
+
+  cancel() {
+
   }
 }
