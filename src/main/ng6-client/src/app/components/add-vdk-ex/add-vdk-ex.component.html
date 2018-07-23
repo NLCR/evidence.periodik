@@ -107,7 +107,7 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row mz-tooltip *matRowDef="let row; let idx = index; columns: displayedColumns;" [class.error]="hasError(row)"  [tooltip]="stringify(row.orig)">
+    <tr mat-row *matRowDef="let row; let idx = index; columns: displayedColumns;" [class.error]="hasError(row)"  >
     <tr mat-row *matRowDef="let row; columns: ['orig']; when: isOrigRow">
   </tr>
 </table>

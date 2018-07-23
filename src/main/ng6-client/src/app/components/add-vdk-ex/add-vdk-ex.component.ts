@@ -67,14 +67,14 @@ export class AddVdkExComponent extends MzBaseModal {
         this.exs = [];
         //this.exs = res['exs'];
         res['exs'].sort((ex1, ex2) => {
-          if(ex1['add']['start_date'] && ex2['add']['start_date']){
+          if (ex1['add']['start_date'] && ex2['add']['start_date']) {
             return parseInt(ex1['add']['start_date']) - parseInt(ex2['add']['start_date']);
           } else {
             return parseInt(ex1['add']['year']) - parseInt(ex2['add']['year']);
           }
         });
-        
-        for(let i = 0; i<res['exs'].length; i++){
+
+        for (let i = 0; i < res['exs'].length; i++) {
           let orig = {}; Object.assign(orig, res['exs'][i]);
           orig['isOrig'] = true;
           this.exs.push(orig);
@@ -113,12 +113,12 @@ export class AddVdkExComponent extends MzBaseModal {
       this.selection = null;
     }
   }
-  
+
   isOrigRow = (index, item) => item['isOrig'];
 
   filter() {
     this.exsFiltered = [];
-    if (this.year_filter === '') {      
+    if (this.year_filter === '') {
       this.exsFiltered = this.exs;
     } else {
       this.exsFiltered = this.exs.filter(ex => {
@@ -138,9 +138,28 @@ export class AddVdkExComponent extends MzBaseModal {
       onspecial: this.onspecial
     };
 
-    this.exsFiltered.filter(ex => {
+    let toIndex = this.exsFiltered.filter(ex => {
       return ex['selected'];
-    }).forEach(ex => {
+    });
+this.indexNext(toIndex);
+//
+//    toIndex.forEach(ex => {
+//      this.service.duplicateExemplar(this.state.currentIssue, this.vlastnik,
+//        ex['add']['start_cislo'],
+//        this.onspecial,
+//        ex['permonik'],
+//        ex['add']['start_date'],
+//        ex['add']['end_date']).subscribe(res => {
+//          if (res['error']) {
+//            this.toastService.show(res['error'], 4000, 'red');
+//          }
+//        });
+//    });
+  }
+
+  indexNext(toIndex: any[]) {
+    if (toIndex.length > 0) {
+      let ex = toIndex[0];
       this.service.duplicateExemplar(this.state.currentIssue, this.vlastnik,
         ex['add']['start_cislo'],
         this.onspecial,
@@ -149,9 +168,13 @@ export class AddVdkExComponent extends MzBaseModal {
         ex['add']['end_date']).subscribe(res => {
           if (res['error']) {
             this.toastService.show(res['error'], 4000, 'red');
+          } else {
+            if (toIndex.length > 1){
+              this.indexNext(toIndex.slice(1));
+            }
           }
         });
-    });
+    }
   }
 
   stringify(ex: any): string {

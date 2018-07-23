@@ -148,7 +148,9 @@
     "start_year":"Startovaci rocnik",
     "start_number": "Startovaci cislo",
     "delete_record.caption": "Podtvrdit smazani",
-    "delete_record.text": "Chtete opravdu smazat zaznam {{value}}?"
+    "delete_record.text": "Chtete opravdu smazat zaznam {{value}}?",
+    "delete_exemplar.caption": "Podtvrdit smazani",
+    "delete_exemplar.text": "Chtete opravdu smazat exemplar {{value}}?"
   },
   "login": {
     "desc": "Prosím, přihlašte se",
