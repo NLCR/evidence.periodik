@@ -64,14 +64,22 @@ export class AddVdkExComponent extends MzBaseModal {
       if (res['error']) {
         this.toastService.show(res['error'], 4000, 'red');
       } else {
-        this.exs = res['exs'];
-        this.exs.sort((ex1, ex2) => {
+        this.exs = [];
+        //this.exs = res['exs'];
+        res['exs'].sort((ex1, ex2) => {
           if(ex1['add']['start_date'] && ex2['add']['start_date']){
             return parseInt(ex1['add']['start_date']) - parseInt(ex2['add']['start_date']);
           } else {
             return parseInt(ex1['add']['year']) - parseInt(ex2['add']['year']);
           }
         });
+        
+        for(let i = 0; i<res['exs'].length; i++){
+          let orig = {}; Object.assign(orig, res['exs'][i]);
+          orig['isOrig'] = true;
+          this.exs.push(orig);
+          this.exs.push(res['exs'][i]);
+        }
         this.filter();
       }
 
@@ -105,9 +113,12 @@ export class AddVdkExComponent extends MzBaseModal {
       this.selection = null;
     }
   }
+  
+  isOrigRow = (index, item) => item['isOrig'];
 
   filter() {
-    if (this.year_filter === '') {
+    this.exsFiltered = [];
+    if (this.year_filter === '') {      
       this.exsFiltered = this.exs;
     } else {
       this.exsFiltered = this.exs.filter(ex => {

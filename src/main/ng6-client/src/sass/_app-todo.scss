@@ -113,3 +113,10 @@ app-add-vdk-ex .mat-table th {
 app-add-vdk-ex .mat-table th input {
   margin: 5px !important;
 }
+
+app-add-vdk-ex .mat-table .mat-row td.app-row-orig {
+  border-bottom-color: #CCCCCC !important;
+  font-size: .9em;
+  color: #888;
+  
+}
