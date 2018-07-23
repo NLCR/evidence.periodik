@@ -697,13 +697,14 @@ public class Indexer {
 
           //System.out.println(idoc.getFieldValue("id"));
           solr.add("issue", idoc);
+          LOGGER.log(Level.FINE, "{0} added", date.format(DateTimeFormatter.BASIC_ISO_DATE));
 
         }
       }
       solr.commit("issue");
 
     } catch (SolrServerException | IOException | ParseException ex) {
-      LOGGER.log(Level.SEVERE, "Error cloning", ex);
+      LOGGER.log(Level.SEVERE, "Error duplicating exemplars", ex);
     }
   }
 
