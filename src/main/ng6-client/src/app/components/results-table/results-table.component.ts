@@ -10,6 +10,7 @@ import {Titul} from '../../models/titul';
 import {Router} from '@angular/router';
 import {Exemplar} from '../../models/exemplar';
 import {TranslateService} from '@ngx-translate/core';
+import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-results-table',
@@ -90,24 +91,24 @@ export class ResultsTableComponent implements OnInit {
           //issue[ck] = i;
         }
       }
-    });
+    }    );
 
-//    this.data.forEach((issue: Issue) => {
-//      for (let i = 0; i < this.cks.length; i++) {
-//        if (!issue.hasOwnProperty(this.cks[i])) {
-//          issue[this.cks[i]] = -1;
-//        }
-//      }
+//    this.data.forEach((issue: Issue) =    > {
+//      for (let i = 0; i < this.cks.length; i++    ) {
+//        if (!issue.hasOwnProperty(this.cks[i])    ) {
+//          issue[this.cks[i]] =     -1;
+//            }
+//          }
 //    });
-    
+
     this.dataSource = new MatTableDataSource(this.data);
     this.dataSource.paginator = this.paginator;
   }
 
   cellColor(row: Issue, vlastnik: string): string {
-    if(row.hasOwnProperty('exemplare')){
-      for(let i = 0; i<row.exemplare.length; i++){
-        if(row.exemplare[i]['vlastnik'] === vlastnik){
+    if (row.hasOwnProperty('exemplare')) {
+      for (let i = 0; i < row.exemplare.length; i++) {
+        if (row.exemplare[i]['vlastnik'] === vlastnik) {
           return this.colorByVlastnik(vlastnik);
         }
       }
@@ -158,6 +159,32 @@ export class ResultsTableComponent implements OnInit {
     );
   }
 
+  deleteEx(issue: Issue, ex: Exemplar, idxex: number) {
+
+
+    let a = this.modalService.open(ConfirmDialogComponent,
+      {
+        caption: 'modal.delete_exemplar.caption',
+        text: "modal.delete_exemplar.text",
+        param: {
+          value: ex.carovy_kod
+        }
+      });
+    a.onDestroy(() => {
+      let mm = <ConfirmDialogComponent> a.instance;
+      if (mm.confirmed) {
+        //console.log(issue.exemplare[idxex]);
+        issue.exemplare.splice(idxex, 1);
+        //console.log(issue.exemplare);
+        this.service.saveIssue(issue).subscribe(res => {
+          console.log(res);
+        })
+      }
+    });
+
+
+  }
+
   duplicate(issue: Issue, ex: Exemplar) {
     let a = this.modalService.open(AddExemplarDialogComponent,
       {
@@ -196,13 +223,13 @@ export class ResultsTableComponent implements OnInit {
     this.router.navigate(['/issue', issue.id]);
 
   }
-  
-  formatStav(ex): string{
+
+  formatStav(ex): string {
     let ret = '';
-    for(let i=0;i<ex['stav'].length;i++) {
+    for (let i = 0; i < ex['stav'].length; i++) {
       ret += this.translate.instant('record.StavIssue.' + ex['stav'][i]) + '\n';
     };
-    if(ex['stav_popis']){
+    if (ex['stav_popis']) {
       ret += ' ' + ex['stav_popis'];
     }
     return ret;
