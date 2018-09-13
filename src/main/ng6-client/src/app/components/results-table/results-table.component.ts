@@ -20,7 +20,7 @@ import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component
 export class ResultsTableComponent implements OnInit {
 
   data: Issue[] = [];
-  cks: string[] = [];
+  vlastnici: string[] = [];
   exs: any = {};
   displayedColumns = ['meta_nazev', 'mutace', 'vydani', 'datum_vydani'];
   header: string = '';
@@ -59,8 +59,8 @@ export class ResultsTableComponent implements OnInit {
   }
 
   setData() {
-    //Extract exemplare
-    this.cks = [];
+    //Extract exemplare per vlastnik
+    this.vlastnici = [];
     this.exs = {};
     this.displayedColumns = [];
     this.header = '';
@@ -78,12 +78,13 @@ export class ResultsTableComponent implements OnInit {
     this.displayedColumns.push('datum_vydani', 'cislo', 'pocet_stran', 'add');
     this.data.forEach((issue: Issue) => {
       if (issue.exemplare) {
+        issue.exemplare = issue.exemplare.sort((ex1, ex2) => { return ex1.carovy_kod.localeCompare(ex2.carovy_kod) > 0 ? 1 : -1; });
         let exs = issue.exemplare;
         for (let i = 0; i < exs.length; i++) {
           //let ck = exs[i].vlastnik + ' - ' + exs[i].signatura;
           let vlastnik = exs[i].vlastnik;
           if (!this.exs.hasOwnProperty(vlastnik) && vlastnik !== '') {
-            this.cks.push(vlastnik);
+            this.vlastnici.push(vlastnik);
             this.exs[vlastnik] = exs[i];
             this.displayedColumns.push(vlastnik);
           } else {
