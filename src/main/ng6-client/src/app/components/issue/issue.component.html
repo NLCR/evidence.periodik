@@ -87,7 +87,7 @@
     </div><!--/.col -->
 
     <div class="col s4 app-exemplar-wrapper">
-      <button mz-button [float]="true" mz-tooltip [tooltip]="'button.add_specimen' | translate" [position]="'top'" (click)="addExemplar()">
+      <button mz-button [float]="true" mz-tooltip  [disabled]="!state.logged" [tooltip]="'button.add_specimen' | translate" [position]="'top'" (click)="addExemplar()">
               <i mz-icon-mdi [icon]="'plus'"></i>
       </button>
       <h5>{{'record.specimen_count' | translate}}: {{state.currentIssue.exemplare.length}}
