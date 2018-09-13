@@ -64,6 +64,7 @@ export class ResultsTableComponent implements OnInit {
     this.exs = {};
     this.displayedColumns = [];
     this.header = '';
+    
     this.data = this.state.searchResults['response']['docs'];
     if (this.data.length === 0) {
       return;
@@ -81,7 +82,7 @@ export class ResultsTableComponent implements OnInit {
         for (let i = 0; i < exs.length; i++) {
           //let ck = exs[i].vlastnik + ' - ' + exs[i].signatura;
           let vlastnik = exs[i].vlastnik;
-          if (!this.exs.hasOwnProperty(vlastnik)) {
+          if (!this.exs.hasOwnProperty(vlastnik) && vlastnik !== '') {
             this.cks.push(vlastnik);
             this.exs[vlastnik] = exs[i];
             this.displayedColumns.push(vlastnik);

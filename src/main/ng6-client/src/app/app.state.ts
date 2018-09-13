@@ -32,6 +32,8 @@ export class AppState {
 
 
   loginError: boolean = false;
+  loginHttpError: boolean = false;
+  loginHttpErrorMsg: string = '';
   logged: boolean = false;
   redirectUrl: string = '/';
   loginuser: string = '';

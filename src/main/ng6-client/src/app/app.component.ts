@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
       }
       this.service.changeLang(userLang);
       
-      this.state.logged = window.location.href.indexOf('localhost') > -1;
+      //this.state.logged = window.location.href.indexOf('localhost') > -1;
     
       this.state.setConfig(cfg);
       this.service.getTituly().subscribe();

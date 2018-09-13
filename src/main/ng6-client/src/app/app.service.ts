@@ -16,6 +16,7 @@ import {Filter} from './models/filter';
 import {Titul} from './models/titul';
 import {Issue} from './models/issue';
 import {Exemplar} from './models/exemplar';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Injectable()
 export class AppService {
@@ -392,7 +393,8 @@ export class AppService {
 
   login() {
     this.state.loginError = false;
-    return this.doLogin().subscribe(res => {
+    return this.doLogin().subscribe(
+      res => {
       if (res.hasOwnProperty('error')) {
         this.state.loginError = true;
         this.state.logged = false;
@@ -406,6 +408,12 @@ export class AppService {
           this.router.navigate([this.state.redirectUrl]);
         }
       }
+    },
+    (err: HttpErrorResponse) =>{
+      console.log(err);
+        this.state.loginHttpError = true;
+      this.state.loginHttpErrorMsg = err.statusText;
+        this.state.logged = false;
     });
   }
 

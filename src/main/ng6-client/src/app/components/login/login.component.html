@@ -33,16 +33,20 @@
               <div class="row app-clean-mg">
                 <div class="input-field col s12">
                   <button mz-button class="col s12" [large]="'true'" 
-                    (keyup.enter)="service.login()">
+                    (click)="service.login()">
                     {{'button.login' | translate}}
                   </button>
                 </div>
               </div>
-            </form>
             
-            <div class="alert alert-warning" *ngIf="state.loginError">
+            <div class="row app-clean-mg alert alert-warning" *ngIf="state.loginError">
               {{'Špatné přihlašovací údaje' | translate}}.
             </div>
+            
+            <div class="row app-clean-mg alert alert-warning" *ngIf="state.loginHttpError">
+              {{state.loginHttpErrorMsg}}.
+            </div>
+            </form>
           </mz-card-content>
         </mz-card>
       </div><!--/.col -->
