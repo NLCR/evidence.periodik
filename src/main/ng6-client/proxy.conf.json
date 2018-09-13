@@ -20,7 +20,7 @@
     "secure": false
   },
   "/lg": {
-    "target": "http://localhost:8080/permonik/lg",
+    "target": "http://localhost:4200/assets/test/login.json",
     "ignorePath": false,
     "logLevel": "debug",
     "pathRewrite": {
