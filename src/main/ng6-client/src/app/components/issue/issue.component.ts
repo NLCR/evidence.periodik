@@ -158,4 +158,10 @@ export class IssueComponent implements OnInit {
   onCalendarClick() {
     this.router.navigate(['/calendar', this.state.currentIssue.id_titul, this.state.calendarView, this.state.currentIssue['datum_vydani_den']]);
   }
+  
+  test(){
+    console.log(this.state.currentIssue);
+    this.service.isIssueValid(this.state.currentIssue);
+    console.log(this.state.currentIssue);
+  }
 }

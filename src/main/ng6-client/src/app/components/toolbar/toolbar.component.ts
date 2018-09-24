@@ -11,7 +11,6 @@ import {CloneParams} from '../../models/clone-params';
 import {AddVdkExComponent} from '../add-vdk-ex/add-vdk-ex.component';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {Router} from '@angular/router';
-import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-toolbar',
@@ -59,6 +58,10 @@ export class ToolbarComponent implements OnInit {
   }
 
   saveRecord() {
+    console.log(this.state.currentIssue);
+    if(1<2){
+      return;
+    }
     this.state.currentIssue.state = 'ok';
     this.service.saveCurrentIssue().subscribe(res => {
       console.log(res);

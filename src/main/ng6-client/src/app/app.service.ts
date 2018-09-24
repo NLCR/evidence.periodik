@@ -201,6 +201,13 @@ export class AppService {
       if (!this.isValidAsInteger(issue.cislo)) {
         return false;
       }
+      
+      //Cistime stavy, aby nebyly "null"
+      issue.exemplare.forEach(ex => {
+        if(ex.stav){
+          ex.stav = ex.stav.filter(st => st !== "null");
+        }
+      });
       return true;
     } catch (ex) {
       console.log(ex);
@@ -211,6 +218,7 @@ export class AppService {
   saveIssue(issue: Issue) {
     console.log(issue);
     if (this.isIssueValid(issue)) {
+      console.log(issue);
       var url = this.state.config['context'] + 'index';
       let params: HttpParams = new HttpParams()
         .set('action', 'SAVE_ISSUE')
