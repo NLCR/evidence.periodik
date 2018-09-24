@@ -32,6 +32,7 @@
     "publication": {
       "placeholder": "Publication",
       "morning": "Morning",
+      "midday": "Midday",
       "afternoon": "Afternoon",
       "evening": "Evening"
     },

@@ -29,6 +29,7 @@
     "publication": {
       "placeholder": "Vydání",
       "morning": "Ranní",
+      "midday": "Polední",
       "afternoon": "Odpolední",
       "evening": "Večerní"
     },
