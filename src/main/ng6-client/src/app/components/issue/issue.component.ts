@@ -23,6 +23,8 @@ export class IssueComponent implements OnInit {
   changingLang: boolean = false;
   titul_idx: number;
 
+
+
   public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
     formatSubmit: 'yyyy-mm-dd',
@@ -42,12 +44,40 @@ export class IssueComponent implements OnInit {
     //console.log(this.issue);
   }
 
+
+  showPages(ex: Exemplar): boolean {
+    return ex.stav && !ex.stav.includes('OK');
+  }
+
+
+  pagesRange: {label: string, sel: boolean}[] = [];
+
+
   setData(res: any[]) {
     if (res.length > 0) {
       this.state.currentIssue = new Issue().fromJSON(res[0]);
+
+      this.pagesRange = [];
+      for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
+        this.pagesRange.push({label: (i + 1) + "", sel: false});
+      }
+
       if (!this.state.currentIssue.hasOwnProperty('exemplare')) {
         this.state.currentIssue['exemplare'] = [];
+      } else {
+
+
+        this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
+          ex.pagesRange = [];
+          for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
+            let sel = ex.pages && ex.pages.includes((i + 1) + "");
+            ex.pagesRange.push({label: (i + 1) + "", sel: sel});
+          }
+        });
       }
+
+
+
       //console.log(this.state.currentIssue);
       this.service.getTitul(this.state.currentIssue.id_titul).subscribe(res2 => {
         this.state.currentIssue.titul = res2;
@@ -158,10 +188,10 @@ export class IssueComponent implements OnInit {
   onCalendarClick() {
     this.router.navigate(['/calendar', this.state.currentIssue.id_titul, this.state.calendarView, this.state.currentIssue['datum_vydani_den']]);
   }
-  
-  test(){
-    console.log(this.state.currentIssue);
+
+  test() {
+    console.log(this.state.currentIssue.exemplare);
     this.service.isIssueValid(this.state.currentIssue);
-    console.log(this.state.currentIssue);
+    console.log(this.state.currentIssue.exemplare);
   }
 }

@@ -5,4 +5,7 @@ export class Exemplar {
   vlastnik: string = ""; //vlastnictví	text	sigla nebo název instituce (která nemá siglu)
   carovy_kod: string = ""; //čárový kód	text	čárák svazku, ve kterém je číslo
   signatura: string = ""; //signatura	text	signatura svazku ve kterém je číslo
+  pages: string[] = []; //seznam problematickych stranek 
+  
+  pagesRange: {label:string, sel:boolean}[] = []; //cely rozsah. Neindexovat
 }

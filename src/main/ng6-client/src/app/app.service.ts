@@ -216,9 +216,7 @@ export class AppService {
   }
 
   saveIssue(issue: Issue) {
-    console.log(issue);
     if (this.isIssueValid(issue)) {
-      console.log(issue);
       var url = this.state.config['context'] + 'index';
       let params: HttpParams = new HttpParams()
         .set('action', 'SAVE_ISSUE')
@@ -295,7 +293,11 @@ export class AppService {
   }
 
   saveCurrentIssue() {
-    return this.saveIssue(this.state.currentIssue);
+    let issue: Issue = JSON.parse(JSON.stringify(this.state.currentIssue));
+    issue.exemplare.forEach((ex: Exemplar) => {
+      delete ex['pagesRange'];
+    });
+    return this.saveIssue(issue);
   }
 
   getIssue(id: string): Observable<any[]> {

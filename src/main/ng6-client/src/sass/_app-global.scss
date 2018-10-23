@@ -79,3 +79,16 @@ button:not(.btn-floating) {
   @include set-border(right, 1, solid, $app-grey-l-2);
   margin: 0 10px;
 }
+
+ul.app-pages{
+  padding: 3px;
+}
+
+li.app-page-item{
+  list-style-type: circle;
+  display: inline-block;
+  margin-right: 20px;
+}
+li.app-page-item label{
+  padding-left: 22px;
+}

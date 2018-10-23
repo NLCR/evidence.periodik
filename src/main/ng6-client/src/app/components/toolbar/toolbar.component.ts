@@ -11,6 +11,7 @@ import {CloneParams} from '../../models/clone-params';
 import {AddVdkExComponent} from '../add-vdk-ex/add-vdk-ex.component';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {Router} from '@angular/router';
+import {Exemplar} from "src/app/models/exemplar";
 
 @Component({
   selector: 'app-toolbar',
@@ -48,26 +49,31 @@ export class ToolbarComponent implements OnInit {
 
   addRecord() {
     this.service.saveCurrentIssue().subscribe(res => {
-      console.log(res);
-      if(res === 'error'){
+      //console.log(res);
+      if (res === 'error') {
         alert("Invalid data!")
-      } else if(res['error']) {
+      } else if (res['error']) {
         this.toastService.show(res['error'], 4000, 'red');
       }
     });
   }
 
   saveRecord() {
-    console.log(this.state.currentIssue);
-    if(1<2){
-      return;
-    }
+    //console.log(this.state.currentIssue);
+    this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
+      ex.pages = [];
+      ex.pagesRange.forEach(p => {
+        if (p.sel)
+          ex.pages.push(p.label);
+      });
+    });
+
     this.state.currentIssue.state = 'ok';
     this.service.saveCurrentIssue().subscribe(res => {
-      console.log(res);
-      if(res === 'error'){
+      //console.log(res);
+      if (res === 'error') {
         alert("Invalid data!")
-      } else if(res['error']) {
+      } else if (res['error']) {
         this.toastService.show(res['error'], 4000, 'red');
       }
     });
@@ -81,7 +87,7 @@ export class ToolbarComponent implements OnInit {
         caption: 'modal.delete_record.caption',
         text: "modal.delete_record.text",
         param: {
-          value: this.state.currentIssue.titul.meta_nazev + 
+          value: this.state.currentIssue.titul.meta_nazev +
           ' ' + this.state.currentIssue.datum_vydani +
           ' ' + this.state.currentIssue.mutace +
           ' ' + this.state.currentIssue.vydani
@@ -92,7 +98,7 @@ export class ToolbarComponent implements OnInit {
       if (mm.confirmed) {
         this.service.deleteIssue(this.state.currentIssue).subscribe(res => {
           console.log(res);
-          if(res['error']) {
+          if (res['error']) {
             this.toastService.show(res['error'], 4000, 'red');
           } else {
             this.router.navigate(['/result']);

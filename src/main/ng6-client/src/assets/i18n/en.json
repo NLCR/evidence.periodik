@@ -34,7 +34,8 @@
       "morning": "Morning",
       "midday": "Midday",
       "afternoon": "Afternoon",
-      "evening": "Evening"
+      "evening": "Evening",
+      "special": "Special"
     },
     
     "periodicita": {
@@ -46,6 +47,7 @@
       "P6M": "Twice per year"
     },
     "pages_count": "Pages count",
+    "lost_pages" : "Damaged/lost pages",
     "state": "State",
     "state_com": "State comment",
     "StavIssue": {

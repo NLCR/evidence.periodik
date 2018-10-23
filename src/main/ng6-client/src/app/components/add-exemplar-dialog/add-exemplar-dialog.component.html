@@ -72,6 +72,17 @@
       <mz-input-container>
         <input mz-input [label]="'record.signatura' | translate" [id]="'signatura'" [name]="'signatura'" [(ngModel)]="exemplar.signatura" type="text">
       </mz-input-container>
+      <div *ngIf="showPages()">
+        {{'record.lost_pages' | translate}}
+        <ul class="app-pages">
+          <li *ngFor="let page of pagesRange" class="app-page-item">
+            <mz-checkbox-container>
+              <input mz-checkbox [label]="page.label" type="checkbox" [id]="'pg'+page.label"
+                     [(ngModel)]="page.sel" />
+            </mz-checkbox-container>
+          </li>
+        </ul>
+      </div>
     </div>  
       
   </mz-modal-content>

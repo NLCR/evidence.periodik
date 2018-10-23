@@ -3,7 +3,7 @@
      <div class="row">
     <div class="col s4">
 
-<a (click)="test();">test</a>
+      
       <mz-select-container *ngIf="state.isNewIssue">
         <select mz-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()" [label]="'Titul'">
                 <option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >{{tit.meta_nazev}}</option>
@@ -126,6 +126,19 @@
             <mz-input-container>
               <input mz-input [label]="'record.signatura' | translate" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura" type="text">
             </mz-input-container>
+            
+      <div *ngIf="showPages(ex)">
+        {{'record.lost_pages' | translate}}
+        <ul class="app-pages">
+          <li *ngFor="let page of ex.pagesRange" class="app-page-item">
+            <mz-checkbox-container>
+              <input mz-checkbox [label]="page.label" type="checkbox" [id]="'pg'+page.label"
+                     [(ngModel)]="page.sel" />
+            </mz-checkbox-container>
+          </li>
+        </ul>
+      </div>
+            
             <button mz-button (click)="removeExemplar(idx)">{{'button.delete_specimen' | translate}}</button>
           </mz-collapsible-item-body>
         </mz-collapsible-item>

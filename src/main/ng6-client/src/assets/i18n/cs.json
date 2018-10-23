@@ -31,9 +31,11 @@
       "morning": "Ranní",
       "midday": "Polední",
       "afternoon": "Odpolední",
-      "evening": "Večerní"
+      "evening": "Večerní",
+      "special": "Zvláštní"
     },
     "pages_count": "Počet stran",
+    "lost_pages" : "Poškozené/Chybějicí strany",
     "state": "Stav",
     "state_com": "Stav popis",
     "StavIssue": {

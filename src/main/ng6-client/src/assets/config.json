@@ -38,6 +38,6 @@
       "ChVV"
   ],
   "states":["ok", "auto"],
-  "vydani": ["morning", "midday", "afternoon", "evening"],
+  "vydani": ["morning", "midday", "afternoon", "evening", "special"],
   "test": false          
 }

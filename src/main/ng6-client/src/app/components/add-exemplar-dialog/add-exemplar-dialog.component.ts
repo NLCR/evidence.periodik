@@ -33,6 +33,8 @@ export class AddExemplarDialogComponent extends MzBaseModal {
 
   saved: boolean = false;
   onspecial: boolean;
+  
+  pagesRange:{label:string, sel:boolean}[] = []; 
 
 
   constructor(
@@ -41,11 +43,19 @@ export class AddExemplarDialogComponent extends MzBaseModal {
   }
 
   ngOnInit() {
-    console.log(this.exemplar)
     if (this.issue) {
       this.duplicate_start_date = this.issue['datum_vydani_den'];
       this.duplicate_end_date = this.issue['datum_vydani_den'];
+      for(let i=0; i<this.issue.pocet_stran; i++){
+        let sel = this.exemplar.pages && this.exemplar.pages.includes((i+1) + "");
+        this.pagesRange.push({label:(i+1) + "", sel: sel});
+        
+      }
     }
+  }
+  
+  showPages(): boolean{
+    return this.exemplar.stav && !this.exemplar.stav.includes('OK');
   }
 
   ok(): void {
@@ -53,6 +63,13 @@ export class AddExemplarDialogComponent extends MzBaseModal {
       case 'new':
         break;
       case 'edit':
+        if (this.showPages()){
+          this.exemplar.pages = [];
+          this.pagesRange.forEach(p => {
+            if (p.sel)
+            this.exemplar.pages.push(p.label);
+          });
+        }
         console.log(this.issue);
         this.service.saveIssue(this.issue).subscribe(res => {
           //console.log(res);

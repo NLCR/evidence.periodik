@@ -22,7 +22,7 @@ export class ResultsTableComponent implements OnInit {
   data: Issue[] = [];
   vlastnici: string[] = [];
   exs: any = {};
-  displayedColumns = ['meta_nazev', 'mutace', 'vydani', 'datum_vydani'];
+  displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'vydani'];
   header: string = '';
   dataSource: MatTableDataSource<Issue>;
 
@@ -117,21 +117,38 @@ export class ResultsTableComponent implements OnInit {
     }
     return '';
   }
+  
+  iconByStav(ex: Exemplar): string{
+    if(ex.stav){
+    if (ex.stav.length === 0){
+      return 'crop-square';
+    } else if (ex.stav.indexOf('OK') > -1){
+      return 'check';
+    } else if (ex.stav.indexOf('ChS') > -1){
+      return 'format-page-break';
+    } else {
+      return 'alert-outline';
+    }
+    }else{
+      return 'crop-square';
+    }
+    
+  }
 
   colorByVlastnik(vlastnik: string): string {
 
     switch (vlastnik) {
       case 'MZK': {
-        return '#d1eff1';
+        return 'rgb(235, 228, 245)';
       }
       case 'NKP': {
-        return 'rgb(197, 98, 98)';
+        return 'rgb(245, 228, 235)';
       }
       case 'UKF': {
-        return 'rgb(197, 98, 98)';
+        return 'rgb(245, 228, 235)';
       }
       case 'VKOL': {
-        return '#3586c4';
+        return 'rgb(247, 238, 175)';
       }
       default: {
         return 'yellow';
@@ -226,14 +243,18 @@ export class ResultsTableComponent implements OnInit {
 
   }
 
-  formatStav(ex): string {
+  formatStav(ex: Exemplar): string {
+    if(ex.stav){
     let ret = '';
-    for (let i = 0; i < ex['stav'].length; i++) {
-      ret += this.translate.instant('record.StavIssue.' + ex['stav'][i]) + '\n';
-    };
-    if (ex['stav_popis']) {
-      ret += ' ' + ex['stav_popis'];
-    }
+      for (let i = 0; i < ex['stav'].length; i++) {
+        ret += this.translate.instant('record.StavIssue.' + ex['stav'][i]) + '\n';
+      };
+      if (ex['stav_popis']) {
+        ret += ' ' + ex['stav_popis'];
+      }
     return ret;
+    } else {
+      return 'nekonrolováno '
+    }
   }
 }
