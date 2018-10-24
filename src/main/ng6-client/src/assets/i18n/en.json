@@ -79,6 +79,7 @@
     "barcode": "Barcode",
     "signatura": "Signature",
     "id_bib_record": "Id bib record",
+    "id_bib_record": "Url bib record",
     "uuid_number": "Uuid number",
     "uuid_title": "Uuid title",
     "url_kramerius": "URL of Kramerius",

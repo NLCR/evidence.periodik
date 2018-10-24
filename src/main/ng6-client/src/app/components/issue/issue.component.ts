@@ -194,4 +194,9 @@ export class IssueComponent implements OnInit {
     this.service.isIssueValid(this.state.currentIssue);
     console.log(this.state.currentIssue.exemplare);
   }
+  
+  openUrl(url: string){
+    console.log(url);
+    window.open(url, '_blank');
+  }
 }

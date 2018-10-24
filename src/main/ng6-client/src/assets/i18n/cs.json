@@ -76,6 +76,7 @@
     "barcode": "Čárový kód",
     "signatura": "Signatura",
     "id_bib_record": "Id bib záznamu",
+    "url_bib_record": "Url bib záznamu",
     "uuid_number": "Uuid čísla",
     "uuid_title": "Uuid titulu",
     "id_titul": "id titulu",

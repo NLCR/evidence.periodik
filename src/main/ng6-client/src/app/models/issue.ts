@@ -20,7 +20,8 @@ export class Issue {
   rocnik_number: number;
   cislo: number = 0; //číslo	číslo	pořadové číslo uvedené na čísle
   druhe_cislo: number = 0; //druhé číslo	číslo	další paralelní číslování, kdyby bylo třeba
-  id_bib_zaznamu: string = ""; //id bib záznamu	id	prolink na bib. záznam (id, URL)
+  id_bib_zaznamu: string = ""; //id bib záznamu	id
+  url_bib_zaznamu: string = ""; //url bib záznamu	prolink na bib. záznam (id, URL)
   uuid_cisla: string = ""; //uuid čísla	text	pokud je to z Krameria
   uuid_titulu: string = ""; //uuid titulu	text	pokud je to z Krameria
   url_krameria: string = ""; //URL krameria	text	pokud je to z Krameria
