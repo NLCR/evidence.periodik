@@ -11,7 +11,7 @@
       <a routerLink="issue">{{'navbar.add_record' | translate}}</a>
     </mz-navbar-item>
     <mz-navbar-item *ngIf="!state.logged" routerLinkActive="active" #login="routerLinkActive" [active]="login.isActive">
-      <a routerLink="login">{{'navbar.login' | translate}}</a>
+      <a (click)="gologin()">{{'navbar.login' | translate}}</a>
     </mz-navbar-item>
     <mz-navbar-item *ngIf="state.logged" >
       <a (click)="logout()">{{'navbar.logout' | translate}}</a>

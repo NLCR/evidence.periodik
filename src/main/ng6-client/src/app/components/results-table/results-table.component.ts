@@ -4,7 +4,7 @@ import {Input} from '@angular/core';
 import {Issue} from '../../models/issue';
 import {AppState} from '../../app.state';
 import {AddExemplarDialogComponent} from '../add-exemplar-dialog/add-exemplar-dialog.component';
-import {MzModalService} from 'ngx-materialize';
+import {MzModalService, MzToastService} from 'ngx-materialize';
 import {AppService} from '../../app.service';
 import {Titul} from '../../models/titul';
 import {Router} from '@angular/router';
@@ -33,7 +33,8 @@ export class ResultsTableComponent implements OnInit {
     public state: AppState,
     public service: AppService,
     private translate: TranslateService,
-    private modalService: MzModalService) {
+    private modalService: MzModalService,
+    private toastService: MzToastService) {
 
 
     // Assign the data to the data source for the table to render
@@ -196,7 +197,7 @@ export class ResultsTableComponent implements OnInit {
         issue.exemplare.splice(idxex, 1);
         //console.log(issue.exemplare);
         this.service.saveIssue(issue).subscribe(res => {
-          console.log(res);
+          this.toastService.show('Deleted success!', 2000, 'green');
         })
       }
     });

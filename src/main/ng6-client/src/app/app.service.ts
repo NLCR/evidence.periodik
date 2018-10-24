@@ -292,7 +292,7 @@ export class AppService {
     return this.http.get(url, {params: params});
   }
 
-  saveCurrentIssue() {
+  saveCurrentIssue(): Observable<any> {
     let issue: Issue = JSON.parse(JSON.stringify(this.state.currentIssue));
     issue.exemplare.forEach((ex: Exemplar) => {
       delete ex['pagesRange'];

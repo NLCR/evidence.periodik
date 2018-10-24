@@ -4,6 +4,7 @@ import {Subject} from 'rxjs';
 import {Titul} from './models/titul';
 import {Issue} from './models/issue';
 import {Filter} from './models/filter';
+import {UrlSegment} from "@angular/router";
 
 @Injectable()
 export class AppState {

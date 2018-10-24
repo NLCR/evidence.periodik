@@ -77,6 +77,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
             this.toastService.show(res['error'], 4000, 'red');
           } else {
             this.modalComponent.closeModal();
+            this.toastService.show('Saved!!', 2000, 'green');
           }
         });
         break;

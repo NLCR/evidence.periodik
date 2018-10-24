@@ -12,6 +12,7 @@ import {AddVdkExComponent} from '../add-vdk-ex/add-vdk-ex.component';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {Router} from '@angular/router';
 import {Exemplar} from "src/app/models/exemplar";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-toolbar',
@@ -54,6 +55,8 @@ export class ToolbarComponent implements OnInit {
         alert("Invalid data!")
       } else if (res['error']) {
         this.toastService.show(res['error'], 4000, 'red');
+      } else {
+        this.toastService.show('Saved!!', 2000, 'green');
       }
     });
   }
@@ -75,7 +78,13 @@ export class ToolbarComponent implements OnInit {
         alert("Invalid data!")
       } else if (res['error']) {
         this.toastService.show(res['error'], 4000, 'red');
+      } else {
+        this.toastService.show('Saved!!', 2000, 'green');
       }
+    },
+    (error: HttpErrorResponse) =>{
+      console.log(error);
+      this.toastService.show(error.message, 4000, 'red');
     });
 
   }
