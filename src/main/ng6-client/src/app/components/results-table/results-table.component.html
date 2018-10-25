@@ -69,7 +69,7 @@
                 <span (click)="viewClick(row, ex)" class="app-cursor-pointer">{{ex['carovy_kod']}}</span>&#160;
                 <i mz-icon-mdi class="app-cursor-pointer" [icon]="'content-duplicate'" [size]="16" [title]="'duplicate'" (click)="duplicate(row, ex)"></i>&#160;
                 <i mz-icon-mdi class="app-cursor-pointer" [icon]="'close-circle-outline'" [size]="16" [title]="'delete exemplar'" (click)="deleteEx(row, ex, idxex)"></i>&#160;
-                <i class="app-cursor-pointer" mz-icon-mdi [icon]="iconByStav(ex)" [size]="20" [title]="formatStav(ex)" (click)="viewClick(row, ex)"></i>
+                <i class="app-cursor-pointer" [style.color]="colorByStav(ex)" mz-icon-mdi [icon]="iconByStav(ex)" [size]="20" [title]="formatStav(ex)" (click)="viewClick(row, ex)"></i>
               ] </ng-container>
             </span>
           

@@ -73,10 +73,11 @@ export class ResultsTableComponent implements OnInit {
 
     this.addColumn('meta_nazev');
     this.addColumn('mutace');
+    this.displayedColumns.push('datum_vydani');
     this.addColumn('vydani');
 
 
-    this.displayedColumns.push('datum_vydani', 'cislo', 'pocet_stran', 'add');
+    this.displayedColumns.push('cislo', 'pocet_stran', 'add');
     this.data.forEach((issue: Issue) => {
       if (issue.exemplare) {
         issue.exemplare = issue.exemplare.sort((ex1, ex2) => { return ex1.carovy_kod.localeCompare(ex2.carovy_kod) > 0 ? 1 : -1; });
@@ -124,7 +125,7 @@ export class ResultsTableComponent implements OnInit {
     if (ex.stav.length === 0){
       return 'crop-square';
     } else if (ex.stav.indexOf('OK') > -1){
-      return 'check';
+      return 'check-circle';
     } else if (ex.stav.indexOf('ChS') > -1){
       return 'format-page-break';
     } else {
@@ -132,6 +133,21 @@ export class ResultsTableComponent implements OnInit {
     }
     }else{
       return 'crop-square';
+    }
+    
+  }
+  
+  colorByStav(ex: Exemplar): string{
+    if(ex.stav){
+    if (ex.stav.length === 0){
+      return 'black';
+    } else if (ex.stav.indexOf('OK') > -1){
+      return 'green';
+    } else {
+      return 'red';
+    }
+    }else{
+      return 'black';
     }
     
   }
