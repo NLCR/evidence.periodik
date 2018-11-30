@@ -32,7 +32,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
   duplicate_start_cislo: number;
 
   saved: boolean = false;
-  onspecial: boolean;
+  onspecial: boolean = false;
   
   pagesRange:{label:string, sel:boolean}[] = []; 
 
@@ -59,18 +59,26 @@ export class AddExemplarDialogComponent extends MzBaseModal {
   }
 
   ok(): void {
-    switch (this.editType) {
-      case 'new':
-        break;
-      case 'edit':
-        if (this.showPages()){
+    if (this.showPages()){
           this.exemplar.pages = [];
           this.pagesRange.forEach(p => {
             if (p.sel)
             this.exemplar.pages.push(p.label);
           });
         }
-        console.log(this.issue);
+        
+        
+        if(this.exemplar.stav){
+          this.exemplar.stav = this.exemplar.stav.filter(st => st !== "null");
+        }
+      
+      
+    switch (this.editType) {
+      case 'new':
+        break;
+      case 'edit':
+        
+        //console.log(this.issue);
         this.service.saveIssue(this.issue).subscribe(res => {
           //console.log(res);
           if (res['error']) {
@@ -83,7 +91,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
         break;
       case 'duplicate':
         this.service.duplicateExemplar(this.issue, this.exemplar.vlastnik,
-          this.duplicate_start_cislo,
+          this.issue.cislo,
           this.onspecial, this.exemplar, this.duplicate_start_date, this.duplicate_end_date).subscribe(res => {
             //console.log(res);
 

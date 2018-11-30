@@ -43,9 +43,11 @@
                  id="end_date" name="end_date"
                  type="text" />
         </mz-datepicker-container>
+        <!--
         <mz-input-container>
           <input mz-input [label]="'record.number' | translate" [id]="'start_cislo'" [name]="'start_cislo'" [(ngModel)]="duplicate_start_cislo" type="number">
         </mz-input-container>
+        -->
         
     <mz-checkbox-container>
       <input mz-checkbox
@@ -70,7 +72,8 @@
         <input mz-input [label]="'record.state_com' | translate" [id]="'stav_popis'" [name]="'stav_popis'" [(ngModel)]="exemplar.stav_popis" type="text">
       </mz-input-container>
       <mz-input-container>
-        <input mz-input [label]="'record.signatura' | translate" [id]="'signatura'" [name]="'signatura'" [(ngModel)]="exemplar.signatura" type="text">
+        <input mz-input [label]="'record.signatura' | translate" id="signatura" name="signatura" [(ngModel)]="exemplar.signatura" type="text"
+               autocomplete="on">
       </mz-input-container>
       <div *ngIf="showPages()">
         {{'record.lost_pages' | translate}}

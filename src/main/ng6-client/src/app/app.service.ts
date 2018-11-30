@@ -243,7 +243,7 @@ export class AppService {
     newIssue.id = null;
     newIssue.vydani = vydani;
 
-    console.log(newIssue);
+    //console.log(newIssue);
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
       .set('action', 'SAVE_ISSUE')
@@ -253,7 +253,7 @@ export class AppService {
   }
 
   duplicateExemplar(issue: Issue, vlastnik: string, start_cislo: number, onspecial: boolean, exemplar: Exemplar, start: string, end: string) {
-
+//console.log(exemplar);
     var url = this.state.config['context'] + 'index';
     let params: HttpParams = new HttpParams()
       .set('action', 'DUPLICATE_EX')
