@@ -142,7 +142,11 @@ export class ResultsTableComponent implements OnInit {
     if (ex.stav.length === 0){
       return 'black';
     } else if (ex.stav.indexOf('OK') > -1){
-      return 'green';
+      if(ex.stav.length > 1){
+        return 'rosybrown';
+      } else {
+        return 'green';
+      }
     } else {
       return 'red';
     }
