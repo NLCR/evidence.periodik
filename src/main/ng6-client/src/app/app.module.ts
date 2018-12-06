@@ -47,7 +47,11 @@ import {
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
-  MatTooltipModule} from '@angular/material';
+  MatTooltipModule,
+  MAT_DATE_LOCALE,
+  MAT_DATE_FORMATS,
+  NativeDateModule,
+  DateAdapter} from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 
 import { AppState } from './app.state';
@@ -83,6 +87,7 @@ import { AddVdkExComponent } from './components/add-vdk-ex/add-vdk-ex.component'
 import { AddVydaniDialogComponent } from './components/add-vydani-dialog/add-vydani-dialog.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import {AuthGuard} from './auth-guard';
+import { EditPagesComponent } from './components/edit-pages/edit-pages.component';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -126,14 +131,16 @@ export function createTranslateLoader(http: HttpClient) {
     AddTitulDialogComponent,
     AddVdkExComponent,
     AddVydaniDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    EditPagesComponent
   ],
   entryComponents: [ConfirmDialogComponent,
     CloneDialogComponent, 
     AddExemplarDialogComponent, 
     AddTitulDialogComponent, 
     AddVdkExComponent,
-    AddVydaniDialogComponent],
+    AddVydaniDialogComponent,
+    EditPagesComponent],
   imports: [
     BrowserModule,
     FormsModule,
@@ -206,7 +213,8 @@ export function createTranslateLoader(http: HttpClient) {
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ])
   ],
-  providers: [HttpClient, DatePipe, AppState, AppService, AuthGuard],
+  providers: [HttpClient, DatePipe, AppState, AppService, AuthGuard
+   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -75,6 +75,14 @@
         <input mz-input [label]="'record.signatura' | translate" id="signatura" name="signatura" [(ngModel)]="exemplar.signatura" type="text"
                autocomplete="on">
       </mz-input-container>
+      <mz-input-container>
+              <input mz-input [label]="'record.oznaceni' | translate" [id]="'oznaceni'" [name]="'oznaceni'" [(ngModel)]="exemplar.oznaceni" type="text"
+                  #box (keyup)="filterOznaceni(box.value)">
+            </mz-input-container>
+            <mz-input-container>
+              <input mz-input [label]="'record.popis_oznaceni_vydani' | translate" 
+                     [id]="'popis_oznaceni_vydani'" [name]="'popis_oznaceni_vydani'" [(ngModel)]="exemplar.popis_oznaceni_vydani" type="text">
+            </mz-input-container>
       <div *ngIf="showPages()">
         {{'record.lost_pages' | translate}}
         <ul class="app-pages">

@@ -11,6 +11,8 @@ import {Exemplar} from '../../models/exemplar';
 import {AddTitulDialogComponent} from '../add-titul-dialog/add-titul-dialog.component';
 import {MzModalService} from 'ngx-materialize';
 import {AddVydaniDialogComponent} from '../add-vydani-dialog/add-vydani-dialog.component';
+import {EditPagesComponent} from "src/app/components/edit-pages/edit-pages.component";
+import {DateAdapter} from "@angular/material/core";
 
 @Component({
   selector: 'app-issue',
@@ -28,6 +30,8 @@ export class IssueComponent implements OnInit {
   public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
     formatSubmit: 'yyyy-mm-dd',
+    //editable: true,
+    selectYears: true,
     clear: null
   };
 
@@ -50,34 +54,41 @@ export class IssueComponent implements OnInit {
   }
 
 
-  pagesRange: {label: string, sel: boolean}[] = [];
+  pagesRange: {label: string, index: number}[] = [];
 
+  setPagesRange() {
+    this.pagesRange = [];
+    if (this.state.currentIssue.pages.length === 0) {
+      for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
+        this.pagesRange.push({label: (i + 1) + "", index: i});
+      }
+    } else {
+      this.pagesRange = JSON.parse(JSON.stringify(this.state.currentIssue.pages));
+      if (this.state.currentIssue.pages.length < this.state.currentIssue.pocet_stran) {
+        for (let i = this.state.currentIssue.pages.length; i < this.state.currentIssue.pocet_stran; i++) {
+          this.pagesRange.push({label: (i + 1) + "", index: i});
+        }
+      }
+    }
+
+    if (!this.state.currentIssue.hasOwnProperty('exemplare')) {
+      this.state.currentIssue['exemplare'] = [];
+    } else {
+      this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
+        ex.pagesRange = [];
+        for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
+          let sel = ex.pages && ex.pages.includes((i + 1) + "");
+          ex.pagesRange.push({label: this.pagesRange[i].label, sel: sel});
+        }
+      });
+    }
+  }
 
   setData(res: any[]) {
     if (res.length > 0) {
       this.state.currentIssue = new Issue().fromJSON(res[0]);
 
-      this.pagesRange = [];
-      for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
-        this.pagesRange.push({label: (i + 1) + "", sel: false});
-      }
-
-      if (!this.state.currentIssue.hasOwnProperty('exemplare')) {
-        this.state.currentIssue['exemplare'] = [];
-      } else {
-
-
-        this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
-          ex.pagesRange = [];
-          for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
-            let sel = ex.pages && ex.pages.includes((i + 1) + "");
-            ex.pagesRange.push({label: (i + 1) + "", sel: sel});
-          }
-        });
-      }
-
-
-
+      this.setPagesRange();
       //console.log(this.state.currentIssue);
       this.service.getTitul(this.state.currentIssue.id_titul).subscribe(res2 => {
         this.state.currentIssue.titul = res2;
@@ -185,6 +196,32 @@ export class IssueComponent implements OnInit {
 
   }
 
+
+  editPages() {
+
+    let a = this.modalService.open(EditPagesComponent,
+      {"issue": this.state.currentIssue, "state": this.state, "service": this.service}
+    );
+    a.onDestroy(() => {
+      let mm = <EditPagesComponent> a.instance;
+      if (mm.saved) {
+        this.setPagesRange();
+      }
+    });
+  }
+  
+  formatPages(){
+    let s = '';
+    this.pagesRange.forEach(p => {
+      s += p.label + ', ';
+    });
+    return s;
+  }
+  
+  filterOznaceni(e: string, ex: Exemplar){
+    ex.oznaceni = new Array(e.length + 1).join( this.state.currentIssue.znak_oznaceni_vydani );
+  }
+
   onCalendarClick() {
     this.router.navigate(['/calendar', this.state.currentIssue.id_titul, this.state.calendarView, this.state.currentIssue['datum_vydani_den']]);
   }
@@ -194,8 +231,8 @@ export class IssueComponent implements OnInit {
     this.service.isIssueValid(this.state.currentIssue);
     console.log(this.state.currentIssue.exemplare);
   }
-  
-  openUrl(url: string){
+
+  openUrl(url: string) {
     console.log(url);
     window.open(url, '_blank');
   }

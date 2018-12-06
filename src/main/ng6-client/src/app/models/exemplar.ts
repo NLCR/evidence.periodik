@@ -8,4 +8,6 @@ export class Exemplar {
   pages: string[] = []; //seznam problematickych stranek 
   
   pagesRange: {label:string, sel:boolean}[] = []; //cely rozsah. Neindexovat
+  oznaceni: string; //github #46 k exempláři přidat pole "označení regionálního vydání" - vkládání symbolů - př hvězdička, puntík - zobrazení v přehledové tabulce 
+  popis_oznaceni_vydani: string //github #46
 }

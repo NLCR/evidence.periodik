@@ -46,11 +46,24 @@ export class AddExemplarDialogComponent extends MzBaseModal {
     if (this.issue) {
       this.duplicate_start_date = this.issue['datum_vydani_den'];
       this.duplicate_end_date = this.issue['datum_vydani_den'];
-      for(let i=0; i<this.issue.pocet_stran; i++){
-        let sel = this.exemplar.pages && this.exemplar.pages.includes((i+1) + "");
-        this.pagesRange.push({label:(i+1) + "", sel: sel});
-        
-      }
+      if (!this.issue.pages || this.issue.pages.length === 0){
+        for(let i=0; i<this.issue.pocet_stran; i++){
+          //this.pages.push({label:(i+1) + "", index: i});
+          let sel = this.exemplar.pages && this.exemplar.pages.includes((i+1) + "");
+          this.pagesRange.push({label:(i+1) + "", sel: sel});
+        }
+      } else {
+        for(let i=0; i<this.issue.pages.length; i++){
+          let label = this.issue.pages[i].label;
+          let sel = this.exemplar.pages && this.exemplar.pages.includes((i+1) + "");
+          this.pagesRange.push({label:label, sel: sel});
+        }
+        for(let i=this.issue.pages.length; i<this.issue.pocet_stran; i++){
+          let sel = this.exemplar.pages && this.exemplar.pages.includes((i+1) + "");
+          this.pagesRange.push({label:(i+1) + "", sel: sel});
+        }
+      } 
+      
     }
   }
   
@@ -105,6 +118,10 @@ export class AddExemplarDialogComponent extends MzBaseModal {
         break;
     }
 
+  }
+  
+  filterOznaceni(e: string){
+    this.exemplar.oznaceni = new Array(e.length + 1).join( this.issue.znak_oznaceni_vydani );
   }
 
   cancel() {

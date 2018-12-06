@@ -16,6 +16,7 @@ export class Issue {
   periodicita: string = "";
   cas_vydani: number = 0; //čas vydání	čas	generuje se (hlavně důležité v případě více vydání téže mutace v jednom dni) na základě názvu vydání. Bude existovat tabulka, která každému názvu vydání přiřadí čas kvůli řazení
   pocet_stran: number = 0; //počet stran	celé číslo	předpokládám, že vždy sudé. 0 může znamenat že nevyšlo, -1 že není znám počet stran
+  pages: {index: number, label: string}[] = []; //detailne popsane stranky
   rocnik: string = ""; //ročník	text	jak je uveden na exempláři
   rocnik_number: number;
   cislo: number = 0; //číslo	číslo	pořadové číslo uvedené na čísle
@@ -36,6 +37,7 @@ export class Issue {
   signatura: string = ""; //signatura	text	signatura svazku ve kterém je číslo
   */
   
+  znak_oznaceni_vydani: string = "*"; //github #47 "Způsob označení mutace": znaky  * nebo • nebo +/.
   
   state: string = "auto"; // Slouzi pro oznaceni aktualinho stavu v ramci aplikace. Tj, automaticke generovane, podtverzeno
   

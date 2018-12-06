@@ -79,6 +79,9 @@ export class ResultsTableComponent implements OnInit {
 
     this.displayedColumns.push('cislo', 'pocet_stran', 'add');
     this.data.forEach((issue: Issue) => {
+      if(!issue.znak_oznaceni_vydani){
+        issue.znak_oznaceni_vydani = "*";
+      }
       if (issue.exemplare) {
         issue.exemplare = issue.exemplare.sort((ex1, ex2) => { return ex1.carovy_kod.localeCompare(ex2.carovy_kod) > 0 ? 1 : -1; });
         let exs = issue.exemplare;

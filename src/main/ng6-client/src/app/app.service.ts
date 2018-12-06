@@ -305,7 +305,7 @@ export class AppService {
     let params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
-      .set('fl', '*,exemplare:[json]')
+      .set('fl', '*,exemplare:[json],pages:[json]')
       .set('fq', 'id:"' + id + '"');
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params}).pipe(

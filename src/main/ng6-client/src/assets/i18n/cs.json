@@ -26,6 +26,9 @@
     "time_publication": "Čas vydání",
     "mutation": "Mutace",
     "date_publication": "Datum vydání",
+    "znak_oznaceni_vydani":"Způsob označení mutace",
+    "oznaceni":"Označení regionálního vydání",
+    "popis_oznaceni_vydani":"Popis označení mutace",
     "publication": {
       "placeholder": "Vydání",
       "morning": "Ranní",
