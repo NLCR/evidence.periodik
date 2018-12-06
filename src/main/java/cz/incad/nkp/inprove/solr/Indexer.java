@@ -468,6 +468,9 @@ public class Indexer {
               break;
             case "_version_":
               break;
+            case "pages":
+              idoc.setField("pages", json.getJSONArray(name).toString());
+              break;
             case "exemplare":
               //Extract vlastnik and index each exemplar
               JSONArray ex = json.getJSONArray(name);
