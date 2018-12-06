@@ -59,8 +59,8 @@ export class AddExemplarDialogComponent extends MzBaseModal {
           this.pagesRange.push({label:label, sel: sel});
         }
         for(let i=this.issue.pages.length; i<this.issue.pocet_stran; i++){
-          let sel = this.exemplar.pages && this.exemplar.pages.includes((i+1) + "");
-          this.pagesRange.push({label:(i+1) + "", sel: sel});
+          //let sel = this.exemplar.pages && this.exemplar.pages.includes((i+1) + "");
+          this.pagesRange.push({label:(i+1) + "", sel: true});
         }
       } 
       

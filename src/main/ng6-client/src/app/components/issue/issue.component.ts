@@ -24,8 +24,8 @@ export class IssueComponent implements OnInit {
 
   changingLang: boolean = false;
   titul_idx: number;
-
-
+  
+  initial_pages: number = 0;
 
   public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
@@ -83,10 +83,33 @@ export class IssueComponent implements OnInit {
       });
     }
   }
+  
+  checkPagesChanged(){
+    if(this.initial_pages < this.state.currentIssue.pocet_stran){
+      this.setPagesRange();
+      //Pridat chybejici stranky pro vsechny exemplare
+      this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
+        if(!ex.stav){
+          ex.stav = ["ChS"];
+        }else if (!ex.stav.includes("ChS")){
+          ex.stav.push("ChS");
+        }
+        if (ex.stav.includes("OK")){
+          ex.stav.splice(ex.stav.indexOf("OK"), 1);
+        }
+        for (let i = this.initial_pages; i < this.state.currentIssue.pocet_stran; i++) {
+          ex.pagesRange[i].sel = true;
+        }
+      });
+    }
+    this.initial_pages = this.state.currentIssue.pocet_stran;
+  }
 
   setData(res: any[]) {
     if (res.length > 0) {
       this.state.currentIssue = new Issue().fromJSON(res[0]);
+      
+      this.initial_pages = this.state.currentIssue.pocet_stran;
 
       this.setPagesRange();
       //console.log(this.state.currentIssue);

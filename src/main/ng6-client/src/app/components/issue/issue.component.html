@@ -75,7 +75,8 @@
       <div class="row" >
         <div class="col s11">
           <mz-input-container [inline]="true">
-            <input mz-input [label]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" [(ngModel)]="state.currentIssue.pocet_stran" type="text">
+            <input mz-input [label]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" 
+              (change)="checkPagesChanged()"  [(ngModel)]="state.currentIssue.pocet_stran" type="text">
           </mz-input-container>
           <span *ngIf="state.currentIssue.pages.length > 0" [title]="formatPages()">(...)</span><a (click)="editPages()"><i mz-icon-mdi [icon]="'pencil'" ></i></a> 
         </div> 
