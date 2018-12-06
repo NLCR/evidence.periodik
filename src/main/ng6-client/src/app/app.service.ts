@@ -335,7 +335,7 @@ export class AppService {
       .set('wt', 'json')
       .set('rows', '' + this.state.rows)
       .set('start', '' + (this.state.currentPage * this.state.rows))
-      .set('sort', 'datum_vydani_den asc')
+      .set('sort', 'datum_vydani_den asc, vydani desc')
       //.set('fq', 'exemplare:[* TO *]')
       //.set('fq', '{!collapse field=id_titul}')
       .set('facet', 'true')
