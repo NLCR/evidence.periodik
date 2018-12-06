@@ -106,7 +106,7 @@ export class AppService {
         .set('q', '*')
         .set('wt', 'json')
         .set('rows', '200')
-        .set('fl', '*,exemplare:[json]')
+        .set('fl', '*,exemplare:[json], pages:[json]')
         .set('fq', 'id_titul:"' + uuid + '"')
         .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
       url = this.state.config['context'] + 'search/issue/select';
@@ -192,9 +192,9 @@ export class AppService {
 
   isIssueValid(issue: Issue): boolean {
     try {
-      if (!this.isValidAsInteger(issue.rocnik)) {
-        return false;
-      }
+//      if (!this.isValidAsInteger(issue.rocnik)) {
+//        return false;
+//      }
       if (!this.isValidAsInteger(issue.druhe_cislo)) {
         return false;
       }
@@ -341,7 +341,7 @@ export class AppService {
       .set('facet', 'true')
       .set('facet.mincount', '1')
       .set('json.nl', 'arrntv')
-      .set('fl', '*, exemplare:[json]')
+      .set('fl', '*, exemplare:[json], pages:[json]')
       //.set('fl', '*')
       .set('stats', 'true')
       .set('stats.field', 'datum_vydani_den')
@@ -387,7 +387,7 @@ export class AppService {
       .set('rows', '500')
       .set('sort', 'datum_vydani_den asc')
       .set('fq', '{!collapse field=id_titul}')
-      .set('fl', '*, id_titul, exemplare:[json]');
+      .set('fl', '*, id_titul, exemplare:[json], pages:[json]');
 
     return this.http.get(url, {params: params});
   }
