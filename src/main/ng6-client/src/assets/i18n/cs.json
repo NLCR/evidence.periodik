@@ -16,8 +16,8 @@
   },
   "formatvdk":{
     "CISLO": "Číslo (3)", 
-    "MESIC": "Mesic(e) číslem(y) (1-155)",
-    "MESIC_SLOVA":"Mesic(e) slovy (LED-DUB)"
+    "MESIC": "Měsíc(e) číslem(y) (1-155)",
+    "MESIC_SLOVA":"Měsíc(e) slovy (LED-DUB)"
   },
   "record": {
     "meta_title": "Meta název",
