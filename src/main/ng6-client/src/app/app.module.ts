@@ -88,6 +88,7 @@ import { AddVydaniDialogComponent } from './components/add-vydani-dialog/add-vyd
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import {AuthGuard} from './auth-guard';
 import { EditPagesComponent } from './components/edit-pages/edit-pages.component';
+import { SvazekComponent } from './components/svazek/svazek.component';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -132,7 +133,8 @@ export function createTranslateLoader(http: HttpClient) {
     AddVdkExComponent,
     AddVydaniDialogComponent,
     ConfirmDialogComponent,
-    EditPagesComponent
+    EditPagesComponent,
+    SvazekComponent
   ],
   entryComponents: [ConfirmDialogComponent,
     CloneDialogComponent, 
@@ -196,6 +198,7 @@ export function createTranslateLoader(http: HttpClient) {
       { path: 'issue', component: IssueComponent, canActivate: [AuthGuard] },
       { path: 'issue/:id', component: IssueComponent },
       { path: 'home', component: HomeComponent },
+      { path: 'svazek', component: SvazekComponent },
       { path: 'result', component: ResultComponent },
       { path: 'calendar/:id', component: CalendarComponent, 
         children: [
