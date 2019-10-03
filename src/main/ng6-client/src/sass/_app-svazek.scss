@@ -1,0 +1,21 @@
+//--- SVAZEK ---
+
+.app-svazek-wrapper {
+  display: flex;
+  height: 100%;
+  //@extend .app-full-wrapper;
+ // padding: $app-container 0.5rem;
+
+  .app-container-left {
+    flex: 1;
+    padding: $app-container;
+    overflow: auto;
+   }
+  
+  .app-container-right {
+    flex: 1;
+    padding: $app-container;
+    overflow: auto;
+    background-color: $secondary-color;
+  }
+}
