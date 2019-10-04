@@ -13,18 +13,57 @@
    }
   
   .app-container-right {
-    flex: 1;
+    flex: 2;
     padding: $app-container;
     overflow: auto;
     background-color: white;
 
-    .example-container {
-      height: 200px;
+    .app-table-wrapper {
+      height: 400px;
       overflow: auto;
-    }
-    
-    table {
-      width: 100%;
+
+      table {
+        width: 100%;
+
+        thead {
+          tr {
+            height: 140px;
+
+            th {
+              background-color: $app-grey-l-2;
+              vertical-align: bottom;
+              border-right: 1px solid white;
+              padding-bottom: 5px;
+
+              &:not(.app-cell-rotate) {
+                padding-left: 5px;
+              }
+
+              &.app-cell-rotate {
+                height: 140px;
+                white-space: nowrap;
+                width: 30px !important;
+
+                & > div {
+                  transform: rotate(-90deg);
+                  width: 30px !important;
+                  margin-bottom: 10px;
+                } 
+              }
+            }
+          }
+        }
+
+        tbody {
+          tr {
+            td {
+              &.mat-cell {
+                padding-left: 5px !important;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

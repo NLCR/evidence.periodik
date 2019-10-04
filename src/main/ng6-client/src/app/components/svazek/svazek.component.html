@@ -3,31 +3,178 @@
     left
   </div>
   <div class="app-container-right">
-    <div class="example-container mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource">
-    
-        <!-- Position Column -->
-        <ng-container matColumnDef="position">
-          <th mat-header-cell *matHeaderCellDef> No. </th>
-          <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+    <div class="app-table-wrapper">
+      <table mat-table [dataSource]="dataSource">   
+        <!-- Date -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>datum</th>
+          <td mat-cell *matCellDef="let element">{{ element.date }}</td>
         </ng-container>
     
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Name </th>
-          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        <!-- Number exist -->
+        <ng-container matColumnDef="numExist">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>číslo existuje</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Add next edition -->
+        <ng-container matColumnDef="addNextEdition">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>přidat další vydání</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <i mz-icon-mdi [icon]="'plus'" [size]="24" (click)="viewIssue(row)"></i>
+          </td>
         </ng-container>
     
-        <!-- Weight Column -->
-        <ng-container matColumnDef="weight">
-          <th mat-header-cell *matHeaderCellDef> Weight </th>
-          <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+        <!-- Edition number -->
+        <ng-container matColumnDef="editionNumber">
+          <th mat-header-cell *matHeaderCellDef>cislo</th>
+          <td mat-cell *matCellDef="let element">{{ element.editionNumber }}</td>
         </ng-container>
-    
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="symbol">
-          <th mat-header-cell *matHeaderCellDef> Symbol </th>
-          <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+
+        <!-- Mutation -->
+        <ng-container matColumnDef="mutation">
+          <th mat-header-cell *matHeaderCellDef>mutace</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-form-field>
+              <mat-select [(value)]="selected">
+                <mat-option value="option1">Praha</mat-option>
+                <mat-option value="option2">Brno</mat-option>
+                <mat-option value="option3">Olomouc</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+
+        <!-- Edition -->
+        <ng-container matColumnDef="edition">
+          <th mat-header-cell *matHeaderCellDef>vydani</th>
+          <td mat-cell *matCellDef="let element">{{ element.edition }}</td>
+        </ng-container>
+
+        <!-- This is attachement -->
+        <ng-container matColumnDef="thisIsAttachement">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>toto je příloha</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Attachement name -->
+        <ng-container matColumnDef="attachementName">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>název přílohy</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.attachementName }}
+          </td>
+        </ng-container>
+
+        <!-- Page number -->
+        <ng-container matColumnDef="pageNumber">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>počet stran</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.pageNumber }}
+          </td>
+        </ng-container>
+
+        <!-- Mutation edition -->
+        <ng-container matColumnDef="mutationEdition">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>mutační vydání</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            ?
+          </td>
+        </ng-container>
+
+        <!-- Destroyed pages -->
+        <ng-container matColumnDef="destroyedPages">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>poškozené strany</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Degradated -->
+        <ng-container matColumnDef="degradated">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>degradované</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Missing pages -->
+        <ng-container matColumnDef="missingPages">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>chybí strany</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Erroneous paging -->
+        <ng-container matColumnDef="erroneousPaging">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>chybná paginace</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Erroneous date -->
+        <ng-container matColumnDef="erroneousDate">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>chybné datum</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Erroneous numbering -->
+        <ng-container matColumnDef="erroneousNumbering">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>chybné číslování</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Wrongly bound -->
+        <ng-container matColumnDef="wronglyBound">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>chybně svázáno</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Censored -->
+        <ng-container matColumnDef="censored">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>cenzurováno</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
         </ng-container>
     
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
