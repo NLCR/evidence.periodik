@@ -3,12 +3,13 @@
 
 @import "sass/app-variables";
 
-@import "../node_modules/materialize-css/sass/materialize.scss";
+// material basic theme 
+//@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
-@import "../node_modules/mdi/scss/materialdesignicons.scss";
+@import "../node_modules/materialize-css/sass/materialize.scss";
+//@import "../node_modules/mdi/scss/materialdesignicons.scss";
 
 //@import "sass/fontface/roboto-condensed/roboto-condensed-fontface";
-
 
 @import "sass/app-mixins";
 @import "sass/app-mdi";

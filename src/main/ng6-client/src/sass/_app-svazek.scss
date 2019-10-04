@@ -16,6 +16,15 @@
     flex: 1;
     padding: $app-container;
     overflow: auto;
-    background-color: $secondary-color;
+    background-color: white;
+
+    .example-container {
+      height: 200px;
+      overflow: auto;
+    }
+    
+    table {
+      width: 100%;
+    }
   }
 }
