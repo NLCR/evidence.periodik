@@ -5,10 +5,10 @@
 
 // material basic theme 
 //@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import "~@angular/material/theming";
 
 @import "../node_modules/materialize-css/sass/materialize.scss";
 //@import "../node_modules/mdi/scss/materialdesignicons.scss";
-
 //@import "sass/fontface/roboto-condensed/roboto-condensed-fontface";
 
 @import "sass/app-mixins";
@@ -19,3 +19,19 @@
 @import "sass/app-navbar";
 @import "sass/app-search-bar";
 @import "sass/app-modal";
+
+
+// material theming
+@include mat-core();
+
+// Define the theme.
+$candy-app-primary: mat-palette($mat-indigo);
+$candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$candy-app-theme:   mat-light-theme($candy-app-primary, $candy-app-accent);
+
+// Include the theme styles for only specified components.
+@include mat-core-theme($candy-app-theme);
+@include mat-table-theme($candy-app-theme);
+@include mat-select-theme($candy-app-theme);
+@include mat-checkbox-theme($candy-app-theme);
+//@include mat-button-theme($candy-app-theme);

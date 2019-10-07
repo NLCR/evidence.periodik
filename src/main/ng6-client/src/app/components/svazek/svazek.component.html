@@ -1,10 +1,119 @@
 <div class="app-svazek-wrapper grey lighten-5">
   <div class="app-container-left">
-    left
-  </div>
+    
+    <div class="app-table-wrapper app-table-left-top">
+      <table mat-table [dataSource]="dataSourceLeftTableTop">   
+        <!-- Atribut -->
+        <ng-container matColumnDef="attribute">
+          <th mat-header-cell *matHeaderCellDef>atribut</th>
+          <td mat-cell *matCellDef="let element">{{ element.attribute }}</td>
+        </ng-container>
+
+        <!-- Value -->
+        <ng-container matColumnDef="value">
+          <th mat-header-cell *matHeaderCellDef>hodnota</th>
+          <td mat-cell *matCellDef="let element">
+            <ng-container *ngIf="element.value === ''">
+              <mat-select [(value)]="selected">
+                <mat-option value="option1">Mlada fronta</mat-option>
+                <mat-option value="option2">Lidove noviny</mat-option>
+                <mat-option value="option3">Rude pravo</mat-option>
+              </mat-select>
+            </ng-container>
+            <ng-container *ngIf="element.value !== ''">
+              {{ element.value }}
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsLeftTableTop;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsLeftTableTop;"></tr>
+      </table>
+      <button mat-raised-button>(Znovu) načíst celý svazek</button> 
+      <button mat-raised-button>Uložit celý svazek</button>
+    </div><!--/.app-table-left-top -->
+    
+    
+    <div class="app-table-wrapper app-table-left-bottom">
+      <table mat-table [dataSource]="dataSourceLeftTableBottom">   
+        <!-- GoOut -->
+        <ng-container matColumnDef="goOut">
+          <th mat-header-cell *matHeaderCellDef>Vychazi</th>
+          <td mat-cell *matCellDef="let element">{{ element.goOut }}</td>
+        </ng-container>
+    
+        <!-- Number exist -->
+        <ng-container matColumnDef="numExist2">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>číslo existuje</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Edition -->
+        <ng-container matColumnDef="edition2">
+          <th mat-header-cell *matHeaderCellDef>vydani</th>
+          <td mat-cell *matCellDef="let element">
+            <mat-form-field>
+              <mat-select [(value)]="selected">
+                <mat-option value="option1">ranni</mat-option>
+                <mat-option value="option2">poledni</mat-option>
+                <mat-option value="option3">odpoledni</mat-option>
+                <mat-option value="option3">neurceno</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </ng-container>
+        
+        <!-- Page number -->
+        <ng-container matColumnDef="pageNumber2">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>počet stran</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.pageNumber2 }}
+          </td>
+        </ng-container>
+
+        <!-- This is attachement -->
+        <ng-container matColumnDef="thisIsAttachement2">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>Toto je priloha</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <mat-checkbox></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Attachement name -->
+        <ng-container matColumnDef="attachementName2">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>název přílohy</div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.attachementName2 }}
+          </td>
+        </ng-container>
+
+        <!-- Button-->
+        <ng-container matColumnDef="button">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let element">
+            <button mat-raised-button>Vlozit dalsi vydani</button> 
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsLeftTableBottom; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsLeftTableBottom;"></tr>
+      </table>
+    </div>
+  </div><!--/.app-container-left -->
+
   <div class="app-container-right">
-    <div class="app-table-wrapper">
-      <table mat-table [dataSource]="dataSource">   
+    <div class="app-table-wrapper app-table-right">
+      <table mat-table [dataSource]="dataSourceRightTable">   
         <!-- Date -->
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef>datum</th>
@@ -54,7 +163,16 @@
         <!-- Edition -->
         <ng-container matColumnDef="edition">
           <th mat-header-cell *matHeaderCellDef>vydani</th>
-          <td mat-cell *matCellDef="let element">{{ element.edition }}</td>
+          <td mat-cell *matCellDef="let element">
+            <mat-form-field>
+              <mat-select [(value)]="selected">
+                <mat-option value="option1">ranni</mat-option>
+                <mat-option value="option2">poledni</mat-option>
+                <mat-option value="option3">odpoledni</mat-option>
+                <mat-option value="option3">neurceno</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
         </ng-container>
 
         <!-- This is attachement -->
@@ -177,8 +295,8 @@
           </td>
         </ng-container>
     
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsRightTable; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsRightTable;"></tr>
       </table>
     </div>
   </div>

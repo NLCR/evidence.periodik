@@ -17,48 +17,62 @@
     padding: $app-container;
     overflow: auto;
     background-color: white;
+  }
 
-    .app-table-wrapper {
+  .app-table-wrapper {
+
+    &.app-table-left-bottom {
       height: 400px;
       overflow: auto;
+    }
 
-      table {
-        width: 100%;
+    &.app-table-right {
+      height: 100%;
+      overflow: auto;
+    }
 
-        thead {
-          tr {
-            height: 140px;
+    .mat-table {
+      width: 100%;
 
-            th {
-              background-color: $app-grey-l-2;
-              vertical-align: bottom;
-              border-right: 1px solid white;
-              padding-bottom: 5px;
+      thead {
+        .mat-header-row {
+          height: 140px;
 
-              &:not(.app-cell-rotate) {
-                padding-left: 5px;
-              }
+          .mat-header-cell {
+            background-color: $app-grey-l-2;
+            vertical-align: bottom;
+            border-right: 1px solid white;
+            padding-bottom: 5px;
 
-              &.app-cell-rotate {
-                height: 140px;
-                white-space: nowrap;
+            &:not(.app-cell-rotate) {
+              padding-left: 5px;
+            }
+
+            &.app-cell-rotate {
+              height: 140px;
+              white-space: nowrap;
+              width: 30px !important;
+
+              & > div {
+                transform: rotate(-90deg);
                 width: 30px !important;
-
-                & > div {
-                  transform: rotate(-90deg);
-                  width: 30px !important;
-                  margin-bottom: 10px;
-                } 
-              }
+                margin-bottom: 10px;
+              } 
             }
           }
         }
+      }
 
-        tbody {
-          tr {
-            td {
-              &.mat-cell {
-                padding-left: 5px !important;
+      tbody {
+        .mat-row {
+          .mat-cell {
+            padding-left: 5px !important;
+
+            .mat-form-field-wrapper {
+              padding-bottom: 0;
+
+              .mat-form-field-infix {
+                border-top: 0;
               }
             }
           }
