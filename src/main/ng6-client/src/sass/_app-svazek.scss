@@ -3,8 +3,6 @@
 .app-svazek-wrapper {
   display: flex;
   height: 100%;
-  //@extend .app-full-wrapper;
- // padding: $app-container 0.5rem;
 
   .app-container-left {
     flex: 1;
@@ -20,13 +18,8 @@
   }
 
   .app-table-wrapper {
-    &.app-table-left-top,
-    &.app-table-left-bottom {
-      //margin-bottom: 10px;
-    }
-
-    &.app-table-left-top {
-      height: 50%;
+    &.app-left-top {
+      height: $app-svazek-table-left-height;
       overflow: auto;
 
       .mat-footer-cell {
@@ -38,8 +31,8 @@
       }
     }
 
-    &.app-table-left-bottom {
-      height: 50%;
+    &.app-left-bottom {
+      height: calc(100% - #{$app-svazek-table-left-height});
       overflow: auto;
 
       .mat-footer-cell {
@@ -51,8 +44,8 @@
       }
     }
 
-    &.app-table-right {
-      height: 100%;
+    &.app-right {
+      height: $app-svazek-table-right-height;
       overflow: auto;
     }
 
@@ -67,13 +60,13 @@
 
       thead {
         .mat-header-row {
-          height: 140px;
+          height: $app-svazek-header-row-height;
 
           .mat-header-cell {
             background-color: $app-grey-l-2;
             vertical-align: bottom;
             border-right: 1px solid white;
-            padding-bottom: 5px;
+            padding-bottom: $app-svazek-header-cell-bottom-space;
 
             &:not(.app-cell-rotate) {
               padding-left: 5px;
@@ -87,7 +80,7 @@
               & > div {
                 transform: rotate(-90deg);
                 width: 30px !important;
-                margin-bottom: 10px;
+                margin-bottom: calc(#{$app-svazek-header-cell-bottom-space} * 2);
               } 
             }
           }

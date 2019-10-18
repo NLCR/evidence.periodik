@@ -1,7 +1,7 @@
 <div class="app-svazek-wrapper grey lighten-4">
   <div class="app-container-left">
     
-    <div class="app-table-wrapper app-table-left-top">
+    <div class="app-table-wrapper app-left-top">
       <table mat-table [dataSource]="dataSourceLeftTableTop">   
         <!-- Atribut -->
         <ng-container matColumnDef="attribute">
@@ -31,13 +31,13 @@
           <td mat-footer-cell *matFooterCellDef colspan="0"></td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsLeftTableTop; sticky: true"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsLeftTableTop; sticky: true" class="app-header-row-left-top"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsLeftTableTop;"></tr>
         <tr mat-footer-row *matFooterRowDef="displayedColumnsLeftTableTop; sticky: true"></tr>
       </table>
     </div><!--/.app-table-left-top -->
     
-    <div class="app-table-wrapper app-table-left-bottom">
+    <div class="app-table-wrapper app-left-bottom">
       <table mat-table [dataSource]="dataSourceLeftTableBottom">   
         <!-- GoOut -->
         <ng-container matColumnDef="goOut">
@@ -118,15 +118,15 @@
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsLeftTableBottom; sticky: true"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsLeftTableBottom; sticky: true" class="app-header-row-left-bottom"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsLeftTableBottom;"></tr>
         <tr mat-footer-row *matFooterRowDef="displayedColumnsLeftTableBottom; sticky: true"></tr>
       </table>
-    </div>
+    </div><!--/.app-table-left-bottom -->
   </div><!--/.app-container-left -->
 
   <div class="app-container-right">
-    <div class="app-table-wrapper app-table-right">
+    <div class="app-table-wrapper app-right">
       <table mat-table [dataSource]="dataSourceRightTable">   
         <!-- Date -->
         <ng-container matColumnDef="date">
@@ -309,7 +309,7 @@
           </td>
         </ng-container>
     
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsRightTable; sticky: true"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsRightTable; sticky: true" class="app-header-row-right"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumnsRightTable;"></tr>
       </table>
     </div>
