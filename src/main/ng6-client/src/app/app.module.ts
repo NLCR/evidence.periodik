@@ -199,6 +199,7 @@ export function createTranslateLoader(http: HttpClient) {
       { path: 'issue/:id', component: IssueComponent },
       { path: 'home', component: HomeComponent },
       { path: 'svazek', component: SvazekComponent },
+      { path: 'svazek/:id', component: SvazekComponent },
       { path: 'result', component: ResultComponent },
       { path: 'calendar/:id', component: CalendarComponent, 
         children: [

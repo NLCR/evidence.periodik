@@ -8,6 +8,7 @@ import {Subscription} from 'rxjs';
 import {AppService} from './app.service';
 import {AppState} from './app.state';
 import {HttpClient} from '@angular/common/http';
+import {AppConfiguration} from 'src/app/models/app.configuration';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class AppComponent implements OnInit {
     this.processUrl();
     this.getConfig().subscribe(cfg => {
 
-      this.state.config = cfg;
+      this.state.config = <AppConfiguration>cfg;
       this.service.getSpecialDays();
       var userLang = navigator.language.split('-')[0]; // use navigator lang if available
       userLang = /(cs|en)/gi.test(userLang) ? userLang : 'cs';
