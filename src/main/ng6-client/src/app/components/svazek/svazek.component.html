@@ -1,15 +1,15 @@
 <div class="app-svazek-wrapper grey lighten-4">
-  <div class="app-container-left">
+  <div class="app-container-left" *ngIf="state.configured">
     
     <div class="app-table-wrapper app-left-top">
       <table mat-table [dataSource]="dataSourceLeftTableTop">   
         <!-- Atribut -->
         <ng-container matColumnDef="attribute">
           <th mat-header-cell *matHeaderCellDef>atribut</th>
-          <td mat-cell *matCellDef="let element">{{ element.attribute }}</td>
+          <td mat-cell *matCellDef="let element">{{ element | translate}}</td>
           <td mat-footer-cell *matFooterCellDef colspan="2">
-            <button mat-raised-button>(Znovu) načíst celý svazek</button>
-            <button mat-raised-button>Uložit celý svazek</button> 
+            <button mat-raised-button (click)="readVolume()">(Znovu) načíst celý svazek</button>
+            <button mat-raised-button (click)="saveVolume()">Uložit celý svazek</button> 
           </td>
         </ng-container>
 
@@ -17,15 +17,26 @@
         <ng-container matColumnDef="value">
           <th mat-header-cell *matHeaderCellDef>hodnota</th>
           <td mat-cell *matCellDef="let element">
-            <ng-container *ngIf="element.value === ''">
-              <mat-select [(value)]="selected">
-                <mat-option value="option1">Mlada fronta</mat-option>
-                <mat-option value="option2">Lidove noviny</mat-option>
-                <mat-option value="option3">Rude pravo</mat-option>
-              </mat-select>
-            </ng-container>
-            <ng-container *ngIf="element.value !== ''">
-              {{ element.value }}
+            <ng-container [ngSwitch]="element">
+              <ng-container *ngSwitchCase="'titul'">
+                <mat-select [(ngModel)]="titul_idx" (change)="setTitul()">
+                  <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >{{tit.meta_nazev}}</mat-option>
+                  <mat-option [value]="-1" >{{'Add new titul' | translate}}</mat-option>
+                </mat-select>
+              </ng-container>
+              <ng-container *ngSwitchCase="'mutace'">
+                <mat-select [(ngModel)]="titul_idx" (change)="setTitul()">
+                  <mat-option *ngFor="let mut of state.mutations; let idx=index;" [value]="idx" >{{mut}}</mat-option>
+                </mat-select>
+              </ng-container>
+              <ng-container *ngSwitchCase="'znak_oznaceni_vydani'">
+                <mat-select [(ngModel)]="titul_idx" (change)="setTitul()">
+                  <mat-option *ngFor="let oznaceni of state.znak_oznaceni_vydani; let idx=index;" [value]="idx" >{{oznaceni}}</mat-option>
+                </mat-select>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <input [(ngModel)]="state.currentVolume[element]" />
+              </ng-container>
             </ng-container>
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="0"></td>
@@ -44,7 +55,7 @@
           <th mat-header-cell *matHeaderCellDef>Vychazi</th>
           <td mat-cell *matCellDef="let element">{{ element.goOut }}</td>
           <td mat-footer-cell *matFooterCellDef colspan="7">
-            <button mat-raised-button>Vygenerovat / vygenerovat znovu</button>
+            <button mat-raised-button (click)="generateVolume()">Vygenerovat / vygenerovat znovu</button>
           </td>
         </ng-container>
     
@@ -179,11 +190,8 @@
           <th mat-header-cell *matHeaderCellDef>vydani</th>
           <td mat-cell *matCellDef="let element">
             <mat-form-field>
-              <mat-select [(value)]="selected">
-                <mat-option value="option1">ranni</mat-option>
-                <mat-option value="option2">poledni</mat-option>
-                <mat-option value="option3">odpoledni</mat-option>
-                <mat-option value="option3">neurceno</mat-option>
+              <mat-select>
+                <mat-option *ngFor="let vydani of state.config.vydani" value="option1">{{vydani}}</mat-option>
               </mat-select>
             </mat-form-field>
           </td>

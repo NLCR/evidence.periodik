@@ -314,6 +314,19 @@ export class AppService {
       }));
   }
 
+  getVolume(id: string): Observable<any[]> {
+    var url = this.state.config['context'] + 'search/svazek/select';
+    let params: HttpParams = new HttpParams()
+      .set('q', '*')
+      .set('wt', 'json')
+      .set('fl', '*,periodicita:[json]')
+      .set('fq', 'id:"' + id + '"');
+    return this.http.get(url, {params: params}).pipe(
+      map((res) => {
+        return res['response']['docs'];
+      }));
+  }
+
   getTitulTotals(id: string) {
     var url = this.state.config['context'] + 'search/issue/select';
     let params: HttpParams = new HttpParams()

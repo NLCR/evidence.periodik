@@ -5,6 +5,8 @@ import {Titul} from './models/titul';
 import {Issue} from './models/issue';
 import {Filter} from './models/filter';
 import {UrlSegment} from "@angular/router";
+import {AppConfiguration} from 'src/app/models/app.configuration';
+import {Volume} from 'src/app/models/volume';
 
 @Injectable()
 export class AppState {
@@ -20,7 +22,7 @@ export class AppState {
   public langSubject: Observable<any> = this._langSubject.asObservable();
 
   //Holds client configuration
-  config: any;
+  config: AppConfiguration;
   periods: string[] = [];
   vdkFormats: string[] = [];
   vydani = [];
@@ -55,6 +57,11 @@ export class AppState {
   currentTitul: Titul = new Titul();
   private _currentTitulSubject = new Subject();
   public currentTitulChanged: Observable<any> = this._currentTitulSubject.asObservable();
+
+  currentVolume: Volume = new Volume();
+  private _currentVolumeSubject = new Subject();
+  public currentVolumeChanged: Observable<any> = this._currentVolumeSubject.asObservable();
+  
   currentIssue: Issue = new Issue();
 
   private _searchSubject = new Subject();
