@@ -171,6 +171,20 @@ export class AppService {
       }));
   }
 
+  getVolumeFacets(id_titul: string): Observable<any> {
+    var url = this.state.config['context'] + 'search/issue/select';
+    let params: HttpParams = new HttpParams()
+      .set('q', 'id_titul:"' + id_titul + '"')
+      .set('facet', 'true')
+      .set('facet.mincount', '1')
+      .set('json.nl', 'arrntv')
+      .set('rows', '0')
+      .append('facet.field', 'znak_oznaceni_vydani')
+      .append('facet.field', 'mutace');
+
+    return this.http.get(url, {params: params});
+  }
+
 
   saveTitul(titul: Titul) {
     var url = this.state.config['context'] + 'index';

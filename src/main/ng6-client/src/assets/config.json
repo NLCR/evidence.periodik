@@ -30,5 +30,7 @@
   ],
   "states":["ok", "auto"],
   "vydani": ["morning", "midday", "afternoon", "evening", "special"],
+  "mutations": ["Brno", "Praha"],
+  "znak_oznaceni_vydani": ["*", "-"],
   "test": false          
 }

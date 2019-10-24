@@ -8,8 +8,8 @@
           <th mat-header-cell *matHeaderCellDef>atribut</th>
           <td mat-cell *matCellDef="let element">{{ element | translate}}</td>
           <td mat-footer-cell *matFooterCellDef colspan="2">
-            <button mat-raised-button (click)="readVolume()">(Znovu) načíst celý svazek</button>
-            <button mat-raised-button (click)="saveVolume()">Uložit celý svazek</button> 
+            <button mat-raised-button (click)="read()">(Znovu) načíst celý svazek</button>
+            <button mat-raised-button (click)="save()">Uložit celý svazek</button> 
           </td>
         </ng-container>
 
@@ -19,19 +19,24 @@
           <td mat-cell *matCellDef="let element">
             <ng-container [ngSwitch]="element">
               <ng-container *ngSwitchCase="'titul'">
-                <mat-select [(ngModel)]="titul_idx" (change)="setTitul()">
+                <mat-select [(ngModel)]="titul_idx" (ngModelChange)="setTitul()">
                   <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >{{tit.meta_nazev}}</mat-option>
                   <mat-option [value]="-1" >{{'Add new titul' | translate}}</mat-option>
                 </mat-select>
               </ng-container>
               <ng-container *ngSwitchCase="'mutace'">
-                <mat-select [(ngModel)]="titul_idx" (change)="setTitul()">
-                  <mat-option *ngFor="let mut of state.mutations; let idx=index;" [value]="idx" >{{mut}}</mat-option>
+                <mat-select [(ngModel)]="mutace_idx" (ngModelChange)="changeMutace()">
+                  <mat-option *ngFor="let mut of mutations; let idx=index;" [value]="idx" >{{mut.name}}</mat-option>
                 </mat-select>
               </ng-container>
               <ng-container *ngSwitchCase="'znak_oznaceni_vydani'">
-                <mat-select [(ngModel)]="titul_idx" (change)="setTitul()">
-                  <mat-option *ngFor="let oznaceni of state.znak_oznaceni_vydani; let idx=index;" [value]="idx" >{{oznaceni}}</mat-option>
+                <mat-select [(ngModel)]="oznaceni_idx" (ngModelChange)="changeOznaceni()">
+                  <mat-option *ngFor="let oznaceni of oznaceni_list; let idx=index;" [value]="idx" >{{oznaceni.name}}</mat-option>
+                </mat-select>
+              </ng-container>
+              <ng-container *ngSwitchCase="'vlastnik'">
+                <mat-select [(ngModel)]="vlastnik_idx" (ngModelChange)="changeVlastnik()">
+                  <mat-option *ngFor="let vlastnik of state.config.owners; let idx=index;" [value]="idx" >{{vlastnik.name}}</mat-option>
                 </mat-select>
               </ng-container>
               <ng-container *ngSwitchDefault>
