@@ -4,7 +4,7 @@
     <div class="col s4">
       
       <mz-select-container *ngIf="state.isNewIssue">
-        <select mz-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()" [label]="'Titul'">
+        <select mz-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()" [label]="'Metatitul'">
                 <option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >{{tit.meta_nazev}}</option>
           <option [value]="-1" >{{'Add new titul' | translate}}</option>
         </select>

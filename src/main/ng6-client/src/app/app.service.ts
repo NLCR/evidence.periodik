@@ -346,10 +346,12 @@ export class AppService {
       .set('stats', 'true')
       .set('stats.field', 'datum_vydani_den')
       .set('facet.field', 'meta_nazev')
-      .append('facet.field', 'vlastnik')
-      .append('facet.field', 'stav')
+      .set('facet.field', 'nazev')
       .append('facet.field', 'mutace')
-      .append('facet.field', 'vydani');
+      .append('facet.field', 'vydani')
+      .append('facet.field', 'znak_oznaceni_vydani')
+      .append('facet.field', 'vlastnik')
+      .append('facet.field', 'stav');
 
     //facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
 
