@@ -60,7 +60,7 @@
 
       thead {
         .mat-header-row {
-          height: $app-svazek-header-row-height;
+          height: 40px;
 
           .mat-header-cell {
             background-color: $app-grey-l-2;
@@ -73,7 +73,7 @@
             }
 
             &.app-cell-rotate {
-              height: 140px;
+              height: $app-svazek-header-row-height;
               white-space: nowrap;
               width: 30px !important;
 

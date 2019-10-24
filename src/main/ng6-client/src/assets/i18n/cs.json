@@ -26,10 +26,11 @@
     "time_publication": "Čas vydání",
     "mutation": "Mutace",
     "date_publication": "Datum vydání",
-    "znak_oznaceni_vydani":"Způsob označení mutace",
-    "oznaceni":"Označení regionálního vydání",
+    "znak_oznaceni_vydani":"Způsob označení mutačního vydání",
+    "oznaceni":"Označení mutačního vydání (hvězdičky)",
     "popis_oznaceni_vydani":"Popis označení mutace",
     "publication": {
+      "empty": "bez určení",
       "placeholder": "Vydání",
       "morning": "Ranní",
       "midday": "Polední",
@@ -88,7 +89,9 @@
     "specimen_count": "Počet exemplářů",
     "specimen_number": "Exemplář číslo"
   },
-  "button": {
+  
+  
+    "button": {
     "save": "Uložit",
     "clone": "Klonovat",
     "delete": "Smazat",
@@ -104,7 +107,7 @@
   "facet": {
     "title": {
       "active_filters": "Aktivní filtry",
-      "caption": "Titul",
+      "caption": "Metatitul",
       "mutation": "Mutace",
       "ownership": "Vlastník"
     },
@@ -112,12 +115,15 @@
       "delete_all_filters": "Odstranit všechny filtry",
       "delete_this_filter": "Odstranit tento filtr"
     },
-    "meta_nazev": "Titul",
+    "meta_nazev": "Metatitul",
+    "nazev": "Název na titulní straně",
     "date": "Datum",
     "vlastnik": "Vlastnik",
     "stav": "Stav",
     "mutace": "Mutace",
+    "znak_oznaceni_vydani":"Mutační vydání",
     "vydani":"Vydani"
+    
   },
   "result": {
     "found_records": "Nalezeno záznamů",

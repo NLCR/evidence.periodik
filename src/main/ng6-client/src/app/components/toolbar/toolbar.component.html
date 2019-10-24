@@ -32,6 +32,10 @@
   <div class="row">
     <div class="col s4">
       <span>Issue: {{state.currentTitul.meta_nazev}} {{state.currentIssue.datum_vydani | date: "dd/MM/yyyy"}}</span>
+      &#160;&#160;&#160;
+<a routerLink="/result" >
+  <i mz-icon-mdi [icon]="'table-large'" mz-tooltip [tooltip]="'Zobrazit tabulku'" class="app-cursor-pointer"></i>
+</a>
     </div><!--/.col -->
     <div class="col s8 right-align">
       <button mz-button (click)="saveRecord()" [disabled]="!state.logged">{{'button.save' | translate}}</button>
