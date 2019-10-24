@@ -38,6 +38,10 @@ a,
   border-radius: 0 !important;
 }
 
+.app-clean-border {
+  border: 0 !important;
+}
+
 
 // clearfix
 .clearfix {
@@ -63,7 +67,7 @@ a,
 
 
 // others
-button:not(.btn-floating) {
+.btn:not(.btn-floating) {
   @extend .z-depth-0;
   i {
     &.left {

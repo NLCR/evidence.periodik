@@ -57,7 +57,7 @@ $app-search-bar-height:           44px !default;
 // global container
 $app-container:                   1.25rem !default;
 
-// facet col widht
+// facet col width
 $app-facet-width:                  320px;
 
 // materialize variables
@@ -73,3 +73,9 @@ $collection-hover-bg-color:       color("grey", "lighten-5") !default;
 $table-striped-color:             color("grey", "lighten-4") !default;
 
 $spinner-default-color:           color("orange", "base") !default;
+
+// svazek table
+$app-svazek-table-left-height: 50% !default;
+$app-svazek-table-right-height: 100% !default;
+$app-svazek-header-row-height: 120px !default;
+$app-svazek-header-cell-bottom-space: 5px !default;

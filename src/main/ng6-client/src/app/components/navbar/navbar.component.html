@@ -7,6 +7,9 @@
     <mz-navbar-item routerLinkActive="active" #home="routerLinkActive" [active]="home.isActive">
       <a routerLink="home">{{'navbar.home' | translate}}</a>
     </mz-navbar-item>
+    <mz-navbar-item routerLinkActive="active" #svazek="routerLinkActive" [active]="svazek.isActive">
+      <a routerLink="svazek"><!-- {{'navbar.add_record' | translate}} -->Svazek</a>
+    </mz-navbar-item>
     <mz-navbar-item routerLinkActive="active" #addRecord="routerLinkActive" [active]="addRecord.isActive && state.isNewIssue">
       <a routerLink="issue">{{'navbar.add_record' | translate}}</a>
     </mz-navbar-item>

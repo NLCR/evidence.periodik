@@ -1,0 +1,31 @@
+{
+  "/search/**": {
+    "target": "http://localhost:4200/assets/test/issues.json",
+    "ignorePath": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/search.*":""
+    },
+    "changeOrigin": false,
+    "secure": false
+  },
+  "/index": {
+    "target": "http://localhost:8080/permonik/index",
+    "ignorePath": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/index":""
+    },
+    "changeOrigin": false,
+    "secure": false
+  },
+  "/lg": {
+    "target": "http://localhost:4200/assets/test/login.json",
+    "ignorePath": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/lg":""
+    },
+    "changeOrigin": true
+  }
+}
