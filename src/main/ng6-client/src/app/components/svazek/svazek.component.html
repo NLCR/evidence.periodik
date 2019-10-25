@@ -149,11 +149,11 @@
 
   <div class="app-container-right">
     <div class="app-table-wrapper app-right">
-      <table mat-table [dataSource]="dataSourceRightTable">   
+      <table mat-table [dataSource]="dsIssues">   
         <!-- Date -->
-        <ng-container matColumnDef="date">
+        <ng-container matColumnDef="datum_vydani">
           <th mat-header-cell *matHeaderCellDef>datum</th>
-          <td mat-cell *matCellDef="let element">{{ element.date }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.datum_vydani }}</td>
         </ng-container>
     
         <!-- Number exist -->
@@ -177,13 +177,13 @@
         </ng-container>
     
         <!-- Edition number -->
-        <ng-container matColumnDef="editionNumber">
+        <ng-container matColumnDef="cislo">
           <th mat-header-cell *matHeaderCellDef>cislo</th>
-          <td mat-cell *matCellDef="let element">{{ element.editionNumber }}</td>
+          <td mat-cell *matCellDef="let element">{{ element.cislo }}</td>
         </ng-container>
 
         <!-- Mutation -->
-        <ng-container matColumnDef="mutation">
+        <ng-container matColumnDef="mutace">
           <th mat-header-cell *matHeaderCellDef>mutace</th>
           <td mat-cell *matCellDef="let element">
             <mat-form-field>
@@ -328,8 +328,8 @@
           </td>
         </ng-container>
     
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsRightTable; sticky: true" class="app-header-row-right"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsRightTable;"></tr>
+        <tr mat-header-row *matHeaderRowDef="issueColumns; sticky: true" class="app-header-row-right"></tr>
+        <tr mat-row *matRowDef="let row; columns: issueColumns;"></tr>
       </table>
     </div>
   </div>

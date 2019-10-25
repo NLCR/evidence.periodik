@@ -17,6 +17,7 @@ import {Titul} from './models/titul';
 import {Issue} from './models/issue';
 import {Exemplar} from './models/exemplar';
 import {HttpErrorResponse} from '@angular/common/http';
+import { Volume } from './models/volume';
 
 @Injectable()
 export class AppService {
@@ -111,7 +112,26 @@ export class AppService {
         .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
       url = this.state.config['context'] + 'search/issue/select';
     }
-    //params.set('fl', 'start:datum_vydani,title:nazev,*')
+    // params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return this.http.get(url, {params: params}).pipe(
+      map((res) => {
+        return res['response']['docs'];
+      }));
+  }
+
+  getIssuesOfVolume(volume: Volume): Observable<any[]> {
+    let params: HttpParams = new HttpParams();
+    
+    params = new HttpParams()
+        .set('q', '*')
+        .set('wt', 'json')
+        .set('rows', '200')
+        .set('fl', '*,exemplare:[json], pages:[json]')
+        .set('fq', 'id_titul:"' + volume.id_titul + '"')
+        .append('fq', 'datum_vydani:[' + volume.datum_od + ' TO ' + volume.datum_do + ']');
+    const url = this.state.config['context'] + 'search/issue/select';
+    
+    // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params}).pipe(
       map((res) => {
         return res['response']['docs'];

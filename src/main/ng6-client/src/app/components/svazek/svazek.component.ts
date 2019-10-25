@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { MatTableDataSource } from '@angular/material';
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
 import { WeekDay } from '@angular/common';
+import { Issue } from 'src/app/models/issue';
 
 @Component({
   selector: 'app-svazek',
@@ -17,12 +18,12 @@ import { WeekDay } from '@angular/common';
   styleUrls: ['./svazek.component.scss']
 })
 export class SvazekComponent implements OnInit {
-  displayedColumnsRightTable = [
-    'date',
+  issueColumns = [
+    'datum_vydani',
     'numExist',
     'addNextEdition',
-    'editionNumber',
-    'mutation',
+    'cislo',
+    'mutace',
     'edition',
     'thisIsAttachement',
     'attachementName',
@@ -43,11 +44,12 @@ export class SvazekComponent implements OnInit {
     'value'
   ];
 
-  displayedColumnsLeftTableBottom  = Object.keys(new PeriodicitaSvazku());
-
-  dataSourceRightTable = [];
+  //issueColumns = Object.keys(new Issue());
+  dsIssues: MatTableDataSource<Issue>;
   //dataSourceRightTable = ELEMENT_DATA_RIGHT_TABLE;
   dataSourceLeftTableTop = ELEMENT_DATA_LEFT_TABLE_TOP;
+
+  displayedColumnsLeftTableBottom  = Object.keys(new PeriodicitaSvazku());
   dsPeriodicita: MatTableDataSource<PeriodicitaSvazku>;
 
   subscriptions: Subscription[] = [];
@@ -70,16 +72,24 @@ export class SvazekComponent implements OnInit {
 
   ngOnInit() {
     this.displayedColumnsLeftTableBottom.push('button');
+    this.issueColumns.push(...['numExist', 'addNextEdition']);
+    console.log(this.issueColumns);
     this.read();
     this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
       this.langChanged();
     }));
   }
 
+  loadIssues() {
+    this.service.getIssuesOfVolume(this.state.currentVolume).subscribe(res => {
+      this.dsIssues = new MatTableDataSource(res);
+      console.log(res);
+    });
+  }
+
   setData(res: Volume[]) {
     if (res.length > 0) {
       this.state.currentVolume = res[0];
-      
       this.service.getTitul(this.state.currentVolume.id_titul).subscribe(res2 => {
         this.state.currentVolume.titul = res2;
         this.state.currentTitul = res2;
@@ -98,6 +108,7 @@ export class SvazekComponent implements OnInit {
         }
 
       });
+      this.loadIssues();
     } else {
       this.state.currentVolume = new Volume();
     }
@@ -161,7 +172,6 @@ export class SvazekComponent implements OnInit {
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.state.isNewIssue = false;
       if (this.state.config) {
         this.service.getVolume(id).subscribe(res => {
           this.setData(res);
@@ -173,8 +183,6 @@ export class SvazekComponent implements OnInit {
           });
         }));
       }
-    } else {
-      this.state.isNewIssue = true;
     }
   }
 
