@@ -1,5 +1,5 @@
-<div class="app-svazek-wrapper grey lighten-4">
-  <div class="app-container-left" *ngIf="state.configured">
+<div class="app-svazek-wrapper grey lighten-4" *ngIf="state.configured">
+  <div class="app-container-left">
     
     <div class="app-table-wrapper app-left-top">
       <table mat-table [dataSource]="dataSourceLeftTableTop">   
@@ -25,14 +25,23 @@
                 </mat-select>
               </ng-container>
               <ng-container *ngSwitchCase="'mutace'">
-                <mat-select [(ngModel)]="mutace_idx" (ngModelChange)="changeMutace()">
-                  <mat-option *ngFor="let mut of mutations; let idx=index;" [value]="idx" >{{mut.name}}</mat-option>
-                </mat-select>
+
+                  <mat-form-field>
+                      <input type="text" matInput [(ngModel)]="mutace" [matAutocomplete]="auto2">
+                    </mat-form-field>
+                    
+                    <mat-autocomplete #auto2="matAutocomplete">
+                      <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
+                    </mat-autocomplete>
               </ng-container>
               <ng-container *ngSwitchCase="'znak_oznaceni_vydani'">
-                <mat-select [(ngModel)]="oznaceni_idx" (ngModelChange)="changeOznaceni()">
-                  <mat-option *ngFor="let oznaceni of oznaceni_list; let idx=index;" [value]="idx" >{{oznaceni.name}}</mat-option>
-                </mat-select>
+                  <mat-form-field>
+                    <input type="text" matInput [(ngModel)]="oznaceni" [matAutocomplete]="auto">
+                  </mat-form-field>
+                  
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let oznaceni of oznaceni_list; let idx=index;" [value]="oznaceni.name">{{oznaceni.name}}</mat-option>
+                  </mat-autocomplete>
               </ng-container>
               <ng-container *ngSwitchCase="'vlastnik'">
                 <mat-select [(ngModel)]="vlastnik_idx" (ngModelChange)="changeVlastnik()">
@@ -54,72 +63,69 @@
     </div><!--/.app-table-left-top -->
     
     <div class="app-table-wrapper app-left-bottom">
-      <table mat-table [dataSource]="dataSourceLeftTableBottom">   
-        <!-- GoOut -->
-        <ng-container matColumnDef="goOut">
+      <table mat-table [dataSource]="dsPeriodicita">   
+        <!-- Vydani (den v tydnu) -->
+        <ng-container matColumnDef="den">
           <th mat-header-cell *matHeaderCellDef>Vychazi</th>
-          <td mat-cell *matCellDef="let element">{{ element.goOut }}</td>
+          <td mat-cell *matCellDef="let element">{{ 'days.' + element.den | translate}}</td>
           <td mat-footer-cell *matFooterCellDef colspan="7">
             <button mat-raised-button (click)="generateVolume()">Vygenerovat / vygenerovat znovu</button>
           </td>
         </ng-container>
     
         <!-- Number exist -->
-        <ng-container matColumnDef="numExist2">
+        <ng-container matColumnDef="active">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
             <div>číslo existuje</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox></mat-checkbox>
+            <mat-checkbox [(ngModel)]="element.active"></mat-checkbox>
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>
 
-        <!-- Edition -->
-        <ng-container matColumnDef="edition2">
+        <!-- Vydani -->
+        <ng-container matColumnDef="vydani">
           <th mat-header-cell *matHeaderCellDef>vydani</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-form-field>
-              <mat-select [(value)]="selected">
-                <mat-option value="option1">ranni</mat-option>
-                <mat-option value="option2">poledni</mat-option>
-                <mat-option value="option3">odpoledni</mat-option>
-                <mat-option value="option3">neurceno</mat-option>
+          <td mat-cell *matCellDef="let element" >
+            <mat-form-field *ngIf="element.active">
+              <mat-select [(ngModel)]="element.vydani">
+                <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}</mat-option>
               </mat-select>
             </mat-form-field>
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>
         
-        <!-- Page number -->
-        <ng-container matColumnDef="pageNumber2">
+        <!-- Pocet stranek -->
+        <ng-container matColumnDef="pocet_stran">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
             <div>počet stran</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.pageNumber2 }}
+            <input *ngIf="element.active" [(ngModel)]="element.pocet_stran" />
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>
 
         <!-- This is attachement -->
-        <ng-container matColumnDef="thisIsAttachement2">
+        <ng-container matColumnDef="isPriloha">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
             <div>Toto je priloha</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox></mat-checkbox>
+            <mat-checkbox *ngIf="element.active" [(ngModel)]="element.isPriloha"></mat-checkbox>
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>
 
         <!-- Attachement name -->
-        <ng-container matColumnDef="attachementName2">
+        <ng-container matColumnDef="nazev_prilohy">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
             <div>název přílohy</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ element.attachementName2 }}
+              <input *ngIf="element.active && element.isPriloha" [(ngModel)]="element.nazev_prilohy" />
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>
@@ -127,9 +133,9 @@
         <!-- Button-->
         <ng-container matColumnDef="button">
           <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element; let idx=index">
             <!-- <button mat-raised-button>Vlozit dalsi vydani</button>  -->
-            <a href="#" title="Vlozit dalsi vydani">Vlozit dalsi vydani</a>
+            <a *ngIf="element.active" (click)="addVydani(element, idx)" title="Vlozit dalsi vydani">Vlozit dalsi vydani</a>
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>

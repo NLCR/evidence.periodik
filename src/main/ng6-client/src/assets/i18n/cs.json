@@ -14,10 +14,10 @@
   "searchbox": {
     "placeholder": "Hledání v evidenci periodik"
   },
-  "formatvdk":{
-    "CISLO": "Číslo (3)", 
+  "formatvdk": {
+    "CISLO": "Číslo (3)",
     "MESIC": "Mesic(e) číslem(y) (1-155)",
-    "MESIC_SLOVA":"Mesic(e) slovy (LED-DUB)"
+    "MESIC_SLOVA": "Mesic(e) slovy (LED-DUB)"
   },
   "record": {
     "meta_title": "Meta název",
@@ -26,9 +26,9 @@
     "time_publication": "Čas vydání",
     "mutation": "Mutace",
     "date_publication": "Datum vydání",
-    "znak_oznaceni_vydani":"Způsob označení mutačního vydání",
-    "oznaceni":"Označení mutačního vydání (hvězdičky)",
-    "popis_oznaceni_vydani":"Popis označení mutace",
+    "znak_oznaceni_vydani": "Způsob označení mutačního vydání",
+    "oznaceni": "Označení mutačního vydání (hvězdičky)",
+    "popis_oznaceni_vydani": "Popis označení mutace",
     "publication": {
       "empty": "bez určení",
       "placeholder": "Vydání",
@@ -39,7 +39,7 @@
       "special": "Zvláštní"
     },
     "pages_count": "Počet stran",
-    "lost_pages" : "Poškozené/Chybějicí strany",
+    "lost_pages": "Poškozené/Chybějicí strany",
     "state": "Stav",
     "state_com": "Stav popis",
     "StavIssue": {
@@ -53,7 +53,6 @@
       "ChSv": "Chybné svázáno",
       "Cz": "Cenzurováno",
       "CzV": "Cenzurní výtisk",
-      
       "Z": "není vůbec (zničeno/ztráta)",
       "PolS": "Polité strany",
       "NT": "Nečitelný tisk",
@@ -89,9 +88,7 @@
     "specimen_count": "Počet exemplářů",
     "specimen_number": "Exemplář číslo"
   },
-  
-  
-    "button": {
+  "button": {
     "save": "Uložit",
     "clone": "Klonovat",
     "delete": "Smazat",
@@ -121,9 +118,8 @@
     "vlastnik": "Vlastnik",
     "stav": "Stav",
     "mutace": "Mutace",
-    "znak_oznaceni_vydani":"Mutační vydání",
-    "vydani":"Vydani"
-    
+    "znak_oznaceni_vydani": "Mutační vydání",
+    "vydani": "Vydani"
   },
   "result": {
     "found_records": "Nalezeno záznamů",
@@ -159,7 +155,7 @@
     "till": "Do",
     "periodicity": "Periodicita",
     "on_special_days": "Ve speciální dny",
-    "start_year":"Startovaci rocnik",
+    "start_year": "Startovaci rocnik",
     "start_number": "Startovaci cislo",
     "delete_record.caption": "Podtvrdit smazani",
     "delete_record.text": "Chtete opravdu smazat zaznam {{value}}?",
@@ -170,5 +166,14 @@
     "desc": "Prosím, přihlašte se",
     "user": "Uživatel",
     "password": "Heslo"
+  },
+  "days": {
+    "Monday": "pondělí",
+    "Tuesday": "úterý",
+    "Wednesday": "středa",
+    "Thursday": "čtvrtek",
+    "Friday": "pátek",
+    "Saturday": "sobota",
+    "Sunday": "neděle"
   }
 }

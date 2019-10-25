@@ -7,6 +7,9 @@ import { Titul } from 'src/app/models/titul';
 import { Volume } from 'src/app/models/volume';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { MatTableDataSource } from '@angular/material';
+import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
+import { WeekDay } from '@angular/common';
 
 @Component({
   selector: 'app-svazek',
@@ -40,26 +43,19 @@ export class SvazekComponent implements OnInit {
     'value'
   ];
 
-  displayedColumnsLeftTableBottom = [
-    'goOut',
-    'numExist2',
-    'edition2',
-    'pageNumber2',
-    'thisIsAttachement2',
-    'attachementName2',
-    'button'
-  ];
+  displayedColumnsLeftTableBottom  = Object.keys(new PeriodicitaSvazku());
 
-  dataSourceRightTable = ELEMENT_DATA_RIGHT_TABLE;
+  dataSourceRightTable = [];
+  //dataSourceRightTable = ELEMENT_DATA_RIGHT_TABLE;
   dataSourceLeftTableTop = ELEMENT_DATA_LEFT_TABLE_TOP;
-  dataSourceLeftTableBottom = ELEMENT_DATA_LEFT_TABLE_BOTTOM;
-  selected = 'option2';
-
+  dsPeriodicita: MatTableDataSource<PeriodicitaSvazku>;
 
   subscriptions: Subscription[] = [];
   titul_idx: number;
   mutace_idx: number;
+  mutace: string;
   oznaceni_idx: number;
+  oznaceni: string;
   vlastnik_idx: number;
 
   mutations: { name: string, type: string, value: number }[];
@@ -73,29 +69,8 @@ export class SvazekComponent implements OnInit {
     private service: AppService) { }
 
   ngOnInit() {
-
-    this.state.currentTitul = new Titul();
-    this.state.currentVolume = new Volume();
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.state.isNewIssue = false;
-      if (this.state.config) {
-        this.service.getVolume(id).subscribe(res => {
-          this.setData(res);
-        });
-      } else {
-        this.subscriptions.push(this.state.configSubject.subscribe((state) => {
-          this.service.getVolume(id).subscribe(res => {
-            this.setData(res);
-          });
-        }));
-      }
-    } else {
-
-      this.state.isNewIssue = true;
-    }
-
-
+    this.displayedColumnsLeftTableBottom.push('button');
+    this.read();
     this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
       this.langChanged();
     }));
@@ -104,6 +79,7 @@ export class SvazekComponent implements OnInit {
   setData(res: Volume[]) {
     if (res.length > 0) {
       this.state.currentVolume = res[0];
+      
       this.service.getTitul(this.state.currentVolume.id_titul).subscribe(res2 => {
         this.state.currentVolume.titul = res2;
         this.state.currentTitul = res2;
@@ -125,19 +101,24 @@ export class SvazekComponent implements OnInit {
     } else {
       this.state.currentVolume = new Volume();
     }
+      
+    this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
+    
   }
 
   setVolumeFacets() {
     this.service.getVolumeFacets(this.state.currentVolume.id_titul).subscribe(res => {
-      console.log(res['facet_counts']['facet_fields']);
       this.oznaceni_idx = -1;
+      this.oznaceni = '';
       this.mutace_idx = -1;
+      this.mutace = '';
       this.oznaceni_list = Object.assign([], res['facet_counts']['facet_fields']['znak_oznaceni_vydani']);
       this.mutations = Object.assign([], res['facet_counts']['facet_fields']['mutace']);
       
       for (let i = 0; i < this.mutations.length; i++) {
         if (this.mutations[i].name === this.state.currentVolume.mutace) {
           this.mutace_idx = i;
+          this.mutace = this.mutations[i].name;
         }
       }
 
@@ -146,12 +127,14 @@ export class SvazekComponent implements OnInit {
         // Pridame
         this.mutations.push({name: this.state.currentVolume.mutace, type: 'int', value: 0});
         this.mutace_idx = this.mutations.length - 1;
+        this.mutace = this.state.currentVolume.mutace;
       }
 
 
       for (let i = 0; i < this.oznaceni_list.length; i++) {
         if (this.oznaceni_list[i].name === this.state.currentVolume.znak_oznaceni_vydani) {
           this.oznaceni_idx = i;
+          this.oznaceni = this.oznaceni_list[i].name;
         }
       }
       if (this.oznaceni_idx === -1) {
@@ -159,6 +142,7 @@ export class SvazekComponent implements OnInit {
         // Pridame
         this.oznaceni_list.push({name: this.state.currentVolume.znak_oznaceni_vydani, type: 'int', value: 0});
         this.oznaceni_idx = this.oznaceni_list.length - 1;
+        this.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
       }
 
 
@@ -171,10 +155,31 @@ export class SvazekComponent implements OnInit {
 
   read() {
 
+    this.state.currentTitul = new Titul();
+    this.state.currentVolume = new Volume();
+    this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
+
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.state.isNewIssue = false;
+      if (this.state.config) {
+        this.service.getVolume(id).subscribe(res => {
+          this.setData(res);
+        });
+      } else {
+        this.subscriptions.push(this.state.configSubject.subscribe((state) => {
+          this.service.getVolume(id).subscribe(res => {
+            this.setData(res);
+          });
+        }));
+      }
+    } else {
+      this.state.isNewIssue = true;
+    }
   }
 
   save() {
-    console.log(this.state.currentVolume);
+    console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
   }
 
   generateVolume() {
@@ -206,6 +211,12 @@ export class SvazekComponent implements OnInit {
 
   changeVlastnik() {
     this.state.currentVolume.vlastnik = this.state.config.owners[this.vlastnik_idx].name;
+  }
+
+  addVydani(element, idx){
+    console.log(element, idx);
+    this.state.currentVolume.periodicita.splice(idx, 0, Object.assign({}, element));
+    this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
   }
 
 }
@@ -355,26 +366,4 @@ const ELEMENT_DATA_LEFT_TABLE_TOP: string[] = [
   'posledni_cislo',
   'vlastnik',
   'poznamka'
-];
-
-export interface dataLeftTableBottom {
-  goOut: string;
-  numExist2: string;
-  edition2: string;
-  pageNumber2: number;
-  thisIsAttachement2: string;
-  attachementName2: string;
-  button: string;
-}
-
-const ELEMENT_DATA_LEFT_TABLE_BOTTOM: dataLeftTableBottom[] = [
-  { goOut: 'Pondeli', numExist2: '', edition2: '', pageNumber2: 2, thisIsAttachement2: '', attachementName2: 'Detem', button: '' },
-  { goOut: 'Pondeli', numExist2: '', edition2: '', pageNumber2: 2, thisIsAttachement2: '', attachementName2: 'Detem', button: '' },
-  { goOut: 'Pondeli', numExist2: '', edition2: '', pageNumber2: 2, thisIsAttachement2: '', attachementName2: 'Detem', button: '' },
-  { goOut: 'Pondeli', numExist2: '', edition2: '', pageNumber2: 2, thisIsAttachement2: '', attachementName2: 'Detem', button: '' },
-  { goOut: 'Pondeli', numExist2: '', edition2: '', pageNumber2: 2, thisIsAttachement2: '', attachementName2: 'Detem', button: '' },
-  { goOut: 'Pondeli', numExist2: '', edition2: '', pageNumber2: 2, thisIsAttachement2: '', attachementName2: 'Detem', button: '' },
-  { goOut: 'Pondeli', numExist2: '', edition2: '', pageNumber2: 2, thisIsAttachement2: '', attachementName2: 'Detem', button: '' },
-  { goOut: 'Pondeli', numExist2: '', edition2: '', pageNumber2: 2, thisIsAttachement2: '', attachementName2: 'Detem', button: '' },
-  { goOut: 'Pondeli', numExist2: '', edition2: '', pageNumber2: 2, thisIsAttachement2: '', attachementName2: 'Detem', button: '' }
 ];
