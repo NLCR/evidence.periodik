@@ -1,24 +1,27 @@
 import {Titul} from 'src/app/models/titul';
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
 import { WeekDay } from '@angular/common';
+import { Issue } from './issue';
 
 export class Volume {
-  id: string;
-  id_titul: string;
+  id: string = '';
+  id_titul: string = '';
   titul: Titul;
-  mutace: string;
-  znak_oznaceni_vydani: string;
-  carovy_kod: string;
-  signatura: string;
-  vlastnik: string;
+  mutace: string = '';
+  znak_oznaceni_vydani: string = '';
+  carovy_kod: string = '';
+  signatura: string = '';
+  vlastnik: string = '';
   periodicita: PeriodicitaSvazku[];
-  prvni_cislo: number;
-  posledni_cislo: number;
-  poznamka: string;
-  datum_od: Date = new Date();
-  datum_do: Date = new Date();
+  prvni_cislo: number = 0;
+  posledni_cislo: number = 0;
+  poznamka: string = '';
+  datum_od: string;
+  datum_do: string;
 
-  constructor() {
+  constructor(datum_od: string, datum_do: string) {
+    this.datum_od = datum_od;
+    this.datum_do = datum_do;
     this.periodicita = [];
       const wds: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       wds.forEach(wd => {
@@ -27,4 +30,5 @@ export class Volume {
         this.periodicita.push(ps);
       });
   }
+
 }

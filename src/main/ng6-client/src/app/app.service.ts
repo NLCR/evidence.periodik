@@ -119,14 +119,32 @@ export class AppService {
       }));
   }
 
+  searchByCarKod(carovy_kod: string) : Observable<any> {
+    let params: HttpParams = new HttpParams();
+    
+    params = new HttpParams()
+        .set('q', carovy_kod)
+        .set('wt', 'json')
+        .set('rows', '1')
+        .set('fl', '*,exemplare:[json], pages:[json]')
+        .set('sort', 'datum_vydani_den asc, vydani desc')
+        .set('stats','true')
+        .set('stats.field', 'datum_vydani_den');
+    const url = this.state.config['context'] + 'search/issue/select';
+    
+    // params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return this.http.get(url, {params: params});
+  }
+
   getIssuesOfVolume(volume: Volume): Observable<any[]> {
     let params: HttpParams = new HttpParams();
     
     params = new HttpParams()
-        .set('q', '*')
+        .set('q', volume.carovy_kod)
         .set('wt', 'json')
         .set('rows', '200')
         .set('fl', '*,exemplare:[json], pages:[json]')
+        .set('sort', 'datum_vydani_den asc, vydani desc')
         .set('fq', 'id_titul:"' + volume.id_titul + '"')
         .append('fq', 'datum_vydani:[' + volume.datum_od + ' TO ' + volume.datum_do + ']');
     const url = this.state.config['context'] + 'search/issue/select';

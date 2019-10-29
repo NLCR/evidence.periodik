@@ -58,7 +58,9 @@ export class AppState {
   private _currentTitulSubject = new Subject();
   public currentTitulChanged: Observable<any> = this._currentTitulSubject.asObservable();
 
-  currentVolume: Volume = new Volume();
+  // currentVolume: Volume = new Volume(this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+  // this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
+  currentVolume: Volume;
   private _currentVolumeSubject = new Subject();
   public currentVolumeChanged: Observable<any> = this._currentVolumeSubject.asObservable();
   

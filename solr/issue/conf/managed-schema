@@ -194,7 +194,6 @@
   <field name="meta_nazev" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="periodicita" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="pocet_stran" type="pint" multiValued="false" indexed="true" stored="true"/>
-  <field name="pages" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="podnazev" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="rocnik" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="signatura" type="string" multiValued="true" indexed="true" stored="true"/>
@@ -208,6 +207,8 @@
   <field name="vlastnik" type="string" multiValued="true" indexed="true" stored="true"/>
   <field name="vydani" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="znak_oznaceni_vydani" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="isPriloha" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="nazev_prilohy" type="string" multiValued="false" indexed="true" stored="true"/>
   
   
   <copyField source="*" dest="_text_" />
