@@ -191,9 +191,8 @@ export function createTranslateLoader(http: HttpClient) {
   MatToolbarModule,
   MatTooltipModule,
   
-  
-    CdkTableModule,
-    
+  CdkTableModule,
+
     RouterModule.forRoot([
       { path: 'issue', component: IssueComponent, canActivate: [AuthGuard] },
       { path: 'issue/:id', component: IssueComponent },

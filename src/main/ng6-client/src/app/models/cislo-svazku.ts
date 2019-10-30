@@ -1,8 +1,10 @@
 import { Issue } from "./issue";
+import { Exemplar } from "./exemplar";
 
 export class CisloSvazku {
   id_issue: string;
   issue: Issue;
+  exemplar: Exemplar;
   datum_vydani: Date;
   numExists: boolean;
   cislo: number;
@@ -24,7 +26,7 @@ export class CisloSvazku {
 
   constructor(issue: Issue, carovy_kod: string, odd: boolean) {
     this.id_issue = issue.id;
-    this.issue= issue;
+    this.issue = issue;
     this.datum_vydani = issue.datum_vydani;
     this.cislo = issue.cislo;
     this.mutace = issue.mutace;
@@ -37,6 +39,7 @@ export class CisloSvazku {
     if (issue.exemplare) {
       issue.exemplare.forEach(ex => {
         if (ex.carovy_kod === carovy_kod) {
+          this.exemplar = ex;
           this.numExists = true;
           if (ex.stav) {
             this.destroyedPages = ex.stav.includes('PP');

@@ -59,6 +59,7 @@
       </span>
       <span *ngSwitchDefault>
         Exemplar: {{exemplar.vlastnik}} <a (click)="editSvazek(exemplar.carovy_kod)">{{exemplar.carovy_kod}}</a>
+        <i mz-icon-mdi class="app-cursor-pointer" [icon]="'pencil'" [size]="16" [title]="'edit svazek'" (click)="editSvazek(exemplar.carovy_kod)"></i>&#160;
       </span>
     </ng-container>
     </div>

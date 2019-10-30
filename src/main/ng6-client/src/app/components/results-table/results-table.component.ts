@@ -264,7 +264,11 @@ export class ResultsTableComponent implements OnInit {
     this.state.currentTitul.id = issue.id_titul;
     this.state.currentTitul.meta_nazev = issue.nazev;
     this.router.navigate(['/issue', issue.id]);
+  }
 
+  viewSvazek(car_kod: string) {
+    this.state.currentTitul = new Titul();
+    this.router.navigate(['/svazek', car_kod]);
   }
 
   formatStav(ex: Exemplar): string {

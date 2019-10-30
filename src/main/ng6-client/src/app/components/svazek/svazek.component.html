@@ -27,7 +27,7 @@
               <ng-container *ngSwitchCase="'mutace'">
 
                   <mat-form-field>
-                      <input type="text" matInput [(ngModel)]="mutace" [matAutocomplete]="auto2">
+                      <input type="text" matInput [(ngModel)]="state.currentVolume.mutace" [matAutocomplete]="auto2">
                     </mat-form-field>
                     
                     <mat-autocomplete #auto2="matAutocomplete">
@@ -36,7 +36,7 @@
               </ng-container>
               <ng-container *ngSwitchCase="'znak_oznaceni_vydani'">
                   <mat-form-field>
-                    <input type="text" matInput [(ngModel)]="oznaceni" [matAutocomplete]="auto">
+                    <input type="text" matInput [(ngModel)]="state.currentVolume.znak_oznaceni_vydani" [matAutocomplete]="auto">
                   </mat-form-field>
                   
                   <mat-autocomplete #auto="matAutocomplete">
@@ -63,13 +63,13 @@
     </div><!--/.app-table-left-top -->
     
     <div class="app-table-wrapper app-left-bottom">
-      <table mat-table [dataSource]="dsPeriodicita">   
+      <table mat-table [dataSource]="state.currentVolume.periodicita">   
         <!-- Vydani (den v tydnu) -->
         <ng-container matColumnDef="den">
           <th mat-header-cell *matHeaderCellDef>Vychazi</th>
           <td mat-cell *matCellDef="let element">{{ 'days.' + element.den | translate}}</td>
           <td mat-footer-cell *matFooterCellDef colspan="7">
-            <button mat-raised-button (click)="generateVolume()">Vygenerovat / vygenerovat znovu</button>
+            <button mat-raised-button (click)="generate()">Vygenerovat / vygenerovat znovu</button>
           </td>
         </ng-container>
     
@@ -212,7 +212,7 @@
             <div>název přílohy</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <ng-container *ngIf="element.numExists"><input [(ngModel)]="element.nazev_prilohy" /></ng-container>
+            <ng-container *ngIf="element.numExists && element.isPriloha"><input [(ngModel)]="element.nazev_prilohy" /></ng-container>
           </td>
         </ng-container>
 
@@ -242,7 +242,8 @@
             <div>poškozené strany</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.destroyedPages"></mat-checkbox>
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.destroyedPages"
+            #dsp (mouseenter)="viewPS(element, 'destroyedPages', dsp, infoPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -252,7 +253,8 @@
             <div>degradované</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.degradated"></mat-checkbox>
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.degradated"
+            #deg (mouseenter)="viewPS(element, 'degradated', deg, infoPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -262,7 +264,8 @@
             <div>chybí strany</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.missingPages"></mat-checkbox>
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.missingPages"
+            #mp (mouseenter)="viewPS(element, 'missingPages', mp, infoPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -272,7 +275,8 @@
             <div>chybná paginace</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousPaging"></mat-checkbox>
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousPaging"
+            #ep (mouseenter)="viewPS(element, 'erroneousPaging', ep, infoPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -282,7 +286,8 @@
             <div>chybné datum</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousDate"></mat-checkbox>
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousDate"
+            #ed (mouseenter)="viewPS(element, 'erroneousDate', ed, infoPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -292,7 +297,8 @@
             <div>chybné číslování</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousNumbering"></mat-checkbox>
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousNumbering"
+            #en (mouseenter)="viewPS(element, 'erroneousNumbering', en, infoPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -302,7 +308,8 @@
             <div>chybně svázáno</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.wronglyBound"></mat-checkbox>
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.wronglyBound"
+            #wb (mouseenter)="viewPS(element, 'wronglyBound', wb, infoPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -312,7 +319,8 @@
             <div>cenzurováno</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.censored"></mat-checkbox>
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.censored"
+            #cz (mouseenter)="viewPS(element, 'censored', cz, infoPopup)"></mat-checkbox>
           </td>
         </ng-container>
     
@@ -322,3 +330,12 @@
     </div>
   </div>
 </div>
+
+<ng-template #infoPopup>
+  <mat-card class='popover-card'>
+    <mat-card-content>
+      <div><b>Popis: </b>{{popText}}</div>
+    </mat-card-content>
+    <button mat-raised-button (click)="closePop()">close</button>
+  </mat-card>
+</ng-template>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, TemplateRef } from '@angular/core';
 import { AppState } from 'src/app/app.state';
 import { MzModalService } from 'ngx-materialize';
 import { AddTitulDialogComponent } from 'src/app/components/add-titul-dialog/add-titul-dialog.component';
@@ -7,13 +7,16 @@ import { Titul } from 'src/app/models/titul';
 import { Volume } from 'src/app/models/volume';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatButton } from '@angular/material';
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
 
 import { Issue } from 'src/app/models/issue';
 import { CisloSvazku } from 'src/app/models/cislo-svazku';
 import { DatePipe } from '@angular/common';
 import { Utils } from 'src/app/utils';
+import { OverlayRef, Overlay } from '@angular/cdk/overlay';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { Exemplar } from 'src/app/models/exemplar';
 
 @Component({
   selector: 'app-svazek',
@@ -21,6 +24,8 @@ import { Utils } from 'src/app/utils';
   styleUrls: ['./svazek.component.scss']
 })
 export class SvazekComponent implements OnInit {
+
+  private overlayRef: OverlayRef;
 
   dsIssues: MatTableDataSource<CisloSvazku>;
   issueColumns = [
@@ -78,8 +83,11 @@ export class SvazekComponent implements OnInit {
   oznaceni_list: { name: string, type: string, value: number }[];
 
   cislaVeSvazku: CisloSvazku[];
+  popText: string;
 
   constructor(
+    private overlay: Overlay,
+    private viewContainerRef: ViewContainerRef,
     private modalService: MzModalService,
     private route: ActivatedRoute,
     private router: Router,
@@ -158,6 +166,7 @@ export class SvazekComponent implements OnInit {
   setData(res: Volume[], id: string) {
     if (res.length > 0) {
       this.state.currentVolume = res[0];
+      this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
       this.findTitul();
       this.loadIssues();
     } else {
@@ -183,7 +192,7 @@ export class SvazekComponent implements OnInit {
           });
           this.findTitul();
           this.loadIssues();
-          
+
         } else {
           this.state.currentVolume = new Volume(this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
             this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
@@ -272,11 +281,70 @@ export class SvazekComponent implements OnInit {
   }
 
   save() {
-    console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
+    // console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
+    console.log(this.state.currentVolume);
+    console.log(this.dsIssues);
   }
 
-  generateVolume() {
+  generate() {
+    const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
+    this.cislaVeSvazku = [];
+    let idx = this.state.currentVolume.prvni_cislo;
 
+    let odd = true;
+    dates.forEach((dt) => {
+      const dayStr = this.datePipe.transform(dt, 'EEEE');
+      let inserted = false;
+      this.state.currentVolume.periodicita.forEach(p => {
+
+        if (p.active) {
+          if (p.den === dayStr) {
+
+            const is = new Issue();
+            is.datum_vydani = dt;
+            is.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
+            const ex = new Exemplar();
+            ex.carovy_kod = this.state.currentVolume.carovy_kod;
+            ex.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
+            ex.signatura = this.state.currentVolume.signatura;
+            ex.vlastnik = this.state.currentVolume.vlastnik;
+            is.exemplare.push(ex);
+            const cvs = new CisloSvazku(is, this.state.currentVolume.carovy_kod, odd);
+            cvs.mutace = this.state.currentVolume.mutace;
+            cvs.numExists = true;
+            cvs.pocet_stran = p.pocet_stran;
+            cvs.isPriloha = p.isPriloha;
+            cvs.nazev_prilohy = p.nazev_prilohy;
+            cvs.vydani = p.vydani;
+            cvs.cislo = idx;
+            idx++;
+            inserted = true;
+            this.cislaVeSvazku.push(cvs);
+          }
+        }
+
+      });
+
+      if (!inserted) {
+        const issue = new Issue();
+        issue.datum_vydani = dt;
+        issue.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
+        const ex = new Exemplar();
+        ex.carovy_kod = this.state.currentVolume.carovy_kod;
+        ex.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
+        ex.signatura = this.state.currentVolume.signatura;
+        ex.vlastnik = this.state.currentVolume.vlastnik;
+        issue.exemplare.push(ex);
+        const cvs2 = new CisloSvazku(issue, this.state.currentVolume.carovy_kod, odd);
+        cvs2.mutace = this.state.currentVolume.mutace;
+        cvs2.numExists = false;
+        this.cislaVeSvazku.push(cvs2);
+      }
+
+      odd = !odd;
+    });
+
+    this.dsIssues = new MatTableDataSource(this.cislaVeSvazku);
   }
 
   setTitul() {
@@ -307,8 +375,10 @@ export class SvazekComponent implements OnInit {
   }
 
   addVydani(element, idx) {
-    this.state.currentVolume.periodicita.splice(idx, 0, Object.assign({}, element));
-    this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
+    const n = Object.assign([], this.state.currentVolume.periodicita);
+    n.splice(idx, 0, Object.assign({}, element));
+    this.state.currentVolume.periodicita = Object.assign([], n);
+    // this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
   }
 
   addIssue(element: CisloSvazku, idx: number) {
@@ -321,7 +391,53 @@ export class SvazekComponent implements OnInit {
       return '#cce';
     }
     return row.odd ? '#fff' : '#eee';
+  }
 
+  viewPS(el: CisloSvazku, prop: string, relative: any, template: TemplateRef<any>) {
+    if (el.exemplar.stav_popis && el.exemplar.stav_popis !== '') {
+      setTimeout(() => {
+        if (el[prop]) {
+          this.popText = el.exemplar.stav_popis;
+          this.openInfoOverlay(relative, template);
+        }
+      }, 700);
+    }
+  }
+
+  ngOnDestroy() {
+    // this.closeInfoOverlay();
+  }
+
+  closePop() {
+    this.closeInfoOverlay();
+  }
+
+  openInfoOverlay(relative: any, template: TemplateRef<any>) {
+    this.closeInfoOverlay();
+
+    this.overlayRef = this.overlay.create({
+      positionStrategy: this.overlay.position().flexibleConnectedTo(relative._elementRef).withPositions([{
+        overlayX: 'end',
+        overlayY: 'top',
+        originX: 'center',
+        originY: 'bottom'
+      }]).withPush().withViewportMargin(30).withDefaultOffsetX(37).withDefaultOffsetY(20),
+      scrollStrategy: this.overlay.scrollStrategies.close(),
+      hasBackdrop: true,
+      backdropClass: 'popover-backdrop'
+    });
+    this.overlayRef.backdropClick().subscribe(() => this.closeInfoOverlay());
+
+    const portal = new TemplatePortal(template, this.viewContainerRef);
+    this.overlayRef.attach(portal);
+  }
+
+  closeInfoOverlay() {
+    if (this.overlayRef) {
+      this.overlayRef.detach();
+      this.overlayRef.dispose();
+      this.overlayRef = null;
+    }
   }
 
 }

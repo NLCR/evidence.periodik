@@ -100,3 +100,27 @@ li.app-page-item label{
 .cdk-overlay-pane {
   background: white !important;
 }
+
+
+
+.popover-backdrop {
+  opacity: 0;
+}
+
+.popover-card {
+  max-width: 300px;
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px ;
+}
+
+.popover-card::after {
+  content: "";
+  position: absolute;
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px ;
+  transform: rotate(225deg);
+  top: -10px;
+  right: 25px;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent #FFF #FFF transparent;
+}

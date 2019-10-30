@@ -1,6 +1,6 @@
 
 export class Utils {
-  static dateFromDay(str) {
+  static dateFromDay(str: string) {
     if (!/^(\d){8}$/.test(str)) {
       return null;
     }
