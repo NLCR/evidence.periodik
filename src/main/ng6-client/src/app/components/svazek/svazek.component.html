@@ -1,4 +1,4 @@
-<div class="app-svazek-wrapper grey lighten-4" *ngIf="state.configured">
+<div class="app-svazek-wrapper grey lighten-4" *ngIf="state.configured" (click)="closeInfoOverlay()">
   <div class="app-container-left">
     
     <div class="app-table-wrapper app-left-top">
@@ -334,8 +334,20 @@
 <ng-template #infoPopup>
   <mat-card class='popover-card'>
     <mat-card-content>
-      <div><b>Popis: </b>{{popText}}</div>
+      <div><b>Popis: </b><input [(ngModel)]="popText" /></div>
+      <div *ngIf="popShowPages">
+        {{'record.lost_pages' | translate}}
+        <ul class="app-pages">
+          <li *ngFor="let page of pagesRange" class="app-page-item">
+            <mz-checkbox-container>
+              <input mz-checkbox [label]="page.label" type="checkbox" [id]="'pg'+page.label"
+                     [(ngModel)]="page.sel" />
+            </mz-checkbox-container>
+          </li>
+        </ul>
+      </div>
     </mat-card-content>
+    <button *ngIf="popShowPages" mat-raised-button (click)="updatePop()">update</button>
     <button mat-raised-button (click)="closePop()">close</button>
   </mat-card>
 </ng-template>

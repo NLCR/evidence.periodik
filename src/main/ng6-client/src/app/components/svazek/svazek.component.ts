@@ -84,6 +84,9 @@ export class SvazekComponent implements OnInit {
 
   cislaVeSvazku: CisloSvazku[];
   popText: string;
+  popShowPages: boolean;
+  pagesRange: { label: string, sel: boolean }[];
+  csEditing: CisloSvazku;
 
   constructor(
     private overlay: Overlay,
@@ -126,6 +129,7 @@ export class SvazekComponent implements OnInit {
           const is = Object.assign({}, issue);
           is.datum_vydani = dt;
           is.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
+          is.cislo = null;
           this.cislaVeSvazku.push(new CisloSvazku(is, 'neexistujicicarovykod', odd));
         } else {
           while (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') === this.datePipe.transform(dt, 'yyyy-MM-dd')) {
@@ -182,13 +186,16 @@ export class SvazekComponent implements OnInit {
           this.state.currentVolume = new Volume(
             this.datePipe.transform(Utils.dateFromDay(datum_od), 'yyyy-MM-dd'),
             this.datePipe.transform(Utils.dateFromDay(datum_do), 'yyyy-MM-dd'));
-          this.state.currentVolume.carovy_kod = id;
+            this.state.currentVolume.id = id;
+            this.state.currentVolume.carovy_kod = id;
           this.state.currentVolume.mutace = issue.mutace;
           this.state.currentVolume.znak_oznaceni_vydani = issue.znak_oznaceni_vydani;
           this.state.currentVolume.id_titul = issue.id_titul;
           issue.exemplare.forEach(ex => {
-            this.state.currentVolume.signatura = ex.signatura;
-            this.state.currentVolume.vlastnik = ex.vlastnik;
+            if (ex.carovy_kod === id) {
+              this.state.currentVolume.signatura = ex.signatura;
+              this.state.currentVolume.vlastnik = ex.vlastnik;
+            }
           });
           this.findTitul();
           this.loadIssues();
@@ -282,8 +289,65 @@ export class SvazekComponent implements OnInit {
 
   save() {
     // console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
-    console.log(this.state.currentVolume);
-    console.log(this.dsIssues);
+    // Ulozit svazek (volume) a vsechny radky tabulky jako Issue.
+
+    // console.log(this.state.currentVolume);
+    // console.log(this.dsIssues);
+
+    const carovy_kod = this.state.currentVolume.carovy_kod;
+
+    const issues: Issue[] = [];
+
+    // console.log(this.dsIssues.data);
+
+    this.dsIssues.data.forEach((cs: CisloSvazku) => {
+      if (cs.numExists) {
+        const issue: Issue = Object.assign({}, cs.issue);
+        issue.cislo = cs.cislo;
+        issue.mutace = cs.mutace;
+        issue.nazev_prilohy = cs.nazev_prilohy;
+        issue.isPriloha = cs.isPriloha;
+        issue.pocet_stran = cs.pocet_stran;
+        issue.vydani = cs.vydani;
+        issue.znak_oznaceni_vydani = cs.znak_oznaceni_vydani;
+
+        // update exemplar.
+        // pokud neni, pridame
+        const idx = issue.exemplare.findIndex(el => el.carovy_kod === carovy_kod);
+        let ex: Exemplar;
+        if (idx < 0) {
+          ex = new Exemplar();
+          ex.vlastnik = this.state.currentVolume.vlastnik;
+          ex.carovy_kod = carovy_kod;
+          ex.signatura = this.state.currentVolume.signatura;
+
+          issue.exemplare.push(ex);
+        } else {
+          ex = issue.exemplare[idx];
+        }
+
+        ex.oznaceni = cs.znak_oznaceni_vydani;
+        ex.pages = Object.assign([], cs.exemplar.pages);
+        ex.stav_popis = cs.exemplar.stav_popis;
+
+        ex.stav = [];
+        if (cs.destroyedPages) { ex.stav.push('PP'); }
+        if (cs.degradated) { ex.stav.push('Deg'); }
+        if (cs.missingPages) { ex.stav.push('ChS'); }
+        if (cs.erroneousPaging) { ex.stav.push('ChPag'); }
+        if (cs.erroneousDate) { ex.stav.push('ChDatum'); }
+        if (cs.erroneousNumbering) { ex.stav.push('ChCis'); }
+        if (cs.wronglyBound) { ex.stav.push('ChSv'); }
+        if (cs.censored) { ex.stav.push('Cz'); }
+
+        issues.push(issue);
+      }
+    });
+
+    this.service.saveIssues(this.state.currentVolume, issues).subscribe(res => {
+      console.log(res);
+    });
+    
   }
 
   generate() {
@@ -394,18 +458,39 @@ export class SvazekComponent implements OnInit {
   }
 
   viewPS(el: CisloSvazku, prop: string, relative: any, template: TemplateRef<any>) {
-    if (el.exemplar.stav_popis && el.exemplar.stav_popis !== '') {
+    this.csEditing = el;
+    const openPop = (el.exemplar.stav_popis && el.exemplar.stav_popis !== '') || prop === 'missingPages' || prop === 'destroyedPages'
+    if (openPop) {
+      this.closeInfoOverlay();
       setTimeout(() => {
         if (el[prop]) {
           this.popText = el.exemplar.stav_popis;
+          this.popShowPages = prop === 'missingPages' || prop === 'destroyedPages';
+          if (this.popShowPages) {
+            this.pagesRange = [];
+            for (let i = 0; i < el.pocet_stran; i++) {
+              const sel = el.exemplar.pages && el.exemplar.pages.includes((i + 1) + '');
+              this.pagesRange.push({ label: (i + 1) + '', sel: sel });
+            }
+          }
           this.openInfoOverlay(relative, template);
         }
-      }, 700);
+      }, 500);
     }
   }
 
+  updatePop() {
+    this.csEditing.exemplar.pages = [];
+    this.pagesRange.forEach(p => {
+      if (p.sel) {
+        this.csEditing.exemplar.pages.push(p.label);
+      }
+    });
+    this.csEditing.exemplar.stav_popis = this.popText;
+  }
+
   ngOnDestroy() {
-    // this.closeInfoOverlay();
+    this.closeInfoOverlay();
   }
 
   closePop() {
@@ -423,10 +508,10 @@ export class SvazekComponent implements OnInit {
         originY: 'bottom'
       }]).withPush().withViewportMargin(30).withDefaultOffsetX(37).withDefaultOffsetY(20),
       scrollStrategy: this.overlay.scrollStrategies.close(),
-      hasBackdrop: true,
+      hasBackdrop: false,
       backdropClass: 'popover-backdrop'
     });
-    this.overlayRef.backdropClick().subscribe(() => this.closeInfoOverlay());
+    //this.overlayRef.backdropClick().subscribe(() => this.closeInfoOverlay());
 
     const portal = new TemplatePortal(template, this.viewContainerRef);
     this.overlayRef.attach(portal);

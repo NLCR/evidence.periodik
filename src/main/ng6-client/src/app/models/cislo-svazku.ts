@@ -36,11 +36,16 @@ export class CisloSvazku {
     this.pocet_stran = issue.pocet_stran;
     this.znak_oznaceni_vydani = issue.znak_oznaceni_vydani;
     this.odd = odd;
+    this.numExists = false;
     if (issue.exemplare) {
       issue.exemplare.forEach(ex => {
         if (ex.carovy_kod === carovy_kod) {
           this.exemplar = ex;
           this.numExists = true;
+          if (ex.oznaceni) {
+
+            this.znak_oznaceni_vydani = ex.oznaceni;
+          }
           if (ex.stav) {
             this.destroyedPages = ex.stav.includes('PP');
             this.degradated = ex.stav.includes('Deg');

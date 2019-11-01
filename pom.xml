@@ -13,6 +13,7 @@
     <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <context.name>permonik</context.name>
+    <skipNg>false</skipNg>
   </properties>
     
   <dependencies>
@@ -65,6 +66,7 @@
             <id>exec-npm-install</id>
             <phase>generate-sources</phase>
             <configuration>
+              <skip>${skipNg}</skip>
               <executable>npm</executable>
               <workingDirectory>${project.basedir}/src/main/ng6-client</workingDirectory>  
               <arguments>

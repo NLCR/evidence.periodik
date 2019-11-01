@@ -43,33 +43,27 @@ export class AppService {
 
   getSpecialDays() {
 
-    var url = this.state.config['context'] + 'search/calendar/select';
+    const url = this.state.config['context'] + 'search/calendar/select';
     let params: HttpParams = new HttpParams();
-    if (this.state.config['test']) {
-      url = this.state.config['context'] + 'assets/special.json';
-    } else {
-      params = params.set('q', '*');
+    params = params.set('q', '*');
       params = params.set('rows', '100');
-    }
     this.http.get(url, {params: params}).subscribe((res) => {
       this.state.specialDays = res;
     });
   }
 
   getSpecialDaysOfMonth(d: Date): Observable<any[]> {
-    var url = this.state.config['context'] + 'search/calendar/select';
+    const url = this.state.config['context'] + 'search/calendar/select';
     let params: HttpParams = new HttpParams();
     let test = this.state.config['test'];
     test = false;
-    if (test) {
-      url = this.state.config['context'] + 'assets/special.json';
-    } else {
-      let month = this.datePipe.transform(d, 'M');
-      let year = this.datePipe.transform(d, 'yyyy');
-      let q = '(month:' + month + ' AND year:' + year + ') OR (month:' + month + ' AND year:0)';
+
+      const month = this.datePipe.transform(d, 'M');
+      const year = this.datePipe.transform(d, 'yyyy');
+      const q = '(month:' + month + ' AND year:' + year + ') OR (month:' + month + ' AND year:0)';
       params = params.set('q', q);
       params = params.set('rows', '50');
-    }
+
     return this.http.get(url, {params: params}).pipe(
       map((res) => {
         return res['response']['docs'];
@@ -77,19 +71,17 @@ export class AppService {
   }
 
   isSpecial(d: Date): Observable<any[]> {
-    var url = this.state.config['context'] + 'search/calendar/select';
+    const url = this.state.config['context'] + 'search/calendar/select';
     let params: HttpParams = new HttpParams();
-    let test = this.state.config['test'];
-    if (test) {
-      url = this.state.config['context'] + 'assets/special.json';
-    } else {
-      let day = this.datePipe.transform(d, 'd');
-      let month = this.datePipe.transform(d, 'M');
-      let year = this.datePipe.transform(d, 'yyyy');
-      let q = '(day:' + day + ' AND month:' + month + ' AND year:' + year + ') OR (day:' + day + ' AND month:' + month + ' AND year:0)';
+    const test = this.state.config['test'];
+
+    const day = this.datePipe.transform(d, 'd');
+      const month = this.datePipe.transform(d, 'M');
+      const year = this.datePipe.transform(d, 'yyyy');
+      const q = '(day:' + day + ' AND month:' + month + ' AND year:' + year + ') OR (day:' + day + ' AND month:' + month + ' AND year:0)';
       params = params.set('q', q);
       params = params.set('rows', '1');
-    }
+
     return this.http.get(url, {params: params}).pipe(
       map((res) => {
         return res['response']['docs'];
@@ -98,20 +90,16 @@ export class AppService {
 
   getIssuesOfTitul(uuid: string, month: string): Observable<any[]> {
     let params: HttpParams = new HttpParams();
-    var url = '';
-    let test = this.state.config['test'];
-    if (test) {
-      url = this.state.config['context'] + 'assets/issues.json';
-    } else {
-      params = new HttpParams()
+    const url = this.state.config['context'] + 'search/issue/select';
+
+    params = new HttpParams()
         .set('q', '*')
         .set('wt', 'json')
         .set('rows', '200')
         .set('fl', '*,exemplare:[json], pages:[json]')
         .set('fq', 'id_titul:"' + uuid + '"')
         .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
-      url = this.state.config['context'] + 'search/issue/select';
-    }
+
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params}).pipe(
       map((res) => {
@@ -121,7 +109,7 @@ export class AppService {
 
   searchByCarKod(carovy_kod: string) : Observable<any> {
     let params: HttpParams = new HttpParams();
-    
+
     params = new HttpParams()
         .set('q', carovy_kod)
         .set('wt', 'json')
@@ -131,14 +119,14 @@ export class AppService {
         .set('stats','true')
         .set('stats.field', 'datum_vydani_den');
     const url = this.state.config['context'] + 'search/issue/select';
-    
+
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params});
   }
 
   getIssuesOfVolume(volume: Volume): Observable<any[]> {
     let params: HttpParams = new HttpParams();
-    
+
     params = new HttpParams()
         .set('q', volume.carovy_kod)
         .set('wt', 'json')
@@ -148,7 +136,7 @@ export class AppService {
         .set('fq', 'id_titul:"' + volume.id_titul + '"')
         .append('fq', 'datum_vydani:[' + volume.datum_od + ' TO ' + volume.datum_do + ']');
     const url = this.state.config['context'] + 'search/issue/select';
-    
+
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, {params: params}).pipe(
       map((res) => {
@@ -157,13 +145,13 @@ export class AppService {
   }
 
   getTitul(id: string): Observable<Titul> {
-    var url = this.state.config['context'] + 'search/titul/select';
+    const url = this.state.config['context'] + 'search/titul/select';
     let params: HttpParams = new HttpParams();
     params = params.set('q', '*')
       .set('fq', 'id:"' + id + '"');
     return this.http.get<Titul>(url, {params: params}).pipe(
       map((res) => {
-        let t = new Titul();
+        const t = new Titul();
         t.id = id;
         if (res['response']['numFound'] > 0) {
           t.meta_nazev = res['response']['docs'][0]['meta_nazev'];
@@ -174,9 +162,9 @@ export class AppService {
 
 
   getTitul_(id: string): Observable<Titul> {
-    var url = this.state.config['context'] + 'search/issue/select';
+    let url = this.state.config['context'] + 'search/issue/select';
     let params: HttpParams = new HttpParams();
-    let test = this.state.config['test'];
+    const test = this.state.config['test'];
     if (test) {
       url = this.state.config['context'] + 'assets/titul.json';
     } else {
@@ -185,7 +173,7 @@ export class AppService {
     }
     return this.http.get<Titul>(url, {params: params}).pipe(
       tap((res) => {
-        let t = new Titul();
+        const t = new Titul();
         t.id = id;
         if (res['response']['numFound'] > 0) {
           t.meta_nazev = res['response']['docs'][0]['nazev'];
@@ -197,8 +185,8 @@ export class AppService {
 
 
   getTituly(): Observable<any> {
-    var url = this.state.config['context'] + 'search/titul/select';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'search/titul/select';
+    const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('sort', 'meta_nazev asc')
       .set('rows', '500');
@@ -210,8 +198,8 @@ export class AppService {
   }
 
   getVolumeFacets(id_titul: string): Observable<any> {
-    var url = this.state.config['context'] + 'search/issue/select';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'search/issue/select';
+    const params: HttpParams = new HttpParams()
       .set('q', 'id_titul:"' + id_titul + '"')
       .set('facet', 'true')
       .set('facet.mincount', '1')
@@ -225,8 +213,8 @@ export class AppService {
 
 
   saveTitul(titul: Titul) {
-    var url = this.state.config['context'] + 'index';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'index';
+    const params: HttpParams = new HttpParams()
       .set('action', 'SAVE_TITUL')
       .set('json', JSON.stringify(titul));
     return this.http.get(url, {params: params});
@@ -253,7 +241,7 @@ export class AppService {
       if (!this.isValidAsInteger(issue.cislo)) {
         return false;
       }
-      
+
       //Cistime stavy, aby nebyly "null"
       issue.exemplare.forEach(ex => {
         if(ex.stav){
@@ -267,10 +255,20 @@ export class AppService {
     }
   }
 
+  saveIssues(vol: Volume, issues: Issue[]) {
+      const body = {svazek: vol, issues: issues};
+      const url = this.state.config['context'] + 'index';
+      const params: HttpParams = new HttpParams()
+        .set('action', 'SAVE_ISSUES');
+
+      return this.http.post(url, body, {params: params});
+    
+  }
+
   saveIssue(issue: Issue) {
     if (this.isIssueValid(issue)) {
-      var url = this.state.config['context'] + 'index';
-      let params: HttpParams = new HttpParams()
+      const url = this.state.config['context'] + 'index';
+      const params: HttpParams = new HttpParams()
         .set('action', 'SAVE_ISSUE')
         .set('json', JSON.stringify(issue));
 
@@ -281,8 +279,8 @@ export class AppService {
   }
 
   deleteIssue(issue: Issue) {
-    var url = this.state.config['context'] + 'index';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'index';
+    const params: HttpParams = new HttpParams()
       .set('action', 'DELETE_ISSUE')
       .set('id', issue.id);
 
@@ -290,14 +288,14 @@ export class AppService {
   }
 
   addVydani(issue: Issue, vydani: string) {
-    let newIssue = new Issue();
+    const newIssue = new Issue();
     newIssue.fromJSON(issue);
     newIssue.id = null;
     newIssue.vydani = vydani;
 
     //console.log(newIssue);
-    var url = this.state.config['context'] + 'index';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'index';
+    const params: HttpParams = new HttpParams()
       .set('action', 'SAVE_ISSUE')
       .set('json', JSON.stringify(newIssue));
 
@@ -306,8 +304,8 @@ export class AppService {
 
   duplicateExemplar(issue: Issue, vlastnik: string, start_cislo: number, onspecial: boolean, exemplar: Exemplar, start: string, end: string) {
 //console.log(exemplar);
-    var url = this.state.config['context'] + 'index';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'index';
+    const params: HttpParams = new HttpParams()
       .set('action', 'DUPLICATE_EX')
       .set('issue', JSON.stringify(issue))
       .set('exemplar', JSON.stringify(exemplar))
@@ -322,8 +320,8 @@ export class AppService {
 
   addVdkEx(issue: Issue, urlvdk: string, options: any) {
 
-    var url = this.state.config['context'] + 'index';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'index';
+    const params: HttpParams = new HttpParams()
       .set('action', 'ADD_VDK_SET')
       .set('issue', JSON.stringify(issue))
       .set('options', JSON.stringify(options))
@@ -334,8 +332,8 @@ export class AppService {
 
   prepareVdkEx(issue: Issue, urlvdk: string, options: any) {
 
-    var url = this.state.config['context'] + 'index';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'index';
+    const params: HttpParams = new HttpParams()
       .set('action', 'COLLECT_VDK_SET')
       .set('issue', JSON.stringify(issue))
       .set('options', JSON.stringify(options))
@@ -345,7 +343,7 @@ export class AppService {
   }
 
   saveCurrentIssue(): Observable<any> {
-    let issue: Issue = JSON.parse(JSON.stringify(this.state.currentIssue));
+    const issue: Issue = JSON.parse(JSON.stringify(this.state.currentIssue));
     issue.exemplare.forEach((ex: Exemplar) => {
       delete ex['pagesRange'];
     });
@@ -353,8 +351,8 @@ export class AppService {
   }
 
   getIssue(id: string): Observable<any[]> {
-    var url = this.state.config['context'] + 'search/issue/select';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'search/issue/select';
+    const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
       .set('fl', '*,exemplare:[json],pages:[json]')
@@ -367,8 +365,8 @@ export class AppService {
   }
 
   getVolume(id: string): Observable<any[]> {
-    var url = this.state.config['context'] + 'search/svazek/select';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'search/svazek/select';
+    const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
       .set('fl', '*,periodicita:[json]')
@@ -380,8 +378,8 @@ export class AppService {
   }
 
   getTitulTotals(id: string) {
-    var url = this.state.config['context'] + 'search/issue/select';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'search/issue/select';
+    const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
       //    .set('fq', 'datum_vydani:"' + datum + '"')
@@ -433,22 +431,22 @@ export class AppService {
   }
 
   search() {
-    var url = this.state.config['context'] + 'search/issue/permonik';
-    let params = this.doSearchParams();
+    const url = this.state.config['context'] + 'search/issue/permonik';
+    const params = this.doSearchParams();
     return this.http.get(url, {params: params});
   }
 
   searchCalendar(month: string) {
-    var url = this.state.config['context'] + 'search/issue/permonik';
+    const url = this.state.config['context'] + 'search/issue/permonik';
     let params = this.doSearchParams();
     params = params.append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
     return this.http.get(url, {params: params});
   }
 
   searchTitulyHome() {
-    var url = this.state.config['context'] + 'search/issue/select';
+    const url = this.state.config['context'] + 'search/issue/select';
 
-    let params: HttpParams = new HttpParams()
+    const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
       .set('rows', '500')
@@ -460,8 +458,8 @@ export class AppService {
   }
 
   clone(cfg: CloneParams) {
-    var url = this.state.config['context'] + 'index';
-    let params: HttpParams = new HttpParams()
+    const url = this.state.config['context'] + 'index';
+    const params: HttpParams = new HttpParams()
       .set('action', 'CLONE')
       .set('cfg', JSON.stringify(cfg));
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
@@ -495,7 +493,7 @@ export class AppService {
   }
 
   doLogin() {
-    var url = 'lg'
+    const url = 'lg'
     var params = new HttpParams()
       .set('user', this.state.loginuser)
       .set('pwd', this.state.loginpwd)
@@ -516,7 +514,7 @@ export class AppService {
   }
 
   doLogout() {
-    var url = 'lg';
+    const url = 'lg';
     var params = new HttpParams().set('action', 'LOGOUT');
     return this.http.get(url, {params: params});
   }
