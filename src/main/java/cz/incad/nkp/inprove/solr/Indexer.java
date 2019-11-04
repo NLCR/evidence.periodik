@@ -451,8 +451,6 @@ public class Indexer {
           //idoc.addField(name, json.get(name));
         } else {
           switch (name) {
-            case "vlastnik":
-              break;
             case "stav":
               break;
             case "datum_vydani_den":

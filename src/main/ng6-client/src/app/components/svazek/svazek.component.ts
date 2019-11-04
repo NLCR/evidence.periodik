@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewContainerRef, TemplateRef } from '@angular/core';
+import { KeyValueChanges, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
 import { AppState } from 'src/app/app.state';
-import { MzModalService } from 'ngx-materialize';
+import { MzModalService, MzToastService } from 'ngx-materialize';
 import { AddTitulDialogComponent } from 'src/app/components/add-titul-dialog/add-titul-dialog.component';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AppService } from 'src/app/app.service';
 import { Titul } from 'src/app/models/titul';
 import { Volume } from 'src/app/models/volume';
@@ -88,31 +90,48 @@ export class SvazekComponent implements OnInit {
   pagesRange: { label: string, sel: boolean }[];
   csEditing: CisloSvazku;
 
+  dataChanged: boolean;
+  // private dataDiffer: KeyValueDiffer<string, any>;
+
+
   constructor(
+    private differs: KeyValueDiffers,
     private overlay: Overlay,
     private viewContainerRef: ViewContainerRef,
     private modalService: MzModalService,
+    private toastService: MzToastService,
     private route: ActivatedRoute,
     private router: Router,
     private datePipe: DatePipe,
     public state: AppState,
     private service: AppService) { }
 
+  // ngDoCheck(): void {
+  //     const changes = this.dataDiffer.diff(this.state.currentVolume);
+  //     if (changes) {
+  //       this.dataChanged = true;
+  //     } else {
+  //       this.dataChanged = false;
+  //     }
+  // }
+
   ngOnInit() {
     this.displayedColumnsLeftTableBottom.push('button');
-    // this.issueColumns = Object.keys(new CisloSvazku());
-    // this.issueColumns.push(...['numExist', 'addNextEdition']);
     this.read();
     this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
       this.langChanged();
     }));
+    // this.dataDiffer = this.differs.find(this.state.currentVolume).create();
   }
 
   getDaysArray(start, end) {
     const arr = [];
-    const dtend = new Date(end);
-    for (let dt = new Date(start); dt <= dtend; dt.setDate(dt.getDate() + 1)) {
+    const dtend = this.datePipe.transform(new Date(end), 'yyyy-MM-dd');
+    let dt  = new Date(start);
+
+    while (this.datePipe.transform(dt, 'yyyy-MM-dd') <= dtend) {
       arr.push(this.datePipe.transform(new Date(dt), 'yyyy-MM-dd'));
+      dt.setDate(dt.getDate() + 1);
     }
     return arr;
   }
@@ -149,6 +168,8 @@ export class SvazekComponent implements OnInit {
   findTitul() {
     this.service.getTitul(this.state.currentVolume.id_titul).subscribe(res2 => {
       this.state.currentVolume.titul = res2;
+      this.state.currentVolume.id_titul = this.state.currentVolume.titul.id;
+      
       this.state.currentTitul = res2;
       for (let i = 0; i < this.state.tituly.length; i++) {
         if (this.state.tituly[i].id === this.state.currentVolume.titul.id) {
@@ -260,6 +281,23 @@ export class SvazekComponent implements OnInit {
 
   }
 
+  readClick() {
+    let a = this.modalService.open(ConfirmDialogComponent,
+      {
+        caption: 'modal.read_svazek.caption',
+        text: 'modal.read_svazek.text',
+        param: {
+          value: ''
+        }
+      });
+    a.onDestroy(() => {
+      let mm = <ConfirmDialogComponent> a.instance;
+      if (mm.confirmed) {
+        this.read();
+      }
+    });
+  }
+
   read() {
 
     this.dsIssues = new MatTableDataSource([]);
@@ -287,14 +325,47 @@ export class SvazekComponent implements OnInit {
     }
   }
 
+  setLastNumber() {
+    const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
+    let idx = this.state.currentVolume.prvni_cislo;
+    dates.forEach((dt) => {
+      const dayStr = this.datePipe.transform(dt, 'EEEE');
+      this.state.currentVolume.periodicita.forEach(p => {
+
+        if (p.active) {
+          if (p.den === dayStr) {
+            idx++;
+          }
+        }
+      });
+    });
+    this.state.currentVolume.posledni_cislo = idx;
+  }
+
   save() {
-    // console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
     // Ulozit svazek (volume) a vsechny radky tabulky jako Issue.
 
-    // console.log(this.state.currentVolume);
+    // console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
+     console.log(this.state.currentVolume);
     // console.log(this.dsIssues);
 
+    // carovy_kod je povinny, jelikoz pouzivame jako id svazku
+    if (!this.state.currentVolume.carovy_kod || this.state.currentVolume.carovy_kod.trim() === '') {
+      this.setLastNumber();
+
+      this.toastService.show('carovy kod je povinny', 4000, 'red');
+      return;
+    }
+
+    if (this.state.currentVolume.datum_od > this.state.currentVolume.datum_do) {
+      this.toastService.show('datum od je vetsi nez datum od', 4000, 'red');
+      return;
+    }
+
+    this.setLastNumber();
+
     const carovy_kod = this.state.currentVolume.carovy_kod;
+    this.state.currentVolume.id = carovy_kod;
 
     const issues: Issue[] = [];
 
@@ -339,7 +410,7 @@ export class SvazekComponent implements OnInit {
         if (cs.erroneousNumbering) { ex.stav.push('ChCis'); }
         if (cs.wronglyBound) { ex.stav.push('ChSv'); }
         if (cs.censored) { ex.stav.push('Cz'); }
-
+        
         issues.push(issue);
       }
     });
@@ -350,6 +421,23 @@ export class SvazekComponent implements OnInit {
     
   }
 
+  generateClick() {
+    let a = this.modalService.open(ConfirmDialogComponent,
+      {
+        caption: 'modal.generate_svazek.caption',
+        text: 'modal.generate_svazek.text',
+        param: {
+          value: ''
+        }
+      });
+    a.onDestroy(() => {
+      const mm = <ConfirmDialogComponent> a.instance;
+      if (mm.confirmed) {
+        this.generate();
+      }
+    });
+  }
+
   generate() {
     const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
     this.cislaVeSvazku = [];
@@ -357,16 +445,18 @@ export class SvazekComponent implements OnInit {
 
     let odd = true;
     dates.forEach((dt) => {
+      
       const dayStr = this.datePipe.transform(dt, 'EEEE');
       let inserted = false;
       this.state.currentVolume.periodicita.forEach(p => {
 
         if (p.active) {
           if (p.den === dayStr) {
-
             const is = new Issue();
             is.datum_vydani = dt;
             is.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
+            is.id_titul = this.state.currentVolume.id_titul;
+            is.meta_nazev = this.state.currentVolume.titul.meta_nazev;
             const ex = new Exemplar();
             ex.carovy_kod = this.state.currentVolume.carovy_kod;
             ex.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
@@ -393,6 +483,8 @@ export class SvazekComponent implements OnInit {
         const issue = new Issue();
         issue.datum_vydani = dt;
         issue.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
+        issue.id_titul = this.state.currentVolume.id_titul;
+        issue.meta_nazev = this.state.currentVolume.titul.meta_nazev;
         const ex = new Exemplar();
         ex.carovy_kod = this.state.currentVolume.carovy_kod;
         ex.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
