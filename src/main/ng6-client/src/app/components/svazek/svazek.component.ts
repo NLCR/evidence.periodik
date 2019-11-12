@@ -346,8 +346,8 @@ export class SvazekComponent implements OnInit {
     // Ulozit svazek (volume) a vsechny radky tabulky jako Issue.
 
     // console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
-     console.log(this.state.currentVolume);
-    // console.log(this.dsIssues);
+    // console.log(this.state.currentVolume);
+     console.log(this.dsIssues);
 
     // carovy_kod je povinny, jelikoz pouzivame jako id svazku
     if (!this.state.currentVolume.carovy_kod || this.state.currentVolume.carovy_kod.trim() === '') {

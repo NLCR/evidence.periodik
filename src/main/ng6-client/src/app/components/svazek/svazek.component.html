@@ -192,7 +192,12 @@
         <ng-container matColumnDef="vydani">
           <th mat-header-cell *matHeaderCellDef>vydani</th>
           <td mat-cell *matCellDef="let element">
-            <ng-container *ngIf="element.numExists">{{ 'record.publication.' + element.vydani | translate}}</ng-container>
+            <mat-form-field *ngIf="element.numExists">
+              <mat-select [(ngModel)]="element.vydani">
+                <mat-option [value]="''">&#160;</mat-option>
+                <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}</mat-option>
+              </mat-select>
+            </mat-form-field>
           </td>
         </ng-container>
 
@@ -222,7 +227,7 @@
             <div>počet stran</div>
           </th>
           <td mat-cell *matCellDef="let element">
-              <ng-container *ngIf="element.numExists">{{ element.pocet_stran }}</ng-container>
+              <input *ngIf="element.numExists" [(ngModel)]="element.pocet_stran"/>
           </td>
         </ng-container>
 
@@ -232,7 +237,7 @@
             <div>mutační vydání</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <ng-container *ngIf="element.numExists">{{ element.znak_oznaceni_vydani }}</ng-container>
+            <input *ngIf="element.numExists" [(ngModel)]="element.znak_oznaceni_vydani"/>
           </td>
         </ng-container>
 
