@@ -30,6 +30,7 @@
     "mutation": "Mutation",
     "date_publication": "Date of publication",
     "publication": {
+      "": " ",
       "placeholder": "Publication",
       "morning": "Morning",
       "midday": "Midday",

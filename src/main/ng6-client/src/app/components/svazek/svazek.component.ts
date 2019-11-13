@@ -530,15 +530,29 @@ export class SvazekComponent implements OnInit {
     this.state.currentVolume.vlastnik = this.state.config.owners[this.vlastnik_idx].name;
   }
 
-  addVydani(element, idx) {
+  addVydani(element, idx: number) {
     const n = Object.assign([], this.state.currentVolume.periodicita);
-    n.splice(idx, 0, Object.assign({}, element));
+    n.splice(idx + 1, 0, Object.assign({}, element));
     this.state.currentVolume.periodicita = Object.assign([], n);
     // this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
   }
 
   addIssue(element: CisloSvazku, idx: number) {
-    this.cislaVeSvazku.splice(idx, 0, Object.assign({}, element));
+    const newEl = Object.assign({}, element);
+    newEl.vydani = '';
+    newEl.destroyedPages = false;
+    newEl.degradated = false;
+    newEl.missingPages = false;
+    newEl.erroneousPaging = false;
+    newEl.erroneousDate = false;
+    newEl.erroneousNumbering = false;
+    newEl.wronglyBound = false;
+    newEl.censored = false;
+    newEl.exemplar.pages = [];
+    newEl.exemplar.stav = [];
+    newEl.exemplar.stav_popis = '';
+
+    this.cislaVeSvazku.splice(idx+1, 0, newEl);
     this.dsIssues = new MatTableDataSource(this.cislaVeSvazku);
   }
 

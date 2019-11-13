@@ -30,6 +30,7 @@
     "oznaceni": "Označení mutačního vydání (hvězdičky)",
     "popis_oznaceni_vydani": "Popis označení mutace",
     "publication": {
+      "": " ",
       "empty": "bez určení",
       "placeholder": "Vydání",
       "morning": "Ranní",
