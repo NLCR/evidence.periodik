@@ -21,7 +21,7 @@ export class AppState {
   public _langSubject = new Subject();
   public langSubject: Observable<any> = this._langSubject.asObservable();
 
-  //Holds client configuration
+  // Holds client configuration
   config: AppConfiguration;
   periods: string[] = [];
   vdkFormats: string[] = [];

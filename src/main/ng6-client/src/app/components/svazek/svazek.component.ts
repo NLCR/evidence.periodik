@@ -343,6 +343,9 @@ export class SvazekComponent implements OnInit {
   }
 
   save() {
+    if (!this.state.logged) {
+      return;
+    }
     // Ulozit svazek (volume) a vsechny radky tabulky jako Issue.
 
     // console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
@@ -422,6 +425,11 @@ export class SvazekComponent implements OnInit {
   }
 
   generateClick() {
+    
+    if (!this.state.logged) {
+      return;
+    }
+    
     let a = this.modalService.open(ConfirmDialogComponent,
       {
         caption: 'modal.generate_svazek.caption',
