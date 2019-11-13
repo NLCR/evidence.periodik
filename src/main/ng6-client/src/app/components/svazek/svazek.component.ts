@@ -571,6 +571,13 @@ export class SvazekComponent implements OnInit {
     }
   }
 
+  viewIssue(issue: Issue) {
+    this.state.currentTitul = new Titul();
+    this.state.currentTitul.id = issue.id_titul;
+    this.state.currentTitul.meta_nazev = issue.nazev;
+    this.router.navigate(['/issue', issue.id]);
+  }
+
   updatePop() {
     this.csEditing.exemplar.pages = [];
     this.pagesRange.forEach(p => {

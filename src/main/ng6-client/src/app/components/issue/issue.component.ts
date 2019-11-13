@@ -259,4 +259,9 @@ export class IssueComponent implements OnInit {
     console.log(url);
     window.open(url, '_blank');
   }
+
+  viewSvazek(car_kod: string) {
+    this.state.currentTitul = new Titul();
+    this.router.navigate(['/svazek', car_kod]);
+  }
 }
