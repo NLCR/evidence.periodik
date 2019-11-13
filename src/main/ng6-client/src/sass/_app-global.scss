@@ -101,8 +101,14 @@ li.app-page-item label{
   background: white !important;
 }
 
+// icons
+.mdi-newspaper {
+  @extend .app-cursor-pointer;
+  color: $primary-color-dark;
+}
 
 
+// alberto
 .popover-backdrop {
   opacity: 0;
 }

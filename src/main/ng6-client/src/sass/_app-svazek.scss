@@ -68,6 +68,25 @@
             border-right: 1px solid white;
             padding-bottom: $app-svazek-header-cell-bottom-space;
 
+            // custom cell width
+            &.app-cell-edit-issue {
+              width: $app-svazek-cell-edit-issue-width;
+              border-right: 0 !important;
+            }
+
+            &.app-cell-date {
+              width: $app-svazek-cell-date-width;
+            }
+
+            &.app-cell-edition {
+              width: $app-svazek-cell-edition-width;
+            }
+
+            &.app-cell-number {
+              width: $app-svazek-cell-number-width;
+            }
+
+
             &:not(.app-cell-rotate) {
               padding-left: 5px;
             }
@@ -91,7 +110,18 @@
         .mat-row {
           .mat-cell {
             padding-left: 5px !important;
-            font-size: 0.8rem;
+            font-size: $app-svazek-cell-font-size;
+
+            &.app-cell-edition {
+              .mat-form-field {
+                width: $app-svazek-cell-edition-width;
+              }
+            }
+
+            .mat-checkbox-inner-container {
+              width: 15px;
+              height: 15px;
+            }
 
             .mat-form-field-wrapper {
               padding-bottom: 0;
@@ -101,8 +131,17 @@
               }
             }
 
+            .mdi {
+              @extend .app-cursor-pointer;
+              color: $primary-color-dark;
+
+              &:before {
+                font-size: 18px;
+              }
+            }
+
             input {
-              font-size: 0.8rem;
+              font-size: $app-svazek-cell-font-size;
             }
           }
         }

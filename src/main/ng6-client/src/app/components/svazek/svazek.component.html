@@ -149,13 +149,21 @@
 
   <div class="app-container-right">
     <div class="app-table-wrapper app-right">
-      <table mat-table [dataSource]="dsIssues">   
+      <table mat-table [dataSource]="dsIssues">
+        <!-- Edit issue -->
+        <ng-container matColumnDef="edit_issue">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-edit-issue"></th>
+          <td mat-cell *matCellDef="let element">
+            <i mz-icon-mdi [icon]="'newspaper'" mz-tooltip [tooltip]="'Editovat issue'" [position]="'top'" (click)="viewIssue(element.issue)"></i>
+          </td>
+        </ng-container> 
+
         <!-- Date -->
         <ng-container matColumnDef="datum_vydani">
-          <th mat-header-cell *matHeaderCellDef>datum</th>
+          <th mat-header-cell *matHeaderCellDef class="app-cell-date">datum</th>
           <td mat-cell *matCellDef="let element">
-              <i mz-icon-mdi [icon]="'pencil'" [size]="24" (click)="viewIssue(element.issue)" title="edit issue"></i>
-              {{element.datum_vydani | date : 'EE' : '+0430' : 'cs-CZ'}} {{ element.datum_vydani }}</td>
+            {{element.datum_vydani | date : 'EE' : '+0430' : 'cs-CZ'}} {{ element.datum_vydani }}
+          </td>
         </ng-container>
     
         <!-- Number exist -->
@@ -174,13 +182,13 @@
             <div>přidat další vydání</div>
           </th>
           <td mat-cell *matCellDef="let element; let idx=index">
-            <i mz-icon-mdi [icon]="'plus'" [size]="24" (click)="addIssue(element, idx)" *ngIf="element.numExists"></i>
+            <i mz-icon-mdi [icon]="'plus-circle'" (click)="addIssue(element, idx)" *ngIf="element.numExists" mz-tooltip [tooltip]="'Přidat další výpis'" [position]="'top'"></i>
           </td>
         </ng-container>
     
         <!-- Edition number -->
         <ng-container matColumnDef="cislo">
-          <th mat-header-cell *matHeaderCellDef>{{'record.number' | translate }}</th>
+          <th mat-header-cell *matHeaderCellDef class="app-cell-number">{{'record.number' | translate }}</th>
           <td mat-cell *matCellDef="let element"><input *ngIf="element.numExists" [(ngModel)]="element.cislo"/></td>
         </ng-container>
 
@@ -192,8 +200,8 @@
 
         <!-- Edition -->
         <ng-container matColumnDef="vydani">
-          <th mat-header-cell *matHeaderCellDef>vydani</th>
-          <td mat-cell *matCellDef="let element">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-edition">vydání</th>
+          <td mat-cell *matCellDef="let element" class="app-cell-edition">
             <mat-form-field *ngIf="element.numExists">
               <mat-select [(ngModel)]="element.vydani">
                 <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}</mat-option>

@@ -31,6 +31,7 @@ export class SvazekComponent implements OnInit {
 
   dsIssues: MatTableDataSource<CisloSvazku>;
   issueColumns = [
+    'edit_issue',
     'datum_vydani',
     'numExists',
     'addNextEdition',
