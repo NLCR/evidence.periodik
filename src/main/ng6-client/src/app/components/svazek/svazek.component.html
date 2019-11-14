@@ -8,8 +8,13 @@
           <th mat-header-cell *matHeaderCellDef>atribut</th>
           <td mat-cell *matCellDef="let element">{{ element | translate}}</td>
           <td mat-footer-cell *matFooterCellDef colspan="2">
-            <button mat-raised-button (click)="readClick()">(Znovu) načíst celý svazek</button>
-            <button mat-raised-button (click)="save()" [disabled]="!state.logged">Uložit celý svazek {{dataChanged ? '!!' : ''}}</button> 
+            <button mat-raised-button (click)="readClick()">
+              (Znovu) načíst celý svazek
+            </button>
+            <button mat-raised-button (click)="save()" [disabled]="!state.logged">
+              <i *ngIf="!state.logged" mz-icon-mdi [icon]="'cancel'" [size]="'18px'" mz-tooltip [tooltip]="'Tato akce není povolená, nejste přihlášen.'" [position]="'top'"></i>
+              Uložit celý svazek {{dataChanged ? '!!' : ''}}
+            </button> 
           </td>
         </ng-container>
 
@@ -69,7 +74,10 @@
           <th mat-header-cell *matHeaderCellDef>vychází</th>
           <td mat-cell *matCellDef="let element">{{ 'days.' + element.den | translate}}</td>
           <td mat-footer-cell *matFooterCellDef colspan="7">
-            <button mat-raised-button (click)="generateClick()"[disabled]="!state.logged">Vygenerovat / vygenerovat znovu</button>
+            <button mat-raised-button (click)="generateClick()"[disabled]="!state.logged">
+              <i *ngIf="!state.logged" mz-icon-mdi [icon]="'cancel'" [size]="'18px'" mz-tooltip [tooltip]="'Tato akce není povolená, nejste přihlášen.'" [position]="'top'"></i>
+              Vygenerovat / vygenerovat znovu
+            </button>
           </td>
         </ng-container>
     
@@ -125,7 +133,7 @@
             <div>název přílohy</div>
           </th>
           <td mat-cell *matCellDef="let element">
-              <input *ngIf="element.active && element.isPriloha" [(ngModel)]="element.nazev_prilohy" />
+            <input *ngIf="element.active && element.isPriloha" [(ngModel)]="element.nazev_prilohy" />
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>

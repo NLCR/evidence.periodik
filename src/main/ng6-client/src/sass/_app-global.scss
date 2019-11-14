@@ -102,9 +102,10 @@ li.app-page-item label{
 }
 
 // icons
-.mdi-newspaper {
+.mdi-newspaper,
+.mdi-package {
   @extend .app-cursor-pointer;
-  color: $primary-color-dark;
+  color: #00a5bb;
 }
 
 

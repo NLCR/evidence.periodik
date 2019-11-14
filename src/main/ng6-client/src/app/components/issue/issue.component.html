@@ -131,8 +131,8 @@
         <mz-collapsible-item [active]="false"  *ngFor="let ex of state.currentIssue.exemplare;let idx= index;">
           <mz-collapsible-item-header>
             <span>
-              {{idx + 1}}.- {{ex.vlastnik}} {{ex.carovy_kod}}  
-              <i mz-icon-mdi class="app-cursor-pointer" [icon]="'pencil'" [size]="16" [title]="'edit svazek'" (click)="viewSvazek(ex['carovy_kod'])"></i>
+              {{idx + 1}}.- {{ex.vlastnik}} {{ex.carovy_kod}}
+              <i mz-icon-mdi class="app-cursor-pointer" [icon]="'package'" [size]="'18px'" mz-tooltip [tooltip]="'Editovat svazek'" [position]="'top'" (click)="viewSvazek(ex['carovy_kod'])"></i>
             </span>
             <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg right'"></i>
             <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg right'"></i>
