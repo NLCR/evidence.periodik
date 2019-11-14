@@ -69,21 +69,29 @@
             padding-bottom: $app-svazek-header-cell-bottom-space;
 
             // custom cell width
-            &.app-cell-edit-issue {
+            &.mat-column-den {
+              width: $app-svazek-cell-den-width;
+            }
+
+            &.mat-column-edit_issue {
               width: $app-svazek-cell-edit-issue-width;
               border-right: 0 !important;
             }
 
-            &.app-cell-date {
-              width: $app-svazek-cell-date-width;
+            &.mat-column-datum_vydani {
+              width: $app-svazek-cell-datum-vydani-width;
             }
 
-            &.app-cell-edition {
-              width: $app-svazek-cell-edition-width;
+            &.mat-column-vydani {
+              width: $app-svazek-cell-vydani-width;
             }
 
-            &.app-cell-number {
-              width: $app-svazek-cell-number-width;
+            &.mat-column-cislo {
+              width: $app-svazek-cell-cislo-width;
+            }
+
+            &.mat-column-mutace {
+              width: $app-svazek-cell-mutace-width;
             }
 
 
@@ -111,10 +119,12 @@
           .mat-cell {
             padding-left: 5px !important;
             font-size: $app-svazek-cell-font-size;
+            height: 31px;
 
-            &.app-cell-edition {
+            &.mat-column-vydani {
+              min-width: calc(#{$app-svazek-cell-vydani-width} + 8px);
               .mat-form-field {
-                width: $app-svazek-cell-edition-width;
+                width: $app-svazek-cell-vydani-width;
               }
             }
 

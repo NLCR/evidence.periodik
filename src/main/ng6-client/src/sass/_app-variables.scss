@@ -79,9 +79,14 @@ $app-svazek-table-left-height: 50% !default;
 $app-svazek-table-right-height: 100% !default;
 $app-svazek-header-row-height: 120px !default;
 $app-svazek-header-cell-bottom-space: 5px !default;
-$app-svazek-cell-date-width: 90px !default;
-$app-svazek-cell-edit_issue-width: 10px !default;
-$app-svazek-cell-edition-width: 80px !default;
-$app-svazek-cell-number-width: 50px !default;
+
+$app-svazek-cell-den-width: 60px !default;
+
+$app-svazek-cell-datum-vydani-width: 90px !default;
+$app-svazek-cell-edit-issue-width: 10px !default;
+$app-svazek-cell-vydani-width: 80px !default;
+$app-svazek-cell-cislo-width: 50px !default;
+$app-svazek-cell-mutace-width: 185px !default;
+
 
 $app-svazek-cell-font-size: 12px !default;
