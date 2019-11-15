@@ -567,9 +567,9 @@ export class SvazekComponent implements OnInit {
 
   rowColor(row): string {
     if (row.isPriloha) {
-      return '#cce';
+      return '#fce4ec'; // #cce
     }
-    return row.odd ? '#fff' : '#eee';
+    return row.odd ? '#fff' : '#f5f5f5';
   }
 
   viewPS(el: CisloSvazku, prop: string, relative: any, template: TemplateRef<any>) {

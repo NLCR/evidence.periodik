@@ -63,19 +63,20 @@
           height: 40px;
 
           .mat-header-cell {
+            @extend .app-clean-radius;
             background-color: $app-grey-l-2;
             vertical-align: bottom;
             border-right: 1px solid white;
             padding-bottom: $app-svazek-header-cell-bottom-space;
+            border-bottom: 0 !important;
+
+            &:first-of-type {
+              padding-left: 0;
+            }
 
             // custom cell width
             &.mat-column-den {
               width: $app-svazek-cell-den-width;
-            }
-
-            &.mat-column-edit_issue {
-              width: $app-svazek-cell-edit-issue-width;
-              border-right: 0 !important;
             }
 
             &.mat-column-datum_vydani {
@@ -117,14 +118,62 @@
       tbody {
         .mat-row {
           .mat-cell {
-            padding-left: 5px !important;
+            @extend .app-clean-radius;
+            padding: 0 0 0 5px !important;
             font-size: $app-svazek-cell-font-size;
-            height: 31px;
+            height: 32px;
 
             &.mat-column-vydani {
               min-width: calc(#{$app-svazek-cell-vydani-width} + 8px);
               .mat-form-field {
                 width: $app-svazek-cell-vydani-width;
+              }
+            }
+
+            &.app-edit-text {
+              .mat-form-field {
+                width: 100%;
+
+                .mat-form-field-wrapper {
+                  .mat-form-field-infix {
+                    border-top: 0;
+                    padding-right: 25px;
+                    position: relative;
+
+                    .mat-input-element {
+                      
+                    }
+
+                    .mdi-pencil {
+                      position: absolute;
+                      top: 2px;
+                      right: 2px;
+                      color: $app-grey;
+                    }
+                  }
+                }
+
+                &.app-short-text {
+                  .mat-form-field-wrapper {
+                    .mat-form-field-infix {
+                      padding-right: 0;
+                      width: auto;
+
+                      .mat-input-element {
+                        padding-right: 0;
+                      }
+                    }
+                  }
+                }
+              }
+
+              &:focus-within {
+                background-color: $app-color-black;
+                color: $app-color-white;
+  
+                .mdi-pencil {
+                  color: $app-color-white !important;
+                }
               }
             }
 
@@ -166,10 +215,8 @@
             padding-left: 5px !important;
             padding-top: 10px;
 
-            .mat-raised-button {
+            .btn {
               @extend .z-depth-0;
-              background-color: #00a5bb;
-              color: #ffffff;
               margin-right: 5px;
 
               &:disabled {
