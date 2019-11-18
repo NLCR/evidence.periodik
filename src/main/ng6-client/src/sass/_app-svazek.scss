@@ -95,6 +95,10 @@
               width: $app-svazek-cell-mutace-width;
             }
 
+            &.mat-column-nazev_prilohy {
+              width: $app-svazek-cell-mutace-width;
+            }
+
 
             &:not(.app-cell-rotate) {
               padding-left: 5px;
@@ -140,15 +144,11 @@
                     padding-right: 25px;
                     position: relative;
 
-                    .mat-input-element {
-                      
-                    }
-
                     .mdi-pencil {
                       position: absolute;
                       top: 2px;
                       right: 2px;
-                      color: $app-grey;
+                      color: $app-grey-l-1;
                     }
                   }
                 }
@@ -187,6 +187,7 @@
 
               .mat-form-field-infix {
                 border-top: 0;
+                width: 100%;
               }
             }
 
