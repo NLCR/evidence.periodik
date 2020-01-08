@@ -17,9 +17,9 @@
   "q_placeholder": "Search keywords, articles, genres, authors...",
   "dummy": "",
   "formatvdk":{
-    "CISLO": "Cislo", 
-    "MESIC": "mesic",
-    "MESIC_SLOVA":"Mesic slovy"
+    "CISLO": "Issue", 
+    "MESIC": "month",
+    "MESIC_SLOVA":"Month name"
   },
   "record": {
     "meta_title": "Meta title",
@@ -52,16 +52,16 @@
     "state": "State",
     "state_com": "State comment",
     "StavIssue": {
-      "OK": "Complet",
-      "ChCC": "Chybí číslo",
-      "ChS": "Chybí strany",
-      "PP": "Poškozený dokument",
-      "Deg": "Degradace",
-      "ChPag": "Chybná paginace",
-      "ChCis": "Chybné číslování",
-      "ChSv": "Chybné svázáno",
-      "Cz": "Cenzurováno",
-      "CzV": "Cenzurní výtisk"
+      "OK": "Complete",
+      "ChCC": "Missing issue",
+      "ChS": "Missing pages",
+      "PP": "Damaged document",
+      "Deg": "Degradation",
+      "ChPag": "incorrect pagination",
+      "ChCis": "Incorrect numbering",
+      "ChSv": "Incorrectly bound",
+      "Cz": "Censored",
+      "CzV": "Censorship printout"
     },
     "year": "Year",
     "number": "Number",
@@ -82,11 +82,11 @@
     "save": "Save",
     "clone": "Clone",
     "delete": "Delete",
-    "add_specimen": "Add specimen",
-    "add_mutation": "Add mutation",
-    "add_background": "Add background",
+    "add_specimen": "Add a specimen",
+    "add_mutation": "Add a mutation",
+    "add_background": "Add a background",
     "delete_all_mutations": "Delete all mutations",
-    "delete_specimen": "Delete specimen",
+    "delete_specimen": "Delete this specimen",
     "cancel": "Cancel",
     "close": "Close",
     "login": "Login"
