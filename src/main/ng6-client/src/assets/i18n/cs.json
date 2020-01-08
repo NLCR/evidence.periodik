@@ -18,6 +18,7 @@
     "CISLO": "Číslo (3)", 
     "MESIC": "Měsíc(e) číslem(y) (1-155)",
     "MESIC_SLOVA":"Měsíc(e) slovy (LED-DUB)"
+
   },
   "record": {
     "meta_title": "Meta název",
@@ -26,10 +27,12 @@
     "time_publication": "Čas vydání",
     "mutation": "Mutace",
     "date_publication": "Datum vydání",
-    "znak_oznaceni_vydani":"Způsob označení mutace",
-    "oznaceni":"Označení regionálního vydání",
-    "popis_oznaceni_vydani":"Popis označení mutace",
+    "znak_oznaceni_vydani": "Způsob označení mutačního vydání",
+    "oznaceni": "Označení mutačního vydání (hvězdičky)",
+    "popis_oznaceni_vydani": "Popis označení mutace",
     "publication": {
+      "": " ",
+      "empty": "bez určení",
       "placeholder": "Vydání",
       "morning": "Ranní",
       "midday": "Polední",
@@ -38,7 +41,7 @@
       "special": "Zvláštní"
     },
     "pages_count": "Počet stran",
-    "lost_pages" : "Poškozené/Chybějicí strany",
+    "lost_pages": "Poškozené/Chybějicí strany",
     "state": "Stav",
     "state_com": "Stav popis",
     "StavIssue": {
@@ -50,9 +53,9 @@
       "ChPag": "Chybná paginace",
       "ChCis": "Chybné číslování",
       "ChSv": "Chybné svázáno",
+      "ChDatum": "Chybné datum",
       "Cz": "Cenzurováno",
       "CzV": "Cenzurní výtisk",
-      
       "Z": "není vůbec (zničeno/ztráta)",
       "PolS": "Polité strany",
       "NT": "Nečitelný tisk",
@@ -104,7 +107,7 @@
   "facet": {
     "title": {
       "active_filters": "Aktivní filtry",
-      "caption": "Titul",
+      "caption": "Metatitul",
       "mutation": "Mutace",
       "ownership": "Vlastník"
     },
@@ -112,12 +115,14 @@
       "delete_all_filters": "Odstranit všechny filtry",
       "delete_this_filter": "Odstranit tento filtr"
     },
-    "meta_nazev": "Titul",
+    "meta_nazev": "Metatitul",
+    "nazev": "Název na titulní straně",
     "date": "Datum",
     "vlastnik": "Vlastnik",
     "stav": "Stav",
     "mutace": "Mutace",
-    "vydani":"Vydani"
+    "znak_oznaceni_vydani": "Mutační vydání",
+    "vydani": "Vydani"
   },
   "result": {
     "found_records": "Nalezeno záznamů",
@@ -153,8 +158,12 @@
     "till": "Do",
     "periodicity": "Periodicita",
     "on_special_days": "Ve speciální dny",
-    "start_year":"Startovaci rocnik",
+    "start_year": "Startovaci rocnik",
     "start_number": "Startovaci cislo",
+    "generate_svazek.caption": "Podtvrdit vygenerovani svazku",
+    "generate_svazek.text": "Chtete opravdu generovat cisla pro svazek? Vsechny zmeny budou odstranena. Generovani neulozi data.",
+    "read_svazek.caption": "Podtvrdit načíst celý svazek",
+    "read_svazek.text": "Chtete opravdu načíst celý svazek? Vsechny neulozene zmeny budou odstranena.",
     "delete_record.caption": "Podtvrdit smazani",
     "delete_record.text": "Chtete opravdu smazat zaznam {{value}}?",
     "delete_exemplar.caption": "Podtvrdit smazani",
@@ -164,5 +173,14 @@
     "desc": "Prosím, přihlašte se",
     "user": "Uživatel",
     "password": "Heslo"
+  },
+  "days": {
+    "Monday": "pondělí",
+    "Tuesday": "úterý",
+    "Wednesday": "středa",
+    "Thursday": "čtvrtek",
+    "Friday": "pátek",
+    "Saturday": "sobota",
+    "Sunday": "neděle"
   }
 }

@@ -58,7 +58,8 @@
     </mz-checkbox-container>
       </span>
       <span *ngSwitchDefault>
-        Exemplar: {{exemplar.vlastnik}} {{exemplar.carovy_kod}}
+        Exemplar: {{exemplar.vlastnik}} <a (click)="editSvazek(exemplar.carovy_kod)">{{exemplar.carovy_kod}}</a>&#160;
+        <i mz-icon-mdi class="app-cursor-pointer" [icon]="'package'" [size]="'18px'" mz-tooltip [tooltip]="'Editovat svazek'" [position]="'top'" (click)="editSvazek(exemplar.carovy_kod)"></i>
       </span>
     </ng-container>
     </div>

@@ -438,10 +438,60 @@ public class Indexer {
       return null;
     }
   }
+  
+  public JSONObject indexSvazek(JSONObject json) {
+
+    LOGGER.info(json.toString());
+    JSONObject ret = new JSONObject();
+    try (SolrClient solr = getClient()) {
+      SolrInputDocument idoc = new SolrInputDocument();
+      for (Object key : json.keySet()) {
+        String name = (String) key;
+        if (null == name) {
+          //idoc.addField(name, json.get(name));
+        } else {
+          switch (name) {
+            case "stav":
+              break;
+            case "datum_vydani_den":
+              //idoc.setField("datum_vydani_den", json.getString(name));
+              //idoc.setField("datum_vydani_den", json.getString(name).replaceAll("-", ""));
+              break;
+            case "datum_vydani":
+              idoc.setField("datum_vydani", json.getString(name));
+              idoc.setField("datum_vydani_den", json.getString(name).replaceAll("-", "").substring(0, 8));
+              break;
+            case "periodicita":
+              idoc.addField("periodicita", json.getJSONArray(name).toString());
+              break;
+            //Skip this
+            case "titul":
+              break;
+            case "_version_":
+              break;
+            
+            default:
+              idoc.addField(name, json.get(name));
+              break;
+          }
+        }
+      }
+
+      if ("".equals(json.optString("id", ""))) {
+        idoc.setField("id", generateId(idoc, Options.getInstance().getStrings("idfields")));
+      }
+      LOGGER.info(idoc.toString());
+      solr.add("svazek", idoc);
+      solr.commit("svazek");
+      ret.put("success", "svazek saved");
+    } catch (SolrServerException | IOException ex) {
+      ret.put("error", ex);
+      LOGGER.log(Level.SEVERE, null, ex);
+    }
+    return ret;
+  }
 
   public JSONObject fromJSON(JSONObject json) {
-
-      LOGGER.info(json.toString());
     JSONObject ret = new JSONObject();
     try (SolrClient solr = getClient()) {
       SolrInputDocument idoc = new SolrInputDocument();

@@ -18,10 +18,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -125,6 +128,32 @@ public class IndexServlet extends HttpServlet {
           Indexer indexer = new Indexer();
           JSONObject jo = new JSONObject(req.getParameter("json"));
           json.put("save issue", indexer.fromJSON(jo));
+        } catch (Exception ex) {
+          LOGGER.log(Level.SEVERE, null, ex);
+          json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
+    SAVE_ISSUES {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        String js = IOUtils.toString(req.getInputStream(), "UTF-8");
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          JSONObject jo = new JSONObject(js);
+          JSONArray ja = jo.getJSONArray("issues");
+          JSONObject svazek = jo.getJSONObject("svazek");
+          
+          json.put("svazek", indexer.indexSvazek(svazek));
+          for (int i =0; i < ja.length(); i++) {
+            json.put("issue"+i, indexer.fromJSON(ja.getJSONObject(i)));
+            //json.put("issue"+i, ja.getJSONObject(i));
+          }
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);
           json.put("error", ex.toString());

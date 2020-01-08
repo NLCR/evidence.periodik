@@ -4,6 +4,7 @@ import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
 import {Issue} from '../../models/issue';
 import {Exemplar} from '../../models/exemplar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-exemplar-dialog',
@@ -38,6 +39,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
 
 
   constructor(
+    private router: Router,
     private toastService: MzToastService) {
     super();
   }
@@ -126,5 +128,10 @@ export class AddExemplarDialogComponent extends MzBaseModal {
 
   cancel() {
 
+  }
+
+  editSvazek(carovy_kod: string) {
+    this.modalComponent.closeModal();
+    this.router.navigate(['/svazek', carovy_kod]);
   }
 }

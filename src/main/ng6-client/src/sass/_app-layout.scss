@@ -78,5 +78,13 @@ app-root {
 
       @import "app-facet";
     }
+
+    app-svazek {
+      display: block;
+      width: 100%;
+      height: 100%;
+      
+      @import "app-svazek";
+    }
   }  
 }

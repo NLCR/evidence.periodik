@@ -38,6 +38,10 @@ a,
   border-radius: 0 !important;
 }
 
+.app-clean-border {
+  border: 0 !important;
+}
+
 
 // clearfix
 .clearfix {
@@ -63,7 +67,7 @@ a,
 
 
 // others
-button:not(.btn-floating) {
+.btn:not(.btn-floating) {
   @extend .z-depth-0;
   i {
     &.left {
@@ -91,4 +95,39 @@ li.app-page-item{
 }
 li.app-page-item label{
   padding-left: 22px;
+}
+
+.cdk-overlay-pane {
+  background: white !important;
+}
+
+// icons
+.mdi-newspaper,
+.mdi-package {
+  @extend .app-cursor-pointer;
+  color: #00a5bb;
+}
+
+
+// alberto
+.popover-backdrop {
+  opacity: 0;
+}
+
+.popover-card {
+  max-width: 800px;
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px ;
+}
+
+.popover-card::after {
+  content: "";
+  position: absolute;
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px ;
+  transform: rotate(225deg);
+  top: -10px;
+  right: 25px;
+  margin-left: -10px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent #FFF #FFF transparent;
 }

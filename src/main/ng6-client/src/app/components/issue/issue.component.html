@@ -4,7 +4,7 @@
     <div class="col s4">
       
       <mz-select-container *ngIf="state.isNewIssue">
-        <select mz-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()" [label]="'Titul'">
+        <select mz-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()" [label]="'Metatitul'">
                 <option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >{{tit.meta_nazev}}</option>
           <option [value]="-1" >{{'Add new titul' | translate}}</option>
         </select>
@@ -131,7 +131,8 @@
         <mz-collapsible-item [active]="false"  *ngFor="let ex of state.currentIssue.exemplare;let idx= index;">
           <mz-collapsible-item-header>
             <span>
-              {{idx + 1}}.- {{ex.vlastnik}} {{ex.carovy_kod}} 
+              {{idx + 1}}.- {{ex.vlastnik}} {{ex.carovy_kod}}
+              <i mz-icon-mdi class="app-cursor-pointer" [icon]="'package'" [size]="'18px'" mz-tooltip [tooltip]="'Editovat svazek'" [position]="'top'" (click)="viewSvazek(ex['carovy_kod'])"></i>
             </span>
             <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg right'"></i>
             <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg right'"></i>

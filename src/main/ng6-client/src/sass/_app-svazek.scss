@@ -1,0 +1,233 @@
+//--- SVAZEK ---
+
+.app-svazek-wrapper {
+  display: flex;
+  height: 100%;
+
+  .app-container-left {
+    flex: 1;
+    padding: $app-container;
+    //overflow: auto;
+   }
+  
+  .app-container-right {
+    flex: 2;
+    padding: $app-container;
+    padding-left:0;
+   // overflow: auto;
+  }
+
+  .app-table-wrapper {
+    &.app-left-top {
+      height: $app-svazek-table-left-height;
+      overflow: auto;
+
+      .mat-footer-cell {
+        padding-bottom: $app-container;
+
+        &:last-child {
+          display: none;
+        }
+      }
+    }
+
+    &.app-left-bottom {
+      height: calc(100% - #{$app-svazek-table-left-height});
+      overflow: auto;
+
+      .mat-footer-cell {
+        padding-bottom: 3px;
+
+        &:not(:first-child) {
+          display: none;
+        }
+      }
+    }
+
+    &.app-right {
+      height: $app-svazek-table-right-height;
+      overflow: auto;
+    }
+
+    .mat-table {
+      width: 100%;
+
+      th, td {
+        &:last-child {
+          border-right: 0 !important;
+        }
+      }
+
+      thead {
+        .mat-header-row {
+          height: 40px;
+
+          .mat-header-cell {
+            @extend .app-clean-radius;
+            background-color: $app-grey-l-2;
+            vertical-align: bottom;
+            border-right: 1px solid white;
+            padding-bottom: $app-svazek-header-cell-bottom-space;
+            border-bottom: 0 !important;
+
+            &:first-of-type {
+              padding-left: 0;
+            }
+
+            // custom cell width
+            &.mat-column-den {
+              width: $app-svazek-cell-den-width;
+            }
+
+            &.mat-column-datum_vydani {
+              width: $app-svazek-cell-datum-vydani-width;
+            }
+
+            &.mat-column-vydani {
+              width: $app-svazek-cell-vydani-width;
+            }
+
+            &.mat-column-cislo {
+              width: $app-svazek-cell-cislo-width;
+            }
+
+            &.mat-column-mutace {
+              width: $app-svazek-cell-mutace-width;
+            }
+
+            &.mat-column-nazev_prilohy {
+              width: $app-svazek-cell-mutace-width;
+            }
+
+
+            &:not(.app-cell-rotate) {
+              padding-left: 5px;
+            }
+
+            &.app-cell-rotate {
+              height: $app-svazek-header-row-height;
+              white-space: nowrap;
+              width: 30px !important;
+
+              & > div {
+                transform: rotate(-90deg);
+                width: 30px !important;
+                margin-bottom: calc(#{$app-svazek-header-cell-bottom-space} * 2);
+              } 
+            }
+          }
+        }
+      }
+
+      tbody {
+        .mat-row {
+          .mat-cell {
+            @extend .app-clean-radius;
+            padding: 0 0 0 5px !important;
+            font-size: $app-svazek-cell-font-size;
+            height: 32px;
+
+            &.mat-column-vydani {
+              min-width: calc(#{$app-svazek-cell-vydani-width} + 8px);
+              .mat-form-field {
+                width: $app-svazek-cell-vydani-width;
+              }
+            }
+
+            &.app-edit-text {
+              .mat-form-field {
+                width: 100%;
+
+                .mat-form-field-wrapper {
+                  .mat-form-field-infix {
+                    border-top: 0;
+                    padding-right: 25px;
+                    position: relative;
+
+                    .mdi-pencil {
+                      position: absolute;
+                      top: 2px;
+                      right: 2px;
+                      color: $app-grey-l-1;
+                    }
+                  }
+                }
+
+                &.app-short-text {
+                  .mat-form-field-wrapper {
+                    .mat-form-field-infix {
+                      padding-right: 0;
+                      width: auto;
+
+                      .mat-input-element {
+                        padding-right: 0;
+                      }
+                    }
+                  }
+                }
+              }
+
+              &:focus-within {
+                background-color: $app-color-black;
+                color: $app-color-white;
+  
+                .mdi-pencil {
+                  color: $app-color-white !important;
+                }
+              }
+            }
+
+            .mat-checkbox-inner-container {
+              width: 15px;
+              height: 15px;
+            }
+
+            .mat-form-field-wrapper {
+              padding-bottom: 0;
+
+              .mat-form-field-infix {
+                border-top: 0;
+                width: 100%;
+              }
+            }
+
+            .mdi {
+              @extend .app-cursor-pointer;
+              color: #00a5bb;
+
+              &:before {
+                font-size: 18px;
+              }
+            }
+
+            input {
+              font-size: $app-svazek-cell-font-size;
+            }
+          }
+        }
+      }
+
+      tfoot {
+        background-color: $app-grey-l-4;
+
+        .mat-footer-row {
+          .mat-footer-cell {
+            @extend .app-clean-border;
+            padding-left: 5px !important;
+            padding-top: 10px;
+
+            .btn {
+              @extend .z-depth-0;
+              margin-right: 5px;
+
+              &:disabled {
+                background-color: $app-grey-l-2;
+                color: rgba($app-grey-d-1, .8);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
