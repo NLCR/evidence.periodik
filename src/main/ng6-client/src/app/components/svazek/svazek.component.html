@@ -386,7 +386,7 @@
     <mat-card-content>
       <div><b>Popis: </b><input [(ngModel)]="popText" /></div>
       <div *ngIf="popShowPages">
-        {{'record.lost_pages' | translate}}
+        {{'record.pages_' + editingProp | translate}}
         <ul class="app-pages">
           <li *ngFor="let page of pagesRange" class="app-page-item">
             <mz-checkbox-container>

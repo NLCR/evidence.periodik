@@ -480,7 +480,7 @@ public class Indexer {
       if ("".equals(json.optString("id", ""))) {
         idoc.setField("id", generateId(idoc, Options.getInstance().getStrings("idfields")));
       }
-      LOGGER.info(idoc.toString());
+      // LOGGER.info(idoc.toString());
       solr.add("svazek", idoc);
       solr.commit("svazek");
       ret.put("success", "svazek saved");
@@ -518,6 +518,8 @@ public class Indexer {
               break;
             case "_version_":
               break;
+            case "index_time": 
+              break;
             case "pages":
               idoc.setField("pages", json.getJSONArray(name).toString());
               break;
@@ -545,7 +547,7 @@ public class Indexer {
       if ("".equals(json.optString("id", ""))) {
         idoc.setField("id", generateId(idoc, Options.getInstance().getStrings("idfields")));
       }
-      LOGGER.info(idoc.toString());
+      // LOGGER.info(idoc.toString());
       solr.add("issue", idoc);
       solr.commit("issue");
       ret.put("success", "issue saved");

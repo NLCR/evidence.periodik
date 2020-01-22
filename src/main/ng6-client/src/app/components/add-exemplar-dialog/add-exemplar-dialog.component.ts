@@ -51,17 +51,17 @@ export class AddExemplarDialogComponent extends MzBaseModal {
       if (!this.issue.pages || this.issue.pages.length === 0){
         for(let i=0; i<this.issue.pocet_stran; i++){
           //this.pages.push({label:(i+1) + "", index: i});
-          let sel = this.exemplar.pages && this.exemplar.pages.includes((i+1) + "");
+          let sel = this.exemplar.pages && this.exemplar.pages.missing.includes((i+1) + "");
           this.pagesRange.push({label:(i+1) + "", sel: sel});
         }
       } else {
         for(let i=0; i<this.issue.pages.length; i++){
           let label = this.issue.pages[i].label;
-          let sel = this.exemplar.pages && this.exemplar.pages.includes((i+1) + "");
+          let sel = this.exemplar.pages && this.exemplar.pages.missing.includes((i+1) + "");
           this.pagesRange.push({label:label, sel: sel});
         }
         for(let i=this.issue.pages.length; i<this.issue.pocet_stran; i++){
-          //let sel = this.exemplar.pages && this.exemplar.pages.includes((i+1) + "");
+          //let sel = this.exemplar.pages && this.exemplar.pages.missing.includes((i+1) + "");
           this.pagesRange.push({label:(i+1) + "", sel: true});
         }
       } 
@@ -75,10 +75,10 @@ export class AddExemplarDialogComponent extends MzBaseModal {
 
   ok(): void {
     if (this.showPages()){
-          this.exemplar.pages = [];
+          this.exemplar.pages = {missing: [], damaged: []};
           this.pagesRange.forEach(p => {
             if (p.sel)
-            this.exemplar.pages.push(p.label);
+            this.exemplar.pages.missing.push(p.label);
           });
         }
         

@@ -11,8 +11,9 @@ import {Exemplar} from '../../models/exemplar';
 import {AddTitulDialogComponent} from '../add-titul-dialog/add-titul-dialog.component';
 import {MzModalService} from 'ngx-materialize';
 import {AddVydaniDialogComponent} from '../add-vydani-dialog/add-vydani-dialog.component';
-import {EditPagesComponent} from "src/app/components/edit-pages/edit-pages.component";
-import {DateAdapter} from "@angular/material/core";
+import {EditPagesComponent} from 'src/app/components/edit-pages/edit-pages.component';
+import {DateAdapter} from '@angular/material/core';
+import { isArray } from 'util';
 
 @Component({
   selector: 'app-issue',
@@ -22,10 +23,10 @@ import {DateAdapter} from "@angular/material/core";
 export class IssueComponent implements OnInit {
   subscriptions: Subscription[] = [];
 
-  changingLang: boolean = false;
+  changingLang = false;
   titul_idx: number;
-  
-  initial_pages: number = 0;
+
+  initial_pages = 0;
 
   public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
@@ -60,13 +61,13 @@ export class IssueComponent implements OnInit {
     this.pagesRange = [];
     if (this.state.currentIssue.pages.length === 0) {
       for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
-        this.pagesRange.push({label: (i + 1) + "", index: i});
+        this.pagesRange.push({label: (i + 1) + '', index: i});
       }
     } else {
       this.pagesRange = JSON.parse(JSON.stringify(this.state.currentIssue.pages));
       if (this.state.currentIssue.pages.length < this.state.currentIssue.pocet_stran) {
         for (let i = this.state.currentIssue.pages.length; i < this.state.currentIssue.pocet_stran; i++) {
-          this.pagesRange.push({label: (i + 1) + "", index: i});
+          this.pagesRange.push({label: (i + 1) + '', index: i});
         }
       }
     }
@@ -74,28 +75,41 @@ export class IssueComponent implements OnInit {
     if (!this.state.currentIssue.hasOwnProperty('exemplare')) {
       this.state.currentIssue['exemplare'] = [];
     } else {
+
+
       this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
-        ex.pagesRange = [];
+        ex.pagesRange = { missing: [], damaged: [] };
+
+      // Back compatibility. 
+      // From pages : string[] to pages: {missing: string[], damaged: string[]}
+      // Assign to missing
+      if (ex.pages && isArray(ex.pages)) {
+        const pages = Object.assign([], ex.pages);
+        ex.pages = {missing: Object.assign([], ex.pages), damaged: Object.assign([], ex.pages)};
+      }
+
         for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
-          let sel = ex.pages && ex.pages.includes((i + 1) + "");
-          ex.pagesRange.push({label: this.pagesRange[i].label, sel: sel});
+          const sel = ex.pages && ex.pages.missing.includes((i + 1) + '');
+          ex.pagesRange.missing.push({label: this.pagesRange[i].label, sel: sel});
+          const sel2 = ex.pages && ex.pages.damaged.includes((i + 1) + '');
+          ex.pagesRange.damaged.push({label: this.pagesRange[i].label, sel: sel2});
         }
       });
     }
   }
-  
-  checkPagesChanged(){
-    if(this.initial_pages < this.state.currentIssue.pocet_stran){
+
+  checkPagesChanged() {
+    if (this.initial_pages < this.state.currentIssue.pocet_stran) {
       this.setPagesRange();
       //Pridat chybejici stranky pro vsechny exemplare
       this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
-        if(!ex.stav){
-          ex.stav = ["ChS"];
-        }else if (!ex.stav.includes("ChS")){
-          ex.stav.push("ChS");
+        if (!ex.stav) {
+          ex.stav = ['ChS'];
+        } else if (!ex.stav.includes('ChS')) {
+          ex.stav.push('ChS');
         }
-        if (ex.stav.includes("OK")){
-          ex.stav.splice(ex.stav.indexOf("OK"), 1);
+        if (ex.stav.includes('OK')) {
+          ex.stav.splice(ex.stav.indexOf('OK'), 1);
         }
         for (let i = this.initial_pages; i < this.state.currentIssue.pocet_stran; i++) {
           ex.pagesRange[i].sel = true;
@@ -108,7 +122,7 @@ export class IssueComponent implements OnInit {
   setData(res: any[]) {
     if (res.length > 0) {
       this.state.currentIssue = new Issue().fromJSON(res[0]);
-      
+
       this.initial_pages = this.state.currentIssue.pocet_stran;
 
       this.setPagesRange();
@@ -132,7 +146,7 @@ export class IssueComponent implements OnInit {
     if (this.titul_idx.toString() === '-1') {
       //New titul dialog
       this.modalService.open(AddTitulDialogComponent,
-        {"state": this.state, "service": this.service}
+        {'state': this.state, 'service': this.service}
       );
     } else {
       this.state.currentIssue.titul = this.state.tituly[this.titul_idx];
@@ -168,7 +182,7 @@ export class IssueComponent implements OnInit {
   ngOnInit() {
     this.state.currentTitul = new Titul();
     this.state.currentIssue = new Issue();
-    let id = this.route.snapshot.paramMap.get('id');
+    const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.state.isNewIssue = false;
       if (this.state.config) {
@@ -214,7 +228,7 @@ export class IssueComponent implements OnInit {
 
   addPub() {
     this.modalService.open(AddVydaniDialogComponent,
-      {"issue": this.state.currentIssue, "state": this.state, "service": this.service}
+      {'issue': this.state.currentIssue, 'state': this.state, 'service': this.service}
     );
 
   }
@@ -222,31 +236,36 @@ export class IssueComponent implements OnInit {
 
   editPages() {
 
-    let a = this.modalService.open(EditPagesComponent,
-      {"issue": this.state.currentIssue, "state": this.state, "service": this.service}
+    const a = this.modalService.open(EditPagesComponent,
+      {'issue': this.state.currentIssue, 'state': this.state, 'service': this.service}
     );
     a.onDestroy(() => {
-      let mm = <EditPagesComponent> a.instance;
+      const mm = <EditPagesComponent> a.instance;
       if (mm.saved) {
         this.setPagesRange();
       }
     });
   }
-  
-  formatPages(){
+
+  formatPages() {
     let s = '';
     this.pagesRange.forEach(p => {
       s += p.label + ', ';
     });
     return s;
   }
-  
-  filterOznaceni(e: string, ex: Exemplar){
+
+  filterOznaceni(e: string, ex: Exemplar) {
     ex.oznaceni = new Array(e.length + 1).join( this.state.currentIssue.znak_oznaceni_vydani );
   }
 
   onCalendarClick() {
-    this.router.navigate(['/calendar', this.state.currentIssue.id_titul, this.state.calendarView, this.state.currentIssue['datum_vydani_den']]);
+    this.router.navigate([
+      '/calendar',
+       this.state.currentIssue.id_titul,
+       this.state.calendarView,
+       this.state.currentIssue['datum_vydani_den']
+      ]);
   }
 
   test() {

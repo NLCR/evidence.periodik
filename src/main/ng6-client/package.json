@@ -31,7 +31,7 @@
     "core-js": "^2.5.4",
     "mdi": "^2.2.43",
     "ngx-materialize": "^6.0.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.0",
     "roboto-fontface": "^0.9.0",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"

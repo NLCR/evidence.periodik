@@ -49,6 +49,8 @@
     },
     "pages_count": "Pages count",
     "lost_pages" : "Damaged/lost pages",
+    "pages_missing": "Missing pages",
+    "pages_damaged": "Damaged paged",
     "state": "State",
     "state_com": "State comment",
     "StavIssue": {

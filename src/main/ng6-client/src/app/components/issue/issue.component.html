@@ -172,16 +172,28 @@
             </mz-input-container>
             
       <div *ngIf="showPages(ex)">
-        {{'record.lost_pages' | translate}}
+        
+        {{'record.pages_missing' | translate}}
         <ul class="app-pages">
-          <li *ngFor="let page of ex.pagesRange" class="app-page-item">
+          <li *ngFor="let page of ex.pagesRange.missing" class="app-page-item">
             <mz-checkbox-container>
-              <input mz-checkbox [label]="page.label" type="checkbox" [id]="'pg'+page.label"
+              <input mz-checkbox [label]="page.label" type="checkbox" [id]="'pgm'+page.label"
+                     [(ngModel)]="page.sel" />
+            </mz-checkbox-container>
+          </li>
+        </ul>
+        
+        {{'record.pages_damaged' | translate}}
+        <ul class="app-pages">
+          <li *ngFor="let page of ex.pagesRange.damaged" class="app-page-item">
+            <mz-checkbox-container>
+              <input mz-checkbox [label]="page.label" type="checkbox" [id]="'pgd'+page.label"
                      [(ngModel)]="page.sel" />
             </mz-checkbox-container>
           </li>
         </ul>
       </div>
+
             <button mz-button (click)="removeExemplar(idx)">{{'button.delete_specimen' | translate}}</button>
           </mz-collapsible-item-body>
         </mz-collapsible-item>

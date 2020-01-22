@@ -42,6 +42,8 @@
     },
     "pages_count": "Počet stran",
     "lost_pages": "Poškozené/Chybějicí strany",
+    "pages_missing": "Chybějicí strany",
+    "pages_damaged": "Poškozené strany",
     "state": "Stav",
     "state_com": "Stav popis",
     "StavIssue": {

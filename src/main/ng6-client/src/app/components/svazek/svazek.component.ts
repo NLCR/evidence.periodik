@@ -19,6 +19,7 @@ import { Utils } from 'src/app/utils';
 import { OverlayRef, Overlay } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Exemplar } from 'src/app/models/exemplar';
+import { isArray } from 'util';
 
 @Component({
   selector: 'app-svazek',
@@ -89,6 +90,7 @@ export class SvazekComponent implements OnInit {
   popText: string;
   popShowPages: boolean;
   pagesRange: { label: string, sel: boolean }[];
+  editingProp: string;
   csEditing: CisloSvazku;
 
   dataChanged: boolean;
@@ -170,7 +172,7 @@ export class SvazekComponent implements OnInit {
     this.service.getTitul(this.state.currentVolume.id_titul).subscribe(res2 => {
       this.state.currentVolume.titul = res2;
       this.state.currentVolume.id_titul = this.state.currentVolume.titul.id;
-      
+
       this.state.currentTitul = res2;
       for (let i = 0; i < this.state.tituly.length; i++) {
         if (this.state.tituly[i].id === this.state.currentVolume.titul.id) {
@@ -402,7 +404,7 @@ export class SvazekComponent implements OnInit {
         }
 
         ex.oznaceni = cs.znak_oznaceni_vydani;
-        ex.pages = Object.assign([], cs.exemplar.pages);
+        ex.pages = Object.assign({}, cs.exemplar.pages);
         ex.stav_popis = cs.exemplar.stav_popis;
 
         ex.stav = [];
@@ -422,15 +424,15 @@ export class SvazekComponent implements OnInit {
     this.service.saveIssues(this.state.currentVolume, issues).subscribe(res => {
       console.log(res);
     });
-    
+
   }
 
   generateClick() {
-    
+
     if (!this.state.logged) {
       return;
     }
-    
+
     let a = this.modalService.open(ConfirmDialogComponent,
       {
         caption: 'modal.generate_svazek.caption',
@@ -454,7 +456,7 @@ export class SvazekComponent implements OnInit {
 
     let odd = true;
     dates.forEach((dt) => {
-      
+
       const dayStr = this.datePipe.transform(dt, 'EEEE');
       let inserted = false;
       this.state.currentVolume.periodicita.forEach(p => {
@@ -557,7 +559,7 @@ export class SvazekComponent implements OnInit {
     newEl.erroneousNumbering = false;
     newEl.wronglyBound = false;
     newEl.censored = false;
-    newEl.exemplar.pages = [];
+    newEl.exemplar.pages = {missing: [], damaged: []};
     newEl.exemplar.stav = [];
     newEl.exemplar.stav_popis = '';
 
@@ -573,10 +575,21 @@ export class SvazekComponent implements OnInit {
   }
 
   viewPS(el: CisloSvazku, prop: string, relative: any, template: TemplateRef<any>) {
+
+    // Back compatibility. 
+    // From pages : string[] to pages: {missing: string[], damaged: string[]}
+    // Assign to missing
+    if (el.exemplar.pages && isArray(el.exemplar.pages)) {
+      const pages = Object.assign([], el.exemplar.pages);
+      el.exemplar.pages = {missing: Object.assign([], el.exemplar.pages), damaged: []};
+    }
+
     this.csEditing = el;
-    const openPop = (el.exemplar.stav_popis && el.exemplar.stav_popis !== '') || prop === 'missingPages' || prop === 'destroyedPages'
+
+    const openPop = (el.exemplar.stav_popis && el.exemplar.stav_popis !== '') || prop === 'missingPages' || prop === 'destroyedPages';
     if (openPop) {
       this.closeInfoOverlay();
+      this.editingProp = prop === 'missingPages' ? 'missing' : 'damaged';
       setTimeout(() => {
         if (el[prop]) {
           this.popText = el.exemplar.stav_popis;
@@ -584,7 +597,7 @@ export class SvazekComponent implements OnInit {
           if (this.popShowPages) {
             this.pagesRange = [];
             for (let i = 0; i < el.pocet_stran; i++) {
-              const sel = el.exemplar.pages && el.exemplar.pages.includes((i + 1) + '');
+              const sel = el.exemplar.pages && el.exemplar.pages[this.editingProp].includes((i + 1) + '');
               this.pagesRange.push({ label: (i + 1) + '', sel: sel });
             }
           }
@@ -602,13 +615,15 @@ export class SvazekComponent implements OnInit {
   }
 
   updatePop() {
-    this.csEditing.exemplar.pages = [];
+
+    this.csEditing.exemplar.pages[this.editingProp] = [];
     this.pagesRange.forEach(p => {
       if (p.sel) {
-        this.csEditing.exemplar.pages.push(p.label);
+        this.csEditing.exemplar.pages[this.editingProp].push(p.label);
       }
     });
     this.csEditing.exemplar.stav_popis = this.popText;
+    console.log(this.csEditing.exemplar);
   }
 
   ngOnDestroy() {
