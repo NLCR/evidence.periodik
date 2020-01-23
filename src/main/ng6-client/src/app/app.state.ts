@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Subject} from 'rxjs';
-import {Titul} from './models/titul';
-import {Issue} from './models/issue';
-import {Filter} from './models/filter';
-import {UrlSegment} from "@angular/router";
-import {AppConfiguration} from 'src/app/models/app.configuration';
-import {Volume} from 'src/app/models/volume';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { Titul } from './models/titul';
+import { Issue } from './models/issue';
+import { Filter } from './models/filter';
+import { UrlSegment } from '@angular/router';
+import { AppConfiguration } from 'src/app/models/app.configuration';
+import { Volume } from 'src/app/models/volume';
 
 @Injectable()
 export class AppState {
@@ -26,24 +26,24 @@ export class AppState {
   periods: string[] = [];
   vdkFormats: string[] = [];
   vydani = [];
-  configured: boolean = false;
-  owners: {name:string, url:string}[] = [];
+  configured = false;
+  owners: { name: string, url: string }[] = [];
   stavy: string[] = [];
   states = [];
 
-  currentLang: string = 'cs';
+  currentLang = 'cs';
 
 
-  loginError: boolean = false;
-  loginHttpError: boolean = false;
-  loginHttpErrorMsg: string = '';
-  logged: boolean = false;
-  redirectUrl: string = '/';
-  loginuser: string = '';
-  loginpwd: string = '';
-  
-  calendarView: string = 'month';
-  
+  loginError = false;
+  loginHttpError = false;
+  loginHttpErrorMsg = '';
+  logged = false;
+  redirectUrl = '/';
+  loginuser = '';
+  loginpwd = '';
+
+  calendarView = 'month';
+
   isNewIssue = false;
 
   specialDays: any = {};
@@ -63,7 +63,7 @@ export class AppState {
   currentVolume: Volume;
   private _currentVolumeSubject = new Subject();
   public currentVolumeChanged: Observable<any> = this._currentVolumeSubject.asObservable();
-  
+
   currentIssue: Issue = new Issue();
 
   private _searchSubject = new Subject();
@@ -72,7 +72,7 @@ export class AppState {
   numFound: number;
 
   start_date: string; //yyyyMMdd
-  end_date: string; 
+  end_date: string;
   start_year: string;
   end_year: string;
 
@@ -81,8 +81,8 @@ export class AppState {
   public searchParamsChanged: Observable<any> = this._searchParamsSubject.asObservable();
 
   q: string;
-  currentPage: number = 0;
-  rows: number= 500;
+  currentPage = 0;
+  rows = 500;
   public filters: Filter[] = [];
 
   public filterByDate: boolean;
@@ -97,7 +97,7 @@ export class AppState {
     this.states = this.config['states'];
     this.vdkFormats = this.config['vdkFormats'];
 
-    this.config["vydani"].map(k => {this.vydani.push(k);});
+    this.config['vydani'].map(k => { this.vydani.push(k); });
 
     this.configured = true;
     this._configSubject.next(cfg);
@@ -125,12 +125,12 @@ export class AppState {
     this.searchResults = res;
     this.numFound = this.searchResults['response']['numFound'];
     if (this.searchResults['stats']) {
-      let stats = this.searchResults['stats']['stats_fields']['datum_vydani_den'];
+      const stats = this.searchResults['stats']['stats_fields']['datum_vydani_den'];
       this.start_date = stats['min'];
       this.end_date = stats['max'];
-      if(stats['min']){
-        this.start_year = this.start_date.substring(0,4);
-        this.end_year = this.end_date.substring(0,4);
+      if (stats['min']) {
+        this.start_year = this.start_date.substring(0, 4);
+        this.end_year = this.end_date.substring(0, 4);
       }
     }
 
@@ -138,13 +138,13 @@ export class AppState {
   }
 
   addFilter(field: string, value: string) {
-    let f: Filter = new Filter(field, value);
+    const f: Filter = new Filter(field, value);
     this.filters.push(f);
     this.currentPage = 0;
     this._searchParamsSubject.next(null);
   }
-  
-  gotoPage(p: number){
+
+  gotoPage(p: number) {
     this.currentPage = p;
     this._searchParamsSubject.next(null);
   }
@@ -171,17 +171,17 @@ export class AppState {
     this.reset();
     this._searchParamsSubject.next(null);
   }
-  
-  removeQuery(){
+
+  removeQuery() {
     this.q = '';
     this._searchParamsSubject.next(null);
   }
-  
-  fireSearch(){
+
+  fireSearch() {
     this._searchParamsSubject.next(null);
   }
-  
-  reset(){
+
+  reset() {
     this.q = '';
     this.filters = [];
     this.filterByDate = false;
@@ -199,9 +199,9 @@ export class AppState {
 
 
   hasFacet(field: string): boolean {
-    if (!this.searchResults) return false;
-    if (!this.searchResults['facet_counts']) return false;
-    if (!this.searchResults['facet_counts']['facet_fields'].hasOwnProperty(field)) return false;
+    if (!this.searchResults) { return false; }
+    if (!this.searchResults['facet_counts']) { return false; }
+    if (!this.searchResults['facet_counts']['facet_fields'].hasOwnProperty(field)) { return false; }
     return this.searchResults['facet_counts']['facet_fields']![field].length > 1;
   }
 

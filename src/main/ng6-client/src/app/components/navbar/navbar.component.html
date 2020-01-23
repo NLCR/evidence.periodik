@@ -1,6 +1,7 @@
 <mz-navbar>
   <a routerLink="home" *ngIf="state.activePage != '/' && state.activePage != '/home'" href="./" class="brand-logo">
     <span class="cyan-text text-lighten-4">{{'app.title1' | translate}}</span> {{'app.title2' | translate}}
+    <span *ngIf="activeRoute() !== ''">- {{'app.' + activeRoute() | translate}}</span>
   </a>
   <app-search-bar *ngIf="state.activePage != '/' && state.activePage != '/home'"></app-search-bar>
   <mz-navbar-item-container [align]="'right'">

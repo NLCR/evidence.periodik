@@ -1,14 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {Title} from '@angular/platform-browser';
-import {ActivatedRoute, Router, NavigationEnd, NavigationStart} from '@angular/router';
-import {TranslateService} from '@ngx-translate/core';
-import {Subscription} from 'rxjs';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
-import {AppService} from './app.service';
-import {AppState} from './app.state';
-import {HttpClient} from '@angular/common/http';
-import {AppConfiguration} from 'src/app/models/app.configuration';
+import { AppService } from './app.service';
+import { AppState } from './app.state';
+import { HttpClient } from '@angular/common/http';
+import { AppConfiguration } from 'src/app/models/app.configuration';
 
 
 @Component({
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
     private titleService: Title,
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router) {}
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -46,15 +46,15 @@ export class AppComponent implements OnInit {
         userLang = cfg['defaultLang'];
       }
       this.service.changeLang(userLang);
-      
+
       //this.state.logged = window.location.href.indexOf('localhost') > -1;
-    
+
       this.state.setConfig(cfg);
       this.service.getTituly().subscribe();
       return this.state.config;
 
     });
-    
+
     this.service.langSubject.subscribe(() => {
       this.translate.get('app.title').subscribe((newTitle: string) => {
         this.titleService.setTitle(newTitle);
@@ -63,11 +63,11 @@ export class AppComponent implements OnInit {
 
     this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {
-        this.state.activePage         = val.url;
+        this.state.activePage = val.url;
 
-//                if(this.state.activePage.indexOf('/calend        ar') > -1){
-//                    this.state.calendarView = this.state.activePage.substring(this.state.activePage.lastIndex        Of('/')+1);
-//                }
+        //                if(this.state.activePage.indexOf('/calend        ar') > -1){
+        //                    this.state.calendarView = this.state.activePage.substring(this.state.activePage.lastIndex        Of('/')+1);
+        //                }
 
 
       }

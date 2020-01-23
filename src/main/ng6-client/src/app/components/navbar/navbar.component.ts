@@ -41,5 +41,18 @@ export class NavbarComponent implements OnInit {
     console.log(this.route, this.state.redirectUrl);
     this.router.navigate(['login']);
   }
+
+  activeRoute() {
+    if (this.state.activePage.indexOf('/issue') > -1) {
+      return 'issue';
+    }
+    if (this.state.activePage.indexOf('/result') > -1) {
+      return 'results';
+    }
+    if (this.state.activePage.indexOf('/svazek') > -1) {
+      return 'svazek';
+    }
+    return '';
+  }
   
 }

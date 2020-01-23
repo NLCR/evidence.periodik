@@ -3,7 +3,10 @@
     "title": "Registration of periodicals",
     "title1": "Registration",
     "title2": "of periodicals",
-    "desc": "system for searching in the registration of periodicals"
+    "desc": "system for searching in the registration of periodicals",
+    "results": "exemplars overview",
+    "svazek": "volume edit",
+    "issue": "issue edit"
   },
   "navbar": {
     "home": "Home",
