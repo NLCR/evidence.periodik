@@ -165,10 +165,7 @@
   </div><!--/.app-container-left -->
 
   <div class="app-container-right">
-    <mz-progress *ngIf="loading"
-  [backgroundClass]="'blue lighten-4'"
-  [progressClass]="'blue'">
-</mz-progress>
+    <mz-progress *ngIf="loading" [backgroundClass]="'blue lighten-4'" [progressClass]="'blue'"></mz-progress>
     <div class="app-table-wrapper app-right">
       <table mat-table [dataSource]="dsIssues">
         <!-- Edit issue -->
@@ -224,9 +221,12 @@
           <th mat-header-cell *matHeaderCellDef>mutace</th>
           <td mat-cell *matCellDef="let element" class="app-edit-text">
             <mat-form-field *ngIf="element.numExists">
-              <input type="text" matInput [(ngModel)]="element.mutace">
+              <input type="text" matInput [(ngModel)]="element.mutace" [matAutocomplete]="auto3">
               <i mz-icon-mdi [icon]="'pencil'"></i>
             </mat-form-field>
+            <mat-autocomplete #auto3="matAutocomplete">
+              <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
+            </mat-autocomplete>
           </td>
         </ng-container>
 

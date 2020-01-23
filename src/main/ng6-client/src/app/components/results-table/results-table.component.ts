@@ -24,7 +24,7 @@ export class ResultsTableComponent implements OnInit {
   vlastnici: string[] = [];
   exs: any = {};
   displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'vydani'];
-  header: string = '';
+  header = '';
   dataSource: MatTableDataSource<Issue>;
   loading: boolean;
 
@@ -71,6 +71,7 @@ export class ResultsTableComponent implements OnInit {
     this.header = '';
     this.data = this.state.searchResults['response']['docs'];
     if (this.data.length === 0) {
+      this.loading = false;
       return;
     }
 
@@ -82,15 +83,15 @@ export class ResultsTableComponent implements OnInit {
 
     this.displayedColumns.push('cislo', 'pocet_stran', 'add');
     this.data.forEach((issue: Issue) => {
-      if(!issue.znak_oznaceni_vydani){
-        issue.znak_oznaceni_vydani = "*";
+      if (!issue.znak_oznaceni_vydani) {
+        issue.znak_oznaceni_vydani = '*';
       }
       if (issue.exemplare) {
-        issue.exemplare = issue.exemplare.sort((ex1, ex2) => { return ex1.carovy_kod.localeCompare(ex2.carovy_kod) > 0 ? 1 : -1; });
-        let exs = issue.exemplare;
+        issue.exemplare = issue.exemplare.sort((ex1, ex2) => ex1.carovy_kod.localeCompare(ex2.carovy_kod) > 0 ? 1 : -1);
+        const exs = issue.exemplare;
         for (let i = 0; i < exs.length; i++) {
-          //let ck = exs[i].vlastnik + ' - ' + exs[i].signatura;
-          let vlastnik = exs[i].vlastnik;
+          // let ck = exs[i].vlastnik + ' - ' + exs[i].signatura;
+          const vlastnik = exs[i].vlastnik;
           if (!this.exs.hasOwnProperty(vlastnik) && vlastnik !== '') {
             this.vlastnici.push(vlastnik);
             this.exs[vlastnik] = exs[i];
@@ -126,30 +127,30 @@ export class ResultsTableComponent implements OnInit {
     }
     return '';
   }
-  
-  iconByStav(ex: Exemplar): string{
-    if(ex.stav){
-    if (ex.stav.length === 0){
+
+  iconByStav(ex: Exemplar): string {
+    if (ex.stav) {
+    if (ex.stav.length === 0) {
       return 'crop-square';
-    } else if (ex.stav.indexOf('OK') > -1){
+    } else if (ex.stav.indexOf('OK') > -1) {
       return 'check-circle';
-    } else if (ex.stav.indexOf('ChS') > -1){
+    } else if (ex.stav.indexOf('ChS') > -1) {
       return 'format-page-break';
     } else {
       return 'alert-outline';
     }
-    }else{
+    } else {
       return 'crop-square';
     }
-    
+
   }
-  
-  colorByStav(ex: Exemplar): string{
-    if(ex.stav){
-    if (ex.stav.length === 0){
+
+  colorByStav(ex: Exemplar): string {
+    if (ex.stav) {
+    if (ex.stav.length === 0) {
       return 'black';
-    } else if (ex.stav.indexOf('OK') > -1){
-      if(ex.stav.length > 1){
+    } else if (ex.stav.indexOf('OK') > -1) {
+      if (ex.stav.length > 1) {
         return 'rosybrown';
       } else {
         return 'green';
@@ -157,10 +158,10 @@ export class ResultsTableComponent implements OnInit {
     } else {
       return 'red';
     }
-    }else{
+    } else {
       return 'black';
     }
-    
+
   }
 
   colorByVlastnik(vlastnik: string): string {
@@ -195,37 +196,37 @@ export class ResultsTableComponent implements OnInit {
 
   addClick(issue: Issue) {
     this.modalService.open(AddExemplarDialogComponent,
-      {"issue": issue, "state": this.state, "service": this.service, exemplar: new Exemplar(), editType: 'new'}
+      {'issue': issue, 'state': this.state, 'service': this.service, exemplar: new Exemplar(), editType: 'new'}
     );
 
   }
 
   viewClick(issue: Issue, ex: Exemplar) {
     this.modalService.open(AddExemplarDialogComponent,
-      {"issue": issue, "state": this.state, "service": this.service, "exemplar": ex, editType: 'edit'}
+      {'issue': issue, 'state': this.state, 'service': this.service, 'exemplar': ex, editType: 'edit'}
     );
   }
 
   deleteEx(issue: Issue, ex: Exemplar, idxex: number) {
 
 
-    let a = this.modalService.open(ConfirmDialogComponent,
+    const a = this.modalService.open(ConfirmDialogComponent,
       {
         caption: 'modal.delete_exemplar.caption',
-        text: "modal.delete_exemplar.text",
+        text: 'modal.delete_exemplar.text',
         param: {
           value: ex.carovy_kod
         }
       });
     a.onDestroy(() => {
-      let mm = <ConfirmDialogComponent> a.instance;
+      const mm = <ConfirmDialogComponent> a.instance;
       if (mm.confirmed) {
         //console.log(issue.exemplare[idxex]);
         issue.exemplare.splice(idxex, 1);
         //console.log(issue.exemplare);
         this.service.saveIssue(issue).subscribe(res => {
           this.toastService.show('Deleted success!', 2000, 'green');
-        })
+        });
       }
     });
 
@@ -233,18 +234,18 @@ export class ResultsTableComponent implements OnInit {
   }
 
   duplicate(issue: Issue, ex: Exemplar) {
-    let a = this.modalService.open(AddExemplarDialogComponent,
+    const a = this.modalService.open(AddExemplarDialogComponent,
       {
-        "issue": issue,
-        "state": this.state,
-        "service": this.service,
-        "exemplar": ex,
+        'issue': issue,
+        'state': this.state,
+        'service': this.service,
+        'exemplar': ex,
         editType: 'duplicate'
       }
     );
 
     a.onDestroy(() => {
-      let mm = <AddExemplarDialogComponent> a.instance;
+      const mm = <AddExemplarDialogComponent> a.instance;
       if (mm.saved) {
         this.service.search().subscribe(res => {
           this.state.setSearchResults(res);
@@ -276,17 +277,17 @@ export class ResultsTableComponent implements OnInit {
   }
 
   formatStav(ex: Exemplar): string {
-    if(ex.stav){
+    if (ex.stav) {
     let ret = '';
       for (let i = 0; i < ex['stav'].length; i++) {
         ret += this.translate.instant('record.StavIssue.' + ex['stav'][i]) + '\n';
-      };
+      }
       if (ex['stav_popis']) {
         ret += ' ' + ex['stav_popis'];
       }
     return ret;
     } else {
-      return 'nekonrolováno '
+      return 'nekonrolováno ';
     }
   }
 }

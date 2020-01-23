@@ -203,6 +203,7 @@ export class AppService {
       .set('q', 'id_titul:"' + id_titul + '"')
       .set('facet', 'true')
       .set('facet.mincount', '1')
+      .set('f.mutace.facet.mincount', '0')
       .set('json.nl', 'arrntv')
       .set('rows', '0')
       .append('facet.field', 'znak_oznaceni_vydani')
