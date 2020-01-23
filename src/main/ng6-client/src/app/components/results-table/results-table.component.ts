@@ -19,14 +19,15 @@ import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component
 })
 export class ResultsTableComponent implements OnInit {
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   data: Issue[] = [];
   vlastnici: string[] = [];
   exs: any = {};
   displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'vydani'];
   header: string = '';
   dataSource: MatTableDataSource<Issue>;
+  loading: boolean;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     private router: Router,
@@ -42,9 +43,11 @@ export class ResultsTableComponent implements OnInit {
 
   ngOnInit() {
     if (this.data) {
+      this.dataSource = new MatTableDataSource([]);
       this.setData();
     }
     this.state.searchChanged.subscribe(res => {
+      this.dataSource = new MatTableDataSource([]);
       this.setData();
     });
   }
@@ -60,12 +63,12 @@ export class ResultsTableComponent implements OnInit {
   }
 
   setData() {
-    //Extract exemplare per vlastnik
+    this.loading = true;
+    // Extract exemplare per vlastnik
     this.vlastnici = [];
     this.exs = {};
     this.displayedColumns = [];
     this.header = '';
-    
     this.data = this.state.searchResults['response']['docs'];
     if (this.data.length === 0) {
       return;
@@ -110,6 +113,7 @@ export class ResultsTableComponent implements OnInit {
 
     this.dataSource = new MatTableDataSource(this.data);
     this.dataSource.paginator = this.paginator;
+    this.loading = false;
   }
 
   cellColor(row: Issue, vlastnik: string): string {

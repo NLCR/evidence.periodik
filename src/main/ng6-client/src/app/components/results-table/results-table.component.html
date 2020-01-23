@@ -1,7 +1,8 @@
 <div >
   {{header}}
 </div>
-  <div class="mat-elevation-z8" *ngIf="data" >
+  <mz-progress *ngIf="loading" [backgroundClass]="'blue lighten-4'" [progressClass]="'blue'"></mz-progress>
+  <div class="mat-elevation-z8"  >
   <table mat-table [dataSource]="dataSource" style="margin-top: 18px;">
 
     <!-- ID Column -->
@@ -77,5 +78,5 @@
     <tr mat-row *matRowDef="let row; let idx = index; columns: displayedColumns;">
     </tr>
   </table>
-
+  <mat-paginator [pageSizeOptions]="[25, 100, 200]" showFirstLastButtons></mat-paginator>
 </div>
