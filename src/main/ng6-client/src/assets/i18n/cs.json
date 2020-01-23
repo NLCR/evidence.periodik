@@ -28,11 +28,20 @@
     "name_title_page": "Název na titulní straně",
     "subname_title_page": "Podnázev na titulní straně",
     "time_publication": "Čas vydání",
+    "titul": "Titul",
     "mutation": "Mutace",
+    "mutace": "Mutace",
     "date_publication": "Datum vydání",
-    "znak_oznaceni_vydani": "Způsob označení mutačního vydání",
+    "znak_oznaceni_vydani": "Označení vydání",
     "oznaceni": "Označení mutačního vydání (hvězdičky)",
     "popis_oznaceni_vydani": "Popis označení mutace",
+    "carovy_kod": "Čárový kód",
+    "datum_od": "Datum od",
+    "datum_do": "Datum do",
+    "prvni_cislo": "První číslo",
+    "posledni_cislo": "Poslední číslo",
+    "vlastnik": "Vlastnik",
+    "poznamka": "Poznámka",
     "publication": {
       "": " ",
       "empty": "bez určení",
@@ -187,5 +196,9 @@
     "Friday": "pátek",
     "Saturday": "sobota",
     "Sunday": "neděle"
+  },
+  "desc": {
+    "atribut": "Názvy",
+    "hodnota": "Hodnota"
   }
 }

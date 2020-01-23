@@ -31,7 +31,15 @@
     "subname_title_page": "Subname on title page",
     "time_publication": "Time of publication",
     "mutation": "Mutation",
+    "mutace": "Mutation",
     "date_publication": "Date of publication",
+    "carovy_kod": "Čárový kód",
+    "datum_od": "Date from",
+    "datum_do": "Date until",
+    "prvni_cislo": "First number",
+    "posledni_cislo": "Last number",
+    "vlastnik": "Owner",
+    "poznamka": "Notes",
     "publication": {
       "": " ",
       "placeholder": "Publication",
@@ -160,5 +168,9 @@
     "desc": "Please, login",
     "user": "User",
     "password": "Password"
+  },
+  "desc": {
+    "atribut": "Names",
+    "hodnota": "Value"
   }
 }
