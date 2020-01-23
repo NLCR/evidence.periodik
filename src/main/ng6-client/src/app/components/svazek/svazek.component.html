@@ -3,7 +3,7 @@
   <div class="app-container-left">
     
     <div class="app-table-wrapper app-left-top">
-      <table mat-table [dataSource]="dsSvazek">   
+      <table mat-table [dataSource]="dsSvazek" #table>   
         <!-- Atribut -->
         <ng-container matColumnDef="attribute">
           <th mat-header-cell *matHeaderCellDef>{{'desc.atribut' | translate}}</th>
@@ -378,11 +378,24 @@
             #cz (mouseenter)="viewPS(element, 'censored', cz, infoPopup)"></mat-checkbox>
           </td>
         </ng-container>
+
+        <!-- Poznamka -->
+        <ng-container matColumnDef="poznamka">
+          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+            <div>poznámka</div>
+          </th>
+          <td mat-cell *matCellDef="let element" >
+            <button mat-icon-button #poznEl *ngIf="element.numExists"  style="background: none;"
+            (click)="viewPozn(element, poznPopup, poznEl)" >
+            <i mz-icon-mdi [icon]="element.poznamka === '' ? 'information-outline' : 'information'" mz-tooltip [tooltip]="'Editovat poznámku'" [position]="'top'" 
+            ></i></button>
+          </td>
+        </ng-container>
     
         <tr mat-header-row *matHeaderRowDef="issueColumns; sticky: true" class="app-header-row-right"></tr>
         <tr mat-row *matRowDef="let row; columns: issueColumns;" [style.background]="rowColor(row)"></tr>
       </table>
-      <mat-paginator [pageSizeOptions]="[25, 100, 200]" showFirstLastButtons></mat-paginator>
+      <mat-paginator [pageSizeOptions]="[5, 10, 200]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>
@@ -403,7 +416,17 @@
         </ul>
       </div>
     </mat-card-content>
-    <button mz-button  *ngIf="popShowPages" mz-button (click)="updatePop()">update</button>
-    <button mz-button  mz-button (click)="closePop()">close</button>
+    <button mz-button  *ngIf="popShowPages" (click)="updatePop()">update</button>
+    <button mz-button (click)="closePop()">close</button>
+  </mat-card>
+</ng-template>
+
+<ng-template #poznPopup>
+  <mat-card class='popover-card'>
+    <mat-card-content>
+      <div><b>Poznámka: </b><input [(ngModel)]="poznText" /></div>
+    </mat-card-content>
+    <button mz-button (click)="updatePoznamka()">update</button>
+    <button mz-button (click)="closePop()">close</button>
   </mat-card>
 </ng-template>

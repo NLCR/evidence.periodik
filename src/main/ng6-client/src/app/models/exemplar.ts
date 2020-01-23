@@ -14,4 +14,6 @@ export class Exemplar {
   // vkládání symbolů - př hvězdička, puntík - zobrazení v přehledové tabulce
   oznaceni: string;
   popis_oznaceni_vydani: string; // github #46
+
+  poznamka = '';
 }

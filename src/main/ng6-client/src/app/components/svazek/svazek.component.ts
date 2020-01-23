@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, TemplateRef, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { KeyValueChanges, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
 import { AppState } from 'src/app/app.state';
 import { MzModalService, MzToastService } from 'ngx-materialize';
@@ -9,7 +9,7 @@ import { Titul } from 'src/app/models/titul';
 import { Volume } from 'src/app/models/volume';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource, MatButton, MatPaginator } from '@angular/material';
+import { MatTableDataSource, MatButton, MatPaginator, MatTable } from '@angular/material';
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
 
 import { Issue } from 'src/app/models/issue';
@@ -26,11 +26,13 @@ import { isArray } from 'util';
   templateUrl: './svazek.component.html',
   styleUrls: ['./svazek.component.scss']
 })
-export class SvazekComponent implements OnInit {
+export class SvazekComponent implements OnInit, OnDestroy {
 
   private overlayRef: OverlayRef;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatTable) table : MatTable<any>; // initialize
+  @ViewChild('poznEl') poznEl: ElementRef;
 
   dsIssues: MatTableDataSource<CisloSvazku>;
   issueColumns = [
@@ -52,7 +54,8 @@ export class SvazekComponent implements OnInit {
     'erroneousDate',
     'erroneousNumbering',
     'wronglyBound',
-    'censored'
+    'censored',
+    'poznamka'
   ];
 
   svazekColumns = [
@@ -94,6 +97,8 @@ export class SvazekComponent implements OnInit {
   pagesRange: { label: string, sel: boolean }[];
   editingProp: string;
   csEditing: CisloSvazku;
+  
+  poznText: string;
 
   dataChanged: boolean;
   // private dataDiffer: KeyValueDiffer<string, any>;
@@ -104,6 +109,7 @@ export class SvazekComponent implements OnInit {
     private differs: KeyValueDiffers,
     private overlay: Overlay,
     private viewContainerRef: ViewContainerRef,
+    private changeDetectorRefs: ChangeDetectorRef,
     private modalService: MzModalService,
     private toastService: MzToastService,
     private route: ActivatedRoute,
@@ -133,7 +139,7 @@ export class SvazekComponent implements OnInit {
   getDaysArray(start, end) {
     const arr = [];
     const dtend = this.datePipe.transform(new Date(end), 'yyyy-MM-dd');
-    let dt  = new Date(start);
+    let dt = new Date(start);
 
     while (this.datePipe.transform(dt, 'yyyy-MM-dd') <= dtend) {
       arr.push(this.datePipe.transform(new Date(dt), 'yyyy-MM-dd'));
@@ -215,8 +221,8 @@ export class SvazekComponent implements OnInit {
           this.state.currentVolume = new Volume(
             this.datePipe.transform(Utils.dateFromDay(datum_od), 'yyyy-MM-dd'),
             this.datePipe.transform(Utils.dateFromDay(datum_do), 'yyyy-MM-dd'));
-            this.state.currentVolume.id = id;
-            this.state.currentVolume.carovy_kod = id;
+          this.state.currentVolume.id = id;
+          this.state.currentVolume.carovy_kod = id;
           this.state.currentVolume.mutace = issue.mutace;
           this.state.currentVolume.znak_oznaceni_vydani = issue.znak_oznaceni_vydani;
           this.state.currentVolume.id_titul = issue.id_titul;
@@ -300,7 +306,7 @@ export class SvazekComponent implements OnInit {
         }
       });
     a.onDestroy(() => {
-      let mm = <ConfirmDialogComponent> a.instance;
+      let mm = <ConfirmDialogComponent>a.instance;
       if (mm.confirmed) {
         this.read();
       }
@@ -359,7 +365,7 @@ export class SvazekComponent implements OnInit {
 
     // console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
     // console.log(this.state.currentVolume);
-     console.log(this.dsIssues);
+    // console.log(this.dsIssues);
 
     // carovy_kod je povinny, jelikoz pouzivame jako id svazku
     if (!this.state.currentVolume.carovy_kod || this.state.currentVolume.carovy_kod.trim() === '') {
@@ -422,7 +428,7 @@ export class SvazekComponent implements OnInit {
         if (cs.erroneousNumbering) { ex.stav.push('ChCis'); }
         if (cs.wronglyBound) { ex.stav.push('ChSv'); }
         if (cs.censored) { ex.stav.push('Cz'); }
-        
+
         issues.push(issue);
       }
     });
@@ -448,7 +454,7 @@ export class SvazekComponent implements OnInit {
         }
       });
     a.onDestroy(() => {
-      const mm = <ConfirmDialogComponent> a.instance;
+      const mm = <ConfirmDialogComponent>a.instance;
       if (mm.confirmed) {
         this.generate();
       }
@@ -565,11 +571,11 @@ export class SvazekComponent implements OnInit {
     newEl.erroneousNumbering = false;
     newEl.wronglyBound = false;
     newEl.censored = false;
-    newEl.exemplar.pages = {missing: [], damaged: []};
+    newEl.exemplar.pages = { missing: [], damaged: [] };
     newEl.exemplar.stav = [];
     newEl.exemplar.stav_popis = '';
 
-    this.cislaVeSvazku.splice(idx+1, 0, newEl);
+    this.cislaVeSvazku.splice(idx + 1, 0, newEl);
     this.dsIssues = new MatTableDataSource(this.cislaVeSvazku);
   }
 
@@ -580,6 +586,16 @@ export class SvazekComponent implements OnInit {
     return row.odd ? '#fff' : '#f5f5f5';
   }
 
+  viewPozn(el: CisloSvazku, template: TemplateRef<any>, relative: any) {
+    this.closeInfoOverlay();
+    this.csEditing = el;
+    this.poznText = el.exemplar.poznamka;
+    setTimeout(() => {
+      this.openInfoOverlay(relative._elementRef, template);
+    }, 100);
+  }
+
+
   viewPS(el: CisloSvazku, prop: string, relative: any, template: TemplateRef<any>) {
 
     // Back compatibility. 
@@ -587,7 +603,7 @@ export class SvazekComponent implements OnInit {
     // Assign to missing
     if (el.exemplar.pages && isArray(el.exemplar.pages)) {
       const pages = Object.assign([], el.exemplar.pages);
-      el.exemplar.pages = {missing: Object.assign([], el.exemplar.pages), damaged: []};
+      el.exemplar.pages = { missing: Object.assign([], el.exemplar.pages), damaged: [] };
     }
 
     this.csEditing = el;
@@ -607,7 +623,7 @@ export class SvazekComponent implements OnInit {
               this.pagesRange.push({ label: (i + 1) + '', sel: sel });
             }
           }
-          this.openInfoOverlay(relative, template);
+          this.openInfoOverlay(relative._elementRef, template);
         }
       }, 500);
     }
@@ -630,6 +646,13 @@ export class SvazekComponent implements OnInit {
     });
     this.csEditing.exemplar.stav_popis = this.popText;
     console.log(this.csEditing.exemplar);
+    this.closePop();
+  }
+
+  updatePoznamka() {
+    this.csEditing.exemplar.poznamka = this.poznText;
+    this.csEditing.poznamka = this.poznText;
+    this.closePop();
   }
 
   ngOnDestroy() {
@@ -644,7 +667,7 @@ export class SvazekComponent implements OnInit {
     this.closeInfoOverlay();
 
     this.overlayRef = this.overlay.create({
-      positionStrategy: this.overlay.position().flexibleConnectedTo(relative._elementRef).withPositions([{
+      positionStrategy: this.overlay.position().flexibleConnectedTo(relative).withPositions([{
         overlayX: 'end',
         overlayY: 'top',
         originX: 'center',

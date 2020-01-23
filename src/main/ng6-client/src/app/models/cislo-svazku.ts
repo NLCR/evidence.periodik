@@ -23,6 +23,7 @@ export class CisloSvazku {
   wronglyBound: boolean;
   censored: boolean;
   odd: boolean;
+  poznamka = '';
 
   constructor(issue: Issue, carovy_kod: string, odd: boolean) {
     this.id_issue = issue.id;
@@ -41,6 +42,7 @@ export class CisloSvazku {
       issue.exemplare.forEach(ex => {
         if (ex.carovy_kod === carovy_kod) {
           this.exemplar = ex;
+          this.poznamka = ex.poznamka ? ex.poznamka : '';
           this.numExists = true;
           if (ex.oznaceni) {
 
