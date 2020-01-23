@@ -72,3 +72,8 @@ buildNumber.properties
 /src/main/webapp/Roboto-Condensed-LightItalic.103a7291be0af3cfe635.svg
 /src/main/webapp/materialdesignicons-webfont.098aafda4b974d4a6432.woff2
 /src/main/webapp/Roboto-Condensed-BoldItalic.a6bb894eee15eda546f5.ttf
+nbactions.xml
+src/main/webapp/index.html
+src/main/webapp/main.*.js
+src/main/webapp/polyfills.*.js
+src/main/webapp/styles.*.css
