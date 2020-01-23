@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, TemplateRef, ViewChild } from '@angular/core';
 import { KeyValueChanges, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
 import { AppState } from 'src/app/app.state';
 import { MzModalService, MzToastService } from 'ngx-materialize';
@@ -9,7 +9,7 @@ import { Titul } from 'src/app/models/titul';
 import { Volume } from 'src/app/models/volume';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource, MatButton } from '@angular/material';
+import { MatTableDataSource, MatButton, MatPaginator } from '@angular/material';
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
 
 import { Issue } from 'src/app/models/issue';
@@ -29,6 +29,8 @@ import { isArray } from 'util';
 export class SvazekComponent implements OnInit {
 
   private overlayRef: OverlayRef;
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   dsIssues: MatTableDataSource<CisloSvazku>;
   issueColumns = [
@@ -96,6 +98,7 @@ export class SvazekComponent implements OnInit {
   dataChanged: boolean;
   // private dataDiffer: KeyValueDiffer<string, any>;
 
+  loading: boolean;
 
   constructor(
     private differs: KeyValueDiffers,
@@ -165,6 +168,8 @@ export class SvazekComponent implements OnInit {
       });
 
       this.dsIssues = new MatTableDataSource(this.cislaVeSvazku);
+      this.dsIssues.paginator = this.paginator;
+      this.loading = false;
     });
   }
 
@@ -228,6 +233,7 @@ export class SvazekComponent implements OnInit {
           this.state.currentVolume = new Volume(this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
             this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
           this.state.currentVolume.carovy_kod = id;
+          this.loading = false;
         }
       });
 
@@ -302,7 +308,7 @@ export class SvazekComponent implements OnInit {
   }
 
   read() {
-
+    this.loading = true;
     this.dsIssues = new MatTableDataSource([]);
 
     this.state.currentTitul = new Titul();

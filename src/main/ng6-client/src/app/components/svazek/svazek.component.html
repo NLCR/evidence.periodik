@@ -1,4 +1,5 @@
 <div class="app-svazek-wrapper grey lighten-4" *ngIf="state.configured" (click)="closeInfoOverlay()">
+  
   <div class="app-container-left">
     
     <div class="app-table-wrapper app-left-top">
@@ -164,6 +165,10 @@
   </div><!--/.app-container-left -->
 
   <div class="app-container-right">
+    <mz-progress *ngIf="loading"
+  [backgroundClass]="'blue lighten-4'"
+  [progressClass]="'blue'">
+</mz-progress>
     <div class="app-table-wrapper app-right">
       <table mat-table [dataSource]="dsIssues">
         <!-- Edit issue -->
@@ -377,6 +382,7 @@
         <tr mat-header-row *matHeaderRowDef="issueColumns; sticky: true" class="app-header-row-right"></tr>
         <tr mat-row *matRowDef="let row; columns: issueColumns;" [style.background]="rowColor(row)"></tr>
       </table>
+      <mat-paginator [pageSizeOptions]="[25, 100, 200]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>
