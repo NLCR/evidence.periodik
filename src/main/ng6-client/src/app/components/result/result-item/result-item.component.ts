@@ -1,10 +1,10 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {AppState} from '../../../app.state';
-import {AppService} from '../../../app.service';
-import {Router} from '@angular/router';
-import {Titul} from '../../../models/titul';
-import {Issue} from '../../../models/issue';
-import {DatePipe} from '@angular/common';
+import { Component, OnInit, Input } from '@angular/core';
+import { AppState } from '../../../app.state';
+import { AppService } from '../../../app.service';
+import { Router } from '@angular/router';
+import { Titul } from '../../../models/titul';
+import { Issue } from '../../../models/issue';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-result-item',
@@ -15,19 +15,19 @@ export class ResultItemComponent implements OnInit {
   @Input() item: Issue;
 
   constructor(
-  private datePipe: DatePipe,
+    private datePipe: DatePipe,
     private router: Router,
     private service: AppService,
-    public state: AppState) {}
+    public state: AppState) { }
 
   ngOnInit() {
     this.setTotals();
   }
-  
-  dayToDate(d: string): string{
-    let date = Date.UTC(parseInt(d.substr(0, 4)), parseInt(d.substr(4,2)), parseInt(d.substr(6,2)));
-    return this.datePipe.transform(date, 'dd/MM/yyyy');
-    
+
+  dayToDate(d: string): string {
+    let date = Date.UTC(parseInt(d.substr(0, 4)), parseInt(d.substr(4, 2)), parseInt(d.substr(6, 2)));
+    return this.datePipe.transform(date, 'dd.MM.yyyy');
+
   }
 
   setTotals() {
@@ -53,14 +53,14 @@ export class ResultItemComponent implements OnInit {
   }
 
   onClick() {
-    
-          this.addFilter(this.item['meta_nazev']);
+
+    this.addFilter(this.item['meta_nazev']);
     this.router.navigate(['/result']);
-//        if(this.item['num_exemplare'] > 1){
-//          this.addFilter(this.item['meta_nazev']);
-//        } else {
-//          this.router.navigate(['/issue', this.item['id']]);
-//        }
+    //        if(this.item['num_exemplare'] > 1){
+    //          this.addFilter(this.item['meta_nazev']);
+    //        } else {
+    //          this.router.navigate(['/issue', this.item['id']]);
+    //        }
   }
 
   onCalendarClick() {

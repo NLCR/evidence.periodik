@@ -34,6 +34,16 @@ export class SvazekComponent implements OnInit, OnDestroy {
   @ViewChild(MatTable) table : MatTable<any>; // initialize
   @ViewChild('poznEl') poznEl: ElementRef;
 
+  public calOptions: Pickadate.DateOptions = {
+    format: 'dd.mm.yyyy',
+    formatSubmit: 'yyyy-mm-dd',
+    // editable: true,
+    closeOnSelect: true,
+    selectYears: true,
+    clear: null,
+    today: null
+  };
+
   dsIssues: MatTableDataSource<CisloSvazku>;
   issueColumns = [
     'edit_issue',

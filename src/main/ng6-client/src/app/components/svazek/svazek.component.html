@@ -53,6 +53,28 @@
                   <mat-option *ngFor="let vlastnik of state.config.owners; let idx=index;" [value]="idx" >{{vlastnik.name}}</mat-option>
                 </mat-select>
               </ng-container>
+
+
+              <ng-container *ngSwitchCase="'datum_od'">
+                <mz-datepicker-container>
+                  <input mz-datepicker
+                         [options]="calOptions"
+                         [(ngModel)]="state.currentVolume[element]"
+                         id="datum_od" name="datum_od"
+                         type="text" />
+                </mz-datepicker-container>
+              </ng-container>
+              <ng-container *ngSwitchCase="'datum_do'">
+                <mz-datepicker-container>
+                  <input mz-datepicker
+                         [options]="calOptions"
+                         [(ngModel)]="state.currentVolume[element]"
+                         id="datum_do" name="datum_do"
+                         type="text" />
+                </mz-datepicker-container>
+              </ng-container>
+
+
               <ng-container *ngSwitchDefault>
                 <mat-form-field>
                   <input type="text" matInput [(ngModel)]="state.currentVolume[element]">
@@ -182,7 +204,7 @@
         <ng-container matColumnDef="datum_vydani">
           <th mat-header-cell *matHeaderCellDef>datum</th>
           <td mat-cell *matCellDef="let element">
-            {{element.datum_vydani | date : 'EE' : '+0430' : 'cs-CZ'}} {{ element.datum_vydani }}
+            {{ element.datum_vydani | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}
           </td>
         </ng-container>
     
