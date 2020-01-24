@@ -38,7 +38,6 @@ export class NavbarComponent implements OnInit {
   gologin(){
     this.state.redirectUrl = this.router.url;
     
-    console.log(this.route, this.state.redirectUrl);
     this.router.navigate(['login']);
   }
 

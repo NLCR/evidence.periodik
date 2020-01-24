@@ -256,14 +256,13 @@ export class AppService {
     }
   }
 
-  saveIssues(vol: Volume, issues: Issue[]) {
+  saveIssues(vol: Volume, issues: Issue[]): Observable<any> {
       const body = {svazek: vol, issues: issues};
       const url = this.state.config['context'] + 'index';
       const params: HttpParams = new HttpParams()
         .set('action', 'SAVE_ISSUES');
 
       return this.http.post(url, body, {params: params});
-    
   }
 
   saveIssue(issue: Issue) {

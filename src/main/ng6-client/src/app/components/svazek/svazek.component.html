@@ -395,7 +395,7 @@
         <tr mat-header-row *matHeaderRowDef="issueColumns; sticky: true" class="app-header-row-right"></tr>
         <tr mat-row *matRowDef="let row; columns: issueColumns;" [style.background]="rowColor(row)"></tr>
       </table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 200]" showFirstLastButtons></mat-paginator>
+      <mat-paginator [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>
@@ -426,7 +426,7 @@
     <mat-card-content>
       <div><b>Poznámka: </b><input [(ngModel)]="poznText" /></div>
     </mat-card-content>
-    <button mz-button (click)="updatePoznamka()">update</button>
+    <button mz-button (click)="updatePoznamka()">update</button>&#160;
     <button mz-button (click)="closePop()">close</button>
   </mat-card>
 </ng-template>

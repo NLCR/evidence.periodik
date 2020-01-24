@@ -388,7 +388,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     const issues: Issue[] = [];
 
     // console.log(this.dsIssues.data);
-
+    this.loading = true;
     this.dsIssues.data.forEach((cs: CisloSvazku) => {
       if (cs.numExists) {
         const issue: Issue = Object.assign({}, cs.issue);
@@ -434,7 +434,14 @@ export class SvazekComponent implements OnInit, OnDestroy {
     });
 
     this.service.saveIssues(this.state.currentVolume, issues).subscribe(res => {
-      console.log(res);
+      this.loading = false;
+      if (res.error) {
+        this.toastService.show('Error: ' + res.error, 4000, 'red');
+      } else {
+        this.toastService.show('Svazek správně uložen', 4000, 'green');
+      }
+      
+      // console.log(res);
     });
 
   }
