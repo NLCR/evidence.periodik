@@ -128,15 +128,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
     public state: AppState,
     private service: AppService) { }
 
-  // ngDoCheck(): void {
-  //     const changes = this.dataDiffer.diff(this.state.currentVolume);
-  //     if (changes) {
-  //       this.dataChanged = true;
-  //     } else {
-  //       this.dataChanged = false;
-  //     }
-  // }
-
   ngOnInit() {
     this.displayedColumnsLeftTableBottom.push('button');
     this.read();
@@ -347,6 +338,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
           });
         }));
       }
+    } else {
+      this.loading = false;
     }
   }
 

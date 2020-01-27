@@ -24,6 +24,11 @@ app-navbar {
         }
       }
     }
+    app-search-bar {
+      .app-search-bar-wrapper {
+        width: 400px;
+      }
+    }
   }
   
   .side-nav {
