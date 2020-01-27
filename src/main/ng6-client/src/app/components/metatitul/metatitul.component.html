@@ -1,0 +1,41 @@
+<app-toolbar></app-toolbar>
+<div class="app-metatitul-wrapper grey lighten-5">
+  <div class="row">
+    <div class="col s4">
+      <div class="row">
+        <ul>
+          <li *ngFor="let t of state.tituly">
+            <a (click)="loadTitul(t)">{{t.meta_nazev}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col s8">
+      <div class="row" *ngIf="titul">
+        
+        <mz-input-container>
+          <input mz-input [label]="'record.meta_title' | translate" id="nazev" name="meta_nazev" type="text"
+            [(ngModel)]="titul.meta_nazev">
+        </mz-input-container>
+
+        <mz-input-container>
+          <input mz-input [label]="'record.uuid_title' | translate" id="uuid" name="uuid" type="text"
+            [(ngModel)]="titul.uuid">
+        </mz-input-container>
+
+        <mz-input-container>
+          <input mz-input [label]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran"
+            [(ngModel)]="titul.pocet_stran" type="text">
+        </mz-input-container>
+
+        <mz-select-container>
+          <select mz-select [label]="'Periodicita'" [id]="'periodicita'" [name]="'periodicita'"
+            [(ngModel)]="titul.periodicita">
+            <option *ngFor="let p of state.periods" [value]="p">{{'record.periodicita.' + p | translate}}</option>
+          </select>
+        </mz-select-container>
+      </div>
+    </div>
+  </div>
+</div>

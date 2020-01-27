@@ -6,7 +6,8 @@
     "desc": "systém pro vyhledávání v evidenci periodik",
     "results": "přehled exemplářů",
     "svazek": "editace svazku",
-    "issue": "editace výtisk"
+    "issue": "editace výtisk",
+    "titul": "editace meta titulu"
   },
   "navbar": {
     "home": "Domovská stánka",

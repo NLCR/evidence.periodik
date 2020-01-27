@@ -6,7 +6,8 @@
     "desc": "system for searching in the registration of periodicals",
     "results": "exemplars overview",
     "svazek": "volume edit",
-    "issue": "issue edit"
+    "issue": "issue edit",
+    "titul": "meta titul edit"
   },
   "navbar": {
     "home": "Home",

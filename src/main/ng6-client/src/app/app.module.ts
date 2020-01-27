@@ -89,6 +89,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import {AuthGuard} from './auth-guard';
 import { EditPagesComponent } from './components/edit-pages/edit-pages.component';
 import { SvazekComponent } from './components/svazek/svazek.component';
+import { MetatitulComponent } from './components/metatitul/metatitul.component';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -134,7 +135,8 @@ export function createTranslateLoader(http: HttpClient) {
     AddVydaniDialogComponent,
     ConfirmDialogComponent,
     EditPagesComponent,
-    SvazekComponent
+    SvazekComponent,
+    MetatitulComponent
   ],
   entryComponents: [ConfirmDialogComponent,
     CloneDialogComponent, 
@@ -194,6 +196,8 @@ export function createTranslateLoader(http: HttpClient) {
   CdkTableModule,
 
     RouterModule.forRoot([
+      { path: 'titul', component: MetatitulComponent },
+      { path: 'titul/:id', component: MetatitulComponent },
       { path: 'issue', component: IssueComponent, canActivate: [AuthGuard] },
       { path: 'issue/:id', component: IssueComponent },
       { path: 'home', component: HomeComponent },

@@ -51,6 +51,9 @@ export class NavbarComponent implements OnInit {
     if (this.state.activePage.indexOf('/svazek') > -1) {
       return 'svazek';
     }
+    if (this.state.activePage.indexOf('/titul') > -1) {
+      return 'titul';
+    }
     return '';
   }
   
