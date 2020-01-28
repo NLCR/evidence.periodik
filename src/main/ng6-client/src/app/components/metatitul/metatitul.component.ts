@@ -30,22 +30,27 @@ export class MetatitulComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    
-      if (this.state.config) {
+    if (this.state.config) {
+      this.load();
+    } else {
+      this.subscriptions.push(this.state.configSubject.subscribe((state) => {
         this.load();
-      } else {
-        this.subscriptions.push(this.state.configSubject.subscribe((state) => {
-          this.load();
-        }));
-      }
-    
+      }));
+    }
+
   }
 
   load() {
     this.service.getTituly().subscribe(resp => {
-      console.log(this.state.tituly);
-      this.loadTitul(this.state.tituly[0])
+      const id = this.route.snapshot.paramMap.get('id');
+      let idx = 0;
+      if (id) {
+        idx = this.state.tituly.findIndex(t => t.id === id);
+      }
+      if (idx > -1) {
+        this.loadTitul(this.state.tituly[idx]);
+      }
+      
     });
   }
 
@@ -53,16 +58,22 @@ export class MetatitulComponent implements OnInit, OnDestroy {
     this.titul = t;
   }
 
-  ok() {
+  save() {
+    this.loading = true;
     this.service.saveTitul(this.titul).subscribe(res => {
       console.log(res);
-
+      this.loading = false;
       if (res['error']) {
         this.toastService.show(res['error'], 4000, 'red');
       } else {
+        this.toastService.show('Titul správně uložen', 4000, 'green');
         this.service.getTituly().subscribe();
       }
     });
+  }
+
+  newTitul() {
+    this.titul = new Titul();
   }
 
   cancel() {

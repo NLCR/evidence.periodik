@@ -557,8 +557,21 @@ public class Indexer {
     }
     return ret;
   }
-
+  
   public JSONObject saveTitul(JSONObject json) {
+    JSONObject ret = new JSONObject();
+    try (SolrClient solr = getClient()) {
+      Titul titul = Titul.fromJSON(json);
+      solr.addBean("titul", titul, 100);
+      ret.put("success", "titul saved");
+    } catch (SolrServerException | IOException ex) {
+      ret.put("error", ex);
+      LOGGER.log(Level.SEVERE, null, ex);
+    }
+    return ret;
+  }
+
+  public JSONObject saveTitul2(JSONObject json) {
     JSONObject ret = new JSONObject();
     try (SolrClient solr = getClient()) {
       SolrInputDocument idoc = new SolrInputDocument();

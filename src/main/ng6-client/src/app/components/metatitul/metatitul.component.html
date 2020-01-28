@@ -13,29 +13,44 @@
 
     <div class="col s8">
       <div class="row" *ngIf="titul">
-        
-        <mz-input-container>
-          <input mz-input [label]="'record.meta_title' | translate" id="nazev" name="meta_nazev" type="text"
-            [(ngModel)]="titul.meta_nazev">
-        </mz-input-container>
+        <mz-progress *ngIf="loading" [backgroundClass]="'blue lighten-4'" [progressClass]="'blue'"></mz-progress>
+        <form (ngSubmit)="save()" #userForm="ngForm">
+          <mat-card>
+            <mat-card-content>
 
-        <mz-input-container>
-          <input mz-input [label]="'record.uuid_title' | translate" id="uuid" name="uuid" type="text"
-            [(ngModel)]="titul.uuid">
-        </mz-input-container>
+              <mat-form-field>
+                <input matInput [(ngModel)]="titul.meta_nazev" name="meta_nazev" id="meta_nazev"
+                  [placeholder]="'record.meta_title' | translate" required cdkFocusInitial />
+              </mat-form-field>
 
-        <mz-input-container>
-          <input mz-input [label]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran"
-            [(ngModel)]="titul.pocet_stran" type="text">
-        </mz-input-container>
+              <mat-form-field>
+                <input matInput [(ngModel)]="titul.uuid" name="uuid" id="uuid"
+                  [placeholder]="'record.uuid_title' | translate" />
+              </mat-form-field>
 
-        <mz-select-container>
-          <select mz-select [label]="'Periodicita'" [id]="'periodicita'" [name]="'periodicita'"
-            [(ngModel)]="titul.periodicita">
-            <option *ngFor="let p of state.periods" [value]="p">{{'record.periodicita.' + p | translate}}</option>
-          </select>
-        </mz-select-container>
+              <mat-form-field>
+                <input matInput [(ngModel)]="titul.pocet_stran" name="pocet_stran" id="pocet_stran"
+                  [placeholder]="'record.pages_count' | translate" type="number" />
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>{{'record.periodicita.placeholder' | translate}}</mat-label>
+                <mat-select [(ngModel)]="titul.periodicita" id="periodicita" name="periodicita">
+                  <mat-option *ngFor="let p of state.periods" [value]="p">{{'record.periodicita.' + p | translate}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="newTitul()"
+                type="button">{{'Add new titul' | translate}}</button>
+              <button mat-button  type="submit"
+                [disabled]="!userForm.form.valid">{{'button.save' | translate}}</button>
+            </mat-card-actions>
+
+          </mat-card>
+        </form>
       </div>
     </div>
   </div>
-</div>
