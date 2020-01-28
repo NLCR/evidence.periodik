@@ -17,6 +17,9 @@
     <mz-navbar-item routerLinkActive="active" #addRecord="routerLinkActive" [active]="addRecord.isActive && state.isNewIssue">
       <a routerLink="issue">{{'navbar.add_record' | translate}}</a>
     </mz-navbar-item>
+    <mz-navbar-item *ngIf="true || state.logged && state.user.role === 'admin'" >
+      <a routerLink="admin">{{'navbar.admin' | translate}}</a>
+    </mz-navbar-item>
     <mz-navbar-item *ngIf="!state.logged" routerLinkActive="active" #login="routerLinkActive" [active]="login.isActive">
       <a (click)="gologin()">{{'navbar.login' | translate}}</a>
     </mz-navbar-item>

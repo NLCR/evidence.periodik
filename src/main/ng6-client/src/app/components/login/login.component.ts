@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ViewChild} from '@angular/core';
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
+import { AuthenticationService } from 'src/app/shared/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -13,9 +14,13 @@ export class LoginComponent implements OnInit {
   @ViewChild('loginuser') loginuser: any;
   loginError: boolean = false;
 
+  username: string;
+  pwd: string;
+
   constructor(
     public state: AppState,
-    public service: AppService) { }
+    public service: AppService,
+    private auth: AuthenticationService) { }
 
   ngOnInit() {
   }
@@ -28,5 +33,10 @@ export class LoginComponent implements OnInit {
 
   focusp(e, el){
       el.focus();
+  }
+
+  login() {
+    // this.service.login();
+    this.auth.login(this.username, this.pwd).subscribe();
   }
 }

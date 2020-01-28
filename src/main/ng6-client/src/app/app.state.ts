@@ -5,8 +5,9 @@ import { Titul } from './models/titul';
 import { Issue } from './models/issue';
 import { Filter } from './models/filter';
 import { UrlSegment } from '@angular/router';
-import { AppConfiguration } from 'src/app/models/app.configuration';
+import { AppConfiguration } from 'src/app/app-configuration';
 import { Volume } from 'src/app/models/volume';
+import { User } from './models/user';
 
 @Injectable()
 export class AppState {
@@ -32,6 +33,8 @@ export class AppState {
   states = [];
 
   currentLang = 'cs';
+
+  user: User;
 
 
   loginError = false;

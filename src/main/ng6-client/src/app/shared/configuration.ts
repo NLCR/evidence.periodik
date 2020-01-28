@@ -1,5 +1,5 @@
 
-export class AppConfiguration {
+export class Configuration {
   context: string;
   defaultLang: string;
   searchParams: {
@@ -13,6 +13,5 @@ export class AppConfiguration {
   vydani: string[];
   mutations: string[];
   znak_oznaceni_vydani: string[];
-  test: boolean   
-  
+  test: boolean;
 }

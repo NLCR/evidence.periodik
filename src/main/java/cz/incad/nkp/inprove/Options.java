@@ -22,9 +22,13 @@ public class Options {
   private final JSONObject client_conf;
   private final JSONObject server_conf;
 
-  public synchronized static Options getInstance() throws IOException, JSONException {
+  public synchronized static Options getInstance() {
     if (_sharedInstance == null) {
-      _sharedInstance = new Options();
+      try {
+        _sharedInstance = new Options();
+      } catch (IOException| JSONException ex) {
+        Logger.getLogger(Options.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
     return _sharedInstance;
   }

@@ -1,5 +1,5 @@
 {
-  "context": "/",
+  "context": "",
   "defaultLang": "cs",
   "searchParams": {
     "rows": 100

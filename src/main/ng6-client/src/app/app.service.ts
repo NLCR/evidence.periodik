@@ -474,7 +474,7 @@ export class AppService {
         this.state.loginError = true;
         this.state.logged = false;
       } else {
-
+        this.state.user = res;
         this.state.loginError = false;
         this.state.loginuser = '';
         this.state.loginpwd = '';
@@ -492,13 +492,15 @@ export class AppService {
     });
   }
 
-  doLogin() {
+  doLogin(): Observable<any> {
     const url = 'lg'
     var params = new HttpParams()
       .set('user', this.state.loginuser)
       .set('pwd', this.state.loginpwd)
       .set('action', 'LOGIN');
     return this.http.get(url, {params: params});
+
+    
 
   }
 

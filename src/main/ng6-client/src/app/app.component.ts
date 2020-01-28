@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { AppService } from './app.service';
 import { AppState } from './app.state';
 import { HttpClient } from '@angular/common/http';
-import { AppConfiguration } from 'src/app/models/app.configuration';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 
 @Component({

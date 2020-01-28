@@ -31,8 +31,8 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
@@ -55,12 +55,11 @@ public class Indexer {
     try {
       Options opts = Options.getInstance();
       return opts.getString("solrhost", DEFAULT_HOST);
-    } catch (IOException | JSONException ex) {
+    } catch (JSONException ex) {
       LOGGER.log(Level.SEVERE, null, ex);
     }
     return DEFAULT_HOST;
   }
-  
 
   private SolrClient getClient() throws IOException {
     SolrClient client = new HttpSolrClient.Builder(Options.getInstance().getString("solrhost", DEFAULT_HOST)).build();
@@ -118,7 +117,7 @@ public class Indexer {
       } else {
         q += " OR id:[" + start.format(DateTimeFormatter.ofPattern("MMdd")) + " TO " + end.format(DateTimeFormatter.ofPattern("MMdd")) + "]";
       }
-      
+
       query.setQuery(q);
 //      query.setFacet(true).addFacetField("year");
       QueryResponse resp = solr.query("calendar", query);
@@ -157,19 +156,18 @@ public class Indexer {
 
   public static int getNumSpecialDays(LocalDate start, LocalDate end) {
     int specialDays = 0;
-   
-      try (SolrClient solr = new HttpSolrClient.Builder(Options.getInstance().getString("solrhost", Indexer.DEFAULT_HOST)).build()) {
-        int daysBetween = (int) ChronoUnit.DAYS.between(start, end);
-        specialDays = daysBetween / 7;
-        
-        if (start.getDayOfWeek().getValue() > end.getDayOfWeek().getValue() || end.getDayOfWeek() == DayOfWeek.SUNDAY) {
-          specialDays++;
-        }
-        
-        List<String> days = Indexer.getSpecialDays(solr, start, end);
-        
-        specialDays += days.size();
-      
+
+    try (SolrClient solr = new HttpSolrClient.Builder(Options.getInstance().getString("solrhost", Indexer.DEFAULT_HOST)).build()) {
+      int daysBetween = (int) ChronoUnit.DAYS.between(start, end);
+      specialDays = daysBetween / 7;
+
+      if (start.getDayOfWeek().getValue() > end.getDayOfWeek().getValue() || end.getDayOfWeek() == DayOfWeek.SUNDAY) {
+        specialDays++;
+      }
+
+      List<String> days = Indexer.getSpecialDays(solr, start, end);
+
+      specialDays += days.size();
 
     } catch (IOException | JSONException ex) {
       Logger.getLogger(VDKSetProcessor.class.getName()).log(Level.SEVERE, null, ex);
@@ -337,7 +335,6 @@ public class Indexer {
     }
   }
 
-
   /**
    * Method clones existing issue
    *
@@ -413,7 +410,7 @@ public class Indexer {
       //idoc.removeField("id");
       idoc.setField("id", generateId(idoc, Options.getInstance().getStrings("idfields")));
       return idoc;
-    } catch (IOException | JSONException ex) {
+    } catch (JSONException ex) {
       LOGGER.log(Level.SEVERE, null, ex);
       return null;
     }
@@ -438,7 +435,7 @@ public class Indexer {
       return null;
     }
   }
-  
+
   public JSONObject indexSvazek(JSONObject json) {
 
     LOGGER.info(json.toString());
@@ -469,7 +466,7 @@ public class Indexer {
               break;
             case "_version_":
               break;
-            
+
             default:
               idoc.addField(name, json.get(name));
               break;
@@ -518,7 +515,7 @@ public class Indexer {
               break;
             case "_version_":
               break;
-            case "index_time": 
+            case "index_time":
               break;
             case "pages":
               idoc.setField("pages", json.getJSONArray(name).toString());
@@ -557,13 +554,35 @@ public class Indexer {
     }
     return ret;
   }
-  
+
   public JSONObject saveTitul(JSONObject json) {
     JSONObject ret = new JSONObject();
     try (SolrClient solr = getClient()) {
       Titul titul = Titul.fromJSON(json);
       solr.addBean("titul", titul, 100);
       ret.put("success", "titul saved");
+    } catch (SolrServerException | IOException ex) {
+      ret.put("error", ex);
+      LOGGER.log(Level.SEVERE, null, ex);
+    }
+    return ret;
+  }
+
+  public static JSONObject indexJSON(JSONObject json, String core) {
+    JSONObject ret = new JSONObject();
+    UpdateResponse response;
+    try (SolrClient client = new HttpSolrClient.Builder(String.format("%s/%s/",
+            Options.getInstance().getString("solrhost", DEFAULT_HOST),
+            core))
+            .withConnectionTimeout(10000)
+            .withSocketTimeout(60000)
+            .build()) {
+      JSONUpdateRequest request = new JSONUpdateRequest(json);
+      request.setCommitWithin(100);
+      response = request.process(client);
+      client.commit();
+      ret = new JSONObject(response.toString());
+
     } catch (SolrServerException | IOException ex) {
       ret.put("error", ex);
       LOGGER.log(Level.SEVERE, null, ex);
@@ -687,9 +706,9 @@ public class Indexer {
       LocalDate end = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
       Period period = Period.parse(issue.getString("periodicita"));
-      
+
       int specialdays = Indexer.getNumSpecialDays(start.minusDays(start.getDayOfYear()), start);
-      
+
       int cislo = start.getDayOfYear() - specialdays;
       for (LocalDate date = start; date.isBefore(end) || date.isEqual(end); date = date.plus(period)) {
         if (!onspecialdays && isSpecial(solr, date)) {
@@ -718,7 +737,7 @@ public class Indexer {
           idoc.removeField("_version_");
           idoc.removeField("index_time");
           idoc.removeField("exemplare");
-          
+
           if (doc.containsKey("exemplare")) {
             exs = new JSONArray(doc.getFieldValue("exemplare").toString());
           }
@@ -740,7 +759,7 @@ public class Indexer {
           idoc.removeField("exemplare");
           idoc.removeField("titul");
           idoc.setField("state", "auto");
-          
+
           idoc.setField("datum_vydani", date.format(DateTimeFormatter.ISO_DATE));
           idoc.setField("datum_vydani_den", date.format(DateTimeFormatter.BASIC_ISO_DATE));
           idoc.setField("cislo", cislo);
@@ -808,21 +827,21 @@ public class Indexer {
     }
     return ret;
   }
-  
-  private int getStartCisloFromDate(String date, boolean special ){
+
+  private int getStartCisloFromDate(String date, boolean special) {
     try {
-      if(date == null){
+      if (date == null) {
         return -1;
       }
       SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
       Date startDate = sdf1.parse(date);
       LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-      
+
       int ret = start.getDayOfYear();
-      if(!special){
+      if (!special) {
         ret = ret - Indexer.getNumSpecialDays(start.minusDays(start.getDayOfYear()), start);
       }
-      
+
       return ret;
     } catch (ParseException ex) {
       LOGGER.log(Level.SEVERE, null, ex);
@@ -839,7 +858,6 @@ public class Indexer {
       JSONArray exs = vp.exemplarsToJson();
       LOGGER.log(Level.INFO, "processing {0} exemplars", exs.length());
 
-      
       for (int i = 0; i < exs.length(); i++) {
         JSONObject ex = exs.getJSONObject(i);
         if (vdkOptions.barcode.equals("") || vdkOptions.barcode.equals(ex.getString("b"))) {
@@ -854,7 +872,7 @@ public class Indexer {
                     .put("year", ex.optString("y"))
                     .put("volume", ex.optString("v"))
                     .put("start_cislo", start_cislo)
-                    .put("start_date", start_date )
+                    .put("start_date", start_date)
                     .put("end_date", vp.getEnd(ex, vdkOptions)));
             ret.append("exs", vdk);
           } else {

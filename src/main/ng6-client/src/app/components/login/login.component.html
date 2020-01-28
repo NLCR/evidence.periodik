@@ -17,7 +17,7 @@
                       #loginuser
                       [label]="'login.user' | translate"  
                       (keyup.enter)="focusp($event, loginpwd)"
-                      [(ngModel)]="state.loginuser" />   
+                      [(ngModel)]="username" />   
                 </mz-input-container>
               </div>
               <div class="row app-clean-mg">
@@ -26,14 +26,14 @@
                   <input mz-input type="password" class="form-control" name="pwd"
                       [label]="'login.password' | translate"
                       #loginpwd
-                      (keyup.enter)="service.login()"
-                      [(ngModel)]="state.loginpwd"/>
+                      (keyup.enter)="login()"
+                      [(ngModel)]="pwd"/>
                 </mz-input-container>
               </div>
               <div class="row app-clean-mg">
                 <div class="input-field col s12">
                   <button mz-button class="col s12" [large]="'true'" 
-                    (click)="service.login()">
+                    (click)="login()">
                     {{'button.login' | translate}}
                   </button>
                 </div>

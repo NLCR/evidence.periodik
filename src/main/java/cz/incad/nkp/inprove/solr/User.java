@@ -13,7 +13,7 @@ public class User {
 
   final static Logger LOGGER = Logger.getLogger(User.class.getName());
   @Field
-  public String code;
+  public String id;
   @Field
   public String username;
   @Field
@@ -21,47 +21,19 @@ public class User {
   @Field
   public String heslo;
   @Field
-  public String sigla;
-  @Field
-  public String adresa;
-  @Field
   public String role;
-  @Field
-  public int priorita;
   @Field
   public String email;
   @Field
-  public String telefon;
-  @Field
   public boolean active;
   @Field
-  public String[] platba;
-  @Field
-  public String[] doprava;
-  @Field
-  public boolean celostatni;
-  @Field
-  public boolean regionalni;
-  @Field
-  public boolean periodicky;
-  @Field
-  public String prijemce;
-  @Field
   public String poznamka;
-  @Field
-  public String osoba;
-  @Field
-  public String cenik_osobni;
-  @Field
-  public String cenik_nadobirku;
-  @Field
-  public String cenik_predem;
   
   
   public static User fromJSON(JSONObject json) {
     User user = JSON.parseObject(json.toString(), User.class);
-    if (user.code == null || user.code.trim().isEmpty()) {
-      user.code = MD5.generate(new String[]{user.nazev, user.email});
+    if (user.id == null || user.id.trim().isEmpty()) {
+      user.id = MD5.generate(new String[]{user.nazev, user.email});
     }
     return user;
   }

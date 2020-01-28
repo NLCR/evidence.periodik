@@ -1,18 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { registerLocaleData } from '@angular/common';
 import localeCs from '@angular/common/locales/cs';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient} from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterializeModule } from 'ngx-materialize';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import {NgProgressModule} from '@ngx-progressbar/core';
+import { NgProgressModule } from '@ngx-progressbar/core';
 
 import {
   MatAutocompleteModule,
@@ -51,7 +51,8 @@ import {
   MAT_DATE_LOCALE,
   MAT_DATE_FORMATS,
   NativeDateModule,
-  DateAdapter} from '@angular/material';
+  DateAdapter
+} from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 
 import { AppState } from './app.state';
@@ -86,10 +87,13 @@ import { AddTitulDialogComponent } from './components/add-titul-dialog/add-titul
 import { AddVdkExComponent } from './components/add-vdk-ex/add-vdk-ex.component';
 import { AddVydaniDialogComponent } from './components/add-vydani-dialog/add-vydani-dialog.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-import {AuthGuard} from './auth-guard';
+import { AuthGuard } from './auth-guard';
 import { EditPagesComponent } from './components/edit-pages/edit-pages.component';
 import { SvazekComponent } from './components/svazek/svazek.component';
 import { MetatitulComponent } from './components/metatitul/metatitul.component';
+import { BasicAuthInterceptor } from './shared/basic-auth.interceptor';
+import { AppConfiguration } from './app-configuration';
+import { AdminComponent } from './components/admin/admin.component';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -101,6 +105,14 @@ export function HttpLoaderFactory(http: HttpClient) {
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
+
+
+
+const providers: any[] = [
+  { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+  // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+  { provide: APP_INITIALIZER, useFactory: (config: AppConfiguration) => () => config.load(), deps: [AppConfiguration], multi: true },
+  HttpClient, DatePipe, AppConfiguration, AppState, AppService, AuthGuard];
 
 @NgModule({
   declarations: [
@@ -136,12 +148,13 @@ export function createTranslateLoader(http: HttpClient) {
     ConfirmDialogComponent,
     EditPagesComponent,
     SvazekComponent,
-    MetatitulComponent
+    MetatitulComponent,
+    AdminComponent
   ],
   entryComponents: [ConfirmDialogComponent,
-    CloneDialogComponent, 
-    AddExemplarDialogComponent, 
-    AddTitulDialogComponent, 
+    CloneDialogComponent,
+    AddExemplarDialogComponent,
+    AddTitulDialogComponent,
     AddVdkExComponent,
     AddVydaniDialogComponent,
     EditPagesComponent],
@@ -159,52 +172,54 @@ export function createTranslateLoader(http: HttpClient) {
     MaterializeModule.forRoot(),
     BrowserAnimationsModule,
     NgProgressModule.forRoot(),
-  MatAutocompleteModule,
-  MatButtonModule,
-  MatButtonToggleModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatDividerModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatGridListModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatNativeDateModule,
-  MatPaginatorModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatRadioModule,
-  MatRippleModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSliderModule,
-  MatSlideToggleModule,
-  MatSnackBarModule,
-  MatSortModule,
-  MatStepperModule,
-  MatTableModule,
-  MatTabsModule,
-  MatToolbarModule,
-  MatTooltipModule,
-  
-  CdkTableModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatStepperModule,
+    MatTableModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule,
+
+    CdkTableModule,
 
     RouterModule.forRoot([
       { path: 'titul', component: MetatitulComponent },
       { path: 'titul/:id', component: MetatitulComponent },
+      { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
       { path: 'issue', component: IssueComponent, canActivate: [AuthGuard] },
       { path: 'issue/:id', component: IssueComponent },
       { path: 'home', component: HomeComponent },
       { path: 'svazek', component: SvazekComponent },
       { path: 'svazek/:id', component: SvazekComponent },
       { path: 'result', component: ResultComponent },
-      { path: 'calendar/:id', component: CalendarComponent, 
+      {
+        path: 'calendar/:id', component: CalendarComponent,
         children: [
           { path: '', redirectTo: 'month', pathMatch: 'full' },
           { path: 'month/:day', component: CalendarMonthComponent },
@@ -220,8 +235,7 @@ export function createTranslateLoader(http: HttpClient) {
       { path: '', redirectTo: 'home', pathMatch: 'full' }
     ])
   ],
-  providers: [HttpClient, DatePipe, AppState, AppService, AuthGuard
-   ],
+  providers,
   bootstrap: [AppComponent]
 })
 export class AppModule { }
