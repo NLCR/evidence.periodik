@@ -21,8 +21,6 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'Evidence periodik';
   stavy = [];
 
-  init: boolean = false;
-
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -47,12 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.state.activePage = this.route.snapshot.url.toString();
     console.log(this.route.snapshot, this.state.activePage);
     this.service.getSpecialDays();
-    let userLang = navigator.language.split('-')[0]; // use navigator lang if available
-    userLang = /(cs|en)/gi.test(userLang) ? userLang : 'cs';
-    if (this.config.defaultLang) {
-      userLang = this.config.defaultLang;
-    }
-    this.service.changeLang(userLang);
+    
 
     this.state.setConfig(this.config);
     this.service.getTituly().subscribe();
@@ -61,13 +54,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.translate.get('app.title').subscribe((newTitle: string) => {
         this.titleService.setTitle(newTitle);
       });
-    });
-
-    this.router.events.subscribe(val => {
-      if (val instanceof NavigationEnd) {
-        this.state.activePage = val.url;
-        console.log(this.route.snapshot, this.state.activePage);
-      }
     });
   }
 
@@ -86,14 +72,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
       if (val instanceof NavigationEnd) {
 
+        this.state.activePage = val.url;
       } else if (val instanceof NavigationStart) {
 
       }
     }));
-  }
-
-  getConfig() {
-    return this.http.get("assets/config.json");
   }
 
   showToolbarAndFacets() {

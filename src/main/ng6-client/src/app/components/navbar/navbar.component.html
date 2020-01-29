@@ -1,5 +1,5 @@
 <mz-navbar>
-  <a routerLink="home" *ngIf="state.activePage != '/' && state.activePage != '/home'" href="./" class="brand-logo">
+  <a routerLink="home" class="brand-logo">
     <span class="cyan-text text-lighten-4">{{'app.title1' | translate}}</span> {{'app.title2' | translate}}
     <span *ngIf="activeRoute() !== ''">- {{'app.' + activeRoute() | translate}}</span>
   </a>
@@ -17,20 +17,23 @@
     <mz-navbar-item routerLinkActive="active" #addRecord="routerLinkActive" [active]="addRecord.isActive && state.isNewIssue">
       <a routerLink="issue">{{'navbar.add_record' | translate}}</a>
     </mz-navbar-item>
-    <!--
-    <mz-navbar-item *ngIf="state.isAdmin" >
+    
+    <mz-navbar-item *ngIf="state.isAdmin">
       <a routerLink="admin">{{'navbar.admin' | translate}}</a>
     </mz-navbar-item>
-  -->
+  
     <mz-navbar-item *ngIf="!state.user" routerLinkActive="active" #login="routerLinkActive" [active]="login.isActive">
       <a (click)="gologin()">{{'navbar.login' | translate}}</a>
     </mz-navbar-item>
-    <mz-navbar-item *ngIf="state.user" >
+    <mz-navbar-item *ngIf="state.user">
       <a (click)="logout()">{{'navbar.logout' | translate}}</a>
     </mz-navbar-item>
-    <mz-navbar-item>
-      <a *ngIf="currLang !== 'en'" (click)="changeLang('en')" title="Switch to english">English</a>
-      <a *ngIf="currLang !== 'cs'" (click)="changeLang('cs')" title="Přepni na češtinu">Česky</a>
-    </mz-navbar-item>
+    <!-- -->
+    <mz-navbar-item *ngIf="currLang !== 'en'">
+      <a (click)="changeLang('en')" title="Switch to english">English</a>
+    </mz-navbar-item> 
+    <mz-navbar-item *ngIf="currLang !== 'cs'">
+      <a (click)="changeLang('cs')" title="Přepni na češtinu">Česky</a>
+    </mz-navbar-item> 
   </mz-navbar-item-container>
 </mz-navbar>
