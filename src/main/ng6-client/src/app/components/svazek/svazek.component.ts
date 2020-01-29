@@ -20,6 +20,7 @@ import { OverlayRef, Overlay } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Exemplar } from 'src/app/models/exemplar';
 import { isArray } from 'util';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-svazek',
@@ -31,7 +32,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   private overlayRef: OverlayRef;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatTable) table : MatTable<any>; // initialize
+  @ViewChild(MatTable) table: MatTable<any>; // initialize
   @ViewChild('poznEl') poznEl: ElementRef;
 
   public calOptions: Pickadate.DateOptions = {
@@ -107,7 +108,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   pagesRange: { label: string, sel: boolean }[];
   editingProp: string;
   csEditing: CisloSvazku;
-  
+
   poznText: string;
 
   dataChanged: boolean;
@@ -125,6 +126,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private datePipe: DatePipe,
+    private config: AppConfiguration,
     public state: AppState,
     private service: AppService) { }
 
@@ -194,8 +196,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
       this.setVolumeFacets();
 
-      for (let i = 0; i < this.state.config.owners.length; i++) {
-        if (this.state.config.owners[i].name === this.state.currentVolume.vlastnik) {
+      for (let i = 0; i < this.config.owners.length; i++) {
+        if (this.config.owners[i].name === this.state.currentVolume.vlastnik) {
           this.vlastnik_idx = i;
         }
       }
@@ -327,17 +329,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      if (this.state.config) {
-        this.service.getVolume(id).subscribe(res => {
-          this.setData(res, id);
-        });
-      } else {
-        this.subscriptions.push(this.state.configSubject.subscribe((state) => {
-          this.service.getVolume(id).subscribe(res => {
-            this.setData(res, id);
-          });
-        }));
-      }
+      this.subscriptions.push(this.service.getVolume(id).subscribe(res => {
+        this.setData(res, id);
+      }));
+
     } else {
       this.loading = false;
     }
@@ -443,7 +438,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       } else {
         this.toastService.show('Svazek správně uložen', 4000, 'green');
       }
-      
+
       // console.log(res);
     });
 
@@ -551,16 +546,16 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   changeMutace() {
-    this.state.currentVolume.mutace = this.state.config.mutations[this.mutace_idx];
+    this.state.currentVolume.mutace = this.config.mutations[this.mutace_idx];
   }
 
   changeOznaceni() {
-    this.state.currentVolume.znak_oznaceni_vydani = this.state.config.znak_oznaceni_vydani[this.oznaceni_idx];
+    this.state.currentVolume.znak_oznaceni_vydani = this.config.znak_oznaceni_vydani[this.oznaceni_idx];
 
   }
 
   changeVlastnik() {
-    this.state.currentVolume.vlastnik = this.state.config.owners[this.vlastnik_idx].name;
+    this.state.currentVolume.vlastnik = this.state.owners[this.vlastnik_idx].name;
   }
 
   addVydani(element, idx: number) {

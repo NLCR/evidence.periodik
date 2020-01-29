@@ -123,7 +123,7 @@ public class UsersController {
       query.addFilterQuery("active:true");
       try (SolrClient client = new HttpSolrClient.Builder(String.format("%s/%s/",
               opts.getString("solrHost", "http://localhost:8983/solr"),
-              opts.getString("usersCore", "users")))
+              "user"))
               .build()) {
 
         final QueryResponse response = client.query(query);
@@ -208,8 +208,7 @@ public class UsersController {
   public static JSONObject add(JSONObject json) {
       User user = User.fromJSON(json);
       JSONObject jo = new JSONObject(JSON.toJSONString(user));
-
-      return Indexer.indexJSON(jo, "usersCore");
+      return Indexer.indexJSON(jo, "user");
     
   }
 
@@ -219,7 +218,7 @@ public class UsersController {
       json.put("heslo", orig.get("heslo"));
       User user = User.fromJSON(json);
       JSONObject jo = new JSONObject(JSON.toJSONString(user));
-      return Indexer.indexJSON(jo, "usersCore");
+      return Indexer.indexJSON(jo, "user");
   }
 
   public static JSONObject resetHeslo(JSONObject json) {
@@ -227,7 +226,7 @@ public class UsersController {
     JSONObject orig = getOne(json.getString("id"), true).getJSONArray("docs").getJSONObject(0);
     if (json.getString("oldheslo").equals(orig.getString("heslo"))) {
       orig.put("heslo", json.getString("newheslo"));
-      return Indexer.indexJSON(orig, "usersCore");
+      return Indexer.indexJSON(orig, "user");
     } else {
       return (new JSONObject()).put("error", "heslo.nespravne_heslo");
     }
@@ -237,7 +236,7 @@ public class UsersController {
     Options opts = Options.getInstance();
     SolrQuery query = new SolrQuery("username:\"" + username + "\"");
     try (HttpSolrClient client = new HttpSolrClient.Builder(opts.getString("solrHost", "http://localhost:8983/solr")).build()) {
-      return new JSONObject().put("exists", client.query(opts.getString("usersCore", "users"), query).getResults().getNumFound() > 0);
+      return new JSONObject().put("exists", client.query("user", query).getResults().getNumFound() > 0);
     } catch (SolrServerException | IOException ex) {
       LOGGER.log(Level.SEVERE, null, ex);
       return new JSONObject().put("error", ex);

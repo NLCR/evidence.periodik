@@ -1,22 +1,22 @@
-import {Injectable} from '@angular/core';
-import {Router, ActivatedRoute, Params, NavigationStart, NavigationEnd, NavigationExtras} from '@angular/router';
-import {DatePipe} from '@angular/common';
-import {TranslateService} from '@ngx-translate/core';
+import { Injectable } from '@angular/core';
+import { Router, ActivatedRoute, Params, NavigationStart, NavigationEnd, NavigationExtras } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
-import {Observable} from 'rxjs';
-import {Subject} from 'rxjs';
-import {tap, map} from 'rxjs/operators';
-import {of} from "rxjs";
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
+import { of } from "rxjs";
 
-import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
-import {CloneParams} from './models/clone-params';
-import {AppState} from './app.state';
-import {Filter} from './models/filter';
-import {Titul} from './models/titul';
-import {Issue} from './models/issue';
-import {Exemplar} from './models/exemplar';
-import {HttpErrorResponse} from '@angular/common/http';
+import { CloneParams } from './models/clone-params';
+import { AppState } from './app.state';
+import { Filter } from './models/filter';
+import { Titul } from './models/titul';
+import { Issue } from './models/issue';
+import { Exemplar } from './models/exemplar';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Volume } from './models/volume';
 
 @Injectable()
@@ -32,7 +32,7 @@ export class AppService {
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private datePipe: DatePipe) {}
+    private datePipe: DatePipe) { }
 
   changeLang(lang: string) {
     //console.log('lang changed to ' + lang);
@@ -43,46 +43,42 @@ export class AppService {
 
   getSpecialDays() {
 
-    const url = this.state.config['context'] + 'search/calendar/select';
+    const url = '/api/search/calendar/select';
     let params: HttpParams = new HttpParams();
     params = params.set('q', '*');
-      params = params.set('rows', '100');
-    this.http.get(url, {params: params}).subscribe((res) => {
+    params = params.set('rows', '100');
+    this.http.get(url, { params: params }).subscribe((res) => {
       this.state.specialDays = res;
     });
   }
 
   getSpecialDaysOfMonth(d: Date): Observable<any[]> {
-    const url = this.state.config['context'] + 'search/calendar/select';
+    const url = '/api/search/calendar/select';
     let params: HttpParams = new HttpParams();
-    let test = this.state.config['test'];
-    test = false;
+    const month = this.datePipe.transform(d, 'M');
+    const year = this.datePipe.transform(d, 'yyyy');
+    const q = '(month:' + month + ' AND year:' + year + ') OR (month:' + month + ' AND year:0)';
+    params = params.set('q', q);
+    params = params.set('rows', '50');
 
-      const month = this.datePipe.transform(d, 'M');
-      const year = this.datePipe.transform(d, 'yyyy');
-      const q = '(month:' + month + ' AND year:' + year + ') OR (month:' + month + ' AND year:0)';
-      params = params.set('q', q);
-      params = params.set('rows', '50');
-
-    return this.http.get(url, {params: params}).pipe(
+    return this.http.get(url, { params: params }).pipe(
       map((res) => {
         return res['response']['docs'];
       }));
   }
 
   isSpecial(d: Date): Observable<any[]> {
-    const url = this.state.config['context'] + 'search/calendar/select';
+    const url = '/api/search/calendar/select';
     let params: HttpParams = new HttpParams();
-    const test = this.state.config['test'];
 
     const day = this.datePipe.transform(d, 'd');
-      const month = this.datePipe.transform(d, 'M');
-      const year = this.datePipe.transform(d, 'yyyy');
-      const q = '(day:' + day + ' AND month:' + month + ' AND year:' + year + ') OR (day:' + day + ' AND month:' + month + ' AND year:0)';
-      params = params.set('q', q);
-      params = params.set('rows', '1');
+    const month = this.datePipe.transform(d, 'M');
+    const year = this.datePipe.transform(d, 'yyyy');
+    const q = '(day:' + day + ' AND month:' + month + ' AND year:' + year + ') OR (day:' + day + ' AND month:' + month + ' AND year:0)';
+    params = params.set('q', q);
+    params = params.set('rows', '1');
 
-    return this.http.get(url, {params: params}).pipe(
+    return this.http.get(url, { params: params }).pipe(
       map((res) => {
         return res['response']['docs'];
       }));
@@ -90,66 +86,66 @@ export class AppService {
 
   getIssuesOfTitul(uuid: string, month: string): Observable<any[]> {
     let params: HttpParams = new HttpParams();
-    const url = this.state.config['context'] + 'search/issue/select';
+    const url = '/api/search/issue/select';
 
     params = new HttpParams()
-        .set('q', '*')
-        .set('wt', 'json')
-        .set('rows', '200')
-        .set('fl', '*,exemplare:[json], pages:[json]')
-        .set('fq', 'id_titul:"' + uuid + '"')
-        .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
+      .set('q', '*')
+      .set('wt', 'json')
+      .set('rows', '200')
+      .set('fl', '*,exemplare:[json], pages:[json]')
+      .set('fq', 'id_titul:"' + uuid + '"')
+      .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
 
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, {params: params}).pipe(
+    return this.http.get(url, { params: params }).pipe(
       map((res) => {
         return res['response']['docs'];
       }));
   }
 
-  searchByCarKod(carovy_kod: string) : Observable<any> {
+  searchByCarKod(carovy_kod: string): Observable<any> {
     let params: HttpParams = new HttpParams();
 
     params = new HttpParams()
-        .set('q', carovy_kod)
-        .set('wt', 'json')
-        .set('rows', '1')
-        .set('fl', '*,exemplare:[json], pages:[json]')
-        .set('sort', 'datum_vydani_den asc, vydani desc')
-        .set('stats','true')
-        .set('stats.field', 'datum_vydani_den');
-    const url = this.state.config['context'] + 'search/issue/select';
+      .set('q', carovy_kod)
+      .set('wt', 'json')
+      .set('rows', '1')
+      .set('fl', '*,exemplare:[json], pages:[json]')
+      .set('sort', 'datum_vydani_den asc, vydani desc')
+      .set('stats', 'true')
+      .set('stats.field', 'datum_vydani_den');
+    const url = '/api/search/issue/select';
 
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   getIssuesOfVolume(volume: Volume): Observable<any[]> {
     let params: HttpParams = new HttpParams();
 
     params = new HttpParams()
-        .set('q', volume.carovy_kod)
-        .set('wt', 'json')
-        .set('rows', '200')
-        .set('fl', '*,exemplare:[json], pages:[json]')
-        .set('sort', 'datum_vydani_den asc, vydani desc')
-        .set('fq', 'id_titul:"' + volume.id_titul + '"')
-        .append('fq', 'datum_vydani:[' + volume.datum_od + ' TO ' + volume.datum_do + ']');
-    const url = this.state.config['context'] + 'search/issue/select';
+      .set('q', volume.carovy_kod)
+      .set('wt', 'json')
+      .set('rows', '200')
+      .set('fl', '*,exemplare:[json], pages:[json]')
+      .set('sort', 'datum_vydani_den asc, vydani desc')
+      .set('fq', 'id_titul:"' + volume.id_titul + '"')
+      .append('fq', 'datum_vydani:[' + volume.datum_od + ' TO ' + volume.datum_do + ']');
+    const url = '/api/search/issue/select';
 
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, {params: params}).pipe(
+    return this.http.get(url, { params: params }).pipe(
       map((res) => {
         return res['response']['docs'];
       }));
   }
 
   getTitul(id: string): Observable<Titul> {
-    const url = this.state.config['context'] + 'search/titul/select';
+    const url = '/api/search/titul/select';
     let params: HttpParams = new HttpParams();
     params = params.set('q', '*')
       .set('fq', 'id:"' + id + '"');
-    return this.http.get<Titul>(url, {params: params}).pipe(
+    return this.http.get<Titul>(url, { params: params }).pipe(
       map((res) => {
         const t = new Titul();
         t.id = id;
@@ -162,16 +158,12 @@ export class AppService {
 
 
   getTitul_(id: string): Observable<Titul> {
-    let url = this.state.config['context'] + 'search/issue/select';
+    let url = '/api/search/issue/select';
     let params: HttpParams = new HttpParams();
-    const test = this.state.config['test'];
-    if (test) {
-      url = this.state.config['context'] + 'assets/titul.json';
-    } else {
-      params = params.set('q', '*').set('rows', '1').set('fq', 'id_titul:"' + id + '"');
-      //params.set('fl', 'start:datum_vydani,title:nazev,*')
-    }
-    return this.http.get<Titul>(url, {params: params}).pipe(
+    
+    params = params.set('q', '*').set('rows', '1').set('fq', 'id_titul:"' + id + '"');
+    
+    return this.http.get<Titul>(url, { params: params }).pipe(
       tap((res) => {
         const t = new Titul();
         t.id = id;
@@ -185,20 +177,20 @@ export class AppService {
 
 
   getTituly(): Observable<any> {
-    const url = this.state.config['context'] + 'search/titul/select';
+    const url = '/api/search/titul/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('sort', 'meta_nazev asc')
       .set('rows', '500');
 
-    return this.http.get(url, {params: params}).pipe(
+    return this.http.get(url, { params: params }).pipe(
       map((res) => {
         this.state.tituly = res['response']['docs'];
       }));
   }
 
   getVolumeFacets(id_titul: string): Observable<any> {
-    const url = this.state.config['context'] + 'search/issue/select';
+    const url = '/api/search/issue/select';
     const params: HttpParams = new HttpParams()
       .set('q', 'id_titul:"' + id_titul + '"')
       .set('facet', 'true')
@@ -209,16 +201,16 @@ export class AppService {
       .append('facet.field', 'znak_oznaceni_vydani')
       .append('facet.field', 'mutace');
 
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
 
   saveTitul(titul: Titul) {
-    const url = this.state.config['context'] + 'index';
+    const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'SAVE_TITUL')
       .set('json', JSON.stringify(titul));
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   isValidAsInteger(o): boolean {
@@ -233,9 +225,9 @@ export class AppService {
 
   isIssueValid(issue: Issue): boolean {
     try {
-//      if (!this.isValidAsInteger(issue.rocnik)) {
-//        return false;
-//      }
+      //      if (!this.isValidAsInteger(issue.rocnik)) {
+      //        return false;
+      //      }
       if (!this.isValidAsInteger(issue.druhe_cislo)) {
         return false;
       }
@@ -245,7 +237,7 @@ export class AppService {
 
       //Cistime stavy, aby nebyly "null"
       issue.exemplare.forEach(ex => {
-        if(ex.stav){
+        if (ex.stav) {
           ex.stav = ex.stav.filter(st => st !== "null");
         }
       });
@@ -257,34 +249,34 @@ export class AppService {
   }
 
   saveIssues(vol: Volume, issues: Issue[]): Observable<any> {
-      const body = {svazek: vol, issues: issues};
-      const url = this.state.config['context'] + 'index';
-      const params: HttpParams = new HttpParams()
-        .set('action', 'SAVE_ISSUES');
+    const body = { svazek: vol, issues: issues };
+    const url = 'index';
+    const params: HttpParams = new HttpParams()
+      .set('action', 'SAVE_ISSUES');
 
-      return this.http.post(url, body, {params: params});
+    return this.http.post(url, body, { params: params });
   }
 
   saveIssue(issue: Issue) {
     if (this.isIssueValid(issue)) {
-      const url = this.state.config['context'] + 'index';
+      const url = 'index';
       const params: HttpParams = new HttpParams()
         .set('action', 'SAVE_ISSUE')
         .set('json', JSON.stringify(issue));
 
-      return this.http.get(url, {params: params});
+      return this.http.get(url, { params: params });
     } else {
       return of('error');
     }
   }
 
   deleteIssue(issue: Issue) {
-    const url = this.state.config['context'] + 'index';
+    const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'DELETE_ISSUE')
       .set('id', issue.id);
 
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   addVydani(issue: Issue, vydani: string) {
@@ -294,17 +286,17 @@ export class AppService {
     newIssue.vydani = vydani;
 
     //console.log(newIssue);
-    const url = this.state.config['context'] + 'index';
+    const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'SAVE_ISSUE')
       .set('json', JSON.stringify(newIssue));
 
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   duplicateExemplar(issue: Issue, vlastnik: string, start_cislo: number, onspecial: boolean, exemplar: Exemplar, start: string, end: string) {
-//console.log(exemplar);
-    const url = this.state.config['context'] + 'index';
+    //console.log(exemplar);
+    const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'DUPLICATE_EX')
       .set('issue', JSON.stringify(issue))
@@ -315,31 +307,31 @@ export class AppService {
       .set('start', start)
       .set('end', end);
 
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   addVdkEx(issue: Issue, urlvdk: string, options: any) {
 
-    const url = this.state.config['context'] + 'index';
+    const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'ADD_VDK_SET')
       .set('issue', JSON.stringify(issue))
       .set('options', JSON.stringify(options))
       .set('url', urlvdk);
 
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   prepareVdkEx(issue: Issue, urlvdk: string, options: any) {
 
-    const url = this.state.config['context'] + 'index';
+    const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'COLLECT_VDK_SET')
       .set('issue', JSON.stringify(issue))
       .set('options', JSON.stringify(options))
       .set('url', urlvdk);
 
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   saveCurrentIssue(): Observable<any> {
@@ -351,34 +343,34 @@ export class AppService {
   }
 
   getIssue(id: string): Observable<any[]> {
-    const url = this.state.config['context'] + 'search/issue/select';
+    const url = '/api/search/issue/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
       .set('fl', '*,exemplare:[json],pages:[json]')
       .set('fq', 'id:"' + id + '"');
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, {params: params}).pipe(
+    return this.http.get(url, { params: params }).pipe(
       map((res) => {
         return res['response']['docs'];
       }));
   }
 
   getVolume(id: string): Observable<any[]> {
-    const url = this.state.config['context'] + 'search/svazek/select';
+    const url = '/api/search/svazek/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
       .set('fl', '*,periodicita:[json]')
       .set('fq', 'id:"' + id + '"');
-    return this.http.get(url, {params: params}).pipe(
+    return this.http.get(url, { params: params }).pipe(
       map((res) => {
         return res['response']['docs'];
       }));
   }
 
   getTitulTotals(id: string) {
-    const url = this.state.config['context'] + 'search/issue/select';
+    const url = '/api/search/issue/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
@@ -389,7 +381,7 @@ export class AppService {
       .append('stats.field', '{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
       .append('stats.field', '{!key=vlastnik countDistinct=true count=true max=true min=true}vlastnik')
       .append('stats.field', 'exemplare')
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   doSearchParams(): HttpParams {
@@ -431,20 +423,20 @@ export class AppService {
   }
 
   search() {
-    const url = this.state.config['context'] + 'search/issue/permonik';
+    const url = '/api/search/issue/permonik';
     const params = this.doSearchParams();
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   searchCalendar(month: string) {
-    const url = this.state.config['context'] + 'search/issue/permonik';
+    const url = '/api/search/issue/permonik';
     let params = this.doSearchParams();
     params = params.append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   searchTitulyHome() {
-    const url = this.state.config['context'] + 'search/issue/select';
+    const url = '/api/search/issue/select';
 
     const params: HttpParams = new HttpParams()
       .set('q', '*')
@@ -454,42 +446,42 @@ export class AppService {
       .set('fq', '{!collapse field=id_titul}')
       .set('fl', '*, id_titul, exemplare:[json], pages:[json]');
 
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   clone(cfg: CloneParams) {
-    const url = this.state.config['context'] + 'index';
+    const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'CLONE')
       .set('cfg', JSON.stringify(cfg));
     //params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
   login() {
     this.state.loginError = false;
     return this.doLogin().subscribe(
       res => {
-      if (res.hasOwnProperty('error')) {
-        this.state.loginError = true;
-        this.state.logged = false;
-      } else {
-        this.state.user = res;
-        this.state.loginError = false;
-        this.state.loginuser = '';
-        this.state.loginpwd = '';
-        this.state.logged = true;
-        if (this.state.redirectUrl) {
-          this.router.navigate([this.state.redirectUrl]);
+        if (res.hasOwnProperty('error')) {
+          this.state.loginError = true;
+          this.state.logged = false;
+        } else {
+          this.state.user = res;
+          this.state.loginError = false;
+          this.state.loginuser = '';
+          this.state.loginpwd = '';
+          this.state.logged = true;
+          if (this.state.redirectUrl) {
+            this.router.navigate([this.state.redirectUrl]);
+          }
         }
-      }
-    },
-    (err: HttpErrorResponse) =>{
-      console.log(err);
+      },
+      (err: HttpErrorResponse) => {
+        console.log(err);
         this.state.loginHttpError = true;
-      this.state.loginHttpErrorMsg = err.statusText;
+        this.state.loginHttpErrorMsg = err.statusText;
         this.state.logged = false;
-    });
+      });
   }
 
   doLogin(): Observable<any> {
@@ -498,9 +490,9 @@ export class AppService {
       .set('user', this.state.loginuser)
       .set('pwd', this.state.loginpwd)
       .set('action', 'LOGIN');
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
 
-    
+
 
   }
 
@@ -518,7 +510,7 @@ export class AppService {
   doLogout() {
     const url = 'lg';
     var params = new HttpParams().set('action', 'LOGOUT');
-    return this.http.get(url, {params: params});
+    return this.http.get(url, { params: params });
   }
 
 }

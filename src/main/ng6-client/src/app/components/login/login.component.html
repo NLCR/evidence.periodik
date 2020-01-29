@@ -39,11 +39,11 @@
                 </div>
               </div>
             
-            <div class="row app-clean-mg alert alert-warning" *ngIf="state.loginError">
+            <div class="row app-clean-mg alert alert-warning" *ngIf="loginError">
               {{'Špatné přihlašovací údaje' | translate}}.
             </div>
             
-            <div class="row app-clean-mg alert alert-warning" *ngIf="state.loginHttpError">
+            <div class="row app-clean-mg alert alert-warning" *ngIf="loginHttpError">
               {{state.loginHttpErrorMsg}}.
             </div>
             </form>

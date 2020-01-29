@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {ViewChild} from '@angular/core';
 import {AppState} from '../../app.state';
-import {AppService} from '../../app.service';
+import { first } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/shared/authentication.service';
+import { Router } from '@angular/router';
+import { Md5 } from 'ts-md5';
 
 @Component({
   selector: 'app-login',
@@ -12,14 +14,15 @@ import { AuthenticationService } from 'src/app/shared/authentication.service';
 export class LoginComponent implements OnInit {
   
   @ViewChild('loginuser') loginuser: any;
-  loginError: boolean = false;
+  error = false;
+  loading = false;
 
   username: string;
   pwd: string;
 
   constructor(
     public state: AppState,
-    public service: AppService,
+    private router: Router,
     private auth: AuthenticationService) { }
 
   ngOnInit() {
@@ -37,6 +40,25 @@ export class LoginComponent implements OnInit {
 
   login() {
     // this.service.login();
-    this.auth.login(this.username, this.pwd).subscribe();
+        this.loading = true;
+    const pwd = '' + Md5.hashStr(this.pwd);
+    this.auth.login(this.username, pwd)
+    .pipe(first())
+    .subscribe(
+      data => {
+        if (data.error) {
+            this.error = data.error;
+        } else {
+            if (this.state.redirectUrl) {
+                this.router.navigate([this.state.redirectUrl]);
+            }
+        }
+        this.loading = false;
+    },
+    error => {
+        console.log(error);
+        this.error = error;
+        this.loading = false;
+    });
   }
 }

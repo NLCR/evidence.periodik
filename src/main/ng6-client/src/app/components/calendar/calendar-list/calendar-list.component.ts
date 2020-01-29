@@ -36,9 +36,9 @@ export class CalendarListComponent implements OnInit {
       this.setDays();
     }));
 
-    this.subscriptions.push(this.state.configSubject.subscribe((state) => {
+    
       this.setDays();
-    }));
+      
 
     this.subscriptions.push(this.state.searchChanged.subscribe(res => {
       this.setIssues();
@@ -74,9 +74,6 @@ export class CalendarListComponent implements OnInit {
   }
 
   setDays() {
-    if (!this.state.config) {
-      return;
-    }
     this.days = [];
     this.service.getSpecialDaysOfMonth(this.state.currentDay).subscribe(res => {
 

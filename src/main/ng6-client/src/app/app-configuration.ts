@@ -10,6 +10,9 @@ import { Configuration } from './shared/configuration';
     private config: Configuration;
     public invalidServer: boolean;
 
+    public get defaultLang() {
+        return this.config.defaultLang;
+    }
     public get context() {
         return this.config.context;
     }
@@ -20,6 +23,10 @@ import { Configuration } from './shared/configuration';
 
     public get znak_oznaceni_vydani() {
         return this.config.znak_oznaceni_vydani;
+    }
+
+    public get vydani() {
+        return this.config.vydani;
     }
 
     public get mutations() {

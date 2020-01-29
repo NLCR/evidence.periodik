@@ -16,14 +16,14 @@ export class AppState {
   private _stateSubject = new Subject();
   public stateChangedSubject: Observable<any> = this._stateSubject.asObservable();
 
-  public _configSubject = new Subject();
-  public configSubject: Observable<any> = this._configSubject.asObservable();
+  // public _configSubject = new Subject();
+  // public configSubject: Observable<any> = this._configSubject.asObservable();
 
   public _langSubject = new Subject();
   public langSubject: Observable<any> = this._langSubject.asObservable();
 
   // Holds client configuration
-  config: AppConfiguration;
+  // config: AppConfiguration;
   periods: string[] = [];
   vdkFormats: string[] = [];
   vydani = [];
@@ -35,6 +35,7 @@ export class AppState {
   currentLang = 'cs';
 
   user: User;
+  isAdmin = false;
 
 
   loginError = false;
@@ -90,20 +91,20 @@ export class AppState {
 
   public filterByDate: boolean;
 
-  setConfig(cfg) {
+  setConfig(config: AppConfiguration) {
 
-    this.config = cfg;
+    
 
-    this.periods = this.config['periodicity'];
-    this.stavy = this.config['stavy'];
-    this.owners = this.config['owners'];
-    this.states = this.config['states'];
-    this.vdkFormats = this.config['vdkFormats'];
+    this.periods = config['periodicity'];
+    this.stavy = config['stavy'];
+    this.owners = config['owners'];
+    this.states = config['states'];
+    this.vdkFormats = config['vdkFormats'];
 
-    this.config['vydani'].map(k => { this.vydani.push(k); });
+    config.vydani.map(k => { this.vydani.push(k); });
 
     this.configured = true;
-    this._configSubject.next(cfg);
+    // this._configSubject.next(cfg);
   }
 
   changeLang(lang) {

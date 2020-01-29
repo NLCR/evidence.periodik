@@ -12,13 +12,7 @@ export class ResultComponent implements OnInit {
   constructor(private service: AppService, public state: AppState) { }
 
   ngOnInit() {
-    if (this.state.config){
-      this.loadResultItems();
-    } else {
-      this.state.configSubject.subscribe(cfg => {
-        this.loadResultItems();
-      });
-    }
+    this.loadResultItems();
       this.state.searchParamsChanged.subscribe(cfg => {
         this.loadResultItems();
       });

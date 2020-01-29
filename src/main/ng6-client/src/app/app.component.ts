@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, NavigationEnd, NavigationStart } from '@angular/router';
@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { AppState } from './app.state';
 import { HttpClient } from '@angular/common/http';
 import { AppConfiguration } from 'src/app/app-configuration';
+import { AuthenticationService } from './shared/authentication.service';
 
 
 @Component({
@@ -16,7 +17,7 @@ import { AppConfiguration } from 'src/app/app-configuration';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'Evidence periodik';
   stavy = [];
 
@@ -25,8 +26,10 @@ export class AppComponent implements OnInit {
   subscriptions: Subscription[] = [];
 
   constructor(
+    private authService: AuthenticationService,
     public state: AppState,
     private service: AppService,
+    private config: AppConfiguration,
     private translate: TranslateService,
     private titleService: Title,
     private http: HttpClient,
@@ -36,24 +39,23 @@ export class AppComponent implements OnInit {
   ngOnInit() {
 
     this.processUrl();
-    this.getConfig().subscribe(cfg => {
-
-      this.state.config = <AppConfiguration>cfg;
-      this.service.getSpecialDays();
-      var userLang = navigator.language.split('-')[0]; // use navigator lang if available
-      userLang = /(cs|en)/gi.test(userLang) ? userLang : 'cs';
-      if (cfg.hasOwnProperty('defaultLang')) {
-        userLang = cfg['defaultLang'];
-      }
-      this.service.changeLang(userLang);
-
-      //this.state.logged = window.location.href.indexOf('localhost') > -1;
-
-      this.state.setConfig(cfg);
-      this.service.getTituly().subscribe();
-      return this.state.config;
-
+    this.authService.currentUser.subscribe(x => {
+      const isLogged = x !== null;
+      this.state.user = x;
+      this.state.isAdmin = isLogged && this.state.user.role === 'admin';
     });
+    this.state.activePage = this.route.snapshot.url.toString();
+    console.log(this.route.snapshot, this.state.activePage);
+    this.service.getSpecialDays();
+    let userLang = navigator.language.split('-')[0]; // use navigator lang if available
+    userLang = /(cs|en)/gi.test(userLang) ? userLang : 'cs';
+    if (this.config.defaultLang) {
+      userLang = this.config.defaultLang;
+    }
+    this.service.changeLang(userLang);
+
+    this.state.setConfig(this.config);
+    this.service.getTituly().subscribe();
 
     this.service.langSubject.subscribe(() => {
       this.translate.get('app.title').subscribe((newTitle: string) => {
@@ -64,12 +66,7 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe(val => {
       if (val instanceof NavigationEnd) {
         this.state.activePage = val.url;
-
-        //                if(this.state.activePage.indexOf('/calend        ar') > -1){
-        //                    this.state.calendarView = this.state.activePage.substring(this.state.activePage.lastIndex        Of('/')+1);
-        //                }
-
-
+        console.log(this.route.snapshot, this.state.activePage);
       }
     });
   }

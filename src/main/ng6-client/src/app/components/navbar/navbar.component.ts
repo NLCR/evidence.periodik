@@ -21,10 +21,14 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    
     this.service.langSubject.subscribe((lang) => {
       this.currLang = lang;
     });
+  }
+
+  showSearchBar() {
+    return this.activeRoute() !== '';
   }
 
   changeLang(lang: string) {
@@ -42,6 +46,7 @@ export class NavbarComponent implements OnInit {
   }
 
   activeRoute() {
+    
     if (this.state.activePage.indexOf('/issue') > -1) {
       return 'issue';
     }

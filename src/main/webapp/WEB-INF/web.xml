@@ -15,25 +15,14 @@
         <servlet-name>ApiServlet</servlet-name>
         <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
+    <!--
     <servlet>
         <servlet-name>IndexServlet</servlet-name>
         <servlet-class>cz.incad.nkp.inprove.IndexServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>UsersServlet</servlet-name>
-        <servlet-class>cz.incad.nkp.inprove.UsersServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>IndexServlet</servlet-name>
         <url-pattern>/index</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>cz.incad.nkp.inprove.LoginServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/lg</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
@@ -42,6 +31,23 @@
     <servlet-mapping>
         <servlet-name>SearchServlet</servlet-name>
         <url-pattern>/search/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UsersServlet</servlet-name>
+        <servlet-class>cz.incad.nkp.inprove.UsersServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UsersServlet</servlet-name>
+        <url-pattern>/users</url-pattern>
+    </servlet-mapping>
+    -->
+    <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>cz.incad.nkp.inprove.LoginServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/lg</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>ConfigServlet</servlet-name>
@@ -74,10 +80,6 @@
         <url-pattern>/result/*</url-pattern>
         <url-pattern>/issue/*</url-pattern>
         <url-pattern>/calendar/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UsersServlet</servlet-name>
-        <url-pattern>/users</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

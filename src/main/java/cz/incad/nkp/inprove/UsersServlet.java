@@ -5,7 +5,6 @@
  */
 package cz.incad.nkp.inprove;
 
-import com.alibaba.fastjson.JSON;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -19,9 +18,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.request.QueryRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -109,6 +105,7 @@ static boolean isLocalhost = false;
           }
 
         } catch (Exception ex) {
+          LOGGER.log(Level.SEVERE, null, ex);
           jo.put("logged", false);
           jo.put("error", ex.toString());
         }

@@ -1,18 +1,18 @@
-import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
-import {Router, ActivatedRoute, ParamMap} from '@angular/router';
-import {Subscription} from 'rxjs';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-import {AppState} from '../../app.state';
-import {AppService} from '../../app.service';
+import { AppState } from '../../app.state';
+import { AppService } from '../../app.service';
 
-import {Issue} from '../../models/issue';
-import {Titul} from '../../models/titul';
-import {Exemplar} from '../../models/exemplar';
-import {AddTitulDialogComponent} from '../add-titul-dialog/add-titul-dialog.component';
-import {MzModalService} from 'ngx-materialize';
-import {AddVydaniDialogComponent} from '../add-vydani-dialog/add-vydani-dialog.component';
-import {EditPagesComponent} from 'src/app/components/edit-pages/edit-pages.component';
-import {DateAdapter} from '@angular/material/core';
+import { Issue } from '../../models/issue';
+import { Titul } from '../../models/titul';
+import { Exemplar } from '../../models/exemplar';
+import { AddTitulDialogComponent } from '../add-titul-dialog/add-titul-dialog.component';
+import { MzModalService } from 'ngx-materialize';
+import { AddVydaniDialogComponent } from '../add-vydani-dialog/add-vydani-dialog.component';
+import { EditPagesComponent } from 'src/app/components/edit-pages/edit-pages.component';
+import { DateAdapter } from '@angular/material/core';
 import { isArray } from 'util';
 
 @Component({
@@ -55,19 +55,19 @@ export class IssueComponent implements OnInit {
   }
 
 
-  pagesRange: {label: string, index: number}[] = [];
+  pagesRange: { label: string, index: number }[] = [];
 
   setPagesRange() {
     this.pagesRange = [];
     if (this.state.currentIssue.pages.length === 0) {
       for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
-        this.pagesRange.push({label: (i + 1) + '', index: i});
+        this.pagesRange.push({ label: (i + 1) + '', index: i });
       }
     } else {
       this.pagesRange = JSON.parse(JSON.stringify(this.state.currentIssue.pages));
       if (this.state.currentIssue.pages.length < this.state.currentIssue.pocet_stran) {
         for (let i = this.state.currentIssue.pages.length; i < this.state.currentIssue.pocet_stran; i++) {
-          this.pagesRange.push({label: (i + 1) + '', index: i});
+          this.pagesRange.push({ label: (i + 1) + '', index: i });
         }
       }
     }
@@ -80,19 +80,19 @@ export class IssueComponent implements OnInit {
       this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
         ex.pagesRange = { missing: [], damaged: [] };
 
-      // Back compatibility. 
-      // From pages : string[] to pages: {missing: string[], damaged: string[]}
-      // Assign to missing
-      if (ex.pages && isArray(ex.pages)) {
-        const pages = Object.assign([], ex.pages);
-        ex.pages = {missing: Object.assign([], ex.pages), damaged: Object.assign([], ex.pages)};
-      }
+        // Back compatibility. 
+        // From pages : string[] to pages: {missing: string[], damaged: string[]}
+        // Assign to missing
+        if (ex.pages && isArray(ex.pages)) {
+          const pages = Object.assign([], ex.pages);
+          ex.pages = { missing: Object.assign([], ex.pages), damaged: Object.assign([], ex.pages) };
+        }
 
         for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
           const sel = ex.pages && ex.pages.missing.includes((i + 1) + '');
-          ex.pagesRange.missing.push({label: this.pagesRange[i].label, sel: sel});
+          ex.pagesRange.missing.push({ label: this.pagesRange[i].label, sel: sel });
           const sel2 = ex.pages && ex.pages.damaged.includes((i + 1) + '');
-          ex.pagesRange.damaged.push({label: this.pagesRange[i].label, sel: sel2});
+          ex.pagesRange.damaged.push({ label: this.pagesRange[i].label, sel: sel2 });
         }
       });
     }
@@ -146,7 +146,7 @@ export class IssueComponent implements OnInit {
     if (this.titul_idx.toString() === '-1') {
       //New titul dialog
       this.modalService.open(AddTitulDialogComponent,
-        {'state': this.state, 'service': this.service}
+        { 'state': this.state, 'service': this.service }
       );
     } else {
       this.state.currentIssue.titul = this.state.tituly[this.titul_idx];
@@ -185,17 +185,11 @@ export class IssueComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.state.isNewIssue = false;
-      if (this.state.config) {
-        this.service.getIssue(id).subscribe(res => {
-          this.setData(res);
-        });
-      } else {
-        this.subscriptions.push(this.state.configSubject.subscribe((state) => {
-          this.service.getIssue(id).subscribe(res => {
-            this.setData(res);
-          });
-        }));
-      }
+
+      this.service.getIssue(id).subscribe(res => {
+        this.setData(res);
+      });
+
     } else {
 
       this.state.isNewIssue = true;
@@ -228,7 +222,7 @@ export class IssueComponent implements OnInit {
 
   addPub() {
     this.modalService.open(AddVydaniDialogComponent,
-      {'issue': this.state.currentIssue, 'state': this.state, 'service': this.service}
+      { 'issue': this.state.currentIssue, 'state': this.state, 'service': this.service }
     );
 
   }
@@ -237,10 +231,10 @@ export class IssueComponent implements OnInit {
   editPages() {
 
     const a = this.modalService.open(EditPagesComponent,
-      {'issue': this.state.currentIssue, 'state': this.state, 'service': this.service}
+      { 'issue': this.state.currentIssue, 'state': this.state, 'service': this.service }
     );
     a.onDestroy(() => {
-      const mm = <EditPagesComponent> a.instance;
+      const mm = <EditPagesComponent>a.instance;
       if (mm.saved) {
         this.setPagesRange();
       }
@@ -256,16 +250,16 @@ export class IssueComponent implements OnInit {
   }
 
   filterOznaceni(e: string, ex: Exemplar) {
-    ex.oznaceni = new Array(e.length + 1).join( this.state.currentIssue.znak_oznaceni_vydani );
+    ex.oznaceni = new Array(e.length + 1).join(this.state.currentIssue.znak_oznaceni_vydani);
   }
 
   onCalendarClick() {
     this.router.navigate([
       '/calendar',
-       this.state.currentIssue.id_titul,
-       this.state.calendarView,
-       this.state.currentIssue['datum_vydani_den']
-      ]);
+      this.state.currentIssue.id_titul,
+      this.state.calendarView,
+      this.state.currentIssue['datum_vydani_den']
+    ]);
   }
 
   test() {

@@ -20,11 +20,13 @@ package cz.incad.nkp.inprove;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +36,7 @@ import org.json.JSONException;
  *
  * @author alberto
  */
+@WebServlet(value = "/search/*")
 public class SearchServlet extends HttpServlet {
 
   public static final Logger LOGGER = Logger.getLogger(SearchServlet.class.getName());
@@ -50,12 +53,9 @@ public class SearchServlet extends HttpServlet {
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException {
     try {
-
-      response.addHeader("Access-Control-Allow-Origin", "http://localhost:4200");
       response.setContentType("application/json;charset=UTF-8");
-      //PrintWriter out = response.getWriter();
       response.addHeader("Access-Control-Allow-Methods", "GET, POST");
-      response.addHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+      PrintWriter out = response.getWriter();
 
       Options opts = Options.getInstance();
       int handlerIdx = request.getRequestURI().lastIndexOf("/") + 1;
@@ -63,6 +63,7 @@ public class SearchServlet extends HttpServlet {
       String handler = request.getRequestURI().substring(handlerIdx);
       String core = request.getRequestURI().substring(solrIdx, handlerIdx);
       
+      System.out.println(core + " ----- " + handler);
       String solrhost = opts.getString("solrhost", "http://localhost:8983/solr/")
               + core  + handler + "?" + request.getQueryString();
       
@@ -71,10 +72,11 @@ public class SearchServlet extends HttpServlet {
         Map<String, String> reqProps = new HashMap<>();
         reqProps.put("Content-Type", "application/json");
         reqProps.put("Accept", "application/json");
-        InputStream inputStream = RESTHelper.inputStream(solrhost, reqProps);
-        org.apache.commons.io.IOUtils.copy(inputStream, response.getOutputStream());
-        //out.print(org.apache.commons.io.IOUtils.toString(inputStream, "UTF8"));
-      //inputStream.close();
+      //org.apache.commons.io.IOUtils.copy(inputStream, response.getOutputStream());
+        try (InputStream inputStream = RESTHelper.inputStream(solrhost, reqProps)) {
+          //org.apache.commons.io.IOUtils.copy(inputStream, response.getOutputStream());
+          out.print(org.apache.commons.io.IOUtils.toString(inputStream, "UTF8"));
+        }
         
     } catch (IOException ex) {
       LOGGER.log(Level.SEVERE, null, ex);

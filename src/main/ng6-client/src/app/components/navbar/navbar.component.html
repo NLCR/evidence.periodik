@@ -3,7 +3,7 @@
     <span class="cyan-text text-lighten-4">{{'app.title1' | translate}}</span> {{'app.title2' | translate}}
     <span *ngIf="activeRoute() !== ''">- {{'app.' + activeRoute() | translate}}</span>
   </a>
-  <app-search-bar *ngIf="state.activePage != '/' && state.activePage != '/home'"></app-search-bar>
+  <app-search-bar *ngIf="showSearchBar()"></app-search-bar>
   <mz-navbar-item-container [align]="'right'">
     <mz-navbar-item routerLinkActive="active" #home="routerLinkActive" [active]="home.isActive">
       <a routerLink="home">{{'navbar.home' | translate}}</a>
@@ -17,13 +17,15 @@
     <mz-navbar-item routerLinkActive="active" #addRecord="routerLinkActive" [active]="addRecord.isActive && state.isNewIssue">
       <a routerLink="issue">{{'navbar.add_record' | translate}}</a>
     </mz-navbar-item>
-    <mz-navbar-item *ngIf="true || state.logged && state.user.role === 'admin'" >
+    <!--
+    <mz-navbar-item *ngIf="state.isAdmin" >
       <a routerLink="admin">{{'navbar.admin' | translate}}</a>
     </mz-navbar-item>
-    <mz-navbar-item *ngIf="!state.logged" routerLinkActive="active" #login="routerLinkActive" [active]="login.isActive">
+  -->
+    <mz-navbar-item *ngIf="!state.user" routerLinkActive="active" #login="routerLinkActive" [active]="login.isActive">
       <a (click)="gologin()">{{'navbar.login' | translate}}</a>
     </mz-navbar-item>
-    <mz-navbar-item *ngIf="state.logged" >
+    <mz-navbar-item *ngIf="state.user" >
       <a (click)="logout()">{{'navbar.logout' | translate}}</a>
     </mz-navbar-item>
     <mz-navbar-item>

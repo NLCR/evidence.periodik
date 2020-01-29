@@ -30,14 +30,8 @@ export class MetatitulComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.state.config) {
       this.load();
-    } else {
-      this.subscriptions.push(this.state.configSubject.subscribe((state) => {
-        this.load();
-      }));
-    }
-
+    
   }
 
   load() {

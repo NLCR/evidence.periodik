@@ -27,15 +27,18 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
+import org.apache.solr.client.solrj.ResponseParser;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.impl.NoOpResponseParser;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.util.NamedList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -571,19 +574,28 @@ public class Indexer {
   public static JSONObject indexJSON(JSONObject json, String core) {
     JSONObject ret = new JSONObject();
     UpdateResponse response;
-    try (SolrClient client = new HttpSolrClient.Builder(String.format("%s/%s/",
-            Options.getInstance().getString("solrhost", DEFAULT_HOST),
-            core))
+    try (SolrClient client = new HttpSolrClient.Builder(Options.getInstance().getString("solrhost", DEFAULT_HOST))
             .withConnectionTimeout(10000)
             .withSocketTimeout(60000)
             .build()) {
       JSONUpdateRequest request = new JSONUpdateRequest(json);
       request.setCommitWithin(100);
-      response = request.process(client);
-      client.commit();
-      ret = new JSONObject(response.toString());
 
-    } catch (SolrServerException | IOException ex) {
+//      response = request.process(client, core);
+//      client.commit(core);
+//      System.out.println(response.toString());
+//      ret = new JSONObject(response.toString());
+      NoOpResponseParser rawJsonResponseParser = new NoOpResponseParser();
+      rawJsonResponseParser.setWriterType("json");
+      request.setResponseParser(rawJsonResponseParser);
+
+      NamedList<Object> resp = client.request(request, core);
+      client.commit(core);
+      String jsonResponse = (String) resp.get("response");
+
+      ret = new JSONObject(jsonResponse);
+
+    } catch (SolrServerException | IOException | JSONException ex) {
       ret.put("error", ex);
       LOGGER.log(Level.SEVERE, null, ex);
     }

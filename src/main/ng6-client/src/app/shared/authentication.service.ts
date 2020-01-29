@@ -26,6 +26,7 @@ export class AuthenticationService {
     login(username: string, password: string) {
         return this.http.post<any>(`/api/users/login`, { username, password })
             .pipe(map(resp => {
+                console.log(resp);
                 if (resp.logged) {
                 // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
                 // password hashed
@@ -34,9 +35,12 @@ export class AuthenticationService {
                     user.authdata = window.btoa(username + ':' + password);
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
+                    this.state.logged = true;
+                    this.state.user = resp;
 
                     return user;
                 } else {
+                    this.state.logged = false;
                     return resp;
                 }
             }));
