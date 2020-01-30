@@ -5,6 +5,7 @@ import { AppService } from '../../app.service';
 import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 import { Router } from "@angular/router";
 import { AppConfiguration } from 'src/app/app-configuration';
+import { AuthenticationService } from 'src/app/shared/authentication.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,6 +18,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private authservice: AuthenticationService,
     public state: AppState,
     private service: AppService,
     private config: AppConfiguration) {
@@ -45,7 +47,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    this.service.logout();
+    this.authservice.logout();
   }
 
   gologin() {

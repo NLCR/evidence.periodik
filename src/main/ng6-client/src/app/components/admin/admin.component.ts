@@ -27,6 +27,7 @@ export class AdminComponent implements OnInit {
 
   load() {
     this.service.getUsers().subscribe(resp => {
+      this.users = resp;
       this.loadUser(this.users[0]);      
     });
   }

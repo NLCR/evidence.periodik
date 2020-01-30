@@ -463,7 +463,10 @@ export class AppService {
 
   getUsers(): Observable<any> {
     const url = '/api/users/all';
-    return this.http.get(url);
+    return this.http.get<any>(url)
+    .pipe(map(resp => {
+      return resp.docs;
+    }));
   }
 
   saveUser(u: User): Observable<any> {

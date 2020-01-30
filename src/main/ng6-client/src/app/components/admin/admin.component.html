@@ -5,7 +5,7 @@
       <div class="row">
         <ul>
           <li *ngFor="let user of users">
-            <a (click)="loadUser(t)">{{user.nazev}}</a>
+            <a (click)="loadUser(user)">{{user.nazev}}</a>
           </li>
         </ul>
       </div>
@@ -47,7 +47,7 @@
             </mat-card-content>
             <mat-card-actions>
               <button mat-button (click)="newTitul()"
-                type="button">{{'Add new titul' | translate}}</button>
+                type="button">{{'Přidat uživatel' | translate}}</button>
               <button mat-button  type="submit"
                 [disabled]="!userForm.form.valid">{{'button.save' | translate}}</button>
             </mat-card-actions>
