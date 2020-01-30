@@ -63,7 +63,6 @@ public class SearchServlet extends HttpServlet {
       String handler = request.getRequestURI().substring(handlerIdx);
       String core = request.getRequestURI().substring(solrIdx, handlerIdx);
       
-      System.out.println(core + " ----- " + handler);
       String solrhost = opts.getString("solrhost", "http://localhost:8983/solr/")
               + core  + handler + "?" + request.getQueryString();
       
