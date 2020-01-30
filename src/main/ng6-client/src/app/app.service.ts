@@ -18,6 +18,7 @@ import { Issue } from './models/issue';
 import { Exemplar } from './models/exemplar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Volume } from './models/volume';
+import { User } from './models/user';
 
 @Injectable()
 export class AppService {
@@ -458,59 +459,15 @@ export class AppService {
     return this.http.get(url, { params: params });
   }
 
-  login() {
-    this.state.loginError = false;
-    return this.doLogin().subscribe(
-      res => {
-        if (res.hasOwnProperty('error')) {
-          this.state.loginError = true;
-          this.state.logged = false;
-        } else {
-          this.state.user = res;
-          this.state.loginError = false;
-          this.state.loginuser = '';
-          this.state.loginpwd = '';
-          this.state.logged = true;
-          if (this.state.redirectUrl) {
-            this.router.navigate([this.state.redirectUrl]);
-          }
-        }
-      },
-      (err: HttpErrorResponse) => {
-        console.log(err);
-        this.state.loginHttpError = true;
-        this.state.loginHttpErrorMsg = err.statusText;
-        this.state.logged = false;
-      });
+
+
+  getUsers(): Observable<any> {
+    const url = '/api/users/all';
+    return this.http.get(url);
   }
 
-  doLogin(): Observable<any> {
-    const url = 'lg'
-    var params = new HttpParams()
-      .set('user', this.state.loginuser)
-      .set('pwd', this.state.loginpwd)
-      .set('action', 'LOGIN');
-    return this.http.get(url, { params: params });
-
-
-
-  }
-
-  logout() {
-    this.doLogout().subscribe(res => {
-      if (res.hasOwnProperty('error')) {
-        console.log(res['error']);
-      }
-      this.state.loginError = false;
-      this.state.logged = false;
-      this.router.navigate(['/home']);
-    });
-  }
-
-  doLogout() {
-    const url = 'lg';
-    var params = new HttpParams().set('action', 'LOGOUT');
-    return this.http.get(url, { params: params });
+  saveUser(u: User): Observable<any> {
+    return this.http.post(`/api/users/save`, u);
   }
 
 }
