@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   
   @ViewChild('loginuser') loginuser: any;
   error = false;
+  loginHttpError = false;
   loading = false;
 
   username: string;
