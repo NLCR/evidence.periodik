@@ -5,8 +5,6 @@
         <servlet-class>cz.incad.nkp.inprove.InitServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    
-    
     <servlet>
         <servlet-name>ApiServlet</servlet-name>
         <servlet-class>cz.incad.nkp.inprove.ApiServlet</servlet-class>

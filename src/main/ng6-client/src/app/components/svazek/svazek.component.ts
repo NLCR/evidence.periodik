@@ -126,7 +126,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private datePipe: DatePipe,
-    private config: AppConfiguration,
+    public config: AppConfiguration,
     public state: AppState,
     private service: AppService) { }
 

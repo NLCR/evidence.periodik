@@ -18,7 +18,7 @@
       <a routerLink="issue">{{'navbar.add_record' | translate}}</a>
     </mz-navbar-item>
     
-    <mz-navbar-item *ngIf="state.isAdmin">
+    <mz-navbar-item *ngIf="state.isAdmin" routerLinkActive="active" #admin="routerLinkActive" [active]="admin.isActive">
       <a routerLink="admin">{{'navbar.admin' | translate}}</a>
     </mz-navbar-item>
   

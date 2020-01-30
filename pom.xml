@@ -163,7 +163,7 @@
                   <value>&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;&lt;!doctype html&gt;</value> 
                 </replacement> 
                 <replacement> 
-                  <token>base href="/"</token> 
+                  <token>base href=""</token> 
                   <value>base href="/${context.name}/"</value> 
                 </replacement> 
               </replacements> 
