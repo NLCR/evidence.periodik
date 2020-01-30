@@ -25,9 +25,15 @@
     <mz-navbar-item *ngIf="!state.user" routerLinkActive="active" #login="routerLinkActive" [active]="login.isActive">
       <a (click)="gologin()">{{'navbar.login' | translate}}</a>
     </mz-navbar-item>
-    <mz-navbar-item *ngIf="state.user">
-      <a (click)="logout()">{{'navbar.logout' | translate}}</a>
-    </mz-navbar-item>
+    <ng-container *ngIf="state.user">
+      
+      <mz-navbar-item>
+        <a routerLink="profile" matTooltip="{{'user.profile' | translate}}"><mat-icon>person</mat-icon>{{state.user.nazev}}</a>
+      </mz-navbar-item>
+      <mz-navbar-item>
+        <a (click)="logout()">{{'navbar.logout' | translate}}</a>
+      </mz-navbar-item>
+    </ng-container>
     <!-- -->
     <mz-navbar-item *ngIf="currLang !== 'en'">
       <a (click)="changeLang('en')" title="Switch to english">English</a>

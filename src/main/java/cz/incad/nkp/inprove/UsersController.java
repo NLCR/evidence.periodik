@@ -120,7 +120,7 @@ public class UsersController {
 
       Options opts = Options.getInstance();
       SolrQuery query = new SolrQuery("username:\"" + username + "\"");
-      query.addFilterQuery("active:true");
+      //query.addFilterQuery("active:true");
       try (SolrClient client = new HttpSolrClient.Builder(String.format("%s/%s/",
               opts.getString("solrHost", "http://localhost:8983/solr"),
               "user"))

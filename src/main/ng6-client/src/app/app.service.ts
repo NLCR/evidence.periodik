@@ -161,9 +161,9 @@ export class AppService {
   getTitul_(id: string): Observable<Titul> {
     let url = '/api/search/issue/select';
     let params: HttpParams = new HttpParams();
-    
+
     params = params.set('q', '*').set('rows', '1').set('fq', 'id_titul:"' + id + '"');
-    
+
     return this.http.get<Titul>(url, { params: params }).pipe(
       tap((res) => {
         const t = new Titul();
@@ -464,13 +464,17 @@ export class AppService {
   getUsers(): Observable<any> {
     const url = '/api/users/all';
     return this.http.get<any>(url)
-    .pipe(map(resp => {
-      return resp.docs;
-    }));
+      .pipe(map(resp => {
+        return resp.docs;
+      }));
   }
 
   saveUser(u: User): Observable<any> {
     return this.http.post(`/api/users/save`, u);
+  }
+
+  resetHeslo(json: { id: string, oldheslo: string, newheslo: string }) {
+    return this.http.post<any>(`/api/users/resetpwd`, json);
   }
 
 }

@@ -3,6 +3,7 @@ import { MzToastService } from 'ngx-materialize';
 import { AppService } from 'src/app/app.service';
 import { AppState } from 'src/app/app.state';
 import { User } from 'src/app/models/user';
+import { Md5 } from 'ts-md5';
 
 @Component({
   selector: 'app-admin',
@@ -45,13 +46,17 @@ export class AdminComponent implements OnInit {
         this.toastService.show(res['error'], 4000, 'red');
       } else {
         this.toastService.show('Uživatel správně uložen', 4000, 'green');
-        this.service.getTituly().subscribe();
+        this.load();
       }
     });
   }
 
-  newuser() {
-    this.user = new User();
+  newUser() {
+    const user = new User();
+    user.nazev = 'new user';
+    user.heslo = '' + Md5.hashStr('test');
+    this.users.push(user);
+    this.loadUser(user);
   }
 
   cancel() {
