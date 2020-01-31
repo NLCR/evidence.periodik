@@ -13,6 +13,7 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { NgProgressModule } from '@ngx-progressbar/core';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import {
   MatAutocompleteModule,
@@ -211,7 +212,7 @@ const providers: any[] = [
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-
+    FlexLayoutModule,
     CdkTableModule,
     AppRoutingModule
   ],
