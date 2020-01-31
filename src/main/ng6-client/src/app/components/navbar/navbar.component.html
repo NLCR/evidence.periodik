@@ -1,50 +1,48 @@
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <a routerLink="home" class="brand-logo">
-      <span>{{'app.title1' | translate}}</span> {{'app.title2' | translate}}
-      <!-- <span *ngIf="activeRoute() !== ''">- {{'app.' + activeRoute() | translate}}</span> -->
-    </a>
-    <div fxFlex class="app-fx-left" *ngIf="showSearchBar()">
-      <app-search-bar></app-search-bar>
-    </div>
-    <div fxFlex class="app-fx-right">
+<mat-toolbar>
+  <a routerLink="home" class="brand-logo">
+    <span>{{'app.title1' | translate}}</span> {{'app.title2' | translate}}
+    <!-- <span *ngIf="activeRoute() !== ''">- {{'app.' + activeRoute() | translate}}</span> -->
+  </a>
+  <div fxFlex class="app-fx-left" *ngIf="showSearchBar()">
+    <app-search-bar></app-search-bar>
+  </div>
+  <div fxFlex class="app-fx-right">
+    <span>
+      <a routerLink="home">{{'navbar.home' | translate}}</a>
+    </span>
+    <span>
+      <a routerLink="titul">Metatituly</a>
+    </span>
+    <span>
+      <a routerLink="svazek">Svazek</a>
+    </span>
+    <span>
+      <a routerLink="issue">{{'navbar.add_record' | translate}}</a>
+    </span>
+    <span>
+      <a routerLink="admin">{{'navbar.admin' | translate}}</a>
+    </span>
+    <span *ngIf="!state.user">
+      <a (click)="gologin()">{{'navbar.login' | translate}}</a>
+    </span>
+    <!--*ngIf="state.user"-->
+    <ng-container>
       <span>
-        <a routerLink="home">{{'navbar.home' | translate}}</a>
+        <a routerLink="profile" matTooltip="{{ 'user.profile' | translate }}">
+          <!-- {{ state.user.nazev }} -->
+          <mat-icon>person</mat-icon>
+          Novak
+        </a>
       </span>
       <span>
-        <a routerLink="titul">Metatituly</a>
+        <a (click)="logout()">{{'navbar.logout' | translate}}</a>
       </span>
-      <span>
-        <a routerLink="svazek">Svazek</a>
-      </span>
-      <span>
-        <a routerLink="issue">{{'navbar.add_record' | translate}}</a>
-      </span>
-      <span>
-        <a routerLink="admin">{{'navbar.admin' | translate}}</a>
-      </span>
-      <span *ngIf="!state.user">
-        <a (click)="gologin()">{{'navbar.login' | translate}}</a>
-      </span>
-      <!--*ngIf="state.user"-->
-      <ng-container>
-        <span>
-          <a routerLink="profile" matTooltip="{{ 'user.profile' | translate }}">
-            <!-- {{ state.user.nazev }} -->
-            <mat-icon>person</mat-icon>
-            Novak
-          </a>
-        </span>
-        <span>
-          <a (click)="logout()">{{'navbar.logout' | translate}}</a>
-        </span>
-      </ng-container>
-      <span *ngIf="currLang !== 'en'">
-        <a (click)="changeLang('en')" title="Switch to english">English</a>
-      </span> 
-      <span *ngIf="currLang !== 'cs'">
-        <a (click)="changeLang('cs')" title="Přepni na češtinu">Česky</a>
-      </span> 
-    </div>
-  </mat-toolbar-row>
+    </ng-container>
+    <span *ngIf="currLang !== 'en'">
+      <a (click)="changeLang('en')" title="Switch to english">English</a>
+    </span> 
+    <span *ngIf="currLang !== 'cs'">
+      <a (click)="changeLang('cs')" title="Přepni na češtinu">Česky</a>
+    </span> 
+  </div>
 </mat-toolbar>
