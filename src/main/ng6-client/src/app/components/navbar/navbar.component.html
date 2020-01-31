@@ -25,8 +25,7 @@
     <span *ngIf="!state.user">
       <a (click)="gologin()">{{'navbar.login' | translate}}</a>
     </span>
-    <!--*ngIf="state.user"-->
-    <ng-container>
+    <ng-container *ngIf="state.user">
       <span>
         <a routerLink="profile" matTooltip="{{ 'user.profile' | translate }}">
           <!-- {{ state.user.nazev }} -->
