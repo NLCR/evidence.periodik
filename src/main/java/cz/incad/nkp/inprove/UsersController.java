@@ -47,7 +47,7 @@ public class UsersController {
       Options opts = Options.getInstance();
       SolrQuery query = new SolrQuery("id:" + id);
       try (HttpSolrClient client = new HttpSolrClient.Builder(opts.getString("solrHost", "http://localhost:8983/solr")).build()) {
-        final QueryResponse response = client.query(opts.getString("usersCore", "users"), query);
+        final QueryResponse response = client.query("user", query);
         User user = response.getBeans(User.class).get(0);
         if (!pwd) {
           user.heslo = null;
@@ -70,7 +70,7 @@ public class UsersController {
       Options opts = Options.getInstance();
       SolrQuery query = new SolrQuery("id:" + id);
       try (HttpSolrClient client = new HttpSolrClient.Builder(opts.getString("solrHost")).build()) {
-        final QueryResponse response = client.query(opts.getString("usersCore", "users"), query);
+        final QueryResponse response = client.query("user", query);
         User user = response.getBeans(User.class).get(0);
         return user;
 
@@ -95,7 +95,7 @@ public class UsersController {
         NoOpResponseParser dontMessWithSolr = new NoOpResponseParser();
         dontMessWithSolr.setWriterType("json");
         client.setParser(dontMessWithSolr);
-        NamedList<Object> qresp = client.request(qreq, opts.getString("usersCore", "users"));
+        NamedList<Object> qresp = client.request(qreq, "user");
         JSONObject r = new JSONObject((String) qresp.get("response"));
         JSONObject resp = r.getJSONObject("response");
         for (int i = 0; i < resp.getJSONArray("docs").length(); i++) {
@@ -120,7 +120,7 @@ public class UsersController {
 
       Options opts = Options.getInstance();
       SolrQuery query = new SolrQuery("username:\"" + username + "\"");
-      query.addFilterQuery("active:true");
+      //query.addFilterQuery("active:true");
       try (SolrClient client = new HttpSolrClient.Builder(String.format("%s/%s/",
               opts.getString("solrHost", "http://localhost:8983/solr"),
               "user"))

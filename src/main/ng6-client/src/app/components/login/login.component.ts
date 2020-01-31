@@ -18,8 +18,8 @@ export class LoginComponent implements OnInit {
   loginHttpError = false;
   loading = false;
 
-  username: string;
-  pwd: string;
+  username: string = '';
+  pwd: string = '';
 
   constructor(
     public state: AppState,

@@ -1,3 +1,59 @@
-<p>
-  admin works!
-</p>
+<app-toolbar></app-toolbar>
+<div class="app-metatitul-wrapper grey lighten-5">
+  <div class="row">
+    <div class="col s4">
+      <div class="row">
+        <ul>
+          <li *ngFor="let user of users">
+            <a (click)="loadUser(user)">{{user.nazev}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col s8">
+      <div class="row" *ngIf="user">
+        <mz-progress *ngIf="loading" [backgroundClass]="'blue lighten-4'" [progressClass]="'blue'"></mz-progress>
+        <form (ngSubmit)="save()" #userForm="ngForm">
+          <mat-card>
+            <mat-card-content>
+
+              <mat-form-field>
+                <input matInput [(ngModel)]="user.username" name="username" id="username"
+                  [placeholder]="'user.username' | translate" required cdkFocusInitial />
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput [(ngModel)]="user.nazev" name="nazev" id="nazev"
+                  [placeholder]="'user.nazev' | translate" required />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput [(ngModel)]="user.email" name="email" id="email"
+                  [placeholder]="'user.email' | translate"  />
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput [(ngModel)]="user.poznamka" name="poznamka" id="poznamka"
+                  [placeholder]="'user.poznamka' | translate"  />
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>{{'user.roles' | translate}}</mat-label>
+                <mat-select [(ngModel)]="user.role" id="role" name="role">
+                  <mat-option value="'user'">{{'user.role.user' | translate}}</mat-option>
+                  <mat-option value="'admin'">{{'user.role.admin' | translate}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-button (click)="newUser()"
+                type="button">{{'Přidat uživatel' | translate}}</button>
+              <button mat-button  type="submit"
+                [disabled]="!userForm.form.valid">{{'button.save' | translate}}</button>
+            </mat-card-actions>
+
+          </mat-card>
+        </form>
+      </div>
+    </div>
+  </div>

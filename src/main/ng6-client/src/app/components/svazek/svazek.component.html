@@ -1,4 +1,4 @@
-<div class="app-svazek-wrapper grey lighten-4" *ngIf="state.configured" (click)="closeInfoOverlay()">
+<div class="app-svazek-wrapper grey lighten-4" (click)="closeInfoOverlay()">
   
   <div class="app-container-left">
     
@@ -50,7 +50,7 @@
               </ng-container>
               <ng-container *ngSwitchCase="'vlastnik'">
                 <mat-select [(ngModel)]="vlastnik_idx" (ngModelChange)="changeVlastnik()">
-                  <mat-option *ngFor="let vlastnik of state.config.owners; let idx=index;" [value]="idx" >{{vlastnik.name}}</mat-option>
+                  <mat-option *ngFor="let vlastnik of config.owners; let idx=index;" [value]="idx" >{{vlastnik.name}}</mat-option>
                 </mat-select>
               </ng-container>
 
@@ -417,7 +417,7 @@
         <tr mat-header-row *matHeaderRowDef="issueColumns; sticky: true" class="app-header-row-right"></tr>
         <tr mat-row *matRowDef="let row; columns: issueColumns;" [style.background]="rowColor(row)"></tr>
       </table>
-      <mat-paginator *ngIf="dsIssues.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
+      <mat-paginator *ngIf="cislaVeSvazku.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>

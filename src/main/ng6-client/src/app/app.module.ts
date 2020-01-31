@@ -3,7 +3,7 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { registerLocaleData } from '@angular/common';
 import localeCs from '@angular/common/locales/cs';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -94,6 +94,9 @@ import { MetatitulComponent } from './components/metatitul/metatitul.component';
 import { BasicAuthInterceptor } from './shared/basic-auth.interceptor';
 import { AppConfiguration } from './app-configuration';
 import { AdminComponent } from './components/admin/admin.component';
+import { PasswordDialogComponent } from './components/password-dialog/password-dialog.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { AppRoutingModule } from './app-routing.module';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -149,7 +152,9 @@ const providers: any[] = [
     EditPagesComponent,
     SvazekComponent,
     MetatitulComponent,
-    AdminComponent
+    AdminComponent,
+    PasswordDialogComponent,
+    ProfileComponent
   ],
   entryComponents: [ConfirmDialogComponent,
     CloneDialogComponent,
@@ -157,10 +162,11 @@ const providers: any[] = [
     AddTitulDialogComponent,
     AddVdkExComponent,
     AddVydaniDialogComponent,
-    EditPagesComponent],
+    EditPagesComponent, PasswordDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {
@@ -207,33 +213,7 @@ const providers: any[] = [
     MatTooltipModule,
 
     CdkTableModule,
-
-    RouterModule.forRoot([
-      { path: 'titul', component: MetatitulComponent },
-      { path: 'titul/:id', component: MetatitulComponent },
-      { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
-      { path: 'issue', component: IssueComponent, canActivate: [AuthGuard] },
-      { path: 'issue/:id', component: IssueComponent },
-      { path: 'home', component: HomeComponent },
-      { path: 'svazek', component: SvazekComponent },
-      { path: 'svazek/:id', component: SvazekComponent },
-      { path: 'result', component: ResultComponent },
-      {
-        path: 'calendar/:id', component: CalendarComponent,
-        children: [
-          { path: '', redirectTo: 'month', pathMatch: 'full' },
-          { path: 'month/:day', component: CalendarMonthComponent },
-          { path: 'month', component: CalendarMonthComponent },
-          { path: 'year', component: CalendarYearComponent },
-          { path: 'year/:day', component: CalendarYearComponent },
-          { path: 'list', component: CalendarListComponent },
-          { path: 'list/:day', component: CalendarListComponent }
-        ]
-      },
-      { path: 'add-record', component: AddRecordComponent },
-      { path: 'login', component: LoginComponent },
-      { path: '', redirectTo: 'home', pathMatch: 'full' }
-    ])
+    AppRoutingModule
   ],
   providers,
   bootstrap: [AppComponent]

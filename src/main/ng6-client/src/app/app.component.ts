@@ -43,9 +43,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.state.isAdmin = isLogged && this.state.user.role === 'admin';
     });
     this.state.activePage = this.route.snapshot.url.toString();
-    console.log(this.route.snapshot, this.state.activePage);
     this.service.getSpecialDays();
-    
 
     this.state.setConfig(this.config);
     this.service.getTituly().subscribe();
