@@ -61,9 +61,6 @@ $app-container:                   1.25rem !default;
 $app-facet-width:                  320px;
 
 // materialize variables
-$navbar-font-color:               lighten($primary-color, 65%) !default;
-$navbar-height:                   68px !default;
-
 $button-padding:                  0 1rem !default;
 
 $collection-active-bg-color:      color("grey", "lighten-3") !default;
@@ -73,6 +70,13 @@ $collection-hover-bg-color:       color("grey", "lighten-5") !default;
 $table-striped-color:             color("grey", "lighten-4") !default;
 
 $spinner-default-color:           color("orange", "base") !default;
+
+// navbar
+$app-navbar-font-color: lighten($primary-color, 65%) !default;
+$app-navbar-height: 68px !default;
+
+// search bar
+$app-search-bar-width: 600px !default;
 
 // svazek table
 $app-svazek-table-left-height: 50% !default;
@@ -90,3 +94,5 @@ $app-svazek-cell-mutace-width: 185px !default;
 
 
 $app-svazek-cell-font-size: 12px !default;
+
+
