@@ -5,6 +5,6 @@
            [placeholder]="'searchbox.placeholder' | translate"
            (keyup.enter)="search()">
   </div><!--/.input-field -->
-  <i mz-icon-mdi [icon]="'magnify'" class="app-cursor-pointer" (click)="search()"></i>
-  <i mz-icon-mdi [icon]="'close'" class="app-cursor-pointer"></i>
+  <mat-icon class="app-mat-icon-search app-cursor-pointer" (click)="search()">search</mat-icon>
+  <mat-icon class="app-mat-icon-close app-cursor-pointer" (click)="search()">close</mat-icon>
 </div><!--/.app-search-wrapper -->

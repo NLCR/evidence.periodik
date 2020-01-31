@@ -17,20 +17,20 @@ app-search-bar {
       box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.03);
     }
 
-    .mdi-magnify,
-    .mdi-close {
+    .app-mat-icon-search,
+    .app-mat-icon-close {
       position: absolute;
       line-height: normal;
       height: auto;
-      font-size: inherit;
+      //font-size: inherit;
       top: 0.6rem;
       @extend .app-cursor-pointer;
       color: color("grey", "base");
     }
-    .mdi-magnify {
+    .app-mat-icon-search {
       left: 0.8rem;
     }
-    .mdi-close {
+    .app-mat-icon-close {
       right: 0.8rem;
     }
 
