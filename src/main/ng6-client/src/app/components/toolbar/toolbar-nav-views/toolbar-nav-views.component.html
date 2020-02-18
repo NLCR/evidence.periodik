@@ -1,11 +1,11 @@
-<a (click)="changeView('month')" [class.active]="state.calendarView === 'month'">
-  <i mz-icon-mdi [icon]="'calendar-today'" mz-tooltip [tooltip]="'Zobrazit měsíc'" class="app-cursor-pointer"></i>
-</a>
+<button mat-icon-button  (click)="changeView('month')" [class.active]="state.calendarView === 'month'" [matTooltip]="'Zobrazit měsíc' | translate">
+  <mat-icon>{{ config.icons.view_month }}</mat-icon>
+</button>
 
-<a (click)="changeView('list')" [class.active]="state.calendarView === 'list'">
-  <i mz-icon-mdi [icon]="'calendar-text'" mz-tooltip [tooltip]="'Zobrazit seznam'" class="app-cursor-pointer"></i>
-</a>
+<button mat-icon-button  (click)="changeView('list')" [class.active]="state.calendarView === 'list'" [matTooltip]="'Zobrazit seznam' | translate">
+  <mat-icon>{{ config.icons.view_list }}</mat-icon>
+</button>
 
-<a routerLink="/result">
-  <i mz-icon-mdi [icon]="'table-large'" mz-tooltip [tooltip]="'Zobrazit v tabulce'" class="app-cursor-pointer"></i>
-</a>
+<button mat-icon-button  routerLink="/result" [matTooltip]="'Zobrazit tabulku' | translate">
+  <mat-icon>{{ config.icons.view_table }}</mat-icon>
+</button>

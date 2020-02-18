@@ -1,4 +1,16 @@
-<mz-modal [fixedFooter]="true">
+<h1 mat-dialog-title>{{ 'Edit pages' | translate }}</h1>
+<div mat-dialog-content>
+  <mat-form-field *ngFor="let p of pages">
+    <input matInput [id]="'p_'+p.index" [(ngModel)]="p.label" size="5">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="ok()">OK</button>
+  <button mat-button (click)="cancel()">{{'button.close' | translate}}</button>
+</div>
+
+
+<!-- <mz-modal [fixedFooter]="true">
   <mz-modal-header>
     {{'Edit pages' | translate}}. 
   </mz-modal-header>
@@ -17,4 +29,4 @@
     <button mz-button [flat]="true" (click)="ok()">OK</button>
     <button mz-button [flat]="true" mz-modal-close>{{'button.close' | translate}}</button>
   </mz-modal-footer>
-</mz-modal>
+</mz-modal> -->

@@ -6,8 +6,6 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../../../app.state';
 import {AppService} from '../../../app.service';
 
-import * as $ from 'jquery';
-
 @Component({
   selector: 'app-calendar-month',
   templateUrl: './calendar-month.component.html',

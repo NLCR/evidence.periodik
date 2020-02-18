@@ -40,13 +40,12 @@
 }
 
 
-// set mdi icon
-@mixin set-mdi-icon($selector, $character-code, $size, $valign) {
-  &:#{$selector} {
-    content: unquote("\"\\#{$character-code}\"");
-    font: normal normal normal #{$size}px/1 "Material Design Icons";
-    vertical-align: $valign;
-  }
+// set icon size
+@mixin setIcon($size, $color: inherit) {
+  font-size: #{$size}px;
+  height: #{$size}px;
+  width: #{$size}px;
+  color: $color;
 }
 
 

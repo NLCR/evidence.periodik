@@ -3,15 +3,15 @@
 app-navbar {
   .mat-toolbar {
     height: $app-navbar-height;
-    background-color: $primary-color;
+    background-color: $app-primary-color;
 
     a {
       color: $app-navbar-font-color;
     }
 
     .brand-logo {
+      @extend .app-font-light;
       font-size: 1.8rem;
-      font-family: 'Roboto-Condensed-Light';
       position: inherit;
       margin-right: 20px;
 
@@ -22,16 +22,15 @@ app-navbar {
 
     .app-fx-left {
       app-search-bar {
-        .app-search-bar-wrapper {
-          max-width: $app-search-bar-width;
+        .app-search-bar-container {
+          border-color: $app-color-white;
+          max-width: $app-search-bar-max-width;
         }
       }
     }
 
     .app-fx-right {
       text-align: right;
-      font-family: 'Roboto-Condensed';
-      font-size: 1rem;
 
       span {
         padding: 0 10px;

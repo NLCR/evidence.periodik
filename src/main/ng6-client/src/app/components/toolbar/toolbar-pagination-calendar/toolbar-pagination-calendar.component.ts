@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 import {AppState} from '../../../app.state';
 
@@ -18,7 +19,8 @@ export class ToolbarPaginationCalendarComponent implements OnInit {
     
     constructor(
         public state: AppState,
-        private datePipe: DatePipe) {}
+        private datePipe: DatePipe,
+        public config: AppConfiguration) {}
 
     ngOnInit() {
       this.setMonth();

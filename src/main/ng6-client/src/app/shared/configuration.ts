@@ -14,4 +14,5 @@ export class Configuration {
   mutations: string[];
   znak_oznaceni_vydani: string[];
   test: boolean;
+  icons: {[key: string]:string};
 }

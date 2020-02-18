@@ -1,33 +1,42 @@
-<div class="app-calendar-day-content" 
-     [class.app-disabled]="isOtherMonth()" 
-     [class.app-calendar-day-special-holiday]="special.type == 'svatek'" 
-     [class.app-calendar-day-special-event]="special.type == 'udalost'">
-  <div *ngIf="special.type" class="app-calendar-day-content-title left" mz-tooltip [tooltip]="special.title" [position]="'top'">
-    <span>{{day | date: 'dd'}}</span>
-  </div>
-  <div *ngIf="!special.type" class="app-calendar-day-content-title left">
-    {{day | date: 'dd'}}
-  </div>
-  <div class="app-calendar-day-content-menu right">
-    <a id="{{day | date: 'MMdd'}}">
-       <i mz-icon-mdi [icon]="'dots-vertical'"></i>
-    </a>
-    <mz-dropdown [id]="'calendar-menu'" [constrainWidth]="false" [dropdownButtonId]="day | date: 'MMdd'">
-      <mz-dropdown-item><a href="javascript:void(0)">{{'button.add_specimen' | translate}}</a></mz-dropdown-item>
-      <mz-dropdown-item><a href="javascript:void(0)">{{'button.add_background' | translate}}</a></mz-dropdown-item>
-      <mz-dropdown-item><a href="javascript:void(0)">{{'button.delete_all_mutations' | translate}}</a></mz-dropdown-item>
-    </mz-dropdown>
-  </div>
-  <div class="clearfix"></div>
-  <div *ngFor="let e of issues; let idx = index" class="app-calendar-day-content-item">
-    <div *ngIf="idx < 3" [class]="'app-state-'+e.state" [routerLink]="['/issue', e.id]">
-      {{e.cislo}} {{e.mutace}} {{'record.publication.' + e.vydani | translate}}
-      <span *ngIf="e.exemplare" class="app-count-ex right app-cursor-pointer" mz-tooltip [tooltip]="'calendar.tooltip.specimen_count' | translate" [position]="'top'">{{e.exemplare.length}}</span>
-      <span *ngIf="e.digitalizovano" class="right"><i mz-icon-mdi [icon]="'credit-card-scan'" [size]="'22'" mz-tooltip [tooltip]="'calendar.tooltip.digitized' | translate" [position]="'top'"></i></span>
+<div class="app-calendar-day-content" [class.app-disabled]="isOtherMonth()"
+  [class.app-calendar-day-special-holiday]="special.type == 'svatek'"
+  [class.app-calendar-day-special-event]="special.type == 'udalost'">
+  <div fxLayout="row">
+    <div fxFlex>
+      <div *ngIf="special.type" class="app-calendar-day-content-title">
+        <span [matTooltip]="special.title" matTooltipPosition="above">{{day | date: 'dd'}}</span>
+      </div>
+      <div *ngIf="!special.type" class="app-calendar-day-content-title">
+        {{day | date: 'dd'}}
+      </div>
     </div>
-    <div *ngIf="idx == 3" class="app-btn-show-more right-align">
-      <a [routerLink]="['/calendar', id, 'list']" mz-tooltip [tooltip]="'calendar.tooltip.show_all_issues' | translate">
-        <i mz-icon-mdi [icon]="'link-variant'" [size]="'20'"></i> <span>{{issues.length - 3}}</span> {{'calendar.next_issues' | translate}}
+    <div fxFlexAlign="right" class="app-calendar-day-content-menu">
+      <a [matMenuTriggerFor]="menu">
+        <mat-icon>{{ config.icons.more_vert }}</mat-icon>
+      </a>
+      <mat-menu #menu="matMenu" [id]="'calendar-menu'">
+        <button mat-menu-item>{{ 'button.add_specimen' | translate }}</button>
+        <button mat-menu-item>{{ 'button.add_background' | translate }}</button>
+        <button mat-menu-item>{{ 'button.delete_all_mutations' | translate }}</button>
+      </mat-menu>
+    </div>
+  </div>
+  <div *ngFor="let e of issues; let idx = index" class="app-calendar-day-content-item">
+    <div fxLayout="row" *ngIf="idx < 3" [class]="'app-state-'+e.state" [routerLink]="['/issue', e.id]">
+      <div fxFlex class="app-fx-left">
+        {{ e.cislo }} {{ e.mutace }} {{ 'record.publication.' + e.vydani | translate }}
+      </div>
+      <div fxFlexAlign="right">
+        <span *ngIf="e.exemplare" class="app-count-ex right app-cursor-pointer" [matTooltip]="'calendar.tooltip.specimen_count' | translate" matTooltipPosition="above">{{ e.exemplare.length }}</span>
+        <span *ngIf="e.digitalizovano" class="right" [matTooltip]="'calendar.tooltip.digitized' | translate" matTooltipPosition="above">
+          <mat-icon>{{ config.icons.digitized }}</mat-icon>
+        </span>
+      </div>
+    </div>
+    <div *ngIf="idx == 3" class="app-btn-show-more">
+      <a [routerLink]="['/calendar', id, 'list']" [matTooltip]="'calendar.tooltip.show_all_issues' | translate">
+        <mat-icon>{{ config.icons.link }}</mat-icon> <span>{{ issues.length - 3 }}</span>
+        {{ 'calendar.next_issues' | translate }}
       </a>
     </div>
   </div>

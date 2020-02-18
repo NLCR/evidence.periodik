@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MzToastService } from 'ngx-materialize';
 import { AppService } from 'src/app/app.service';
 import { AppState } from 'src/app/app.state';
 import { User } from 'src/app/models/user';
@@ -17,7 +16,6 @@ export class AdminComponent implements OnInit {
   user: User = new User();
 
   constructor(
-    private toastService: MzToastService,
     private service: AppService,
     public state: AppState) {
   }
@@ -43,9 +41,9 @@ export class AdminComponent implements OnInit {
       console.log(res);
       this.loading = false;
       if (res['error']) {
-        this.toastService.show(res['error'], 4000, 'red');
+        //this.toastService.show(res['error'], 4000, 'red');
       } else {
-        this.toastService.show('Uživatel správně uložen', 4000, 'green');
+        //this.toastService.show('Uživatel správně uložen', 4000, 'green');
         this.load();
       }
     });

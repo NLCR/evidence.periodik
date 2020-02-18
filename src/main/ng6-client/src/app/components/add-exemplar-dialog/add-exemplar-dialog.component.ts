@@ -1,5 +1,4 @@
 import {Component, OnInit, Inject} from '@angular/core';
-import {MzBaseModal, MzToastService, } from 'ngx-materialize';
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
 import {Issue} from '../../models/issue';
@@ -11,13 +10,13 @@ import { Router } from '@angular/router';
   templateUrl: './add-exemplar-dialog.component.html',
   styleUrls: ['./add-exemplar-dialog.component.scss']
 })
-export class AddExemplarDialogComponent extends MzBaseModal {
+export class AddExemplarDialogComponent {
 
 
-  public options: Pickadate.DateOptions = {
+ /*  public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
     formatSubmit: 'yyyymmdd',
-  };
+  }; */
 
   state: AppState;
   service: AppService;
@@ -39,9 +38,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
 
 
   constructor(
-    private router: Router,
-    private toastService: MzToastService) {
-    super();
+    private router: Router) {
   }
 
   ngOnInit() {
@@ -97,10 +94,10 @@ export class AddExemplarDialogComponent extends MzBaseModal {
         this.service.saveIssue(this.issue).subscribe(res => {
           //console.log(res);
           if (res['error']) {
-            this.toastService.show(res['error'], 4000, 'red');
+            //this.toastService.show(res['error'], 4000, 'red');
           } else {
-            this.modalComponent.closeModal();
-            this.toastService.show('Saved!!', 2000, 'green');
+            //this.modalComponent.closeModal();
+            //this.toastService.show('Saved!!', 2000, 'green');
           }
         });
         break;
@@ -111,10 +108,10 @@ export class AddExemplarDialogComponent extends MzBaseModal {
             //console.log(res);
 
             if (res['error']) {
-              this.toastService.show(res['error'], 4000, 'red');
+              //this.toastService.show(res['error'], 4000, 'red');
             } else {
               this.saved = true;
-              this.modalComponent.closeModal();
+              //this.modalComponent.closeModal();
             }
           });
         break;
@@ -131,7 +128,7 @@ export class AddExemplarDialogComponent extends MzBaseModal {
   }
 
   editSvazek(carovy_kod: string) {
-    this.modalComponent.closeModal();
+    //this.modalComponent.closeModal();
     this.router.navigate(['/svazek', carovy_kod]);
   }
 }

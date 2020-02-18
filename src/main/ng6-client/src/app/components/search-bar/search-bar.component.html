@@ -1,10 +1,9 @@
-<div class="app-search-bar-wrapper">
-  <div class="input-field">
-    <input autocapitalize="off"  type="search"
-           [(ngModel)]="state.q"
-           [placeholder]="'searchbox.placeholder' | translate"
-           (keyup.enter)="search()">
-  </div>
-  <mat-icon class="app-mat-icon-search app-cursor-pointer" (click)="search()">search</mat-icon>
-  <mat-icon class="app-mat-icon-close app-cursor-pointer" (click)="search()">close</mat-icon>
+<div fxFlex class="app-search-bar-container">
+	<a (click)="search()" [matTooltip]="'searchbox.search' | translate">
+		<mat-icon>{{ config.icons.search }}</mat-icon>
+	</a>
+	<input type="text" [(ngModel)]="state.q" [placeholder]="'searchbox.placeholder' | translate" (keyup.enter)="search()" />
+	<a (click)="clearQuery()" [matTooltip]="'searchbox.delete_query' | translate">
+		<mat-icon>{{ config.icons.clear }}</mat-icon>
+	</a>
 </div>

@@ -4,7 +4,6 @@ import { AppState } from 'src/app/app.state';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Md5 } from 'ts-md5';
-import { MzToastService } from 'ngx-materialize';
 
 @Component({
   selector: 'app-password-dialog',
@@ -19,7 +18,6 @@ export class PasswordDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<PasswordDialogComponent>,
-    private toastService: MzToastService,
     private formBuilder: FormBuilder,
     public state: AppState,
     private service: AppService) { }
@@ -46,12 +44,12 @@ export class PasswordDialogComponent implements OnInit {
     this.loading = true;
     this.service.resetHeslo(data).subscribe(resp => {
       if (resp.error) {
-        this.toastService.show('heslo.reset_heslo_error', 4000, 'red');
+        //this.toastService.show('heslo.reset_heslo_error', 4000, 'red');
         this.error = resp.error;
         this.loading = false;
       } else {
         this.loading = false;
-        this.toastService.show('heslo.reset_heslo_success', 4000, 'green');
+        //this.toastService.show('heslo.reset_heslo_success', 4000, 'green');
         this.dialogRef.close();
       }
     });

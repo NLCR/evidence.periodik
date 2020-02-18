@@ -1,4 +1,11 @@
-<ul class="pagination">
+<mat-paginator 
+  [length]="100"
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>
+
+
+<!-- <ul class="pagination">
   <li class="disabled">
     <a (click)="prev()">
       <i mz-icon-mdi [icon]="'chevron-left'" mz-tooltip [tooltip]="'result.pagination.previous_page' | translate" class="app-cursor-pointer"></i>
@@ -15,4 +22,4 @@
       <i mz-icon-mdi [icon]="'chevron-right'" mz-tooltip [tooltip]="'result.pagination.next_page' | translate" class="app-cursor-pointer"></i>
     </a>
   </li>
-</ul>
+</ul> -->

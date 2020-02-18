@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import {MzBaseModal} from 'ngx-materialize';
 
 @Component({
   selector: 'app-confirm-dialog',
   templateUrl: './confirm-dialog.component.html',
   styleUrls: ['./confirm-dialog.component.scss']
 })
-export class ConfirmDialogComponent  extends MzBaseModal {
+export class ConfirmDialogComponent {
 
   caption: string;
   text: string;
@@ -19,13 +18,12 @@ export class ConfirmDialogComponent  extends MzBaseModal {
   
   ok(){
     this.confirmed = true;
-    this.modalComponent.closeModal();
+    //this.modalComponent.closeModal();
   }
   
   cancel(){
     this.confirmed = false;
-    this.modalComponent.closeModal();
-    
+    //this.modalComponent.closeModal();
   }
 
 }

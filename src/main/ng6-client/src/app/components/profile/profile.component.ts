@@ -5,7 +5,6 @@ import { Md5 } from 'ts-md5';
 import { AppService } from 'src/app/app.service';
 import { MatDialog } from '@angular/material';
 import { PasswordDialogComponent } from 'src/app/components/password-dialog/password-dialog.component';
-import { MzToastService } from 'ngx-materialize';
 
 @Component({
   selector: 'app-profile',
@@ -17,7 +16,6 @@ export class ProfileComponent implements OnInit {
   user: User;
 
   constructor(
-    private toastService: MzToastService,
     public dialog: MatDialog,
     public state: AppState,
     private service: AppService
@@ -31,9 +29,9 @@ export class ProfileComponent implements OnInit {
 
     this.service.saveUser(this.user).subscribe(resp => {
       if (resp.error) {
-        this.toastService.show(resp['error'], 4000, 'red');
+        //this.toastService.show(resp['error'], 4000, 'red');
       } else {
-        this.toastService.show('Uživatel správně uložen', 4000, 'green');
+        //this.toastService.show('Uživatel správně uložen', 4000, 'green');
       }
     });
 

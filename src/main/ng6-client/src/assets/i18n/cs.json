@@ -1,4 +1,5 @@
 {
+  "dummy": "",
   "app": {
     "title": "Evidence periodik",
     "title1": "Evidence",
@@ -9,30 +10,45 @@
     "issue": "editace výtisk",
     "titul": "editace meta titulu"
   },
-  "navbar": {
+  "page": {
     "home": "Domovská stánka",
+    "meta_titles": "Metatituly",
+    "volume": "Svazek",
     "add_record": "Vložit záznam",
-    "login": "Přihlášení",
+    "administration": "Administrace",
+    "login": "Přihlásit",
     "logout": "Odhlásit"
   },
   "searchbox": {
-    "placeholder": "Hledání v evidenci periodik"
+    "placeholder": "Hledání v evidenci periodik",
+    "search": "Hledej",
+    "delete_query": "Odstranit dotaz"
   },
+  "desc": {
+    "records": "záznamů",
+    "specimens": "exemplářů",
+    "mutations": "mutací",
+    "owners": "vlastníků",
+    "digitized": "digitalizováno",
+    "atribut": "názvy",
+    "hodnota": "hodnota"
+  },
+
+
   "formatvdk":{
     "CISLO": "Číslo (3)", 
     "MESIC": "Měsíc(e) číslem(y) (1-155)",
     "MESIC_SLOVA":"Měsíc(e) slovy (LED-DUB)"
-
   },
   "record": {
     "meta_title": "Meta název",
     "name_title_page": "Název na titulní straně",
     "subname_title_page": "Podnázev na titulní straně",
     "time_publication": "Čas vydání",
-    "titul": "Titul",
-    "mutation": "Mutace",
-    "mutace": "Mutace",
-    "date_publication": "Datum vydání",
+    "titul": "titul",
+    "mutation": "mutace",
+    "mutace": "mutace",
+    "date_publication": "datum",
     "znak_oznaceni_vydani": "Označení vydání",
     "oznaceni": "Označení mutačního vydání (hvězdičky)",
     "popis_oznaceni_vydani": "Popis označení mutace",
@@ -46,14 +62,14 @@
     "publication": {
       "": " ",
       "empty": "bez určení",
-      "placeholder": "Vydání",
+      "placeholder": "vydání",
       "morning": "Ranní",
       "midday": "Polední",
       "afternoon": "Odpolední",
       "evening": "Večerní",
       "special": "Zvláštní"
     },
-    "pages_count": "Počet stran",
+    "pages_count": "počet stran",
     "lost_pages": "Poškozené/Chybějicí strany",
     "pages_missing": "Chybějicí strany",
     "pages_damaged": "Poškozené strany",
@@ -91,7 +107,7 @@
     },
     "year": "Rok",
     "volume": "Ročník",
-    "number": "Číslo",
+    "number": "číslo",
     "second_number": "Druhé číslo",
     "state_desc": "Stav - popis",
     "ownership": "Vlastnictví",
@@ -144,13 +160,6 @@
     "pagination": {
       "previous_page": "Předchozí stánka",
       "next_page": "Další stánka"
-    },
-    "badge": {
-      "issues": "záznamů",
-      "specimens": "exemplářů",
-      "mutations": "mutací",
-      "owners": "vlastníků",
-      "digitized": "digitalizováno"
     }
   },
   "calendar": {
@@ -197,9 +206,5 @@
     "Friday": "pátek",
     "Saturday": "sobota",
     "Sunday": "neděle"
-  },
-  "desc": {
-    "atribut": "Názvy",
-    "hodnota": "Hodnota"
   }
 }

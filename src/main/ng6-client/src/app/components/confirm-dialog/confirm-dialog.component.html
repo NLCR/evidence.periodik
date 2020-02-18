@@ -1,4 +1,13 @@
-<mz-modal [fixedFooter]="true">
+<h1 mat-dialog-title>{{ caption | translate }}</h1>
+<div mat-dialog-content>
+  {{ text | translate: param }}
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="ok()">OK</button>
+  <button mat-button (click)="cancel()">{{ 'button.close' | translate }}</button>
+</div>
+
+<!-- <mz-modal [fixedFooter]="true">
   <mz-modal-header>
     <h3>{{caption | translate}}</h3>
   </mz-modal-header>
@@ -11,4 +20,4 @@
     <button mz-button [flat]="true" (click)="ok()">OK</button>
     <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{'button.close' | translate}}</button>
   </mz-modal-footer>
-</mz-modal>
+</mz-modal> -->

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {MzBaseModal, MzToastService} from 'ngx-materialize';
 
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
@@ -10,7 +9,7 @@ import {Issue} from '../../models/issue';
   templateUrl: './edit-pages.component.html',
   styleUrls: ['./edit-pages.component.scss']
 })
-export class EditPagesComponent extends MzBaseModal {
+export class EditPagesComponent {
   state: AppState;
   service: AppService;
 
@@ -21,7 +20,6 @@ export class EditPagesComponent extends MzBaseModal {
   public saved: boolean = false;
 
   constructor() {
-    super();
   }
 
   ngOnInit() {
@@ -48,7 +46,7 @@ export class EditPagesComponent extends MzBaseModal {
       this.issue.pages.push(p);
     });
     this.saved = true;
-    this.modalComponent.closeModal();
+    //this.modalComponent.closeModal();
   }
 
 }

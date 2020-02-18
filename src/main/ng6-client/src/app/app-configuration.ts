@@ -33,6 +33,10 @@ import { Configuration } from './shared/configuration';
         return this.config.mutations;
     }
 
+    public get icons() {
+        return this.config.icons;
+    }
+
     /**
      * List the files holding section configuration in assets/configs folder
      * ['search'] will look for /assets/configs/search.json

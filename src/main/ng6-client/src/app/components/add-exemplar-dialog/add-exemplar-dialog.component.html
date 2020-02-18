@@ -1,4 +1,92 @@
-<mz-modal [fixedFooter]="true">
+<h1 mat-dialog-title>
+  <ng-container [ngSwitch]="editType">
+    <span *ngSwitchCase="'new'">{{'Add exemplar' | translate}}</span>
+    <span *ngSwitchCase="'duplicate'">{{'Duplicate exemplar' | translate}}</span>
+    <span *ngSwitchDefault>{{'Edit exemplar' | translate}}</span>
+  </ng-container>
+</h1>
+<div mat-dialog-content>
+  <div>
+    ISSUE: {{issue.nazev}}, {{issue.datum_vydani | date: 'dd.MM.yyyy'}}
+  </div>
+  <div>
+    <ng-container [ngSwitch]="editType">
+      <span *ngSwitchCase="'new'">
+        <mat-form-field>
+          <mat-label>{{ 'record.ownership' | translate }}</mat-label>
+          <mat-select [id]="'owner'" [name]="'owner'" [(ngModel)]="exemplar.vlastnik">
+            <mat-option *ngFor="let owner of state.owners" [value]="owner.name">{{owner.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input mat-input [placeholder]="'record.barcode' | translate" [id]="'carovy_kod'" [name]="'carovy_kod'" [(ngModel)]="exemplar.carovy_kod" type="text">
+        </mat-form-field>
+      </span>
+      <span *ngSwitchCase="'duplicate'">
+        <div>
+          Exemplar: {{exemplar.vlastnik}} {{exemplar.carovy_kod}}
+        </div>
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <mat-checkbox [(ngModel)]="onspecial" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox>
+      </span>
+      <span *ngSwitchDefault>
+        Exemplar: {{ exemplar.vlastnik }} <a (click)="editSvazek(exemplar.carovy_kod)">{{ exemplar.carovy_kod }}</a>&#160;
+        <a (click)="editSvazek(exemplar.carovy_kod)" [matTooltip]="'Editovat svazek' | translate" [matTooltipPosition]="above">
+          <mat-icon>all_inbox</mat-icon>
+        </a>
+      </span>
+    </ng-container>
+  </div>
+
+  <div>
+    <mat-form-field>
+      <mat-label>{{ 'Select stavy' | translate }}</mat-label>
+      <mat-select [id]="'stav'" [name]="'stav'" [(ngModel)]="exemplar.stav">
+        <mat-option *ngFor="let stav of state.stavy" [value]="stav">
+          {{ 'record.StavIssue.' + stav | translate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [placeholder]="'record.state_com' | translate" [id]="'stav_popis'" [name]="'stav_popis'" [(ngModel)]="exemplar.stav_popis" type="text">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [placeholder]="'record.signatura' | translate" id="signatura" name="signatura" [(ngModel)]="exemplar.signatura" type="text" autocomplete="on">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [placeholder]="'record.oznaceni' | translate" [id]="'oznaceni'" [name]="'oznaceni'" [(ngModel)]="exemplar.oznaceni" type="text" #box (keyup)="filterOznaceni(box.value)">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [placeholder]="'record.popis_oznaceni_vydani' | translate" [id]="'popis_oznaceni_vydani'" [name]="'popis_oznaceni_vydani'" [(ngModel)]="exemplar.popis_oznaceni_vydani" type="text">
+    </mat-form-field>
+    <div *ngIf="showPages()">
+      {{'record.lost_pages' | translate}}
+      <ul class="app-pages">
+        <li *ngFor="let page of pagesRange" class="app-page-item">
+          <mat-checkbox [id]="'pg'+page.label" [(ngModel)]="page.sel">{{ page.label }}</mat-checkbox>
+        </li>
+      </ul>
+    </div>
+  </div> 
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="ok()">OK</button>
+  <button mat-button (click)="cancel()">{{ 'button.cancel' | translate }}</button>
+</div>
+
+
+
+
+<!-- <mz-modal [fixedFooter]="true">
   <mz-modal-header>
     <ng-container [ngSwitch]="editType">
       <span *ngSwitchCase="'new'">{{'Add exemplar' | translate}}</span>
@@ -43,11 +131,6 @@
                  id="end_date" name="end_date"
                  type="text" />
         </mz-datepicker-container>
-        <!--
-        <mz-input-container>
-          <input mz-input [label]="'record.number' | translate" [id]="'start_cislo'" [name]="'start_cislo'" [(ngModel)]="duplicate_start_cislo" type="number">
-        </mz-input-container>
-        -->
         
     <mz-checkbox-container>
       <input mz-checkbox
@@ -69,6 +152,9 @@
           <option *ngFor="let stav of state.stavy" [value]="stav">{{'record.StavIssue.' + stav | translate}}</option>
         </select>
       </mz-select-container>
+
+
+
       <mz-input-container>
         <input mz-input [label]="'record.state_com' | translate" [id]="'stav_popis'" [name]="'stav_popis'" [(ngModel)]="exemplar.stav_popis" type="text">
       </mz-input-container>
@@ -103,4 +189,4 @@
       <button mz-button [flat]="true" (click)="ok()">OK</button>
       <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{'button.cancel' | translate}}</button>
   </mz-modal-footer>
-</mz-modal>
+</mz-modal> -->

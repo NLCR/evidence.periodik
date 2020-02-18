@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {MzBaseModal, MzToastService, } from 'ngx-materialize';
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
 import {Titul} from '../../models/titul';
@@ -9,15 +8,13 @@ import {Titul} from '../../models/titul';
   templateUrl: './add-titul-dialog.component.html',
   styleUrls: ['./add-titul-dialog.component.scss']
 })
-export class AddTitulDialogComponent extends MzBaseModal {
+export class AddTitulDialogComponent {
 
   state: AppState;
   service: AppService;
   titul: Titul = new Titul();
 
-  constructor(
-    private toastService: MzToastService) {
-    super();
+  constructor() {
   }
 
   ngOnInit() {
@@ -28,10 +25,10 @@ export class AddTitulDialogComponent extends MzBaseModal {
       console.log(res);
 
       if (res['error']) {
-        this.toastService.show(res['error'], 4000, 'red');
+        //this.toastService.show(res['error'], 4000, 'red');
       } else {
         this.service.getTituly().subscribe();
-        this.modalComponent.closeModal();
+        //this.modalComponent.closeModal();
       }
     });
   }

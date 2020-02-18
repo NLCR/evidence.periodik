@@ -1,56 +1,37 @@
-<app-toolbar></app-toolbar>
-<div class="app-metatitul-wrapper grey lighten-5">
-  <div class="row">
-    <div class="col s4">
-      <div class="row">
-        <ul>
-          <li *ngFor="let t of state.tituly">
-            <a (click)="loadTitul(t)">{{t.meta_nazev}}</a>
-          </li>
-        </ul>
-      </div>
-    </div>
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-    <div class="col s8">
-      <div class="row" *ngIf="titul">
-        <mz-progress *ngIf="loading" [backgroundClass]="'blue lighten-4'" [progressClass]="'blue'"></mz-progress>
-        <form (ngSubmit)="save()" #userForm="ngForm">
-          <mat-card>
-            <mat-card-content>
-
-              <mat-form-field>
-                <input matInput [(ngModel)]="titul.meta_nazev" name="meta_nazev" id="meta_nazev"
-                  [placeholder]="'record.meta_title' | translate" required cdkFocusInitial />
-              </mat-form-field>
-
-              <mat-form-field>
-                <input matInput [(ngModel)]="titul.uuid" name="uuid" id="uuid"
-                  [placeholder]="'record.uuid_title' | translate" />
-              </mat-form-field>
-
-              <mat-form-field>
-                <input matInput [(ngModel)]="titul.pocet_stran" name="pocet_stran" id="pocet_stran"
-                  [placeholder]="'record.pages_count' | translate" type="number" />
-              </mat-form-field>
-
-              <mat-form-field>
-                <mat-label>{{'record.periodicita.placeholder' | translate}}</mat-label>
-                <mat-select [(ngModel)]="titul.periodicita" id="periodicita" name="periodicita">
-                  <mat-option *ngFor="let p of state.periods" [value]="p">{{'record.periodicita.' + p | translate}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-
-            </mat-card-content>
-            <mat-card-actions>
-              <button mat-button (click)="newTitul()"
-                type="button">{{'Add new titul' | translate}}</button>
-              <button mat-button  type="submit"
-                [disabled]="!userForm.form.valid">{{'button.save' | translate}}</button>
-            </mat-card-actions>
-
-          </mat-card>
-        </form>
-      </div>
-    </div>
+<div class="app-metatitul-wrapper" fxLayout="row">
+  <div fxFlex="320px" class="app-fx-left">
+    <mat-list role="list">
+      <mat-list-item role="listitem" *ngFor="let t of state.tituly">
+        <a (click)="loadTitul(t)">{{ t.meta_nazev }}</a>
+      </mat-list-item>
+    </mat-list>
   </div>
+  <div fxFlex class="app-fx-right" *ngIf="titul">
+    <form (ngSubmit)="save()" #userForm="ngForm">
+      <div fxLayout="row" fxLayoutGap="16px">
+        <mat-form-field fxFlex>
+          <input matInput [(ngModel)]="titul.meta_nazev" name="meta_nazev" id="meta_nazev" [placeholder]="'record.meta_title' | translate" required cdkFocusInitial />
+        </mat-form-field>
+
+        <mat-form-field fxFlex>
+          <input matInput [(ngModel)]="titul.uuid" name="uuid" id="uuid" [placeholder]="'record.uuid_title' | translate" />
+        </mat-form-field>
+
+        <mat-form-field fxFlex>
+          <input matInput [(ngModel)]="titul.pocet_stran" name="pocet_stran" id="pocet_stran" [placeholder]="'record.pages_count' | translate" type="number" />
+        </mat-form-field>
+
+        <mat-form-field fxFlex>
+          <mat-label>{{ 'record.periodicita.placeholder' | translate }}</mat-label>
+          <mat-select [(ngModel)]="titul.periodicita" id="periodicita" name="periodicita">
+            <mat-option *ngFor="let p of state.periods" [value]="p">{{ 'record.periodicita.' + p | translate }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <button mat-flat-button color="primary" (click)="newTitul()" type="button">{{ 'Add new titul' | translate }}</button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="!userForm.form.valid">{{ 'button.save' | translate }}</button>
+    </form>
+  </div>
+</div>

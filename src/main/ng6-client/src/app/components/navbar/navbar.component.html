@@ -1,6 +1,6 @@
 <mat-toolbar>
   <a routerLink="home" class="brand-logo">
-    <span>{{'app.title1' | translate}}</span> {{'app.title2' | translate}}
+    <span>{{ 'app.title1' | translate }}</span> {{ 'app.title2' | translate }}
     <!-- <span *ngIf="activeRoute() !== ''">- {{'app.' + activeRoute() | translate}}</span> -->
   </a>
   <div fxFlex class="app-fx-left" *ngIf="showSearchBar()">
@@ -8,33 +8,33 @@
   </div>
   <div fxFlex class="app-fx-right">
     <span>
-      <a routerLink="home">{{'navbar.home' | translate}}</a>
+      <a routerLink="home">{{ 'page.home' | translate }}</a>
     </span>
     <span>
-      <a routerLink="titul">Metatituly</a>
+      <a routerLink="titul">{{ 'page.meta_titles' | translate }}</a>
     </span>
     <span>
-      <a routerLink="svazek">Svazek</a>
+      <a routerLink="svazek">{{ 'page.volume' | translate }}</a>
     </span>
     <span>
-      <a routerLink="issue">{{'navbar.add_record' | translate}}</a>
+      <a routerLink="issue">{{ 'page.add_record' | translate }}</a>
     </span>
     <span>
-      <a routerLink="admin">{{'navbar.admin' | translate}}</a>
+      <a routerLink="admin">{{ 'page.administration' | translate }}</a>
     </span>
     <span *ngIf="!state.user">
-      <a (click)="gologin()">{{'navbar.login' | translate}}</a>
+      <a (click)="gologin()">{{ 'page.login' | translate }}</a>
     </span>
     <ng-container *ngIf="state.user">
       <span>
         <a routerLink="profile" matTooltip="{{ 'user.profile' | translate }}">
           <!-- {{ state.user.nazev }} -->
-          <mat-icon>person</mat-icon>
+          <mat-icon>{{ config.icons.person }}</mat-icon>
           Novak
         </a>
       </span>
       <span>
-        <a (click)="logout()">{{'navbar.logout' | translate}}</a>
+        <a (click)="logout()">{{ 'page.logout' | translate }}</a>
       </span>
     </ng-container>
     <span *ngIf="currLang !== 'en'">

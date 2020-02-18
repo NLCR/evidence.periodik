@@ -9,11 +9,11 @@ import { Issue } from '../../models/issue';
 import { Titul } from '../../models/titul';
 import { Exemplar } from '../../models/exemplar';
 import { AddTitulDialogComponent } from '../add-titul-dialog/add-titul-dialog.component';
-import { MzModalService } from 'ngx-materialize';
 import { AddVydaniDialogComponent } from '../add-vydani-dialog/add-vydani-dialog.component';
 import { EditPagesComponent } from 'src/app/components/edit-pages/edit-pages.component';
 import { DateAdapter } from '@angular/material/core';
 import { isArray } from 'util';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-issue',
@@ -28,21 +28,20 @@ export class IssueComponent implements OnInit {
 
   initial_pages = 0;
 
-  public options: Pickadate.DateOptions = {
+  /* public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
     formatSubmit: 'yyyy-mm-dd',
-    //editable: true,
     selectYears: true,
     clear: null
-  };
+  }; */
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private modalService: MzModalService,
     private route: ActivatedRoute,
     private router: Router,
     public state: AppState,
-    private service: AppService) {
+    private service: AppService,
+    public config: AppConfiguration) {
   }
 
   onSubmit() {
@@ -145,9 +144,9 @@ export class IssueComponent implements OnInit {
   setTitul() {
     if (this.titul_idx.toString() === '-1') {
       //New titul dialog
-      this.modalService.open(AddTitulDialogComponent,
+      /* this.modalService.open(AddTitulDialogComponent,
         { 'state': this.state, 'service': this.service }
-      );
+      ); */
     } else {
       this.state.currentIssue.titul = this.state.tituly[this.titul_idx];
       this.state.currentIssue.id_titul = this.state.currentIssue.titul.id;
@@ -221,16 +220,16 @@ export class IssueComponent implements OnInit {
   }
 
   addPub() {
-    this.modalService.open(AddVydaniDialogComponent,
+   /*  this.modalService.open(AddVydaniDialogComponent,
       { 'issue': this.state.currentIssue, 'state': this.state, 'service': this.service }
-    );
+    ); */
 
   }
 
 
   editPages() {
 
-    const a = this.modalService.open(EditPagesComponent,
+    /* const a = this.modalService.open(EditPagesComponent,
       { 'issue': this.state.currentIssue, 'state': this.state, 'service': this.service }
     );
     a.onDestroy(() => {
@@ -238,7 +237,7 @@ export class IssueComponent implements OnInit {
       if (mm.saved) {
         this.setPagesRange();
       }
-    });
+    }); */
   }
 
   formatPages() {

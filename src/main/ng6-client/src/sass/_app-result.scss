@@ -2,7 +2,8 @@
 
 .app-result-wrapper {
   @extend .app-full-wrapper;
-  @import "app-result-item";
-  
-  padding: 0.75rem;
+  background-color: $app-gray-1;
+  padding: $app-gap;
+
+  @import "app-result-table";
 }

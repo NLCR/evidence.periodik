@@ -2,8 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppState } from 'src/app/app.state';
 import { AppService } from 'src/app/app.service';
 import { Titul } from 'src/app/models/titul';
-import { MzToastService } from 'ngx-materialize';
-import { load } from '@angular/core/src/render3/instructions';
+//import { load } from '@angular/core/src/render3/instructions';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -20,7 +19,6 @@ export class MetatitulComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private toastService: MzToastService,
     private service: AppService,
     public state: AppState) {
   }
@@ -58,9 +56,9 @@ export class MetatitulComponent implements OnInit, OnDestroy {
       console.log(res);
       this.loading = false;
       if (res['error']) {
-        this.toastService.show(res['error'], 4000, 'red');
+        //this.toastService.show(res['error'], 4000, 'red');
       } else {
-        this.toastService.show('Titul správně uložen', 4000, 'green');
+        //this.toastService.show('Titul správně uložen', 4000, 'green');
         this.service.getTituly().subscribe();
       }
     });

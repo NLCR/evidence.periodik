@@ -5,7 +5,6 @@ import { AppService } from '../../app.service';
 
 import { Issue } from '../../models/issue';
 import { Titul } from '../../models/titul';
-import { MzModalService, MzToastService } from 'ngx-materialize';
 import { CloneDialogComponent } from '../clone-dialog/clone-dialog.component';
 import { CloneParams } from '../../models/clone-params';
 import { AddVdkExComponent } from '../add-vdk-ex/add-vdk-ex.component';
@@ -13,6 +12,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { Router } from '@angular/router';
 import { Exemplar } from 'src/app/models/exemplar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-toolbar',
@@ -26,8 +26,7 @@ export class ToolbarComponent implements OnInit {
     public state: AppState,
     public service: AppService,
     private router: Router,
-    private toastService: MzToastService,
-    private modalService: MzModalService) { }
+    public config: AppConfiguration) { }
 
   ngOnInit() {
   }
@@ -53,9 +52,9 @@ export class ToolbarComponent implements OnInit {
       if (res === 'error') {
         alert('Invalid data!');
       } else if (res['error']) {
-        this.toastService.show(res['error'], 4000, 'red');
+        //this.toastService.show(res['error'], 4000, 'red');
       } else {
-        this.toastService.show('Saved!!', 2000, 'green');
+        //this.toastService.show('Saved!!', 2000, 'green');
       }
     });
   }
@@ -83,21 +82,21 @@ export class ToolbarComponent implements OnInit {
       if (res === 'error') {
         alert('Invalid data!');
       } else if (res['error']) {
-        this.toastService.show(res['error'], 4000, 'red');
+        //this.toastService.show(res['error'], 4000, 'red');
       } else {
-        this.toastService.show('Saved!!', 2000, 'green');
+        //this.toastService.show('Saved!!', 2000, 'green');
       }
     },
       (error: HttpErrorResponse) => {
         console.log(error);
-        this.toastService.show(error.message, 4000, 'red');
+        //this.toastService.show(error.message, 4000, 'red');
       });
 
   }
 
   deleteRecord() {
 
-    const a = this.modalService.open(ConfirmDialogComponent,
+    /* const a = this.modalService.open(ConfirmDialogComponent,
       {
         caption: 'modal.delete_record.caption',
         text: 'modal.delete_record.text',
@@ -114,13 +113,13 @@ export class ToolbarComponent implements OnInit {
         this.service.deleteIssue(this.state.currentIssue).subscribe(res => {
           console.log(res);
           if (res['error']) {
-            this.toastService.show(res['error'], 4000, 'red');
+            //this.toastService.show(res['error'], 4000, 'red');
           } else {
             this.router.navigate(['/result']);
           }
         });
       }
-    });
+    }); */
 
   }
 
@@ -133,12 +132,12 @@ export class ToolbarComponent implements OnInit {
     cloneParams.start_year = parseInt(this.state.currentIssue.rocnik);
     cloneParams.periodicity = this.state.currentIssue.periodicita;
 
-    this.modalService.open(CloneDialogComponent, { 'state': this.state, 'service': this.service, 'params': cloneParams });
+    //this.modalService.open(CloneDialogComponent, { 'state': this.state, 'service': this.service, 'params': cloneParams });
   }
 
 
 
   addVDKEx() {
-    this.modalService.open(AddVdkExComponent, { 'state': this.state, 'service': this.service });
+    //this.modalService.open(AddVdkExComponent, { 'state': this.state, 'service': this.service });
   }
 }

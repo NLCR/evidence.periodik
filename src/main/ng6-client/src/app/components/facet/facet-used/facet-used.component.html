@@ -1,41 +1,32 @@
-<mz-collection>
-  <mz-collection-header>
-    {{'facet.title.active_filters' | translate}}
-    <i mz-icon-mdi [icon]="'close-circle'" [class]="'app-clean-mg app-cursor-pointer'" 
-       mz-tooltip [tooltip]="'facet.tooltip.delete_all_filters' | translate" [position]="'top'"
-       (click)="removeAll()"></i>
-  </mz-collection-header>
-  
-  <mz-collection-item *ngIf="state.q && state.q !== ''">
-    <span class="app-cursor-pointer" mz-tooltip 
-          [tooltip]="'facet.tooltip.delete_this_filter' | translate" [position]="'top'"
-          (click)="state.removeQuery()">
-      <i mz-icon-mdi [icon]="'check'" [class]="'app-clean-mg'"></i>
-      <i mz-icon-mdi [icon]="'close'" [class]="'app-clean-mg'"></i> 
-      <span>{{state.q}}</span>
-    </span>
-  </mz-collection-item>
-  
-  <mz-collection-item *ngFor="let filter of state.filters; let idx= index">
-    <span class="app-cursor-pointer" mz-tooltip 
-          [tooltip]="'facet.tooltip.delete_this_filter' | translate" [position]="'top'"
-          (click)="remove(idx)">
-      <i mz-icon-mdi [icon]="'check'" [class]="'app-clean-mg'"></i>
-      <i mz-icon-mdi [icon]="'close'" [class]="'app-clean-mg'"></i>
-      {{'facet.' + filter.field | translate}} : 
-      <span *ngIf="filter.field !== 'stav'">{{filter.value}}</span>
-      <span *ngIf="filter.field === 'stav'">{{'record.StavIssue.' + filter.value | translate}}</span>
-    </span>
-  </mz-collection-item>
-  
-  <mz-collection-item *ngIf="state.filterByDate">
-    <span class="app-cursor-pointer" mz-tooltip 
-          [tooltip]="'facet.tooltip.delete_this_filter' | translate" [position]="'top'"
-          (click)="state.removeDateFilter()">
-      <i mz-icon-mdi [icon]="'check'" [class]="'app-clean-mg'"></i>
-      <i mz-icon-mdi [icon]="'close'" [class]="'app-clean-mg'"></i>
-      {{'facet.date' | translate}} : 
-      <span>{{start_year}} - {{end_year}}</span>
-    </span>
-  </mz-collection-item>
-</mz-collection>
+<mat-list role="list" class="app-list-used-facet" *ngIf="(state.q && state.q !== '') || state.filters.length > 0 || state.filterByDate">
+  <h3 mat-subheader>
+    {{ 'facet.title.active_filters' | translate }}
+    <a [matTooltip]="'facet.tooltip.delete_all_filters' | translate" matTooltipPosition="above" (click)="removeAll()">
+      <mat-icon>close</mat-icon>
+    </a>
+  </h3>
+  <mat-list-item role="listitem" *ngIf="state.q && state.q !== ''">
+    <a [matTooltip]="'facet.tooltip.delete_this_filter' | translate" matTooltipPosition="above" (click)="state.removeQuery()">
+      <mat-icon>close</mat-icon>
+    </a>
+    {{ 'facet.title.active_filters' | translate }}:&#160;
+    <span class="app-font-bold">{{ state.q }}</span>
+  </mat-list-item>
+
+  <mat-list-item role="listitem" *ngFor="let filter of state.filters; let idx= index">
+    <a [matTooltip]="'facet.tooltip.delete_this_filter' | translate" matTooltipPosition="above" (click)="remove(idx)">
+      <mat-icon>close</mat-icon>
+    </a>
+    {{ 'facet.' + filter.field | translate }}:&#160;
+    <span class="app-font-bold" *ngIf="filter.field !== 'stav'">{{ filter.value }}</span>
+    <span class="app-font-bold" *ngIf="filter.field === 'stav'">{{ 'record.StavIssue.' + filter.value | translate }}</span>
+  </mat-list-item>
+
+  <mat-list-item role="listitem"  *ngIf="state.filterByDate">
+    <a [matTooltip]="'facet.tooltip.delete_this_filter' | translate" matTooltipPosition="above" (click)="state.removeDateFilter()">
+      <mat-icon>close</mat-icon>
+    </a>
+    {{ 'facet.date' | translate }}:&#160;
+    <span class="app-font-bold">{{ start_year }}</span>&#160;-&#160;<span class="app-font-bold">{{ end_year }}</span>
+  </mat-list-item>
+</mat-list>

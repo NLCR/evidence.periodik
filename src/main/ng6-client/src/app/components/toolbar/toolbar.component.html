@@ -1,50 +1,45 @@
-<div class="app-toolbar-wrapper app-toolbar-calendar valign-wrapper" *ngIf="showCalendar()">
-  <div class="app-row-count">
+<mat-toolbar class="app-toolbar-calendar" *ngIf="showCalendar()">
+  <div fxFlex="320px">
     <app-toolbar-count></app-toolbar-count>
-  </div><!--/.app-row-count -->
-  <div class="app-row-nav row app-clean-mg">
-    <div class="col s3 app-clean-pd">
-      <app-toolbar-pagination-calendar></app-toolbar-pagination-calendar>
-    </div><!--/.col -->
-    <div class="col s6 center-align">
-      <span *ngIf="state.currentTitul">{{state.currentTitul.meta_nazev}}</span>
-    </div><!--/.col -->
-    <div class="col s3 app-clean-pd right-align">
-      <app-toolbar-nav-views></app-toolbar-nav-views>
-    </div><!--/.col -->
-  </div><!--/.app-row-nav -->
-</div><!--/.app-toolbar-wrapper-calendar -->
+  </div>
+  <div fxFlex class="app-fx-pagination">
+    <app-toolbar-pagination-calendar></app-toolbar-pagination-calendar>
+  </div>
+  <div fxFlex class="app-fx-title">
+    <span *ngIf="state.currentTitul" class="app-font-bold">{{ state.currentTitul.meta_nazev }}</span>
+  </div>
+  <div fxFlex class="app-fx-views">
+    <app-toolbar-nav-views></app-toolbar-nav-views>
+  </div>
+</mat-toolbar>
 
 
-<div class="app-toolbar-wrapper app-toolbar-result valign-wrapper" *ngIf="showResult()">
-  <div class="app-row-count">
+<mat-toolbar class="app-toolbar-result" *ngIf="showResult()">
+  <div fxFlex="320px" class="app-fx-left">
     <app-toolbar-count></app-toolbar-count>
-  </div><!--/.app-row-count -->
-  <div class="app-row-nav row app-clean-mg">
-    <div class="col s12 app-clean-pd">
-      <app-toolbar-pagination-result></app-toolbar-pagination-result>
-    </div><!--/.col -->
-  </div><!--/.app-row-nav -->
-</div><!--/.app-toolbar-wrapper -->
+  </div>
+  <div fxFlex class="app-fx-right">
+    <!-- <app-toolbar-pagination-result></app-toolbar-pagination-result> -->
+    Meta nazev: <span class="app-font-bold">Lidové noviny - Vydání Brno</span>
+  </div>
+</mat-toolbar>
 
 
-<div class="app-toolbar-wrapper app-toolbar-issue" *ngIf="showIssue()">
-  <div class="row">
-    <div class="col s4">
-      <span>Issue: {{state.currentTitul.meta_nazev}} {{state.currentIssue.datum_vydani | date: "dd/MM/yyyy"}}</span>
-      &#160;&#160;&#160;
-<a routerLink="/result" >
-  <i mz-icon-mdi [icon]="'table-large'" mz-tooltip [tooltip]="'Zobrazit tabulku'" class="app-cursor-pointer"></i>
-</a>
-    </div><!--/.col -->
-    <div class="col s8 right-align">
-      <button mz-button (click)="saveRecord()" [disabled]="!state.logged">{{'button.save' | translate}}</button>
-      <button mz-button (click)="openCloneDialog()" [disabled]="!state.logged">{{'button.clone' | translate}}</button>
-      <button mz-button (click)="deleteRecord()" [disabled]="!state.logged">{{'button.delete' | translate}}</button>
-      <button mz-button (click)="addVDKEx()" [disabled]="!state.logged">{{'add from VDK' | translate}}</button>
-    </div><!--/.col -->
-  </div><!--/.row -->
-</div><!--/.app-toolbar-wrapper -->
+<mat-toolbar class="app-toolbar-issue" *ngIf="showIssue()">
+  <div fxFlex class="app-fx-left">
+    <span>{{ 'Issue' | translate }}: {{ state.currentTitul.meta_nazev }} {{ state.currentIssue.datum_vydani | date: "dd/MM/yyyy" }}</span>
+    <span class="app-pipe"></span>
+    <a routerLink="/result" [matTooltip]="'Zobrazit tabulku' | translate">
+      <mat-icon>{{ config.icons.view_table }}</mat-icon>
+    </a>
+  </div>
+  <div fxFlex class="app-fx-right">
+    <button mat-flat-button (click)="saveRecord()" [disabled]="!state.logged">{{ 'button.save' | translate }}</button>
+    <button mat-flat-button (click)="openCloneDialog()" [disabled]="!state.logged">{{ 'button.clone' | translate }}</button>
+    <button mat-flat-button (click)="deleteRecord()" [disabled]="!state.logged">{{ 'button.delete' | translate }}</button>
+    <button mat-flat-button (click)="addVDKEx()" [disabled]="!state.logged">{{ 'add from VDK' | translate }}</button>
+  </div>      
+</mat-toolbar>
 
 
 <div class="app-toolbar-wrapper app-toolbar-issue" *ngIf="showAddRecord()">

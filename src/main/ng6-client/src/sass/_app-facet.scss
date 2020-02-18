@@ -1,105 +1,56 @@
 // --- FACET ---
 
 .app-facet-wrapper {
-  @extend .app-full-wrapper;
+  @extend .app-full-wrapper, .app-fx-facet;
   @import "app-facet-used";
-  //@extend .app-container;
   
-  position: relative;
-  background-color: color("shades", "white");
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  z-index: 997;
+
   
-  .collapsible {
-    margin: 0 0 0px 0;
-    border: none !important;
-    @extend .z-depth-0;
+  .mat-accordion {
+    .mat-expansion-panel {
+      @extend .app-clean-shadow, .app-clean-mg, .app-clean-radius;
+      @include set-border(bottom, 1, solid, #{$app-gray-3});
 
-    & > li {
-      padding: 15px 0 !important;
-      @include set-border(bottom, 1, solid, $app-grey-l-2);
-    }
-
-    .collapsible-header {
-      position: relative;
-      color: $app-grey-d-4;
-      background-color: transparent;
-      padding: 0 20px;
-      min-height: 1.6rem;
-      line-height: 1.6rem;
-      border: none;
-      @extend .app-font-bold;
-
-      .mdi-chevron-down, .mdi-chevron-left, .mdi-close-circle {
-        position: absolute;
-        top: 0;
-        right: 10px;
-        line-height: 1.6rem;
+      .mat-list {
+        margin-top: -7px;
       }
 
-      .mdi-chevron-down {
-        display: none;
-      }
-      .mdi-chevron-left {
-        display: block;
-      }
-      &.active {
-        .mdi-chevron-down {
-          display: block;
-        }
-        .mdi-chevron-left {
-          display: none;
-        }
-      }
-    }
-    
-    .collapsible-body {
-      @extend .app-clean-pd;
-      border: none;
-
-      .collection-item {
-        background-color: transparent;
-        border: none;
-        padding: 0 20px;
-      }
-
-      .app-row {
-          .mdi {
-          &:before {
-            font-size: 18px;
+      &.app-facet-date {
+        .mat-expansion-panel-body {
+          .mat-form-field-wrapper {
+            margin-bottom: -1.25em;
           }
-          &.mdi-close {
-            &:before {
-              display: none !important; 
+
+          .app-fx-end {
+            align-items: flex-end;
+
+            .mat-icon {
+              color: $app-primary-color-darker;
             }
           }
-          &.mdi-check {
-            color: $primary-color;
-          }
-        }
-        display: table;
-        width: 100%;
-        a {
-          display: table-cell;
-          width: 90%;
-          vertical-align: top;
-          color: $app-grey-d-1;
-          &:hover {
-            color: $app-grey-d-4;
-          }
-        }
-        span {
-          display: table-cell;
-          width: 10%;
-          text-align: right;
-          vertical-align: top;
-          color: $app-grey-d-1;
-          
-        }
-        &.selected {
-          @extend .app-font-bold;
         }
       }
     }
+  }
+
+  .mat-list {
+    @extend .app-clean-pd;
+
+    &:not(.app-list-used-facet) {
+      .mat-list-item {
+        .mat-list-item-content {
+          @extend .app-clean-pd;
+
+          span {
+            color: $app-gray-5;
+            font-size: 14px;
+            margin-left: 5px;
+          }
+        } 
+      }
+      
+    }
+
+    @extend .app-list-view-facet;
   }
 }

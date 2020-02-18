@@ -1,11 +1,6 @@
 // --- TODO ---
 // Tyto styly patri do jinych souboru
 
-//Componenta result-table
-.app-table-cell-ex{
-  
-  width: 30px !important;
-}
 
 tr.mat-row{
   height: fit-content !important;
@@ -27,29 +22,7 @@ tr.mat-row td textarea:focus {
   box-shadow: none!important;
 }
 
-.app-rotate {
-  font-size: .85em;
-  height: 30px !important;
-  white-space: nowrap;
-}
-.app-rotate > div{
-  width: 30px !important;
-  /* Safari */
-  -webkit-transform: rotate(-90deg);
 
-  /* Firefox */
-  -moz-transform: rotate(-90deg);
-
-  /* IE */
-  -ms-transform: rotate(-90deg);
-
-  /* Opera */
-  -o-transform: rotate(-90deg);
-
-  /* Internet Explorer */
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-  
-}
 
 //ikonky za input ukazujici validace
 //Componenta issue

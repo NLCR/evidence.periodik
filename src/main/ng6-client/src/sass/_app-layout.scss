@@ -6,17 +6,18 @@ app-root {
   width: 100%;
   height: 100%;
   display: block;
+  @extend .app-clean-mg;
 }
 
 body {
-  font-family: 'Roboto-Condensed-Regular';
+  font-family: 'Roboto Condensed', sans-serif !important;
 }
 
 
 app-root {
   main {
     width: 100%;
-    height: calc(100% - #{$navbar-height});
+    height: calc(100% - #{$app-navbar-height});
     
     app-home {
       display: block;
@@ -24,14 +25,7 @@ app-root {
       height: 100%;
       
       @import "app-home";
-    }
-    
-    app-login {
-      display: block;
-      width: 100%;
-      height: 100%;
-      
-      @import "app-login";
+      @import "app-result-item";
     }
     
     app-add-record {
@@ -72,7 +66,7 @@ app-root {
     
     app-facet {
       display: block;
-      width: $app-facet-width;
+      width: $app-facet-col-width;
       height: 100%;
       float: left;
 
@@ -85,6 +79,14 @@ app-root {
       height: 100%;
       
       @import "app-svazek";
+    }
+
+    app-metatitul {
+      @import "app-metatitul";
+    }
+
+    app-login {    
+      @import "app-login";
     }
   }  
 }

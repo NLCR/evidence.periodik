@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AppState} from '../../app.state';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-search-bar',
@@ -11,7 +12,8 @@ export class SearchBarComponent implements OnInit {
 
   constructor(
     private router: Router,
-    public state: AppState) {}
+    public state: AppState,
+    public config: AppConfiguration) {}
 
   ngOnInit() {
   }

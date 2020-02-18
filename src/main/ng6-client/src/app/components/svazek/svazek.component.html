@@ -1,7 +1,6 @@
-<div class="app-svazek-wrapper grey lighten-4" (click)="closeInfoOverlay()">
-  
+<mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+<div class="app-svazek-wrapper" (click)="closeInfoOverlay()">
   <div class="app-container-left">
-    
     <div class="app-table-wrapper app-left-top">
       <table mat-table [dataSource]="dsSvazek" #table>   
         <!-- Atribut -->
@@ -9,12 +8,12 @@
           <th mat-header-cell *matHeaderCellDef>{{'desc.atribut' | translate}}</th>
           <td mat-cell *matCellDef="let element">{{ 'record.' + element | translate}}</td>
           <td mat-footer-cell *matFooterCellDef colspan="2">
-            <button mz-button (click)="readClick()">
-              (Znovu) načíst celý svazek
+            <button mat-flat-button color="primary" (click)="readClick()">
+              {{ '(Znovu) načíst celý svazek' | translate }}
             </button>
-            <button mz-button (click)="save()" [disabled]="!state.logged">
-              <i *ngIf="!state.logged" mz-icon-mdi [icon]="'cancel'" [size]="'18px'" mz-tooltip [tooltip]="'Tato akce není povolená, nejste přihlášen.'" [position]="'top'"></i>
-              Uložit celý svazek {{dataChanged ? '!!' : ''}}
+            <button mat-flat-button color="primary" (click)="save()" [disabled]="!state.logged">
+              <mat-icon *ngIf="!state.logged" [matTooltip]="'Tato akce není povolená, nejste přihlášen.' | translate" matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
+              {{ 'Uložit celý svazek' | translate }} {{dataChanged ? '!!' : ''}}
             </button> 
           </td>
         </ng-container>
@@ -33,16 +32,16 @@
               <ng-container *ngSwitchCase="'mutace'">
                 <mat-form-field>
                   <input type="text" matInput [(ngModel)]="state.currentVolume.mutace" [matAutocomplete]="auto2">
-                  <i mz-icon-mdi [icon]="'pencil'"></i>
+                  <mat-icon>{{ config.icons.pencil }}</mat-icon>
                 </mat-form-field>
-                  <mat-autocomplete #auto2="matAutocomplete">
+                <mat-autocomplete #auto2="matAutocomplete">
                   <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
                 </mat-autocomplete>
               </ng-container>
               <ng-container *ngSwitchCase="'znak_oznaceni_vydani'">
                 <mat-form-field>
                   <input type="text" matInput [(ngModel)]="state.currentVolume.znak_oznaceni_vydani" [matAutocomplete]="auto">
-                  <i mz-icon-mdi [icon]="'pencil'"></i>
+                  <mat-icon>{{ config.icons.pencil }}</mat-icon>
                 </mat-form-field>
                 <mat-autocomplete #auto="matAutocomplete">
                   <mat-option *ngFor="let oznaceni of oznaceni_list; let idx=index;" [value]="oznaceni.name">{{oznaceni.name}}</mat-option>
@@ -56,29 +55,39 @@
 
 
               <ng-container *ngSwitchCase="'datum_od'">
-                <mz-datepicker-container>
+                <mat-form-field floatLabel="never">
+                  <input matInput [matDatepicker]="picker" [placeholder]="'Choose a date' | translate" [(ngModel)]="state.currentVolume[element]" id="datum_od" name="datum_od">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <!-- <mz-datepicker-container>
                   <input mz-datepicker
                          [options]="calOptions"
                          [(ngModel)]="state.currentVolume[element]"
                          id="datum_od" name="datum_od"
                          type="text" />
-                </mz-datepicker-container>
+                </mz-datepicker-container> -->
               </ng-container>
               <ng-container *ngSwitchCase="'datum_do'">
-                <mz-datepicker-container>
+                <mat-form-field floatLabel="never">
+                  <input matInput [matDatepicker]="picker" [placeholder]="'Choose a date' | translate" [(ngModel)]="state.currentVolume[element]" id="datum_do" name="datum_do">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <!-- <mz-datepicker-container>
                   <input mz-datepicker
                          [options]="calOptions"
                          [(ngModel)]="state.currentVolume[element]"
                          id="datum_do" name="datum_do"
                          type="text" />
-                </mz-datepicker-container>
+                </mz-datepicker-container> -->
               </ng-container>
 
 
               <ng-container *ngSwitchDefault>
                 <mat-form-field>
                   <input type="text" matInput [(ngModel)]="state.currentVolume[element]">
-                  <i mz-icon-mdi [icon]="'pencil'"></i>
+                  <mat-icon>{{ config.icons.pencil }}</mat-icon>
                 </mat-form-field>
               </ng-container>
             </ng-container>
@@ -96,12 +105,12 @@
       <table mat-table [dataSource]="state.currentVolume.periodicita">   
         <!-- Vydani (den v tydnu) -->
         <ng-container matColumnDef="den">
-          <th mat-header-cell *matHeaderCellDef>vychází</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'vychází'  | translate }}</th>
           <td mat-cell *matCellDef="let element">{{ 'days.' + element.den | translate}}</td>
           <td mat-footer-cell *matFooterCellDef colspan="7">
-            <button mz-button (click)="generateClick()"[disabled]="!state.logged">
-              <i *ngIf="!state.logged" mz-icon-mdi [icon]="'cancel'" [size]="'18px'" mz-tooltip [tooltip]="'Tato akce není povolená, nejste přihlášen.'" [position]="'top'"></i>
-              Vygenerovat / vygenerovat znovu
+            <button mat-flat-button color="primary" (click)="generateClick()"[disabled]="!state.logged">
+              <mat-icon *ngIf="!state.logged" [matTooltip]="'Tato akce není povolená, nejste přihlášen.' | translate" matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
+              {{ 'Vygenerovat / vygenerovat znovu' | translate }}
             </button>
           </td>
         </ng-container>
@@ -109,7 +118,7 @@
         <!-- Number exist -->
         <ng-container matColumnDef="active">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>číslo existuje</div>
+            <div>{{ 'číslo existuje' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox [(ngModel)]="element.active"></mat-checkbox>
@@ -119,7 +128,7 @@
 
         <!-- Vydani -->
         <ng-container matColumnDef="vydani">
-          <th mat-header-cell *matHeaderCellDef>vydání</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'vydání' | translate }}</th>
           <td mat-cell *matCellDef="let element" >
             <mat-form-field *ngIf="element.active">
               <mat-select [(ngModel)]="element.vydani">
@@ -133,7 +142,7 @@
         <!-- Pocet stranek -->
         <ng-container matColumnDef="pocet_stran">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>počet stran</div>
+            <div>{{ 'počet stran' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element" class="app-edit-text">
             <mat-form-field *ngIf="element.active" class="app-short-text">
@@ -146,7 +155,7 @@
         <!-- This is attachement -->
         <ng-container matColumnDef="isPriloha">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>toto je příloha</div>
+            <div>{{ 'toto je příloha' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.active" [(ngModel)]="element.isPriloha"></mat-checkbox>
@@ -157,12 +166,12 @@
         <!-- Attachement name -->
         <ng-container matColumnDef="nazev_prilohy">
           <th mat-header-cell *matHeaderCellDef>
-            <div>název přílohy</div>
+            <div>{{ 'název přílohy' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element" class="app-edit-text">
             <mat-form-field *ngIf="element.active && element.isPriloha">
               <input type="text" matInput [(ngModel)]="element.nazev_prilohy">
-              <i mz-icon-mdi [icon]="'pencil'"></i>
+              <mat-icon>{{ config.icons.pencil }}</mat-icon>
             </mat-form-field>
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
@@ -171,10 +180,12 @@
         <!-- Button-->
         <ng-container matColumnDef="button">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>vložit další vydání</div>
+            <div>{{ 'vložit další vydání' | translate}}</div>
           </th>
           <td mat-cell *matCellDef="let element; let idx=index">
-            <i *ngIf="element.active" mz-icon-mdi [icon]="'plus-circle'" (click)="addVydani(element, idx)" mz-tooltip [tooltip]="'Vložit další vydání'" [position]="'top'"></i>
+            <a *ngIf="element.active" (click)="addVydani(element, idx)" [matTooltip]="'Vložit další vydání' | translate" matTooltipPosition="above">
+              <mat-icon>{{ config.icons.add_circle }}</mat-icon>  
+            </a>
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>
@@ -187,74 +198,87 @@
   </div><!--/.app-container-left -->
 
   <div class="app-container-right">
-    <mz-progress *ngIf="loading" [backgroundClass]="'blue lighten-4'" [progressClass]="'blue'"></mz-progress>
     <div class="app-table-wrapper app-right">
       <table mat-table [dataSource]="dsIssues">
         <!-- Edit issue -->
         <ng-container matColumnDef="edit_issue">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>editovat issue</div>
+            <div>{{ 'editovat issue' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <i mz-icon-mdi [icon]="'newspaper'" mz-tooltip [tooltip]="'Editovat issue'" [position]="'top'" (click)="viewIssue(element.issue)"></i>
+            <a (click)="viewIssue(element.issue)">
+              <mat-icon [matTooltip]="'Editovat issue' | translate" matTooltipPosition="above">{{ config.icons.edit_issue }}</mat-icon>
+            </a>
+          </td>
+          <td mat-footer-cell *matFooterCellDef [attr.colspan]="20">
+            <div class="app-paginator-wrapper">
+              <mat-paginator *ngIf="cislaVeSvazku.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator> 
+            </div>
           </td>
         </ng-container> 
 
         <!-- Date -->
         <ng-container matColumnDef="datum_vydani">
-          <th mat-header-cell *matHeaderCellDef>datum</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'datum' | translate }}</th>
           <td mat-cell *matCellDef="let element">
             {{ element.datum_vydani | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
     
         <!-- Number exist -->
         <ng-container matColumnDef="numExists">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>číslo existuje</div>
+            <div>{{ 'číslo existuje' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox [(ngModel)]="element.numExists"></mat-checkbox>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Add next edition -->
         <ng-container matColumnDef="addNextEdition">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>přidat další vydání</div>
+            <div>{{ 'přidat další vydání' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element; let idx=index">
-            <i mz-icon-mdi [icon]="'plus-circle'" (click)="addIssue(element, idx)" *ngIf="element.numExists" mz-tooltip [tooltip]="'Přidat další výpis'" [position]="'top'"></i>
+            <a (click)="addIssue(element, idx)" *ngIf="element.numExists">
+              <mat-icon [matTooltip]="'Přidat další výpis' | translate" matTooltipPosition="above">{{ config.icons.add_circle }}</mat-icon> 
+            </a>         
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
     
         <!-- Edition number -->
         <ng-container matColumnDef="cislo">
-          <th mat-header-cell *matHeaderCellDef>číslo</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'číslo' | translate }}</th>
           <td mat-cell *matCellDef="let element" class="app-edit-text">
             <mat-form-field *ngIf="element.numExists" class="app-short-text">
               <input type="text" matInput [(ngModel)]="element.cislo">
             </mat-form-field>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Mutation -->
         <ng-container matColumnDef="mutace">
-          <th mat-header-cell *matHeaderCellDef>mutace</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'mutace' | translate }}</th>
           <td mat-cell *matCellDef="let element" class="app-edit-text">
             <mat-form-field *ngIf="element.numExists">
               <input type="text" matInput [(ngModel)]="element.mutace" [matAutocomplete]="auto3">
-              <i mz-icon-mdi [icon]="'pencil'"></i>
+              <mat-icon>{{ config.icons.pencil }}</mat-icon>
             </mat-form-field>
             <mat-autocomplete #auto3="matAutocomplete">
               <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
             </mat-autocomplete>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Edition -->
         <ng-container matColumnDef="vydani">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-edition">vydání</th>
+          <th mat-header-cell *matHeaderCellDef class="app-cell-edition">{{ 'vydání' | translate }}</th>
           <td mat-cell *matCellDef="let element" class="app-cell-edition">
             <mat-form-field *ngIf="element.numExists">
               <mat-select [(ngModel)]="element.vydani">
@@ -262,162 +286,176 @@
               </mat-select>
             </mat-form-field>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- This is attachement -->
         <ng-container matColumnDef="isPriloha">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>toto je příloha</div>
+            <div>{{ 'toto je příloha' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox [(ngModel)]="element.isPriloha" *ngIf="element.numExists"></mat-checkbox>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Attachement name -->
         <ng-container matColumnDef="nazev_prilohy">
           <th mat-header-cell *matHeaderCellDef>
-            <div>název přílohy</div>
+            <div>{{ 'název přílohy' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element" class="app-edit-text">
             <ng-container *ngIf="element.numExists && element.isPriloha">
               <mat-form-field>
                 <input type="text" matInput [(ngModel)]="element.nazev_prilohy">
-                <i mz-icon-mdi [icon]="'pencil'"></i>
+                <mat-icon>{{ config.icons.pencil }}</mat-icon>
               </mat-form-field>
             </ng-container>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Page number -->
         <ng-container matColumnDef="pocet_stran">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>počet stran</div>
+            <div>{{ 'počet stran' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element" class="app-edit-text">
             <mat-form-field *ngIf="element.numExists" class="app-short-text">
               <input type="text" matInput [(ngModel)]="element.pocet_stran">
             </mat-form-field>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Mutation edition -->
         <ng-container matColumnDef="znak_oznaceni_vydani">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>mutační vydání</div>
+            <div>{{ 'mutační vydání' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element" class="app-edit-text">
             <mat-form-field *ngIf="element.numExists" class="app-short-text">
               <input type="text" matInput [(ngModel)]="element.znak_oznaceni_vydani">
             </mat-form-field>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Destroyed pages -->
         <ng-container matColumnDef="destroyedPages">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>poškozené strany</div>
+            <div>{{ 'poškozené strany' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.destroyedPages"
             #dsp (mouseenter)="viewPS(element, 'destroyedPages', dsp, infoPopup)"></mat-checkbox>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Degradated -->
         <ng-container matColumnDef="degradated">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>degradované</div>
+            <div>{{ 'degradované' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.degradated"
             #deg (mouseenter)="viewPS(element, 'degradated', deg, infoPopup)"></mat-checkbox>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Missing pages -->
         <ng-container matColumnDef="missingPages">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>chybí strany</div>
+            <div>{{ 'chybí strany' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.missingPages"
             #mp (mouseenter)="viewPS(element, 'missingPages', mp, infoPopup)"></mat-checkbox>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Erroneous paging -->
         <ng-container matColumnDef="erroneousPaging">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>chybná paginace</div>
+            <div>{{ 'chybná paginace' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousPaging"
             #ep (mouseenter)="viewPS(element, 'erroneousPaging', ep, infoPopup)"></mat-checkbox>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Erroneous date -->
         <ng-container matColumnDef="erroneousDate">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>chybné datum</div>
+            <div>{{ 'chybné datum' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousDate"
             #ed (mouseenter)="viewPS(element, 'erroneousDate', ed, infoPopup)"></mat-checkbox>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Erroneous numbering -->
         <ng-container matColumnDef="erroneousNumbering">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>chybné číslování</div>
+            <div>{{ 'chybné číslování' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousNumbering"
             #en (mouseenter)="viewPS(element, 'erroneousNumbering', en, infoPopup)"></mat-checkbox>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Wrongly bound -->
         <ng-container matColumnDef="wronglyBound">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>chybně svázáno</div>
+            <div>{{ 'chybně svázáno' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.wronglyBound"
             #wb (mouseenter)="viewPS(element, 'wronglyBound', wb, infoPopup)"></mat-checkbox>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Censored -->
         <ng-container matColumnDef="censored">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>cenzurováno</div>
+            <div>{{ 'cenzurováno' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.censored"
             #cz (mouseenter)="viewPS(element, 'censored', cz, infoPopup)"></mat-checkbox>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
 
         <!-- Poznamka -->
         <ng-container matColumnDef="poznamka">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>poznámka</div>
+            <div>{{ 'poznámka' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element" >
-            <button mat-icon-button #poznEl *ngIf="element.numExists"  style="background: none;"
-            (click)="viewPozn(element, poznPopup, poznEl)" >
-            <i mz-icon-mdi [icon]="element.poznamka === '' ? 'information-outline' : 'information'" mz-tooltip [tooltip]="'Editovat poznámku'" [position]="'top'" 
-            ></i></button>
+            <a #poznEl *ngIf="element.numExists" (click)="viewPozn(element, poznPopup, poznEl)" >
+              <mat-icon [matTooltip]="'Editovat poznámku' | translate" matTooltipPosition="above">{{ element.poznamka === '' ? config.icons.info_outline : 'config.icons.info' }}</mat-icon>
+            </a>
           </td>
+          <td mat-footer-cell *matFooterCellDef></td>
         </ng-container>
     
         <tr mat-header-row *matHeaderRowDef="issueColumns; sticky: true" class="app-header-row-right"></tr>
         <tr mat-row *matRowDef="let row; columns: issueColumns;" [style.background]="rowColor(row)"></tr>
+        <tr mat-footer-row *matFooterRowDef="issueColumns; sticky: true"></tr>
       </table>
-      <mat-paginator *ngIf="cislaVeSvazku.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
+      <!-- <mat-paginator *ngIf="cislaVeSvazku.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator> -->
     </div>
   </div>
 </div>
@@ -425,30 +463,27 @@
 <ng-template #infoPopup>
   <mat-card class='popover-card'>
     <mat-card-content>
-      <div><b>Popis: </b><input [(ngModel)]="popText" /></div>
+      <div><b>{{ 'Popis' | translate }}: </b><input [(ngModel)]="popText" /></div>
       <div *ngIf="popShowPages">
         {{'record.pages_' + editingProp | translate}}
         <ul class="app-pages">
           <li *ngFor="let page of pagesRange" class="app-page-item">
-            <mz-checkbox-container>
-              <input mz-checkbox [label]="page.label" type="checkbox" [id]="'pg'+page.label"
-                     [(ngModel)]="page.sel" />
-            </mz-checkbox-container>
+            <mat-checkbox [id]="'pg'+page.label" [(ngModel)]="page.sel">{{ page.label }}</mat-checkbox>
           </li>
         </ul>
       </div>
     </mat-card-content>
-    <button mz-button  *ngIf="popShowPages" (click)="updatePop()">update</button>
-    <button mz-button (click)="closePop()">close</button>
+    <button mat-button ngIf="popShowPages" (click)="updatePop()">{{ 'update' | translate}}</button>
+    <button mat-button (click)="closePop()">{{ 'update' | translate}}</button>
   </mat-card>
 </ng-template>
 
 <ng-template #poznPopup>
   <mat-card class='popover-card'>
     <mat-card-content>
-      <div><b>Poznámka: </b><input [(ngModel)]="poznText" /></div>
+      <div><b>{{ 'Poznámka' | translate }}: </b><input [(ngModel)]="poznText" /></div>
     </mat-card-content>
-    <button mz-button (click)="updatePoznamka()">update</button>&#160;
-    <button mz-button (click)="closePop()">close</button>
+    <button mat-button (click)="updatePoznamka()">{{ 'update' | translate}}</button>
+    <button mat-button (click)="closePop()">{{ 'update' | translate}}</button>
   </mat-card>
 </ng-template>

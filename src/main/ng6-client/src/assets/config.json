@@ -32,5 +32,39 @@
   "vydani": ["", "morning", "midday", "afternoon", "evening", "special"],
   "mutations": ["Brno", "Praha"],
   "znak_oznaceni_vydani": ["*", "-"],
-  "test": false          
+  "test": false,
+  "icons": {
+    "search": "search",
+    "clear": "clear",
+    "person": "person",
+    "pencil": "create",
+    "info_outline": "info_outline",
+    "info": "info",
+    "check_circle": "check_circle",
+    "cancel": "cancel",
+    "block": "block",
+    "add_circle": "add_circle",
+    "add": "add",
+    "more_vert": "more_vert",
+    "open_in_new": "open_in_new",
+    "library_add": "library_add",
+    "arrow_left": "keyboard_arrow_left",
+    "arrow_right": "keyboard_arrow_right",
+    "link": "link",
+    
+    "duplicate": "file_copy",
+    "missing_page": "error",
+    "uncontrolled": "visibility_off",
+    "damaged_document": "flash_on",
+    "complete_degradation": "remove_circle",
+    "edit_issue": "chrome_reader_mode",
+    "edit_pack": "layers",
+    "delete_specimen": "delete",
+
+    "view_month": "insert_invitation",
+    "view_list": "view_list",
+    "view_table": "table_chart",
+    "digitized": "all_out"
+  }       
 }
+

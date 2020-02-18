@@ -13,7 +13,7 @@ import { Md5 } from 'ts-md5';
 })
 export class LoginComponent implements OnInit {
   
-  @ViewChild('loginuser') loginuser: any;
+  //@ViewChild('loginuser') loginuser: any;
   error = false;
   loginHttpError = false;
   loading = false;
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
 
   focusu(){
     setTimeout(() => {
-        this.loginuser.nativeElement.focus();
+        //this.loginuser.nativeElement.focus();
       }, 100);
   }
 

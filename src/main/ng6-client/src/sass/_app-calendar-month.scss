@@ -12,10 +12,10 @@
     width: 14.28%;
     height: 25px;
     margin: 0px;
-    color: $app-grey-d-1;
+    color: $app-gray-6;
     padding: 0.3rem 0.5rem;
     font-size: 16px;
-    @include set-border(right, 1, solid, #{$app-grey-l-2});
+    @include set-border(right, 1, solid, $app-gray-3);
 
     &::first-letter {
       text-transform: uppercase;
@@ -30,7 +30,7 @@
     width: 14.28%;
     height: 16.6666%;
     margin: 0px;
-    @include set-border(right-bottom, 1, solid, #{$app-grey-l-2});
+    @include set-border(right-bottom, 1, solid, $app-gray-3);
 
     &:nth-child(7n) {
       border-right: none !important;
@@ -44,7 +44,7 @@
 
       .app-calendar-day-content-title {
         font-size: 1rem;
-        color: $app-grey-d-2;
+        color: $app-gray-7;
         padding: 0.3rem 0.5rem;
       }
       
@@ -90,7 +90,18 @@
             background-color: $app-color-white;
             margin-top: 0.15rem;
             margin-left: 0.5rem;
+            padding-top: 1px;
           }
+        }
+
+        .app-fx-left {
+          padding-top: 1px;
+        }
+
+        .mat-icon {
+          @include setIcon(18);
+          margin-left: 2px;
+          vertical-align: bottom;
         }
 
         // set states
@@ -101,10 +112,10 @@
         .app-btn-show-more {
           a {
             margin-right: $app-container;
-            color: $app-grey-d-4;
+            color: $app-gray-9;
             
             &:hover {
-              color: lighten($app-grey-d-4, 50%); 
+              color: lighten($app-gray-9, 50%); 
             }
             
             span {
@@ -116,15 +127,15 @@
       
       
       .app-calendar-day-content-menu {
-        .mdi-dots-vertical {
-          @extend .app-cursor-pointer;
-          color: $app-grey;
+        .mat-icon {
+          color: $app-gray-5;
+          margin-top: 0.3rem;
         }
       }
 
       &.app-disabled {
         .app-calendar-day-content-title {
-          color: $app-grey-l-1;
+          color: $app-gray-4;
         }
       }
     }

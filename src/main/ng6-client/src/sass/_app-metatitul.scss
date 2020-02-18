@@ -1,0 +1,20 @@
+// --- METATITUL ---
+
+.app-metatitul-wrapper {
+  height: 100%;
+  background-color: $app-gray-1;
+
+  .app-fx-left {
+    @extend .app-fx-facet;
+
+    .mat-list {
+      @extend .app-list-view-facet;
+      padding: $app-gap 0;
+    }
+  }
+
+  .app-fx-right {
+    padding: $app-gap;
+    overflow: auto;
+  }
+}

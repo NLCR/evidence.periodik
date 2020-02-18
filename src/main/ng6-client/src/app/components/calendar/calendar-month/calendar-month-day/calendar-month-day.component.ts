@@ -4,6 +4,7 @@ import {Router, ActivatedRoute} from '@angular/router';
 
 import {AppState} from '../../../../app.state';
 import {AppService} from '../../../../app.service';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-calendar-month-day',
@@ -24,7 +25,8 @@ export class CalendarMonthDayComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     public state: AppState,
-    private service: AppService) { }
+    private service: AppService,
+    public config: AppConfiguration) { }
 
   ngOnInit() {
     let id = this.route.snapshot.parent.paramMap.get('id');

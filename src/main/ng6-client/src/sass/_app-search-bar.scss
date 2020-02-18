@@ -1,58 +1,42 @@
 // --- SEARCH BAR ---
 
 app-search-bar {
-  .app-search-bar-wrapper {
-    position: relative;
-    display: inline-block;
-    width: 600px;
-    height: $app-search-bar-height;
-    vertical-align: middle;
-    background-color: color("shades", "white");
-    @include set-border(all, 1, solid, color("shades", "white"));
+  justify-content: center;
+  
+  .app-search-bar-container {
+    background-color: $app-search-bar-bg;
     border-radius: $app-border-radius;
-    box-shadow:  0 2px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 5px 0 rgba(0, 0, 0, 0.05), 0 3px 1px -2px rgba(0, 0, 0, 0.05);
+    height: $app-search-bar-height;
+    color: $app-search-bar-color;
+    max-width: $app-search-bar-max-width;
+    display: flex;
+    align-items: center;
+    border: 1px solid $app-gray-3;
 
-    &:focus, &:hover {
-      @include set-border(all, 1, solid, color("shades", "white"));
-      box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.03);
+    &:focus-within {
+      box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
     }
 
-    .app-mat-icon-search,
-    .app-mat-icon-close {
-      position: absolute;
-      line-height: normal;
-      height: auto;
-      //font-size: inherit;
-      top: 0.6rem;
-      @extend .app-cursor-pointer;
-      color: color("grey", "base");
-    }
-    .app-mat-icon-search {
-      left: 0.8rem;
-    }
-    .app-mat-icon-close {
-      right: 0.8rem;
+    .mat-icon {
+      margin-left: $app-search-bar-icon-gap;
+      margin-right: $app-search-bar-icon-gap;
+      vertical-align: middle;
+      color: $app-primary-color-darker;
+
+      &.app-icon-clear {
+        margin-right: 0 !important;
+      }
     }
 
-    .input-field {
-      padding-right: 3rem;
-      margin-top: 0;
+    input {
+      @extend .app-clean-border, .app-clean-pd, .app-clean-bg, .app-font-family-rc;
+      width: calc(100% - 90px);
+      height: 100%;
+      font-size: $app-search-bar-font-size;
 
-      input[type=search] {
-        height: $app-search-bar-height;
-        line-height: $app-search-bar-height;
-        padding-left: 3rem;
-        border: none !important;
-        width: calc(100% - 4rem);
-
-        &:focus {
-          background-color: transparent;
-          box-shadow: none !important;
-        }
-        &::-ms-clear {
-          display: none; // for IE - not display his display button
-        }
-      }      
+      &:focus {
+        outline: none;
+      }
     }
   }
 }

@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {MzBaseModal, MzToastService} from 'ngx-materialize';
 import {MatSort, MatTableDataSource} from '@angular/material';
-import {NgProgress, NgProgressComponent} from '@ngx-progressbar/core';
 
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
@@ -13,9 +11,9 @@ import {ViewChild} from '@angular/core';
   templateUrl: './add-vdk-ex.component.html',
   styleUrls: ['./add-vdk-ex.component.scss']
 })
-export class AddVdkExComponent extends MzBaseModal {
+export class AddVdkExComponent {
 
-  @ViewChild(NgProgressComponent) progressBar: NgProgressComponent;
+  //@ViewChild(NgProgressComponent) progressBar: NgProgressComponent;
 
   state: AppState;
   service: AppService;
@@ -43,15 +41,13 @@ export class AddVdkExComponent extends MzBaseModal {
   displayedColumns = ['id', 'year', 'volume', 'od', 'do', 'add'];
   dataSource: MatTableDataSource<Issue> = new MatTableDataSource(this.exsFiltered);
 
-  constructor(
-    private toastService: MzToastService) {
-    super();
+  constructor() {
   }
 
   prepare() {
-    if (this.progressBar) {
+    /* if (this.progressBar) {
       this.progressBar.start();
-    }
+    } */
     let ops = {
       format: this.format,
       vlastnik: this.vlastnik,
@@ -62,7 +58,7 @@ export class AddVdkExComponent extends MzBaseModal {
     this.service.prepareVdkEx(this.state.currentIssue, this.url, ops).subscribe(res => {
 
       if (res['error']) {
-        this.toastService.show(res['error'], 4000, 'red');
+        //this.toastService.show(res['error'], 4000, 'red');
       } else {
         this.exs = [];
         //this.exs = res['exs'];
@@ -84,9 +80,9 @@ export class AddVdkExComponent extends MzBaseModal {
       }
 
       this.prepared = true;
-      if (this.progressBar) {
+      /* if (this.progressBar) {
         this.progressBar.complete();
-      }
+      } */
     });
 
   }
@@ -167,7 +163,7 @@ this.indexNext(toIndex);
         ex['add']['start_date'],
         ex['add']['end_date']).subscribe(res => {
           if (res['error']) {
-            this.toastService.show(res['error'], 4000, 'red');
+            //this.toastService.show(res['error'], 4000, 'red');
           } else {
             if (toIndex.length > 1){
               this.indexNext(toIndex.slice(1));

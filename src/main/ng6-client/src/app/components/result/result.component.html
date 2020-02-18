@@ -1,11 +1,8 @@
-<app-toolbar></app-toolbar>
-<app-facet></app-facet>
+<mat-progress-bar *ngIf="!state.searchResults" mode="indeterminate"></mat-progress-bar>
+<app-toolbar *ngIf="state.searchResults"></app-toolbar>
 
-<div class="app-result-wrapper grey lighten-5">
-  <div class="row" *ngIf="state.searchResults">
-    <!--
-    <app-result-item *ngFor="let item of state.searchResults['response']['docs']" [item]="item" class="col s3"></app-result-item>
-    -->
-    <app-results-table></app-results-table>
-  </div>
-</div><!--/.app-results-wrapper -->
+
+<app-facet *ngIf="state.searchResults"></app-facet>
+<div *ngIf="state.searchResults" class="app-result-wrapper">
+  <app-result-table></app-result-table>
+</div>

@@ -8,12 +8,12 @@ import {AppState} from '../../app.state';
 })
 export class FacetComponent implements OnInit {
   
-    public options: Pickadate.DateOptions = {
+ /*    public options: Pickadate.DateOptions = {
         format: 'dd/mm/yyyy',
         formatSubmit: 'yyyymmdd',
         selectMonths: true,
         selectYears: 20
-    };
+    }; */
     
   facets: any; // temporary for facets
   

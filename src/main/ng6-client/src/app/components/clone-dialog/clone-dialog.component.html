@@ -1,6 +1,41 @@
-<mz-modal [fixedFooter]="true">
+<h1 mat-dialog-title>{{ 'modal.clone_options' | translate }}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [matDatepicker]="picker" placeholder="Choose a date">
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>{{ 'record.periodicita.placeholder' | translate }}</mat-label>
+    <mat-select id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita">
+      <mat-option *ngFor="let v of state.periods" [value]="v">{{ 'record.periodicita.' + v | translate }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input [placeholder]="'modal.start_number' | translate" id="start_number" name="start_number" [(ngModel)]="params.start_number" type="text">
+  </mat-form-field>
+  <mat-form-field>
+    <input [placeholder]="'modal.start_year' | translate" id="start_year" name="start_year" [(ngModel)]="params.start_year" type="text">
+  </mat-form-field>
+
+  <mat-checkbox [(ngModel)]="params.onSpecialDays" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="ok()">OK</button>
+  <button mat-button (click)="cancel()">{{ 'button.cancel' | translate }}</button>
+</div>
+
+
+<!-- <mz-modal [fixedFooter]="true">
   <mz-modal-header>
-    {{'modal.clone_options' | translate}}
+    {{ 'modal.clone_options' | translate}}
   </mz-modal-header>
   
   <mz-modal-content>
@@ -26,7 +61,7 @@
     <mz-select-container>
           <select mz-select id="periodicita" name="periodicita" [label]="'record.periodicita.placeholder' | translate" 
                   [(ngModel)]="state.currentIssue.periodicita">
-            <option *ngFor="let v of state.periods" [value]="v">{{'record.periodicita.' + v | translate }}</option>
+            <option *ngFor="let v of state.periods" [value]="v">{{ 'record.periodicita.' + v | translate }}</option>
           </select>
         </mz-select-container>
     
@@ -47,6 +82,6 @@
   
   <mz-modal-footer>
       <button mz-button [flat]="true" (click)="ok()">OK</button>
-      <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{'button.cancel' | translate}}</button>
+      <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{ 'button.cancel' | translate }}</button>
   </mz-modal-footer>
-</mz-modal>
+</mz-modal> -->

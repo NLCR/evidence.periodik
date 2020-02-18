@@ -6,7 +6,6 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../../../app.state';
 import {AppService} from '../../../app.service';
 
-import * as $ from 'jquery';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({

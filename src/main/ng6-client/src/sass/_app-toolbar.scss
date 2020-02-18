@@ -1,112 +1,42 @@
 // --- TOOLBAR ---
 
-.app-toolbar-wrapper {
-  display: flex;
+.mat-toolbar {
+  @include set-border(bottom, 1, solid, #{$app-gray-3});
   height: $app-toolbar-height;
-  @include set-border(bottom, 1, solid, #{$app-grey-l-2});
+  background-color: $app-color-white;
 
-  &.app-toolbar-issue {
-    display: block;
-    line-height: $app-toolbar-height;
-    
-    .row {
-      @extend .app-clean-mg;
-      
-      .col {
-        height: $app-toolbar-height;
-        line-height: $app-toolbar-height;
-        padding: 0 $app-container;
-        
-        &:first-child {
-          span {
-            font-size: 1.2rem;  
-            color: $primary-color;
-          }
-        }
-        
-        .btn {
-          vertical-align: unset;
-        }
-      }
+  &.app-toolbar-issue { 
+    .app-fx-right {
+      text-align: right;
     }
   }
 
-  .app-row-count {
-    padding: 0 $app-container;
-    width: $app-facet-width;
-    flex: none;
-  }
-  
-  .app-row-nav {
-    padding: 0 $app-container;
-    width: 100%;
-    
-    .pagination {
-      @extend .app-clean-mg;
-    }
+  &.app-toolbar-result {
+
   }
 
   &.app-toolbar-calendar {
-    .app-row-nav {
-      .col {
-        &:first-child {
-          .btn {
-            background-color: $app-grey-l-5;
-            @include set-border(all, 1, solid, #{$app-grey-l-3});
-            height: $app-toolbar-height-elements;
-            line-height: $app-toolbar-height-elements;
-            padding: 0 0.5rem;
-            color: $app-grey;
+    .app-fx-views {
+      text-align: right;
+    }
 
-            &:hover {
-              background-color: $app-grey-l-3;
-            }
-          }
+    .mat-form-field {
+      @extend .app-font-family-rc;
+      margin-left: $app-gap;
+    }
 
-          span {
-            margin-left: $app-container; 
-          }
+    // override currentColor from _themes.scss
+    .mat-form-field-appearance-legacy {
+      .mat-form-field-wrapper {
+        padding-bottom: .9em;
 
-          .pagination {
-            @extend .app-clean-mg;
-          }
-        }
-
-        &:nth-child(2) {
-          span {
-            height: $app-toolbar-height-elements;
-            line-height: $app-toolbar-height-elements;
-            font-size: 1.3rem;
-            color: $primary-color;
-          }
-        }
-
-        &:last-child {
-          padding-top: 4px;
-
-          a {
-            padding-left: 0.75rem;
-            vertical-align: -webkit-baseline-middle;
-            color: $app-grey-c-1;
-
-            &:hover, &.active {
-              i[class*="mdi-"] {
-                color: $primary-color;
-              } 
-            }
-
-            .mdi:before {
-              line-height: normal;
-              vertical-align: middle;
-            }
-          }
+        .mat-form-field-underline {
+          background-color: rgba(0, 0, 0, 0.42);
+          bottom: .9em;
         }
         
-        .app-input-simple{
-          width: 60px;
-          border: none;
-          margin: 0;
-          padding: 0;
+        .mat-form-field-ripple {
+          background-color: $app-primary-color;
         }
       }
     }

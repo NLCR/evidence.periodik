@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 
 import {AppState} from '../../../../app.state';
 import {AppService} from '../../../../app.service';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-calendar-list-item',
@@ -20,7 +21,8 @@ export class CalendarListItemComponent implements OnInit {
   
   constructor(
         public state: AppState,
-        private service: AppService) { }
+        private service: AppService,
+        public config: AppConfiguration) { }
 
   ngOnInit() {
 //    this.service.isSpecial(this.day).subscribe(res => {

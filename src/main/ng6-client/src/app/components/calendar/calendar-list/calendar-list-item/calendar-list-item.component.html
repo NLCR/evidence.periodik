@@ -1,39 +1,36 @@
-<div *ngIf="issues?.length" class="app-calendar-list-item-wrapper" 
-     [class.app-disabled]="isOtherMonth()" 
-     [class.app-calendar-day-special-holiday]="special.type == 'svatek'" 
-     [class.app-calendar-day-special-event]="special.type == 'udalost'">
-  <div class="app-calendar-list-item-menu right">
-    <a id="{{day | date: 'dd'}}">
-       <i mz-icon-mdi [icon]="'dots-vertical'"></i>
-    </a>
-    <mz-dropdown [id]="'calendar-menu'" [constrainWidth]="false" [dropdownButtonId]="day | date: 'dd'">
-      <mz-dropdown-item><a href="javascript:void(0)">Přidat mutaci</a></mz-dropdown-item>
-      <mz-dropdown-item><a href="javascript:void(0)">Přiřadit pozadí</a></mz-dropdown-item>
-      <mz-dropdown-item><a href="javascript:void(0)">Smazat všechny mutace</a></mz-dropdown-item>
-    </mz-dropdown>
+<div fxLayout="row" *ngIf="issues?.length" class="app-calendar-list-item-wrapper" [class.app-disabled]="isOtherMonth()" [class.app-calendar-day-special-holiday]="special.type == 'svatek'" [class.app-calendar-day-special-event]="special.type == 'udalost'">
+  <div fxFlexAlign="left" class="app-fx-left">
+    <div class="app-calendar-list-item-weekday">
+      {{ day | date : 'E' : null : state.currentLang }}
+    </div>
+    <div *ngIf="special.type" class="app-calendar-list-item-title" [matTooltip]="special.title" matTooltipPosition="above">
+      <span>{{day | date: 'dd'}}</span>
+      {{ special.title }}
+    </div>
+    <div *ngIf="!special.type" class="app-calendar-list-item-title">
+      {{ day | date: 'dd' }}
+    </div>
   </div>
-  <div class="row app-clean-mg">
-    <div class="col">
-      <div class="app-calendar-list-item-weekday">
-        {{day | date : 'E' : null : state.currentLang}}
-      </div>
-      <div *ngIf="special.type" class="app-calendar-list-item-title" mz-tooltip [tooltip]="special.title" [position]="'top'">
-        <span>{{day | date: 'dd'}}</span>
-        {{special.title}}
-      </div>
-      <div *ngIf="!special.type" class="app-calendar-list-item-title">
-        {{day | date: 'dd'}}
-      </div>
-    </div><!--/.col -->
-    <div class="col">
-      <div *ngFor="let e of issues" class="app-calendar-list-item-issue" [routerLink]="['/issue', e.id]">
-        <span [class]="'app-state-'+e.state"></span><!--
-        --><span>{{e.cislo}} {{e.mutace}} {{'record.publication.' + e.vydani | translate}}</span><!--
-        --><span *ngIf="e.exemplare" class="app-pipe"></span><!--
-        --><span *ngIf="e.exemplare">Počet exemplářů: {{e.exemplare.length}}</span><!--
-        --><span *ngIf="e.digitalizovano" class="app-pipe"></span><!--
-        --><span *ngIf="e.digitalizovano"><i mz-icon-mdi [icon]="'credit-card-scan'" [size]="22"></i> digitalizováno</span>
-      </div>
-    </div><!--/.col -->
-  </div><!--./row -->
-</div><!--/.app-calendar-list-item-wrapper -->
+  <div fxFlex class="app-fx-middle">
+    <div *ngFor="let e of issues" class="app-calendar-list-item-issue" [routerLink]="['/issue', e.id]">
+      <span [class]="'app-state-'+e.state"></span><!--
+      --><span>{{ e.cislo }} {{ e.mutace }} {{ 'record.publication.' + e.vydani | translate }}</span><!--
+      --><span *ngIf="e.exemplare" class="app-pipe"></span><!--
+      --><span *ngIf="e.exemplare">Počet exemplářů: {{e.exemplare.length}}</span><!--
+      --><span *ngIf="e.digitalizovano" class="app-pipe"></span><!--
+      --><span *ngIf="e.digitalizovano" [matTooltip]="'calendar.tooltip.digitized' | translate" matTooltipPosition="above">
+            <mat-icon>{{ config.icons.digitized }}</mat-icon> digitalizováno
+          </span>
+    </div>
+  </div>
+  <div fxFlexAlign="right" class="app-fx-right">
+    <a [matMenuTriggerFor]="menu">
+      <mat-icon>{{ config.icons.more_vert }}</mat-icon>
+    </a>
+    <mat-menu #menu="matMenu" [id]="'calendar-menu'">
+      <button mat-menu-item>{{ 'button.add_specimen' | translate }}</button>
+      <button mat-menu-item>{{ 'button.add_background' | translate }}</button>
+      <button mat-menu-item>{{ 'button.delete_all_mutations' | translate }}</button>
+    </mat-menu>
+  </div>
+</div>

@@ -1,73 +1,23 @@
-<mz-card [hoverable]="true" class="app-cursor-pointer" (click)="onClick()">
-  <mz-card-title>
-      <a>{{item.meta_nazev}}{{item.nazev}}</a>
-  </mz-card-title>
-  <mz-card-content class="grey-text text-darken-1">
-    <i mz-icon-mdi [icon]="'calendar-check'" [size]="'20'" (click)="onCalendarClick()"></i>
-    {{item['date']}}
-    <mz-badge
-      [value]="item['total']"
-      [caption]="'result.badge.issues' | translate"
-      [badgeClass]="'green'">
-    </mz-badge>
-  </mz-card-content>
-  <mz-card-action>
-    <mz-badge
-      *ngIf="item['num_exemplare'] > 0"
-      [value]="item['num_exemplare']"
-      [caption]="'result.badge.specimens' | translate"
-      [badgeClass]="'blue'">
-    </mz-badge>
-    
-    <mz-badge
-      *ngIf="item['num_exemplare'] == 0"
-      [value]="item['num_exemplare']"
-      [caption]="'result.badge.specimens' | translate"
-      [badgeClass]="'grey lighten-1'">
-    </mz-badge>
-    
-    <mz-badge
-      *ngIf="item['num_mutace'] > 0"
-      [value]="item['num_mutace']"
-      [caption]="'result.badge.mutations' | translate"
-      [badgeClass]="'red'">
-    </mz-badge>
-    
-    <mz-badge
-      *ngIf="item['num_mutace'] == 0"
-      [value]="item['num_mutace']"
-      [caption]="'result.badge.mutations' | translate"
-      [badgeClass]="'grey lighten-1'">
-    </mz-badge><!--/mutace -->
-    
-    <mz-badge
-      *ngIf="item['num_vlastniku'] > 0"
-      [value]="item['num_vlastniku']"
-      [caption]="'result.badge.owners' | translate"
-      [badgeClass]="'teal'">
-    </mz-badge>
-    
-    <mz-badge
-      *ngIf="item['num_vlastniku'] == 0"
-      [value]="item['num_vlastniku']"
-      [caption]="'result.badge.owners' | translate"
-      [badgeClass]="'grey lighten-1'">
-    </mz-badge><!--/vlastnik -->
-    
-    <mz-badge
-      *ngIf="item['digitalizovano'] > 0"
-      [value]="item['digitalizovano']"
-      [caption]="'result.badge.digitized' | translate"
-      [badgeClass]="'orange'">
-    </mz-badge>
-    
-    <mz-badge
-      *ngIf="item['digitalizovano'] == 0"
-      [value]="item['digitalizovano']"
-      [caption]="'result.badge.digitized' | translate"
-      [badgeClass]="'grey lighten-1'">
-    </mz-badge>
-    
-    <div class="clearfix"></div>
-  </mz-card-action>
-</mz-card>
+<mat-card (click)="onClick()">
+  <mat-card-header>
+    <mat-card-title>{{ item.meta_nazev }}{{ item.nazev }}</mat-card-title>
+    <mat-card-subtitle>{{ item['date'] }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <button mat-flat-button color="accent">
+        {{ item['total'] }} {{ 'desc.records' | translate }}
+      </button>
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button *ngIf="item['num_exemplare'] > 0">{{ item['num_exemplare'] }} {{ 'desc.specimens' | translate }}</button>
+    <button mat-button *ngIf="item['num_exemplare'] == 0">{{ item['num_exemplare'] }}  {{ 'desc.specimens' | translate }}</button>
+    <button mat-button *ngIf="item['num_mutace'] > 0">{{ item['num_mutace'] }} {{ 'desc.mutations' | translate }}</button>
+    <button mat-button *ngIf="item['num_mutace'] == 0">{{ item['num_mutace'] }} {{ 'desc.mutations' | translate }}</button>
+    <button mat-button *ngIf="item['num_vlastniku'] > 0">{{ item['num_vlastniku'] }} {{ 'desc.owners' | translate }}</button>
+    <button mat-button *ngIf="item['num_vlastniku'] == 0">{{ item['num_vlastniku'] }} {{ 'desc.owners' | translate }}</button>
+    <button mat-button *ngIf="item['digitalizovano'] > 0">{{ item['digitalizovano'] }} {{ 'desc.digitized' | translate }}</button>
+    <button mat-button *ngIf="item['digitalizovano'] == 0">{{ item['digitalizovano'] }} {{ 'desc.digitized' | translate }}</button>
+  </mat-card-actions>
+</mat-card>

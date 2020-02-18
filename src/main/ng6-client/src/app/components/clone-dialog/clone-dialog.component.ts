@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {MzBaseModal, MzToastService} from 'ngx-materialize';
 import {CloneParams} from '../../models/clone-params';
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
@@ -9,12 +8,7 @@ import {AppService} from '../../app.service';
   templateUrl: './clone-dialog.component.html',
   styleUrls: ['./clone-dialog.component.scss']
 })
-export class CloneDialogComponent extends MzBaseModal {
-
-  public options: Pickadate.DateOptions = {
-    format: 'dd/mm/yyyy',
-    formatSubmit: 'yyyy-mm-dd',
-  };
+export class CloneDialogComponent {
 
   //Input properties
   state: AppState;
@@ -23,9 +17,7 @@ export class CloneDialogComponent extends MzBaseModal {
   //Clone parameters
   params: CloneParams = new CloneParams();
 
-  constructor(
-    private toastService: MzToastService) {
-    super();
+  constructor() {
   }
 
   ok() {
@@ -33,9 +25,9 @@ export class CloneDialogComponent extends MzBaseModal {
       console.log(res);
 
       if (res['error']) {
-        this.toastService.show(res['error'], 4000, 'red');
+        //this.toastService.show(res['error'], 4000, 'red');
       } else {
-        this.modalComponent.closeModal();
+        //this.modalComponent.closeModal();
       }
     });
   }

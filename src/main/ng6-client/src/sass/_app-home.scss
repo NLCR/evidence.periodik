@@ -2,31 +2,42 @@
 
 .app-home-wrapper {
   @extend .app-full-wrapper;
-  height: calc(100% - #{$navbar-height});
-  padding-top: 200px;
-  
-  section {
-    
-    &:first-child {
-      & > .row {
-        &:first-child,
-        &:nth-child(2) {
-          margin-bottom: 10px;
-        }
+  height: calc(100% - #{$app-navbar-height});
+  background-color: $app-gray-1;
+  padding: $app-gap;
+
+  .app-row-logo {
+    justify-content: center;
+    text-align: center;
+
+    & > div {
+      width: 300px;
+
+      .app-logo {
+        @extend .app-font-light;
+        font-size: 1.8rem;
+        color: $app-primary-color;
+      }
+
+      .mat-divider {
+        margin: $app-gap 0;
+      }
+
+      .app-desc {
+        color: $app-gray-5;
       }
     }
-  
-    .brand-logo {
-      font-size: 1.8rem;
-      font-family: 'Roboto-Condensed-Light';
-    }
+  }
+
+  .app-row-search-bar {
+    margin: $app-gap 0 calc(2 * #{$app-gap}) 0;
 
     .app-search-bar-wrapper {
-      border-color: $app-grey-l-3;
-
+      border-color: $app-gray-3;
+  
       &:hover {
-        border-color: $app-grey-l-2;
+        border-color: $app-gray-2;
       }
-    } 
+    }
   }
 }

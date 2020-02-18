@@ -13,7 +13,7 @@
 
     <div class="col s8">
       <div class="row" *ngIf="user">
-        <mz-progress *ngIf="loading" [backgroundClass]="'blue lighten-4'" [progressClass]="'blue'"></mz-progress>
+        <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
         <form (ngSubmit)="save()" #userForm="ngForm">
           <mat-card>
             <mat-card-content>

@@ -3,18 +3,63 @@
 .app-svazek-wrapper {
   display: flex;
   height: 100%;
+  background-color: $app-gray-1;
 
   .app-container-left {
     flex: 1;
     padding: $app-container;
     //overflow: auto;
-   }
+
+    tfoot {
+      background-color: $app-gray-1;
+
+      .mat-footer-row {
+        .mat-footer-cell {
+          @extend .app-clean-border;
+          padding-left: 5px !important;
+          padding-top: 10px;
+
+          .btn {
+            //@extend .z-depth-0;
+            margin-right: 5px;
+
+            &:disabled {
+              background-color: $app-gray-2;
+              color: rgba($app-gray-5, .8);
+            }
+          }
+        }
+      }
+    }
+  }
   
   .app-container-right {
     flex: 2;
     padding: $app-container;
     padding-left:0;
    // overflow: auto;
+
+    tfoot {
+      background-color: $app-color-white;
+
+      .mat-footer-row {
+        .mat-footer-cell {
+          &:first-child {
+            @extend .app-clean-border, .app-clean-pd;
+
+            .app-paginator-wrapper {
+              display: flex;
+              justify-content: flex-start;
+              box-shadow: 0px -4px 36px 4px rgba(0,0,0,0.15);
+            }
+          }
+
+          &:not(:first-child) {
+            display: none;
+          }
+        }
+      }
+    }
   }
 
   .app-table-wrapper {
@@ -64,7 +109,7 @@
 
           .mat-header-cell {
             @extend .app-clean-radius;
-            background-color: $app-grey-l-2;
+            background-color: $app-gray-3;
             vertical-align: bottom;
             border-right: 1px solid white;
             padding-bottom: $app-svazek-header-cell-bottom-space;
@@ -144,11 +189,11 @@
                     padding-right: 25px;
                     position: relative;
 
-                    .mdi-pencil {
+                    .mat-icon {
                       position: absolute;
-                      top: 2px;
+                      top: 4px;
                       right: 2px;
-                      color: $app-grey-l-1;
+                      color: $app-gray-4;
                     }
                   }
                 }
@@ -171,7 +216,9 @@
                 background-color: $app-color-black;
                 color: $app-color-white;
   
-                .mdi-pencil {
+                .mat-icon,
+                .mat-form-field-label,
+                .mat-datepicker-toggle-default-icon {
                   color: $app-color-white !important;
                 }
               }
@@ -191,9 +238,8 @@
               }
             }
 
-            .mdi {
-              @extend .app-cursor-pointer;
-              color: #00a5bb;
+            .mat-icon {
+              color: $app-primary-color-darker;
 
               &:before {
                 font-size: 18px;
@@ -202,28 +248,6 @@
 
             input {
               font-size: $app-svazek-cell-font-size;
-            }
-          }
-        }
-      }
-
-      tfoot {
-        background-color: $app-grey-l-4;
-
-        .mat-footer-row {
-          .mat-footer-cell {
-            @extend .app-clean-border;
-            padding-left: 5px !important;
-            padding-top: 10px;
-
-            .btn {
-              @extend .z-depth-0;
-              margin-right: 5px;
-
-              &:disabled {
-                background-color: $app-grey-l-2;
-                color: rgba($app-grey-d-1, .8);
-              }
             }
           }
         }

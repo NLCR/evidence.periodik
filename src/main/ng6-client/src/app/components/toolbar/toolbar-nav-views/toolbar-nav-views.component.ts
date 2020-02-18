@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AppState} from '../../../app.state';
 import {DatePipe} from '@angular/common';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-toolbar-nav-views',
@@ -13,7 +14,8 @@ export class ToolbarNavViewsComponent implements OnInit {
   constructor(
     private datePipe: DatePipe,
     public state: AppState,
-    private router: Router) {}
+    private router: Router,
+    public config: AppConfiguration) {}
 
   ngOnInit() {
   }

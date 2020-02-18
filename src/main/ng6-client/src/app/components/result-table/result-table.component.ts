@@ -4,22 +4,22 @@ import {Input} from '@angular/core';
 import {Issue} from '../../models/issue';
 import {AppState} from '../../app.state';
 import {AddExemplarDialogComponent} from '../add-exemplar-dialog/add-exemplar-dialog.component';
-import {MzModalService, MzToastService} from 'ngx-materialize';
 import {AppService} from '../../app.service';
 import {Titul} from '../../models/titul';
 import {Router} from '@angular/router';
 import {Exemplar} from '../../models/exemplar';
 import {TranslateService} from '@ngx-translate/core';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
-  selector: 'app-results-table',
-  templateUrl: './results-table.component.html',
-  styleUrls: ['./results-table.component.scss']
+  selector: 'app-result-table',
+  templateUrl: './result-table.component.html',
+  styleUrls: ['./result-table.component.scss']
 })
-export class ResultsTableComponent implements OnInit {
+export class ResultTableComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  //@ViewChild(MatPaginator) paginator: MatPaginator;
   data: Issue[] = [];
   vlastnici: string[] = [];
   exs: any = {};
@@ -34,8 +34,7 @@ export class ResultsTableComponent implements OnInit {
     public state: AppState,
     public service: AppService,
     private translate: TranslateService,
-    private modalService: MzModalService,
-    private toastService: MzToastService) {
+    public config: AppConfiguration) {
 
 
     // Assign the data to the data source for the table to render
@@ -113,7 +112,7 @@ export class ResultsTableComponent implements OnInit {
 //    });
 
     this.dataSource = new MatTableDataSource(this.data);
-    this.dataSource.paginator = this.paginator;
+    //this.dataSource.paginator = this.paginator;
     this.loading = false;
   }
 
@@ -121,7 +120,7 @@ export class ResultsTableComponent implements OnInit {
     if (row.hasOwnProperty('exemplare')) {
       for (let i = 0; i < row.exemplare.length; i++) {
         if (row.exemplare[i]['vlastnik'] === vlastnik) {
-          return this.colorByVlastnik(vlastnik);
+          return this.classByVlastnik(vlastnik);
         }
       }
     }
@@ -131,56 +130,54 @@ export class ResultsTableComponent implements OnInit {
   iconByStav(ex: Exemplar): string {
     if (ex.stav) {
     if (ex.stav.length === 0) {
-      return 'crop-square';
+      return this.config.icons.uncontrolled;
     } else if (ex.stav.indexOf('OK') > -1) {
-      return 'check-circle';
+      return this.config.icons.check_circle;
     } else if (ex.stav.indexOf('ChS') > -1) {
-      return 'format-page-break';
+      return this.config.icons.missing_page;
     } else {
-      return 'alert-outline';
+      return this.config.icons.damaged_document;
     }
     } else {
-      return 'crop-square';
+      return this.config.icons.uncontrolled;
     }
 
   }
 
-  colorByStav(ex: Exemplar): string {
+  classByStav(ex: Exemplar): string {
     if (ex.stav) {
-    if (ex.stav.length === 0) {
-      return 'black';
-    } else if (ex.stav.indexOf('OK') > -1) {
-      if (ex.stav.length > 1) {
-        return 'rosybrown';
+      if (ex.stav.length === 0) {
+        return "app-icon-uncontrolled";
+      } else if (ex.stav.indexOf('OK') > -1) {
+        if (ex.stav.length > 1) {
+          return "app-icon-complete-degradation";
+        } else {
+          return "app-icon-complete";
+        }
       } else {
-        return 'green';
+        return "app-icon-damaged-document";
       }
     } else {
-      return 'red';
+      return "app-icon-uncontrolled";
     }
-    } else {
-      return 'black';
-    }
-
   }
 
-  colorByVlastnik(vlastnik: string): string {
-
+  classByVlastnik(vlastnik: string): string {
     switch (vlastnik) {
       case 'MZK': {
-        return 'rgb(235, 228, 245)';
+        return 'app-header-cell-mzk';
       }
       case 'NKP': {
-        return 'rgb(245, 228, 235)';
+        return 'app-header-cell-nkp';
       }
       case 'UKF': {
-        return 'rgb(245, 228, 235)';
+        return 'app-header-cell-ukf';
       }
       case 'VKOL': {
-        return 'rgb(247, 238, 175)';
+        return 'app-header-cell-vkol';
       }
       default: {
-        return 'yellow';
+        return 'app-header-cell-default';
       }
     }
   }
@@ -195,22 +192,22 @@ export class ResultsTableComponent implements OnInit {
   }
 
   addClick(issue: Issue) {
-    this.modalService.open(AddExemplarDialogComponent,
+    /* this.modalService.open(AddExemplarDialogComponent,
       {'issue': issue, 'state': this.state, 'service': this.service, exemplar: new Exemplar(), editType: 'new'}
-    );
+    ); */
 
   }
 
   viewClick(issue: Issue, ex: Exemplar) {
-    this.modalService.open(AddExemplarDialogComponent,
+   /*  this.modalService.open(AddExemplarDialogComponent,
       {'issue': issue, 'state': this.state, 'service': this.service, 'exemplar': ex, editType: 'edit'}
-    );
+    ); */
   }
 
   deleteEx(issue: Issue, ex: Exemplar, idxex: number) {
 
 
-    const a = this.modalService.open(ConfirmDialogComponent,
+    /* const a = this.modalService.open(ConfirmDialogComponent,
       {
         caption: 'modal.delete_exemplar.caption',
         text: 'modal.delete_exemplar.text',
@@ -228,13 +225,13 @@ export class ResultsTableComponent implements OnInit {
           this.toastService.show('Deleted success!', 2000, 'green');
         });
       }
-    });
+    }); */
 
 
   }
 
   duplicate(issue: Issue, ex: Exemplar) {
-    const a = this.modalService.open(AddExemplarDialogComponent,
+    /* const a = this.modalService.open(AddExemplarDialogComponent,
       {
         'issue': issue,
         'state': this.state,
@@ -252,7 +249,7 @@ export class ResultsTableComponent implements OnInit {
           //this.docs = this.state.
         });
       }
-    });
+    }); */
   }
 
 

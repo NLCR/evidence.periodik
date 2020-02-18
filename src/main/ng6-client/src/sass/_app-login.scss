@@ -1,7 +1,25 @@
 // --- LOGIN ---
 
 .app-login-wrapper {
-  @extend .app-full-wrapper;
-  height: calc(100% - #{$navbar-height});
-  padding-top: 200px;
+  height: 100%;
+  background-color: $app-gray-1;
+  overflow: auto;
+  justify-content: center;
+
+  .app-login-card {
+    width: 300px;
+    padding: $app-gap;
+    text-align: center;
+
+    .mat-form-field,
+    .mat-button-base,
+    .mat-card-header-text {
+      @extend .app-full-width;
+    }
+
+    .mat-card-actions {
+      @extend .app-clean-mg;
+    }
+  }
+  
 }

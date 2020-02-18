@@ -1,204 +1,187 @@
 <app-toolbar></app-toolbar>
-<div class="app-issue-wrapper grey lighten-5" *ngIf="state.currentIssue.id || state.isNewIssue">
-     <div class="row">
-    <div class="col s4">
-      
-      <mz-select-container *ngIf="state.isNewIssue">
-        <select mz-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()" [label]="'Metatitul'">
-                <option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >{{tit.meta_nazev}}</option>
-          <option [value]="-1" >{{'Add new titul' | translate}}</option>
-        </select>
-      </mz-select-container>
-      <mz-datepicker-container>
-        <i mz-icon-mdi mz-input-prefix [icon]="'calendar'" (click)="onCalendarClick()"></i>
-        <input mz-datepicker
-               [disabled]="!state.isNewIssue"
-               [options]="options"
-               
-               [label]="'record.date_publication' | translate"
-               [(ngModel)]="state.currentIssue.datum_vydani"
-               id="datum_vydani" name="datum_vydani"
-               type="text" />
-      </mz-datepicker-container>
-      <!--
-      <mz-input-container>
-        <input mz-input [label]="'record.date_publication' | translate" id="datum_vydani" name="datum_vydani" type="text" 
-               [(ngModel)]="state.currentIssue.datum_vydani" pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](18|19|20)\d\d">
-      </mz-input-container>
-      -->
-      
-      <mz-input-container>
-        <input mz-input [label]="'record.name_title_page' | translate" id="nazev" name="nazev" type="text" [(ngModel)]="state.currentIssue.nazev">
-      </mz-input-container>
-      <mz-input-container>
-        <input mz-input [label]="'record.subname_title_page' | translate" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev" type="text">
-      </mz-input-container>
-      <div class="row" >
-        <div class="col s10">
-          <mz-select-container *ngIf="!changingLang">
-            <select mz-select id="vydani" name="vydani" [placeholder]="'record.publication.placeholder' | translate" 
-                    [(ngModel)]="state.currentIssue.vydani">
-                    <option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}</option>
-            </select>
-          </mz-select-container>
-        <mz-input-container [inline]="true">
-          <input mz-input [label]="'record.znak_oznaceni_vydani' | translate" 
-                 id="znak_oznaceni_vydani" name="znak_oznaceni_vydani" 
-                 [(ngModel)]="state.currentIssue.znak_oznaceni_vydani" type="text" >
-        </mz-input-container>
-        </div>
-        <div class="col s2">
-          <button mz-button [float]="true" mz-tooltip [tooltip]="'Duplikovat vytisk v novem vydání' | translate" [position]="'top'" (click)="addPub()">
-                  <i mz-icon-mdi [icon]="'plus-circle-multiple-outline'"></i>
-          </button>
-        </div>
+
+<div fxLayout="row" fxLayoutGap="16px" class="app-issue-wrapper">
+  <div fxFlex>
+    <mat-form-field *ngIf="state.isNewIssue">
+      <mat-label>Metatitul</mat-label> 
+      <mat-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()">
+        <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >
+          {{ food.viewValue }}
+        </mat-option>
+        <mat-option [value]="-1">
+          {{ 'Add new titul' | translate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" [placeholder]="'Choose a date' | translate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [placeholder]="'record.name_title_page' | translate" id="nazev" name="nazev" [(ngModel)]="state.currentIssue.nazev">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [placeholder]="'record.subname_title_page' | translate" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev">
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayoutGap="16px">
+      <mat-form-field *ngIf="!changingLang" fxFlex="45%">
+        <mat-select id="vydani" name="vydani" [(ngModel)]="state.currentIssue.vydani">
+          <mat-option *ngFor="let v of state.vydani" [value]="v">
+            {{ 'record.publication.' + v | translate }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex="45%">
+        <input matInput [placeholder]="'record.znak_oznaceni_vydani' | translate" id="znak_oznaceni_vydani" name="znak_oznaceni_vydani" [(ngModel)]="state.currentIssue.znak_oznaceni_vydani">
+      </mat-form-field>
+      <div fxFlex="10%">
+        <button mat-mini-fab color="primary" matTooltip="'Duplikovat vytisk v novem vydání' | translate" matTooltipPosition="above" (click)="addPub()" class="mat-elevation-z0">
+          <mat-icon>{{ config.icons.library_add }}</mat-icon>
+        </button>
       </div>
-      <mz-input-container>
-        <input mz-input [label]="'record.time_publication' | translate" id="cas_vydani" name="cas_vydani" [(ngModel)]="state.currentIssue.cas_vydani" type="text">
-      </mz-input-container>
-      <mz-input-container>
-        <input mz-input [label]="'record.mutation' | translate" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace" type="text">
-      </mz-input-container>
+    </div>
 
-      <mz-select-container *ngIf="!changingLang">
-        <select mz-select id="periodicita" name="periodicita" [label]="'record.periodicita.placeholder' | translate" 
-                [(ngModel)]="state.currentIssue.periodicita">
-                <option *ngFor="let v of state.periods" [value]="v">{{'record.periodicita.' + v | translate }}</option>
-        </select>
-      </mz-select-container>
+    <mat-form-field>
+      <input matInput [placeholder]="'record.time_publication' | translate" id="cas_vydani" name="cas_vydani" [(ngModel)]="state.currentIssue.cas_vydani">
+    </mat-form-field>
 
-    </div><!--/.col -->
+    <mat-form-field>
+      <input matInput [placeholder]="'record.mutation' | translate | translate" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace">
+    </mat-form-field>
+    
+    <mat-form-field *ngIf="!changingLang">
+      <mat-select id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita">
+        <mat-label>{{ 'record.periodicita.placeholder' | translate }}</mat-label>
+        <mat-option *ngFor="let v of state.periods" [value]="v">
+          {{'record.periodicita.' + v | translate }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
-    <div class="col s4">
-      
-      
-      <div class="row" >
-        <div class="col s11">
-          <mz-input-container [inline]="true">
-            <input mz-input [label]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" 
-              (change)="checkPagesChanged()"  [(ngModel)]="state.currentIssue.pocet_stran" type="text">
-          </mz-input-container>
-          <span *ngIf="state.currentIssue.pages.length > 0" [title]="formatPages()">(...)</span><a (click)="editPages()"><i mz-icon-mdi [icon]="'pencil'" ></i></a> 
-        </div> 
-        <div class="col s1">
-           
-        </div>
+  <div fxFlex>
+    <mat-form-field>
+      <input matInput [placeholder]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" (change)="checkPagesChanged()" [(ngModel)]="state.currentIssue.pocet_stran">
+      <mat-icon class="app-cursor-pointer" matSuffix>{{ config.icons.pencil }}</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [placeholder]="'record.volume' | translate" id="rocnik" name="rocnik" [(ngModel)]="state.currentIssue.rocnik" min="1" step="1" type="number">
+      <span class="validity"></span>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [placeholder]="'record.number' | translate" id="cislo" name="cislo" [(ngModel)]="state.currentIssue.cislo" min="1" step="1" type="number" pattern="[0-9]+">
+      <span class="validity"></span>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [placeholder]="'record.second_number' | translate" id="druhe_cislo" name="druhe_cislo" [(ngModel)]="state.currentIssue.druhe_cislo" pattern="[0-9]+">
+      <span class="validity"></span>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [placeholder]="'record.id_bib_record' | translate" id="id_bib_zaznamu" name="id_bib_zaznamu" [(ngModel)]="state.currentIssue.id_bib_zaznamu">
+    </mat-form-field>  
+
+    <mat-form-field>
+      <input matInput [placeholder]="'record.url_bib_record' | translate" id="url_bib_zaznamu" name="url_bib_zaznamu" [(ngModel)]="state.currentIssue.url_bib_zaznamu">
+      <mat-icon class="app-cursor-pointer" matSuffix>{{ config.icons.open_in_new }}</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [placeholder]="'record.uuid_number' | translate" id="uuid_cisla" name="uuid_cisla" [(ngModel)]="state.currentIssue.uuid_cisla">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput [placeholder]="'record.url_kramerius' | translate" id="url_krameria" name="url_krameria" [(ngModel)]="state.currentIssue.url_krameria">
+    </mat-form-field>
+  </div>
+  
+  <div fxFlex>
+    <div fxLayout="row" class="app-accordation-header">
+      <div fxFlex class="app-fx-left">
+        <h2>{{'record.specimen_count' | translate}}: {{state.currentIssue.exemplare.length}}</h2>
       </div>
-      
-      
-      <mz-input-container>
-        <input mz-input [label]="'record.volume' | translate" id="rocnik" name="rocnik" [(ngModel)]="state.currentIssue.rocnik" 
-               min="1" step="1" type="number"><span class="validity"></span>
-      </mz-input-container>
-      <mz-input-container>
-        <input mz-input [label]="'record.number' | translate" id="cislo" name="cislo" [(ngModel)]="state.currentIssue.cislo" 
-               min="1" step="1" type="number" pattern="[0-9]+"><span class="validity"></span>
-      </mz-input-container>
-      <mz-input-container>
-        <input mz-input [label]="'record.second_number' | translate" id="druhe_cislo" name="druhe_cislo" [(ngModel)]="state.currentIssue.druhe_cislo" 
-               type="text"  pattern="[0-9]+"><span class="validity"></span>
-      </mz-input-container>
-      <mz-input-container>
-        <input mz-input [label]="'record.id_bib_record' | translate" id="id_bib_zaznamu" name="id_bib_zaznamu" [(ngModel)]="state.currentIssue.id_bib_zaznamu" type="text">
-      </mz-input-container>     
-      
-      <div class="row" >
-        <div class="col s11">
-          <mz-input-container>
-        <input mz-input [label]="'record.url_bib_record' | translate" id="url_bib_zaznamu" name="url_bib_zaznamu" [(ngModel)]="state.currentIssue.url_bib_zaznamu" type="text">
-      </mz-input-container>
-        </div>
-        <div class="col s1">
-          <a (click)="openUrl(state.currentIssue.url_bib_zaznamu)"><i mz-icon-mdi [icon]="'open-in-new'" ></i></a>  
-        </div>
+      <div fxFlex class="app-fx-right">
+        <button mat-mini-fab [matTooltip]="'button.add_specimen' | translate" matTooltipPosition="above" [disabled]="!state.logged" (click)="addExemplar()">
+          <mat-icon>{{ config.icons.add }}</mat-icon>
+        </button>
       </div>
-      
-      <mz-input-container>
-        <input mz-input [label]="'record.uuid_number' | translate" id="uuid_cisla" name="uuid_cisla" [(ngModel)]="state.currentIssue.uuid_cisla" type="text">
-      </mz-input-container>
-      <mz-input-container>
-        <input mz-input [label]="'record.url_kramerius' | translate" id="url_krameria" name="url_krameria" [(ngModel)]="state.currentIssue.url_krameria" type="text">
-      </mz-input-container>
-    </div><!--/.col -->
+    </div>
+    <mat-accordion *ngIf="!changingLang" multi="true">
+      <mat-expansion-panel *ngFor="let ex of state.currentIssue.exemplare;let idx= index;">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <a (click)="viewSvazek(ex['carovy_kod'])" [matTooltip]="'Editovat svazek' | translate" matTooltipPosition="above">
+              <mat-icon>{{ config.icons.edit_pack }}</mat-icon>
+            </a>
+            <span class="app-pipe"></span>
+            {{ idx + 1 }}. - {{ ex.vlastnik }} {{ ex.carovy_kod }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
 
-    <div class="col s4 app-exemplar-wrapper">
-      <button mz-button [float]="true" mz-tooltip  [disabled]="!state.logged" [tooltip]="'button.add_specimen' | translate" [position]="'top'" (click)="addExemplar()">
-              <i mz-icon-mdi [icon]="'plus'"></i>
-      </button>
-      <h5>{{'record.specimen_count' | translate}}: {{state.currentIssue.exemplare.length}}
-      </h5>
-      <mz-collapsible [mode]="'expandable'" [onClose]="closeFunctionCallback" *ngIf="!changingLang">
-        <mz-collapsible-item [active]="false"  *ngFor="let ex of state.currentIssue.exemplare;let idx= index;">
-          <mz-collapsible-item-header>
-            <span>
-              {{idx + 1}}.- {{ex.vlastnik}} {{ex.carovy_kod}}
-              <i mz-icon-mdi class="app-cursor-pointer" [icon]="'package'" [size]="'18px'" mz-tooltip [tooltip]="'Editovat svazek'" [position]="'top'" (click)="viewSvazek(ex['carovy_kod'])"></i>
-            </span>
-            <i mz-icon-mdi [icon]="'chevron-down'" [class]="'app-clean-mg right'"></i>
-            <i mz-icon-mdi [icon]="'chevron-left'" [class]="'app-clean-mg right'"></i>
-          </mz-collapsible-item-header>
-          <mz-collapsible-item-body>
-            <mz-select-container>
-              <select mz-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav" [multiple]="true" [placeholder]="'Stav'">
-                      <option *ngFor="let stav of state.stavy" [value]="stav">{{'record.StavIssue.' + stav | translate}}</option>
-              </select>
-            </mz-select-container>
-            <mz-input-container>
-              <input mz-input [label]="'record.state_com' | translate" [id]="'stav_popis'+idx" [name]="'stav_popis'+idx" [(ngModel)]="ex.stav_popis" type="text">
-            </mz-input-container>
-            <mz-select-container>
-              <select mz-select [id]="'owner'" [name]="'owner'" [(ngModel)]="ex.vlastnik" [label]="'record.ownership' | translate">
-                <option *ngFor="let owner of state.owners" [value]="owner.name">{{owner.name}}</option>
-              </select>
-            </mz-select-container>
-            <!--
-            <mz-input-container>
-              <input mz-input [label]="'record.ownership' | translate" [id]="'vlastnik'+idx" [name]="'vlastnik'+idx" [(ngModel)]="ex.vlastnik" type="text">
-            </mz-input-container>
-            -->
-            <mz-input-container>
-              <input mz-input [label]="'record.barcode' | translate" [id]="'carovy_kod'+idx" [name]="'carovy_kod'+idx" [(ngModel)]="ex.carovy_kod" type="text">
-            </mz-input-container>
-            <mz-input-container>
-              <input mz-input [label]="'record.signatura' | translate" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura" type="text">
-            </mz-input-container>
-            <mz-input-container>
-              <input mz-input [label]="'record.oznaceni' | translate" [id]="'oznaceni'+idx" [name]="'oznaceni'+idx" [(ngModel)]="ex.oznaceni" type="text"
-                  #box (keyup)="filterOznaceni(box.value, ex)">
-            </mz-input-container>
-            <mz-input-container>
-              <input mz-input [label]="'record.popis_oznaceni_vydani' | translate" 
-                     [id]="'popis_oznaceni_vydani'+idx" [name]="'popis_oznaceni_vydani'+idx" [(ngModel)]="ex.popis_oznaceni_vydani" type="text">
-            </mz-input-container>
-            
-      <div *ngIf="showPages(ex)">
+        <mat-form-field *ngIf="!changingLang">
+          <mat-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav">
+            <mat-label>{{ 'Stav' | translate }}</mat-label>
+            <mat-option *ngFor="let stav of state.stavy" [value]="stav">
+              {{ 'record.StavIssue.' + stav | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput [placeholder]="'record.state_com' | translate | translate" [id]="'stav_popis'+idx" [name]="'stav_popis'+idx" [(ngModel)]="ex.stav_popis">
+        </mat-form-field>
+
+        <mat-form-field *ngIf="!changingLang">
+          <mat-select [id]="'owner'" [name]="'owner'" [(ngModel)]="ex.vlastnik">
+            <mat-label>{{ 'record.ownership' | translate }}</mat-label>
+            <mat-option *ngFor="let owner of state.owners" [value]="owner.name">
+              {{ owner.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput [placeholder]="'record.barcode' | translate" [id]="'carovy_kod'+idx" [name]="'carovy_kod'+idx" [(ngModel)]="ex.carovy_kod">
+        </mat-form-field>
         
-        {{'record.pages_missing' | translate}}
-        <ul class="app-pages">
-          <li *ngFor="let page of ex.pagesRange.missing" class="app-page-item">
-            <mz-checkbox-container>
-              <input mz-checkbox [label]="page.label" type="checkbox" [id]="'pgm'+page.label"
-                     [(ngModel)]="page.sel" />
-            </mz-checkbox-container>
-          </li>
-        </ul>
+        <mat-form-field>
+          <input matInput [placeholder]="'record.signatura' | translate" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura">
+        </mat-form-field>
         
-        {{'record.pages_damaged' | translate}}
-        <ul class="app-pages">
-          <li *ngFor="let page of ex.pagesRange.damaged" class="app-page-item">
-            <mz-checkbox-container>
-              <input mz-checkbox [label]="page.label" type="checkbox" [id]="'pgd'+page.label"
-                     [(ngModel)]="page.sel" />
-            </mz-checkbox-container>
-          </li>
-        </ul>
-      </div>
+        <mat-form-field>
+          <input matInput [placeholder]="'record.oznaceni' | translate" [id]="'oznaceni'+idx" [name]="'oznaceni'+idx" [(ngModel)]="ex.oznaceni" #box (keyup)="filterOznaceni(box.value, ex)">
+        </mat-form-field>
+        
+        <mat-form-field>
+          <input matInput [placeholder]="'record.popis_oznaceni_vydani' | translate" [id]="'popis_oznaceni_vydani'+idx" [name]="'popis_oznaceni_vydani'+idx" [(ngModel)]="ex.popis_oznaceni_vydani">
+        </mat-form-field>
+       
+        <div *ngIf="showPages(ex)">
+          <span class="app-font-bold">{{ 'record.pages_missing' | translate }}</span>
+          <div class="app-grid-wrapper">
+            <div *ngFor="let page of ex.pagesRange.missing">
+              <mat-checkbox [id]="'pgm'+page.label" [(ngModel)]="page.sel">{{ page.label }}</mat-checkbox>
+            </div>
+          </div>
 
-            <button mz-button (click)="removeExemplar(idx)">{{'button.delete_specimen' | translate}}</button>
-          </mz-collapsible-item-body>
-        </mz-collapsible-item>
-      </mz-collapsible>
-      <div class="clearfix"></div>
-    </div><!--/.col -->
-  </div><!--/row -->
-</div><!--/.app-add-record-wrapper -->
+          <span class="app-font-bold">{{ 'record.pages_damaged' | translate }}</span>
+          <div class="app-grid-wrapper">
+            <div *ngFor="let page of ex.pagesRange.damaged">
+              <mat-checkbox [id]="'pgd'+page.label" [(ngModel)]="page.sel">{{ page.label }}</mat-checkbox>
+            </div>
+          </div>
+        </div>
+
+        <button mat-flat-button color="primary" (click)="removeExemplar(idx)">{{ 'button.delete_specimen' | translate }}</button>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>

@@ -1,10 +1,10 @@
-<button mz-button class="z-depth-0">
-  <i mz-icon-mdi [icon]="'chevron-left'" mz-tooltip [tooltip]="'Předchozí měsíc'" class="app-cursor-pointer" (click)="changeMonth(-1)"></i>
+<button mat-icon-button (click)="changeMonth(-1)" [matTooltip]="'Předchozí měsíc' | translate" >
+  <mat-icon>{{ config.icons.arrow_left }}</mat-icon>
 </button>
-<button mz-button class="z-depth-0">
-  <i mz-icon-mdi [icon]="'chevron-right'" mz-tooltip [tooltip]="'Další měsíc'" class="app-cursor-pointer" (click)="changeMonth(1)"></i>
+<button mat-icon-button (click)="changeMonth(1)" [matTooltip]="'Další měsíc' | translate">
+  <mat-icon>{{ config.icons.arrow_right }}</mat-icon>
 </button>
-<span>
-  {{month}}
-  <input [(ngModel)]="year" pattern="[0-9]+" type="text" class="app-input-simple" (keyup.enter)="changeYear()" />
-</span>
+<span class="app-font-bold">{{ month }}</span>
+<mat-form-field>
+  <input matInput [(ngModel)]="year" pattern="[0-9]+" type="text" (keyup.enter)="changeYear()">
+</mat-form-field>

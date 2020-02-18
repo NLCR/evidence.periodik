@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewContainerRef, TemplateRef, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { KeyValueChanges, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
 import { AppState } from 'src/app/app.state';
-import { MzModalService, MzToastService } from 'ngx-materialize';
 import { AddTitulDialogComponent } from 'src/app/components/add-titul-dialog/add-titul-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AppService } from 'src/app/app.service';
@@ -31,19 +30,18 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   private overlayRef: OverlayRef;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  /* @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<any>; // initialize
   @ViewChild('poznEl') poznEl: ElementRef;
-
-  public calOptions: Pickadate.DateOptions = {
+ */
+ /*  public calOptions: Pickadate.DateOptions = {
     format: 'dd.mm.yyyy',
     formatSubmit: 'yyyy-mm-dd',
-    // editable: true,
     closeOnSelect: true,
     selectYears: true,
     clear: null,
     today: null
-  };
+  }; */
 
   dsIssues: MatTableDataSource<CisloSvazku>;
   issueColumns = [
@@ -121,8 +119,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
     private overlay: Overlay,
     private viewContainerRef: ViewContainerRef,
     private changeDetectorRefs: ChangeDetectorRef,
-    private modalService: MzModalService,
-    private toastService: MzToastService,
     private route: ActivatedRoute,
     private router: Router,
     private datePipe: DatePipe,
@@ -177,7 +173,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       });
 
       this.dsIssues = new MatTableDataSource(this.cislaVeSvazku);
-      this.dsIssues.paginator = this.paginator;
+      //this.dsIssues.paginator = this.paginator;
       this.loading = false;
     });
   }
@@ -300,7 +296,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   readClick() {
-    let a = this.modalService.open(ConfirmDialogComponent,
+    /* let a = this.modalService.open(ConfirmDialogComponent,
       {
         caption: 'modal.read_svazek.caption',
         text: 'modal.read_svazek.text',
@@ -313,7 +309,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       if (mm.confirmed) {
         this.read();
       }
-    });
+    }); */
   }
 
   read() {
@@ -369,12 +365,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
     if (!this.state.currentVolume.carovy_kod || this.state.currentVolume.carovy_kod.trim() === '') {
       this.setLastNumber();
 
-      this.toastService.show('carovy kod je povinny', 4000, 'red');
+      //this.toastService.show('carovy kod je povinny', 4000, 'red');
       return;
     }
 
     if (this.state.currentVolume.datum_od > this.state.currentVolume.datum_do) {
-      this.toastService.show('datum od je vetsi nez datum od', 4000, 'red');
+      //this.toastService.show('datum od je vetsi nez datum od', 4000, 'red');
       return;
     }
 
@@ -434,9 +430,9 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.service.saveIssues(this.state.currentVolume, issues).subscribe(res => {
       this.loading = false;
       if (res.error) {
-        this.toastService.show('Error: ' + res.error, 4000, 'red');
+        //this.toastService.show('Error: ' + res.error, 4000, 'red');
       } else {
-        this.toastService.show('Svazek správně uložen', 4000, 'green');
+        //this.toastService.show('Svazek správně uložen', 4000, 'green');
       }
 
       // console.log(res);
@@ -450,7 +446,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let a = this.modalService.open(ConfirmDialogComponent,
+    /* let a = this.modalService.open(ConfirmDialogComponent,
       {
         caption: 'modal.generate_svazek.caption',
         text: 'modal.generate_svazek.text',
@@ -463,7 +459,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       if (mm.confirmed) {
         this.generate();
       }
-    });
+    }); */
   }
 
   generate() {
@@ -534,9 +530,9 @@ export class SvazekComponent implements OnInit, OnDestroy {
   setTitul() {
     if (this.titul_idx.toString() === '-1') {
       // New titul dialog
-      this.modalService.open(AddTitulDialogComponent,
+      /* this.modalService.open(AddTitulDialogComponent,
         { 'state': this.state, 'service': this.service }
-      );
+      ); */
     } else {
       this.state.currentVolume.titul = this.state.tituly[this.titul_idx];
       this.state.currentVolume.id_titul = this.state.currentVolume.titul.id;

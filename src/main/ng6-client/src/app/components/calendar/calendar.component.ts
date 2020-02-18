@@ -5,6 +5,8 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
 
+import { AppConfiguration } from 'src/app/app-configuration';
+
 @Component({
     selector: 'app-calendar',
     templateUrl: './calendar.component.html',
@@ -18,7 +20,8 @@ export class CalendarComponent implements OnInit {
         private router: Router,
         private route: ActivatedRoute,
         public state: AppState,
-        private service: AppService
+        private service: AppService,
+        public config: AppConfiguration
     ) {}
 
 

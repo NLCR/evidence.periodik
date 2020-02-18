@@ -1,0 +1,126 @@
+<!-- presunuto do toolberu misto byvale paginace
+<div>
+  {{ header }}
+</div> 
+-->
+
+<div class="app-table-wrapper">
+  <table mat-table [dataSource]="dataSource">
+    <!-- ted se nezobrazuji, zachovat?
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="meta_nazev">
+      <th mat-header-cell *matHeaderCellDef>{{'record.meta_title' | translate}}</th>
+      <td mat-cell *matCellDef="let row; let idx = index" style="white-space: nowrap;"  [routerLink]="['/issue', row.id]">
+        <span *ngIf="idx == 0 || data[idx-1]['nazev'] !== data[idx]['nazev']">{{row.nazev}}</span>
+        <span *ngIf="idx !== 0 && data[idx-1]['nazev'] === data[idx]['nazev']"> -- || -- </span>
+      </td>
+    </ng-container>
+    -->
+
+    <ng-container matColumnDef="mutace">
+      <th mat-header-cell *matHeaderCellDef>{{'record.mutation' | translate}}</th>
+      <td mat-cell *matCellDef="let row; let idx = index">
+        <span *ngIf="idx == 0 || data[idx-1]['mutace'] !== data[idx]['mutace']">{{row.mutace}}</span>
+        <span *ngIf="idx !== 0 && data[idx-1]['mutace'] === data[idx]['mutace']"> -- || --</span>
+      </td>
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="9">
+        <div class="app-paginator-wrapper">
+          <mat-paginator [pageSizeOptions]="[25, 100, 200]" showFirstLastButtons></mat-paginator>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="datum_vydani">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'record.date_publication' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <a (click)="onCalendarClick(row)">{{ row.datum_vydani | date: 'dd.MM.yyyy' }}</a> 
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="vydani">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'record.publication.placeholder' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row; let idx = index">
+        <span *ngIf="row.vydani">{{ 'record.publication.' + row.vydani | translate }}</span>
+        <span *ngIf="!row.vydani">{{ 'record.publication.empty' | translate }}</span>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="cislo">
+      <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+        <div>{{ 'record.number' | translate }}</div>
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.cislo }}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="pocet_stran">
+      <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+        <div>{{ 'record.pages_count' | translate }}</div>
+      </th>
+      <td mat-cell *matCellDef="let row">{{ row.pocet_stran }}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="add">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ 'celkem' | translate }}
+      </th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.exemplare ? row.exemplare.length : 0 }} 
+        <a (click)="addClick(row)" title="pridat exemplar">
+          <mat-icon>{{ config.icons.add_circle }}</mat-icon>
+        </a>
+        <a [matTooltip]="'Editovat issue' | translate" matTooltipPosition="above" (click)="viewIssue(row)">
+          <mat-icon>{{ config.icons.edit_issue }}</mat-icon>
+        </a>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+    
+    <ng-container *ngFor="let vl of vlastnici" [matColumnDef]="vl">
+      <th mat-header-cell *matHeaderCellDef [ngClass]="classByVlastnik(vl)">
+        {{ vl }}
+      </th>
+      <td mat-cell *matCellDef="let row; let idx = index;">
+        <span *ngFor="let ex of row.exemplare; let idxex = index">
+          <ng-container *ngIf="ex.vlastnik === vl">[
+            <a (click)="viewClick(row, ex)">{{ ex['carovy_kod'] }}</a>
+            <a [matTooltip]="'Editovat svazek' | translate" matTooltipPosition="above" (click)="viewSvazek(ex['carovy_kod'])">
+              <mat-icon>{{ config.icons.edit_pack }}</mat-icon>
+            </a>
+            <a [matTooltip]="'Duplikovat exemplář' | translate" matTooltipPosition="above" (click)="duplicate(row, ex)">
+              <mat-icon>{{ config.icons.duplicate }}</mat-icon>
+            </a>
+            <a [matTooltip]="'Smazat exemplář' | translate" matTooltipPosition="above" (click)="deleteEx(row, ex, idxex)">
+              <mat-icon>{{ config.icons.delete_specimen }}</mat-icon>
+            </a>
+            <a [matTooltip]="formatStav(ex)" matTooltipPosition="above" (click)="viewClick(row, ex)">
+              <mat-icon [ngClass]="classByStav(ex)">{{ iconByStav(ex) }}</mat-icon>
+            </a>
+            <!-- <i mz-icon-mdi class="app-cursor-pointer" [icon]="'package'" [size]="16" mz-tooltip [tooltip]="'Editovat svazek'" [position]="'top'" (click)="viewSvazek(ex['carovy_kod'])"></i>&#160;
+            <i mz-icon-mdi class="app-cursor-pointer" [icon]="'content-duplicate'" [size]="16" mz-tooltip [tooltip]="'Duplikovat exemplář'" [position]="'top'" (click)="duplicate(row, ex)"></i>&#160;
+            <i mz-icon-mdi class="app-cursor-pointer" [icon]="'close-circle-outline'" [size]="16" mz-tooltip [tooltip]="'Smazat exemplář'" [position]="'top'" (click)="deleteEx(row, ex, idxex)"></i>&#160;
+            <i class="app-cursor-pointer" [style.color]="colorByStav(ex)" mz-icon-mdi [icon]="iconByStav(ex)" [size]="20" mz-tooltip [tooltip]="formatStav(ex)" [position]="'top'" (click)="viewClick(row, ex)"></i> -->
+          ]</ng-container>
+        </span>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row [ngClass]="{'app-even': idx%2 == 1}" *matRowDef="let row; let idx = index; columns: displayedColumns;"></tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+  </table>
+  <!-- <mat-paginator [pageSizeOptions]="[25, 100, 200]" showFirstLastButtons></mat-paginator>  --> 
+</div>
+

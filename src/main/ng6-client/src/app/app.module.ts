@@ -8,11 +8,9 @@ import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MaterializeModule } from 'ngx-materialize';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-import { NgProgressModule } from '@ngx-progressbar/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import {
@@ -49,6 +47,7 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
+  MatBadgeModule,
   MAT_DATE_LOCALE,
   MAT_DATE_FORMATS,
   NativeDateModule,
@@ -82,7 +81,7 @@ import { ToolbarNavViewsComponent } from './components/toolbar/toolbar-nav-views
 import { ToolbarCountComponent } from './components/toolbar/toolbar-count/toolbar-count.component';
 import { CalendarListItemComponent } from './components/calendar/calendar-list/calendar-list-item/calendar-list-item.component';
 import { CloneDialogComponent } from './components/clone-dialog/clone-dialog.component';
-import { ResultsTableComponent } from './components/results-table/results-table.component';
+import { ResultTableComponent } from './components/result-table/result-table.component';
 import { AddExemplarDialogComponent } from './components/add-exemplar-dialog/add-exemplar-dialog.component';
 import { AddTitulDialogComponent } from './components/add-titul-dialog/add-titul-dialog.component';
 import { AddVdkExComponent } from './components/add-vdk-ex/add-vdk-ex.component';
@@ -144,7 +143,7 @@ const providers: any[] = [
     ToolbarCountComponent,
     CalendarListItemComponent,
     CloneDialogComponent,
-    ResultsTableComponent,
+    ResultTableComponent,
     AddExemplarDialogComponent,
     AddTitulDialogComponent,
     AddVdkExComponent,
@@ -176,9 +175,7 @@ const providers: any[] = [
         deps: [HttpClient]
       }
     }),
-    MaterializeModule.forRoot(),
     BrowserAnimationsModule,
-    NgProgressModule.forRoot(),
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
@@ -212,6 +209,7 @@ const providers: any[] = [
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatBadgeModule,
     FlexLayoutModule,
     CdkTableModule,
     AppRoutingModule
