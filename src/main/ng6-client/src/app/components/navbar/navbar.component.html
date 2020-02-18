@@ -26,16 +26,13 @@
       <a (click)="gologin()">{{ 'page.login' | translate }}</a>
     </span>
     <ng-container *ngIf="state.user">
-      <span>
-        <a routerLink="profile" matTooltip="{{ 'user.profile' | translate }}">
-          <!-- {{ state.user.nazev }} -->
-          <mat-icon>{{ config.icons.person }}</mat-icon>
-          Novak
-        </a>
-      </span>
-      <span>
-        <a (click)="logout()">{{ 'page.logout' | translate }}</a>
-      </span>
+      <a mat-flat-button [matMenuTriggerFor]="menu" class="app-user">
+        <mat-icon>{{ config.icons.person }}</mat-icon> {{ state.user.nazev }}
+      </a>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="profile">{{ 'page.user_profile' | translate }}</button>
+        <button mat-menu-item (click)="logout()">{{ 'page.logout' | translate }}</button>
+      </mat-menu>
     </ng-container>
     <span *ngIf="currLang !== 'en'">
       <a (click)="changeLang('en')" title="Switch to english">English</a>

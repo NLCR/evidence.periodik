@@ -7,6 +7,13 @@ app-navbar {
 
     a {
       color: $app-navbar-font-color;
+
+      &.app-user {
+        @extend .app-clean-pd;
+        margin: 0 10px;
+        color: $app-primary-color;
+        background-color: rgba($app-color-white, 0.9);
+      }
     }
 
     .brand-logo {

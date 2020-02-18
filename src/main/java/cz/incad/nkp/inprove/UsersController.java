@@ -2,6 +2,7 @@ package cz.incad.nkp.inprove;
 
 import com.alibaba.fastjson.JSON;
 import cz.incad.nkp.inprove.solr.Indexer;
+import cz.incad.nkp.inprove.solr.MD5;
 import cz.incad.nkp.inprove.solr.User;
 import java.io.IOException;
 import java.util.Base64;
@@ -36,7 +37,7 @@ public class UsersController {
       return null;
     }
   }
-  
+
   public static void logout(HttpServletRequest req) {
     req.getSession().invalidate();
   }
@@ -206,19 +207,33 @@ public class UsersController {
   }
 
   public static JSONObject add(JSONObject json) {
-      User user = User.fromJSON(json);
-      JSONObject jo = new JSONObject(JSON.toJSONString(user));
-      return Indexer.indexJSON(jo, "user");
-    
+    User user = User.fromJSON(json);
+    JSONObject jo = new JSONObject(JSON.toJSONString(user));
+    return Indexer.indexJSON(jo, "user");
+  }
+
+  public static JSONObject initAdmin(String pwd) {
+    User user = new User();
+    user.heslo = MD5.generate(pwd);
+    user.nazev = "Administrator";
+    user.username = "admin";
+    user.email = "test@test.cz";
+    user.role = "ADMIN";
+    user.active = true;
+	user.id = MD5.generate(new String[]{user.nazev, user.email});
+    JSONObject jo = new JSONObject(JSON.toJSONString(user));
+    JSONObject ret =  Indexer.indexJSON(jo, "user");
+    ret.put("user", jo);
+    return ret;
   }
 
   public static JSONObject save(JSONObject json) {
-      //Retreive pwd. It should be missed in request
-      JSONObject orig = getOne(json.getString("id"), true);
-      json.put("heslo", orig.get("heslo"));
-      User user = User.fromJSON(json);
-      JSONObject jo = new JSONObject(JSON.toJSONString(user));
-      return Indexer.indexJSON(jo, "user");
+    //Retreive pwd. It should be missed in request
+    JSONObject orig = getOne(json.getString("id"), true);
+    json.put("heslo", orig.get("heslo"));
+    User user = User.fromJSON(json);
+    JSONObject jo = new JSONObject(JSON.toJSONString(user));
+    return Indexer.indexJSON(jo, "user");
   }
 
   public static JSONObject resetHeslo(JSONObject json) {

@@ -19,7 +19,7 @@ import { LoginComponent } from './components/login/login.component';
 const routes: Routes = [
   { path: 'titul', component: MetatitulComponent },
       { path: 'titul/:id', component: MetatitulComponent },
-      { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+      { path: 'admin', component: AdminComponent }, //canActivate: [AuthGuard]
       { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
       { path: 'issue', component: IssueComponent, canActivate: [AuthGuard] },
       { path: 'issue/:id', component: IssueComponent },

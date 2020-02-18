@@ -113,6 +113,27 @@ static boolean isLocalhost = false;
 
       }
     },
+    INITADMIN {
+      @Override
+      JSONObject doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        JSONObject jo = new JSONObject();
+        try {
+          if (isLocalhost) {
+          String pwd = req.getParameter("json");
+          jo = UsersController.initAdmin(pwd);
+          
+          } else {
+            jo.put("error", "Operation allowed only from localhost");
+          }
+        } catch (Exception ex) {
+          LOGGER.log(Level.SEVERE, null, ex);
+          jo.put("error", ex.toString());
+        }
+        return jo;
+
+      }
+    },
     SAVE {
       @Override
       JSONObject doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
