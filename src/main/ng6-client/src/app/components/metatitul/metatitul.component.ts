@@ -5,6 +5,7 @@ import { Titul } from 'src/app/models/titul';
 //import { load } from '@angular/core/src/render3/instructions';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-metatitul',
@@ -20,7 +21,8 @@ export class MetatitulComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private service: AppService,
-    public state: AppState) {
+    public state: AppState,
+    public config: AppConfiguration) {
   }
 
   ngOnDestroy() {

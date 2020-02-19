@@ -51,6 +51,9 @@
     "arrow_left": "keyboard_arrow_left",
     "arrow_right": "keyboard_arrow_right",
     "link": "link",
+    "radio_button_checked": "radio_button_checked",
+    "radio_button_unchecked": "radio_button_unchecked",
+    "lock_outline": "lock_outline",
     
     "duplicate": "file_copy",
     "missing_page": "error",

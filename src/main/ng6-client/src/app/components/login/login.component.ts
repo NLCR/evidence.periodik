@@ -5,6 +5,7 @@ import { first } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/shared/authentication.service';
 import { Router } from '@angular/router';
 import { Md5 } from 'ts-md5';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,8 @@ export class LoginComponent implements OnInit {
   constructor(
     public state: AppState,
     private router: Router,
-    private auth: AuthenticationService) { }
+    private auth: AuthenticationService,
+    public config: AppConfiguration) { }
 
   ngOnInit() {
   }

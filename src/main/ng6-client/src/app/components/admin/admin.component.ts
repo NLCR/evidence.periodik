@@ -3,6 +3,7 @@ import { AppService } from 'src/app/app.service';
 import { AppState } from 'src/app/app.state';
 import { User } from 'src/app/models/user';
 import { Md5 } from 'ts-md5';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-admin',
@@ -17,7 +18,8 @@ export class AdminComponent implements OnInit {
 
   constructor(
     private service: AppService,
-    public state: AppState) {
+    public state: AppState,
+    public config: AppConfiguration) {
   }
 
   ngOnInit() {

@@ -5,8 +5,8 @@
     <mat-list role="list">
       <mat-list-item role="listitem" *ngFor="let t of state.tituly" [ngClass]="{'app-active' : t.id === titul.id}">
         <ng-container [ngSwitch]="t.id">
-          <mat-icon *ngSwitchCase="titul.id">radio_button_checked</mat-icon>
-          <mat-icon *ngSwitchDefault>radio_button_unchecked</mat-icon>
+          <mat-icon *ngSwitchCase="titul.id">{{ config.icons.radio_button_checked }}</mat-icon>
+          <mat-icon *ngSwitchDefault>{{ config.icons.radio_button_unchecked }}</mat-icon>
         </ng-container>
         <a (click)="loadTitul(t)">{{ t.meta_nazev }}</a>
       </mat-list-item>

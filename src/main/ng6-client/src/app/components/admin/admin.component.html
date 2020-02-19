@@ -5,8 +5,8 @@
     <mat-list role="list">
       <mat-list-item role="listitem" *ngFor="let u of users" [ngClass]="{'app-active' : u.id === user.id}">
         <ng-container [ngSwitch]="u.id">
-          <mat-icon *ngSwitchCase="user.id">radio_button_checked</mat-icon>
-          <mat-icon *ngSwitchDefault>radio_button_unchecked</mat-icon>
+          <mat-icon *ngSwitchCase="user.id">{{ config.icons.radio_button_checked }}</mat-icon>
+          <mat-icon *ngSwitchDefault>{{ config.icons.radio_button_unchecked }}</mat-icon>
         </ng-container>
         <a (click)="loadUser(u)">{{ u.nazev }}</a>
       </mat-list-item>
