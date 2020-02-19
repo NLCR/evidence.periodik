@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
   }
 
   showSearchBar() {
-    return this.activeRoute() !== '';
+    return this.activeRoute() !== 'home';
   }
 
   changeLang(lang: string) {
@@ -69,6 +69,15 @@ export class NavbarComponent implements OnInit {
     }
     if (this.state.activePage.indexOf('/titul') > -1) {
       return 'titul';
+    }
+    if (this.state.activePage.indexOf('/home') > -1) {
+      return 'home';
+    }
+    if (this.state.activePage.indexOf('/admin') > -1) {
+      return 'admin';
+    }
+    if (this.state.activePage.indexOf('/profile') > -1) {
+      return 'profile';
     }
     return '';
   }

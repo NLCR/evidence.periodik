@@ -5,37 +5,38 @@ app-navbar {
     height: $app-navbar-height;
     background-color: $app-primary-color;
 
-    a {
-      color: $app-navbar-font-color;
-      padding: 10px;
-
-      &.app-user {
-        padding: 0 10px;
-        margin: 0 10px;
-        color: $app-primary-color;
-        background-color: rgba($app-color-white, 0.8);
-      }
-
-      &.active {
-        @extend .app-font-bold;
-        background-color: $app-primary-color-darker;
-        color: $app-color-white;
-        border-radius: $app-border-radius;
-      }
-    }
-
-    .brand-logo {
+    .app-fx-left {
       @extend .app-font-light;
-      font-size: 1.8rem;
-      position: inherit;
-      margin-right: 20px;
+
+      .app-logo {
+        font-size: 1.8rem;
+        position: inherit;
+        //margin-right: 20px;
+        color: $app-color-white;
+
+        span {
+          color: rgba($app-navbar-font-color, .7);
+        }
+      }
 
       span {
-        color: rgba($app-navbar-font-color, .7);
+        &.app-pipe {
+          border-color: rgba($app-navbar-font-color, .7) !important;
+          font-size: 1.4rem;
+          vertical-align: top;
+        }
+
+        &.app-route {
+          font-size: 1.4rem;
+          color: rgba($app-navbar-font-color, .7);
+          vertical-align: top;
+        }
       }
     }
 
-    .app-fx-left {
+    
+
+    .app-fx-middle {
       app-search-bar {
         .app-search-bar-container {
           border-color: $app-color-white;
@@ -46,6 +47,25 @@ app-navbar {
 
     .app-fx-right {
       text-align: right;
+
+      a {
+        color: $app-navbar-font-color;
+        padding: 10px;
+  
+        &.app-user {
+          padding: 0 10px;
+          margin: 0 10px;
+          color: $app-primary-color;
+          background-color: rgba($app-color-white, 0.8);
+        }
+  
+        &.active {
+          @extend .app-font-bold;
+          background-color: $app-primary-color-darker;
+          color: $app-color-white;
+          border-radius: $app-border-radius;
+        }
+      }
     }
   }
 }

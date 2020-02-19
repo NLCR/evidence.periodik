@@ -4,18 +4,22 @@
     "title": "Evidence periodik",
     "title1": "Evidence",
     "title2": "periodik",
-    "desc": "systém pro vyhledávání v evidenci periodik",
+    "desc": "systém pro vyhledávání v evidenci periodik"
+  },
+  "route": {
+    "home": "domovská stránka",
     "results": "přehled exemplářů",
     "svazek": "editace svazku",
-    "issue": "editace výtisk",
-    "titul": "editace meta titulu"
+    "issue": "editace výtisku",
+    "titul": "editace meta titulu",
+    "admin": "administrace uživatelů"
   },
-  "page": {
+  "navbar": {
     "home": "Home",
     "meta_titles": "Metatituly",
     "volume": "Svazek",
     "add_record": "Vložit záznam",
-    "administration": "Administrace",
+    "administration": "Správa",
     "user_profile": "Profil uživatele",
     "login": "Přihlásit",
     "logout": "Odhlásit"

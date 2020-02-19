@@ -1,37 +1,43 @@
 <mat-toolbar>
-  <a routerLink="home" class="brand-logo">
-    <span>{{ 'app.title1' | translate }}</span> {{ 'app.title2' | translate }}
-    <!-- <span *ngIf="activeRoute() !== ''">- {{'app.' + activeRoute() | translate}}</span> -->
-  </a>
-  <div fxFlex class="app-fx-left" *ngIf="showSearchBar()">
+  <div fxFlex="304px" class="app-fx-left">
+    <a routerLink="home" class="app-logo">
+      <!-- <span>{{ 'app.title1' | translate }}</span> {{ 'app.title2' | translate }} -->
+      <span>E</span>P<!--
+    --></a>
+    <span class="app-pipe" *ngIf="activeRoute() !== ''"></span>
+    <span *ngIf="activeRoute() !== ''" class="app-route">{{ 'route.' + activeRoute() | translate }}</span>
+  </div>
+ 
+  <div fxFlex class="app-fx-middle" *ngIf="showSearchBar()">
     <app-search-bar></app-search-bar>
   </div>
+
   <div fxFlex class="app-fx-right">
     <span>
-      <a routerLink="home" routerLinkActive="active">{{ 'page.home' | translate }}</a>
+      <a routerLink="home" routerLinkActive="active">{{ 'navbar.home' | translate }}</a>
     </span>
     <span>
-      <a routerLink="titul" routerLinkActive="active">{{ 'page.meta_titles' | translate }}</a>
+      <a routerLink="titul" routerLinkActive="active">{{ 'navbar.meta_titles' | translate }}</a>
+    </span>
+    <!-- <span>
+      <a routerLink="svazek" routerLinkActive="active">{{ 'navbar.volume' | translate }}</a>
+    </span> -->
+    <span>
+      <a routerLink="issue" routerLinkActive="active">{{ 'navbar.add_record' | translate }}</a>
     </span>
     <span>
-      <a routerLink="svazek" routerLinkActive="active">{{ 'page.volume' | translate }}</a>
-    </span>
-    <span>
-      <a routerLink="issue" routerLinkActive="active">{{ 'page.add_record' | translate }}</a>
-    </span>
-    <span>
-      <a routerLink="admin" routerLinkActive="active">{{ 'page.administration' | translate }}</a>
+      <a routerLink="admin" routerLinkActive="active">{{ 'navbar.administration' | translate }}</a>
     </span>
     <span *ngIf="!state.user">
-      <a (click)="gologin()">{{ 'page.login' | translate }}</a>
+      <a (click)="gologin()">{{ 'navbar.login' | translate }}</a>
     </span>
     <ng-container *ngIf="state.user">
       <a mat-flat-button [matMenuTriggerFor]="menu" class="app-user">
         <mat-icon>{{ config.icons.person }}</mat-icon> {{ state.user.nazev }}
       </a>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="profile">{{ 'page.user_profile' | translate }}</button>
-        <button mat-menu-item (click)="logout()">{{ 'page.logout' | translate }}</button>
+        <button mat-menu-item routerLink="profile">{{ 'navbar.user_profile' | translate }}</button>
+        <button mat-menu-item (click)="logout()">{{ 'navbar.logout' | translate }}</button>
       </mat-menu>
     </ng-container>
     <span *ngIf="currLang !== 'en'">

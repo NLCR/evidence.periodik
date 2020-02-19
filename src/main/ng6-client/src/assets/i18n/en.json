@@ -4,13 +4,17 @@
     "title": "Registration of periodicals",
     "title1": "Registration",
     "title2": "of periodicals",
-    "desc": "system for searching in the registration of periodicals",
+    "desc": "system for searching in the registration of periodicals"
+  },
+  "route": {
+    "home": "home page",
     "results": "exemplars overview",
     "svazek": "volume edit",
     "issue": "issue edit",
-    "titul": "meta titul edit"
+    "titul": "meta titul edit",
+    "admin": "user administration"
   },
-  "page": {
+  "navbar": {
     "home": "Home",
     "meta_titles": "Metatitles",
     "volume": "Volume",
