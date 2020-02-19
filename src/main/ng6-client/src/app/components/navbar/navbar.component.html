@@ -8,19 +8,19 @@
   </div>
   <div fxFlex class="app-fx-right">
     <span>
-      <a routerLink="home">{{ 'page.home' | translate }}</a>
+      <a routerLink="home" routerLinkActive="active">{{ 'page.home' | translate }}</a>
     </span>
     <span>
-      <a routerLink="titul">{{ 'page.meta_titles' | translate }}</a>
+      <a routerLink="titul" routerLinkActive="active">{{ 'page.meta_titles' | translate }}</a>
     </span>
     <span>
-      <a routerLink="svazek">{{ 'page.volume' | translate }}</a>
+      <a routerLink="svazek" routerLinkActive="active">{{ 'page.volume' | translate }}</a>
     </span>
     <span>
-      <a routerLink="issue">{{ 'page.add_record' | translate }}</a>
+      <a routerLink="issue" routerLinkActive="active">{{ 'page.add_record' | translate }}</a>
     </span>
     <span>
-      <a routerLink="admin">{{ 'page.administration' | translate }}</a>
+      <a routerLink="admin" routerLinkActive="active">{{ 'page.administration' | translate }}</a>
     </span>
     <span *ngIf="!state.user">
       <a (click)="gologin()">{{ 'page.login' | translate }}</a>

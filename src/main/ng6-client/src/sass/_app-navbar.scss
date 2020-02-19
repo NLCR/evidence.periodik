@@ -7,12 +7,20 @@ app-navbar {
 
     a {
       color: $app-navbar-font-color;
+      padding: 10px;
 
       &.app-user {
-        @extend .app-clean-pd;
+        padding: 0 10px;
         margin: 0 10px;
         color: $app-primary-color;
-        background-color: rgba($app-color-white, 0.9);
+        background-color: rgba($app-color-white, 0.8);
+      }
+
+      &.active {
+        @extend .app-font-bold;
+        background-color: $app-primary-color-darker;
+        color: $app-color-white;
+        border-radius: $app-border-radius;
       }
     }
 
@@ -38,10 +46,6 @@ app-navbar {
 
     .app-fx-right {
       text-align: right;
-
-      span {
-        padding: 0 10px;
-      }
     }
   }
 }

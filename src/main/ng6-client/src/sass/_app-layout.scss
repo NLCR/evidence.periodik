@@ -92,5 +92,9 @@ app-root {
     app-admin {    
       @import "app-admin";
     }
+
+    app-profile {
+      @import "app-profile";
+    }
   }  
 }

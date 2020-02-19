@@ -5,8 +5,8 @@
     <mat-form-field *ngIf="state.isNewIssue">
       <mat-label>Metatitul</mat-label> 
       <mat-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()">
-        <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx" >
-          {{ food.viewValue }}
+        <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx">
+          {{ tit.meta_nazev }}
         </mat-option>
         <mat-option [value]="-1">
           {{ 'Add new titul' | translate }}

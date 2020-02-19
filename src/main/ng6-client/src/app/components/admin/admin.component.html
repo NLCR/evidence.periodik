@@ -15,23 +15,23 @@
   <div fxFlex class="app-fx-right" *ngIf="user">
     <form (ngSubmit)="save()" #userForm="ngForm">
       <div fxLayout="row" fxLayoutGap="16px">
-        <mat-form-field>
+        <mat-form-field fxFlex>
           <input matInput [(ngModel)]="user.username" name="username" id="username" [placeholder]="'user.username' | translate" required cdkFocusInitial />
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field fxFlex>
           <input matInput [(ngModel)]="user.nazev" name="nazev" id="nazev" [placeholder]="'user.nazev' | translate" required />
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field fxFlex>
           <input matInput [(ngModel)]="user.email" name="email" id="email" [placeholder]="'user.email' | translate"  />
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field fxFlex>
           <input matInput [(ngModel)]="user.poznamka" name="poznamka" id="poznamka" [placeholder]="'user.poznamka' | translate"  />
         </mat-form-field>
 
-        <mat-form-field>
+        <mat-form-field fxFlex>
           <mat-label>{{ 'user.roles' | translate }}</mat-label>
           <mat-select [(ngModel)]="user.role" id="role" name="role">
             <mat-option value="'user'">{{ 'user.role.user' | translate }}</mat-option>
