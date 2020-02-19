@@ -166,10 +166,8 @@ li.app-page-item label{
 
 // toolbar
 .mat-toolbar {
-  .mat-icon {
-    //@include setIcon(22);
-    color: $app-primary-color-darker;
-    vertical-align: middle;
+  .mat-icon{
+    @include setIcon($va: middle); 
   }
 }
 
@@ -181,8 +179,6 @@ li.app-page-item label{
 
   .mat-icon {
     @include setIcon(18);
-    vertical-align: bottom;
-    color: $app-primary-color-darker;
   }
 
   .mat-expansion-panel-header,
@@ -201,26 +197,8 @@ li.app-page-item label{
 
 // mat list
 .mat-list {
-  .mat-list-item {
-    .mat-icon {
-      margin-right: $app-gap-icon !important;
-    }
-  }
-
   .mat-icon {
-    @include setIcon(18);
-    vertical-align: bottom;
-  }
-
-  &.app-list-view-facet {
-    .mat-list-item {
-      height: $app-list-view-facet-item-height;
-      color: $app-list-view-facet-item-color;
-
-      &:hover {
-        color: $app-primary-color-darker;
-      }
-    }
+    @include setIcon(18, $color: inherit);
   }
 }
 
@@ -233,7 +211,6 @@ li.app-page-item label{
   
   .mat-icon {
     @include setIcon(16); 
-    vertical-align: bottom;
   }
 
   .mat-datepicker-toggle-default-icon {

@@ -50,7 +50,9 @@
       }
       
     }
-
-    @extend .app-list-view-facet;
+    
+    .mat-list-item {
+      @include setListItemView();
+    }
   }
 }

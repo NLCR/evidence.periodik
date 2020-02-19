@@ -41,11 +41,34 @@
 
 
 // set icon size
-@mixin setIcon($size, $color: inherit) {
+@mixin setIcon($size: 24, $va: bottom, $mg_right: $app-gap-icon, $mg_left: 0, $color: $app-primary-color-darker) {
   font-size: #{$size}px;
   height: #{$size}px;
   width: #{$size}px;
   color: $color;
+  vertical-align: $va;
+  margin-right: $mg_right;
+  margin-left: #{$mg_left};
+}
+
+
+// set list item view
+@mixin setListItemView(
+  $height: $app-list-view-facet-item-height, 
+  $color: $app-list-view-facet-item-color, 
+  $color_hover: $app-primary-color-darker, 
+  $color_active: $app-primary-color-darker) {
+
+  height: $height;
+  color: $color;
+
+  &:hover {
+    color: $color_hover;
+  }
+
+  &.app-active {
+    color: $color_active;
+  }
 }
 
 

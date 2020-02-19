@@ -8,15 +8,10 @@
     @extend .app-fx-facet;
 
     .mat-list {
-      @extend .app-list-view-facet;
       padding: $app-gap 0;
 
       .mat-list-item {
-        height: 30px !important;
-        
-        &.app-active {
-          color: $app-primary-color-darker;
-        }
+        @include setListItemView($height: 30px);
       }
     }
   }
