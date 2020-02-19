@@ -88,5 +88,9 @@ app-root {
     app-login {    
       @import "app-login";
     }
+
+    app-admin {    
+      @import "app-admin";
+    }
   }  
 }
