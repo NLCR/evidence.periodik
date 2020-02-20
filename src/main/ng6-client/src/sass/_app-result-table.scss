@@ -95,28 +95,16 @@ app-result-table {
           }
         }
       }
+    }
 
-      tfoot {
-        background-color: $app-color-white;
+    .mat-paginator {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      box-shadow: 0px -4px 36px 4px rgba(0,0,0,0.15);
 
-        .mat-footer-row {
-          .mat-footer-cell {
-            &:first-child {
-              @extend .app-clean-border;
-              padding-left: 0;
-
-              .app-paginator-wrapper {
-                display: flex;
-                justify-content: flex-start;
-                box-shadow: 0px -4px 36px 4px rgba(0,0,0,0.15);
-              }
-            }
-
-            &:not(:first-child) {
-              display: none;
-            }
-          }
-        }
+      .mat-paginator-container {
+        justify-content: flex-start;
       }
     }
   }
