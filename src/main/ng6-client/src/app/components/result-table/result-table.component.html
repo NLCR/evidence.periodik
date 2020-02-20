@@ -27,14 +27,6 @@
         <span *ngIf="idx == 0 || data[idx-1]['mutace'] !== data[idx]['mutace']">{{row.mutace}}</span>
         <span *ngIf="idx !== 0 && data[idx-1]['mutace'] === data[idx]['mutace']"> -- || --</span>
       </td>
-      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-        <div class="app-paginator-wrapper">
-          <!--
-            <mat-paginator [pageSizeOptions]="[5, 100, 200]" showFirstLastButtons></mat-paginator>
-          -->
-          
-        </div>
-      </td>
     </ng-container>
 
     <ng-container matColumnDef="datum_vydani">
@@ -43,8 +35,7 @@
       </th>
       <td mat-cell *matCellDef="let row">
         <a (click)="onCalendarClick(row)">{{ row.datum_vydani | date: 'dd.MM.yyyy' }}</a> 
-      </td>
-      <td mat-footer-cell *matFooterCellDef></td>
+      </td>    
     </ng-container>
 
     <ng-container matColumnDef="vydani">
@@ -54,24 +45,21 @@
       <td mat-cell *matCellDef="let row; let idx = index">
         <span *ngIf="row.vydani">{{ 'record.publication.' + row.vydani | translate }}</span>
         <span *ngIf="!row.vydani">{{ 'record.publication.empty' | translate }}</span>
-      </td>
-      <td mat-footer-cell *matFooterCellDef></td>
+      </td>  
     </ng-container>
 
     <ng-container matColumnDef="cislo">
       <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
         <div>{{ 'record.number' | translate }}</div>
       </th>
-      <td mat-cell *matCellDef="let row">{{ row.cislo }}</td>
-      <td mat-footer-cell *matFooterCellDef></td>
+      <td mat-cell *matCellDef="let row">{{ row.cislo }}</td>     
     </ng-container>
 
     <ng-container matColumnDef="pocet_stran">
       <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
         <div>{{ 'record.pages_count' | translate }}</div>
       </th>
-      <td mat-cell *matCellDef="let row">{{ row.pocet_stran }}</td>
-      <td mat-footer-cell *matFooterCellDef></td>
+      <td mat-cell *matCellDef="let row">{{ row.pocet_stran }}</td>  
     </ng-container>
 
     <ng-container matColumnDef="add">
@@ -86,8 +74,7 @@
         <a [matTooltip]="'Editovat issue' | translate" matTooltipPosition="above" (click)="viewIssue(row)">
           <mat-icon>{{ config.icons.edit_issue }}</mat-icon>
         </a>
-      </td>
-      <td mat-footer-cell *matFooterCellDef></td>
+      </td>   
     </ng-container>
     
     <ng-container *ngFor="let vl of vlastnici" [matColumnDef]="vl">
@@ -116,13 +103,11 @@
             <i class="app-cursor-pointer" [style.color]="colorByStav(ex)" mz-icon-mdi [icon]="iconByStav(ex)" [size]="20" mz-tooltip [tooltip]="formatStav(ex)" [position]="'top'" (click)="viewClick(row, ex)"></i> -->
           ]</ng-container>
         </span>
-      </td>
-      <td mat-footer-cell *matFooterCellDef></td>
+      </td>     
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row [ngClass]="{'app-even': idx%2 == 1}" *matRowDef="let row; let idx = index; columns: displayedColumns;"></tr>
-    <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
   </table>
   <mat-paginator [pageSizeOptions]="[25, 100, 200]" showFirstLastButtons></mat-paginator>
 </div>
