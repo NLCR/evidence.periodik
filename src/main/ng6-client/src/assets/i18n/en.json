@@ -30,13 +30,15 @@
     "delete_query": "Delete query"
   },
   "desc": {
-    "records": "records",
-    "specimens": "specimens",
-    "mutations": "mutations",
-    "owners": "owners",
-    "digitized": "digitized",
-    "atribut": "names",
-    "hodnota": "value"
+    "records": "Records",
+    "specimens": "Specimens",
+    "mutations": "Mutations",
+    "owners": "Owners",
+    "digitized": "Digitized",
+    "atribut": "Names",
+    "hodnota": "Value",
+    "add_new_title": "Add new title",
+    "save": "Save"
   },
 
 
@@ -47,7 +49,7 @@
   },
   "record": {
     "meta_title": "Meta title",
-    "id_titul": "title Id",
+    "id_titul": "Title Id",
     "name_title_page": "Name on title page",
     "subname_title_page": "Subname on title page",
     "time_publication": "Time of publication",

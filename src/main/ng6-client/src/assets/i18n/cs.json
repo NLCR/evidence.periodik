@@ -30,13 +30,15 @@
     "delete_query": "Odstranit dotaz"
   },
   "desc": {
-    "records": "záznamů",
-    "specimens": "exemplářů",
-    "mutations": "mutací",
-    "owners": "vlastníků",
-    "digitized": "digitalizováno",
-    "atribut": "názvy",
-    "hodnota": "hodnota"
+    "records": "Záznamů",
+    "specimens": "Exemplářů",
+    "mutations": "Mutací",
+    "owners": "Vlastníků",
+    "digitized": "Digitalizováno",
+    "atribut": "Názvy",
+    "hodnota": "Hodnota",
+    "add_new_title": "Vložit nový titul",
+    "save": "Uložit"
   },
 
 
@@ -74,7 +76,7 @@
       "evening": "Večerní",
       "special": "Zvláštní"
     },
-    "pages_count": "počet stran",
+    "pages_count": "Počet stran",
     "lost_pages": "Poškozené/Chybějicí strany",
     "pages_missing": "Chybějicí strany",
     "pages_damaged": "Poškozené strany",
