@@ -28,14 +28,6 @@ app-root {
       @import "app-result-item";
     }
     
-    app-add-record {
-      display: block;
-      width: 100%;
-      height: calc(100% - #{$app-toolbar-height});
-      
-      @import "app-add-record";
-    }
-    
     app-issue {
       display: block;
       width: 100%;

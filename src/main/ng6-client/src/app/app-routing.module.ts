@@ -12,7 +12,6 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { CalendarMonthComponent } from './components/calendar/calendar-month/calendar-month.component';
 import { CalendarYearComponent } from './components/calendar/calendar-year/calendar-year.component';
 import { CalendarListComponent } from './components/calendar/calendar-list/calendar-list.component';
-import { AddRecordComponent } from './components/add-record/add-record.component';
 import { LoginComponent } from './components/login/login.component';
 
 
@@ -39,7 +38,6 @@ const routes: Routes = [
           { path: 'list/:day', component: CalendarListComponent }
         ]
       },
-      { path: 'add-record', component: AddRecordComponent },
       { path: 'login', component: LoginComponent },
       { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
