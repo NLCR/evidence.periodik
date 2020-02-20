@@ -1,5 +1,5 @@
 <mat-toolbar>
-  <div fxFlex="304px" class="app-fx-left">
+  <div fxFlex="320px" class="app-fx-left">
     <a routerLink="home" class="app-logo">
       <!-- <span>{{ 'app.title1' | translate }}</span> {{ 'app.title2' | translate }} -->
       <span>E</span>P<!--
@@ -8,7 +8,7 @@
     <span *ngIf="activeRoute() !== ''" class="app-route">{{ 'route.' + activeRoute() | translate }}</span>
   </div>
  
-  <div fxFlex class="app-fx-middle" *ngIf="showSearchBar()">
+  <div fxFlex="640px" class="app-fx-middle" *ngIf="showSearchBar()">
     <app-search-bar></app-search-bar>
   </div>
 
