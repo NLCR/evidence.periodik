@@ -100,7 +100,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   mutations: { name: string, type: string, value: number }[];
   oznaceni_list: { name: string, type: string, value: number }[];
 
-  cislaVeSvazku: CisloSvazku[];
+  cislaVeSvazku: CisloSvazku[] = [];
   popText: string;
   popShowPages: boolean;
   pagesRange: { label: string, sel: boolean }[];
