@@ -3,19 +3,19 @@
 <div fxLayout="row" fxLayoutGap="16px" class="app-issue-wrapper">
   <div fxFlex>
     <mat-form-field *ngIf="state.isNewIssue">
-      <mat-label>Metatitul</mat-label> 
+      <mat-label>{{ 'record.meta_title' | translate }}</mat-label> 
       <mat-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()">
         <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx">
           {{ tit.meta_nazev }}
         </mat-option>
         <mat-option [value]="-1">
-          {{ 'Add new titul' | translate }}
+          {{ 'desc.add_new_title' | translate }}
         </mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput [matDatepicker]="picker" [placeholder]="'Choose a date' | translate">
+      <input matInput [matDatepicker]="picker" [placeholder]="'desc.choose_date' | translate">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>

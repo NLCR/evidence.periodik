@@ -38,7 +38,8 @@
     "atribut": "Names",
     "hodnota": "Value",
     "add_new_title": "Add new title",
-    "save": "Save"
+    "save": "Save",
+    "choose_date": "Choose a date" 
   },
 
 
@@ -49,14 +50,17 @@
   },
   "record": {
     "meta_title": "Meta title",
-    "id_titul": "Title Id",
     "name_title_page": "Name on title page",
     "subname_title_page": "Subname on title page",
     "time_publication": "Time of publication",
+    "titul": "Title",
     "mutation": "Mutation",
     "mutace": "Mutation",
     "date_publication": "Date of publication",
-    "carovy_kod": "Čárový kód",
+    "znak_oznaceni_vydani": "Edition label",
+    "oznaceni": "Mutation edition label (stars)",
+    "popis_oznaceni_vydani": "Description of mutation designation",
+    "carovy_kod": "Barcode",
     "datum_od": "Date from",
     "datum_do": "Date until",
     "prvni_cislo": "First number",
@@ -65,22 +69,14 @@
     "poznamka": "Notes",
     "publication": {
       "": " ",
+      "empty": "Without destination",
       "placeholder": "Publication",
       "morning": "Morning",
       "midday": "Midday",
       "afternoon": "Afternoon",
       "evening": "Evening",
       "special": "Special"
-    },
-    
-    "periodicita": {
-      "placeholder": "Periodicity",
-      "P1W": "Weekly",
-      "P1D": "Dayly",
-      "P1Y": "Per year",
-      "P1M": "Monthly",
-      "P6M": "Twice per year"
-    },
+    },    
     "pages_count": "Pages count",
     "lost_pages" : "Damaged/lost pages",
     "pages_missing": "Missing pages",
@@ -96,10 +92,29 @@
       "ChPag": "incorrect pagination",
       "ChCis": "Incorrect numbering",
       "ChSv": "Incorrectly bound",
+      "ChDatum": "Wrong date",
       "Cz": "Censored",
-      "CzV": "Censorship printout"
+      "CzV": "Censorship printout",
+      "Z": "Not at all (destroyed/lost)",
+      "PolS": "Spilled sides",
+      "NT": "Unreadable printing",
+      "PopS": "Described parties",
+      "Prl": "Taped",
+      "ChCl": "Missing article",
+      "NS": "Unreadably bound",
+      "ZV": "Replacement Edition",
+      "NeS": "Unbound"
+    },
+    "periodicita": {
+      "placeholder": "Periodicity",
+      "P1W": "Weekly",
+      "P1D": "Dayly",
+      "P1Y": "Per year",
+      "P1M": "Monthly",
+      "P6M": "Twice per year"
     },
     "year": "Year",
+    "volume": "Volume",
     "number": "Number",
     "second_number": "Second number",
     "state_desc": "State - description",
@@ -110,6 +125,7 @@
     "url_bib_record": "Url bib record",
     "uuid_number": "Uuid number",
     "uuid_title": "Uuid title",
+    "id_titul": "Title Id",
     "url_kramerius": "URL of Kramerius",
     "specimen_count": "Specimen count",
     "specimen_number": "Specimen number"
@@ -139,10 +155,12 @@
       "delete_this_filter": "Delete this filter"
     },
     "meta_nazev": "Title",
+    "nazev": "Title on the title page",
     "date": "Date",
-    "stav": "State",
     "vlastnik": "Owner",
+    "stav": "State",
     "mutace": "Mutation",
+    "znak_oznaceni_vydani": "Mutation edition",
     "vydani":"Publication"
   },
   "result": {
@@ -153,7 +171,7 @@
     }
   },
   "calendar": {
-    "next_issues": "next issues",
+    "next_issues": "Next issues",
     "tooltip": {
       "previous_month": "Previous month",
       "next_month": "Next month",
@@ -172,6 +190,8 @@
     "till": "Till",
     "periodicity": "Periodicity",
     "on_special_days": "On special days",
+    "start_year": "Start year",
+    "start_number": "Startovaci cislo",
     "generate_svazek.caption": "Confirm generate volume",
     "generate_svazek.text": "Are you sure you want generate all the volume numbers? All changes will be deleted. Generating volume doesn't save changes.",
     "read_svazek.caption": "Confirm read whole volume",

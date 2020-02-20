@@ -30,6 +30,13 @@ a,
   font-weight: 300;
 }
 
+.app-fl-low {
+  &:first-of-type {
+    text-transform: lowercase;
+    vertical-align: inherit !important;
+  }
+}
+
 
 //cleaners
 .app-clean-mg {

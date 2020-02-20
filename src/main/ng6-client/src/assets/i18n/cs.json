@@ -38,7 +38,8 @@
     "atribut": "Názvy",
     "hodnota": "Hodnota",
     "add_new_title": "Vložit nový titul",
-    "save": "Uložit"
+    "save": "Uložit",
+    "choose_date": "Vybrat datum" 
   },
 
 
@@ -52,10 +53,10 @@
     "name_title_page": "Název na titulní straně",
     "subname_title_page": "Podnázev na titulní straně",
     "time_publication": "Čas vydání",
-    "titul": "titul",
-    "mutation": "mutace",
-    "mutace": "mutace",
-    "date_publication": "datum",
+    "titul": "Titul",
+    "mutation": "Mutace",
+    "mutace": "Mutace",
+    "date_publication": "Datum publikace",
     "znak_oznaceni_vydani": "Označení vydání",
     "oznaceni": "Označení mutačního vydání (hvězdičky)",
     "popis_oznaceni_vydani": "Popis označení mutace",
@@ -68,8 +69,8 @@
     "poznamka": "Poznámka",
     "publication": {
       "": " ",
-      "empty": "bez určení",
-      "placeholder": "vydání",
+      "empty": "Bez určení",
+      "placeholder": "Vydání",
       "morning": "Ranní",
       "midday": "Polední",
       "afternoon": "Odpolední",
@@ -94,7 +95,7 @@
       "ChDatum": "Chybné datum",
       "Cz": "Cenzurováno",
       "CzV": "Cenzurní výtisk",
-      "Z": "není vůbec (zničeno/ztráta)",
+      "Z": "Není vůbec (zničeno/ztráta)",
       "PolS": "Polité strany",
       "NT": "Nečitelný tisk",
       "PopS": "Popsané strany",
@@ -106,15 +107,15 @@
     },
     "periodicita": {
       "placeholder": "Periodicita",
-      "P1W": "Tydennik",
+      "P1W": "Týdeník",
       "P1D": "Deník",
-      "P1Y": "Rocnik",
-      "P1M": "Mesicnik",
-      "P6M": "Dvakrat za rok"
+      "P1Y": "Ročník",
+      "P1M": "Mesíčník",
+      "P6M": "Dvakrát za rok"
     },
     "year": "Rok",
     "volume": "Ročník",
-    "number": "číslo",
+    "number": "Číslo",
     "second_number": "Druhé číslo",
     "state_desc": "Stav - popis",
     "ownership": "Vlastnictví",
@@ -124,7 +125,7 @@
     "url_bib_record": "Url bib záznamu",
     "uuid_number": "Uuid čísla",
     "uuid_title": "Uuid titulu",
-    "id_titul": "id titulu",
+    "id_titul": "Id titulu",
     "url_kramerius": "URL Krameria",
     "specimen_count": "Počet exemplářů",
     "specimen_number": "Exemplář číslo"
@@ -156,11 +157,11 @@
     "meta_nazev": "Metatitul",
     "nazev": "Název na titulní straně",
     "date": "Datum",
-    "vlastnik": "Vlastnik",
+    "vlastnik": "Vlastník",
     "stav": "Stav",
     "mutace": "Mutace",
     "znak_oznaceni_vydani": "Mutační vydání",
-    "vydani": "Vydani"
+    "vydani": "Vydání"
   },
   "result": {
     "found_records": "Nalezeno záznamů",
@@ -170,7 +171,7 @@
     }
   },
   "calendar": {
-    "next_issues": "další vydání",
+    "next_issues": "Další vydání",
     "tooltip": {
       "previous_month": "Předchozí měsíc",
       "next_month": "Další měsíc",
@@ -189,8 +190,8 @@
     "till": "Do",
     "periodicity": "Periodicita",
     "on_special_days": "Ve speciální dny",
-    "start_year": "Startovaci rocnik",
-    "start_number": "Startovaci cislo",
+    "start_year": "Startovací ročník",
+    "start_number": "Startovací číslo",
     "generate_svazek.caption": "Podtvrdit vygenerovani svazku",
     "generate_svazek.text": "Chtete opravdu generovat cisla pro svazek? Vsechny zmeny budou odstranena. Generovani neulozi data.",
     "read_svazek.caption": "Podtvrdit načíst celý svazek",
