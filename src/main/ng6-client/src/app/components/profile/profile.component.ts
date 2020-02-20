@@ -14,6 +14,7 @@ import { PasswordDialogComponent } from 'src/app/components/password-dialog/pass
 export class ProfileComponent implements OnInit {
 
   user: User;
+  loading: boolean;
 
   constructor(
     public dialog: MatDialog,

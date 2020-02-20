@@ -30,8 +30,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   private overlayRef: OverlayRef;
 
-  /* @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatTable) table: MatTable<any>; // initialize
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  /* @ViewChild(MatTable) table: MatTable<any>; // initialize
   @ViewChild('poznEl') poznEl: ElementRef;
  */
  /*  public calOptions: Pickadate.DateOptions = {
@@ -173,7 +173,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       });
 
       this.dsIssues = new MatTableDataSource(this.cislaVeSvazku);
-      //this.dsIssues.paginator = this.paginator;
+      this.dsIssues.paginator = this.paginator;
       this.loading = false;
     });
   }

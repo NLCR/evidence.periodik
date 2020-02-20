@@ -40,7 +40,7 @@
       </span>
       <span *ngSwitchDefault>
         Exemplar: {{ exemplar.vlastnik }} <a (click)="editSvazek(exemplar.carovy_kod)">{{ exemplar.carovy_kod }}</a>&#160;
-        <a (click)="editSvazek(exemplar.carovy_kod)" [matTooltip]="'Editovat svazek' | translate" [matTooltipPosition]="above">
+        <a (click)="editSvazek(exemplar.carovy_kod)" [matTooltip]="'Editovat svazek' | translate" [matTooltipPosition]="'above'">
           <mat-icon>all_inbox</mat-icon>
         </a>
       </span>

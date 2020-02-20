@@ -212,7 +212,7 @@
           </td>
           <td mat-footer-cell *matFooterCellDef [attr.colspan]="20">
             <div class="app-paginator-wrapper">
-              <mat-paginator *ngIf="cislaVeSvazku.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator> 
+              <!-- <mat-paginator *ngIf="cislaVeSvazku.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>  -->
             </div>
           </td>
         </ng-container> 
@@ -455,7 +455,7 @@
         <tr mat-row *matRowDef="let row; columns: issueColumns;" [style.background]="rowColor(row)"></tr>
         <tr mat-footer-row *matFooterRowDef="issueColumns; sticky: true"></tr>
       </table>
-      <!-- <mat-paginator *ngIf="cislaVeSvazku.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator> -->
+      <mat-paginator *ngIf="cislaVeSvazku.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
     </div>
   </div>
 </div>

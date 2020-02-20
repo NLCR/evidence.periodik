@@ -21,6 +21,10 @@ export class AddVydaniDialogComponent {
   constructor() {
   }
 
+  cancel() {
+    
+  }
+
   ok() {
     this.service.addVydani(this.issue, this.vydani).subscribe(res => {
 
