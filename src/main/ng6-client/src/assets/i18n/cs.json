@@ -12,7 +12,8 @@
     "svazek": "editace svazku",
     "issue": "editace výtisku",
     "titul": "editace meta titulu",
-    "admin": "administrace uživatelů"
+    "admin": "administrace uživatelů",
+    "profile": "profil uživatele"
   },
   "navbar": {
     "home": "Home",
@@ -151,7 +152,8 @@
     "close": "Zavřít",
     "login": "Přihlásit",
     "add_from_vdk": "Vložit z VDK",
-    "add_user": "Přidat uživatele"
+    "add_user": "Přidat uživatele",
+    "password_reset": "Reset hesla"
   },
   "facet": {
     "title": {

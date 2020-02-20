@@ -12,7 +12,8 @@
     "svazek": "volume edit",
     "issue": "issue edit",
     "titul": "meta titul edit",
-    "admin": "user administration"
+    "admin": "user administration",
+    "profile": "user profile"
   },
   "navbar": {
     "home": "Home",
@@ -151,7 +152,8 @@
     "close": "Close",
     "login": "Login",
     "add_from_vdk": "Add from VDK",
-    "add_user": "Add user"
+    "add_user": "Add user",
+    "password_reset": "Password reset"
   },
   "facet": {
     "title": {
