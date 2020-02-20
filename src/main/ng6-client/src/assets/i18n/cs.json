@@ -40,7 +40,14 @@
     "add_new_title": "Vložit nový titul",
     "save": "Uložit",
     "choose_date": "Vybrat datum",
-    "record": "Záznam"
+    "record": "Záznam",
+    "account_name": "Jméno účtu",
+    "username": "Jméno uživatele",
+    "email": "Email",
+    "note": "Poznámka",
+    "user_roles": "Uživatelské role",
+    "user_role": "Uživatel",
+    "admin_role": "Admin"
   },
 
 
@@ -143,7 +150,8 @@
     "cancel": "Zrušit",
     "close": "Zavřít",
     "login": "Přihlásit",
-    "add_from_vdk": "Vložit z VDK"
+    "add_from_vdk": "Vložit z VDK",
+    "add_user": "Přidat uživatele"
   },
   "facet": {
     "title": {

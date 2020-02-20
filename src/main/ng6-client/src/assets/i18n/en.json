@@ -40,7 +40,14 @@
     "add_new_title": "Add new title",
     "save": "Save",
     "choose_date": "Choose a date",
-    "record": "Record"
+    "record": "Record",
+    "account_name": "Account name",
+    "username": "Username",
+    "email": "Email",
+    "note": "Note",
+    "user_roles": "User roles",
+    "user_role": "User",
+    "admin_role": "Admin"
   },
 
 
@@ -143,7 +150,8 @@
     "cancel": "Cancel",
     "close": "Close",
     "login": "Login",
-    "add_from_vdk": "Add from VDK"
+    "add_from_vdk": "Add from VDK",
+    "add_user": "Add user"
   },
   "facet": {
     "title": {

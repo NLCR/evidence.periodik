@@ -16,30 +16,30 @@
     <form (ngSubmit)="save()" #userForm="ngForm">
       <div fxLayout="row" fxLayoutGap="16px">
         <mat-form-field fxFlex>
-          <input matInput [(ngModel)]="user.username" name="username" id="username" [placeholder]="'user.username' | translate" required cdkFocusInitial />
+          <input matInput [(ngModel)]="user.username" name="username" id="username" [placeholder]="'desc.account_name' | translate" required cdkFocusInitial />
         </mat-form-field>
 
         <mat-form-field fxFlex>
-          <input matInput [(ngModel)]="user.nazev" name="nazev" id="nazev" [placeholder]="'user.nazev' | translate" required />
+          <input matInput [(ngModel)]="user.nazev" name="nazev" id="nazev" [placeholder]="'desc.username' | translate" required />
         </mat-form-field>
 
         <mat-form-field fxFlex>
-          <input matInput [(ngModel)]="user.email" name="email" id="email" [placeholder]="'user.email' | translate"  />
+          <input matInput [(ngModel)]="user.email" name="email" id="email" [placeholder]="'desc.email' | translate"  />
         </mat-form-field>
 
         <mat-form-field fxFlex>
-          <input matInput [(ngModel)]="user.poznamka" name="poznamka" id="poznamka" [placeholder]="'user.poznamka' | translate"  />
+          <input matInput [(ngModel)]="user.poznamka" name="poznamka" id="poznamka" [placeholder]="'desc.note' | translate"  />
         </mat-form-field>
 
         <mat-form-field fxFlex>
-          <mat-label>{{ 'user.roles' | translate }}</mat-label>
+          <mat-label>{{ 'desc.user_roles' | translate }}</mat-label>
           <mat-select [(ngModel)]="user.role" id="role" name="role">
-            <mat-option value="'user'">{{ 'user.role.user' | translate }}</mat-option>
-            <mat-option value="'admin'">{{ 'user.role.admin' | translate }}</mat-option>
+            <mat-option value="'user'">{{ 'desc.user_role' | translate }}</mat-option>
+            <mat-option value="'admin'">{{ 'desc.admin_role' | translate }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-      <button mat-flat-button color="primary" (click)="newUser()" type="button">{{ 'Přidat uživatel' | translate }}</button>
+      <button mat-flat-button color="primary" (click)="newUser()" type="button">{{ 'button.add_user' | translate }}</button>
       <button mat-flat-button color="primary" type="submit" [disabled]="!userForm.form.valid">{{ 'button.save' | translate }}</button>
     </form>
   </div>
