@@ -125,6 +125,10 @@ export class AddVdkExComponent {
     this.dataSource = new MatTableDataSource(this.exsFiltered);
   }
 
+  cancel() {
+    
+  }
+
   ok() {
     let ops = {
       format: this.format,

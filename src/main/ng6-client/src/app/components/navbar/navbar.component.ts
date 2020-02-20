@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit {
     private authservice: AuthenticationService,
     public state: AppState,
     private service: AppService,
-    private config: AppConfiguration) {
+    public config: AppConfiguration) {
   }
 
   ngOnInit() {

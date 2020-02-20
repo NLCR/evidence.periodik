@@ -127,7 +127,7 @@
               <outputDirectory>${project.basedir}/src/main/webapp</outputDirectory>
               <resources>
                 <resource>
-                  <directory>src/main/ng6-client/dist/ng6-client</directory>
+                  <directory>src/main/ng6-client/dist/ng-client</directory>
                   <includes>
                     <include>*/**</include>
                   </includes>

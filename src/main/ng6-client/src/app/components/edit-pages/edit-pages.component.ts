@@ -49,4 +49,10 @@ export class EditPagesComponent {
     //this.modalComponent.closeModal();
   }
 
+  
+
+  cancel() {
+    
+  }
+
 }

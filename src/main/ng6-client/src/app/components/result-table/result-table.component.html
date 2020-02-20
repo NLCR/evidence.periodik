@@ -27,9 +27,12 @@
         <span *ngIf="idx == 0 || data[idx-1]['mutace'] !== data[idx]['mutace']">{{row.mutace}}</span>
         <span *ngIf="idx !== 0 && data[idx-1]['mutace'] === data[idx]['mutace']"> -- || --</span>
       </td>
-      <td mat-footer-cell *matFooterCellDef [attr.colspan]="9">
+      <td mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
         <div class="app-paginator-wrapper">
-          <mat-paginator [pageSizeOptions]="[25, 100, 200]" showFirstLastButtons></mat-paginator>
+          <!--
+            <mat-paginator [pageSizeOptions]="[5, 100, 200]" showFirstLastButtons></mat-paginator>
+          -->
+          
         </div>
       </td>
     </ng-container>
@@ -121,6 +124,6 @@
     <tr mat-row [ngClass]="{'app-even': idx%2 == 1}" *matRowDef="let row; let idx = index; columns: displayedColumns;"></tr>
     <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
   </table>
-  <!-- <mat-paginator [pageSizeOptions]="[25, 100, 200]" showFirstLastButtons></mat-paginator>  --> 
+  <mat-paginator [pageSizeOptions]="[25, 100, 200]" showFirstLastButtons></mat-paginator>
 </div>
 

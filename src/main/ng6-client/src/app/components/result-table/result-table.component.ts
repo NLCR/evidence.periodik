@@ -19,7 +19,7 @@ import { AppConfiguration } from 'src/app/app-configuration';
 })
 export class ResultTableComponent implements OnInit {
 
-  //@ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   data: Issue[] = [];
   vlastnici: string[] = [];
   exs: any = {};
@@ -112,7 +112,7 @@ export class ResultTableComponent implements OnInit {
 //    });
 
     this.dataSource = new MatTableDataSource(this.data);
-    //this.dataSource.paginator = this.paginator;
+    this.dataSource.paginator = this.paginator;
     this.loading = false;
   }
 

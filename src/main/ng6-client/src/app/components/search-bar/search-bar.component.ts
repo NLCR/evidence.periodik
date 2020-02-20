@@ -25,4 +25,8 @@ export class SearchBarComponent implements OnInit {
       this.router.navigate(['/result']);
     }
   }
+
+  clearQuery() {
+    this.state.q = '';
+  }
 }
