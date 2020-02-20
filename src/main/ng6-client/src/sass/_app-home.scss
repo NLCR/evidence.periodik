@@ -5,6 +5,7 @@
   height: calc(100% - #{$app-navbar-height});
   background-color: $app-gray-1;
   padding: $app-gap;
+  padding-top: 150px;
 
   .app-row-logo {
     justify-content: center;
