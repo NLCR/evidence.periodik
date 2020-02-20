@@ -210,11 +210,6 @@
               <mat-icon [matTooltip]="'Editovat issue' | translate" matTooltipPosition="above">{{ config.icons.edit_issue }}</mat-icon>
             </a>
           </td>
-          <td mat-footer-cell *matFooterCellDef [attr.colspan]="20">
-            <div class="app-paginator-wrapper">
-              <!-- <mat-paginator *ngIf="cislaVeSvazku.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>  -->
-            </div>
-          </td>
         </ng-container> 
 
         <!-- Date -->
@@ -222,8 +217,7 @@
           <th mat-header-cell *matHeaderCellDef>{{ 'datum' | translate }}</th>
           <td mat-cell *matCellDef="let element">
             {{ element.datum_vydani | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>        
         </ng-container>
     
         <!-- Number exist -->
@@ -233,8 +227,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox [(ngModel)]="element.numExists"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>         
         </ng-container>
 
         <!-- Add next edition -->
@@ -246,8 +239,7 @@
             <a (click)="addIssue(element, idx)" *ngIf="element.numExists">
               <mat-icon [matTooltip]="'Přidat další výpis' | translate" matTooltipPosition="above">{{ config.icons.add_circle }}</mat-icon> 
             </a>         
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>       
         </ng-container>
     
         <!-- Edition number -->
@@ -257,8 +249,7 @@
             <mat-form-field *ngIf="element.numExists" class="app-short-text">
               <input type="text" matInput [(ngModel)]="element.cislo">
             </mat-form-field>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>       
         </ng-container>
 
         <!-- Mutation -->
@@ -272,8 +263,7 @@
             <mat-autocomplete #auto3="matAutocomplete">
               <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
             </mat-autocomplete>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>      
         </ng-container>
 
         <!-- Edition -->
@@ -285,8 +275,7 @@
                 <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}</mat-option>
               </mat-select>
             </mat-form-field>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>        
         </ng-container>
 
         <!-- This is attachement -->
@@ -296,8 +285,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox [(ngModel)]="element.isPriloha" *ngIf="element.numExists"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>     
         </ng-container>
 
         <!-- Attachement name -->
@@ -312,8 +300,7 @@
                 <mat-icon>{{ config.icons.pencil }}</mat-icon>
               </mat-form-field>
             </ng-container>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>      
         </ng-container>
 
         <!-- Page number -->
@@ -325,8 +312,7 @@
             <mat-form-field *ngIf="element.numExists" class="app-short-text">
               <input type="text" matInput [(ngModel)]="element.pocet_stran">
             </mat-form-field>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>     
         </ng-container>
 
         <!-- Mutation edition -->
@@ -338,8 +324,7 @@
             <mat-form-field *ngIf="element.numExists" class="app-short-text">
               <input type="text" matInput [(ngModel)]="element.znak_oznaceni_vydani">
             </mat-form-field>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td> 
         </ng-container>
 
         <!-- Destroyed pages -->
@@ -350,8 +335,7 @@
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.destroyedPages"
             #dsp (mouseenter)="viewPS(element, 'destroyedPages', dsp, infoPopup)"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>       
         </ng-container>
 
         <!-- Degradated -->
@@ -362,8 +346,7 @@
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.degradated"
             #deg (mouseenter)="viewPS(element, 'degradated', deg, infoPopup)"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>         
         </ng-container>
 
         <!-- Missing pages -->
@@ -374,8 +357,7 @@
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.missingPages"
             #mp (mouseenter)="viewPS(element, 'missingPages', mp, infoPopup)"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>         
         </ng-container>
 
         <!-- Erroneous paging -->
@@ -386,8 +368,7 @@
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousPaging"
             #ep (mouseenter)="viewPS(element, 'erroneousPaging', ep, infoPopup)"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td> 
         </ng-container>
 
         <!-- Erroneous date -->
@@ -398,8 +379,7 @@
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousDate"
             #ed (mouseenter)="viewPS(element, 'erroneousDate', ed, infoPopup)"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>      
         </ng-container>
 
         <!-- Erroneous numbering -->
@@ -410,8 +390,7 @@
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousNumbering"
             #en (mouseenter)="viewPS(element, 'erroneousNumbering', en, infoPopup)"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>          
         </ng-container>
 
         <!-- Wrongly bound -->
@@ -422,8 +401,7 @@
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.wronglyBound"
             #wb (mouseenter)="viewPS(element, 'wronglyBound', wb, infoPopup)"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>        
         </ng-container>
 
         <!-- Censored -->
@@ -434,8 +412,7 @@
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.censored"
             #cz (mouseenter)="viewPS(element, 'censored', cz, infoPopup)"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>          
         </ng-container>
 
         <!-- Poznamka -->
@@ -447,13 +424,11 @@
             <a #poznEl *ngIf="element.numExists" (click)="viewPozn(element, poznPopup, poznEl)" >
               <mat-icon [matTooltip]="'Editovat poznámku' | translate" matTooltipPosition="above">{{ element.poznamka === '' ? config.icons.info_outline : 'config.icons.info' }}</mat-icon>
             </a>
-          </td>
-          <td mat-footer-cell *matFooterCellDef></td>
+          </td>         
         </ng-container>
     
         <tr mat-header-row *matHeaderRowDef="issueColumns; sticky: true" class="app-header-row-right"></tr>
         <tr mat-row *matRowDef="let row; columns: issueColumns;" [style.background]="rowColor(row)"></tr>
-        <tr mat-footer-row *matFooterRowDef="issueColumns; sticky: true"></tr>
       </table>
       <mat-paginator *ngIf="cislaVeSvazku.length > 0" [pageSizeOptions]="[25, 50, 100]" showFirstLastButtons></mat-paginator>
     </div>
