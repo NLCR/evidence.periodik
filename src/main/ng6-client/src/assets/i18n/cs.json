@@ -39,7 +39,8 @@
     "hodnota": "Hodnota",
     "add_new_title": "Vložit nový titul",
     "save": "Uložit",
-    "choose_date": "Vybrat datum" 
+    "choose_date": "Vybrat datum",
+    "record": "Záznam"
   },
 
 
@@ -141,7 +142,8 @@
     "delete_specimen": "Smazat exemplář",
     "cancel": "Zrušit",
     "close": "Zavřít",
-    "login": "Přihlásit"
+    "login": "Přihlásit",
+    "add_from_vdk": "Vložit z VDK"
   },
   "facet": {
     "title": {
@@ -192,14 +194,14 @@
     "on_special_days": "Ve speciální dny",
     "start_year": "Startovací ročník",
     "start_number": "Startovací číslo",
-    "generate_svazek.caption": "Podtvrdit vygenerovani svazku",
-    "generate_svazek.text": "Chtete opravdu generovat cisla pro svazek? Vsechny zmeny budou odstranena. Generovani neulozi data.",
-    "read_svazek.caption": "Podtvrdit načíst celý svazek",
-    "read_svazek.text": "Chtete opravdu načíst celý svazek? Vsechny neulozene zmeny budou odstranena.",
-    "delete_record.caption": "Podtvrdit smazani",
-    "delete_record.text": "Chtete opravdu smazat zaznam {{value}}?",
-    "delete_exemplar.caption": "Podtvrdit smazani",
-    "delete_exemplar.text": "Chtete opravdu smazat exemplar {{value}}?"
+    "generate_svazek.caption": "Podtvrdit vygenerování svazku",
+    "generate_svazek.text": "Chtete opravdu generovat čísla pro svazek? Všechny změny budou odstraněny. Generování neuloží data.",
+    "read_svazek.caption": "Potvrdit načíst celý svazek",
+    "read_svazek.text": "Chtete opravdu načíst celý svazek? Všechny změny budou odstraněny.",
+    "delete_record.caption": "Potvrdit smazání",
+    "delete_record.text": "Chtete opravdu smazat záznam {{value}}?",
+    "delete_exemplar.caption": "Potvrdit smazání",
+    "delete_exemplar.text": "Chtete opravdu smazat exemplář {{value}}?"
   },
   "login": {
     "desc": "Prosím, přihlašte se",
@@ -207,12 +209,12 @@
     "password": "Heslo"
   },
   "days": {
-    "Monday": "pondělí",
-    "Tuesday": "úterý",
-    "Wednesday": "středa",
-    "Thursday": "čtvrtek",
-    "Friday": "pátek",
-    "Saturday": "sobota",
-    "Sunday": "neděle"
+    "Monday": "Pondělí",
+    "Tuesday": "Úterý",
+    "Wednesday": "Středa",
+    "Thursday": "Čtvrtek",
+    "Friday": "Pátek",
+    "Saturday": "Sobota",
+    "Sunday": "Neděle"
   }
 }

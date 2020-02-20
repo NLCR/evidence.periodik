@@ -39,7 +39,8 @@
     "hodnota": "Value",
     "add_new_title": "Add new title",
     "save": "Save",
-    "choose_date": "Choose a date" 
+    "choose_date": "Choose a date",
+    "record": "Record"
   },
 
 
@@ -141,7 +142,8 @@
     "delete_specimen": "Delete this specimen",
     "cancel": "Cancel",
     "close": "Close",
-    "login": "Login"
+    "login": "Login",
+    "add_from_vdk": "Add from VDK"
   },
   "facet": {
     "title": {
@@ -191,7 +193,7 @@
     "periodicity": "Periodicity",
     "on_special_days": "On special days",
     "start_year": "Start year",
-    "start_number": "Startovaci cislo",
+    "start_number": "Start number",
     "generate_svazek.caption": "Confirm generate volume",
     "generate_svazek.text": "Are you sure you want generate all the volume numbers? All changes will be deleted. Generating volume doesn't save changes.",
     "read_svazek.caption": "Confirm read whole volume",
@@ -205,5 +207,14 @@
     "desc": "Please, login",
     "user": "User",
     "password": "Password"
+  },
+  "days": {
+    "Monday": "Monday",
+    "Tuesday": "Tuesday",
+    "Wednesday": "Wednesday",
+    "Thursday": "Thursday",
+    "Friday": "Friday",
+    "Saturday": "Saturday",
+    "Sunday": "Sunday"
   }
 }
