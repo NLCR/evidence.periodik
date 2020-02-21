@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
-import { of } from "rxjs";
+import { of } from 'rxjs';
 
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
@@ -16,14 +16,14 @@ import { Filter } from './models/filter';
 import { Titul } from './models/titul';
 import { Issue } from './models/issue';
 import { Exemplar } from './models/exemplar';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Volume } from './models/volume';
 import { User } from './models/user';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable()
 export class AppService {
 
-  //Observe language
+  // Observe language
   public _langSubject = new Subject();
   public langSubject: Observable<any> = this._langSubject.asObservable();
 
@@ -33,10 +33,11 @@ export class AppService {
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient,
-    private datePipe: DatePipe) { }
+    private datePipe: DatePipe,
+    private snackBar: MatSnackBar) { }
 
   changeLang(lang: string) {
-    //console.log('lang changed to ' + lang);
+    // console.log('lang changed to ' + lang);
     this.state.currentLang = lang;
     this.translate.use(lang);
     this._langSubject.next(lang);
@@ -48,7 +49,7 @@ export class AppService {
     let params: HttpParams = new HttpParams();
     params = params.set('q', '*');
     params = params.set('rows', '100');
-    this.http.get(url, { params: params }).subscribe((res) => {
+    this.http.get(url, { params }).subscribe((res) => {
       this.state.specialDays = res;
     });
   }
@@ -62,9 +63,9 @@ export class AppService {
     params = params.set('q', q);
     params = params.set('rows', '50');
 
-    return this.http.get(url, { params: params }).pipe(
-      map((res) => {
-        return res['response']['docs'];
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        return res.response['docs'];
       }));
   }
 
@@ -79,9 +80,9 @@ export class AppService {
     params = params.set('q', q);
     params = params.set('rows', '1');
 
-    return this.http.get(url, { params: params }).pipe(
-      map((res) => {
-        return res['response']['docs'];
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        return res.response['docs'];
       }));
   }
 
@@ -98,9 +99,9 @@ export class AppService {
       .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
 
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, { params: params }).pipe(
-      map((res) => {
-        return res['response']['docs'];
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        return res.response['docs'];
       }));
   }
 
@@ -118,7 +119,7 @@ export class AppService {
     const url = '/api/search/issue/select';
 
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
   getIssuesOfVolume(volume: Volume): Observable<any[]> {
@@ -135,9 +136,9 @@ export class AppService {
     const url = '/api/search/issue/select';
 
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, { params: params }).pipe(
-      map((res) => {
-        return res['response']['docs'];
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        return res.response['docs'];
       }));
   }
 
@@ -146,12 +147,12 @@ export class AppService {
     let params: HttpParams = new HttpParams();
     params = params.set('q', '*')
       .set('fq', 'id:"' + id + '"');
-    return this.http.get<Titul>(url, { params: params }).pipe(
-      map((res) => {
+    return this.http.get<Titul>(url, { params }).pipe(
+      map((res: any) => {
         const t = new Titul();
         t.id = id;
-        if (res['response']['numFound'] > 0) {
-          t.meta_nazev = res['response']['docs'][0]['meta_nazev'];
+        if (res.response['numFound'] > 0) {
+          t.meta_nazev = res.response['docs'][0].meta_nazev;
         }
         return t;
       }));
@@ -159,17 +160,17 @@ export class AppService {
 
 
   getTitul_(id: string): Observable<Titul> {
-    let url = '/api/search/issue/select';
+    const url = '/api/search/issue/select';
     let params: HttpParams = new HttpParams();
 
     params = params.set('q', '*').set('rows', '1').set('fq', 'id_titul:"' + id + '"');
 
-    return this.http.get<Titul>(url, { params: params }).pipe(
-      tap((res) => {
+    return this.http.get<Titul>(url, { params }).pipe(
+      tap((res: any) => {
         const t = new Titul();
         t.id = id;
-        if (res['response']['numFound'] > 0) {
-          t.meta_nazev = res['response']['docs'][0]['nazev'];
+        if (res.response['numFound'] > 0) {
+          t.meta_nazev = res.response['docs'][0].nazev;
         }
         return t;
 
@@ -184,9 +185,9 @@ export class AppService {
       .set('sort', 'meta_nazev asc')
       .set('rows', '500');
 
-    return this.http.get(url, { params: params }).pipe(
-      map((res) => {
-        this.state.tituly = res['response']['docs'];
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        this.state.tituly = res.response['docs'];
       }));
   }
 
@@ -202,16 +203,16 @@ export class AppService {
       .append('facet.field', 'znak_oznaceni_vydani')
       .append('facet.field', 'mutace');
 
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
 
-  saveTitul(titul: Titul) {
+  saveTitul(titul: Titul): Observable<any> {
     const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'SAVE_TITUL')
       .set('json', JSON.stringify(titul));
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
   isValidAsInteger(o): boolean {
@@ -220,7 +221,7 @@ export class AppService {
         return false;
       }
     }
-    return true
+    return true;
   }
 
 
@@ -236,10 +237,10 @@ export class AppService {
         return false;
       }
 
-      //Cistime stavy, aby nebyly "null"
+      // Cistime stavy, aby nebyly "null"
       issue.exemplare.forEach(ex => {
         if (ex.stav) {
-          ex.stav = ex.stav.filter(st => st !== "null");
+          ex.stav = ex.stav.filter(st => st !== 'null');
         }
       });
       return true;
@@ -250,22 +251,22 @@ export class AppService {
   }
 
   saveIssues(vol: Volume, issues: Issue[]): Observable<any> {
-    const body = { svazek: vol, issues: issues };
+    const body = { svazek: vol, issues };
     const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'SAVE_ISSUES');
 
-    return this.http.post(url, body, { params: params });
+    return this.http.post(url, body, { params });
   }
 
-  saveIssue(issue: Issue) {
+  saveIssue(issue: Issue): Observable<any> {
     if (this.isIssueValid(issue)) {
       const url = 'index';
       const params: HttpParams = new HttpParams()
         .set('action', 'SAVE_ISSUE')
         .set('json', JSON.stringify(issue));
 
-      return this.http.get(url, { params: params });
+      return this.http.get(url, { params });
     } else {
       return of('error');
     }
@@ -277,26 +278,28 @@ export class AppService {
       .set('action', 'DELETE_ISSUE')
       .set('id', issue.id);
 
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
-  addVydani(issue: Issue, vydani: string) {
+  addVydani(issue: Issue, vydani: string): Observable<any> {
     const newIssue = new Issue();
     newIssue.fromJSON(issue);
     newIssue.id = null;
     newIssue.vydani = vydani;
 
-    //console.log(newIssue);
+    // console.log(newIssue);
     const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'SAVE_ISSUE')
       .set('json', JSON.stringify(newIssue));
 
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
-  duplicateExemplar(issue: Issue, vlastnik: string, start_cislo: number, onspecial: boolean, exemplar: Exemplar, start: string, end: string) {
-    //console.log(exemplar);
+  duplicateExemplar(issue: Issue, vlastnik: string, 
+    start_cislo: number, onspecial: boolean, 
+    exemplar: Exemplar, start: string, end: string): Observable<any> {
+    // console.log(exemplar);
     const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'DUPLICATE_EX')
@@ -308,7 +311,7 @@ export class AppService {
       .set('start', start)
       .set('end', end);
 
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
   addVdkEx(issue: Issue, urlvdk: string, options: any) {
@@ -320,7 +323,7 @@ export class AppService {
       .set('options', JSON.stringify(options))
       .set('url', urlvdk);
 
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
   prepareVdkEx(issue: Issue, urlvdk: string, options: any) {
@@ -332,13 +335,13 @@ export class AppService {
       .set('options', JSON.stringify(options))
       .set('url', urlvdk);
 
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
   saveCurrentIssue(): Observable<any> {
     const issue: Issue = JSON.parse(JSON.stringify(this.state.currentIssue));
     issue.exemplare.forEach((ex: Exemplar) => {
-      delete ex['pagesRange'];
+      delete ex.pagesRange;
     });
     return this.saveIssue(issue);
   }
@@ -350,10 +353,10 @@ export class AppService {
       .set('wt', 'json')
       .set('fl', '*,exemplare:[json],pages:[json]')
       .set('fq', 'id:"' + id + '"');
-    //params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, { params: params }).pipe(
-      map((res) => {
-        return res['response']['docs'];
+    // params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        return res.response['docs'];
       }));
   }
 
@@ -364,9 +367,9 @@ export class AppService {
       .set('wt', 'json')
       .set('fl', '*,periodicita:[json]')
       .set('fq', 'id:"' + id + '"');
-    return this.http.get(url, { params: params }).pipe(
-      map((res) => {
-        return res['response']['docs'];
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        return res.response['docs'];
       }));
   }
 
@@ -381,8 +384,8 @@ export class AppService {
       .set('stats.field', '{!key=mutace countDistinct=true count=true}mutace')
       .append('stats.field', '{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
       .append('stats.field', '{!key=vlastnik countDistinct=true count=true max=true min=true}vlastnik')
-      .append('stats.field', 'exemplare')
-    return this.http.get(url, { params: params });
+      .append('stats.field', 'exemplare');
+    return this.http.get(url, { params });
   }
 
   doSearchParams(): HttpParams {
@@ -392,13 +395,13 @@ export class AppService {
       .set('rows', '' + this.state.rows)
       .set('start', '' + (this.state.currentPage * this.state.rows))
       .set('sort', 'datum_vydani_den asc, vydani desc')
-      //.set('fq', 'exemplare:[* TO *]')
-      //.set('fq', '{!collapse field=id_titul}')
+      // .set('fq', 'exemplare:[* TO *]')
+      // .set('fq', '{!collapse field=id_titul}')
       .set('facet', 'true')
       .set('facet.mincount', '1')
       .set('json.nl', 'arrntv')
       .set('fl', '*, exemplare:[json], pages:[json]')
-      //.set('fl', '*')
+      // .set('fl', '*')
       .set('stats', 'true')
       .set('stats.field', 'datum_vydani_den')
       .set('facet.field', 'meta_nazev')
@@ -409,7 +412,7 @@ export class AppService {
       .append('facet.field', 'vlastnik')
       .append('facet.field', 'stav');
 
-    //facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
+    // facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
 
     this.state.filters.forEach((f: Filter) => {
       //    for (let f in this.state.filters){
@@ -419,21 +422,21 @@ export class AppService {
     if (this.state.filterByDate) {
       params = params.append('fq', 'datum_vydani_den:[' + this.state.start_year + '0101 TO ' + this.state.end_year + '1231]');
     }
-    //params.set('fl', 'start:datum_vydani,title:nazev,*')
+    // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return params;
   }
 
   search() {
     const url = '/api/search/issue/permonik';
     const params = this.doSearchParams();
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
   searchCalendar(month: string) {
     const url = '/api/search/issue/permonik';
     let params = this.doSearchParams();
     params = params.append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
   searchTitulyHome() {
@@ -447,7 +450,7 @@ export class AppService {
       .set('fq', '{!collapse field=id_titul}')
       .set('fl', '*, id_titul, exemplare:[json], pages:[json]');
 
-    return this.http.get(url, { params: params });
+    return this.http.get(url, { params });
   }
 
   clone(cfg: CloneParams) {
@@ -455,8 +458,8 @@ export class AppService {
     const params: HttpParams = new HttpParams()
       .set('action', 'CLONE')
       .set('cfg', JSON.stringify(cfg));
-    //params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, { params: params });
+    // params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return this.http.get(url, { params });
   }
 
 
@@ -476,5 +479,22 @@ export class AppService {
   resetHeslo(json: { id: string, oldheslo: string, newheslo: string }) {
     return this.http.post<any>(`/api/users/resetpwd`, json);
   }
+
+
+
+  showSnackBar(s: string, r: string = '', error: boolean = false) {
+    const right = r !== '' ? this.getTranslation(r) : '';
+    const clazz = error ? 'app-snack-error' : 'app-snack-success';
+    this.snackBar.open(this.getTranslation(s), right, {
+      duration: 2000,
+      verticalPosition: 'top',
+      panelClass: clazz
+    });
+  }
+
+  getTranslation(s: string): string {
+    return this.translate.instant(s);
+  }
+
 
 }

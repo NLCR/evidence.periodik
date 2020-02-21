@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -7,23 +8,24 @@ import { Component } from '@angular/core';
 })
 export class ConfirmDialogComponent {
 
-  caption: string;
-  text: string;
-  param: string;
-  
-  public confirmed:boolean;
 
-  ngOnInit() {
-  }
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      caption: string,
+      text: string,
+      param: {
+        value: string
+      }
+    }) { }
+  
   
   ok(){
-    this.confirmed = true;
-    //this.modalComponent.closeModal();
+    this.dialogRef.close(true);
   }
   
   cancel(){
-    this.confirmed = false;
-    //this.modalComponent.closeModal();
+    this.dialogRef.close();
   }
 
 }

@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Inject} from '@angular/core';
 import {AppState} from '../../app.state';
 import {AppService} from '../../app.service';
 import {Titul} from '../../models/titul';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-add-titul-dialog',
@@ -10,31 +11,28 @@ import {Titul} from '../../models/titul';
 })
 export class AddTitulDialogComponent {
 
-  state: AppState;
-  service: AppService;
   titul: Titul = new Titul();
 
-  constructor() {
-  }
-
-  ngOnInit() {
+  constructor(public dialogRef: MatDialogRef<AddTitulDialogComponent>,
+              public state: AppState,
+              private service: AppService) {
   }
 
   ok() {
     this.service.saveTitul(this.titul).subscribe(res => {
-      console.log(res);
 
-      if (res['error']) {
-        //this.toastService.show(res['error'], 4000, 'red');
+      if (res.error) {
+        this.service.showSnackBar('error_saving_titul', res.error, true);
+        // this.toastService.show(res['error'], 4000, 'red');
       } else {
         this.service.getTituly().subscribe();
-        //this.modalComponent.closeModal();
+        this.dialogRef.close();
       }
     });
   }
 
   cancel() {
-
+    this.dialogRef.close();
   }
 
 }

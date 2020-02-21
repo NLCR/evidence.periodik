@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort, MatTableDataSource, MatDialog} from '@angular/material';
 import {Input} from '@angular/core';
 import {Issue} from '../../models/issue';
 import {AppState} from '../../app.state';
@@ -30,6 +30,7 @@ export class ResultTableComponent implements OnInit {
 
 
   constructor(
+    public dialog: MatDialog,
     private router: Router,
     public state: AppState,
     public service: AppService,
@@ -192,64 +193,61 @@ export class ResultTableComponent implements OnInit {
   }
 
   addClick(issue: Issue) {
-    /* this.modalService.open(AddExemplarDialogComponent,
-      {'issue': issue, 'state': this.state, 'service': this.service, exemplar: new Exemplar(), editType: 'new'}
-    ); */
+
+    const dialogRef = this.dialog.open(AddExemplarDialogComponent, {
+      width: '650px',
+      data: {issue: this.state.currentIssue, exemplar: new Exemplar(), editType: 'new'}
+    });
 
   }
 
   viewClick(issue: Issue, ex: Exemplar) {
-   /*  this.modalService.open(AddExemplarDialogComponent,
-      {'issue': issue, 'state': this.state, 'service': this.service, 'exemplar': ex, editType: 'edit'}
-    ); */
+
+    const dialogRef = this.dialog.open(AddExemplarDialogComponent, {
+      width: '650px',
+      data: {issue: issue, exemplar: ex, editType: 'edit'}
+    });
+
   }
 
   deleteEx(issue: Issue, ex: Exemplar, idxex: number) {
 
 
-    /* const a = this.modalService.open(ConfirmDialogComponent,
-      {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '650px',
+      data: {
         caption: 'modal.delete_exemplar.caption',
         text: 'modal.delete_exemplar.text',
         param: {
           value: ex.carovy_kod
         }
-      });
-    a.onDestroy(() => {
-      const mm = <ConfirmDialogComponent> a.instance;
-      if (mm.confirmed) {
-        //console.log(issue.exemplare[idxex]);
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
         issue.exemplare.splice(idxex, 1);
-        //console.log(issue.exemplare);
+        // console.log(issue.exemplare);
         this.service.saveIssue(issue).subscribe(res => {
-          this.toastService.show('Deleted success!', 2000, 'green');
+          this.service.showSnackBar('Deleted success!');
         });
       }
-    }); */
-
+    });
 
   }
 
   duplicate(issue: Issue, ex: Exemplar) {
-    /* const a = this.modalService.open(AddExemplarDialogComponent,
-      {
-        'issue': issue,
-        'state': this.state,
-        'service': this.service,
-        'exemplar': ex,
-        editType: 'duplicate'
-      }
-    );
 
-    a.onDestroy(() => {
-      const mm = <AddExemplarDialogComponent> a.instance;
-      if (mm.saved) {
+    const dialogRef = this.dialog.open(AddExemplarDialogComponent, {
+      width: '650px',
+      data: {issue, exemplar: ex, editType: 'duplicate'}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
         this.service.search().subscribe(res => {
           this.state.setSearchResults(res);
-          //this.docs = this.state.
         });
       }
-    }); */
+    });
   }
 
 

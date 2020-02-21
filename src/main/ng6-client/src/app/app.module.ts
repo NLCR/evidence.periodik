@@ -51,7 +51,8 @@ import {
   MAT_DATE_LOCALE,
   MAT_DATE_FORMATS,
   NativeDateModule,
-  DateAdapter
+  DateAdapter,
+  NativeDateAdapter
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 
@@ -96,6 +97,7 @@ import { AdminComponent } from './components/admin/admin.component';
 import { PasswordDialogComponent } from './components/password-dialog/password-dialog.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { AppRoutingModule } from './app-routing.module';
+import { Platform } from '@angular/cdk/platform';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -108,10 +110,21 @@ export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'YYYYMMDD',
+  },
+  display: {
+    dateInput: 'DD.MM.YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 const providers: any[] = [
   { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+  {provide: MAT_DATE_LOCALE, useValue: 'cs-CZ'},
   // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   { provide: APP_INITIALIZER, useFactory: (config: AppConfiguration) => () => config.load(), deps: [AppConfiguration], multi: true },
   HttpClient, DatePipe, AppConfiguration, AppState, AppService, AuthGuard];

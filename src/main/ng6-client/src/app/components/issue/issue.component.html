@@ -4,7 +4,7 @@
   <div fxFlex>
     <mat-form-field *ngIf="state.isNewIssue">
       <mat-label>{{ 'record.meta_title' | translate }}</mat-label> 
-      <mat-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (change)="setTitul()">
+      <mat-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (selectionChange)="setTitul()">
         <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx">
           {{ tit.meta_nazev }}
         </mat-option>
@@ -67,7 +67,7 @@
   <div fxFlex>
     <mat-form-field>
       <input matInput [placeholder]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" (change)="checkPagesChanged()" [(ngModel)]="state.currentIssue.pocet_stran">
-      <mat-icon class="app-cursor-pointer" matSuffix>{{ config.icons.pencil }}</mat-icon>
+      <mat-icon class="app-cursor-pointer" matSuffix (click)="editPages()">{{ config.icons.pencil }}</mat-icon>
     </mat-form-field>
 
     <mat-form-field>

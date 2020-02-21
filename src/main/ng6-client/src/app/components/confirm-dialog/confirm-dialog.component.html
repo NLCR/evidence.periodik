@@ -1,6 +1,6 @@
-<h1 mat-dialog-title>{{ caption | translate }}</h1>
+<h1 mat-dialog-title>{{ data.caption | translate }}</h1>
 <div mat-dialog-content>
-  {{ text | translate: param }}
+  {{ data.text | translate: data.param }}
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="ok()">OK</button>

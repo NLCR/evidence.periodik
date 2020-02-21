@@ -19,7 +19,7 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field>
-          <input mat-input [placeholder]="'record.barcode' | translate" [id]="'carovy_kod'" [name]="'carovy_kod'" [(ngModel)]="exemplar.carovy_kod" type="text">
+          <input matInput [placeholder]="'record.barcode' | translate" [id]="'carovy_kod'" [name]="'carovy_kod'" [(ngModel)]="exemplar.carovy_kod" type="text">
         </mat-form-field>
       </span>
       <span *ngSwitchCase="'duplicate'">
@@ -27,14 +27,14 @@
           Exemplar: {{exemplar.vlastnik}} {{exemplar.carovy_kod}}
         </div>
         <mat-form-field>
-          <input matInput [matDatepicker]="picker" placeholder="Choose a date">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <input matInput [matDatepicker]="pickerOd" placeholder="Choose a date" [(ngModel)]="startDate">
+          <mat-datepicker-toggle matSuffix [for]="pickerOd"></mat-datepicker-toggle>
+          <mat-datepicker #pickerOd></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
-          <input matInput [matDatepicker]="picker" placeholder="Choose a date">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <input matInput [matDatepicker]="pickerTo" placeholder="Choose a date" [(ngModel)]="endDate">
+          <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+          <mat-datepicker #pickerTo></mat-datepicker>
         </mat-form-field>
         <mat-checkbox [(ngModel)]="onspecial" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox>
       </span>

@@ -14,6 +14,7 @@ import { EditPagesComponent } from 'src/app/components/edit-pages/edit-pages.com
 import { DateAdapter } from '@angular/material/core';
 import { isArray } from 'util';
 import { AppConfiguration } from 'src/app/app-configuration';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-issue',
@@ -21,12 +22,6 @@ import { AppConfiguration } from 'src/app/app-configuration';
   styleUrls: ['./issue.component.scss']
 })
 export class IssueComponent implements OnInit {
-  subscriptions: Subscription[] = [];
-
-  changingLang = false;
-  titul_idx: number;
-
-  initial_pages = 0;
 
   /* public options: Pickadate.DateOptions = {
     format: 'dd/mm/yyyy',
@@ -36,6 +31,7 @@ export class IssueComponent implements OnInit {
   }; */
 
   constructor(
+    public dialog: MatDialog,
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
@@ -43,18 +39,24 @@ export class IssueComponent implements OnInit {
     private service: AppService,
     public config: AppConfiguration) {
   }
+  subscriptions: Subscription[] = [];
+
+  changingLang = false;
+  titul_idx: number;
+
+  initial_pages = 0;
+
+
+  pagesRange: { label: string, index: number }[] = [];
 
   onSubmit() {
-    //console.log(this.issue);
+    // console.log(this.issue);
   }
 
 
   showPages(ex: Exemplar): boolean {
     return ex.stav && !ex.stav.includes('OK');
   }
-
-
-  pagesRange: { label: string, index: number }[] = [];
 
   setPagesRange() {
     this.pagesRange = [];
@@ -72,14 +74,14 @@ export class IssueComponent implements OnInit {
     }
 
     if (!this.state.currentIssue.hasOwnProperty('exemplare')) {
-      this.state.currentIssue['exemplare'] = [];
+      this.state.currentIssue.exemplare = [];
     } else {
 
 
       this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
         ex.pagesRange = { missing: [], damaged: [] };
 
-        // Back compatibility. 
+        // Back compatibility.
         // From pages : string[] to pages: {missing: string[], damaged: string[]}
         // Assign to missing
         if (ex.pages && isArray(ex.pages)) {
@@ -89,7 +91,7 @@ export class IssueComponent implements OnInit {
 
         for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
           const sel = ex.pages && ex.pages.missing.includes((i + 1) + '');
-          ex.pagesRange.missing.push({ label: this.pagesRange[i].label, sel: sel });
+          ex.pagesRange.missing.push({ label: this.pagesRange[i].label, sel });
           const sel2 = ex.pages && ex.pages.damaged.includes((i + 1) + '');
           ex.pagesRange.damaged.push({ label: this.pagesRange[i].label, sel: sel2 });
         }
@@ -100,7 +102,7 @@ export class IssueComponent implements OnInit {
   checkPagesChanged() {
     if (this.initial_pages < this.state.currentIssue.pocet_stran) {
       this.setPagesRange();
-      //Pridat chybejici stranky pro vsechny exemplare
+      // Pridat chybejici stranky pro vsechny exemplare
       this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
         if (!ex.stav) {
           ex.stav = ['ChS'];
@@ -125,7 +127,7 @@ export class IssueComponent implements OnInit {
       this.initial_pages = this.state.currentIssue.pocet_stran;
 
       this.setPagesRange();
-      //console.log(this.state.currentIssue);
+      // console.log(this.state.currentIssue);
       this.service.getTitul(this.state.currentIssue.id_titul).subscribe(res2 => {
         this.state.currentIssue.titul = res2;
         this.state.currentTitul = res2;
@@ -143,10 +145,13 @@ export class IssueComponent implements OnInit {
 
   setTitul() {
     if (this.titul_idx.toString() === '-1') {
-      //New titul dialog
+      // New titul dialog
       /* this.modalService.open(AddTitulDialogComponent,
         { 'state': this.state, 'service': this.service }
       ); */
+      const dialogRef = this.dialog.open(AddTitulDialogComponent, {
+        width: '250px'
+      });
     } else {
       this.state.currentIssue.titul = this.state.tituly[this.titul_idx];
       this.state.currentIssue.id_titul = this.state.currentIssue.titul.id;
@@ -223,11 +228,25 @@ export class IssueComponent implements OnInit {
    /*  this.modalService.open(AddVydaniDialogComponent,
       { 'issue': this.state.currentIssue, 'state': this.state, 'service': this.service }
     ); */
+    const dialogRef = this.dialog.open(AddVydaniDialogComponent, {
+      width: '250px',
+      data: {issue: this.state.currentIssue}
+    });
 
   }
 
 
   editPages() {
+    
+    const dialogRef = this.dialog.open(EditPagesComponent, {
+      width: '250px',
+      data: {issue: this.state.currentIssue}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.setPagesRange();
+      }
+    });
 
     /* const a = this.modalService.open(EditPagesComponent,
       { 'issue': this.state.currentIssue, 'state': this.state, 'service': this.service }
@@ -257,7 +276,7 @@ export class IssueComponent implements OnInit {
       '/calendar',
       this.state.currentIssue.id_titul,
       this.state.calendarView,
-      this.state.currentIssue['datum_vydani_den']
+      this.state.currentIssue.datum_vydani_den
     ]);
   }
 
