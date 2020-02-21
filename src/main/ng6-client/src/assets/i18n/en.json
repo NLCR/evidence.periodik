@@ -164,7 +164,8 @@
     },
     "tooltip": {
       "delete_all_filters": "Delete all filters",
-      "delete_this_filter": "Delete this filter"
+      "delete_this_filter": "Delete this filter",
+      "use_this_filter": "Use this filter"
     },
     "meta_nazev": "Title",
     "nazev": "Title on the title page",

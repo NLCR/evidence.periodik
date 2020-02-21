@@ -5,7 +5,7 @@
     <mat-expansion-panel *ngIf="isInResults() && !state.filterByDate" [expanded]="true" class="app-facet-date">
       <mat-expansion-panel-header expandedHeight="50px" collapsedHeight="50px">
         <mat-panel-title>
-          {{ 'Datum' | translate}}
+          {{ 'facet.date' | translate}}
         </mat-panel-title>
       </mat-expansion-panel-header>
       
@@ -38,12 +38,9 @@
         </div>
         <div fxFlex="20%" class="app-fx-end">
           <div fxFlex>
-            <a *ngIf="!state.filterByDate" (click)="state.addDateFilter()" [matTooltip]="'filter' | translate">
-              <mat-icon>send</mat-icon>
+            <a *ngIf="!state.filterByDate" (click)="state.addDateFilter()" [matTooltip]="'facet.tooltip.use_this_filter' | translate">
+              <mat-icon>{{ config.icons.send }}</mat-icon>
             </a>
-            <!-- <a *ngIf="state.filterByDate" (click)="state.removeDateFilter()" [matTooltip]="'remove date filter' | translate">
-              <mat-icon color="accent">close_circle</mat-icon>
-            </a> -->
           </div>
         </div>
       </div>

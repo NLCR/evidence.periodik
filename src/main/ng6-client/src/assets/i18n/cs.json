@@ -164,7 +164,8 @@
     },
     "tooltip": {
       "delete_all_filters": "Odstranit všechny filtry",
-      "delete_this_filter": "Odstranit tento filtr"
+      "delete_this_filter": "Odstranit tento filtr",
+      "use_this_filter": "Použij tento filtr"
     },
     "meta_nazev": "Metatitul",
     "nazev": "Název na titulní straně",

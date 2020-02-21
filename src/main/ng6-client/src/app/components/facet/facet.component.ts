@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AppState} from '../../app.state';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-facet',
@@ -18,7 +19,8 @@ export class FacetComponent implements OnInit {
   facets: any; // temporary for facets
   
   
-  constructor(public state: AppState) { }
+  constructor(public state: AppState,
+              public config: AppConfiguration) { }
 
   ngOnInit() {
   }
