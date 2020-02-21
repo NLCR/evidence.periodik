@@ -39,6 +39,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.processUrl();
     this.authService.currentUser.subscribe(x => {
       const isLogged = x !== null;
+      this.state.logged = isLogged;
       this.state.user = x;
       this.state.isAdmin = isLogged && this.state.user.role === 'admin';
     });

@@ -30,7 +30,7 @@
     <span *ngIf="!state.user">
       <a (click)="gologin()">{{ 'navbar.login' | translate }}</a>
     </span>
-    <ng-container *ngIf="state.user">
+    <ng-container *ngIf="state.logged">
       <a mat-flat-button [matMenuTriggerFor]="menu" class="app-user">
         <mat-icon>{{ config.icons.person }}</mat-icon> {{ state.user.nazev }}
       </a>

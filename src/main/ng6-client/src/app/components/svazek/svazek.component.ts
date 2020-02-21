@@ -8,7 +8,7 @@ import { Titul } from 'src/app/models/titul';
 import { Volume } from 'src/app/models/volume';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource, MatButton, MatPaginator, MatTable } from '@angular/material';
+import { MatTableDataSource, MatButton, MatPaginator, MatTable, MatDialog, MatDatepickerInputEvent } from '@angular/material';
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
 
 import { Issue } from 'src/app/models/issue';
@@ -113,8 +113,13 @@ export class SvazekComponent implements OnInit, OnDestroy {
   // private dataDiffer: KeyValueDiffer<string, any>;
 
   loading: boolean;
+  
+  // Holds dates in calendar. Should convert to yyyyMMdd for volume
+  startDate: Date;
+  endDate: Date;
 
   constructor(
+    public dialog: MatDialog,
     private differs: KeyValueDiffers,
     private overlay: Overlay,
     private viewContainerRef: ViewContainerRef,
@@ -296,20 +301,21 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   readClick() {
-    /* let a = this.modalService.open(ConfirmDialogComponent,
-      {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '650px',
+      data: {
         caption: 'modal.read_svazek.caption',
         text: 'modal.read_svazek.text',
         param: {
           value: ''
         }
-      });
-    a.onDestroy(() => {
-      let mm = <ConfirmDialogComponent>a.instance;
-      if (mm.confirmed) {
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
         this.read();
       }
-    }); */
+    });
   }
 
   read() {
@@ -355,6 +361,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     if (!this.state.logged) {
       return;
     }
+    
     // Ulozit svazek (volume) a vsechny radky tabulky jako Issue.
 
     // console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
@@ -364,13 +371,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // carovy_kod je povinny, jelikoz pouzivame jako id svazku
     if (!this.state.currentVolume.carovy_kod || this.state.currentVolume.carovy_kod.trim() === '') {
       this.setLastNumber();
-
-      //this.toastService.show('carovy kod je povinny', 4000, 'red');
+      this.service.showSnackBar('carovy kod je povinny', '', true);
       return;
     }
 
     if (this.state.currentVolume.datum_od > this.state.currentVolume.datum_do) {
-      //this.toastService.show('datum od je vetsi nez datum od', 4000, 'red');
+      this.service.showSnackBar('datum od je vetsi nez datum od', '', true);
       return;
     }
 
@@ -430,9 +436,9 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.service.saveIssues(this.state.currentVolume, issues).subscribe(res => {
       this.loading = false;
       if (res.error) {
-        //this.toastService.show('Error: ' + res.error, 4000, 'red');
+        this.service.showSnackBar('save_issues_error', res.error, true);
       } else {
-        //this.toastService.show('Svazek správně uložen', 4000, 'green');
+        this.service.showSnackBar('Svazek správně uložen');
       }
 
       // console.log(res);
@@ -446,20 +452,21 @@ export class SvazekComponent implements OnInit, OnDestroy {
       return;
     }
 
-    /* let a = this.modalService.open(ConfirmDialogComponent,
-      {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '650px',
+      data: {
         caption: 'modal.generate_svazek.caption',
         text: 'modal.generate_svazek.text',
         param: {
           value: ''
         }
-      });
-    a.onDestroy(() => {
-      const mm = <ConfirmDialogComponent>a.instance;
-      if (mm.confirmed) {
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
         this.generate();
       }
-    }); */
+    });
   }
 
   generate() {
@@ -530,9 +537,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
   setTitul() {
     if (this.titul_idx.toString() === '-1') {
       // New titul dialog
-      /* this.modalService.open(AddTitulDialogComponent,
-        { 'state': this.state, 'service': this.service }
-      ); */
+      const dialogRef = this.dialog.open(AddTitulDialogComponent, {
+        width: '650px'
+      });
+
     } else {
       this.state.currentVolume.titul = this.state.tituly[this.titul_idx];
       this.state.currentVolume.id_titul = this.state.currentVolume.titul.id;
@@ -690,6 +698,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
       this.overlayRef.dispose();
       this.overlayRef = null;
     }
+  }
+
+  setVolumeDatum(element: string, event: MatDatepickerInputEvent<Date>) {
+    this.state.currentVolume[element] = this.datePipe.transform(event.value, 'yyyy-MM-dd');
   }
 
 }

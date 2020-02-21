@@ -56,31 +56,21 @@
 
               <ng-container *ngSwitchCase="'datum_od'">
                 <mat-form-field floatLabel="never">
-                  <input matInput [matDatepicker]="picker" [placeholder]="'Choose a date' | translate" [(ngModel)]="state.currentVolume[element]" id="datum_od" name="datum_od">
+                  <input matInput [matDatepicker]="picker" [placeholder]="'Choose a date' | translate" (dateChange)="setVolumeDatum(element, $event)"
+                  [(ngModel)]="state.currentVolume[element]"
+                   id="datum_od" name="datum_od">
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
-                <!-- <mz-datepicker-container>
-                  <input mz-datepicker
-                         [options]="calOptions"
-                         [(ngModel)]="state.currentVolume[element]"
-                         id="datum_od" name="datum_od"
-                         type="text" />
-                </mz-datepicker-container> -->
               </ng-container>
               <ng-container *ngSwitchCase="'datum_do'">
                 <mat-form-field floatLabel="never">
-                  <input matInput [matDatepicker]="picker" [placeholder]="'Choose a date' | translate" [(ngModel)]="state.currentVolume[element]" id="datum_do" name="datum_do">
+                  <input matInput [matDatepicker]="picker" [placeholder]="'Choose a date' | translate"
+                   [(ngModel)]="state.currentVolume[element]" (dateChange)="setVolumeDatum(element, $event)"
+                    id="datum_do" name="datum_do">
                   <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
-                <!-- <mz-datepicker-container>
-                  <input mz-datepicker
-                         [options]="calOptions"
-                         [(ngModel)]="state.currentVolume[element]"
-                         id="datum_do" name="datum_do"
-                         type="text" />
-                </mz-datepicker-container> -->
               </ng-container>
 
 

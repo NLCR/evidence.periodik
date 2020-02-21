@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { Exemplar } from 'src/app/models/exemplar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppConfiguration } from 'src/app/app-configuration';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-toolbar',
@@ -23,6 +24,7 @@ export class ToolbarComponent implements OnInit {
   periods = [];
 
   constructor(
+    public dialog: MatDialog,
     public state: AppState,
     public service: AppService,
     private router: Router,
@@ -96,8 +98,9 @@ export class ToolbarComponent implements OnInit {
 
   deleteRecord() {
 
-    /* const a = this.modalService.open(ConfirmDialogComponent,
-      {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '650px',
+      data: {
         caption: 'modal.delete_record.caption',
         text: 'modal.delete_record.text',
         param: {
@@ -106,20 +109,20 @@ export class ToolbarComponent implements OnInit {
             ' ' + this.state.currentIssue.mutace +
             ' ' + this.state.currentIssue.vydani
         }
-      });
-    a.onDestroy(() => {
-      const mm = <ConfirmDialogComponent>a.instance;
-      if (mm.confirmed) {
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
         this.service.deleteIssue(this.state.currentIssue).subscribe(res => {
           console.log(res);
-          if (res['error']) {
-            //this.toastService.show(res['error'], 4000, 'red');
+          if (res.error) {
+            this.service.showSnackBar('delete_issue_error', res.error, true);
           } else {
             this.router.navigate(['/result']);
           }
         });
       }
-    }); */
+    });
 
   }
 
@@ -131,6 +134,13 @@ export class ToolbarComponent implements OnInit {
     cloneParams.start_number = this.state.currentIssue.cislo;
     cloneParams.start_year = parseInt(this.state.currentIssue.rocnik);
     cloneParams.periodicity = this.state.currentIssue.periodicita;
+
+    const dialogRef = this.dialog.open(CloneDialogComponent, {
+      width: '650px',
+      data: {
+        params: cloneParams
+      }
+    });
 
     //this.modalService.open(CloneDialogComponent, { 'state': this.state, 'service': this.service, 'params': cloneParams });
   }

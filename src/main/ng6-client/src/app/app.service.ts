@@ -272,7 +272,7 @@ export class AppService {
     }
   }
 
-  deleteIssue(issue: Issue) {
+  deleteIssue(issue: Issue): Observable<any> {
     const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'DELETE_ISSUE')
@@ -453,7 +453,7 @@ export class AppService {
     return this.http.get(url, { params });
   }
 
-  clone(cfg: CloneParams) {
+  clone(cfg: CloneParams): Observable<any> {
     const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'CLONE')

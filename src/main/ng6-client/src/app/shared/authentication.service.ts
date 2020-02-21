@@ -26,7 +26,7 @@ export class AuthenticationService {
     login(username: string, password: string) {
         return this.http.post<any>(`/api/users/login`, { username, password })
             .pipe(map(resp => {
-                console.log(resp);
+                // console.log(resp);
                 if (resp.logged) {
                 // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
                 // password hashed
@@ -36,7 +36,7 @@ export class AuthenticationService {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
                     this.state.logged = true;
-                    this.state.user = resp;
+                    this.state.user = user;
 
                     return user;
                 } else {

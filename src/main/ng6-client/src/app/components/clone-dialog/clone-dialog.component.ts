@@ -1,7 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {CloneParams} from '../../models/clone-params';
-import {AppState} from '../../app.state';
-import {AppService} from '../../app.service';
+import { Component, OnInit, Inject } from '@angular/core';
+import { CloneParams } from '../../models/clone-params';
+import { AppState } from '../../app.state';
+import { AppService } from '../../app.service';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDatepickerInputEvent } from '@angular/material';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-clone-dialog',
@@ -10,29 +13,31 @@ import {AppService} from '../../app.service';
 })
 export class CloneDialogComponent {
 
-  //Input properties
-  state: AppState;
-  service: AppService;
-
-  //Clone parameters
-  params: CloneParams = new CloneParams();
-
-  constructor() {
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { params: CloneParams },
+    private datePipe: DatePipe,
+    public state: AppState,
+    private service: AppService) {
   }
 
   ok() {
-    this.service.clone(this.params).subscribe(res => {
+    this.service.clone(this.data.params).subscribe(res => {
       console.log(res);
 
-      if (res['error']) {
-        //this.toastService.show(res['error'], 4000, 'red');
+      if (res.error) {
+        this.service.showSnackBar('clone_error', res.error, true);
       } else {
-        //this.modalComponent.closeModal();
+        this.dialogRef.close();
       }
     });
   }
 
   cancel() {
-    
+    this.dialogRef.close();
+  }
+
+  setDate(element: string, event: MatDatepickerInputEvent<Date>) {
+    this.data.params[element] = this.datePipe.transform(event.value, 'yyyy-MM-dd');
   }
 }
