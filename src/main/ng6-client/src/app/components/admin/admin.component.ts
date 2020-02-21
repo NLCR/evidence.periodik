@@ -15,6 +15,10 @@ export class AdminComponent implements OnInit {
   loading = false;
   users: User[] = [];
   user: User = new User();
+  roles = [
+    { id: 'user', name: 'user_role' },
+    { id: 'admin', name: 'admin_role' }
+  ];
 
   constructor(
     private service: AppService,

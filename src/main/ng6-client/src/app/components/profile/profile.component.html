@@ -2,7 +2,7 @@
 
 <div class="app-profile-wrapper" fxLayout="row">
   <div fxFlex class="app-fx">
-    <h2>Petr Kudela</h2>
+    <h2>{{user.nazev}}</h2>
     <form (ngSubmit)="save()" #userForm="ngForm">
       <div fxLayout="row" fxLayoutGap="16px">
         <mat-form-field fxFlex>
@@ -20,12 +20,11 @@
         <mat-form-field fxFlex>
           <input matInput [(ngModel)]="user.poznamka" name="poznamka" id="poznamka" [placeholder]="'desc.note' | translate"  />
         </mat-form-field>
-
-        <mat-form-field fxFlex>
+        
+        <mat-form-field fxFlex *ngIf="user">
           <mat-label>{{ 'desc.user_roles' | translate }}</mat-label>
           <mat-select [(ngModel)]="user.role" id="role" name="role">
-            <mat-option value="'user'">{{ 'desc.user_role' | translate }}</mat-option>
-            <mat-option value="'admin'">{{ 'desc.admin_role' | translate }}</mat-option>
+            <mat-option *ngFor="let role of roles" [value]="role.id">{{'desc.' + role.name | translate }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>

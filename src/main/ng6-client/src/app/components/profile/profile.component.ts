@@ -15,6 +15,10 @@ export class ProfileComponent implements OnInit {
 
   user: User;
   loading: boolean;
+  roles = [
+    { id: 'user', name: 'user_role' },
+    { id: 'admin', name: 'admin_role' }
+  ];
 
   constructor(
     public dialog: MatDialog,
@@ -24,21 +28,22 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.state.user;
+    console.log(this.user);
   }
 
   save() {
 
     this.service.saveUser(this.user).subscribe(resp => {
       if (resp.error) {
-        //this.toastService.show(resp['error'], 4000, 'red');
+        this.service.showSnackBar('save_user_error', resp.error, true);
       } else {
-        //this.toastService.show('Uživatel správně uložen', 4000, 'green');
+        this.service.showSnackBar('Uživatel správně uložen');
       }
     });
 
   }
 
-  
+
 
   resetHeslo() {
     const dialogRef = this.dialog.open(PasswordDialogComponent, {

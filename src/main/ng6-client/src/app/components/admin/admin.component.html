@@ -34,8 +34,8 @@
         <mat-form-field fxFlex>
           <mat-label>{{ 'desc.user_roles' | translate }}</mat-label>
           <mat-select [(ngModel)]="user.role" id="role" name="role">
-            <mat-option value="'user'">{{ 'desc.user_role' | translate }}</mat-option>
-            <mat-option value="'admin'">{{ 'desc.admin_role' | translate }}</mat-option>
+            
+            <mat-option *ngFor="let role of roles" [value]="role.id">{{'desc.' + role.name | translate }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
