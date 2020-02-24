@@ -48,7 +48,12 @@
     "note": "Note",
     "user_roles": "User roles",
     "user_role": "User",
-    "admin_role": "Admin"
+    "admin_role": "Admin",
+    "add_specimen": "Add a specimen",
+    "edit_record": "Edit record",
+    "edit_volume": "Edit volume",
+    "duplicate_specimen": "Duplicate specimen",
+    "delete_specimen": "Delete specimen"
   },
 
 
@@ -65,6 +70,7 @@
     "titul": "Title",
     "mutation": "Mutation",
     "mutace": "Mutation",
+    "total": "Total",
     "date_publication": "Date of publication",
     "znak_oznaceni_vydani": "Edition label",
     "oznaceni": "Mutation edition label (stars)",

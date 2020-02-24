@@ -275,7 +275,13 @@ export class ResultTableComponent implements OnInit {
     if (ex.stav) {
     let ret = '';
       for (let i = 0; i < ex['stav'].length; i++) {
-        ret += this.translate.instant('record.StavIssue.' + ex['stav'][i]) + '\n';
+        if (ex['stav'].length > 1) {
+          ret += this.translate.instant('record.StavIssue.' + ex['stav'][i]) + '\n' + '| ';
+        }
+        else if (ex['stav'].length === 1) {
+          ret += this.translate.instant('record.StavIssue.' + ex['stav'][i]) + '\n';
+        }
+        
       }
       if (ex['stav_popis']) {
         ret += ' ' + ex['stav_popis'];

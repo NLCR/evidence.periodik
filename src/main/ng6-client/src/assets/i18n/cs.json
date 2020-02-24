@@ -48,7 +48,12 @@
     "note": "Poznámka",
     "user_roles": "Uživatelské role",
     "user_role": "Uživatel",
-    "admin_role": "Admin"
+    "admin_role": "Admin",
+    "add_specimen": "Přidat exemplář",
+    "edit_record": "Editovat záznam",
+    "edit_volume": "Editovat svazek",
+    "duplicate_specimen": "Duplicate exemplář",
+    "delete_specimen": "Smazat exemplář"
   },
 
 
@@ -65,6 +70,7 @@
     "titul": "Titul",
     "mutation": "Mutace",
     "mutace": "Mutace",
+    "total": "Celkem",
     "date_publication": "Datum publikace",
     "znak_oznaceni_vydani": "Označení vydání",
     "oznaceni": "Označení mutačního vydání (hvězdičky)",

@@ -57,14 +57,14 @@
 
     <ng-container matColumnDef="add">
       <th mat-header-cell *matHeaderCellDef>
-        {{ 'celkem' | translate }}
+        {{ 'record.total' | translate }}
       </th>
       <td mat-cell *matCellDef="let row">
         {{ row.exemplare ? row.exemplare.length : 0 }} 
-        <a (click)="addClick(row)" title="pridat exemplar">
+        <a (click)="addClick(row)" [matTooltip]="'desc.add_specimen' | translate" matTooltipPosition="above">
           <mat-icon>{{ config.icons.add_circle }}</mat-icon>
         </a>
-        <a [matTooltip]="'Editovat issue' | translate" matTooltipPosition="above" (click)="viewIssue(row)">
+        <a [matTooltip]="'desc.edit_record' | translate" matTooltipPosition="above" (click)="viewIssue(row)">
           <mat-icon>{{ config.icons.edit_issue }}</mat-icon>
         </a>
       </td>   
@@ -78,13 +78,13 @@
         <span *ngFor="let ex of row.exemplare; let idxex = index">
           <ng-container *ngIf="ex.vlastnik === vl">[
             <a (click)="viewClick(row, ex)">{{ ex['carovy_kod'] }}</a>
-            <a [matTooltip]="'Editovat svazek' | translate" matTooltipPosition="above" (click)="viewSvazek(ex['carovy_kod'])">
+            <a [matTooltip]="'desc.edit_volume' | translate" matTooltipPosition="above" (click)="viewSvazek(ex['carovy_kod'])">
               <mat-icon>{{ config.icons.edit_pack }}</mat-icon>
             </a>
-            <a [matTooltip]="'Duplikovat exemplář' | translate" matTooltipPosition="above" (click)="duplicate(row, ex)">
+            <a [matTooltip]="'desc.duplicate_specimen' | translate" matTooltipPosition="above" (click)="duplicate(row, ex)">
               <mat-icon>{{ config.icons.duplicate }}</mat-icon>
             </a>
-            <a [matTooltip]="'Smazat exemplář' | translate" matTooltipPosition="above" (click)="deleteEx(row, ex, idxex)">
+            <a [matTooltip]="'desc.delete_specimen' | translate" matTooltipPosition="above" (click)="deleteEx(row, ex, idxex)">
               <mat-icon>{{ config.icons.delete_specimen }}</mat-icon>
             </a>
             <a [matTooltip]="formatStav(ex)" matTooltipPosition="above" (click)="viewClick(row, ex)">
