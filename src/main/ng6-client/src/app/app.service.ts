@@ -328,14 +328,19 @@ export class AppService {
 
   prepareVdkEx(issue: Issue, urlvdk: string, options: any): Observable<any> {
 
-    const url = 'index';
-    const params: HttpParams = new HttpParams()
-      .set('action', 'COLLECT_VDK_SET')
-      .set('issue', JSON.stringify(issue))
-      .set('options', JSON.stringify(options))
-      .set('url', urlvdk);
+    // const url = 'index';
+    // const params: HttpParams = new HttpParams()
+    //   .set('action', 'COLLECT_VDK_SET')
+    //   .set('issue', JSON.stringify(issue))
+    //   .set('options', JSON.stringify(options))
+    //   .set('url', urlvdk);
+    // return this.http.get(url, { params });
 
-    return this.http.get(url, { params });
+    const url = 'index?action=COLLECT_VDK_SET';
+    const json = {issue, urlvdk, options};
+    
+    return this.http.post(url, json);
+
   }
 
   saveCurrentIssue(): Observable<any> {

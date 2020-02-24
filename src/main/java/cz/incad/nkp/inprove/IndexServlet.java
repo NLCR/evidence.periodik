@@ -64,7 +64,7 @@ public class IndexServlet extends HttpServlet {
           LOGGER.log(Level.INFO, "running from local address");
           isLocalhost = true;
         }
-        
+
         Actions actionToDo = Actions.valueOf(actionNameParam.toUpperCase());
         if (LoginController.isLogged(req) || actionToDo.equals(Actions.SPECIAL_DAYS) || isLocalhost) {
           actionToDo.doPerform(req, resp);
@@ -150,10 +150,10 @@ public class IndexServlet extends HttpServlet {
           JSONObject jo = new JSONObject(js);
           JSONArray ja = jo.getJSONArray("issues");
           JSONObject svazek = jo.getJSONObject("svazek");
-          
+
           json.put("svazek", indexer.indexSvazek(svazek));
-          for (int i =0; i < ja.length(); i++) {
-            json.put("issue"+i, indexer.fromJSON(ja.getJSONObject(i)));
+          for (int i = 0; i < ja.length(); i++) {
+            json.put("issue" + i, indexer.fromJSON(ja.getJSONObject(i)));
             //json.put("issue"+i, ja.getJSONObject(i));
           }
         } catch (Exception ex) {
@@ -307,11 +307,22 @@ public class IndexServlet extends HttpServlet {
         JSONObject json = new JSONObject();
         try {
           Indexer indexer = new Indexer();
-          json = indexer.collectExFromVdkSet(
-                  new JSONObject(req.getParameter("issue")),
-                  req.getParameter("url"),
-                  new JSONObject(req.getParameter("options"))
-          );
+          if (req.getMethod().equals("POST")) {
+            JSONObject js = new JSONObject();
+            js = new JSONObject(IOUtils.toString(req.getInputStream(), "UTF-8"));
+
+            json = indexer.collectExFromVdkSet(
+                    js.getJSONObject("issue"),
+                    js.getString("urlvdk"),
+                    js.getJSONObject("options"));
+          } else {
+            json = indexer.collectExFromVdkSet(
+                    new JSONObject(req.getParameter("issue")),
+                    req.getParameter("url"),
+                    new JSONObject(req.getParameter("options"))
+            );
+          }
+
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);
           json.put("error", ex.toString());

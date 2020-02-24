@@ -95,7 +95,7 @@
 <div mat-dialog-actions>
   <button mat-button *ngIf="prepared" (click)="ok()" [disabled]="!state.logged">Add</button>
   <button mat-button (click)="prepare()">{{ 'button.prepare' | translate }}</button>
-  <button mat-button (click)="cancel()">{{ 'button.close' | translate }}</button>
+  <button mat-button mat-dialog-close>{{ 'button.close' | translate }}</button>
 </div>
 
 
