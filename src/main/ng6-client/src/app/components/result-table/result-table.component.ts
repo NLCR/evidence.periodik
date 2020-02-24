@@ -28,7 +28,6 @@ export class ResultTableComponent implements OnInit {
   dataSource: MatTableDataSource<Issue>;
   loading: boolean;
 
-
   constructor(
     public dialog: MatDialog,
     private router: Router,
@@ -196,7 +195,7 @@ export class ResultTableComponent implements OnInit {
 
     const dialogRef = this.dialog.open(AddExemplarDialogComponent, {
       width: '650px',
-      data: { issue: this.state.currentIssue, exemplar: new Exemplar(), editType: 'new' }
+      data: { issue, exemplar: new Exemplar(), editType: 'new' }
     });
 
   }

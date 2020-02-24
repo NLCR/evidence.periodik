@@ -12,7 +12,7 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>{{ 'login.password' | translate }}</mat-label>
-          <input matInput [placeholder]="'login.password' | translate" name="pwd" #loginpwd (keyup.enter)="login()" [(ngModel)]="pwd">
+          <input matInput type="password" [placeholder]="'login.password' | translate" name="pwd" #loginpwd (keyup.enter)="login()" [(ngModel)]="pwd">
           <mat-icon matSuffix>{{ config.icons.lock_outline }}</mat-icon>
         </mat-form-field>
       </p>

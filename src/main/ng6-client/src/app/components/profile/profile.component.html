@@ -6,10 +6,6 @@
     <form (ngSubmit)="save()" #userForm="ngForm">
       <div fxLayout="row" fxLayoutGap="16px">
         <mat-form-field fxFlex>
-          <input matInput [(ngModel)]="user.username" name="username" id="username" [placeholder]="'desc.account_name' | translate" required cdkFocusInitial />
-        </mat-form-field>
-
-        <mat-form-field fxFlex>
           <input matInput [(ngModel)]="user.nazev" name="nazev" id="nazev" [placeholder]="'desc.username' | translate" required />
         </mat-form-field>
         
@@ -21,12 +17,6 @@
           <input matInput [(ngModel)]="user.poznamka" name="poznamka" id="poznamka" [placeholder]="'desc.note' | translate"  />
         </mat-form-field>
         
-        <mat-form-field fxFlex *ngIf="user">
-          <mat-label>{{ 'desc.user_roles' | translate }}</mat-label>
-          <mat-select [(ngModel)]="user.role" id="role" name="role">
-            <mat-option *ngFor="let role of roles" [value]="role.id">{{'desc.' + role.name | translate }}</mat-option>
-          </mat-select>
-        </mat-form-field>
       </div>
       <button mat-flat-button color="primary" (click)="resetHeslo()" type="button" >{{ 'button.password_reset' | translate }}</button>
       <button mat-flat-button color="primary" type="submit" [disabled]="!userForm.form.valid">{{ 'button.save' | translate }}</button>

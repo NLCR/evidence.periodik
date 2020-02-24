@@ -217,7 +217,7 @@ static boolean isLocalhost = false;
           }
 
         } catch (Exception ex) {
-          //resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+          LOGGER.log(Level.WARNING, null, ex);
           jo.put("logged", false);
           jo.put("error", ex.toString());
         }

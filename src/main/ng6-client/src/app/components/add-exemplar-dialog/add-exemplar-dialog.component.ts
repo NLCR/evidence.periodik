@@ -32,6 +32,7 @@ export class AddExemplarDialogComponent implements OnInit {
   saved = false;
   onspecial = false;
 
+  showPages: boolean;
   pagesRange: {label: string, sel: boolean}[] = [];
 
 
@@ -72,10 +73,9 @@ export class AddExemplarDialogComponent implements OnInit {
       }
 
     }
-  }
 
-  showPages(): boolean {
-    return this.exemplar.stav && !this.exemplar.stav.includes('OK');
+    this.showPages = this.editType === 'new' || (this.exemplar.stav && !this.exemplar.stav.includes('OK'));
+    
   }
 
   ok(): void {

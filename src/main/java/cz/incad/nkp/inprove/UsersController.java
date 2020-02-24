@@ -90,6 +90,7 @@ public class UsersController {
 
       Options opts = Options.getInstance();
       SolrQuery query = new SolrQuery("*");
+      query.setSort(SolrQuery.SortClause.create("nazev", SolrQuery.ORDER.asc));
       try (HttpSolrClient client = new HttpSolrClient.Builder(opts.getString("solrHost", "http://localhost:8983/solr")).build()) {
         QueryRequest qreq = new QueryRequest(query);
 
@@ -238,7 +239,7 @@ public class UsersController {
 
   public static JSONObject resetHeslo(JSONObject json) {
 
-    JSONObject orig = getOne(json.getString("id"), true).getJSONArray("docs").getJSONObject(0);
+    JSONObject orig = getOne(json.getString("id"), true);
     if (json.getString("oldheslo").equals(orig.getString("heslo"))) {
       orig.put("heslo", json.getString("newheslo"));
       return Indexer.indexJSON(orig, "user");

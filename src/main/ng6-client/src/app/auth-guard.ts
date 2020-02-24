@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
   }
 
   checkLogin(url: string, route: ActivatedRouteSnapshot): boolean {
-    if (this.state.user) {
+    if (this.state.logged) {
       if (url.indexOf('/admin') > -1) {
         return this.state.isAdmin;
       } else {

@@ -24,7 +24,7 @@
     <span>
       <a routerLink="issue" routerLinkActive="active">{{ 'navbar.add_record' | translate }}</a>
     </span>
-    <span>
+    <span *ngIf="state.isAdmin">
       <a routerLink="admin" routerLinkActive="active">{{ 'navbar.administration' | translate }}</a>
     </span>
     <span *ngIf="!state.user">
