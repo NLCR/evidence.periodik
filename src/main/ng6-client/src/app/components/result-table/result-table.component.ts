@@ -1,15 +1,15 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource, MatDialog} from '@angular/material';
-import {Input} from '@angular/core';
-import {Issue} from '../../models/issue';
-import {AppState} from '../../app.state';
-import {AddExemplarDialogComponent} from '../add-exemplar-dialog/add-exemplar-dialog.component';
-import {AppService} from '../../app.service';
-import {Titul} from '../../models/titul';
-import {Router} from '@angular/router';
-import {Exemplar} from '../../models/exemplar';
-import {TranslateService} from '@ngx-translate/core';
-import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
+import { Input } from '@angular/core';
+import { Issue } from '../../models/issue';
+import { AppState } from '../../app.state';
+import { AddExemplarDialogComponent } from '../add-exemplar-dialog/add-exemplar-dialog.component';
+import { AppService } from '../../app.service';
+import { Titul } from '../../models/titul';
+import { Router } from '@angular/router';
+import { Exemplar } from '../../models/exemplar';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
@@ -19,7 +19,7 @@ import { AppConfiguration } from 'src/app/app-configuration';
 })
 export class ResultTableComponent implements OnInit {
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   data: Issue[] = [];
   vlastnici: string[] = [];
   exs: any = {};
@@ -69,7 +69,7 @@ export class ResultTableComponent implements OnInit {
     this.exs = {};
     this.displayedColumns = [];
     this.header = '';
-    this.data = this.state.searchResults['response']['docs'];
+    this.data = this.state.searchResults.response['docs'];
     if (this.data.length === 0) {
       this.loading = false;
       return;
@@ -99,18 +99,18 @@ export class ResultTableComponent implements OnInit {
           } else {
 
           }
-          //issue[ck] = i;
+          // issue[ck] = i;
         }
       }
-    }    );
+    });
 
-//    this.data.forEach((issue: Issue) =    > {
-//      for (let i = 0; i < this.cks.length; i++    ) {
-//        if (!issue.hasOwnProperty(this.cks[i])    ) {
-//          issue[this.cks[i]] =     -1;
-//            }
-//          }
-//    });
+    //    this.data.forEach((issue: Issue) =    > {
+    //      for (let i = 0; i < this.cks.length; i++    ) {
+    //        if (!issue.hasOwnProperty(this.cks[i])    ) {
+    //          issue[this.cks[i]] =     -1;
+    //            }
+    //          }
+    //    });
 
     this.dataSource = new MatTableDataSource(this.data);
     this.dataSource.paginator = this.paginator;
@@ -120,7 +120,7 @@ export class ResultTableComponent implements OnInit {
   cellColor(row: Issue, vlastnik: string): string {
     if (row.hasOwnProperty('exemplare')) {
       for (let i = 0; i < row.exemplare.length; i++) {
-        if (row.exemplare[i]['vlastnik'] === vlastnik) {
+        if (row.exemplare[i].vlastnik === vlastnik) {
           return this.classByVlastnik(vlastnik);
         }
       }
@@ -130,15 +130,15 @@ export class ResultTableComponent implements OnInit {
 
   iconByStav(ex: Exemplar): string {
     if (ex.stav) {
-    if (ex.stav.length === 0) {
-      return this.config.icons.uncontrolled;
-    } else if (ex.stav.indexOf('OK') > -1) {
-      return this.config.icons.check_circle;
-    } else if (ex.stav.indexOf('ChS') > -1) {
-      return this.config.icons.missing_page;
-    } else {
-      return this.config.icons.damaged_document;
-    }
+      if (ex.stav.length === 0) {
+        return this.config.icons.uncontrolled;
+      } else if (ex.stav.indexOf('OK') > -1) {
+        return this.config.icons.check_circle;
+      } else if (ex.stav.indexOf('ChS') > -1) {
+        return this.config.icons.missing_page;
+      } else {
+        return this.config.icons.damaged_document;
+      }
     } else {
       return this.config.icons.uncontrolled;
     }
@@ -148,18 +148,18 @@ export class ResultTableComponent implements OnInit {
   classByStav(ex: Exemplar): string {
     if (ex.stav) {
       if (ex.stav.length === 0) {
-        return "app-icon-uncontrolled";
+        return 'app-icon-uncontrolled';
       } else if (ex.stav.indexOf('OK') > -1) {
         if (ex.stav.length > 1) {
-          return "app-icon-complete-degradation";
+          return 'app-icon-complete-degradation';
         } else {
-          return "app-icon-complete";
+          return 'app-icon-complete';
         }
       } else {
-        return "app-icon-damaged-document";
+        return 'app-icon-damaged-document';
       }
     } else {
-      return "app-icon-uncontrolled";
+      return 'app-icon-uncontrolled';
     }
   }
 
@@ -196,7 +196,7 @@ export class ResultTableComponent implements OnInit {
 
     const dialogRef = this.dialog.open(AddExemplarDialogComponent, {
       width: '650px',
-      data: {issue: this.state.currentIssue, exemplar: new Exemplar(), editType: 'new'}
+      data: { issue: this.state.currentIssue, exemplar: new Exemplar(), editType: 'new' }
     });
 
   }
@@ -205,7 +205,7 @@ export class ResultTableComponent implements OnInit {
 
     const dialogRef = this.dialog.open(AddExemplarDialogComponent, {
       width: '650px',
-      data: {issue: issue, exemplar: ex, editType: 'edit'}
+      data: { issue, exemplar: ex, editType: 'edit' }
     });
 
   }
@@ -239,7 +239,7 @@ export class ResultTableComponent implements OnInit {
 
     const dialogRef = this.dialog.open(AddExemplarDialogComponent, {
       width: '650px',
-      data: {issue, exemplar: ex, editType: 'duplicate'}
+      data: { issue, exemplar: ex, editType: 'duplicate' }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -255,7 +255,7 @@ export class ResultTableComponent implements OnInit {
     this.state.currentTitul = new Titul();
     this.state.currentTitul.id = issue.id_titul;
     this.state.currentTitul.meta_nazev = issue.nazev;
-    this.router.navigate(['/calendar', issue.id_titul, this.state.calendarView, issue['datum_vydani_den']]);
+    this.router.navigate(['/calendar', issue.id_titul, this.state.calendarView, issue.datum_vydani_den]);
 
   }
 
@@ -273,22 +273,28 @@ export class ResultTableComponent implements OnInit {
 
   formatStav(ex: Exemplar): string {
     if (ex.stav) {
-    let ret = '';
-      for (let i = 0; i < ex['stav'].length; i++) {
-        if (ex['stav'].length > 1) {
-          ret += this.translate.instant('record.StavIssue.' + ex['stav'][i]) + '\n' + '| ';
+      let ret = '';
+      for (let i = 0; i < ex.stav.length; i++) {
+        if (ex.stav.length > 1) {
+          ret += this.translate.instant('record.StavIssue.' + ex.stav[i]);
+          if (ex.stav_popis) {
+            ret += ' "' + ex.stav_popis + '"';
+          }
+          if (i < ex.stav.length - 1) {
+            ret += ' | ';
+          }
+
+        } else if (ex.stav.length === 1) {
+          ret += this.translate.instant('record.StavIssue.' + ex.stav[i]);
+          if (ex.stav_popis) {
+            ret += ' ' + ex.stav_popis;
+          }
         }
-        else if (ex['stav'].length === 1) {
-          ret += this.translate.instant('record.StavIssue.' + ex['stav'][i]) + '\n';
-        }
-        
       }
-      if (ex['stav_popis']) {
-        ret += ' ' + ex['stav_popis'];
-      }
-    return ret;
+
+      return ret;
     } else {
-      return 'nekonrolováno ';
+      return 'nekontrolováno ';
     }
   }
 }
