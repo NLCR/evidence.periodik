@@ -51,6 +51,7 @@
     "user_role": "User",
     "admin_role": "Admin",
     "add_specimen": "Add a specimen",
+    "edit_specimen": "Edit specimen",
     "edit_record": "Edit record",
     "edit_volume": "Edit volume",
     "duplicate_specimen": "Duplicate specimen",

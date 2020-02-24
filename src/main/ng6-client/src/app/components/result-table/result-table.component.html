@@ -79,7 +79,7 @@
           <ng-container *ngIf="ex.vlastnik === vl">[
             <a (click)="viewClick(row, ex)">{{ ex['carovy_kod'] }}</a>
             <a [matTooltip]="'desc.edit_volume' | translate" matTooltipPosition="above" (click)="viewSvazek(ex['carovy_kod'])">
-              <mat-icon>{{ config.icons.edit_pack }}</mat-icon>
+              <mat-icon>{{ config.icons.edit_volume }}</mat-icon>
             </a>
             <a [matTooltip]="'desc.duplicate_specimen' | translate" matTooltipPosition="above" (click)="duplicate(row, ex)">
               <mat-icon>{{ config.icons.duplicate }}</mat-icon>

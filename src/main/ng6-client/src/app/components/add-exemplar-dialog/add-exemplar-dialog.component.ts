@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { Utils } from 'src/app/utils';
+import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
   selector: 'app-add-exemplar-dialog',
@@ -42,7 +43,8 @@ export class AddExemplarDialogComponent implements OnInit {
     private datePipe: DatePipe,
     private router: Router,
     public state: AppState,
-    private service: AppService) {
+    private service: AppService,
+    public config: AppConfiguration) {
   }
 
   ngOnInit() {

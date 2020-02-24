@@ -1,8 +1,8 @@
 <h1 mat-dialog-title>
   <ng-container [ngSwitch]="editType">
-    <span *ngSwitchCase="'new'">{{ 'Add exemplar' | translate }}</span>
-    <span *ngSwitchCase="'duplicate'">{{ 'Duplicate exemplar' | translate }}</span>
-    <span *ngSwitchDefault>{{ 'Edit exemplar' | translate }}</span>
+    <span *ngSwitchCase="'new'">{{ 'desc.add_specimen' | translate }}</span>
+    <span *ngSwitchCase="'duplicate'">{{ 'desc.duplicate_specimen' | translate }}</span>
+    <span *ngSwitchDefault>{{ 'desc.edit_specimen' | translate }}</span>
   </ng-container>
 </h1>
 <div mat-dialog-content>
@@ -10,14 +10,13 @@
     {{ 'desc.record' | translate }}: <span class="app-font-bold">{{ issue.nazev }}, {{ issue.datum_vydani | date: 'dd.MM.yyyy' }}</span>
   </div>
   <ng-container [ngSwitch]="editType">
-    <div *ngSwitchCase="'new'" fxLayout="row" fxLayoutGap="16px">
+    <div *ngSwitchCase="'new'" fxLayout="row" fxLayoutGap="16px" class="app-gap-top">
       <mat-form-field fxFlex>
         <mat-label>{{ 'record.ownership' | translate }}</mat-label>
         <mat-select [id]="'owner'" [name]="'owner'" [(ngModel)]="exemplar.vlastnik">
           <mat-option *ngFor="let owner of state.owners" [value]="owner.name">{{owner.name}}</mat-option>
         </mat-select>
       </mat-form-field>
-
       <mat-form-field fxFlex>
         <input matInput [placeholder]="'record.barcode' | translate" [id]="'carovy_kod'" [name]="'carovy_kod'" [(ngModel)]="exemplar.carovy_kod" type="text">
       </mat-form-field>
@@ -26,7 +25,7 @@
       <div>
         {{ 'desc.specimen' | translate }}: <span class="app-font-bold">{{ exemplar.vlastnik }} {{ exemplar.carovy_kod }}</span>
       </div>
-      <div fxLayout="row" fxLayoutGap="16px">
+      <div fxLayout="row" fxLayoutGap="16px" class="app-gap-top">
         <mat-form-field fxFlex="33.3333%">
           <input matInput [matDatepicker]="pickerOd" placeholder="Choose a date" [(ngModel)]="startDate">
           <mat-datepicker-toggle matSuffix [for]="pickerOd"></mat-datepicker-toggle>
@@ -40,13 +39,13 @@
         <div fxFlex="33.3333%" fxLayout="row">
           <mat-checkbox fxFlexAlign="center" [(ngModel)]="onspecial" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox> 
         </div>
-      </div>
-     
+      </div> 
     </div>
     <div *ngSwitchDefault>
-      {{ 'desc.specimen' | translate }}: {{ exemplar.vlastnik }} <a (click)="editSvazek(exemplar.carovy_kod)">{{ exemplar.carovy_kod }}</a>&#160;
+      {{ 'desc.specimen' | translate }}: {{ exemplar.vlastnik }} <span class="app-font-bold">{{ exemplar.carovy_kod }}</span>
+      <span class="app-pipe"></span>
       <a (click)="editSvazek(exemplar.carovy_kod)" [matTooltip]="'desc.edit_volume' | translate" [matTooltipPosition]="'above'">
-        <mat-icon>{{ config.icons.all_inbox }}</mat-icon>
+        <mat-icon>{{ config.icons.edit_volume }}</mat-icon>
       </a>
     </div>
   </ng-container>

@@ -16,6 +16,12 @@ a,
   text-decoration: unset;
 }
 
+a {
+  .mat-icon {
+    color: $app-primary-color-darker;
+  }
+}
+
 
 // font
 .app-font-family-rc {
@@ -100,6 +106,10 @@ a,
   display: grid;
   grid-template-columns: repeat(4, 1fr); 
   margin-bottom: $app-gap;
+}
+
+.app-gap-top {
+  margin-top: $app-gap;
 }
 
 .app-gap-bottom {
@@ -292,4 +302,12 @@ li.app-page-item label{
 // alerts
 .app-alert-warning {
   color: $app-red;
+}
+
+
+// dialog
+.mat-dialog-container {
+  .mat-icon {
+    @include setIcon(20, $va: middle); 
+  }
 }
