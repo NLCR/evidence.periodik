@@ -6,9 +6,9 @@
   </ng-container>
 </h1>
 <div mat-dialog-content>
-  <p>
-    ISSUE: {{ issue.nazev }}, {{ issue.datum_vydani | date: 'dd.MM.yyyy' }}
-  </p>
+  <div style="margin-bottom: 16px;">
+    ISSUE: <span class="app-font-bold">{{ issue.nazev }}, {{ issue.datum_vydani | date: 'dd.MM.yyyy' }}</span>
+  </div>
   <ng-container [ngSwitch]="editType">
     <div fxLayout="row" *ngSwitchCase="'new'" fxLayoutGap="16px">
       <mat-form-field fxFlex>
@@ -24,7 +24,7 @@
     </div>
     <div *ngSwitchCase="'duplicate'">
       <div>
-        Exemplar: {{exemplar.vlastnik}} {{exemplar.carovy_kod}}
+        Exemplar: {{ exemplar.vlastnik }} {{ exemplar.carovy_kod }}
       </div>
       <mat-form-field>
         <input matInput [matDatepicker]="pickerOd" placeholder="Choose a date" [(ngModel)]="startDate">
@@ -72,14 +72,12 @@
     </mat-form-field>
   </div>
   
-  <div fxLayout="row" fxLayoutGap="16px" *ngIf="showPages">
-    <div fxFlex="100%">
-      {{ 'record.lost_pages' | translate }}
-      <ul class="app-pages">
-        <li *ngFor="let page of pagesRange" class="app-page-item">
-          <mat-checkbox [id]="'pg'+page.label" [(ngModel)]="page.sel">{{ page.label }}</mat-checkbox>
-        </li>
-      </ul>
+  <div *ngIf="showPages">
+    <span class="app-font-bold">{{ 'record.lost_pages' | translate }}</span>
+    <div class="app-grid-wrapper">
+      <div *ngFor="let page of pagesRange">
+        <mat-checkbox [id]="'pg'+page.label" [(ngModel)]="page.sel">{{ page.label }}</mat-checkbox>
+      </div>
     </div>
   </div> 
 </div>
@@ -87,111 +85,3 @@
   <button mat-button (click)="ok()">OK</button>
   <button mat-button (click)="cancel()">{{ 'button.cancel' | translate }}</button>
 </div>
-
-
-
-
-<!-- <mz-modal [fixedFooter]="true">
-  <mz-modal-header>
-    <ng-container [ngSwitch]="editType">
-      <span *ngSwitchCase="'new'">{{'Add exemplar' | translate}}</span>
-      <span *ngSwitchCase="'duplicate'">{{'Duplicate exemplar' | translate}}</span>
-      <span *ngSwitchDefault>{{'Edit exemplar' | translate}}</span>
-    </ng-container>
-  </mz-modal-header>
-  
-  <mz-modal-content>
-    <div>
-        ISSUE: {{issue.nazev}}, {{issue.datum_vydani | date: 'dd.MM.yyyy'}}
-    </div>
-    <div>
-    <ng-container [ngSwitch]="editType">
-      <span *ngSwitchCase="'new'">
-        <mz-select-container>
-          <select mz-select [id]="'owner'" [name]="'owner'" [(ngModel)]="exemplar.vlastnik" [label]="'record.ownership' | translate">
-            <option *ngFor="let owner of state.owners" [value]="owner.name">{{owner.name}}</option>
-          </select>
-        </mz-select-container>
-        <mz-input-container>
-          <input mz-input [label]="'record.barcode' | translate" [id]="'carovy_kod'" [name]="'carovy_kod'" [(ngModel)]="exemplar.carovy_kod" type="text">
-        </mz-input-container>
-      </span>
-      <span *ngSwitchCase="'duplicate'">
-        <div>
-          Exemplar: {{exemplar.vlastnik}} {{exemplar.carovy_kod}}
-        </div>
-        <mz-datepicker-container [inline]="true">
-          <input mz-datepicker
-                 [options]="options"
-                 [label]="'modal.from' | translate"
-                 [(ngModel)]="duplicate_start_date"
-                 id="start_date" name="start_date"
-                 type="text" />
-        </mz-datepicker-container>
-        <mz-datepicker-container [inline]="true">
-          <input mz-datepicker
-                 [options]="options"
-                 [label]="'modal.till' | translate"
-                 [(ngModel)]="duplicate_end_date"
-                 id="end_date" name="end_date"
-                 type="text" />
-        </mz-datepicker-container>
-        
-    <mz-checkbox-container>
-      <input mz-checkbox
-             [(ngModel)]="onspecial"
-             [label]="'modal.on_special_days' | translate"
-             id="onSpecialDays"
-             type="checkbox" />
-    </mz-checkbox-container>
-      </span>
-      <span *ngSwitchDefault>
-        Exemplar: {{exemplar.vlastnik}} <a (click)="editSvazek(exemplar.carovy_kod)">{{exemplar.carovy_kod}}</a>&#160;
-        <i mz-icon-mdi class="app-cursor-pointer" [icon]="'package'" [size]="'18px'" mz-tooltip [tooltip]="'Editovat svazek'" [position]="'top'" (click)="editSvazek(exemplar.carovy_kod)"></i>
-      </span>
-    </ng-container>
-    </div>
-    <div>
-      <mz-select-container>
-        <select mz-select [id]="'stav'" [name]="'stav'" [(ngModel)]="exemplar.stav" [multiple]="true"  [placeholder]="'Stav'" [label]="'Select stavy'">
-          <option *ngFor="let stav of state.stavy" [value]="stav">{{'record.StavIssue.' + stav | translate}}</option>
-        </select>
-      </mz-select-container>
-
-
-
-      <mz-input-container>
-        <input mz-input [label]="'record.state_com' | translate" [id]="'stav_popis'" [name]="'stav_popis'" [(ngModel)]="exemplar.stav_popis" type="text">
-      </mz-input-container>
-      <mz-input-container>
-        <input mz-input [label]="'record.signatura' | translate" id="signatura" name="signatura" [(ngModel)]="exemplar.signatura" type="text"
-               autocomplete="on">
-      </mz-input-container>
-      <mz-input-container>
-              <input mz-input [label]="'record.oznaceni' | translate" [id]="'oznaceni'" [name]="'oznaceni'" [(ngModel)]="exemplar.oznaceni" type="text"
-                  #box (keyup)="filterOznaceni(box.value)">
-            </mz-input-container>
-            <mz-input-container>
-              <input mz-input [label]="'record.popis_oznaceni_vydani' | translate" 
-                     [id]="'popis_oznaceni_vydani'" [name]="'popis_oznaceni_vydani'" [(ngModel)]="exemplar.popis_oznaceni_vydani" type="text">
-            </mz-input-container>
-      <div *ngIf="showPages()">
-        {{'record.lost_pages' | translate}}
-        <ul class="app-pages">
-          <li *ngFor="let page of pagesRange" class="app-page-item">
-            <mz-checkbox-container>
-              <input mz-checkbox [label]="page.label" type="checkbox" [id]="'pg'+page.label"
-                     [(ngModel)]="page.sel" />
-            </mz-checkbox-container>
-          </li>
-        </ul>
-      </div>
-    </div>  
-      
-  </mz-modal-content>
-  
-  <mz-modal-footer>
-      <button mz-button [flat]="true" (click)="ok()">OK</button>
-      <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{'button.cancel' | translate}}</button>
-  </mz-modal-footer>
-</mz-modal> -->

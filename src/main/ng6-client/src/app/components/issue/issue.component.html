@@ -109,7 +109,7 @@
         <h2>{{'record.specimen_count' | translate}}: {{state.currentIssue.exemplare.length}}</h2>
       </div>
       <div fxFlex class="app-fx-right">
-        <button mat-mini-fab [matTooltip]="'button.add_specimen' | translate" matTooltipPosition="above" [disabled]="!state.logged" (click)="addExemplar()">
+        <button mat-mini-fab [matTooltip]="'button.add_specimen' | translate" color="primary" matTooltipPosition="above" [disabled]="!state.logged" (click)="addExemplar()" class="mat-elevation-z0">
           <mat-icon>{{ config.icons.add }}</mat-icon>
         </button>
       </div>

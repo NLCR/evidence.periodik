@@ -20,14 +20,4 @@
       }
     }
   }
-
-  .mat-expansion-panel {
-    .mat-expansion-panel-body {
-      .app-grid-wrapper {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr); 
-        margin-bottom: $app-gap;
-      }
-    }
-  }
 }

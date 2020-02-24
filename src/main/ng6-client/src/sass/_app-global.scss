@@ -96,6 +96,16 @@ a,
   flex-wrap: wrap;
 }
 
+.app-grid-wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  margin-bottom: $app-gap;
+}
+
+.app-gap-bottom {
+  margin-bottom: $app-gap;
+}
+
 
 // others
 .btn:not(.btn-floating) {
