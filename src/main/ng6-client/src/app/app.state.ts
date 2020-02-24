@@ -93,13 +93,12 @@ export class AppState {
 
   setConfig(config: AppConfiguration) {
 
-    
 
-    this.periods = config['periodicity'];
-    this.stavy = config['stavy'];
-    this.owners = config['owners'];
-    this.states = config['states'];
-    this.vdkFormats = config['vdkFormats'];
+    this.periods = config.periodicity;
+    this.stavy = config.stavy;
+    this.owners = config.owners;
+    this.states = config.states;
+    this.vdkFormats = config.vdkFormats;
 
     config.vydani.map(k => { this.vydani.push(k); });
 

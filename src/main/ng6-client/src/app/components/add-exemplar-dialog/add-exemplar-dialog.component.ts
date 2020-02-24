@@ -1,8 +1,8 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {AppState} from '../../app.state';
-import {AppService} from '../../app.service';
-import {Issue} from '../../models/issue';
-import {Exemplar} from '../../models/exemplar';
+import { Component, OnInit, Inject } from '@angular/core';
+import { AppState } from '../../app.state';
+import { AppService } from '../../app.service';
+import { Issue } from '../../models/issue';
+import { Exemplar } from '../../models/exemplar';
 import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { DatePipe } from '@angular/common';
@@ -33,12 +33,12 @@ export class AddExemplarDialogComponent implements OnInit {
   onspecial = false;
 
   showPages: boolean;
-  pagesRange: {label: string, sel: boolean}[] = [];
+  pagesRange: { label: string, sel: boolean }[] = [];
 
 
   constructor(
     public dialogRef: MatDialogRef<AddExemplarDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {issue: Issue, exemplar: Exemplar, editType: string},
+    @Inject(MAT_DIALOG_DATA) public data: { issue: Issue, exemplar: Exemplar, editType: string },
     private datePipe: DatePipe,
     private router: Router,
     public state: AppState,
@@ -50,48 +50,48 @@ export class AddExemplarDialogComponent implements OnInit {
     this.exemplar = this.data.exemplar;
     this.editType = this.data.editType;
     if (this.issue) {
-      
+
       this.startDate = Utils.dateFromDay(this.issue.datum_vydani_den);
       this.endDate = Utils.dateFromDay(this.issue.datum_vydani_den);
-      
+
       if (!this.issue.pages || this.issue.pages.length === 0) {
         for (let i = 0; i < this.issue.pocet_stran; i++) {
           // this.pages.push({label:(i+1) + "", index: i});
           const sel = this.exemplar.pages && this.exemplar.pages.missing.includes((i + 1) + '');
-          this.pagesRange.push({label: (i + 1) + '', sel});
+          this.pagesRange.push({ label: (i + 1) + '', sel });
         }
       } else {
         for (let i = 0; i < this.issue.pages.length; i++) {
           const label = this.issue.pages[i].label;
           const sel = this.exemplar.pages && this.exemplar.pages.missing.includes((i + 1) + '');
-          this.pagesRange.push({label, sel});
+          this.pagesRange.push({ label, sel });
         }
         for (let i = this.issue.pages.length; i < this.issue.pocet_stran; i++) {
           // let sel = this.exemplar.pages && this.exemplar.pages.missing.includes((i+1) + "");
-          this.pagesRange.push({label: (i + 1) + '', sel: true});
+          this.pagesRange.push({ label: (i + 1) + '', sel: true });
         }
       }
 
     }
 
     this.showPages = this.editType === 'new' || (this.exemplar.stav && !this.exemplar.stav.includes('OK'));
-    
+
   }
 
   ok(): void {
     if (this.showPages()) {
-          this.exemplar.pages = {missing: [], damaged: []};
-          this.pagesRange.forEach(p => {
-            if (p.sel) {
-            this.exemplar.pages.missing.push(p.label);
-            }
-          });
+      this.exemplar.pages = { missing: [], damaged: [] };
+      this.pagesRange.forEach(p => {
+        if (p.sel) {
+          this.exemplar.pages.missing.push(p.label);
         }
+      });
+    }
 
 
     if (this.exemplar.stav) {
-          this.exemplar.stav = this.exemplar.stav.filter(st => st !== 'null');
-        }
+      this.exemplar.stav = this.exemplar.stav.filter(st => st !== 'null');
+    }
 
 
     switch (this.editType) {
@@ -130,7 +130,7 @@ export class AddExemplarDialogComponent implements OnInit {
   }
 
   filterOznaceni(e: string) {
-    this.exemplar.oznaceni = new Array(e.length + 1).join( this.issue.znak_oznaceni_vydani );
+    this.exemplar.oznaceni = new Array(e.length + 1).join(this.issue.znak_oznaceni_vydani);
   }
 
   cancel() {

@@ -25,6 +25,22 @@ import { Configuration } from './shared/configuration';
         return this.config.znak_oznaceni_vydani;
     }
 
+    public get states() {
+        return this.config.states;
+    }
+
+    public get stavy() {
+        return this.config.stavy;
+    }
+
+    public get vdkFormats() {
+        return this.config.vdkFormats;
+    }
+
+    public get periodicity() {
+        return this.config.periodicity;
+    }
+
     public get vydani() {
         return this.config.vydani;
     }
