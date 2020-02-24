@@ -681,7 +681,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         overlayY: 'top',
         originX: 'center',
         originY: 'bottom'
-      }]).withPush().withViewportMargin(30).withDefaultOffsetX(37).withDefaultOffsetY(20),
+      }]).withPush().withViewportMargin(30).withDefaultOffsetX(6).withDefaultOffsetY(20),
       scrollStrategy: this.overlay.scrollStrategies.close(),
       hasBackdrop: false,
       backdropClass: 'popover-backdrop'

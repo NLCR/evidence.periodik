@@ -438,7 +438,7 @@
         </ul>
       </div>
     </mat-card-content>
-    <button mat-button ngIf="popShowPages" (click)="updatePop()">{{ 'update' | translate}}</button>
+    <button mat-button *ngIf="popShowPages" (click)="updatePop()">{{ 'update' | translate}}</button>
     <button mat-button (click)="closePop()">{{ 'update' | translate}}</button>
   </mat-card>
 </ng-template>
