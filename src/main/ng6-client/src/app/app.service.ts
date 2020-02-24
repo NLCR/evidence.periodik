@@ -326,7 +326,7 @@ export class AppService {
     return this.http.get(url, { params });
   }
 
-  prepareVdkEx(issue: Issue, urlvdk: string, options: any) {
+  prepareVdkEx(issue: Issue, urlvdk: string, options: any): Observable<any> {
 
     const url = 'index';
     const params: HttpParams = new HttpParams()

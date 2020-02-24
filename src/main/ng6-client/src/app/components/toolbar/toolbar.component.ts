@@ -23,6 +23,8 @@ import { MatDialog } from '@angular/material';
 export class ToolbarComponent implements OnInit {
   periods = [];
 
+  header = '';
+
   constructor(
     public dialog: MatDialog,
     public state: AppState,
@@ -31,6 +33,25 @@ export class ToolbarComponent implements OnInit {
     public config: AppConfiguration) { }
 
   ngOnInit() {
+    this.state.searchChanged.subscribe(res => {
+      this.setHeader();
+    });
+  }
+
+  setHeader() {
+    this.header = '';
+    const data = this.state.searchResults.response['docs'];
+    this.setCommonColumns(data, 'meta_nazev');
+    this.setCommonColumns(data, 'mutace');
+    this.setCommonColumns(data, 'vydani');
+  }
+
+  setCommonColumns(data: any, field: string) {
+    if (!this.state.hasFacet(field)) {
+      if (data[0][field] && data[0][field] !== '') {
+        this.header += this.service.getTranslation('facet.' + field) + ': ' + data[0][field] + '<span class="app-pipe"></span>';
+      }
+    }
   }
 
   showCalendar() {
@@ -53,10 +74,10 @@ export class ToolbarComponent implements OnInit {
     this.service.saveCurrentIssue().subscribe(res => {
       if (res === 'error') {
         alert('Invalid data!');
-      } else if (res['error']) {
-        //this.toastService.show(res['error'], 4000, 'red');
+      } else if (res.error) {
+        this.service.showSnackBar('save_current_titul_error', res.error, true);
       } else {
-        //this.toastService.show('Saved!!', 2000, 'green');
+        this.service.showSnackBar('save_current_titul_success');
       }
     });
   }
@@ -83,15 +104,15 @@ export class ToolbarComponent implements OnInit {
     this.service.saveCurrentIssue().subscribe(res => {
       if (res === 'error') {
         alert('Invalid data!');
-      } else if (res['error']) {
-        //this.toastService.show(res['error'], 4000, 'red');
+      } else if (res.error) {
+        this.service.showSnackBar('save_current_issue_error', res.error, true);
       } else {
-        //this.toastService.show('Saved!!', 2000, 'green');
+        this.service.showSnackBar('save_current_issue_success');
       }
     },
       (error: HttpErrorResponse) => {
         console.log(error);
-        //this.toastService.show(error.message, 4000, 'red');
+        this.service.showSnackBar('save_current_issue_error', res.error, true);
       });
 
   }
@@ -142,12 +163,15 @@ export class ToolbarComponent implements OnInit {
       }
     });
 
-    //this.modalService.open(CloneDialogComponent, { 'state': this.state, 'service': this.service, 'params': cloneParams });
   }
 
 
 
   addVDKEx() {
+
+    const dialogRef = this.dialog.open(AddVdkExComponent, {
+      width: '650px'
+    });
     //this.modalService.open(AddVdkExComponent, { 'state': this.state, 'service': this.service });
   }
 }
