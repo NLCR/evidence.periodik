@@ -6,11 +6,11 @@
   </ng-container>
 </h1>
 <div mat-dialog-content>
-  <div style="margin-bottom: 16px;">
-    ISSUE: <span class="app-font-bold">{{ issue.nazev }}, {{ issue.datum_vydani | date: 'dd.MM.yyyy' }}</span>
+  <div>
+    {{ 'desc.record' | translate }}: <span class="app-font-bold">{{ issue.nazev }}, {{ issue.datum_vydani | date: 'dd.MM.yyyy' }}</span>
   </div>
   <ng-container [ngSwitch]="editType">
-    <div fxLayout="row" *ngSwitchCase="'new'" fxLayoutGap="16px">
+    <div *ngSwitchCase="'new'" fxLayout="row" fxLayoutGap="16px">
       <mat-form-field fxFlex>
         <mat-label>{{ 'record.ownership' | translate }}</mat-label>
         <mat-select [id]="'owner'" [name]="'owner'" [(ngModel)]="exemplar.vlastnik">
@@ -24,31 +24,36 @@
     </div>
     <div *ngSwitchCase="'duplicate'">
       <div>
-        Exemplar: {{ exemplar.vlastnik }} {{ exemplar.carovy_kod }}
+        {{ 'desc.specimen' | translate }}: <span class="app-font-bold">{{ exemplar.vlastnik }} {{ exemplar.carovy_kod }}</span>
       </div>
-      <mat-form-field>
-        <input matInput [matDatepicker]="pickerOd" placeholder="Choose a date" [(ngModel)]="startDate">
-        <mat-datepicker-toggle matSuffix [for]="pickerOd"></mat-datepicker-toggle>
-        <mat-datepicker #pickerOd></mat-datepicker>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput [matDatepicker]="pickerTo" placeholder="Choose a date" [(ngModel)]="endDate">
-        <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-        <mat-datepicker #pickerTo></mat-datepicker>
-      </mat-form-field>
-      <mat-checkbox [(ngModel)]="onspecial" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox>
+      <div fxLayout="row" fxLayoutGap="16px">
+        <mat-form-field fxFlex="33.3333%">
+          <input matInput [matDatepicker]="pickerOd" placeholder="Choose a date" [(ngModel)]="startDate">
+          <mat-datepicker-toggle matSuffix [for]="pickerOd"></mat-datepicker-toggle>
+          <mat-datepicker #pickerOd></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field fxFlex="33.3333%">
+          <input matInput [matDatepicker]="pickerTo" placeholder="Choose a date" [(ngModel)]="endDate">
+          <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+          <mat-datepicker #pickerTo></mat-datepicker>
+        </mat-form-field>
+        <div fxFlex="33.3333%" fxLayout="row">
+          <mat-checkbox fxFlexAlign="center" [(ngModel)]="onspecial" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox> 
+        </div>
+      </div>
+     
     </div>
     <div *ngSwitchDefault>
-      Exemplar: {{ exemplar.vlastnik }} <a (click)="editSvazek(exemplar.carovy_kod)">{{ exemplar.carovy_kod }}</a>&#160;
-      <a (click)="editSvazek(exemplar.carovy_kod)" [matTooltip]="'Editovat svazek' | translate" [matTooltipPosition]="'above'">
-        <mat-icon>all_inbox</mat-icon>
+      {{ 'desc.specimen' | translate }}: {{ exemplar.vlastnik }} <a (click)="editSvazek(exemplar.carovy_kod)">{{ exemplar.carovy_kod }}</a>&#160;
+      <a (click)="editSvazek(exemplar.carovy_kod)" [matTooltip]="'desc.edit_volume' | translate" [matTooltipPosition]="'above'">
+        <mat-icon>{{ config.icons.all_inbox }}</mat-icon>
       </a>
     </div>
   </ng-container>
 
   <div fxLayout="row" fxLayoutGap="16px">
     <mat-form-field fxFlex="33.3333%">
-      <mat-label>{{ 'Select stavy' | translate }}</mat-label>
+      <mat-label>{{ 'desc.select_state' | translate }}</mat-label>
       <mat-select [id]="'stav'" [name]="'stav'" [(ngModel)]="exemplar.stav">
         <mat-option *ngFor="let stav of state.stavy" [value]="stav">
           {{ 'record.StavIssue.' + stav | translate }}

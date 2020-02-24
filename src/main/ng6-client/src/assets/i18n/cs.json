@@ -33,6 +33,7 @@
   "desc": {
     "records": "Záznamů",
     "specimens": "Exemplářů",
+    "specimen": "Exemplář",
     "mutations": "Mutací",
     "owners": "Vlastníků",
     "digitized": "Digitalizováno",
@@ -53,7 +54,8 @@
     "edit_record": "Editovat záznam",
     "edit_volume": "Editovat svazek",
     "duplicate_specimen": "Duplicate exemplář",
-    "delete_specimen": "Smazat exemplář"
+    "delete_specimen": "Smazat exemplář",
+    "select_state": "Vyber stav"
   },
 
 

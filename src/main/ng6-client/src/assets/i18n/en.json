@@ -33,6 +33,7 @@
   "desc": {
     "records": "Records",
     "specimens": "Specimens",
+    "specimen": "Specimen",
     "mutations": "Mutations",
     "owners": "Owners",
     "digitized": "Digitized",
@@ -53,7 +54,8 @@
     "edit_record": "Edit record",
     "edit_volume": "Edit volume",
     "duplicate_specimen": "Duplicate specimen",
-    "delete_specimen": "Delete specimen"
+    "delete_specimen": "Delete specimen",
+    "select_state": "Select state"
   },
 
 

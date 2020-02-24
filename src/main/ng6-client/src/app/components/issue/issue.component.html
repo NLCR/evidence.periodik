@@ -30,6 +30,7 @@
 
     <div fxLayout="row" fxLayoutGap="16px">
       <mat-form-field *ngIf="!changingLang" fxFlex="45%">
+        <mat-label>{{ 'record.publication.placeholder' | translate }}</mat-label>
         <mat-select id="vydani" name="vydani" [(ngModel)]="state.currentIssue.vydani">
           <mat-option *ngFor="let v of state.vydani" [value]="v">
             {{ 'record.publication.' + v | translate }}
@@ -55,8 +56,8 @@
     </mat-form-field>
     
     <mat-form-field *ngIf="!changingLang">
+      <mat-label>{{ 'record.periodicita.placeholder' | translate }}</mat-label>
       <mat-select id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita">
-        <mat-label>{{ 'record.periodicita.placeholder' | translate }}</mat-label>
         <mat-option *ngFor="let v of state.periods" [value]="v">
           {{'record.periodicita.' + v | translate }}
         </mat-option>
