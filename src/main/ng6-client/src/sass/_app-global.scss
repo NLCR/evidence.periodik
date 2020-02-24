@@ -92,6 +92,10 @@ a,
   padding: $app-container;
 }
 
+.app-fx-wrap {
+  flex-wrap: wrap;
+}
+
 
 // others
 .btn:not(.btn-floating) {
