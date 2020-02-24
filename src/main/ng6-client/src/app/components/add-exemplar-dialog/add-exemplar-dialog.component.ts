@@ -79,7 +79,7 @@ export class AddExemplarDialogComponent implements OnInit {
   }
 
   ok(): void {
-    if (this.showPages()) {
+    if (this.showPages) {
       this.exemplar.pages = { missing: [], damaged: [] };
       this.pagesRange.forEach(p => {
         if (p.sel) {

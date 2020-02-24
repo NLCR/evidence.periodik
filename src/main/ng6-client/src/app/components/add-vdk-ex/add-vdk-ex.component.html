@@ -9,17 +9,17 @@
     <div class="col s2">
       <mat-form-field>
         <mat-label>{{ 'record.ownership' | translate }}</mat-label>
-        <select [id]="'owner'" [name]="'owner'" [(ngModel)]="vlastnik">
+        <mat-select [id]="'owner'" [name]="'owner'" [(ngModel)]="vlastnik">
           <mat-option *ngFor="let owner of state.owners" [value]="owner.name">{{ owner.name }}</mat-option>
-        </select>
+        </mat-select>
       </mat-form-field>
     </div>
     <div class="col s4">
       <mat-form-field>
         <mat-label>{{ 'Format pod pole \'i\'' }}</mat-label>
-        <select [id]="'format'" [name]="'format'" [(ngModel)]="format">
+        <mat-select [id]="'format'" [name]="'format'" [(ngModel)]="format">
           <mat-option *ngFor="let f of state.vdkFormats" [value]="f">{{ 'formatvdk.' + f | translate }}</mat-option>
-        </select>
+        </mat-select>
       </mat-form-field>
     </div>
     <div class="col s6">
@@ -28,7 +28,7 @@
   </div>  
 
   <div class="mat-elevation-z8 app-progressbar-wrapper">
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
     <!-- <ng-progress id="bar-1" #progressBar [color]="'#4285f4'"></ng-progress> -->
     <table mat-table [dataSource]="dataSource" >
       <ng-container matColumnDef="id">
@@ -95,7 +95,7 @@
 <div mat-dialog-actions>
   <button mat-button *ngIf="prepared" (click)="ok()" [disabled]="!state.logged">Add</button>
   <button mat-button (click)="prepare()">{{ 'button.prepare' | translate }}</button>
-  <button mat-button (click)="cancel()">{{ 'button.close' | translate }}</button>
+  <button mat-button mat-dialog-close>{{ 'button.close' | translate }}</button>
 </div>
 
 
