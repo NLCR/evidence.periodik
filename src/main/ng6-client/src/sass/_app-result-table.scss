@@ -109,3 +109,14 @@ app-result-table {
     }
   }
 }
+
+.mat-column-NKP,
+.mat-column-MZK,
+.mat-column-VKOL {
+  &.col-is-closed {
+    max-width: 70px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

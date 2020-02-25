@@ -27,6 +27,10 @@ export class ResultTableComponent implements OnInit {
   header = '';
   dataSource: MatTableDataSource<Issue>;
   loading: boolean;
+  
+  nkpIsClosed: boolean = false;
+  mzkIsClosed: boolean = false;
+  vkolIsClosed: boolean = false;
 
   constructor(
     public dialog: MatDialog,
@@ -294,6 +298,16 @@ export class ResultTableComponent implements OnInit {
       return ret;
     } else {
       return 'nekontrolováno ';
+    }
+  }
+
+  isOwnerClosed(owner: string) {
+    if(owner === "NKP") {
+      this.nkpIsClosed =! this.nkpIsClosed;
+    } else if(owner === "MZK") {
+      this.mzkIsClosed =! this.mzkIsClosed;
+    } else if(owner === "VKOL") {
+      this.vkolIsClosed =! this.vkolIsClosed;
     }
   }
 }
