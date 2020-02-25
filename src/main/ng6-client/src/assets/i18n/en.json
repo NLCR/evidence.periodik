@@ -56,7 +56,9 @@
     "edit_volume": "Edit volume",
     "duplicate_specimen": "Duplicate specimen",
     "delete_specimen": "Delete specimen",
-    "select_state": "Select state"
+    "select_state": "Select state",
+    "collapse_this_column": "Collapse this column",
+    "expand_this_column": "Expand this column"
   },
 
 

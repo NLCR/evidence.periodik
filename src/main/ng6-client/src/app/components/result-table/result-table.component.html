@@ -74,13 +74,17 @@
       <th mat-header-cell *matHeaderCellDef [ngClass]="'app-header-cell-' + vl.name.toLowerCase()">
         <div fxLayout="row">
           <div fxFlex>{{ vl.name }}</div>
-          <div fxFlexAlign="right"><a (click)="vl.collapsed = !vl.collapsed"><mat-icon style="color:black">{{vl.collapsed ? 'last_page' : 'first_page' }}</mat-icon></a></div>
+          <div fxFlexAlign="right">
+            <a (click)="vl.collapsed = !vl.collapsed" [matTooltip]="vl.collapsed ? ('desc.expand_this_column' | translate) : ('desc.collapse_this_column' | translate)" matTooltipPosition="above">
+              <mat-icon>{{vl.collapsed ? config.icons.expand_this_column : config.icons.collapse_this_column }}</mat-icon>
+            </a>
+          </div>
         </div>
       </th>
-      <td mat-cell *matCellDef="let row; let idx = index;" [class.col-is-closed]="vl.collapsed">
+      <td mat-cell *matCellDef="let row; let idx = index;" [class.app-col-collapsed]="vl.collapsed">
         <span *ngFor="let ex of row.exemplare; let idxex = index">
           <ng-container *ngIf="ex.vlastnik === vl.name">[
-            <a (click)="viewClick(row, ex)" [matTooltip]="'desc.edit_specimen' | translate">{{ ex['carovy_kod'] }}</a>
+            <a (click)="viewClick(row, ex)" [matTooltip]="'desc.edit_specimen' | translate" matTooltipPosition="above">{{ ex['carovy_kod'] }}</a>
             <a [matTooltip]="'desc.edit_volume' | translate" matTooltipPosition="above" (click)="viewSvazek(ex['carovy_kod'])">
               <mat-icon>{{ config.icons.edit_volume }}</mat-icon>
             </a>

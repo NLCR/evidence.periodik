@@ -30,6 +30,10 @@ app-result-table {
               padding-left: 0;
             }
 
+            &:last-of-type {
+              padding-right: 0;
+            }
+
             // custom cell width
             &.mat-column-mutace {
               min-width: $app-result-cell-mutace-width;
@@ -63,10 +67,38 @@ app-result-table {
               }
             }
 
-            &.app-header-cell-nkp {background-color: $app-result-header-cell-nkp-bg; color: $app-result-header-cell-nkp-color}
-            &.app-header-cell-mzk {background-color: $app-result-header-cell-mzk-bg; color: $app-result-header-cell-mzk-color}
-            &.app-header-cell-ukf {background-color: $app-result-header-cell-ukf-bg; color: $app-result-header-cell-ukf-color}
-            &.app-header-cell-vkol {background-color: $app-result-header-cell-vkol-bg; color: $app-result-header-cell-vkol-color}
+            &.app-header-cell-nkp {
+              background-color: $app-result-header-cell-nkp-bg; 
+              color: $app-result-header-cell-nkp-color;
+
+              .mat-icon {
+                color: $app-result-header-cell-nkp-color;
+              }
+            }
+            &.app-header-cell-mzk {
+              background-color: $app-result-header-cell-mzk-bg; 
+              color: $app-result-header-cell-mzk-color;
+              
+              .mat-icon {
+                color: $app-result-header-cell-mzk-color;
+              }
+            }
+            &.app-header-cell-ukf {
+              background-color: $app-result-header-cell-ukf-bg; 
+              color: $app-result-header-cell-ukf-color;
+              
+              .mat-icon {
+                color: $app-result-header-cell-ukf-color;
+              }
+            }
+            &.app-header-cell-vkol {
+              background-color: $app-result-header-cell-vkol-bg; 
+              color: $app-result-header-cell-vkol-color;
+            
+              .mat-icon {
+                color: $app-result-header-cell-vkol-color;
+              }
+            }
           }
         }
       }
@@ -92,6 +124,19 @@ app-result-table {
               color: $app-primary-color-darker;
               margin-left: 3px;
             }
+
+            &.mat-column-NKP,
+            &.mat-column-MZK,
+            &.mat-column-UKF,
+            &.mat-column-VKOL {
+              &.app-col-collapsed {
+                max-width: 60px;
+                width: 60px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              } 
+            }
           }
         }
       }
@@ -107,16 +152,5 @@ app-result-table {
         justify-content: flex-start;
       }
     }
-  }
-}
-
-.mat-column-NKP,
-.mat-column-MZK,
-.mat-column-VKOL {
-  &.col-is-closed {
-    max-width: 70px !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 }
