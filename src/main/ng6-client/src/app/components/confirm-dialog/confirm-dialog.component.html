@@ -1,23 +1,10 @@
 <h1 mat-dialog-title>{{ data.caption | translate }}</h1>
 <div mat-dialog-content>
-  {{ data.text | translate: data.param }}
+  <div class="app-gap-bottom">
+      {{ data.text | translate: data.param }} 
+  </div>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="ok()">OK</button>
   <button mat-button (click)="cancel()">{{ 'button.close' | translate }}</button>
 </div>
-
-<!-- <mz-modal [fixedFooter]="true">
-  <mz-modal-header>
-    <h3>{{caption | translate}}</h3>
-  </mz-modal-header>
-
-  <mz-modal-content>
-    {{text | translate: param}}
-  </mz-modal-content>
-
-  <mz-modal-footer>
-    <button mz-button [flat]="true" (click)="ok()">OK</button>
-    <button mz-button [flat]="true" mz-modal-close (click)="cancel()">{{'button.close' | translate}}</button>
-  </mz-modal-footer>
-</mz-modal> -->

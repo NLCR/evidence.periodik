@@ -58,7 +58,8 @@
     "delete_specimen": "Delete specimen",
     "select_state": "Select state",
     "collapse_this_column": "Collapse this column",
-    "expand_this_column": "Expand this column"
+    "expand_this_column": "Expand this column",
+    "without_name": "without name"
   },
 
 
