@@ -74,7 +74,7 @@
       <th mat-header-cell *matHeaderCellDef [ngClass]="classByVlastnik(vl)">
         <div fxLayout="row">
           <div fxFlex>{{ vl }}</div>
-          <div fxFlexAlign="right"><a (click)="isOwnerClosed(vl)"><mat-icon style="color:black">first_page</mat-icon></a></div>
+          <div fxFlexAlign="right"><a (click)="isOwnerClosed(vl)"><mat-icon style="color:black">first_page</mat-icon></a></div><!--last_page-->
         </div>
       </th>
       <td mat-cell *matCellDef="let row; let idx = index;" [ngClass]="{'col-is-closed' : (nkpIsClosed && vl === 'NKP') || (mzkIsClosed && vl === 'MZK') || (vkolIsClosed && vl === 'VKOL')}">
