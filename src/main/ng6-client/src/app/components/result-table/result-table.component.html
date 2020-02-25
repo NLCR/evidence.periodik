@@ -71,7 +71,7 @@
     </ng-container>
     
     <ng-container *ngFor="let vl of vlastnici" [matColumnDef]="vl.name">
-      <th mat-header-cell *matHeaderCellDef [ngClass]="classByVlastnik(vl.name)">
+      <th mat-header-cell *matHeaderCellDef [ngClass]="'app-header-cell-' + vl.name.toLowerCase()">
         <div fxLayout="row">
           <div fxFlex>{{ vl.name }}</div>
           <div fxFlexAlign="right"><a (click)="vl.collapsed = !vl.collapsed"><mat-icon style="color:black">{{vl.collapsed ? 'last_page' : 'first_page' }}</mat-icon></a></div>
