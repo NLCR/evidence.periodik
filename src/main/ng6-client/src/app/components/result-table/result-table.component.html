@@ -70,16 +70,21 @@
       </td>   
     </ng-container>
     
-    <ng-container *ngFor="let vl of vlastnici" [matColumnDef]="vl">
-      <th mat-header-cell *matHeaderCellDef [ngClass]="classByVlastnik(vl)">
+    <ng-container *ngFor="let vl of vlastnici" [matColumnDef]="vl.name">
+      <th mat-header-cell *matHeaderCellDef [ngClass]="classByVlastnik(vl.name)">
         <div fxLayout="row">
+<<<<<<< HEAD
           <div fxFlex>{{ vl }}</div>
           <div fxFlexAlign="right"><a (click)="isOwnerClosed(vl)"><mat-icon style="color:black">first_page</mat-icon></a></div><!--last_page-->
+=======
+          <div fxFlex>{{ vl.name }}</div>
+          <div fxFlexAlign="right"><a (click)="vl.collapsed = !vl.collapsed"><mat-icon style="color:black">{{vl.collapsed ? 'last_page' : 'first_page' }}</mat-icon></a></div>
+>>>>>>> 916e7ef367064361b19f867d8c8ae26eae128729
         </div>
       </th>
-      <td mat-cell *matCellDef="let row; let idx = index;" [ngClass]="{'col-is-closed' : (nkpIsClosed && vl === 'NKP') || (mzkIsClosed && vl === 'MZK') || (vkolIsClosed && vl === 'VKOL')}">
+      <td mat-cell *matCellDef="let row; let idx = index;" [class.col-is-closed]="vl.collapsed">
         <span *ngFor="let ex of row.exemplare; let idxex = index">
-          <ng-container *ngIf="ex.vlastnik === vl">[
+          <ng-container *ngIf="ex.vlastnik === vl.name">[
             <a (click)="viewClick(row, ex)" [matTooltip]="'desc.edit_specimen' | translate">{{ ex['carovy_kod'] }}</a>
             <a [matTooltip]="'desc.edit_volume' | translate" matTooltipPosition="above" (click)="viewSvazek(ex['carovy_kod'])">
               <mat-icon>{{ config.icons.edit_volume }}</mat-icon>

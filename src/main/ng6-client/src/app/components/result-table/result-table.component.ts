@@ -21,16 +21,13 @@ export class ResultTableComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   data: Issue[] = [];
-  vlastnici: string[] = [];
+  vlastnici: {name: string, collapsed: boolean}[] = [];
   exs: any = {};
   displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'vydani'];
   header = '';
   dataSource: MatTableDataSource<Issue>;
   loading: boolean;
   
-  nkpIsClosed: boolean = false;
-  mzkIsClosed: boolean = false;
-  vkolIsClosed: boolean = false;
 
   constructor(
     public dialog: MatDialog,
@@ -96,7 +93,7 @@ export class ResultTableComponent implements OnInit {
           // let ck = exs[i].vlastnik + ' - ' + exs[i].signatura;
           const vlastnik = exs[i].vlastnik;
           if (!this.exs.hasOwnProperty(vlastnik) && vlastnik !== '') {
-            this.vlastnici.push(vlastnik);
+            this.vlastnici.push({name: vlastnik, collapsed: false});
             this.exs[vlastnik] = exs[i];
             this.displayedColumns.push(vlastnik);
           } else {
@@ -298,16 +295,6 @@ export class ResultTableComponent implements OnInit {
       return ret;
     } else {
       return 'nekontrolováno ';
-    }
-  }
-
-  isOwnerClosed(owner: string) {
-    if(owner === "NKP") {
-      this.nkpIsClosed =! this.nkpIsClosed;
-    } else if(owner === "MZK") {
-      this.mzkIsClosed =! this.mzkIsClosed;
-    } else if(owner === "VKOL") {
-      this.vkolIsClosed =! this.vkolIsClosed;
     }
   }
 }
