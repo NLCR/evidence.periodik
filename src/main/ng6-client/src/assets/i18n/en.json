@@ -62,7 +62,12 @@
     "without_name": "without name",
     "duplicate_print_in_new_edition": "Duplicate print in new edition",
     "edit_pages": "Edit pages",
-    "display_table": "Display table"
+    "display_table": "Display table",
+    "password_reset": "Password reset",
+    "old_password": "Old password",
+    "old_password_required": "Old password required",
+    "new_password": "New password",
+    "new_password_required": "New password required"  
   },
 
 
