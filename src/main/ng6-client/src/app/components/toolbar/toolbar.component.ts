@@ -112,7 +112,7 @@ export class ToolbarComponent implements OnInit {
     },
       (error: HttpErrorResponse) => {
         console.log(error);
-        this.service.showSnackBar('save_current_issue_error', res.error, true);
+        this.service.showSnackBar('save_current_issue_error', error.message, true);
       });
 
   }
