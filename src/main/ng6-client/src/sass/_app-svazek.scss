@@ -125,7 +125,7 @@
             }
 
             &.mat-column-datum_vydani {
-              width: $app-svazek-cell-datum-vydani-width;
+              min-width: $app-svazek-cell-datum-vydani-width;
             }
 
             &.mat-column-vydani {
