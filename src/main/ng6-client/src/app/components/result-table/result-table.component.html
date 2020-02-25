@@ -71,7 +71,7 @@
     </ng-container>
     
     <ng-container *ngFor="let vl of vlastnici" [matColumnDef]="vl.name">
-      <th mat-header-cell *matHeaderCellDef [ngClass]="classByVlastnik(vl.name)">
+      <th mat-header-cell *matHeaderCellDef [ngClass]="'app-header-cell-' + vl.name.toLowerCase()">
         <div fxLayout="row">
 <<<<<<< HEAD
           <div fxFlex>{{ vl }}</div>
