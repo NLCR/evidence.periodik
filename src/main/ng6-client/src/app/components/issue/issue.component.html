@@ -41,7 +41,7 @@
         <input matInput [placeholder]="'record.znak_oznaceni_vydani' | translate" id="znak_oznaceni_vydani" name="znak_oznaceni_vydani" [(ngModel)]="state.currentIssue.znak_oznaceni_vydani">
       </mat-form-field>
       <div fxFlex="10%">
-        <button mat-mini-fab color="primary" matTooltip="'Duplikovat vytisk v novem vydání' | translate" matTooltipPosition="above" (click)="addPub()" class="mat-elevation-z0">
+        <button mat-mini-fab color="primary" [matTooltip]="'desc.duplicate_print_in_new_edition' | translate" matTooltipPosition="above" (click)="addPub()" class="mat-elevation-z0">
           <mat-icon>{{ config.icons.library_add }}</mat-icon>
         </button>
       </div>
@@ -68,7 +68,7 @@
   <div fxFlex>
     <mat-form-field>
       <input matInput [placeholder]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" (change)="checkPagesChanged()" [(ngModel)]="state.currentIssue.pocet_stran">
-      <mat-icon class="app-cursor-pointer" matSuffix (click)="editPages()">{{ config.icons.pencil }}</mat-icon>
+      <mat-icon class="app-cursor-pointer" matSuffix (click)="editPages()" [matTooltip]="'desc.edit_pages' | translate" matTooltipPosition="above">{{ config.icons.pencil }}</mat-icon>
     </mat-form-field>
 
     <mat-form-field>

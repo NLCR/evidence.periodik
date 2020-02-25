@@ -59,7 +59,10 @@
     "select_state": "Vyber stav",
     "collapse_this_column": "Zmenšit tento sloupec",
     "expand_this_column": "Rozšířit tento sloupec",
-    "without_name": "bez názvu"
+    "without_name": "bez názvu",
+    "duplicate_print_in_new_edition": "Duplikovat výtisk v novém vydání",
+    "edit_pages": "Editovat stránky",
+    "display_table": "Zobrazit tabulku"
   },
 
 
