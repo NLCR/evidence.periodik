@@ -111,7 +111,7 @@ export class AppService {
     params = new HttpParams()
       .set('q', carovy_kod)
       .set('wt', 'json')
-      .set('rows', '1')
+      .set('rows', '1000')
       .set('fl', '*,exemplare:[json], pages:[json]')
       .set('sort', 'datum_vydani_den asc, vydani desc')
       .set('facet', 'true')
