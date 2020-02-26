@@ -74,7 +74,12 @@
     "till": "Do",
     "volume_overview": "Přehled svazku",
     "description": "Popis",
-    "edit_note": "Editovat poznámku"
+    "edit_note": "Editovat poznámku",
+    "publication": "Vydání",
+    "mutation_edition": "Mutační vydání",
+    "numbers": "Čísla",
+    "dates": "Data",
+    "complete": "Kompletní"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."

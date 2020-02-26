@@ -1,14 +1,113 @@
 <h1 mat-dialog-title>
-    <span>{{ 'Přehled svazku' | translate }}: 
-      {{ data.volume.carovy_kod }}</span>
+  {{ 'desc.volume_overview' | translate }}: {{ data.volume.carovy_kod }}
 </h1>
-<div mat-dialog-content>
-  <div>{{ 'record.titul' | translate}}: {{ data.volume.titul.meta_nazev }}</div>
-  <div>{{ 'record.vlastnik' | translate}}: {{ data.volume.vlastnik }}</div>
-  <div>{{ 'record.signatura' | translate}}: {{ data.volume.signatura }}</div>
-  <div>{{ 'record.carovy_kod' | translate}}: {{ data.volume.carovy_kod }}</div>
-  <div>{{ 'record.mutace' | translate}}: {{ data.volume.mutace }}</div>
-  <div>{{ 'Rok' | translate}}: {{ rok }}</div>
+<div mat-dialog-content class="app-svazek-overview">
+  <div>
+    <strong>{{ 'record.titul' | translate }}:</strong> {{ data.volume.titul.meta_nazev }}
+  </div>
+  <div>
+    <strong>{{ 'record.vlastnik' | translate}}:</strong> {{ data.volume.vlastnik }}
+  </div>
+  <div>
+    <strong>{{ 'record.signatura' | translate}}:</strong> {{ data.volume.signatura }}
+  </div>
+  <div>
+    <strong>{{ 'record.carovy_kod' | translate}}:</strong> {{ data.volume.carovy_kod }}
+  </div>
+  <div>
+    <strong>{{ 'record.mutace' | translate}}:</strong> {{ data.volume.mutace }}
+  </div>
+  <div>
+    <strong>{{ 'record.year' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="40px">1970</div>
+      <div fxFlex="40px">76x</div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="40px">1970</div>
+      <div fxFlex="40px">76x</div>
+    </div>
+  </div>
+  <div>
+    <strong>{{ 'desc.dates' | translate }}:</strong> 1.7.1970 - 30.9.1970
+  </div>
+  <div>
+    <strong>{{ 'desc.numbers' | translate }}:</strong> 151-231
+  </div>
+  <div>
+    <strong>{{ 'desc.mutation_edition' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">*</div>
+      <div fxFlex="100px">76x</div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">**</div>
+      <div fxFlex="100px">76x</div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">bez označení</div>
+      <div fxFlex="100px">76x</div>
+    </div>
+  </div>
+  <div>
+    <strong>{{ 'desc.publication' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">ranni</div>
+      <div fxFlex="100px">81x</div>
+    </div>
+  </div>
+  <div>
+    <strong>{{ 'desc.complete' | translate }}:</strong> Ano / Ne
+  </div>
+  <div>
+    <strong>{{ 'Přehled typů poškození' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">Degradované</div>
+      <div fxFlex="100px">76x</div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">Poškozené strany</div>
+      <div fxFlex="100px">2x</div>
+    </div>
+  </div>
+  <div>
+    <strong>{{ 'Chybějící čísla' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">pa</div>
+      <div fxFlex="100px">3.7.1970</div>
+      <div fxFlex="100px">153</div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">pa</div>
+      <div fxFlex="100px">3.7.1970</div>
+      <div fxFlex="100px">153</div>
+    </div>
+  </div>
+  <div>
+    <strong>{{ 'Fyzický stav' | translate }}:</strong> Vyhovujici / Poskozeny
+  </div>
+  <div>
+    <strong>{{ 'Poškozená čísla' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">pa</div>
+      <div fxFlex="100px">3.7.1970</div>
+      <div fxFlex="100px">153</div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">pa</div>
+      <div fxFlex="100px">3.7.1970</div>
+      <div fxFlex="100px">153</div>
+    </div>
+  </div>
+  <div>
+    <strong>{{ 'Poznamky' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px">
+      <div fxFlex="100px">pa</div>
+      <div fxFlex="100px">3.7.1970</div>
+      <div fxFlex="100px">153</div>
+      <div fxFlex="100px">vystřižený článek na s. 1</div>
+    </div>
+  </div>
   
   
 </div>

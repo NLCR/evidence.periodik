@@ -352,3 +352,17 @@ li.app-page-item label{
     @include setIcon(20, $va: middle); 
   }
 }
+
+
+
+
+
+.app-svazek-overview {
+  & > div {
+    margin-bottom: 10px;
+
+    & > strong {
+      display: block;
+    }
+  }
+}

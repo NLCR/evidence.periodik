@@ -74,7 +74,12 @@
     "till": "Till",
     "volume_overview": "Volume overview",
     "description": "Description",
-    "edit_note": "Edit note"
+    "edit_note": "Edit note",
+    "publication": "Publication",
+    "mutation_edition": "Mutation Edition",
+    "numbers": "Numbers",
+    "dates": "Dates",
+    "complete": "Complete"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "TThis action is not allowed, you are not logged in."
