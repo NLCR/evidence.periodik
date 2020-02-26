@@ -430,29 +430,37 @@
 </div>
 
 <ng-template #infoPopup>
-  <mat-card class='popover-card'>
-    <mat-card-content>
-      <div><b>{{ 'Popis' | translate }}: </b><input [(ngModel)]="popText" /></div>
-      <div *ngIf="popShowPages">
-        {{'record.pages_' + editingProp | translate}}
-        <ul class="app-pages">
-          <li *ngFor="let page of pagesRange" class="app-page-item">
+  <mat-card class="app-popover-card app-popover-card-missing">
+    <mat-card-content [ngClass]="'app-clean-mg'">
+      <mat-form-field>
+        <input matInput [placeholder]="'desc.description' | translate" [(ngModel)]="popText" />
+      </mat-form-field>
+      <ng-container *ngIf="popShowPages">
+        <div class="app-font-bold">{{ 'record.pages_' + editingProp | translate }}</div>
+        <div class="app-grid-wrapper">
+          <div *ngFor="let page of pagesRange">
             <mat-checkbox [id]="'pg'+page.label" [(ngModel)]="page.sel">{{ page.label }}</mat-checkbox>
-          </li>
-        </ul>
-      </div>
+          </div>
+        </div>
+      </ng-container>
     </mat-card-content>
-    <button mat-button *ngIf="popShowPages" (click)="updatePop()">{{ 'update' | translate}}</button>
-    <button mat-button (click)="closePop()">{{ 'update' | translate}}</button>
+    <mat-card-actions>
+      <button mat-flat-button *ngIf="popShowPages" (click)="updatePop()">{{ 'button.update' | translate}}</button>
+      <button mat-flat-button (click)="closePop()">{{ 'button.close' | translate}}</button>
+    </mat-card-actions>
   </mat-card>
 </ng-template>
 
 <ng-template #poznPopup>
-  <mat-card class='popover-card'>
-    <mat-card-content>
-      <div><b>{{ 'Poznámka' | translate }}: </b><input [(ngModel)]="poznText" /></div>
+  <mat-card class='app-popover-card'>
+    <mat-card-content [ngClass]="'app-clean-mg'">
+      <mat-form-field>
+        <input matInput [placeholder]="'desc.note' | translate" [(ngModel)]="poznText" />
+      </mat-form-field>   
     </mat-card-content>
-    <button mat-button (click)="updatePoznamka()">{{ 'update' | translate}}</button>
-    <button mat-button (click)="closePop()">{{ 'update' | translate}}</button>
+    <mat-card-actions>
+      <button mat-flat-button (click)="updatePoznamka()">{{ 'button.update' | translate}}</button>
+      <button mat-flat-button (click)="closePop()">{{ 'button.close' | translate}}</button>
+    </mat-card-actions>
   </mat-card>
 </ng-template>

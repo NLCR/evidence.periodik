@@ -72,7 +72,8 @@
     "format_by_field_i": "Format by field 'i'",
     "from": "From",
     "till": "Till",
-    "volume_overview": "Volume overview"
+    "volume_overview": "Volume overview",
+    "description": "Description"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "TThis action is not allowed, you are not logged in."
@@ -185,7 +186,8 @@
     "add": "Add",
     "load_the_entire_volume": "(Reload) Load the entire volume",
     "save_the_entire_volume": "Save the entire volume",
-    "generate_again": "Generate / generate again"
+    "generate_again": "Generate / generate again",
+    "update": "Update"
   },
   "facet": {
     "title": {

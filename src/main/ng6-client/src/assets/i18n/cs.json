@@ -72,7 +72,8 @@
     "format_by_field_i": "Format podle pole 'i'",
     "from": "Od",
     "till": "Do",
-    "volume_overview": "Přehled svazku"
+    "volume_overview": "Přehled svazku",
+    "description": "Popis"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."
@@ -186,7 +187,8 @@
     "add": "Přidat",
     "load_the_entire_volume": "(Znovu) načíst celý svazek",
     "save_the_entire_volume": "Uložit celý svazek",
-    "generate_again": "Vygenerovat / vygenerovat znovu"
+    "generate_again": "Vygenerovat / vygenerovat znovu",
+    "update": "Aktualizovat"
   },
   "facet": {
     "title": {
