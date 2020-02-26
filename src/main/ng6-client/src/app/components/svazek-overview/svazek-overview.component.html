@@ -1,31 +1,29 @@
 <h1 mat-dialog-title>
-  {{ 'desc.volume_overview' | translate }}: {{ data.volume.carovy_kod }}
+  {{ 'desc.volume_overview' | translate }}: {{ data.carKod }}
 </h1>
 <div mat-dialog-content class="app-svazek-overview">
-  <div>
-    <strong>{{ 'record.titul' | translate }}:</strong> {{ data.volume.titul.meta_nazev }}
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <ng-container *ngIf="volume">
+  <div *ngIf="volume.titul">
+    <strong>{{ 'record.titul' | translate }}:</strong> {{ volume.titul.meta_nazev }}
   </div>
   <div>
-    <strong>{{ 'record.vlastnik' | translate}}:</strong> {{ data.volume.vlastnik }}
+    <strong>{{ 'record.vlastnik' | translate}}:</strong> {{ volume.vlastnik }}
   </div>
   <div>
-    <strong>{{ 'record.signatura' | translate}}:</strong> {{ data.volume.signatura }}
+    <strong>{{ 'record.signatura' | translate}}:</strong> {{ volume.signatura }}
   </div>
   <div>
-    <strong>{{ 'record.carovy_kod' | translate}}:</strong> {{ data.volume.carovy_kod }}
+    <strong>{{ 'record.carovy_kod' | translate}}:</strong> {{ volume.carovy_kod }}
   </div>
   <div>
-    <strong>{{ 'record.mutace' | translate}}:</strong> {{ data.volume.mutace }}
+    <strong>{{ 'record.mutace' | translate}}:</strong> {{ volume.mutace }}
   </div>
   <div>
     <strong>{{ 'record.year' | translate}}:</strong>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <div fxFlex="40px">1970</div>
-      <div fxFlex="40px">76x</div>
-    </div>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <div fxFlex="40px">1970</div>
-      <div fxFlex="40px">76x</div>
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let year of years">
+      <div fxFlex="40px">{{year.name | date : 'yyyy'}}</div>
+      <div fxFlex="40px">{{year.value}}x</div>
     </div>
   </div>
   <div>
@@ -36,24 +34,16 @@
   </div>
   <div>
     <strong>{{ 'desc.mutation_edition' | translate}}:</strong>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <div fxFlex="100px">*</div>
-      <div fxFlex="100px">76x</div>
-    </div>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <div fxFlex="100px">**</div>
-      <div fxFlex="100px">76x</div>
-    </div>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <div fxFlex="100px">bez označení</div>
-      <div fxFlex="100px">76x</div>
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of znaky">
+      <div fxFlex="100px">{{f.name}}</div>
+      <div fxFlex="100px">{{f.value}}x</div>
     </div>
   </div>
   <div>
     <strong>{{ 'desc.publication' | translate}}:</strong>
-    <div fxLayout="row" fxLayoutGap="16px">
-      <div fxFlex="100px">ranni</div>
-      <div fxFlex="100px">81x</div>
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of vydani">
+      <div fxFlex="100px">{{'record.publication.' + f.name | translate}}</div>
+      <div fxFlex="100px">{{f.value}}x</div>
     </div>
   </div>
   <div>
@@ -108,7 +98,7 @@
       <div fxFlex="100px">vystřižený článek na s. 1</div>
     </div>
   </div>
-  
+</ng-container>
   
 </div>
 <div mat-dialog-actions>

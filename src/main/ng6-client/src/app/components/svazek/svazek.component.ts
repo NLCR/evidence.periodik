@@ -709,7 +709,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(SvazekOverviewComponent, {
       width: '650px',
       data: {
-        volume: this.state.currentVolume
+        carKod: this.state.currentVolume.carovy_kod
       }
     });
   }

@@ -64,10 +64,9 @@ public class SearchServlet extends HttpServlet {
       String core = request.getRequestURI().substring(solrIdx, handlerIdx);
       
       String solrhost = opts.getString("solrhost", "http://localhost:8983/solr/")
-              + core  + handler + "?" + request.getQueryString();
+              + core  + handler + "?" + request.getQueryString().replaceAll("\\+", "%2B");
       
-
-        LOGGER.log(Level.FINE, "requesting url {0}", solrhost);
+        LOGGER.log(Level.INFO, "requesting url {0}", solrhost);
         Map<String, String> reqProps = new HashMap<>();
         reqProps.put("Content-Type", "application/json");
         reqProps.put("Accept", "application/json");
