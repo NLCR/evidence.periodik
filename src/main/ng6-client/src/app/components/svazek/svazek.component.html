@@ -416,7 +416,7 @@
           </th>
           <td mat-cell *matCellDef="let element" >
             <a *ngIf="element.numExists" (click)="viewPozn(element, poznPopup, poznEl)" >
-              <mat-icon #poznEl [matTooltip]="'Editovat poznámku' | translate" matTooltipPosition="above">{{ element.poznamka === '' ? config.icons.info_outline : config.icons.info }}</mat-icon>
+              <mat-icon #poznEl [matTooltip]="element.poznamka === '' ? ('desc.edit_note' | translate) : ('desc.edit_note' + ': ' + element.poznamka | translate)" matTooltipPosition="above">{{ element.poznamka === '' ? config.icons.info_outline : config.icons.info }}</mat-icon>
             </a>
           </td>         
         </ng-container>

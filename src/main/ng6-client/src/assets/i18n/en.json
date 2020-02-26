@@ -73,7 +73,8 @@
     "from": "From",
     "till": "Till",
     "volume_overview": "Volume overview",
-    "description": "Description"
+    "description": "Description",
+    "edit_note": "Edit note"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "TThis action is not allowed, you are not logged in."
