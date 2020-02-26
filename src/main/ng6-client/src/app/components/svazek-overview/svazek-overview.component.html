@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>
+    <span>{{ 'Přehled svazku' | translate }}: 
+      {{ data.volume.carovy_kod }}</span>
+</h1>
+<div mat-dialog-content>
+  <div>{{ 'record.titul' | translate}}: {{ data.volume.titul.meta_nazev }}</div>
+  <div>{{ 'record.vlastnik' | translate}}: {{ data.volume.vlastnik }}</div>
+  <div>{{ 'record.signatura' | translate}}: {{ data.volume.signatura }}</div>
+  <div>{{ 'record.carovy_kod' | translate}}: {{ data.volume.carovy_kod }}</div>
+  <div>{{ 'record.mutace' | translate}}: {{ data.volume.mutace }}</div>
+  <div>{{ 'Rok' | translate}}: {{ rok }}</div>
+  
+  
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="ok()">OK</button>
+  <button mat-button mat-dialog-close>{{ 'button.cancel' | translate }}</button>
+</div>

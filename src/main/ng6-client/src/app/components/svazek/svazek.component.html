@@ -16,7 +16,8 @@
               {{ 'button.save_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}
             </button>
             <button mat-icon-button>
-              <mat-icon [matTooltip]="'desc.volume_overview' | translate" matTooltipPosition="above">{{ config.icons.info }}</mat-icon>
+              <mat-icon [matTooltip]="'desc.volume_overview' | translate" (click)="showSvazekOverview()"
+              matTooltipPosition="above">{{ config.icons.info }}</mat-icon>
             </button> 
           </td>
         </ng-container>

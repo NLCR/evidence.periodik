@@ -20,6 +20,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { Exemplar } from 'src/app/models/exemplar';
 import { isArray } from 'util';
 import { AppConfiguration } from 'src/app/app-configuration';
+import { SvazekOverviewComponent } from '../svazek-overview/svazek-overview.component';
 
 @Component({
   selector: 'app-svazek',
@@ -702,6 +703,15 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   setVolumeDatum(element: string, event: MatDatepickerInputEvent<Date>) {
     this.state.currentVolume[element] = this.datePipe.transform(event.value, 'yyyy-MM-dd');
+  }
+
+  showSvazekOverview() {
+    const dialogRef = this.dialog.open(SvazekOverviewComponent, {
+      width: '650px',
+      data: {
+        volume: this.state.currentVolume
+      }
+    });
   }
 
 }

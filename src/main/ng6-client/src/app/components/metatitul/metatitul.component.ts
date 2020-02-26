@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppState } from 'src/app/app.state';
 import { AppService } from 'src/app/app.service';
 import { Titul } from 'src/app/models/titul';
-//import { load } from '@angular/core/src/render3/instructions';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AppConfiguration } from 'src/app/app-configuration';
@@ -15,7 +14,7 @@ import { AppConfiguration } from 'src/app/app-configuration';
 export class MetatitulComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
 
-  titul: Titul = new Titul();
+  titul: Titul = null;
   loading: boolean;
 
   constructor(
@@ -30,21 +29,22 @@ export class MetatitulComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-      this.load();
-    
+    this.load();
   }
 
   load() {
     this.service.getTituly().subscribe(resp => {
-      const id = this.route.snapshot.paramMap.get('id');
-      let idx = 0;
-      if (id) {
-        idx = this.state.tituly.findIndex(t => t.id === id);
+      if (!this.titul) {
+        const id = this.route.snapshot.paramMap.get('id');
+        let idx = 0;
+        if (id) {
+          idx = this.state.tituly.findIndex(t => t.id === id);
+        }
+        if (idx > -1) {
+          this.loadTitul(this.state.tituly[idx]);
+        }
       }
-      if (idx > -1) {
-        this.loadTitul(this.state.tituly[idx]);
-      }
-      
+
     });
   }
 
@@ -57,11 +57,11 @@ export class MetatitulComponent implements OnInit, OnDestroy {
     this.service.saveTitul(this.titul).subscribe(res => {
       console.log(res);
       this.loading = false;
-      if (res['error']) {
-        //this.toastService.show(res['error'], 4000, 'red');
+      if (res.error) {
+        this.service.showSnackBar('save_titul_error', res.error, true);
       } else {
-        //this.toastService.show('Titul správně uložen', 4000, 'green');
-        this.service.getTituly().subscribe();
+        this.service.showSnackBar('Titul správně uložen');
+        this.load();
       }
     });
   }
