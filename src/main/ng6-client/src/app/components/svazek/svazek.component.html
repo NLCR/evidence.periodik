@@ -9,11 +9,14 @@
           <td mat-cell *matCellDef="let element">{{ 'record.' + element | translate}}</td>
           <td mat-footer-cell *matFooterCellDef colspan="2">
             <button mat-flat-button color="primary" (click)="readClick()">
-              {{ '(Znovu) načíst celý svazek' | translate }}
+              {{ 'button.load_the_entire_volume' | translate }}
             </button>
             <button mat-flat-button color="primary" (click)="save()" [disabled]="!state.logged">
-              <mat-icon *ngIf="!state.logged" [matTooltip]="'Tato akce není povolená, nejste přihlášen.' | translate" matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
-              {{ 'Uložit celý svazek' | translate }} {{dataChanged ? '!!' : ''}}
+              <mat-icon *ngIf="!state.logged" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate" matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
+              {{ 'button.save_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}
+            </button>
+            <button mat-icon-button>
+              <mat-icon [matTooltip]="'desc.volume_overview' | translate" matTooltipPosition="above">{{ config.icons.info }}</mat-icon>
             </button> 
           </td>
         </ng-container>
@@ -99,8 +102,8 @@
           <td mat-cell *matCellDef="let element">{{ 'days.' + element.den | translate}}</td>
           <td mat-footer-cell *matFooterCellDef colspan="7">
             <button mat-flat-button color="primary" (click)="generateClick()"[disabled]="!state.logged">
-              <mat-icon *ngIf="!state.logged" [matTooltip]="'Tato akce není povolená, nejste přihlášen.' | translate" matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
-              {{ 'Vygenerovat / vygenerovat znovu' | translate }}
+              <mat-icon *ngIf="!state.logged" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate" matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
+              {{ 'button.generate_again' | translate }}
             </button>
           </td>
         </ng-container>

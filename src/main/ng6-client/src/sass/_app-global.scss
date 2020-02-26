@@ -239,11 +239,14 @@ li.app-page-item label{
   .mat-form-field-subscript-wrapper {
     display: none;
   }
-  
-  .mat-icon {
-    @include setIcon(16); 
-  }
 
+  .mat-header-cell,
+  .mat-cell {
+    .mat-icon {
+      @include setIcon(16); 
+    } 
+  }
+  
   .mat-datepicker-toggle-default-icon {
     width: 1.4em !important;
   }
@@ -306,6 +309,12 @@ li.app-page-item label{
 
   &.mat-primary {
     background-color: $app-primary-color-darker;
+  }
+
+  &.mat-flat-button {
+    .mat-icon {
+      @include setIcon($size: 20, $va: middle, $color: inherit); 
+    } 
   }
 }
 

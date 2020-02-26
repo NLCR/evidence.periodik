@@ -254,6 +254,12 @@
       }
     }
 
+    tfoot {
+      .mat-icon-button {
+        color: $app-gray-6;
+      }
+    }
+
     .mat-paginator {
       position: sticky;
       bottom: 0;

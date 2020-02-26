@@ -71,9 +71,12 @@
     "add_exemplars_from_vdk-set_record": "Add exemplars from vdk-set record",
     "format_by_field_i": "Format by field 'i'",
     "from": "From",
-    "till": "Till"
+    "till": "Till",
+    "volume_overview": "Volume overview"
   },
-
+  "note": {
+    "this_action_is_not_allowed_not_login": "TThis action is not allowed, you are not logged in."
+  },
 
   "formatvdk":{
     "CISLO": "Issue", 
@@ -179,7 +182,10 @@
     "add_user": "Add user",
     "password_reset": "Password reset",
     "prepare": "Prepare",
-    "add": "Add"
+    "add": "Add",
+    "load_the_entire_volume": "(Reload) Load the entire volume",
+    "save_the_entire_volume": "Save the entire volume",
+    "generate_again": "Generate / generate again"
   },
   "facet": {
     "title": {

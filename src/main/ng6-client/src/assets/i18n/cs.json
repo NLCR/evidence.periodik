@@ -71,7 +71,11 @@
     "add_exemplars_from_vdk-set_record": "Vložit exemplář z VDK sestavy",
     "format_by_field_i": "Format podle pole 'i'",
     "from": "Od",
-    "till": "Do"
+    "till": "Do",
+    "volume_overview": "Přehled svazku"
+  },
+  "note": {
+    "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."
   },
 
 
@@ -179,7 +183,10 @@
     "add_user": "Přidat uživatele",
     "password_reset": "Reset hesla",
     "prepare": "Připravit",
-    "add": "Přidat"
+    "add": "Přidat",
+    "load_the_entire_volume": "(Znovu) načíst celý svazek",
+    "save_the_entire_volume": "Uložit celý svazek",
+    "generate_again": "Vygenerovat / vygenerovat znovu"
   },
   "facet": {
     "title": {
