@@ -147,7 +147,7 @@ static boolean isLocalhost = false;
             js = new JSONObject(req.getParameter("json"));
           }
           
-          if (js.has("code")) {
+          if (js.has("id")) {
             jo = UsersController.save(js);
           } else {
             jo = UsersController.add(js);
