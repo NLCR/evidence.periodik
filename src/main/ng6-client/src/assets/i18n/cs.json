@@ -67,7 +67,11 @@
     "old_password": "Staré heslo",
     "old_password_required": "Staré heslo je vyžadováno",
     "new_password": "Nové heslo",
-    "new_password_required": "Nové heslo je vyžadováno"
+    "new_password_required": "Nové heslo je vyžadováno",
+    "add_exemplars_from_vdk-set_record": "Vložit exemplář z VDK sestavy",
+    "format_by_field_i": "Format podle pole 'i'",
+    "from": "Od",
+    "till": "Do"
   },
 
 
@@ -173,7 +177,9 @@
     "login": "Přihlásit",
     "add_from_vdk": "Vložit z VDK",
     "add_user": "Přidat uživatele",
-    "password_reset": "Reset hesla"
+    "password_reset": "Reset hesla",
+    "prepare": "Připravit",
+    "add": "Přidat"
   },
   "facet": {
     "title": {

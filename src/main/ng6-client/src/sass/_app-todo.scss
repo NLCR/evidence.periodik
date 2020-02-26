@@ -2,7 +2,7 @@
 // Tyto styly patri do jinych souboru
 
 
-tr.mat-row{
+/* tr.mat-row{
   height: fit-content !important;
   font-size: .85em;
 }
@@ -20,7 +20,7 @@ tr.mat-row  input, tr.mat-row td p {
 tr.mat-row td textarea:focus {
   border-bottom: none!important;
   box-shadow: none!important;
-}
+} */
 
 
 
@@ -42,9 +42,8 @@ input:valid+label+span.validity:after {
   padding-left: 5px;
 }
 
-//Table pro pridani exemplare s vdk
-//Componenta add-vdk-ex
-tr.mat-row.error {
+// Table pro pridani exemplare s vdk
+/* tr.mat-row.error {
   color: red;
 }
 
@@ -52,14 +51,12 @@ app-add-vdk-ex .mat-elevation-z8{
   border: 1px solid black;
   max-height: 300px;
   overflow: auto !important;
-// progress bar
-    @extend .app-progressbar-wrapper;
-
-}
+  @extend .app-progressbar-wrapper;
+} */
 
 
 // progress bar
-.app-progressbar-wrapper {
+/* .app-progressbar-wrapper {
   position:relative;
   overflow: hidden;
 
@@ -73,9 +70,9 @@ app-add-vdk-ex .mat-elevation-z8{
       position: absolute;
     }
   }
-}
+} */
 
-app-add-vdk-ex .mat-table th {
+/* app-add-vdk-ex .mat-table th {
   position: sticky;
   position: -webkit-sticky;
   background: #EFEFEF !important;
@@ -92,4 +89,4 @@ app-add-vdk-ex .mat-table .mat-row td.app-row-orig {
   font-size: .9em;
   color: #888;
   
-}
+} */

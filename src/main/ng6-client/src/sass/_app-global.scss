@@ -250,11 +250,47 @@ li.app-page-item label{
 
   tbody {
     .mat-row {
+      height: fit-content;
+
       .mat-cell {
         a {
           &:hover {
             color: $app-primary-color-darker;
           }
+        }
+      }
+    }
+  }
+
+  &.app-table-gap-5 {
+    @extend .app-full-width;
+
+    thead {
+      .mat-header-row {
+        .mat-header-cell {
+          @extend .app-clean-radius;
+          background-color: $app-gray-3;
+          border-right: 1px solid white;
+          padding: 5px;
+          border-bottom: 0 !important;
+        }
+      }
+    }
+
+    tbody {
+      .mat-row {
+        height: fit-content !important;
+
+        &.app-even {
+          background-color: $app-gray-1;
+        }
+
+        &:hover {
+          background-color: $app-gray-2;
+        }
+        
+        .mat-cell {
+          padding: 5px !important;
         }
       }
     }

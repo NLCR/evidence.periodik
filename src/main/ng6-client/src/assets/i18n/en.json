@@ -67,7 +67,11 @@
     "old_password": "Old password",
     "old_password_required": "Old password required",
     "new_password": "New password",
-    "new_password_required": "New password required"  
+    "new_password_required": "New password required",
+    "add_exemplars_from_vdk-set_record": "Add exemplars from vdk-set record",
+    "format_by_field_i": "Format by field 'i'",
+    "from": "From",
+    "till": "Till"
   },
 
 
@@ -173,7 +177,9 @@
     "login": "Login",
     "add_from_vdk": "Add from VDK",
     "add_user": "Add user",
-    "password_reset": "Password reset"
+    "password_reset": "Password reset",
+    "prepare": "Prepare",
+    "add": "Add"
   },
   "facet": {
     "title": {
