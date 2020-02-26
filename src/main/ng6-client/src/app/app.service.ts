@@ -105,6 +105,29 @@ export class AppService {
       }));
   }
 
+  volumeOverview(carovy_kod: string): Observable<any> {
+    let params: HttpParams = new HttpParams();
+
+    params = new HttpParams()
+      .set('q', carovy_kod)
+      .set('wt', 'json')
+      .set('rows', '1')
+      .set('fl', '*,exemplare:[json], pages:[json]')
+      .set('sort', 'datum_vydani_den asc, vydani desc')
+      .set('facet', 'true')
+      .set('facet.field', 'mutace')
+      .append('facet.field', 'znak_oznaceni_vydani')
+      .append('facet.field', 'vydani')
+      .append('facet.field', 'stav')
+      .set('stats', 'true')
+      .set('stats.field', 'cislo')
+      .append('stats.field', 'datum_vydani_den');
+    const url = '/api/search/issue/select';
+
+    // params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return this.http.get(url, { params });
+  }
+
   searchByCarKod(carovy_kod: string): Observable<any> {
     let params: HttpParams = new HttpParams();
 

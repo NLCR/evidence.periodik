@@ -22,6 +22,9 @@ export class SvazekOverviewComponent implements OnInit {
     public config: AppConfiguration) { }
 
   ngOnInit() {
+    this.service.volumeOverview(this.data.volume.carovy_kod).subscribe(res => {
+      console.log(res);
+    });
   }
 
 }
