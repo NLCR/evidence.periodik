@@ -4,6 +4,8 @@ import { AppState } from 'src/app/app.state';
 import { User } from 'src/app/models/user';
 import { Md5 } from 'ts-md5';
 import { AppConfiguration } from 'src/app/app-configuration';
+import { PromptDialogComponent } from '../prompt-dialog/prompt-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-admin',
@@ -21,6 +23,7 @@ export class AdminComponent implements OnInit {
   ];
 
   constructor(
+    public dialog: MatDialog,
     private service: AppService,
     public state: AppState,
     public config: AppConfiguration) {
@@ -57,12 +60,25 @@ export class AdminComponent implements OnInit {
   }
 
   newUser() {
-    const user = new User();
-    user.nazev = 'new user';
-    user.heslo = '' + Md5.hashStr('test');
-    user.role = 'user';
-    this.users.push(user);
-    this.loadUser(user);
+
+    const dialogRef = this.dialog.open(PromptDialogComponent, {
+      width: '350px',
+      data: { title: 'desc.username' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const user = new User();
+        user.username = result;
+        user.nazev = result;
+        user.heslo = '' + Md5.hashStr('test');
+        user.role = 'user';
+        this.users.push(user);
+        this.loadUser(user);
+      }
+    });
+
+
   }
 
   cancel() {

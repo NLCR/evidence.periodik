@@ -59,13 +59,13 @@ export class AddExemplarDialogComponent implements OnInit {
       if (!this.issue.pages || this.issue.pages.length === 0) {
         for (let i = 0; i < this.issue.pocet_stran; i++) {
           // this.pages.push({label:(i+1) + "", index: i});
-          const sel = this.exemplar.pages && this.exemplar.pages.missing.includes((i + 1) + '');
+          const sel = this.exemplar.pages && this.exemplar.pages.missing && this.exemplar.pages.missing.includes((i + 1) + '');
           this.pagesRange.push({ label: (i + 1) + '', sel });
         }
       } else {
         for (let i = 0; i < this.issue.pages.length; i++) {
           const label = this.issue.pages[i].label;
-          const sel = this.exemplar.pages && this.exemplar.pages.missing.includes((i + 1) + '');
+          const sel = this.exemplar.pages && this.exemplar.pages.missing && this.exemplar.pages.missing.includes((i + 1) + '');
           this.pagesRange.push({ label, sel });
         }
         for (let i = this.issue.pages.length; i < this.issue.pocet_stran; i++) {

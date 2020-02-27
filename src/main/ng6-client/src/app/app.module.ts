@@ -99,6 +99,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { AppRoutingModule } from './app-routing.module';
 import { Platform } from '@angular/cdk/platform';
 import { SvazekOverviewComponent } from './components/svazek-overview/svazek-overview.component';
+import { PromptDialogComponent } from './components/prompt-dialog/prompt-dialog.component';
 
 
 registerLocaleData(localeCs, 'cs');
@@ -167,6 +168,7 @@ const providers: any[] = [
     AdminComponent,
     PasswordDialogComponent,
     ProfileComponent,
+    PromptDialogComponent,
     SvazekOverviewComponent
   ],
   entryComponents: [ConfirmDialogComponent,
@@ -176,7 +178,8 @@ const providers: any[] = [
     AddVdkExComponent,
     AddVydaniDialogComponent,
     EditPagesComponent, SvazekOverviewComponent,
-    PasswordDialogComponent],
+    PasswordDialogComponent,
+    PromptDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,
