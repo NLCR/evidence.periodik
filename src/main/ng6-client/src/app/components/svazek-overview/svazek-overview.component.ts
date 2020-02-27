@@ -17,12 +17,23 @@ export class SvazekOverviewComponent implements OnInit {
 
   volume: Volume;
 
-  years: {name: string, type: string, value: number}[] = [];
-  mutace: {name: string, type: string, value: number}[] = [];
-  vydani: {name: string, type: string, value: number}[] = [];
-  znaky: {name: string, type: string, value: number}[] = [];
-  
+  signatury: string[] = [];
+  years: { name: string, type: string, value: number }[] = [];
+  mutace: { name: string, type: string, value: number }[] = [];
+  vydani: { name: string, type: string, value: number }[] = [];
+  znaky: { name: string, type: string, value: number }[] = [];
+  stavy: { name: string, value: number }[] = [];
+  cisla: { datum: Date, cislo: number }[] = [];
+  fyzStavOk: boolean;
+  stavyExt: { datum: Date, cislo: number }[] = [];
+  poznamky: { datum: Date, cislo: number, note: string }[] = [];
+
+  prvniCislo: number;
+  posledniCislo: number;
+
   loading: boolean;
+
+  result: any;
 
   constructor(
     public dialogRef: MatDialogRef<SvazekOverviewComponent>,
@@ -36,6 +47,7 @@ export class SvazekOverviewComponent implements OnInit {
     this.loading = true;
     this.service.volumeOverview(this.data.carKod).subscribe(res => {
       console.log(res);
+      this.result = res;
       const issue: Issue = res.response.docs[0] as Issue;
       const datum_od = res.stats.stats_fields.datum_vydani_den.min;
       const datum_do = res.stats.stats_fields.datum_vydani_den.max;
@@ -44,22 +56,63 @@ export class SvazekOverviewComponent implements OnInit {
         this.datePipe.transform(Utils.dateFromDay(datum_do), 'yyyy-MM-dd'));
       // this.volume.id = id;
       this.volume.carovy_kod = this.data.carKod;
-      this.volume.mutace = issue.mutace;
-      this.volume.znak_oznaceni_vydani = issue.znak_oznaceni_vydani;
+      // this.volume.mutace = issue.mutace;
+      // this.volume.znak_oznaceni_vydani = issue.znak_oznaceni_vydani;
       this.volume.id_titul = issue.id_titul;
-      // issue.exemplare.forEach(ex => {
-      //   if (ex.carovy_kod === id) {
-      //     this.volume.signatura = ex.signatura;
-      //     this.volume.vlastnik = ex.vlastnik;
-      //   }
-      // });
+
+      issue.exemplare.forEach(ex => {
+        if (ex.carovy_kod === this.data.carKod) {
+          this.volume.signatura = ex.signatura;
+          this.volume.vlastnik = ex.vlastnik;
+        }
+      });
       this.findTitul();
-      const facetDatum: {name: string, type: string, value: number}[] = res.facet_counts.facet_ranges.datum_vydani.counts;
+      const facetDatum: { name: string, type: string, value: number }[] = res.facet_counts.facet_ranges.datum_vydani.counts;
       this.years = facetDatum.filter(f => f.value > 0);
       this.mutace = res.facet_counts.facet_fields.mutace.filter(f => f.value > 0);
       this.znaky = res.facet_counts.facet_fields.znak_oznaceni_vydani.filter(f => f.value > 0);
       this.vydani = res.facet_counts.facet_fields.vydani.filter(f => f.value > 0);
+      this.stavy = res.facet_counts.facet_fields.stav.filter(f => f.value > 0);
+      this.fyzStavOk = !(res.facet_counts.facet_fields.stav.findIndex(f => f.name !== 'OK') > -1);
+      this.prvniCislo = res.stats.stats_fields.cislo.min;
+      this.posledniCislo = res.stats.stats_fields.cislo.max;
+      this.loadDates(res.response.docs);
+      this.processExemplars(res.response.docs);
       this.loading = false;
+    });
+  }
+
+  loadDates(res) {
+    const dates = this.service.getDaysArray(this.volume.datum_od, this.volume.datum_do);
+    this.cisla = [];
+    let idx = 0;
+    let issue: Issue = res[idx];
+    dates.forEach((dt) => {
+      if (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') !== dt) {
+        this.cisla.push({ datum: dt, cislo: idx + this.prvniCislo });
+      } else {
+        while (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') === dt) {
+          idx++;
+          issue = res[idx];
+        }
+      }
+    });
+  }
+
+  processExemplars(issues) {
+    issues.forEach((issue: Issue) => {
+      issue.exemplare.forEach(ex => {
+        if (ex.carovy_kod === this.data.carKod) {
+          if (ex.stav.length > 0) {
+            this.stavyExt.push({ datum: issue.datum_vydani, cislo: issue.cislo });
+          }
+
+          if (ex.poznamka && ex.poznamka !== '') {
+            this.poznamky.push({ datum: issue.datum_vydani, cislo: issue.cislo, note: ex.poznamka });
+          }
+
+        }
+      });
     });
   }
 
@@ -70,7 +123,7 @@ export class SvazekOverviewComponent implements OnInit {
       this.volume.id_titul = this.volume.titul.id;
 
       this.state.currentTitul = res2;
-      
+
     });
   }
 }

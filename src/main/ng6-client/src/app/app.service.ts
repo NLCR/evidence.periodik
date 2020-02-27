@@ -116,7 +116,7 @@ export class AppService {
       .set('fl', '*,exemplare:[json], pages:[json]')
       .set('sort', 'datum_vydani_den asc, vydani desc')
       .set('facet', 'true')
-      .set('facet.mincout', '1')
+      .set('facet.mincount', '1')
       .set('facet.field', 'mutace')
       .append('facet.field', 'znak_oznaceni_vydani')
       .append('facet.field', 'vydani')
@@ -529,6 +529,18 @@ export class AppService {
 
   getTranslation(s: string): string {
     return this.translate.instant(s);
+  }
+  
+  getDaysArray(start, end) {
+    const arr = [];
+    const dtend = this.datePipe.transform(new Date(end), 'yyyy-MM-dd');
+    let dt = new Date(start);
+
+    while (this.datePipe.transform(dt, 'yyyy-MM-dd') <= dtend) {
+      arr.push(this.datePipe.transform(new Date(dt), 'yyyy-MM-dd'));
+      dt.setDate(dt.getDate() + 1);
+    }
+    return arr;
   }
 
 
