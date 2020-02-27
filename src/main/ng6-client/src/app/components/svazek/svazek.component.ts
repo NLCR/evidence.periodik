@@ -601,7 +601,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.csEditing = el;
     this.poznText = el.exemplar.poznamka;
     setTimeout(() => {
-      this.openInfoOverlay(relative._elementRef, template);
+      this.openInfoOverlay(relative._elementRef, template, 35);
     }, 100);
   }
 
@@ -673,7 +673,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.closeInfoOverlay();
   }
 
-  openInfoOverlay(relative: any, template: TemplateRef<any>) {
+  openInfoOverlay(relative: any, template: TemplateRef<any>, xOffset: number = 6) {
     this.closeInfoOverlay();
 
     this.overlayRef = this.overlay.create({
@@ -682,7 +682,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         overlayY: 'top',
         originX: 'center',
         originY: 'bottom'
-      }]).withPush().withViewportMargin(30).withDefaultOffsetX(6).withDefaultOffsetY(20),
+      }]).withPush().withViewportMargin(30).withDefaultOffsetX(xOffset).withDefaultOffsetY(20),
       scrollStrategy: this.overlay.scrollStrategies.close(),
       hasBackdrop: false,
       backdropClass: 'popover-backdrop'
