@@ -3,8 +3,10 @@
     <a routerLink="home" class="app-logo">
       <span>E</span>P<!--
     --></a>
-    <span class="app-pipe" *ngIf="activeRoute() !== 'home'"></span>
-    <span *ngIf="activeRoute() !== 'home'" class="app-route">{{ 'route.' + activeRoute() | translate }}</span>
+    <!--*ngIf="activeRoute() !== 'home'"-->
+    <span class="app-pipe"></span>
+    <!--*ngIf="activeRoute() !== 'home'" -->
+    <span class="app-route">{{ 'route.' + activeRoute() | translate }}</span>
   </div>
  
   <div fxFlex="640px" class="app-fx-middle" *ngIf="showSearchBar()">
