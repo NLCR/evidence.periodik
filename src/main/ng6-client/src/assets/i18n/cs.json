@@ -278,6 +278,15 @@
     "user_error_saving": "Chyba při ukládání uživatele",
     "user_correctly_saved": "Uživatel byl úspěšně uložen",
     "error_cloning": "Chyba klonování",
-    "delete_success": "Úspěšně vymazáno"
+    "delete_success": "Úspěšně vymazáno",
+    "barcode_is_required": "Čárový kód je povinný",
+    "the_date_from_is_greater_than_the_date_to": "Datum od je větší než datum do",
+    "error_saving_volume": "Chyba při ukládání svazku",
+    "the_volume_was_saved_correctly": "Svazek byl úspěšně uložen",
+    "error_saving_current_title": "Chyba při ukládání aktuálního titulu",
+    "the_current_title_has_been_successfully_saved": "Aktuálního titul byl úspěšně uložen",
+    "error_saving_current_volume": "Chyba při ukládání aktuálního svazku",
+    "the_current_volume_was_saved_correctly": "Aktuální svazek byl úspěšně uložen",
+    "error_deleting_volume": "Chyba při smazání svazku"
   }
 }

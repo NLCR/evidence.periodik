@@ -277,6 +277,15 @@
     "user_error_saving": "Error saveing user",
     "user_correctly_saved": "User corretly saved",
     "error_cloning": "Error cloning",
-    "delete_success": "Delete success"
+    "delete_success": "Delete success",
+    "barcode_is_required": "Barcode is required",
+    "the_date_from_is_greater_than_the_date_to": "The date from is greater than the date to",
+    "error_saving_volume": "Error saving volume",
+    "the_volume_was_saved_correctly": "The volume was saved correctly",
+    "error_saving_current_title": "Error saving current title",
+    "the_current_title_has_been_successfully_saved": "The current title has been successfully saved",
+    "error_saving_current_volume": "Error saving current volume",
+    "the_current_volume_was_saved_correctly": "The current volume was saved correctly",
+    "error_deleting_volume": "Error deleting volume"
   }
 }

@@ -372,12 +372,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // carovy_kod je povinny, jelikoz pouzivame jako id svazku
     if (!this.state.currentVolume.carovy_kod || this.state.currentVolume.carovy_kod.trim() === '') {
       this.setLastNumber();
-      this.service.showSnackBar('carovy kod je povinny', '', true);
+      this.service.showSnackBar('snackbar.barcode_is_required', '', true);
       return;
     }
 
     if (this.state.currentVolume.datum_od > this.state.currentVolume.datum_do) {
-      this.service.showSnackBar('datum od je vetsi nez datum od', '', true);
+      this.service.showSnackBar('snackbar.the_date_from_is_greater_than_the_date_to', '', true);
       return;
     }
 
@@ -437,9 +437,9 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.service.saveIssues(this.state.currentVolume, issues).subscribe(res => {
       this.loading = false;
       if (res.error) {
-        this.service.showSnackBar('save_issues_error', res.error, true);
+        this.service.showSnackBar('snackbar.error_saving_volume', res.error, true);
       } else {
-        this.service.showSnackBar('Svazek správně uložen');
+        this.service.showSnackBar('snackbar.the_volume_was_saved_correctly');
       }
 
       // console.log(res);

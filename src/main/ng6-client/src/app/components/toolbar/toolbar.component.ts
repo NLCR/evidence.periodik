@@ -75,9 +75,9 @@ export class ToolbarComponent implements OnInit {
       if (res === 'error') {
         alert('Invalid data!');
       } else if (res.error) {
-        this.service.showSnackBar('save_current_titul_error', res.error, true);
+        this.service.showSnackBar('snackbar.error_saving_current_title', res.error, true);
       } else {
-        this.service.showSnackBar('save_current_titul_success');
+        this.service.showSnackBar('snackbar.the_current_title_has_been_successfully_saved');
       }
     });
   }
@@ -105,14 +105,14 @@ export class ToolbarComponent implements OnInit {
       if (res === 'error') {
         alert('Invalid data!');
       } else if (res.error) {
-        this.service.showSnackBar('save_current_issue_error', res.error, true);
+        this.service.showSnackBar('snackbar.error_saving_current_volume', res.error, true);
       } else {
-        this.service.showSnackBar('save_current_issue_success');
+        this.service.showSnackBar('snackbar.the_current_volume_was_saved_correctly');
       }
     },
       (error: HttpErrorResponse) => {
         console.log(error);
-        this.service.showSnackBar('save_current_issue_error', error.message, true);
+        this.service.showSnackBar('snackbar.error_saving_current_volume', error.message, true);
       });
 
   }
@@ -137,7 +137,7 @@ export class ToolbarComponent implements OnInit {
         this.service.deleteIssue(this.state.currentIssue).subscribe(res => {
           console.log(res);
           if (res.error) {
-            this.service.showSnackBar('delete_issue_error', res.error, true);
+            this.service.showSnackBar('snackbar.error_deleting_volume', res.error, true);
           } else {
             this.router.navigate(['/result']);
           }
