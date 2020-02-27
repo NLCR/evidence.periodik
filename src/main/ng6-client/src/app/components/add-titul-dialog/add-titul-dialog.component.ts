@@ -22,7 +22,7 @@ export class AddTitulDialogComponent {
     this.service.saveTitul(this.titul).subscribe(res => {
 
       if (res.error) {
-        this.service.showSnackBar('error_saving_titul', res.error, true);
+        this.service.showSnackBar('snackbar.title_error_saving', res.error, true);
         // this.toastService.show(res['error'], 4000, 'red');
       } else {
         this.service.getTituly().subscribe();

@@ -30,9 +30,9 @@ export class AddVydaniDialogComponent {
   ok() {
     this.service.addVydani(this.issue, this.vydani).subscribe(res => {
       if (res.error) {
-        this.service.showSnackBar('error_adding_vydani', res.error, true);
+        this.service.showSnackBar('snackbar.edition_error_adding', res.error, true);
       } else {
-        this.service.showSnackBar('vydani_added');
+        this.service.showSnackBar('snackbar.edition_added');
         this.dialogRef.close();
       }
     });

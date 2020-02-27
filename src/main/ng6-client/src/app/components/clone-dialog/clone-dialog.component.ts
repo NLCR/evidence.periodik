@@ -26,7 +26,7 @@ export class CloneDialogComponent {
       console.log(res);
 
       if (res.error) {
-        this.service.showSnackBar('clone_error', res.error, true);
+        this.service.showSnackBar('snackbar.error_cloning', res.error, true);
       } else {
         this.dialogRef.close();
       }

@@ -267,5 +267,16 @@
     "Friday": "Friday",
     "Saturday": "Saturday",
     "Sunday": "Sunday"
+  },
+  "snackbar": {
+    "title_error_saving": "Error saving title",
+    "title_saved": "Title saved correctly",
+    "specimen_error_duplicate": "Error duplicate pecimen",
+    "edition_error_adding": "Error adding edition",
+    "edition_added": "Edition added correctly",
+    "user_error_saving": "Error saveing user",
+    "user_correctly_saved": "User corretly saved",
+    "error_cloning": "Error cloning",
+    "delete_success": "Delete success"
   }
 }

@@ -228,7 +228,7 @@ export class ResultTableComponent implements OnInit {
         issue.exemplare.splice(idxex, 1);
         // console.log(issue.exemplare);
         this.service.saveIssue(issue).subscribe(res => {
-          this.service.showSnackBar('Deleted success!');
+          this.service.showSnackBar('snackbar.delete_success');
         });
       }
     });

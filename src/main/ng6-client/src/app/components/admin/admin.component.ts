@@ -51,9 +51,9 @@ export class AdminComponent implements OnInit {
     this.service.saveUser(this.user).subscribe(res => {
       this.loading = false;
       if (res.error) {
-        this.service.showSnackBar('save_user_error', res.error, true);
+        this.service.showSnackBar('snackbar.user_error_saving', res.error, true);
       } else {
-        this.service.showSnackBar('Uživatel správně uložen');
+        this.service.showSnackBar('snackbar.user_correctly_saved');
         this.load();
       }
     });

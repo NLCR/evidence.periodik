@@ -105,9 +105,9 @@ export class AddExemplarDialogComponent implements OnInit {
         this.service.saveIssue(this.issue).subscribe(res => {
           // console.log(res);
           if (res.error) {
-            this.service.showSnackBar('error_saving_titul', res.error, true);
+            this.service.showSnackBar('snackbar.title_error_saving', res.error, true);
           } else {
-            this.service.showSnackBar('tittu_saved');
+            this.service.showSnackBar('snackbar.title_saved');
             this.dialogRef.close();
           }
         });
@@ -120,7 +120,7 @@ export class AddExemplarDialogComponent implements OnInit {
           this.onspecial, this.exemplar, this.duplicate_start_date, this.duplicate_end_date).subscribe(res => {
 
             if (res.error) {
-              this.service.showSnackBar('error_duplicating_exemplar', res.error, true);
+              this.service.showSnackBar('snackbar.specimen_error_duplicate', res.error, true);
             } else {
               this.saved = true;
               this.dialogRef.close(true);

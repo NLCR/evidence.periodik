@@ -58,9 +58,9 @@ export class MetatitulComponent implements OnInit, OnDestroy {
       console.log(res);
       this.loading = false;
       if (res.error) {
-        this.service.showSnackBar('save_titul_error', res.error, true);
+        this.service.showSnackBar('snackbar.title_error_saving', res.error, true);
       } else {
-        this.service.showSnackBar('Titul správně uložen');
+        this.service.showSnackBar('snackbar.title_saved');
         this.load();
       }
     });
