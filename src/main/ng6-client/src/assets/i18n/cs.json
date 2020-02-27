@@ -268,5 +268,16 @@
     "Friday": "Pátek",
     "Saturday": "Sobota",
     "Sunday": "Neděle"
+  },
+  "snackbar": {
+    "title_error_saving": "Chybe při ukládání titulu",
+    "title_saved": "Titul byl úspěšně uložen",
+    "specimen_error_duplicate": "Chyba při duplikování exempláře",
+    "edition_error_adding": "Chyba při vkládání vydání",
+    "edition_added": "Vydání bylo vloženo úspěšně",
+    "user_error_saving": "Chyba při ukládání uživatele",
+    "user_correctly_saved": "Uživatel byl úspěšně uložen",
+    "error_cloning": "Chyba klonování",
+    "delete_success": "Úspěšně vymazáno"
   }
 }
