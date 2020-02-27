@@ -16,6 +16,9 @@ $app-primary-color-darker: mat-color($app-primary, 600);
 // base colors
 $app-color-white: #ffffff!default;
 $app-color-black: #000000 !default;
+$app-success-color: mat-color($mat-green, A700);
+$app-warning-color: mat-color($mat-amber, A400);
+$app-danger-color: mat-color($mat-red, 800);
 
 // gray colors
 $app-gray-0: mat-color($mat-gray, 50) !default;

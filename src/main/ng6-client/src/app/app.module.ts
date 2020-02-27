@@ -224,6 +224,7 @@ const providers: any[] = [
     MatToolbarModule,
     MatTooltipModule,
     MatBadgeModule,
+    MatSidenavModule,
     FlexLayoutModule,
     CdkTableModule,
     AppRoutingModule

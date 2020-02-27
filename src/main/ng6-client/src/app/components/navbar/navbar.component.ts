@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 
 import { AppState } from '../../app.state';
 import { AppService } from '../../app.service';
@@ -6,6 +6,7 @@ import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 import { Router } from "@angular/router";
 import { AppConfiguration } from 'src/app/app-configuration';
 import { AuthenticationService } from 'src/app/shared/authentication.service';
+import {MatSidenav} from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-navbar',
@@ -14,6 +15,14 @@ import { AuthenticationService } from 'src/app/shared/authentication.service';
 })
 export class NavbarComponent implements OnInit {
   currLang: string;
+  /* @ViewChild('sidenav') sidenav: MatSidenav;
+
+  reason = '';
+
+  close(reason: string) {
+    this.reason = reason;
+    this.sidenav.close();
+  } */
 
   constructor(
     private route: ActivatedRoute,
@@ -71,16 +80,16 @@ export class NavbarComponent implements OnInit {
     if (this.state.activePage.indexOf('/titul') > -1) {
       return 'titul';
     }
-    if (this.state.activePage.indexOf('/home') > -1) {
+    /* if (this.state.activePage.indexOf('/home') > -1) {
       return 'home';
-    }
+    } */
     if (this.state.activePage.indexOf('/admin') > -1) {
       return 'admin';
     }
     if (this.state.activePage.indexOf('/profile') > -1) {
       return 'profile';
     }
-    return '';
+    return 'home';
   }
 
 }

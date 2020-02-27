@@ -347,6 +347,16 @@ li.app-page-item label{
 }
 
 
+// snack
+.app-snack-success {
+	background-color: $app-success-color;
+	color: $app-color-white;
+}
+
+.app-snack-error {
+	background-color: $app-warning-color;
+	color: $app-color-white;
+}
 
 
 
