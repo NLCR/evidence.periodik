@@ -105,7 +105,7 @@
   </div>
   
   <div fxFlex>
-    <div fxLayout="row" class="app-accordation-header">
+    <div fxLayout="row" class="app-accordation-header" *ngIf="!loading">
       <div fxFlex class="app-fx-left">
         <h2>{{'record.specimen_count' | translate}}: {{state.currentIssue.exemplare.length}}</h2>
       </div>
@@ -123,7 +123,7 @@
               <mat-icon>{{ config.icons.edit_volume }}</mat-icon>
             </a>
             <span class="app-pipe"></span>
-            {{ idx + 1 }}. - {{ ex.vlastnik }} {{ ex.carovy_kod }}
+            {{ idx + 1 }}. - {{ ex.vlastnik }} &#160; <a (click)="showSvazekOverview(ex.carovy_kod)">{{ ex.carovy_kod }}</a>
           </mat-panel-title>
         </mat-expansion-panel-header>
 

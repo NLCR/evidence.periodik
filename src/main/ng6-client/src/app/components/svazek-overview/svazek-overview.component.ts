@@ -7,6 +7,7 @@ import { AppConfiguration } from 'src/app/app-configuration';
 import { Volume } from 'src/app/models/volume';
 import { Utils } from 'src/app/utils';
 import { Issue } from 'src/app/models/issue';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-svazek-overview',
@@ -38,6 +39,7 @@ export class SvazekOverviewComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<SvazekOverviewComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { carKod: string },
+    private router: Router,
     private datePipe: DatePipe,
     public state: AppState,
     private service: AppService,
@@ -46,7 +48,6 @@ export class SvazekOverviewComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.service.volumeOverview(this.data.carKod).subscribe(res => {
-      console.log(res);
       this.result = res;
       const issue: Issue = res.response.docs[0] as Issue;
       const datum_od = res.stats.stats_fields.datum_vydani_den.min;
@@ -56,8 +57,6 @@ export class SvazekOverviewComponent implements OnInit {
         this.datePipe.transform(Utils.dateFromDay(datum_do), 'yyyy-MM-dd'));
       // this.volume.id = id;
       this.volume.carovy_kod = this.data.carKod;
-      // this.volume.mutace = issue.mutace;
-      // this.volume.znak_oznaceni_vydani = issue.znak_oznaceni_vydani;
       this.volume.id_titul = issue.id_titul;
 
       issue.exemplare.forEach(ex => {
@@ -103,7 +102,7 @@ export class SvazekOverviewComponent implements OnInit {
     issues.forEach((issue: Issue) => {
       issue.exemplare.forEach(ex => {
         if (ex.carovy_kod === this.data.carKod) {
-          if (ex.stav.length > 0) {
+          if (ex.stav && ex.stav.length > 0) {
             this.stavyExt.push({ datum: issue.datum_vydani, cislo: issue.cislo });
           }
 
@@ -125,5 +124,9 @@ export class SvazekOverviewComponent implements OnInit {
       this.state.currentTitul = res2;
 
     });
+  }
+
+  viewSvazek() {
+    this.router.navigate(['/svazek', this.data.carKod]);
   }
 }

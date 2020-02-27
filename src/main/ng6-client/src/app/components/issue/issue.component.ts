@@ -15,6 +15,7 @@ import { DateAdapter } from '@angular/material/core';
 import { isArray } from 'util';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { MatDialog } from '@angular/material';
+import { SvazekOverviewComponent } from '../svazek-overview/svazek-overview.component';
 
 @Component({
   selector: 'app-issue',
@@ -23,12 +24,16 @@ import { MatDialog } from '@angular/material';
 })
 export class IssueComponent implements OnInit {
 
-  /* public options: Pickadate.DateOptions = {
-    format: 'dd/mm/yyyy',
-    formatSubmit: 'yyyy-mm-dd',
-    selectYears: true,
-    clear: null
-  }; */
+  subscriptions: Subscription[] = [];
+
+  changingLang = false;
+  titul_idx: number;
+
+  initial_pages = 0;
+  
+  loading: boolean;
+
+  pagesRange: { label: string, index: number }[] = [];
 
   constructor(
     public dialog: MatDialog,
@@ -39,15 +44,6 @@ export class IssueComponent implements OnInit {
     private service: AppService,
     public config: AppConfiguration) {
   }
-  subscriptions: Subscription[] = [];
-
-  changingLang = false;
-  titul_idx: number;
-
-  initial_pages = 0;
-
-
-  pagesRange: { label: string, index: number }[] = [];
 
   onSubmit() {
     // console.log(this.issue);
@@ -55,7 +51,7 @@ export class IssueComponent implements OnInit {
 
 
   showPages(ex: Exemplar): boolean {
-    return ex.stav && !ex.stav.includes('OK');
+    return ex.pagesRange && ex.stav && !ex.stav.includes('OK');
   }
 
   setPagesRange() {
@@ -77,14 +73,13 @@ export class IssueComponent implements OnInit {
       this.state.currentIssue.exemplare = [];
     } else {
 
-
       this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
         ex.pagesRange = { missing: [], damaged: [] };
 
         // Back compatibility.
         // From pages : string[] to pages: {missing: string[], damaged: string[]}
         // Assign to missing
-        if (ex.pages && isArray(ex.pages)) {
+        if (ex.pages && isArray(ex.pages) || !ex.pages.missing) {
           const pages = Object.assign([], ex.pages);
           ex.pages = { missing: Object.assign([], ex.pages), damaged: Object.assign([], ex.pages) };
         }
@@ -184,6 +179,7 @@ export class IssueComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loading = true;
     this.state.currentTitul = new Titul();
     this.state.currentIssue = new Issue();
     const id = this.route.snapshot.paramMap.get('id');
@@ -192,6 +188,7 @@ export class IssueComponent implements OnInit {
 
       this.service.getIssue(id).subscribe(res => {
         this.setData(res);
+        this.loading = false;
       });
 
     } else {
@@ -295,4 +292,14 @@ export class IssueComponent implements OnInit {
     this.state.currentTitul = new Titul();
     this.router.navigate(['/svazek', car_kod]);
   }
+
+  showSvazekOverview(carKod: string) {
+    const dialogRef = this.dialog.open(SvazekOverviewComponent, {
+      width: '650px',
+      data: {
+        carKod
+      }
+    });
+  }
 }
+

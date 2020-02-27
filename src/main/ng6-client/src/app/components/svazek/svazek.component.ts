@@ -629,7 +629,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
           if (this.popShowPages) {
             this.pagesRange = [];
             for (let i = 0; i < el.pocet_stran; i++) {
-              const sel = el.exemplar.pages && el.exemplar.pages[this.editingProp].includes((i + 1) + '');
+              const sel = el.exemplar.pages && el.exemplar.pages[this.editingProp] && el.exemplar.pages[this.editingProp].includes((i + 1) + '');
               this.pagesRange.push({ label: (i + 1) + '', sel: sel });
             }
           }
