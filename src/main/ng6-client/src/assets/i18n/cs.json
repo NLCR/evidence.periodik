@@ -194,7 +194,8 @@
     "load_the_entire_volume": "(Znovu) načíst celý svazek",
     "save_the_entire_volume": "Uložit celý svazek",
     "generate_again": "Vygenerovat / vygenerovat znovu",
-    "update": "Aktualizovat"
+    "update": "Aktualizovat",
+    "close_navigation": "Zavřít navigaci"
   },
   "facet": {
     "title": {

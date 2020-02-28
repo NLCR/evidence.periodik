@@ -15,14 +15,14 @@ import {MatSidenav} from '@angular/material/sidenav';
 })
 export class NavbarComponent implements OnInit {
   currLang: string;
-  /* @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild('sidenav') sidenav: MatSidenav;
 
   reason = '';
 
   close(reason: string) {
     this.reason = reason;
     this.sidenav.close();
-  } */
+  }
 
   constructor(
     private route: ActivatedRoute,

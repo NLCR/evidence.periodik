@@ -75,7 +75,7 @@
         <div fxLayout="row">
           <div fxFlex>{{ vl.name }}</div>
           <div fxFlexAlign="right">
-            <a (click)="vl.collapsed = !vl.collapsed" [matTooltip]="vl.collapsed ? ('desc.expand_this_column' | translate) : ('desc.collapse_this_column' | translate)" matTooltipPosition="above">
+            <a (click)="vl.collapsed =! vl.collapsed" [matTooltip]="vl.collapsed ? ('desc.expand_this_column' | translate) : ('desc.collapse_this_column' | translate)" matTooltipPosition="above">
               <mat-icon>{{vl.collapsed ? config.icons.expand_this_column : config.icons.collapse_this_column }}</mat-icon>
             </a>
           </div>
@@ -97,10 +97,6 @@
             <a [matTooltip]="formatStav(ex)" matTooltipPosition="above" (click)="viewClick(row, ex)">
               <mat-icon [ngClass]="classByStav(ex)">{{ iconByStav(ex) }}</mat-icon>
             </a>
-            <!-- <i mz-icon-mdi class="app-cursor-pointer" [icon]="'package'" [size]="16" mz-tooltip [tooltip]="'Editovat svazek'" [position]="'top'" (click)="viewSvazek(ex['carovy_kod'])"></i>&#160;
-            <i mz-icon-mdi class="app-cursor-pointer" [icon]="'content-duplicate'" [size]="16" mz-tooltip [tooltip]="'Duplikovat exemplář'" [position]="'top'" (click)="duplicate(row, ex)"></i>&#160;
-            <i mz-icon-mdi class="app-cursor-pointer" [icon]="'close-circle-outline'" [size]="16" mz-tooltip [tooltip]="'Smazat exemplář'" [position]="'top'" (click)="deleteEx(row, ex, idxex)"></i>&#160;
-            <i class="app-cursor-pointer" [style.color]="colorByStav(ex)" mz-icon-mdi [icon]="iconByStav(ex)" [size]="20" mz-tooltip [tooltip]="formatStav(ex)" [position]="'top'" (click)="viewClick(row, ex)"></i> -->
           ]</ng-container>
         </span>
       </td>     

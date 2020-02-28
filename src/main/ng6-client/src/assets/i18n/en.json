@@ -193,7 +193,8 @@
     "load_the_entire_volume": "(Reload) Load the entire volume",
     "save_the_entire_volume": "Save the entire volume",
     "generate_again": "Generate / generate again",
-    "update": "Update"
+    "update": "Update",
+    "close_navigation": "Close navigation"
   },
   "facet": {
     "title": {

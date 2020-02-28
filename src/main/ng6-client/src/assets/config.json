@@ -55,6 +55,8 @@
     "radio_button_unchecked": "radio_button_unchecked",
     "lock_outline": "lock_outline",
     "send": "send",
+    "menu": "menu",
+    "close": "close",
     
     "duplicate": "file_copy",
     "missing_page": "error",
