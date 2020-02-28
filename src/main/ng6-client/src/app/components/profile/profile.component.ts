@@ -28,7 +28,6 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.user = this.state.user;
-    console.log(this.user);
   }
 
   save() {
@@ -42,8 +41,6 @@ export class ProfileComponent implements OnInit {
     });
 
   }
-
-
 
   resetHeslo() {
     const dialogRef = this.dialog.open(PasswordDialogComponent, {

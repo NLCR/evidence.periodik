@@ -97,11 +97,11 @@ app-navbar {
   z-index: 1090 !important;
   background-color: transparent;
   width: 100%;
-  height: calc(100% - 68px);
+  // height: calc(100% - 68px);
 
- /*  &.mat-drawer-container-has-open {
+   &.mat-drawer-container-has-open {
     height: calc(100% - 68px);
-  } */
+  } 
 
   .mat-sidenav {
     .mat-list {

@@ -53,11 +53,11 @@
   </div>
 </mat-toolbar>
 
-<mat-sidenav-container class="app-sidenav-container" (backdropClick)="close('backdrop')">
-  <mat-sidenav #sidenav (keydown.escape)="close('escape')">
+<mat-drawer-container class="app-sidenav-container" (backdropClick)="close('backdrop')">
+  <mat-drawer #sidenav (keydown.escape)="close('backdrop')" fixedInViewport="true">
     <mat-list role="list">
       <mat-list-item role="listitem">
-        <button mat-flat-button (click)="close('toggle button')">
+        <button mat-flat-button (click)="close('backdrop')">
           <mat-icon>{{ config.icons.close }}</mat-icon> {{ 'button.close_navigation' | translate}}
         </button>
       </mat-list-item>
@@ -93,7 +93,7 @@
       </mat-list-item>
     </mat-list>
    
-  </mat-sidenav>
-</mat-sidenav-container>
+  </mat-drawer>
+</mat-drawer-container>
 
 

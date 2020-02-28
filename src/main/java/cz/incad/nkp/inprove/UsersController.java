@@ -219,7 +219,7 @@ public class UsersController {
     user.nazev = "Administrator";
     user.username = "admin";
     user.email = "test@test.cz";
-    user.role = "ADMIN";
+    user.role = "admin";
     user.active = true;
 	user.id = MD5.generate(new String[]{user.nazev, user.email});
     JSONObject jo = new JSONObject(JSON.toJSONString(user));

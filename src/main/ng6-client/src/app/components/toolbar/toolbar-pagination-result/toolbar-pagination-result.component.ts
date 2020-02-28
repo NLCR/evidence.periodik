@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {AppState} from '../../../app.state';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-toolbar-pagination-result',
   templateUrl: './toolbar-pagination-result.component.html',
   styleUrls: ['./toolbar-pagination-result.component.scss']
 })
-export class ToolbarPaginationResultComponent implements OnInit {
-  
+export class ToolbarPaginationResultComponent implements OnInit, OnDestroy {
+
+  subscriptions: Subscription[] = [];
   
   numPages: number = 5;
   totalPages: number;
@@ -19,9 +21,16 @@ export class ToolbarPaginationResultComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.state.searchChanged.subscribe(cfg => {
+    this.subscriptions.push(this.state.searchChanged.subscribe(cfg => {
         this.setPages();
-      });
+      }));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => {
+      s.unsubscribe();
+    });
+    this.subscriptions = [];
   }
   
   setPages(){

@@ -667,6 +667,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.closeInfoOverlay();
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   closePop() {

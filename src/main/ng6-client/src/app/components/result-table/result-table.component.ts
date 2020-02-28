@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
 import { Input } from '@angular/core';
 import { Issue } from '../../models/issue';
@@ -11,23 +11,25 @@ import { Exemplar } from '../../models/exemplar';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AppConfiguration } from 'src/app/app-configuration';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-result-table',
   templateUrl: './result-table.component.html',
   styleUrls: ['./result-table.component.scss']
 })
-export class ResultTableComponent implements OnInit {
+export class ResultTableComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  data: Issue[] = [];
-  vlastnici: {name: string, collapsed: boolean}[] = [];
+  subscriptions: Subscription[] = [];
+  data: Issue[];
+  vlastnici: { name: string, collapsed: boolean }[] = [];
   exs: any = {};
   displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'vydani'];
   header = '';
   dataSource: MatTableDataSource<Issue>;
   loading: boolean;
-  
+
 
   constructor(
     public dialog: MatDialog,
@@ -35,21 +37,29 @@ export class ResultTableComponent implements OnInit {
     public state: AppState,
     public service: AppService,
     private translate: TranslateService,
-    public config: AppConfiguration) {
-
-
-    // Assign the data to the data source for the table to render
-  }
+    public config: AppConfiguration) {}
 
   ngOnInit() {
-    if (this.data) {
-      this.dataSource = new MatTableDataSource([]);
-      this.setData();
-    }
-    this.state.searchChanged.subscribe(res => {
-      this.dataSource = new MatTableDataSource([]);
-      this.setData();
+
+    // this.dataSource = new MatTableDataSource([]);
+    this.setData();
+
+    this.subscriptions.push(this.state.searchChanged.subscribe(res => {
+      this.dataSource = null;
+      this.vlastnici = null;
+      this.data = [];
+      setTimeout(() => {
+        this.setData();
+      }, 1);
+    }));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => {
+      s.unsubscribe();
     });
+    this.subscriptions = [];
+    console.log(this.subscriptions);
   }
 
   addColumn(field: string) {
@@ -63,13 +73,14 @@ export class ResultTableComponent implements OnInit {
   }
 
   setData() {
+    this.dataSource = null;
     this.loading = true;
     // Extract exemplare per vlastnik
     this.vlastnici = [];
     this.exs = {};
     this.displayedColumns = [];
     this.header = '';
-    this.data = this.state.searchResults.response['docs'];
+    this.data = Object.assign([], this.state.searchResults.response.docs);
     if (this.data.length === 0) {
       this.loading = false;
       return;
@@ -93,7 +104,7 @@ export class ResultTableComponent implements OnInit {
           // let ck = exs[i].vlastnik + ' - ' + exs[i].signatura;
           const vlastnik = exs[i].vlastnik;
           if (!this.exs.hasOwnProperty(vlastnik) && vlastnik !== '') {
-            this.vlastnici.push({name: vlastnik, collapsed: false});
+            this.vlastnici.push({ name: vlastnik, collapsed: false });
             this.exs[vlastnik] = exs[i];
             this.displayedColumns.push(vlastnik);
           } else {
@@ -103,15 +114,6 @@ export class ResultTableComponent implements OnInit {
         }
       }
     });
-
-    //    this.data.forEach((issue: Issue) =    > {
-    //      for (let i = 0; i < this.cks.length; i++    ) {
-    //        if (!issue.hasOwnProperty(this.cks[i])    ) {
-    //          issue[this.cks[i]] =     -1;
-    //            }
-    //          }
-    //    });
-
     this.dataSource = new MatTableDataSource(this.data);
     this.dataSource.paginator = this.paginator;
     this.loading = false;
@@ -296,5 +298,9 @@ export class ResultTableComponent implements OnInit {
     } else {
       return 'nekontrolováno ';
     }
+  }
+
+  toggleCollapsed(vl) {
+    vl.collapsed = !vl.collapsed;
   }
 }

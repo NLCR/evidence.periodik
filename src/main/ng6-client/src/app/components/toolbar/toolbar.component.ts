@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { AppState } from '../../app.state';
 import { AppService } from '../../app.service';
@@ -14,13 +14,16 @@ import { Exemplar } from 'src/app/models/exemplar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit, OnDestroy {
+
+  subscriptions: Subscription[] = [];
   periods = [];
 
   header = '';
@@ -33,9 +36,16 @@ export class ToolbarComponent implements OnInit {
     public config: AppConfiguration) { }
 
   ngOnInit() {
-    this.state.searchChanged.subscribe(res => {
+    this.subscriptions.push(this.state.searchChanged.subscribe(res => {
       this.setHeader();
+    }));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => {
+      s.unsubscribe();
     });
+    this.subscriptions = [];
   }
 
   setHeader() {
