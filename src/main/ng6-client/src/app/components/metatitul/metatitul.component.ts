@@ -5,6 +5,8 @@ import { Titul } from 'src/app/models/titul';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AppConfiguration } from 'src/app/app-configuration';
+import { PromptDialogComponent } from '../prompt-dialog/prompt-dialog.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-metatitul',
@@ -18,6 +20,7 @@ export class MetatitulComponent implements OnInit, OnDestroy {
   loading: boolean;
 
   constructor(
+    public dialog: MatDialog,
     private route: ActivatedRoute,
     private service: AppService,
     public state: AppState,
@@ -67,7 +70,19 @@ export class MetatitulComponent implements OnInit, OnDestroy {
   }
 
   newTitul() {
-    this.titul = new Titul();
+    const dialogRef = this.dialog.open(PromptDialogComponent, {
+      width: '350px',
+      data: { title: 'record.meta_title' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.titul = new Titul();
+        this.titul.meta_nazev = result;
+        this.state.tituly.push(this.titul);
+      }
+    });
+    
   }
 
   cancel() {
