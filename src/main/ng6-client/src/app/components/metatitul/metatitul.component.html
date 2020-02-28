@@ -4,8 +4,8 @@
   <div fxFlex="320px" class="app-fx-left">
     <mat-list role="list">
       <mat-list-item role="listitem" *ngFor="let t of state.tituly; let idx=index" [ngClass]="{'app-active' : (titul && t.id === titul.id) || (!titul && idx===0)}">
-        <ng-container [ngSwitch]="t.id">
-          <mat-icon *ngSwitchCase="t.id">{{ config.icons.radio_button_checked }}</mat-icon>
+        <ng-container [ngSwitch]="(titul && t.id === titul.id) || (!titul && idx===0)">
+          <mat-icon *ngSwitchCase="true">{{ config.icons.radio_button_checked }}</mat-icon>
           <mat-icon *ngSwitchDefault>{{ config.icons.radio_button_unchecked }}</mat-icon>
         </ng-container>
         <a (click)="loadTitul(t)">{{ t.meta_nazev }}</a>
