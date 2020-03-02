@@ -395,8 +395,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
         const issue: Issue = Object.assign({}, cs.issue);
         issue.cislo = cs.cislo;
         issue.mutace = cs.mutace;
-        issue.nazev_prilohy = cs.nazev_prilohy;
-        issue.isPriloha = cs.isPriloha;
+        issue.nazev = cs.nazev;
+        issue.podnazev = cs.podnazev;
         issue.pocet_stran = cs.pocet_stran;
         issue.vydani = cs.vydani;
         issue.znak_oznaceni_vydani = cs.znak_oznaceni_vydani;

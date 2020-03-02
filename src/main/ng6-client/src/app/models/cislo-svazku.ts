@@ -10,8 +10,8 @@ export class CisloSvazku {
   cislo: number;
   mutace: string = '';
   vydani: string = '';
-  isPriloha: boolean;
-  nazev_prilohy: string = '';
+  nazev: string = '';
+  podnazev: string = '';
   pocet_stran: number;
   znak_oznaceni_vydani: string = '';
   destroyedPages: boolean;
@@ -32,8 +32,8 @@ export class CisloSvazku {
     this.cislo = issue.cislo;
     this.mutace = issue.mutace;
     this.vydani = issue.vydani;
-    this.isPriloha = issue.isPriloha;
-    this.nazev_prilohy = issue.nazev_prilohy;
+    this.nazev = issue.nazev;
+    this.podnazev = issue.podnazev;
     this.pocet_stran = issue.pocet_stran;
     this.znak_oznaceni_vydani = issue.znak_oznaceni_vydani;
     this.odd = odd;
