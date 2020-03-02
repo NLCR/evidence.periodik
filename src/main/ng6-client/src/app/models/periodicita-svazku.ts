@@ -3,6 +3,6 @@ export class PeriodicitaSvazku {
   active: boolean = false;
   vydani: string = '';
   pocet_stran: number = 0;
-  isPriloha: boolean = false;
-  nazev_prilohy: string = '';
+  nazev: string = '';
+  podnazev: string = '';
 }

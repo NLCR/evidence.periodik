@@ -146,25 +146,28 @@
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>
 
-        <!-- This is attachement -->
-        <ng-container matColumnDef="isPriloha">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'toto je příloha' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.active" [(ngModel)]="element.isPriloha"></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef colspan="7"></td>
-        </ng-container>
-
-        <!-- Attachement name -->
-        <ng-container matColumnDef="nazev_prilohy">
+        <!-- Name -->
+        <ng-container matColumnDef="nazev">
           <th mat-header-cell *matHeaderCellDef>
             <div>{{ 'název přílohy' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element" class="app-edit-text">
-            <mat-form-field *ngIf="element.active && element.isPriloha">
-              <input type="text" matInput [(ngModel)]="element.nazev_prilohy">
+            <mat-form-field *ngIf="element.active">
+              <input type="text" matInput [(ngModel)]="element.nazev">
+              <mat-icon>{{ config.icons.pencil }}</mat-icon>
+            </mat-form-field>
+          </td>
+          <td mat-footer-cell *matFooterCellDef colspan="7"></td>
+        </ng-container>
+
+        <!-- Subname -->
+        <ng-container matColumnDef="podnazev">
+          <th mat-header-cell *matHeaderCellDef>
+            <div>{{ 'název přílohy' | translate }}</div>
+          </th>
+          <td mat-cell *matCellDef="let element" class="app-edit-text">
+            <mat-form-field *ngIf="element.active">
+              <input type="text" matInput [(ngModel)]="element.podnazev">
               <mat-icon>{{ config.icons.pencil }}</mat-icon>
             </mat-form-field>
           </td>
@@ -272,25 +275,30 @@
           </td>        
         </ng-container>
 
-        <!-- This is attachement -->
-        <ng-container matColumnDef="isPriloha">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'toto je příloha' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox [(ngModel)]="element.isPriloha" *ngIf="element.numExists"></mat-checkbox>
-          </td>     
-        </ng-container>
-
-        <!-- Attachement name -->
-        <ng-container matColumnDef="nazev_prilohy">
+        <!-- Name -->
+        <ng-container matColumnDef="nazev">
           <th mat-header-cell *matHeaderCellDef>
             <div>{{ 'název přílohy' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element" class="app-edit-text">
-            <ng-container *ngIf="element.numExists && element.isPriloha">
+            <ng-container *ngIf="element.numExists">
               <mat-form-field>
-                <input type="text" matInput [(ngModel)]="element.nazev_prilohy">
+                <input type="text" matInput [(ngModel)]="element.nazev">
+                <mat-icon>{{ config.icons.pencil }}</mat-icon>
+              </mat-form-field>
+            </ng-container>
+          </td>      
+        </ng-container>
+
+        <!-- Subname -->
+        <ng-container matColumnDef="podnazev">
+          <th mat-header-cell *matHeaderCellDef>
+            <div>{{ 'název přílohy' | translate }}</div>
+          </th>
+          <td mat-cell *matCellDef="let element" class="app-edit-text">
+            <ng-container *ngIf="element.numExists">
+              <mat-form-field>
+                <input type="text" matInput [(ngModel)]="element.podnazev">
                 <mat-icon>{{ config.icons.pencil }}</mat-icon>
               </mat-form-field>
             </ng-container>

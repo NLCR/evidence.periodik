@@ -25,7 +25,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   data: Issue[];
   vlastnici: { name: string, collapsed: boolean }[] = [];
   exs: any = {};
-  displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'vydani'];
+  displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'nazev', 'vydani'];
   header = '';
   dataSource: MatTableDataSource<Issue>;
   loading: boolean;
@@ -89,6 +89,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     this.addColumn('meta_nazev');
     this.addColumn('mutace');
     this.displayedColumns.push('datum_vydani');
+    this.addColumn('nazev');
     this.addColumn('vydani');
 
 

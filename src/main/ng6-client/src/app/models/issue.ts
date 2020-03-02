@@ -39,9 +39,6 @@ export class Issue {
   */
   
   znak_oznaceni_vydani: string = ""; //github #47 "Způsob označení mutace": znaky  * nebo • nebo +/.
-
-  isPriloha: boolean = false;
-  nazev_prilohy: string = '';
   
   state: string = "auto"; // Slouzi pro oznaceni aktualinho stavu v ramci aplikace. Tj, automaticke generovane, podtverzeno
   
