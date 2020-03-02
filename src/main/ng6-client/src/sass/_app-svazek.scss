@@ -119,6 +119,10 @@
               padding-left: 0;
             }
 
+            &:last-of-type {
+              padding-right: 0;
+            }
+
             // custom cell width
             &.mat-column-den {
               width: $app-svazek-cell-den-width;
