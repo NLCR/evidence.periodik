@@ -21,7 +21,7 @@
     <span *ngIf="state.logged">
       <a routerLink="svazek" routerLinkActive="active">{{ 'navbar.volume' | translate }}</a>
     </span>
-    <span>
+    <span *ngIf="state.logged">
       <a routerLink="issue" routerLinkActive="active">{{ 'navbar.add_record' | translate }}</a>
     </span>
     <span *ngIf="state.isAdmin">

@@ -499,8 +499,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
             cvs.mutace = this.state.currentVolume.mutace;
             cvs.numExists = true;
             cvs.pocet_stran = p.pocet_stran;
-            cvs.isPriloha = p.isPriloha;
-            cvs.nazev_prilohy = p.nazev_prilohy;
+            cvs.nazev = p.nazev;
+            cvs.podnazev = p.podnazev;
             cvs.vydani = p.vydani;
             cvs.cislo = idx;
             idx++;
