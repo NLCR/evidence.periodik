@@ -79,7 +79,16 @@
     "mutation_edition": "Mutační vydání",
     "numbers": "Čísla",
     "dates": "Data",
-    "complete": "Kompletní"
+    "complete": "Kompletní",
+    "comming": "Vychází",
+    "number_exists": "Číslo existuje",
+    "edition": "Vydání",
+    "name": "Název",
+    "subname": "Podnázev",
+    "insert_next_edition": "Vložit další vydání",
+    "edit_issue": "Editovat issue",
+    "date": "Datum",
+    "number": "Číslo"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."

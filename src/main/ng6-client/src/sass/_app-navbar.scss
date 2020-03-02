@@ -103,11 +103,11 @@ app-navbar {
     height: calc(100% - 68px);
   } 
 
-  .mat-sidenav {
+  .mat-drawer-inner-container {
     .mat-list {
       .mat-list-item {
         a {
-          color: $app-primary-color;
+          color: $app-primary-color !important;
         }
 
         .mat-button-base {

@@ -79,7 +79,16 @@
     "mutation_edition": "Mutation Edition",
     "numbers": "Numbers",
     "dates": "Dates",
-    "complete": "Complete"
+    "complete": "Complete",
+    "comming": "Comming",
+    "number_exists": "Number exist",
+    "edition": "Edition",
+    "name": "Name",
+    "subname": "Subname",
+    "insert_next_edition": "Insert next edition",
+    "edit_issue": "Edit issue",
+    "date": "Date",
+    "number": "Number"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "TThis action is not allowed, you are not logged in."
