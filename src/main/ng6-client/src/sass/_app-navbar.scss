@@ -37,12 +37,35 @@ app-navbar {
     
 
     .app-fx-middle {
+      margin-right: $app-gap;
+
       app-search-bar {
         .app-search-bar-container {
           border-color: $app-color-white;
           max-width: $app-search-bar-max-width;
         }
       }
+
+      @media only screen and (max-width: 1279px) {
+        $app-val: 450px;
+        flex: 1 1 $app-val;
+        min-width: $app-val;
+        max-width: $app-val;
+      }
+
+      @media only screen and (min-width: 1450px) {
+        $app-val: 500px;
+        flex: 1 1 $app-val;
+        min-width: $app-val;
+        max-width: $app-val;
+      }
+
+      @media only screen and (min-width: 1600px) {
+        $app-val: 640px;
+        flex: 1 1 $app-val;
+        min-width: $app-val;
+        max-width: $app-val;
+      }  
     }
 
     .app-fx-right {
@@ -51,7 +74,7 @@ app-navbar {
       &.app-desktop {
         display: none;
 
-        @media only screen and (min-width: 1500px ) {
+        @media only screen and (min-width: 1280px ) {
           display: block;
         }
       }
@@ -59,7 +82,7 @@ app-navbar {
       &.app-mobile {
         display: none;
 
-        @media only screen and (max-width: 1499px ) {
+        @media only screen and (max-width: 1279px ) {
           display: block;
         }
       }
