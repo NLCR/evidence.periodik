@@ -120,7 +120,7 @@ static boolean isLocalhost = false;
         JSONObject jo = new JSONObject();
         try {
           if (isLocalhost) {
-          String pwd = req.getParameter("json");
+          String pwd = req.getParameter("pwd");
           jo = UsersController.initAdmin(pwd);
           
           } else {

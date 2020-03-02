@@ -82,7 +82,6 @@ export class MetatitulComponent implements OnInit, OnDestroy {
         this.state.tituly.push(this.titul);
       }
     });
-    
   }
 
   cancel() {

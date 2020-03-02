@@ -18,9 +18,9 @@
     <span>
       <a routerLink="titul" routerLinkActive="active">{{ 'navbar.meta_titles' | translate }}</a>
     </span>
-    <!-- <span>
+    <span *ngIf="state.logged">
       <a routerLink="svazek" routerLinkActive="active">{{ 'navbar.volume' | translate }}</a>
-    </span> -->
+    </span>
     <span>
       <a routerLink="issue" routerLinkActive="active">{{ 'navbar.add_record' | translate }}</a>
     </span>
@@ -69,6 +69,9 @@
       </mat-list-item>
       <mat-list-item role="listitem">
         <a routerLink="issue" routerLinkActive="active">{{ 'navbar.add_record' | translate }}</a>
+      </mat-list-item>
+      <mat-list-item role="listitem">
+        <a routerLink="svazek" routerLinkActive="active">{{ 'navbar.volume' | translate }}uu</a>
       </mat-list-item>
       <mat-list-item role="listitem" *ngIf="state.isAdmin">
         <a routerLink="admin" routerLinkActive="active">{{ 'navbar.administration' | translate }}</a>
