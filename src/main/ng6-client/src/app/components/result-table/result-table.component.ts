@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { Subscription } from 'rxjs';
+import { SvazekOverviewComponent } from '../svazek-overview/svazek-overview.component';
 
 @Component({
   selector: 'app-result-table',
@@ -303,5 +304,14 @@ export class ResultTableComponent implements OnInit, OnDestroy {
 
   toggleCollapsed(vl) {
     vl.collapsed = !vl.collapsed;
+  }
+
+  showSvazekOverview(carKod: string) {
+    const dialogRef = this.dialog.open(SvazekOverviewComponent, {
+      width: '650px',
+      data: {
+        carKod
+      }
+    });
   }
 }

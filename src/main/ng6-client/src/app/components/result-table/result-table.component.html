@@ -92,7 +92,7 @@
       <td mat-cell *matCellDef="let row; let idx = index;" [class.app-col-collapsed]="vl.collapsed">
         <span *ngFor="let ex of row.exemplare; let idxex = index">
           <ng-container *ngIf="ex.vlastnik === vl.name">[
-            <a (click)="viewClick(row, ex)" [matTooltip]="'desc.edit_specimen' | translate" matTooltipPosition="above">{{ ex['carovy_kod'] }}</a>
+            <a (click)="showSvazekOverview(ex.carovy_kod)" matTooltipPosition="above">{{ ex['carovy_kod'] }}</a>
             <a [matTooltip]="'desc.edit_volume' | translate" matTooltipPosition="above" (click)="viewSvazek(ex['carovy_kod'])">
               <mat-icon>{{ config.icons.edit_volume }}</mat-icon>
             </a>
