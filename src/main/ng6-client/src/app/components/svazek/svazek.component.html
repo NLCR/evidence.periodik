@@ -71,7 +71,7 @@
               <ng-container *ngSwitchCase="'datum_do'">
                 <mat-form-field floatLabel="never">
                   <input matInput [matDatepicker]="pickerDo" [placeholder]="'desc.choose_date' | translate"
-                   [(ngModel)]="state.currentVolume[element]" (dateChange)="setVolumeDatum(element, $event, pickerDo)"
+                   [(ngModel)]="state.currentVolume[element]" (dateChange)="setVolumeDatum(element, $event)"
                     id="datum_do" name="datum_do">
                   <mat-datepicker-toggle matSuffix [for]="pickerDo"></mat-datepicker-toggle>
                   <mat-datepicker #pickerDo></mat-datepicker>
