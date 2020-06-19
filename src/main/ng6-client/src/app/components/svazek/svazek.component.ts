@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewContainerRef, TemplateRef, ViewChild, ElementRef, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { KeyValueChanges, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, TemplateRef, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { AppState } from 'src/app/app.state';
 import { AddTitulDialogComponent } from 'src/app/components/add-titul-dialog/add-titul-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
@@ -8,7 +7,7 @@ import { Titul } from 'src/app/models/titul';
 import { Volume } from 'src/app/models/volume';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource, MatButton, MatPaginator, MatTable, MatDialog, MatDatepickerInputEvent } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialog, MatDatepickerInputEvent, MatDatepicker } from '@angular/material';
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
 
 import { Issue } from 'src/app/models/issue';
@@ -21,6 +20,7 @@ import { Exemplar } from 'src/app/models/exemplar';
 import { isArray } from 'util';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { SvazekOverviewComponent } from '../svazek-overview/svazek-overview.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-svazek',
@@ -31,18 +31,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   private overlayRef: OverlayRef;
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  /* @ViewChild(MatTable) table: MatTable<any>; // initialize
-  @ViewChild('poznEl') poznEl: ElementRef;
- */
- /*  public calOptions: Pickadate.DateOptions = {
-    format: 'dd.mm.yyyy',
-    formatSubmit: 'yyyy-mm-dd',
-    closeOnSelect: true,
-    selectYears: true,
-    clear: null,
-    today: null
-  }; */
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild('pickerOd', { read: undefined, static: false }) pickerOd: MatDatepicker<Date>;
 
   dsIssues: MatTableDataSource<CisloSvazku>;
   issueColumns = [
@@ -114,17 +104,16 @@ export class SvazekComponent implements OnInit, OnDestroy {
   // private dataDiffer: KeyValueDiffer<string, any>;
 
   loading: boolean;
-  
+
   // Holds dates in calendar. Should convert to yyyyMMdd for volume
-  startDate: Date;
-  endDate: Date;
+  startDate = new FormControl(new Date());
+  endDate = new FormControl(new Date());
+  now = new Date();
 
   constructor(
     public dialog: MatDialog,
-    private differs: KeyValueDiffers,
     private overlay: Overlay,
     private viewContainerRef: ViewContainerRef,
-    private changeDetectorRefs: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
     private datePipe: DatePipe,
@@ -138,13 +127,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
       this.langChanged();
     }));
-    // this.dataDiffer = this.differs.find(this.state.currentVolume).create();
   }
 
   getDaysArray(start, end) {
     const arr = [];
     const dtend = this.datePipe.transform(new Date(end), 'yyyy-MM-dd');
-    let dt = new Date(start);
+    const dt = new Date(start);
 
     while (this.datePipe.transform(dt, 'yyyy-MM-dd') <= dtend) {
       arr.push(this.datePipe.transform(new Date(dt), 'yyyy-MM-dd'));
@@ -218,10 +206,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
       this.service.searchByCarKod(id).subscribe(res2 => {
 
-        if (res2['response']['numFound'] > 0) {
-          const issue: Issue = <Issue>res2['response']['docs'][0];
-          const datum_od = res2['stats']['stats_fields']['datum_vydani_den']['min'];
-          const datum_do = res2['stats']['stats_fields']['datum_vydani_den']['max'];
+        if (res2.response.numFound > 0) {
+          const issue: Issue = res2.response.docs[0] as Issue;
+          const datum_od = res2.stats.stats_fields.datum_vydani_den.min;
+          const datum_do = res2.stats.stats_fields.datum_vydani_den.max;
 
           this.state.currentVolume = new Volume(
             this.datePipe.transform(Utils.dateFromDay(datum_od), 'yyyy-MM-dd'),
@@ -241,17 +229,19 @@ export class SvazekComponent implements OnInit, OnDestroy {
           this.loadIssues();
 
         } else {
-          this.state.currentVolume = new Volume(this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
-            this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
+          const d = new Date().getFullYear() + '-01-01';
+          this.state.currentVolume = new Volume(d, d);
           this.state.currentVolume.carovy_kod = id;
+          this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
           this.loading = false;
         }
       });
 
     }
 
-    this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
-
+    if (this.state.currentVolume) {
+      this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
+    }
   }
 
   setVolumeFacets() {
@@ -260,8 +250,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
       this.oznaceni = '';
       this.mutace_idx = -1;
       this.mutace = '';
-      this.oznaceni_list = Object.assign([], res['facet_counts']['facet_fields']['znak_oznaceni_vydani']);
-      this.mutations = Object.assign([], res['facet_counts']['facet_fields']['mutace']);
+      this.oznaceni_list = Object.assign([], res.facet_counts.facet_fields.znak_oznaceni_vydani);
+      this.mutations = Object.assign([], res.facet_counts.facet_fields.mutace);
 
       for (let i = 0; i < this.mutations.length; i++) {
         if (this.mutations[i].name === this.state.currentVolume.mutace) {
@@ -325,20 +315,27 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
     this.state.currentTitul = new Titul();
 
-    this.state.currentVolume = new Volume(this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
-      this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
+    // this.state.currentVolume = new Volume(
+    //   this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+    //   this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
 
-    this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
+
+    // setTimeout(() => {
+    //   this.state.currentVolume.datum_od = this.datePipe.transform(Utils.dateFromDay('20190101'), 'yyyy-MM-dd');
+    //   this.state.currentVolume.datum_do = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+
+    //   this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
+    //   this.loading = false;
+    // }, 100);
 
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.subscriptions.push(this.service.getVolume(id).subscribe(res => {
-        this.setData(res, id);
-      }));
+    // if (id) {
+    this.subscriptions.push(this.service.getVolume(id).subscribe(res => {
+      this.setData(res, id);
+    }));
 
-    } else {
-      this.loading = false;
-    }
+    // } else {
+    // }
   }
 
   setLastNumber() {
@@ -362,17 +359,22 @@ export class SvazekComponent implements OnInit, OnDestroy {
     if (!this.state.logged) {
       return;
     }
-    
     // Ulozit svazek (volume) a vsechny radky tabulky jako Issue.
-
-    // console.log(JSON.stringify(JSON.stringify(this.state.currentVolume)));
-    // console.log(this.state.currentVolume);
-    // console.log(this.dsIssues);
 
     // carovy_kod je povinny, jelikoz pouzivame jako id svazku
     if (!this.state.currentVolume.carovy_kod || this.state.currentVolume.carovy_kod.trim() === '') {
       this.setLastNumber();
       this.service.showSnackBar('snackbar.barcode_is_required', '', true);
+      return;
+    }
+
+    if (!this.state.currentVolume.datum_od) {
+      this.service.showSnackBar('snackbar.datum_od_is_required', '', true);
+      return;
+    }
+
+    if (!this.state.currentVolume.datum_do) {
+      this.service.showSnackBar('snackbar.datum_do_is_required', '', true);
       return;
     }
 
@@ -608,7 +610,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   viewPS(el: CisloSvazku, prop: string, relative: any, template: TemplateRef<any>) {
 
-    // Back compatibility. 
+    // Back compatibility.
     // From pages : string[] to pages: {missing: string[], damaged: string[]}
     // Assign to missing
     if (el.exemplar.pages && isArray(el.exemplar.pages)) {
@@ -630,7 +632,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
             this.pagesRange = [];
             for (let i = 0; i < el.pocet_stran; i++) {
               const sel = el.exemplar.pages && el.exemplar.pages[this.editingProp] && el.exemplar.pages[this.editingProp].includes((i + 1) + '');
-              this.pagesRange.push({ label: (i + 1) + '', sel: sel });
+              this.pagesRange.push({ label: (i + 1) + '', sel });
             }
           }
           this.openInfoOverlay(relative._elementRef, template);
@@ -688,7 +690,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       hasBackdrop: false,
       backdropClass: 'popover-backdrop'
     });
-    //this.overlayRef.backdropClick().subscribe(() => this.closeInfoOverlay());
+    // this.overlayRef.backdropClick().subscribe(() => this.closeInfoOverlay());
 
     const portal = new TemplatePortal(template, this.viewContainerRef);
     this.overlayRef.attach(portal);
@@ -703,7 +705,18 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   setVolumeDatum(element: string, event: MatDatepickerInputEvent<Date>) {
-    this.state.currentVolume[element] = this.datePipe.transform(event.value, 'yyyy-MM-dd');
+    console.log(event.value, this.state.currentVolume[element]);
+    if (event.value) {
+      this.state.currentVolume[element] = this.datePipe.transform(event.value, 'yyyy-MM-dd');
+    } else if (this.state.currentVolume[element]) {
+      // const d: Date = Utils.dateFromDay(e.value);
+      // this.pickerOd.select(d);
+    }
+
+  }
+
+  dateChanged(element, e) {
+    console.log(element, e.target.value);
   }
 
   showSvazekOverview() {

@@ -1,5 +1,5 @@
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-<div class="app-svazek-wrapper" (click)="closeInfoOverlay()">
+<div class="app-svazek-wrapper" (click)="closeInfoOverlay()" *ngIf="state.currentVolume">
   <div class="app-container-left">
     <div class="app-table-wrapper app-left-top">
       <table mat-table [dataSource]="dsSvazek" #table>   
@@ -16,9 +16,10 @@
               {{ 'button.save_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}
             </button>
             <button mat-icon-button>
+              <mat-icon routerLink="/result" [matTooltip]="'desc.display_table' | translate">{{ config.icons.view_table }}</mat-icon>
               <mat-icon [matTooltip]="'desc.volume_overview' | translate" (click)="showSvazekOverview()"
               matTooltipPosition="above">{{ config.icons.info }}</mat-icon>
-            </button> 
+            </button>
           </td>
         </ng-container>
 
@@ -60,20 +61,20 @@
 
               <ng-container *ngSwitchCase="'datum_od'">
                 <mat-form-field floatLabel="never">
-                  <input matInput [matDatepicker]="picker" [placeholder]="'desc.choose_date' | translate" (dateChange)="setVolumeDatum(element, $event)"
-                  [(ngModel)]="state.currentVolume[element]"
+                  <input matInput [matDatepicker]="pickerOd" [placeholder]="'desc.choose_date' | translate" 
+                  (dateChange)="setVolumeDatum(element, $event)" [(ngModel)]="state.currentVolume[element]" 
                    id="datum_od" name="datum_od">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-datepicker-toggle matSuffix [for]="pickerOd"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerOd></mat-datepicker>
                 </mat-form-field>
               </ng-container>
               <ng-container *ngSwitchCase="'datum_do'">
                 <mat-form-field floatLabel="never">
-                  <input matInput [matDatepicker]="picker" [placeholder]="'desc.choose_date' | translate"
-                   [(ngModel)]="state.currentVolume[element]" (dateChange)="setVolumeDatum(element, $event)"
+                  <input matInput [matDatepicker]="pickerDo" [placeholder]="'desc.choose_date' | translate"
+                   [(ngModel)]="state.currentVolume[element]" (dateChange)="setVolumeDatum(element, $event, pickerDo)"
                     id="datum_do" name="datum_do">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-datepicker-toggle matSuffix [for]="pickerDo"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerDo></mat-datepicker>
                 </mat-form-field>
               </ng-container>
 
