@@ -19,6 +19,7 @@ import { Exemplar } from './models/exemplar';
 import { Volume } from './models/volume';
 import { User } from './models/user';
 import { MatSnackBar } from '@angular/material';
+import { isArray } from 'util';
 
 @Injectable()
 export class AppService {
@@ -255,29 +256,34 @@ export class AppService {
   }
 
 
-  isIssueValid(issue: Issue): boolean {
+  isIssueValid(issue: Issue): {valid: boolean, why: string} {
+    const ret = {valid: true, why: ''};
     try {
       //      if (!this.isValidAsInteger(issue.rocnik)) {
       //        return false;
       //      }
       if (!this.isValidAsInteger(issue.druhe_cislo)) {
-        return false;
+        ret.valid = false;
+        ret.why = 'Druhe cislo not nevalidni';
       }
       if (!this.isValidAsInteger(issue.cislo)) {
-        return false;
+        ret.valid = false;
+        ret.why = 'Pole cislo neni validni';
       }
 
       // Cistime stavy, aby nebyly "null"
       issue.exemplare.forEach(ex => {
-        if (ex.stav) {
+        if (ex.stav && isArray(ex.stav)) {
           ex.stav = ex.stav.filter(st => st !== 'null');
         }
       });
-      return true;
     } catch (ex) {
       console.log(ex);
-      return false;
+      ret.valid = false;
+      ret.why = ex;
     }
+
+    return ret;
   }
 
   saveIssues(vol: Volume, issues: Issue[]): Observable<any> {
@@ -290,7 +296,8 @@ export class AppService {
   }
 
   saveIssue(issue: Issue): Observable<any> {
-    if (this.isIssueValid(issue)) {
+    const isValid = this.isIssueValid(issue);
+    if (isValid.valid) {
       const url = 'index?action=SAVE_ISSUE';
       const params: HttpParams = new HttpParams()
         .set('action', 'SAVE_ISSUE')
@@ -298,7 +305,7 @@ export class AppService {
 
       return this.http.post(url, issue);
     } else {
-      return of('error');
+      return of(isValid.why);
     }
   }
 

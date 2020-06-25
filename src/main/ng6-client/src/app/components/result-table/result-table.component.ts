@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource, MatDialog } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, MatDialog, PageEvent } from '@angular/material';
 import { Input } from '@angular/core';
 import { Issue } from '../../models/issue';
 import { AppState } from '../../app.state';
@@ -30,7 +30,6 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   header = '';
   dataSource: MatTableDataSource<Issue>;
   loading: boolean;
-
 
   constructor(
     public dialog: MatDialog,
@@ -314,4 +313,9 @@ export class ResultTableComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  pageChanged(e: PageEvent) {
+    this.state.pageIndex = e.pageIndex;
+  }
+
 }

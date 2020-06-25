@@ -74,6 +74,7 @@ export class AppState {
   public searchChanged: Observable<any> = this._searchSubject.asObservable();
   searchResults: any;
   numFound: number;
+  pageIndex: number;
 
   start_date: string; //yyyyMMdd
   end_date: string;

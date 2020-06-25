@@ -339,6 +339,9 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   setLastNumber() {
+    if (this.state.currentVolume.posledni_cislo) {
+      return;
+    }
     const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
     let idx = this.state.currentVolume.prvni_cislo;
     dates.forEach((dt) => {
@@ -352,7 +355,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         }
       });
     });
-    this.state.currentVolume.posledni_cislo = idx;
+    this.state.currentVolume.posledni_cislo = idx - 1;
   }
 
   save() {
