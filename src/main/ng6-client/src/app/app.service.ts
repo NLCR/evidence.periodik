@@ -173,6 +173,26 @@ export class AppService {
       }));
   }
 
+  searchIssueByDate(datum: string, id_titul: string): Observable<any[]> {
+    let params: HttpParams = new HttpParams();
+
+    params = new HttpParams()
+      .set('q', '*')
+      .set('wt', 'json')
+      .set('rows', '10')
+      .set('fl', '*,exemplare:[json], pages:[json]')
+      .set('sort', 'datum_vydani_den asc, vydani desc')
+      .set('fq', 'id_titul:"' + id_titul + '"')
+      .append('fq', 'datum_vydani_den:"' + datum + '"');
+    const url = '/api/search/issue/select';
+
+    // params.set('fl', 'start:datum_vydani,title:nazev,*')
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        return res.response['docs'];
+      }));
+  }
+
   getTitul(id: string): Observable<Titul> {
     const url = '/api/search/titul/select';
     let params: HttpParams = new HttpParams();

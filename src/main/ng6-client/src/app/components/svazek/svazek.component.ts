@@ -154,6 +154,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
           is.datum_vydani = dt;
           is.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
           is.cislo = null;
+          is.id = null;
+          //console.log(is.datum_vydani_den, issue);
           this.cislaVeSvazku.push(new CisloSvazku(is, 'neexistujicicarovykod', odd));
         } else {
           while (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') === this.datePipe.transform(dt, 'yyyy-MM-dd')) {
@@ -395,8 +397,14 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
     // console.log(this.dsIssues.data);
     this.loading = true;
+    let valid = true;
     this.dsIssues.data.forEach((cs: CisloSvazku) => {
       if (cs.numExists) {
+        if (!cs.cislo) {
+          this.service.showSnackBar('číslo vytisku je povinne', '', true);
+          valid = false;
+          return;
+        }
         const issue: Issue = Object.assign({}, cs.issue);
         issue.cislo = cs.cislo;
         issue.mutace = cs.mutace;
@@ -422,8 +430,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
         }
 
         ex.oznaceni = cs.znak_oznaceni_vydani;
-        ex.pages = Object.assign({}, cs.exemplar.pages);
-        ex.stav_popis = cs.exemplar.stav_popis;
+        if (cs.exemplar) {
+          ex.pages = Object.assign({}, cs.exemplar.pages);
+          ex.stav_popis = cs.exemplar.stav_popis;
+        }
 
         ex.stav = [];
         if (cs.destroyedPages) { ex.stav.push('PP'); }
@@ -438,6 +448,11 @@ export class SvazekComponent implements OnInit, OnDestroy {
         issues.push(issue);
       }
     });
+
+    if (!valid) {
+      this.loading = false;
+      return;
+    }
 
     this.service.saveIssues(this.state.currentVolume, issues).subscribe(res => {
       this.loading = false;
@@ -573,6 +588,44 @@ export class SvazekComponent implements OnInit, OnDestroy {
     n.splice(idx + 1, 0, Object.assign({}, element));
     this.state.currentVolume.periodicita = Object.assign([], n);
     // this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
+  }
+
+  checkElementExists(cs: CisloSvazku) {
+    this.service.searchIssueByDate(this.datePipe.transform(cs.datum_vydani, 'yyyyMMdd'), this.state.currentVolume.id_titul)
+      .subscribe((docs: any[]) => {
+        if (docs.length > 0) {
+          let found = false;
+          docs.forEach((doc: Issue) => {
+            console.log(doc.exemplare);
+            const exe: Exemplar = doc.exemplare.find(ex => ex.carovy_kod === this.state.currentVolume.carovy_kod);
+            if (exe) {
+              cs.issue = Object.assign({}, doc);
+              cs.exemplar = Object.assign({}, exe);
+              found = true;
+            }
+          });
+
+          if (!found) {
+            // Issue exists but not the exemplar
+            cs.id_issue = docs[0].id;
+            cs.issue = Object.assign({}, docs[0]);
+            cs.exemplar = new Exemplar();
+            cs.exemplar.carovy_kod = this.state.currentVolume.carovy_kod;
+          }
+        } else {
+          cs.exemplar = new Exemplar();
+          cs.exemplar.carovy_kod = this.state.currentVolume.carovy_kod;
+        }
+      });
+    // if (!cs.exemplar) {
+    //   const exe: Exemplar = cs.issue.exemplare.find(ex => ex.carovy_kod === this.state.currentVolume.carovy_kod);
+    //   if (exe) {
+    //     cs.exemplar = Object.assign({}, exe);
+    //   } else {
+    //     cs.exemplar = new Exemplar();
+    //     cs.exemplar.carovy_kod = this.state.currentVolume.carovy_kod;
+    //   }
+    // }
   }
 
   addIssue(element: CisloSvazku, idx: number) {
@@ -729,6 +782,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
         carKod: this.state.currentVolume.carovy_kod
       }
     });
+  }
+
+  log(element) {
+    console.log(element);
   }
 
 }

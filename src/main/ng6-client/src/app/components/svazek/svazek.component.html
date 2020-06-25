@@ -224,7 +224,7 @@
             <div>{{ 'desc.number_exists' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox [(ngModel)]="element.numExists"></mat-checkbox>
+            <mat-checkbox [(ngModel)]="element.numExists" (change)="checkElementExists(element)"></mat-checkbox>
           </td>         
         </ng-container>
 
