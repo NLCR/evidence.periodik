@@ -103,6 +103,9 @@ import { SvazekOverviewComponent } from './components/svazek-overview/svazek-ove
 import { PromptDialogComponent } from './components/prompt-dialog/prompt-dialog.component';
 
 
+import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
+
+
 registerLocaleData(localeCs, 'cs');
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -116,6 +119,8 @@ export function createTranslateLoader(http: HttpClient) {
 const providers: any[] = [
   { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
   { provide: MAT_DATE_LOCALE, useValue: 'cs-CZ' },
+  {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+  {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
   // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   { provide: APP_INITIALIZER, useFactory: (config: AppConfiguration) => () => config.load(), deps: [AppConfiguration], multi: true },
   HttpClient, DatePipe, AppConfiguration, AppState, AppService, AuthGuard];
