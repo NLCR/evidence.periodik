@@ -291,12 +291,12 @@ export class AppService {
 
   saveIssue(issue: Issue): Observable<any> {
     if (this.isIssueValid(issue)) {
-      const url = 'index';
+      const url = 'index?action=SAVE_ISSUE';
       const params: HttpParams = new HttpParams()
         .set('action', 'SAVE_ISSUE')
         .set('json', JSON.stringify(issue));
 
-      return this.http.get(url, { params });
+      return this.http.post(url, issue);
     } else {
       return of('error');
     }

@@ -128,7 +128,12 @@ public class IndexServlet extends HttpServlet {
         JSONObject json = new JSONObject();
         try {
           Indexer indexer = new Indexer();
-          JSONObject jo = new JSONObject(req.getParameter("json"));
+          JSONObject jo;
+          if (req.getMethod().equals("POST")) {
+            jo = new JSONObject(IOUtils.toString(req.getInputStream(), "UTF-8"));
+          } else {
+            jo = new JSONObject(req.getParameter("json"));
+          }
           json.put("save issue", indexer.fromJSON(jo));
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);

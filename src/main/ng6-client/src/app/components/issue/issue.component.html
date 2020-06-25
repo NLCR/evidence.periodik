@@ -128,7 +128,7 @@
         </mat-expansion-panel-header>
 
         <mat-form-field *ngIf="!changingLang">
-          <mat-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav">
+          <mat-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav" multiple>
             <mat-label>{{ 'Stav' | translate }}</mat-label>
             <mat-option *ngFor="let stav of state.stavy" [value]="stav">
               {{ 'record.StavIssue.' + stav | translate }}

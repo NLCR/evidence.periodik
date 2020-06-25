@@ -53,7 +53,7 @@
   <div fxLayout="row" fxLayoutGap="16px">
     <mat-form-field fxFlex="33.3333%">
       <mat-label>{{ 'desc.select_state' | translate }}</mat-label>
-      <mat-select [id]="'stav'" [name]="'stav'" [(ngModel)]="exemplar.stav">
+      <mat-select [id]="'stav'" [name]="'stav'" [(ngModel)]="exemplar.stav" multiple>
         <mat-option *ngFor="let stav of state.stavy" [value]="stav">
           {{ 'record.StavIssue.' + stav | translate }}
         </mat-option>
@@ -76,14 +76,32 @@
     </mat-form-field>
   </div>
   
-  <div *ngIf="showPages">
+  <!-- <div *ngIf="showPages">
     <span class="app-font-bold">{{ 'record.lost_pages' | translate }}</span>
     <div class="app-grid-wrapper">
       <div *ngFor="let page of pagesRange">
         <mat-checkbox [id]="'pg'+page.label" [(ngModel)]="page.sel">{{ page.label }}</mat-checkbox>
       </div>
     </div>
-  </div> 
+  </div>  -->
+
+  <div *ngIf="showPages">
+    <span class="app-font-bold">{{ 'record.pages_missing' | translate }}</span>
+    <div class="app-grid-wrapper">
+      <div *ngFor="let page of exemplar.pagesRange.missing">
+        <mat-checkbox [id]="'pgm'+page.label" [(ngModel)]="page.sel">{{ page.label }}</mat-checkbox>
+      </div>
+    </div>
+
+    <span class="app-font-bold">{{ 'record.pages_damaged' | translate }}</span>
+    <div class="app-grid-wrapper">
+      <div *ngFor="let page of exemplar.pagesRange.damaged">
+        <mat-checkbox [id]="'pgd'+page.label" [(ngModel)]="page.sel">{{ page.label }}</mat-checkbox>
+      </div>
+    </div>
+  </div>
+
+
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="ok()">OK</button>
