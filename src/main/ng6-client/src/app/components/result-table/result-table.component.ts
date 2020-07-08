@@ -29,7 +29,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'nazev', 'vydani'];
   header = '';
   dataSource: MatTableDataSource<Issue>;
-  loading: boolean;
+  loading: boolean = true;
 
   constructor(
     public dialog: MatDialog,
@@ -42,6 +42,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     // this.dataSource = new MatTableDataSource([]);
+    this.data = [];
     this.setData();
 
     this.subscriptions.push(this.state.searchChanged.subscribe(res => {
@@ -59,7 +60,6 @@ export class ResultTableComponent implements OnInit, OnDestroy {
       s.unsubscribe();
     });
     this.subscriptions = [];
-    console.log(this.subscriptions);
   }
 
   addColumn(field: string) {

@@ -50,10 +50,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   setHeader() {
     this.header = '';
-    const data = this.state.searchResults.response['docs'];
-    this.setCommonColumns(data, 'meta_nazev');
-    this.setCommonColumns(data, 'mutace');
-    this.setCommonColumns(data, 'vydani');
+    const data = this.state.searchResults.response.docs;
+    if (data && data.length > 0) {
+      this.setCommonColumns(data, 'meta_nazev');
+      this.setCommonColumns(data, 'mutace');
+      this.setCommonColumns(data, 'vydani');
+    }
   }
 
   setCommonColumns(data: any, field: string) {
@@ -182,6 +184,6 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(AddVdkExComponent, {
       width: '650px'
     });
-    //this.modalService.open(AddVdkExComponent, { 'state': this.state, 'service': this.service });
+    // this.modalService.open(AddVdkExComponent, { 'state': this.state, 'service': this.service });
   }
 }
