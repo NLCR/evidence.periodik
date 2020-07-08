@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ViewChild} from '@angular/core';
-import {AppState} from '../../app.state';
+import { ViewChild } from '@angular/core';
+import { AppState } from '../../app.state';
 import { first } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/shared/authentication.service';
 import { Router } from '@angular/router';
@@ -13,8 +13,8 @@ import { AppConfiguration } from 'src/app/app-configuration';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  
-  //@ViewChild('loginuser') loginuser: any;
+
+  @ViewChild('loginuser', { static: true }) loginuser: any;
   error = false;
   loginHttpError = false;
   loading = false;
@@ -29,39 +29,42 @@ export class LoginComponent implements OnInit {
     public config: AppConfiguration) { }
 
   ngOnInit() {
-  }
-
-  focusu(){
     setTimeout(() => {
-        //this.loginuser.nativeElement.focus();
-      }, 100);
+      this.loginuser.nativeElement.focus();
+    }, 100);
   }
 
-  focusp(e, el){
-      el.focus();
+  focusu() {
+    setTimeout(() => {
+      this.loginuser.nativeElement.focus();
+    }, 100);
+  }
+
+  focusp(e, el) {
+    el.focus();
   }
 
   login() {
     // this.service.login();
-        this.loading = true;
+    this.loading = true;
     const pwd = '' + Md5.hashStr(this.pwd);
     this.auth.login(this.username, pwd)
-    .pipe(first())
-    .subscribe(
-      data => {
-        if (data.error) {
+      .pipe(first())
+      .subscribe(
+        data => {
+          if (data.error) {
             this.error = data.error;
-        } else {
+          } else {
             if (this.state.redirectUrl) {
-                this.router.navigate([this.state.redirectUrl]);
+              this.router.navigate([this.state.redirectUrl]);
             }
-        }
-        this.loading = false;
-    },
-    error => {
-        console.log(error);
-        this.error = error;
-        this.loading = false;
-    });
+          }
+          this.loading = false;
+        },
+        error => {
+          console.log(error);
+          this.error = error;
+          this.loading = false;
+        });
   }
 }

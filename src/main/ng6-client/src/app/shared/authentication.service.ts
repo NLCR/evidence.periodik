@@ -18,11 +18,13 @@ export class AuthenticationService {
         private state: AppState,
         private config: AppConfiguration) {
         const user: User = JSON.parse(localStorage.getItem('currentUser'));
-        if (!user.date) {
-            user.date = new Date();
-            localStorage.setItem('currentUser', JSON.stringify(user));
-        } else {
-            user.date = new Date(user.date);
+        if (user) {
+            if (!user.date) {
+                user.date = new Date();
+                localStorage.setItem('currentUser', JSON.stringify(user));
+            } else {
+                user.date = new Date(user.date);
+            }
         }
         this.currentUserSubject = new BehaviorSubject<User>(user);
         this.currentUser = this.currentUserSubject.asObservable();
@@ -66,6 +68,7 @@ export class AuthenticationService {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');
         this.state.user = null;
+        this.state.logged = false;
         this.currentUserSubject.next(null);
     }
 }

@@ -32,7 +32,7 @@
     </span>
     <ng-container *ngIf="state.logged">
       <a mat-flat-button [matMenuTriggerFor]="menu" class="app-user">
-        <mat-icon>{{ config.icons.person }}</mat-icon> {{ state.user.nazev }}
+        <mat-icon>{{ config.icons.person }}</mat-icon> {{ state.user?.nazev }}
       </a>
       <mat-menu #menu="matMenu">
         <button mat-menu-item routerLink="profile">{{ 'navbar.user_profile' | translate }}</button>
