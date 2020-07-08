@@ -69,9 +69,9 @@
       </th>
       <td mat-cell *matCellDef="let row">
         {{ row.exemplare ? row.exemplare.length : 0 }} 
-        <a (click)="addClick(row)" [matTooltip]="'desc.add_specimen' | translate" matTooltipPosition="above">
+        <!-- <a (click)="addClick(row)" [matTooltip]="'desc.add_specimen' | translate" matTooltipPosition="above">
           <mat-icon>{{ config.icons.add_circle }}</mat-icon>
-        </a>
+        </a> -->
         <a [matTooltip]="'desc.edit_record' | translate" matTooltipPosition="above" (click)="viewIssue(row)">
           <mat-icon>{{ config.icons.edit_issue }}</mat-icon>
         </a>
