@@ -10,7 +10,7 @@
         {{day | date: 'dd'}}
       </div>
     </div>
-    <div fxFlexAlign="right" class="app-calendar-day-content-menu">
+    <!-- <div fxFlexAlign="right" class="app-calendar-day-content-menu">
       <a [matMenuTriggerFor]="menu">
         <mat-icon>{{ config.icons.more_vert }}</mat-icon>
       </a>
@@ -19,7 +19,7 @@
         <button mat-menu-item>{{ 'button.add_background' | translate }}</button>
         <button mat-menu-item>{{ 'button.delete_all_mutations' | translate }}</button>
       </mat-menu>
-    </div>
+    </div> -->
   </div>
   <div *ngFor="let e of issues; let idx = index" class="app-calendar-day-content-item">
     <div fxLayout="row" *ngIf="idx < 3" [class]="'app-state-'+e.state" [routerLink]="['/issue', e.id]">
