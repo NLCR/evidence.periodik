@@ -18,6 +18,11 @@
   </div>
   <div>
     <strong>{{ 'record.mutace' | translate}}:</strong> {{ volume.mutace }}
+
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of mutace">
+      <div fxFlex="100px">{{f.name}}</div>
+      <div fxFlex="100px">{{f.value}}x</div>
+    </div>
   </div>
   <div>
     <strong>{{ 'record.year' | translate}}:</strong>
