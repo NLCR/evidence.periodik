@@ -8,6 +8,6 @@ export class User {
   poznamka: string;
   active: boolean;
   authdata?: string;
-
+  date: Date;
 
 }

@@ -14,12 +14,21 @@ export class BasicAuthInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // add authorization header with basic auth credentials if available
         const currentUser = this.authenticationService.currentUserValue;
-        if (currentUser && currentUser.authdata) {
-            request = request.clone({
-                setHeaders: { 
-                    Authorization: `Basic ${currentUser.authdata}`
-                }
-            });
+        if (this.config.configured && currentUser && currentUser.authdata) {
+            // Check expired. Configuration in minutes
+            const expiredTime = this.config.expiredTime * 1000 * 60;
+
+            if ((new Date().getTime() - currentUser.date.getTime()) > expiredTime) {
+                console.log('EXPIRED');
+                this.authenticationService.logout();
+            } else {
+                this.authenticationService.renewDate();
+                request = request.clone({
+                    setHeaders: {
+                        Authorization: `Basic ${currentUser.authdata}`
+                    }
+                });
+            }
         }
 
         if (request.url.startsWith('/api')) {

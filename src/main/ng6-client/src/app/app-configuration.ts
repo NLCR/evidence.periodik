@@ -10,6 +10,8 @@ import { Configuration } from './shared/configuration';
     private config: Configuration;
     public invalidServer: boolean;
 
+    public configured: boolean;
+
     public get defaultLang() {
         return this.config.defaultLang;
     }
@@ -53,6 +55,10 @@ import { Configuration } from './shared/configuration';
         return this.config.icons;
     }
 
+    public get expiredTime() {
+        return this.config.expiredTime;
+    }
+
     /**
      * List the files holding section configuration in assets/configs folder
      * ['search'] will look for /assets/configs/search.json
@@ -72,6 +78,7 @@ import { Configuration } from './shared/configuration';
             .toPromise()
             .then(cfg => {
                 this.config = cfg as Configuration;
+                this.configured = true;
             }).then(() => {
                 return this.loadConfigs();
             });

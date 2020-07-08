@@ -4,6 +4,7 @@
   "searchParams": {
     "rows": 100
   },
+  "expiredTime": 5,
   "vdkFormats":["CISLO", "MESIC", "MESIC_SLOVA"],
   "periodicity": [
     "P1D","P1W",

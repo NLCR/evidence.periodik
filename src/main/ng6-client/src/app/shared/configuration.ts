@@ -15,4 +15,5 @@ export class Configuration {
   znak_oznaceni_vydani: string[];
   test: boolean;
   icons: {[key: string]:string};
+  expiredTime: number;
 }

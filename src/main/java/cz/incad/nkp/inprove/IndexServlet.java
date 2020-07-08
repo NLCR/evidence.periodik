@@ -66,7 +66,8 @@ public class IndexServlet extends HttpServlet {
         }
 
         Actions actionToDo = Actions.valueOf(actionNameParam.toUpperCase());
-        if (LoginController.isLogged(req) || actionToDo.equals(Actions.SPECIAL_DAYS) || isLocalhost) {
+        System.out.println(UsersController.isLogged(req));
+        if (UsersController.isLogged(req) || actionToDo.equals(Actions.SPECIAL_DAYS) || isLocalhost) {
           actionToDo.doPerform(req, resp);
         } else {
           resp.setContentType("application/json;charset=UTF-8");
