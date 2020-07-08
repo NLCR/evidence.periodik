@@ -456,8 +456,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
       }
     });
 
-    valid = false;
-
     if (!valid) {
       this.loading = false;
       return;
