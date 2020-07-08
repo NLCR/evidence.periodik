@@ -45,7 +45,6 @@ export class CisloSvazku {
           this.poznamka = ex.poznamka ? ex.poznamka : '';
           this.numExists = true;
           if (ex.oznaceni) {
-
             this.znak_oznaceni_vydani = ex.oznaceni;
           }
           if (ex.stav) {

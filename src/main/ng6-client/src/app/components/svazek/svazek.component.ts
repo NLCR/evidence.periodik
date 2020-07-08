@@ -161,6 +161,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
           while (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') === this.datePipe.transform(dt, 'yyyy-MM-dd')) {
             const cs = new CisloSvazku(issue, this.state.currentVolume.carovy_kod, odd);
             this.cislaVeSvazku.push(cs);
+            // console.log(cs.exemplar);
             idx++;
             issue = res[idx];
           }
@@ -423,19 +424,21 @@ export class SvazekComponent implements OnInit, OnDestroy {
           ex.vlastnik = this.state.currentVolume.vlastnik;
           ex.carovy_kod = carovy_kod;
           ex.signatura = this.state.currentVolume.signatura;
-
           issue.exemplare.push(ex);
         } else {
           ex = issue.exemplare[idx];
         }
 
-        ex.oznaceni = cs.znak_oznaceni_vydani;
+        const origStav = Object.assign([], ex.stav);
+
         if (cs.exemplar) {
           ex.pages = Object.assign({}, cs.exemplar.pages);
           ex.stav_popis = cs.exemplar.stav_popis;
         }
 
+        ex.oznaceni = cs.znak_oznaceni_vydani;
         ex.stav = [];
+
         if (cs.destroyedPages) { ex.stav.push('PP'); }
         if (cs.degradated) { ex.stav.push('Deg'); }
         if (cs.missingPages) { ex.stav.push('ChS'); }
@@ -445,9 +448,15 @@ export class SvazekComponent implements OnInit, OnDestroy {
         if (cs.wronglyBound) { ex.stav.push('ChSv'); }
         if (cs.censored) { ex.stav.push('Cz'); }
 
+        if (ex.stav.length === 0 && origStav.length > 0) {
+          ex.stav.push('OK');
+        }
+
         issues.push(issue);
       }
     });
+
+    valid = false;
 
     if (!valid) {
       this.loading = false;
