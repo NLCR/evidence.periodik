@@ -44,9 +44,7 @@ export class CisloSvazku {
           this.exemplar = ex;
           this.poznamka = ex.poznamka ? ex.poznamka : '';
           this.numExists = true;
-          if (ex.oznaceni) {
-            this.znak_oznaceni_vydani = ex.oznaceni;
-          }
+          this.znak_oznaceni_vydani = ex.oznaceni;
           if (ex.stav) {
             this.destroyedPages = ex.stav.includes('PP');
             this.degradated = ex.stav.includes('Deg');

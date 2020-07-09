@@ -413,7 +413,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         issue.podnazev = cs.podnazev;
         issue.pocet_stran = cs.pocet_stran;
         issue.vydani = cs.vydani;
-        issue.znak_oznaceni_vydani = cs.znak_oznaceni_vydani;
+        // issue.znak_oznaceni_vydani = cs.znak_oznaceni_vydani;
 
         // update exemplar.
         // pokud neni, pridame
