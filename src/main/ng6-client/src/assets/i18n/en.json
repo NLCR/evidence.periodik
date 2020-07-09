@@ -4,7 +4,7 @@
     "title": "Registration of periodicals",
     "title1": "Registration",
     "title2": "of periodicals",
-    "desc": "system for searching in the registration of periodicals"
+    "desc": "system for managing the registration of periodicals"
   },
   "route": {
     "home": "home page",

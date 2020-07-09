@@ -19,8 +19,9 @@
     <app-toolbar-count></app-toolbar-count>
   </div>
   <div fxFlex class="app-fx-right">
+    <span *ngIf="state.currentTitul" class="app-font-bold">{{ state.currentTitul.meta_nazev }}</span>
     <!-- <app-toolbar-pagination-result></app-toolbar-pagination-result> -->
-    <span class="app-font-bold" [innerHtml]="header" ></span>
+    <!-- <span class="app-font-bold" [innerHtml]="header" ></span> -->
   </div>
 </mat-toolbar>
 

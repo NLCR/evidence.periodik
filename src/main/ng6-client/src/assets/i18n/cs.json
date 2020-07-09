@@ -4,7 +4,7 @@
     "title": "Evidence periodik",
     "title1": "Evidence",
     "title2": "periodik",
-    "desc": "systém pro vyhledávání v evidenci periodik"
+    "desc": "systém pro správu evidenci periodik"
   },
   "route": {
     "home": "domovská stránka",
