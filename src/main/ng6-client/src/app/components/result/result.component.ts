@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from '../../app.service';
 import { AppState } from '../../app.state';
 import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-result',
@@ -12,7 +13,10 @@ export class ResultComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
-  constructor(private service: AppService, public state: AppState) { }
+  constructor(
+    private route: ActivatedRoute,
+    private service: AppService, 
+    public state: AppState) { }
 
   ngOnInit() {
     this.loadResultItems();
@@ -29,11 +33,9 @@ export class ResultComponent implements OnInit, OnDestroy {
   }
 
   loadResultItems() {
-
-    //  this.results = this.http.get("../../assets/results.json");
-    this.service.search().subscribe(res => {
+    const idTitul = this.route.snapshot.paramMap.get('id');
+    this.service.searchIssuesOfTitul(idTitul).subscribe(res => {
       this.state.setSearchResults(res);
-      //this.docs = this.state.
     });
   }
 

@@ -7,7 +7,7 @@ import { Titul } from 'src/app/models/titul';
 import { Volume } from 'src/app/models/volume';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource, MatPaginator, MatDialog, MatDatepickerInputEvent, MatDatepicker } from '@angular/material';
+import { MatTableDataSource, MatPaginator, MatDialog, MatDatepickerInputEvent, MatDatepicker, PageEvent } from '@angular/material';
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
 
 import { Issue } from 'src/app/models/issue';
@@ -110,6 +110,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
   endDate = new FormControl(new Date());
   now = new Date();
 
+  rows: number = 25;
+  page: number = 0;
+  numFound: number;
+
   constructor(
     public dialog: MatDialog,
     private overlay: Overlay,
@@ -141,12 +145,22 @@ export class SvazekComponent implements OnInit, OnDestroy {
     return arr;
   }
 
+  
+
+  pageChanged(e: PageEvent) {
+    this.rows = e.pageSize;
+    this.page = e.pageIndex;
+    
+    // this.loadIssues();
+  }
+
   loadIssues() {
     this.service.getIssuesOfVolume(this.state.currentVolume).subscribe(res => {
       const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
+      this.numFound = res.numFound;
       this.cislaVeSvazku = [];
       let idx = 0;
-      let issue: Issue = res[idx];
+      let issue: Issue = res.docs[idx];
       let odd = true;
       dates.forEach((dt) => {
         if (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') !== dt) {
@@ -163,14 +177,14 @@ export class SvazekComponent implements OnInit, OnDestroy {
             this.cislaVeSvazku.push(cs);
             // console.log(cs.exemplar);
             idx++;
-            issue = res[idx];
+            issue = res.docs[idx];
           }
         }
         odd = !odd;
       });
 
       this.dsIssues = new MatTableDataSource(this.cislaVeSvazku);
-      this.dsIssues.paginator = this.paginator;
+      // this.dsIssues.paginator = this.paginator;
       this.loading = false;
     });
   }

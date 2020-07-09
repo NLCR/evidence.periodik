@@ -153,13 +153,13 @@ export class AppService {
     return this.http.get(url, { params });
   }
 
-  getIssuesOfVolume(volume: Volume): Observable<any[]> {
+  getIssuesOfVolume(volume: Volume): Observable<any> {
     let params: HttpParams = new HttpParams();
 
     params = new HttpParams()
       .set('q', volume.carovy_kod)
       .set('wt', 'json')
-      .set('rows', '200')
+      .set('rows', '1000')
       .set('fl', '*,exemplare:[json], pages:[json]')
       .set('sort', 'datum_vydani_den asc, vydani desc')
       .set('fq', 'id_titul:"' + volume.id_titul + '"')
@@ -169,7 +169,7 @@ export class AppService {
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
-        return res.response.docs;
+        return res.response;
       }));
   }
 
@@ -503,6 +503,13 @@ export class AppService {
   search() {
     const url = '/api/search/issue/permonik';
     const params = this.doSearchParams();
+    return this.http.get(url, { params });
+  }
+
+  searchIssuesOfTitul(id: string) {
+    const url = '/api/search/issue/permonik';
+    const params = this.doSearchParams()
+     .set('fq', 'id_titul:"' + id + '"');
     return this.http.get(url, { params });
   }
 

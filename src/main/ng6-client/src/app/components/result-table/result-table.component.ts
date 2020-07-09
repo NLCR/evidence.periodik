@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatDialog, PageEvent } from '@angular/material';
 import { Input } from '@angular/core';
 import { Issue } from '../../models/issue';
@@ -21,7 +21,7 @@ import { SvazekOverviewComponent } from '../svazek-overview/svazek-overview.comp
 })
 export class ResultTableComponent implements OnInit, OnDestroy {
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild('paginator', { static: true }) paginator: MatPaginator;
   subscriptions: Subscription[] = [];
   data: Issue[];
   vlastnici: { name: string, collapsed: boolean }[] = [];
@@ -32,6 +32,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   loading: boolean = true;
 
   constructor(
+    private cdr: ChangeDetectorRef,
     public dialog: MatDialog,
     private router: Router,
     public state: AppState,
@@ -73,8 +74,12 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   }
 
   setData() {
+
     this.dataSource = null;
     this.loading = true;
+    if (!this.state.searchResults) {
+      return;
+    }
     // Extract exemplare per vlastnik
     this.vlastnici = [];
     this.exs = {};
@@ -101,23 +106,22 @@ export class ResultTableComponent implements OnInit, OnDestroy {
       if (issue.exemplare) {
         issue.exemplare = issue.exemplare.sort((ex1, ex2) => ex1.carovy_kod.localeCompare(ex2.carovy_kod) > 0 ? 1 : -1);
         const exs = issue.exemplare;
-        for (let i = 0; i < exs.length; i++) {
-          // let ck = exs[i].vlastnik + ' - ' + exs[i].signatura;
-          const vlastnik = exs[i].vlastnik;
+        exs.forEach(ex => {
+          const vlastnik = ex.vlastnik;
           if (!this.exs.hasOwnProperty(vlastnik) && vlastnik !== '') {
             this.vlastnici.push({ name: vlastnik, collapsed: false });
-            this.exs[vlastnik] = exs[i];
+            this.exs[vlastnik] = ex;
             this.displayedColumns.push(vlastnik);
           } else {
 
           }
-          // issue[ck] = i;
-        }
+        });
       }
     });
     this.dataSource = new MatTableDataSource(this.data);
-    this.dataSource.paginator = this.paginator;
     this.loading = false;
+    this.cdr.detectChanges();
+    this.dataSource.paginator = this.paginator;
   }
 
   cellColor(row: Issue, vlastnik: string): string {
@@ -315,7 +319,9 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   }
 
   pageChanged(e: PageEvent) {
-    this.state.pageIndex = e.pageIndex;
+    // this.state.pageIndex = e.pageIndex;
+    this.state.rows = e.pageSize;
+    this.state.gotoPage(e.pageIndex);
   }
 
 }

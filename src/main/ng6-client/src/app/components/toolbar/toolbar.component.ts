@@ -9,7 +9,7 @@ import { CloneDialogComponent } from '../clone-dialog/clone-dialog.component';
 import { CloneParams } from '../../models/clone-params';
 import { AddVdkExComponent } from '../add-vdk-ex/add-vdk-ex.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Exemplar } from 'src/app/models/exemplar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppConfiguration } from 'src/app/app-configuration';
@@ -33,12 +33,14 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     public state: AppState,
     public service: AppService,
     private router: Router,
+    private route: ActivatedRoute,
     public config: AppConfiguration) { }
 
   ngOnInit() {
     this.subscriptions.push(this.state.searchChanged.subscribe(res => {
       this.setHeader();
     }));
+    this.setHeader();
   }
 
   ngOnDestroy() {
@@ -71,6 +73,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   showResult() {
+    // this.state.setCurrentTitul(this.item);
     return this.state.activePage.indexOf('/result') > -1;
   }
 

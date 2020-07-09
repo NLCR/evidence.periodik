@@ -12,7 +12,7 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./result-item.component.scss']
 })
 export class ResultItemComponent implements OnInit {
-  @Input() item: Issue;
+  @Input() item: any;
 
   constructor(
     private datePipe: DatePipe,
@@ -25,37 +25,39 @@ export class ResultItemComponent implements OnInit {
   }
 
   dayToDate(d: string): string {
-    let date = Date.UTC(parseInt(d.substr(0, 4)), parseInt(d.substr(4, 2)), parseInt(d.substr(6, 2)));
+    const date = Date.UTC(parseInt(d.substr(0, 4)), parseInt(d.substr(4, 2)), parseInt(d.substr(6, 2)));
     return this.datePipe.transform(date, 'dd.MM.yyyy');
 
   }
 
   setTotals() {
-    this.service.getTitulTotals(this.item['id']).subscribe(res => {
+    this.service.getTitulTotals(this.item.id).subscribe((res: any) => {
 
-      this.item['total'] = res['response']['numFound'];
-      if (res['stats']) {
-        this.item['num_mutace'] = res['stats']['stats_fields']['mutace']['countDistinct'];
-        this.item['num_exemplare'] = res['stats']['stats_fields']['exemplare']['count'];
-        this.item['num_vlastniku'] = res['stats']['stats_fields']['vlastnik']['countDistinct'];
+      this.item.total = res.response.numFound;
+      if (res.stats) {
+        this.item.num_mutace = res.stats.stats_fields.mutace.countDistinct;
+        this.item.num_exemplare = res.stats.stats_fields.exemplare.count;
+        this.item.num_vlastniku = res.stats.stats_fields.vlastnik.countDistinct;
 
-        this.item['den_od'] = res['stats']['stats_fields']['den']['min'];
-        this.item['den_do'] = res['stats']['stats_fields']['den']['max'];
-        if (this.item['den_od'] !== null) {
-          if (this.item['den_od'] === this.item['den_do']) {
-            this.item['date'] = this.dayToDate(this.item['den_od']);
+        this.item.den_od = res.stats.stats_fields.den.min;
+        this.item.den_do = res.stats.stats_fields.den.max;
+        if (this.item.den_od !== null) {
+          if (this.item.den_od === this.item.den_do) {
+            this.item.date = this.dayToDate(this.item.den_od);
           } else {
-            this.item['date'] = this.dayToDate(this.item['den_od']) + ' - ' + this.dayToDate(this.item['den_do']);
+            this.item.date = this.dayToDate(this.item.den_od) + ' - ' + this.dayToDate(this.item.den_do);
           }
         }
       }
     });
   }
 
-  onClick() {
+  setTitul() {
 
-    this.addFilter(this.item['meta_nazev']);
-    this.router.navigate(['/result']);
+    // this.addFilter(this.item['meta_nazev']);
+    this.state.setCurrentTitul(this.item);
+
+    this.router.navigate(['/result', this.item.id]);
     //        if(this.item['num_exemplare'] > 1){
     //          this.addFilter(this.item['meta_nazev']);
     //        } else {
@@ -63,13 +65,13 @@ export class ResultItemComponent implements OnInit {
     //        }
   }
 
-  onCalendarClick() {
-    this.state.currentTitul = new Titul();
-    this.state.currentTitul.id = this.item.id;
-    this.state.currentTitul.meta_nazev = this.item.nazev;
-    this.router.navigate(['/calendar', this.item.id, this.state.calendarView, this.item['den_od']]);
+  // onCalendarClick() {
+  //   this.state.currentTitul = new Titul();
+  //   this.state.currentTitul.id = this.item.id;
+  //   this.state.currentTitul.meta_nazev = this.item.nazev;
+  //   this.router.navigate(['/calendar', this.item.id, this.state.calendarView, this.item['den_od']]);
 
-  }
+  // }
 
   addFilter(nazev: string) {
     this.state.addFilter('meta_nazev', nazev);

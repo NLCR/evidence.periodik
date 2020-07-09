@@ -76,7 +76,7 @@ export class AppState {
   numFound: number;
   pageIndex: number;
 
-  start_date: string; //yyyyMMdd
+  start_date: string; // yyyyMMdd
   end_date: string;
   start_year: string;
   end_year: string;
@@ -87,7 +87,7 @@ export class AppState {
 
   q: string;
   currentPage = 0;
-  rows = 500;
+  rows = 25;
   public filters: Filter[] = [];
 
   public filterByDate: boolean;
@@ -127,12 +127,12 @@ export class AppState {
 
   setSearchResults(res: any) {
     this.searchResults = res;
-    this.numFound = this.searchResults['response']['numFound'];
-    if (this.searchResults['stats']) {
-      const stats = this.searchResults['stats']['stats_fields']['datum_vydani_den'];
-      this.start_date = stats['min'];
-      this.end_date = stats['max'];
-      if (stats['min']) {
+    this.numFound = this.searchResults.response.numFound;
+    if (this.searchResults.stats) {
+      const stats = this.searchResults.stats.stats_fields.datum_vydani_den;
+      this.start_date = stats.min;
+      this.end_date = stats.max;
+      if (stats.min) {
         this.start_year = this.start_date.substring(0, 4);
         this.end_year = this.end_date.substring(0, 4);
       }
@@ -204,9 +204,9 @@ export class AppState {
 
   hasFacet(field: string): boolean {
     if (!this.searchResults) { return false; }
-    if (!this.searchResults['facet_counts']) { return false; }
-    if (!this.searchResults['facet_counts']['facet_fields'].hasOwnProperty(field)) { return false; }
-    return this.searchResults['facet_counts']['facet_fields']![field].length > 1;
+    if (!this.searchResults.facet_counts) { return false; }
+    if (!this.searchResults.facet_counts.facet_fields.hasOwnProperty(field)) { return false; }
+    return this.searchResults.facet_counts.facet_fields![field].length > 1;
   }
 
 }
