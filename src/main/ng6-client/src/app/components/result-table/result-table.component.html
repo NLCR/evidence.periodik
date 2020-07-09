@@ -107,9 +107,9 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row [ngClass]="{'app-even': idx%2 == 1}" *matRowDef="let row; let idx = index; columns: displayedColumns;"></tr>
   </table>
-  <mat-paginator [pageSizeOptions]="[25, 50, 100]"
-  [length]="state.numFound"
-  [pageSize]="state.rows"
+  <mat-paginator [pageSizeOptions]="[5, 25, 50, 100]"
+  
+  [pageSize]="25"
     [pageIndex]="state.currentPage"
     (page)="pageChanged($event)"
     showFirstLastButtons></mat-paginator>

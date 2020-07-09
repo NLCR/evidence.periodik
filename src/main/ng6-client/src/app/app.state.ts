@@ -87,7 +87,7 @@ export class AppState {
 
   q: string;
   currentPage = 0;
-  rows = 25;
+  rows = 5000;
   public filters: Filter[] = [];
 
   public filterByDate: boolean;

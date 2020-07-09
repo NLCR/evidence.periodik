@@ -21,7 +21,7 @@ import { SvazekOverviewComponent } from '../svazek-overview/svazek-overview.comp
 })
 export class ResultTableComponent implements OnInit, OnDestroy {
 
-  @ViewChild('paginator', { static: true }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   subscriptions: Subscription[] = [];
   data: Issue[];
   vlastnici: { name: string, collapsed: boolean }[] = [];
@@ -119,9 +119,9 @@ export class ResultTableComponent implements OnInit, OnDestroy {
       }
     });
     this.dataSource = new MatTableDataSource(this.data);
+    this.dataSource.paginator = this.paginator;
     this.loading = false;
     this.cdr.detectChanges();
-    this.dataSource.paginator = this.paginator;
   }
 
   cellColor(row: Issue, vlastnik: string): string {
@@ -319,9 +319,8 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   }
 
   pageChanged(e: PageEvent) {
-    // this.state.pageIndex = e.pageIndex;
-    this.state.rows = e.pageSize;
-    this.state.gotoPage(e.pageIndex);
+    // this.state.rows = e.pageSize;
+    // this.state.gotoPage(e.pageIndex);
   }
 
 }
