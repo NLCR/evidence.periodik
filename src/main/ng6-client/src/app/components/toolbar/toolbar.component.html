@@ -30,7 +30,7 @@
   <div fxFlex class="app-fx-left">
     <span>{{ 'desc.record' | translate }}: <strong>{{ state.currentTitul.meta_nazev }} {{ state.currentIssue.datum_vydani | date: "dd/MM/yyyy" }}</strong></span>
     <span class="app-pipe"></span>
-    <a routerLink="/result" [matTooltip]="'desc.display_table' | translate">
+    <a [routerLink]="'/result/'+ state.currentTitul.id" [matTooltip]="'desc.display_table' | translate">
       <mat-icon>{{ config.icons.view_table }}</mat-icon>
     </a>
   </div>

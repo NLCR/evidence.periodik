@@ -17,7 +17,7 @@
               {{ 'button.save_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}
             </button>
             <button mat-icon-button>
-              <mat-icon routerLink="/result" [matTooltip]="'desc.display_table' | translate">
+              <mat-icon [routerLink]="'/result/'+ state.currentTitul.id" [matTooltip]="'desc.display_table' | translate">
                 {{ config.icons.view_table }}</mat-icon>
               <mat-icon [matTooltip]="'desc.volume_overview' | translate" (click)="showSvazekOverview()"
                 matTooltipPosition="above">{{ config.icons.info }}</mat-icon>

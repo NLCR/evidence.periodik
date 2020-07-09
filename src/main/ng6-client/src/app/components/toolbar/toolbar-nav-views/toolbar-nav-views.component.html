@@ -6,6 +6,6 @@
   <mat-icon>{{ config.icons.view_list }}</mat-icon>
 </button>
 
-<button mat-icon-button  routerLink="/result" [matTooltip]="'Zobrazit tabulku' | translate">
+<button mat-icon-button [routerLink]="'/result/'+ state.currentTitul.id" [matTooltip]="'Zobrazit tabulku' | translate">
   <mat-icon>{{ config.icons.view_table }}</mat-icon>
 </button>
