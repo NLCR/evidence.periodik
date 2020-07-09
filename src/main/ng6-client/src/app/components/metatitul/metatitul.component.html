@@ -24,7 +24,7 @@
         </mat-form-field>
 
         <mat-form-field fxFlex>
-          <input matInput [(ngModel)]="titul.pocet_stran" name="pocet_stran" id="pocet_stran" [placeholder]="'record.pages_count' | translate" type="number" />
+          <input matInput [(ngModel)]="titul.pocet_stran" name="pocet_stran" id="pocet_stran" [placeholder]="'record.pages_count' | translate" type="number" min="1" />
         </mat-form-field>
 
         <mat-form-field fxFlex>

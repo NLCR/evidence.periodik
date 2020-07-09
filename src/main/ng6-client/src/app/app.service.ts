@@ -233,7 +233,7 @@ export class AppService {
     const url = '/api/search/titul/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
-      .set('sort', 'meta_nazev asc')
+      .set('sort', 'meta_nazev_sort asc')
       .set('rows', '500');
 
     return this.http.get(url, { params }).pipe(
