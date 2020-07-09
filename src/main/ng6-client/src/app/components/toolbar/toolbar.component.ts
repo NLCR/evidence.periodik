@@ -114,17 +114,18 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
     this.state.currentIssue.state = 'ok';
     this.service.saveCurrentIssue().subscribe(res => {
+      console.log(res);
       if (res === 'error') {
         alert('Invalid data!');
       } else if (res.error) {
-        this.service.showSnackBar('snackbar.error_saving_current_volume', res.error, true);
+        this.service.showSnackBar('snackbar.error_saving_current_issue', res.error, true);
       } else {
-        this.service.showSnackBar('snackbar.the_current_volume_was_saved_correctly');
+        this.service.showSnackBar('snackbar.the_current_issue_was_saved_correctly');
       }
     },
       (error: HttpErrorResponse) => {
         console.log(error);
-        this.service.showSnackBar('snackbar.error_saving_current_volume', error.message, true);
+        this.service.showSnackBar('snackbar.error_saving_current_issue', error.message, true);
       });
 
   }

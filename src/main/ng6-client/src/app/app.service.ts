@@ -276,19 +276,31 @@ export class AppService {
   }
 
 
-  isIssueValid(issue: Issue): {valid: boolean, why: string} {
-    const ret = {valid: true, why: ''};
+  isIssueValid(issue: Issue): {valid: boolean, error: string} {
+    const ret = {valid: true, error: ''};
     try {
       //      if (!this.isValidAsInteger(issue.rocnik)) {
       //        return false;
       //      }
+      if (!issue.datum_vydani) {
+        ret.valid = false;
+        ret.error = 'Pole datum_vydani je povinne';
+        return ret;
+      }
+      if (!issue.id_titul) {
+        ret.valid = false;
+        ret.error = 'Metatitul je povinne';
+        return ret;
+      }
       if (!this.isValidAsInteger(issue.druhe_cislo)) {
         ret.valid = false;
-        ret.why = 'Druhe cislo not nevalidni';
+        ret.error = 'Druhe cislo not nevalidni';
+        return ret;
       }
       if (!this.isValidAsInteger(issue.cislo)) {
         ret.valid = false;
-        ret.why = 'Pole cislo neni validni';
+        ret.error = 'Pole cislo neni validni';
+        return ret;
       }
 
       // Cistime stavy, aby nebyly "null"
@@ -300,7 +312,7 @@ export class AppService {
     } catch (ex) {
       console.log(ex);
       ret.valid = false;
-      ret.why = ex;
+      ret.error = ex;
     }
 
     return ret;
@@ -325,7 +337,7 @@ export class AppService {
 
       return this.http.post(url, issue);
     } else {
-      return of(isValid.why);
+      return of(isValid);
     }
   }
 

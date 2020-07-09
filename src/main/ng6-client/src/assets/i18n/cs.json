@@ -295,6 +295,8 @@
     "the_volume_was_saved_correctly": "Svazek byl úspěšně uložen",
     "error_saving_current_title": "Chyba při ukládání aktuálního titulu",
     "the_current_title_has_been_successfully_saved": "Aktuálního titul byl úspěšně uložen",
+    "error_saving_current_issue": "Chyba při ukládání aktuálního výtisku",
+    "the_current_issue_was_saved_correctly": "Aktuální výtisk byl úspěšně uložen",
     "error_saving_current_volume": "Chyba při ukládání aktuálního svazku",
     "the_current_volume_was_saved_correctly": "Aktuální svazek byl úspěšně uložen",
     "error_deleting_volume": "Chyba při smazání svazku"
