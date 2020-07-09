@@ -280,6 +280,7 @@
   },
   "snackbar": {
     "title_error_saving": "Error saving title",
+    "title_error_adding": "Error adding title",
     "title_saved": "Title saved correctly",
     "specimen_error_duplicate": "Error duplicate pecimen",
     "edition_error_adding": "Error adding edition",

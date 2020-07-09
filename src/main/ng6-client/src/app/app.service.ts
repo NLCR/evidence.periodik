@@ -66,7 +66,7 @@ export class AppService {
 
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
-        return res.response['docs'];
+        return res.response.docs;
       }));
   }
 
@@ -83,7 +83,7 @@ export class AppService {
 
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
-        return res.response['docs'];
+        return res.response.docs;
       }));
   }
 
@@ -102,7 +102,7 @@ export class AppService {
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
-        return res.response['docs'];
+        return res.response.docs;
       }));
   }
 
@@ -169,7 +169,7 @@ export class AppService {
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
-        return res.response['docs'];
+        return res.response.docs;
       }));
   }
 
@@ -189,7 +189,7 @@ export class AppService {
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
-        return res.response['docs'];
+        return res.response.docs;
       }));
   }
 
@@ -202,8 +202,8 @@ export class AppService {
       map((res: any) => {
         const t = new Titul();
         t.id = id;
-        if (res.response['numFound'] > 0) {
-          t.meta_nazev = res.response['docs'][0].meta_nazev;
+        if (res.response.numFound > 0) {
+          t.meta_nazev = res.response.docs[0].meta_nazev;
         }
         return t;
       }));
@@ -220,8 +220,8 @@ export class AppService {
       tap((res: any) => {
         const t = new Titul();
         t.id = id;
-        if (res.response['numFound'] > 0) {
-          t.meta_nazev = res.response['docs'][0].nazev;
+        if (res.response.numFound > 0) {
+          t.meta_nazev = res.response.docs[0].nazev;
         }
         return t;
 
@@ -238,7 +238,7 @@ export class AppService {
 
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
-        this.state.tituly = res.response['docs'];
+        this.state.tituly = res.response.docs;
       }));
   }
 
@@ -365,9 +365,9 @@ export class AppService {
     return this.http.get(url, { params });
   }
 
-  duplicateExemplar(issue: Issue, vlastnik: string, 
-    start_cislo: number, onspecial: boolean, 
-    exemplar: Exemplar, start: string, end: string): Observable<any> {
+  duplicateExemplar(issue: Issue, vlastnik: string,
+                    start_cislo: number, onspecial: boolean,
+                    exemplar: Exemplar, start: string, end: string): Observable<any> {
     // console.log(exemplar);
     const url = 'index';
     const params: HttpParams = new HttpParams()
@@ -407,7 +407,7 @@ export class AppService {
 
     const url = 'index?action=COLLECT_VDK_SET';
     const json = {issue, urlvdk, options};
-    
+
     return this.http.post(url, json);
 
   }
@@ -430,7 +430,7 @@ export class AppService {
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
-        return res.response['docs'];
+        return res.response.docs;
       }));
   }
 
@@ -443,7 +443,7 @@ export class AppService {
       .set('fq', 'id:"' + id + '"');
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
-        return res.response['docs'];
+        return res.response.docs;
       }));
   }
 
@@ -569,11 +569,11 @@ export class AppService {
   getTranslation(s: string): string {
     return this.translate.instant(s);
   }
-  
+
   getDaysArray(start, end) {
     const arr = [];
     const dtend = this.datePipe.transform(new Date(end), 'yyyy-MM-dd');
-    let dt = new Date(start);
+    const dt = new Date(start);
 
     while (this.datePipe.transform(dt, 'yyyy-MM-dd') <= dtend) {
       arr.push(this.datePipe.transform(new Date(dt), 'yyyy-MM-dd'));

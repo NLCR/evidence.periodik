@@ -69,6 +69,10 @@ export class MetatitulComponent implements OnInit, OnDestroy {
     });
   }
 
+  titulExists(name: string): boolean {
+    return this.state.tituly.find(t => t.meta_nazev === name) != null;
+  }
+
   newTitul() {
     const dialogRef = this.dialog.open(PromptDialogComponent, {
       width: '350px',
@@ -77,9 +81,13 @@ export class MetatitulComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.titul = new Titul();
-        this.titul.meta_nazev = result;
-        this.state.tituly.push(this.titul);
+        if (this.titulExists(result)) {
+          this.service.showSnackBar('snackbar.title_error_adding', 'Název existuje', true);
+        } else {
+          this.titul = new Titul();
+          this.titul.meta_nazev = result;
+          this.state.tituly.push(this.titul);
+        }
       }
     });
   }
