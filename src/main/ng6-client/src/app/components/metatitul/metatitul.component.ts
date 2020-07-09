@@ -32,13 +32,12 @@ export class MetatitulComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.load();
+    this.load(this.route.snapshot.paramMap.get('id'));
   }
 
-  load() {
+  load(id: string) {
     this.service.getTituly().subscribe(resp => {
-      if (!this.titul) {
-        const id = this.route.snapshot.paramMap.get('id');
+      //if (!this.titul) {
         let idx = 0;
         if (id) {
           idx = this.state.tituly.findIndex(t => t.id === id);
@@ -46,9 +45,13 @@ export class MetatitulComponent implements OnInit, OnDestroy {
         if (idx > -1) {
           this.loadTitul(this.state.tituly[idx]);
         }
-      }
+      //}
 
     });
+  }
+
+  selectTitul(id: string) {
+    this.titul = this.state.tituly.find(t => t.id === id);
   }
 
   loadTitul(t: Titul) {
@@ -64,7 +67,7 @@ export class MetatitulComponent implements OnInit, OnDestroy {
         this.service.showSnackBar('snackbar.title_error_saving', res.error, true);
       } else {
         this.service.showSnackBar('snackbar.title_saved');
-        this.load();
+        this.load(res.resp.id);
       }
     });
   }

@@ -179,7 +179,7 @@ public class IndexServlet extends HttpServlet {
           Indexer indexer = new Indexer();
           JSONObject jo = new JSONObject(req.getParameter("json"));
           LOGGER.log(Level.INFO, "getParameterMap: {0}", jo);
-          json.put("save titul", indexer.saveTitul(jo));
+          json.put("resp", indexer.saveTitul(jo));
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);
           json.put("error", ex.toString());

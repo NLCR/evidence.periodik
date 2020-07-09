@@ -563,7 +563,7 @@ public class Indexer {
     try (SolrClient solr = getClient()) {
       Titul titul = Titul.fromJSON(json);
       solr.addBean("titul", titul, 100);
-      ret.put("success", "titul saved");
+      ret.put("id", titul.id);
     } catch (SolrServerException | IOException ex) {
       ret.put("error", ex);
       LOGGER.log(Level.SEVERE, null, ex);
