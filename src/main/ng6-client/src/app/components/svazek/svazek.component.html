@@ -356,7 +356,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.destroyedPages" #dsp
-              (mouseenter)="viewPS(element, 'destroyedPages', dsp, infoPopup)"></mat-checkbox>
+              (mouseenter)="viewPS(element, 'destroyedPages', dsp, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -367,7 +367,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.degradated" #deg
-              (mouseenter)="viewPS(element, 'degradated', deg, infoPopup)"></mat-checkbox>
+              (mouseenter)="viewPS(element, 'degradated', deg, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -378,7 +378,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.missingPages" #mp
-              (mouseenter)="viewPS(element, 'missingPages', mp, infoPopup)"></mat-checkbox>
+              (mouseenter)="viewPS(element, 'missingPages', mp, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -389,7 +389,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousPaging" #ep
-              (mouseenter)="viewPS(element, 'erroneousPaging', ep, infoPopup)"></mat-checkbox>
+              (mouseenter)="viewPS(element, 'erroneousPaging', ep, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -400,7 +400,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousDate" #ed
-              (mouseenter)="viewPS(element, 'erroneousDate', ed, infoPopup)"></mat-checkbox>
+              (mouseenter)="viewPS(element, 'erroneousDate', ed, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -411,7 +411,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousNumbering" #en
-              (mouseenter)="viewPS(element, 'erroneousNumbering', en, infoPopup)"></mat-checkbox>
+              (mouseenter)="viewPS(element, 'erroneousNumbering', en, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -422,7 +422,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.wronglyBound" #wb
-              (mouseenter)="viewPS(element, 'wronglyBound', wb, infoPopup)"></mat-checkbox>
+              (mouseenter)="viewPS(element, 'wronglyBound', wb, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -433,7 +433,7 @@
           </th>
           <td mat-cell *matCellDef="let element">
             <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.censored" #cz
-              (mouseenter)="viewPS(element, 'censored', cz, infoPopup)"></mat-checkbox>
+              (mouseenter)="viewPS(element, 'censored', cz, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -461,7 +461,7 @@
   </div>
 </div>
 
-<ng-template #infoPopup>
+<ng-template #pagesPopup>
   <mat-card class="app-popover-card app-popover-card-missing">
     <mat-card-content [ngClass]="'app-clean-mg'">
       <mat-form-field>
@@ -477,7 +477,7 @@
       </ng-container>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-flat-button *ngIf="popShowPages" (click)="updatePop()">{{ 'button.update' | translate}}</button>
+      <button mat-flat-button *ngIf="popShowPages" (click)="updatePages()">{{ 'button.update' | translate}}</button>
       <button mat-flat-button (click)="closePop()">{{ 'button.close' | translate}}</button>
     </mat-card-actions>
   </mat-card>

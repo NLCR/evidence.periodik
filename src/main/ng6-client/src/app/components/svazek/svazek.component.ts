@@ -145,12 +145,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
     return arr;
   }
 
-  
+
 
   pageChanged(e: PageEvent) {
     this.rows = e.pageSize;
     this.page = e.pageIndex;
-    
+
     // this.loadIssues();
   }
 
@@ -415,57 +415,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
     let valid = true;
     this.dsIssues.data.forEach((cs: CisloSvazku) => {
       if (cs.numExists) {
-        if (!cs.cislo) {
-          this.service.showSnackBar('číslo vytisku je povinne', '', true);
-          valid = false;
+        const issue: Issue = this.cisloSvazkuToIssue(cs);
+        if (!issue) {
           return;
         }
-        const issue: Issue = Object.assign({}, cs.issue);
-        issue.cislo = cs.cislo;
-        issue.mutace = cs.mutace;
-        issue.nazev = cs.nazev;
-        issue.podnazev = cs.podnazev;
-        issue.pocet_stran = cs.pocet_stran;
-        issue.vydani = cs.vydani;
-        // issue.znak_oznaceni_vydani = cs.znak_oznaceni_vydani;
-
-        // update exemplar.
-        // pokud neni, pridame
-        const idx = issue.exemplare.findIndex(el => el.carovy_kod === carovy_kod);
-        let ex: Exemplar;
-        if (idx < 0) {
-          ex = new Exemplar();
-          ex.vlastnik = this.state.currentVolume.vlastnik;
-          ex.carovy_kod = carovy_kod;
-          ex.signatura = this.state.currentVolume.signatura;
-          issue.exemplare.push(ex);
-        } else {
-          ex = issue.exemplare[idx];
-        }
-
-        const origStav = Object.assign([], ex.stav);
-
-        if (cs.exemplar) {
-          ex.pages = Object.assign({}, cs.exemplar.pages);
-          ex.stav_popis = cs.exemplar.stav_popis;
-        }
-
-        ex.oznaceni = cs.znak_oznaceni_vydani;
-        ex.stav = [];
-
-        if (cs.destroyedPages) { ex.stav.push('PP'); }
-        if (cs.degradated) { ex.stav.push('Deg'); }
-        if (cs.missingPages) { ex.stav.push('ChS'); }
-        if (cs.erroneousPaging) { ex.stav.push('ChPag'); }
-        if (cs.erroneousDate) { ex.stav.push('ChDatum'); }
-        if (cs.erroneousNumbering) { ex.stav.push('ChCis'); }
-        if (cs.wronglyBound) { ex.stav.push('ChSv'); }
-        if (cs.censored) { ex.stav.push('Cz'); }
-
-        if (ex.stav.length === 0 && origStav.length > 0) {
-          ex.stav.push('OK');
-        }
-
         issues.push(issue);
       }
     });
@@ -485,6 +438,63 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
       // console.log(res);
     });
+
+  }
+
+  cisloSvazkuToIssue(cs: CisloSvazku): Issue {
+
+    const carovy_kod = this.state.currentVolume.carovy_kod;
+    if (!cs.cislo) {
+      this.service.showSnackBar('číslo vytisku je povinne', '', true);
+      return null;
+    }
+    const issue: Issue = Object.assign({}, cs.issue);
+    issue.cislo = cs.cislo;
+    issue.mutace = cs.mutace;
+    issue.nazev = cs.nazev;
+    issue.podnazev = cs.podnazev;
+    issue.pocet_stran = cs.pocet_stran;
+    issue.vydani = cs.vydani;
+    // issue.znak_oznaceni_vydani = cs.znak_oznaceni_vydani;
+
+    // update exemplar.
+    // pokud neni, pridame
+    const idx = issue.exemplare.findIndex(el => el.carovy_kod === carovy_kod);
+    let ex: Exemplar;
+    if (idx < 0) {
+      ex = new Exemplar();
+      ex.vlastnik = this.state.currentVolume.vlastnik;
+      ex.carovy_kod = carovy_kod;
+      ex.signatura = this.state.currentVolume.signatura;
+      issue.exemplare.push(ex);
+    } else {
+      ex = issue.exemplare[idx];
+    }
+
+    const origStav = Object.assign([], ex.stav);
+
+    if (cs.exemplar) {
+      ex.pages = Object.assign({}, cs.exemplar.pages);
+      ex.stav_popis = cs.exemplar.stav_popis;
+    }
+
+    ex.oznaceni = cs.znak_oznaceni_vydani;
+    ex.stav = [];
+
+    if (cs.destroyedPages) { ex.stav.push('PP'); }
+    if (cs.degradated) { ex.stav.push('Deg'); }
+    if (cs.missingPages) { ex.stav.push('ChS'); }
+    if (cs.erroneousPaging) { ex.stav.push('ChPag'); }
+    if (cs.erroneousDate) { ex.stav.push('ChDatum'); }
+    if (cs.erroneousNumbering) { ex.stav.push('ChCis'); }
+    if (cs.wronglyBound) { ex.stav.push('ChSv'); }
+    if (cs.censored) { ex.stav.push('Cz'); }
+
+    if (ex.stav.length === 0 && origStav.length > 0) {
+      ex.stav.push('OK');
+    }
+
+    return issue;
 
   }
 
@@ -725,7 +735,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.router.navigate(['/issue', issue.id]);
   }
 
-  updatePop() {
+  updatePages() {
 
     this.csEditing.exemplar.pages[this.editingProp] = [];
     this.pagesRange.forEach(p => {
@@ -734,8 +744,20 @@ export class SvazekComponent implements OnInit, OnDestroy {
       }
     });
     this.csEditing.exemplar.stav_popis = this.popText;
-    console.log(this.csEditing.exemplar);
-    this.closePop();
+    const issue: Issue = this.cisloSvazkuToIssue(this.csEditing);
+    if (!issue) {
+      return;
+    }
+    this.service.saveIssue(issue).subscribe(res => {
+      this.loading = false;
+      if (res.error) {
+        this.service.showSnackBar('snackbar.error_saving_volume', res.error, true);
+      } else {
+        this.service.showSnackBar('snackbar.the_volume_was_saved_correctly');
+      }
+      this.closePop();
+    });
+
   }
 
   updatePoznamka() {

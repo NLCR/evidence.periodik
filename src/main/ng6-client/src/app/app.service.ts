@@ -509,7 +509,7 @@ export class AppService {
   searchIssuesOfTitul(id: string) {
     const url = '/api/search/issue/permonik';
     const params = this.doSearchParams()
-     .set('fq', 'id_titul:"' + id + '"');
+     .append('fq', 'id_titul:"' + id + '"');
     return this.http.get(url, { params });
   }
 

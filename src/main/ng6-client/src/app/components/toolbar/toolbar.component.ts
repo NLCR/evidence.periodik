@@ -37,10 +37,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     public config: AppConfiguration) { }
 
   ngOnInit() {
-    this.subscriptions.push(this.state.searchChanged.subscribe(res => {
-      this.setHeader();
-    }));
-    this.setHeader();
+    // this.subscriptions.push(this.state.searchChanged.subscribe(res => {
+    //   this.setHeader();
+    // }));
   }
 
   ngOnDestroy() {
