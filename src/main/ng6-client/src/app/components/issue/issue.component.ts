@@ -268,6 +268,13 @@ export class IssueComponent implements OnInit {
     ex.oznaceni = new Array(e.length + 1).join(this.state.currentIssue.znak_oznaceni_vydani);
   }
 
+  // setDatum(element: string, event: MatDatepickerInputEvent<Date>) {
+  //   if (event.value) {
+  //     this.state.currentIssue.datum_vydani = this.datePipe.transform(event.value, 'yyyy-MM-dd');
+  //   }
+
+  // }
+
   onCalendarClick() {
     this.router.navigate([
       '/calendar',

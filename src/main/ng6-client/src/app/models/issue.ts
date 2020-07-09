@@ -11,7 +11,7 @@ export class Issue {
   podnazev: string = ""; //podnázev na titulní straně	text	Podnázev tak jak je na konkrétním čísle novin.
   vydani: string = ""; //vydání	text	název vydání tak jak je uveden na titulní straně
   mutace: string = ""; //mutace	text	název mutace
-  datum_vydani: Date = new Date(); //datum vydání	datum	
+  datum_vydani: Date; //datum vydání	datum	
   datum_vydani_den: string = ""; //datum vydání ve formatu yyyyMMdd	
   periodicita: string = "";
   cas_vydani: number = 0; //čas vydání	čas	generuje se (hlavně důležité v případě více vydání téže mutace v jednom dni) na základě názvu vydání. Bude existovat tabulka, která každému názvu vydání přiřadí čas kvůli řazení
@@ -45,11 +45,13 @@ export class Issue {
   fromJSON(json: any){
     let array = Object.getOwnPropertyNames(this);
     array.forEach(i => {
-      
       if(json.hasOwnProperty(i)){
         this[i] = json[i];
       }
     });
+    if (json.datum_vydani) {
+      this.datum_vydani = new Date(json.datum_vydani);
+    }
     return this;
   }
 }

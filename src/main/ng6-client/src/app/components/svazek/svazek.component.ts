@@ -768,7 +768,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   setVolumeDatum(element: string, event: MatDatepickerInputEvent<Date>) {
-    console.log(event.value, this.state.currentVolume[element]);
     if (event.value) {
       this.state.currentVolume[element] = this.datePipe.transform(event.value, 'yyyy-MM-dd');
     } else if (this.state.currentVolume[element]) {

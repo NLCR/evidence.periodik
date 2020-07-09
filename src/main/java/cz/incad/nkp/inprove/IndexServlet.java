@@ -66,7 +66,6 @@ public class IndexServlet extends HttpServlet {
         }
 
         Actions actionToDo = Actions.valueOf(actionNameParam.toUpperCase());
-        System.out.println(UsersController.isLogged(req));
         if (UsersController.isLogged(req) || actionToDo.equals(Actions.SPECIAL_DAYS) || isLocalhost) {
           actionToDo.doPerform(req, resp);
         } else {

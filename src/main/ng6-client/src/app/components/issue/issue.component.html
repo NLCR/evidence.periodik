@@ -14,11 +14,14 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field>
-      <input matInput [matDatepicker]="picker" [placeholder]="'desc.choose_date' | translate">
+    <mat-form-field *ngIf="state.isNewIssue">
+      <input matInput [matDatepicker]="picker" [placeholder]="'desc.choose_date' | translate"
+       [(ngModel)]="state.currentIssue.datum_vydani" 
+        id="datum_vydani" name="datum_vydani">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
+    
 
     <mat-form-field>
       <input matInput [placeholder]="'record.name_title_page' | translate" id="nazev" name="nazev" [(ngModel)]="state.currentIssue.nazev">
