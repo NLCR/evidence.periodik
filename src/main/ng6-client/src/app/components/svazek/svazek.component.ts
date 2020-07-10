@@ -648,15 +648,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
           cs.exemplar.carovy_kod = this.state.currentVolume.carovy_kod;
         }
       });
-    // if (!cs.exemplar) {
-    //   const exe: Exemplar = cs.issue.exemplare.find(ex => ex.carovy_kod === this.state.currentVolume.carovy_kod);
-    //   if (exe) {
-    //     cs.exemplar = Object.assign({}, exe);
-    //   } else {
-    //     cs.exemplar = new Exemplar();
-    //     cs.exemplar.carovy_kod = this.state.currentVolume.carovy_kod;
-    //   }
-    // }
   }
 
   addIssue(element: CisloSvazku, idx: number) {
