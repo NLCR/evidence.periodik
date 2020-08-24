@@ -2,6 +2,9 @@
 
 <div class="app-metatitul-wrapper" fxLayout="row">
   <div fxFlex="320px" class="app-fx-left">
+    <div style="margin: 16px 0 0 16px;">
+      <button mat-flat-button color="primary" (click)="newTitul()" type="button">{{ 'desc.add_new_title' | translate }}</button>
+    </div>
     <mat-list role="list">
       <mat-list-item role="listitem" *ngFor="let t of state.tituly; let idx=index" [class.app-active]="titul && t.id === titul.id">
         <ng-container [ngSwitch]="(titul && t.id === titul.id) || (!titul && idx===0)">
@@ -23,9 +26,10 @@
           <input matInput [(ngModel)]="titul.uuid" name="uuid" id="uuid" [placeholder]="'record.uuid_title' | translate" />
         </mat-form-field>
 
-        <mat-form-field fxFlex>
+        <!-- Odstraneno podle #138
+          <mat-form-field fxFlex>
           <input matInput [(ngModel)]="titul.pocet_stran" name="pocet_stran" id="pocet_stran" [placeholder]="'record.pages_count' | translate" type="number" min="1" />
-        </mat-form-field>
+        </mat-form-field> -->
 
         <mat-form-field fxFlex>
           <mat-label>{{ 'record.periodicita.placeholder' | translate }}</mat-label>
@@ -34,7 +38,6 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <button mat-flat-button color="primary" (click)="newTitul()" type="button">{{ 'desc.add_new_title' | translate }}</button>
       <button mat-flat-button color="primary" type="submit" [disabled]="!userForm.form.valid">{{ 'desc.save' | translate }}</button>
     </form>
   </div>

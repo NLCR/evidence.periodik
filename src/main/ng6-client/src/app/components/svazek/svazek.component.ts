@@ -540,6 +540,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
             is.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
             is.id_titul = this.state.currentVolume.id_titul;
             is.meta_nazev = this.state.currentVolume.titul.meta_nazev;
+            is.znak_oznaceni_vydani = this.state.currentVolume.znak_oznaceni_vydani;
             const ex = new Exemplar();
             ex.carovy_kod = this.state.currentVolume.carovy_kod;
             ex.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
@@ -568,6 +569,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         issue.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
         issue.id_titul = this.state.currentVolume.id_titul;
         issue.meta_nazev = this.state.currentVolume.titul.meta_nazev;
+        issue.znak_oznaceni_vydani = this.state.currentVolume.znak_oznaceni_vydani;
         const ex = new Exemplar();
         ex.carovy_kod = this.state.currentVolume.carovy_kod;
         ex.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
@@ -736,6 +738,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     });
     this.csEditing.exemplar.stav_popis = this.popText;
     const issue: Issue = this.cisloSvazkuToIssue(this.csEditing);
+    
     if (!issue) {
       return;
     }

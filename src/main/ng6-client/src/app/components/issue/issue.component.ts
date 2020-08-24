@@ -155,7 +155,7 @@ export class IssueComponent implements OnInit {
 
       this.state.currentIssue.periodicita = this.state.currentIssue.titul.periodicita;
 
-      this.state.currentIssue.pocet_stran = this.state.currentIssue.titul.pocet_stran;
+      // this.state.currentIssue.pocet_stran = this.state.currentIssue.titul.pocet_stran;
     }
   }
 

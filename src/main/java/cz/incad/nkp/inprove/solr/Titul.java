@@ -22,8 +22,10 @@ public class Titul {
   public String uuid;
   @Field
   public String periodicita;
-  @Field
-  public int pocet_stran;
+  
+  // Odstraneno podle #138
+//  @Field
+//  public int pocet_stran;
   
   
   public static Titul fromJSON(JSONObject json) {

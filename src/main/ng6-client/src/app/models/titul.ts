@@ -5,7 +5,7 @@ export class Titul {
   prilohy: string[]; //mozne prilohy
   
   periodicita: string = ""; //default periodicita
-  pocet_stran: number = 0; //default počet stran
+  // pocet_stran: number = 0; //default počet stran Odstraneno podle #138
   uuid: string = ""; //uuid titulu	text	pokud je to z Krameria
   
 }

@@ -1,6 +1,6 @@
 {
   "solrhost": "http://localhost:8983/solr/",
-  "idfields": ["id_titul", "nazev", "podnazev", "vydani", "mutace", "datum_vydani_den"],
+  "idfields": ["id_titul", "nazev", "podnazev", "vydani", "mutace", "datum_vydani_den", "znak_oznaceni_vydani"],
   "users":{
     "test": {"pwd": "test", "role": "user"}
   },

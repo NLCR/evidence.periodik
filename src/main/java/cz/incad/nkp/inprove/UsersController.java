@@ -90,6 +90,7 @@ public class UsersController {
 
       Options opts = Options.getInstance();
       SolrQuery query = new SolrQuery("*");
+      query.setRows(100);
       query.setSort(SolrQuery.SortClause.create("nazev", SolrQuery.ORDER.asc));
       try (HttpSolrClient client = new HttpSolrClient.Builder(opts.getString("solrHost", "http://localhost:8983/solr")).build()) {
         QueryRequest qreq = new QueryRequest(query);
