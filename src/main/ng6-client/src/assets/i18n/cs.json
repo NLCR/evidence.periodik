@@ -88,7 +88,9 @@
     "insert_next_edition": "Vložit další vydání",
     "edit_issue": "Editovat issue",
     "date": "Datum",
-    "number": "Číslo"
+    "number": "Číslo",
+    "renumber_up": "Automatické přečíslování na horu",
+    "renumber_down": "Automatické přečíslování na dolu"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."

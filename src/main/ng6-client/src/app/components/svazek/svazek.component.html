@@ -261,9 +261,15 @@
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
             <div>{{ 'desc.number' | translate }}</div>
           </th>
-          <td mat-cell *matCellDef="let element" class="app-edit-text">
+          <td mat-cell *matCellDef="let element; let idx=index" class="app-edit-text">
             <mat-form-field *ngIf="element.numExists" class="app-short-text">
-              <input type="text" matInput [(ngModel)]="element.cislo">
+              <input type="text" matInput [(ngModel)]="element.cislo" style="width :20px;">
+              <button mat-icon-button matSuffix (click)="reNumber(element, idx, false)" [attr.aria-label]="'desc.renumber_up' | translate" [matTooltip]="'desc.renumber_up' | translate" matTooltipPosition="above">
+                <mat-icon>keyboard_arrow_up</mat-icon>
+              </button>
+              <button mat-icon-button matSuffix (click)="reNumber(element, idx, true)" [attr.aria-label]="'desc.renumber_down' | translate" [matTooltip]="'desc.renumber_down' | translate" matTooltipPosition="above">
+                <mat-icon>keyboard_arrow_down</mat-icon>
+              </button>
             </mat-form-field>
           </td>
         </ng-container>

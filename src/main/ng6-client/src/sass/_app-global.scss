@@ -220,6 +220,12 @@ li.app-page-item label{
   }
 }
 
+.app-short-text{
+  .mat-form-field-suffix {
+    margin-left: 2px;
+  }
+}
+
 // mat list
 .mat-list {
   .mat-icon {

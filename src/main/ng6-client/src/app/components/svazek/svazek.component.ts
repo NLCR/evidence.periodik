@@ -652,6 +652,32 @@ export class SvazekComponent implements OnInit, OnDestroy {
       });
   }
 
+  reNumber(element: CisloSvazku, idx: number, down: boolean) {
+    console.log(idx);
+    const min = down ? idx : 0;
+    const max = down ? this.dsIssues.data.length : idx;
+    let curCislo = this.dsIssues.data[min].cislo;
+    // const maxCislo = this.dsIssues.data[min].cislo;
+    for (let i = min; i < max; i++) {
+      const cs: CisloSvazku = this.dsIssues.data[i];
+      console.log(i, cs.cislo);
+      if (cs.numExists) {
+        cs.cislo = curCislo;
+        curCislo++;
+      }
+      
+    }
+    // this.dsIssues.data.forEach((cs: CisloSvazku) => {
+    //   if (cs.numExists) {
+    //     const issue: Issue = this.cisloSvazkuToIssue(cs);
+    //     if (!issue) {
+    //       return;
+    //     }
+        
+    //   }
+    // });
+  }
+
   addIssue(element: CisloSvazku, idx: number) {
     const newEl = Object.assign({}, element);
     newEl.vydani = '';
