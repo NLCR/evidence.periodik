@@ -575,7 +575,7 @@ public class Indexer {
     JSONObject ret = new JSONObject();
     try (SolrClient solr = getClient()) {
       solr.deleteByQuery("issue", "id_titul:\"" + id + "\"", 100);
-      solr.deleteById("titul", id, 100);
+      solr.deleteByQuery("titul", "id:\"" + id + "\"", 100);
       ret.put("msg", "metatitul deleted");
     } catch (SolrServerException | IOException ex) {
       ret.put("error", ex);
