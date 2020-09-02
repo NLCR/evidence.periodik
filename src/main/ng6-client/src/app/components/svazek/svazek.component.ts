@@ -550,6 +550,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
             const cvs = new CisloSvazku(is, this.state.currentVolume.carovy_kod, odd);
             cvs.mutace = this.state.currentVolume.mutace;
             cvs.numExists = true;
+            cvs.vydaniExists = true;
             cvs.pocet_stran = p.pocet_stran;
             cvs.nazev = p.nazev;
             cvs.podnazev = p.podnazev;
@@ -559,6 +560,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
             inserted = true;
             this.cislaVeSvazku.push(cvs);
           }
+        } else {
+
         }
 
       });
@@ -579,6 +582,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         const cvs2 = new CisloSvazku(issue, this.state.currentVolume.carovy_kod, odd);
         cvs2.mutace = this.state.currentVolume.mutace;
         cvs2.numExists = false;
+        cvs2.vydaniExists = false;
         this.cislaVeSvazku.push(cvs2);
       }
 
@@ -660,22 +664,11 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // const maxCislo = this.dsIssues.data[min].cislo;
     for (let i = min; i < max; i++) {
       const cs: CisloSvazku = this.dsIssues.data[i];
-      console.log(i, cs.cislo);
       if (cs.numExists) {
         cs.cislo = curCislo;
         curCislo++;
       }
-      
     }
-    // this.dsIssues.data.forEach((cs: CisloSvazku) => {
-    //   if (cs.numExists) {
-    //     const issue: Issue = this.cisloSvazkuToIssue(cs);
-    //     if (!issue) {
-    //       return;
-    //     }
-        
-    //   }
-    // });
   }
 
   addIssue(element: CisloSvazku, idx: number) {
@@ -841,7 +834,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(SvazekOverviewComponent, {
       width: '650px',
       data: {
-        carKod: this.state.currentVolume.carovy_kod
+        carKod: this.state.currentVolume.carovy_kod,
+        idTitul: this.state.currentVolume.id_titul
       }
     });
   }

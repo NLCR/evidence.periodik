@@ -571,6 +571,19 @@ public class Indexer {
     return ret;
   }
 
+  public JSONObject deleteTitul(String id) {
+    JSONObject ret = new JSONObject();
+    try (SolrClient solr = getClient()) {
+      solr.deleteByQuery("issue", "id_titul:\"" + id + "\"", 100);
+      solr.deleteById("titul", id, 100);
+      ret.put("msg", "metatitul deleted");
+    } catch (SolrServerException | IOException ex) {
+      ret.put("error", ex);
+      LOGGER.log(Level.SEVERE, null, ex);
+    }
+    return ret;
+  }
+
   public static JSONObject indexJSON(JSONObject json, String core) {
     JSONObject ret = new JSONObject();
     UpdateResponse response;

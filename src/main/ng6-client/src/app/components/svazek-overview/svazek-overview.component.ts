@@ -24,7 +24,7 @@ export class SvazekOverviewComponent implements OnInit {
   vydani: { name: string, type: string, value: number }[] = [];
   znaky: { name: string, type: string, value: number }[] = [];
   stavy: { name: string, value: number }[] = [];
-  cisla: { datum: Date, cislo: number }[] = [];
+  chybejsicisla: { datum: Date, cislo: number }[] = [];
   fyzStavOk: boolean;
   stavyExt: { datum: Date, cislo: number }[] = [];
   poznamky: { datum: Date, cislo: number, note: string }[] = [];
@@ -38,7 +38,7 @@ export class SvazekOverviewComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<SvazekOverviewComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { carKod: string },
+    @Inject(MAT_DIALOG_DATA) public data: { carKod: string, idTitul: string },
     private router: Router,
     private datePipe: DatePipe,
     public state: AppState,
@@ -47,7 +47,8 @@ export class SvazekOverviewComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.service.volumeOverview(this.data.carKod).subscribe(res => {
+    this.service.volumeOverview(this.data.carKod, this.data.idTitul).subscribe(res => {
+      console.log(res);
       this.result = res;
       const issue: Issue = res.response.docs[0] as Issue;
       const datum_od = res.stats.stats_fields.datum_vydani_den.min;
@@ -83,12 +84,15 @@ export class SvazekOverviewComponent implements OnInit {
 
   loadDates(res) {
     const dates = this.service.getDaysArray(this.volume.datum_od, this.volume.datum_do);
-    this.cisla = [];
+    this.chybejsicisla = [];
     let idx = 0;
     let issue: Issue = res[idx];
+    // console.log(dates, issue.datum_vydani);
     dates.forEach((dt) => {
       if (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') !== dt) {
-        this.cisla.push({ datum: dt, cislo: idx + this.prvniCislo });
+        const exemplar = issue.exemplare.find(ex => ex.carovy_kod === this.data.carKod);
+        
+        this.chybejsicisla.push({ datum: dt, cislo: idx + this.prvniCislo });
       } else {
         while (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') === dt) {
           idx++;

@@ -264,7 +264,9 @@
     "delete_record.caption": "Confirm delete",
     "delete_record.text": "Are you sure you want delete record {{value}}?",
     "delete_exemplar.caption": "Confirm delete",
-    "delete_exemplar.text": "Are you sure you want delete exemplare {{value}}?"
+    "delete_exemplar.text": "Are you sure you want delete exemplare {{value}}?",
+    "delete_title.caption": "Confirm delete",
+    "delete_title.text": "Are you sure you want delete metatitul {{value}} and all his numbers ?"
   },
   "login": {
     "desc": "Please, login",

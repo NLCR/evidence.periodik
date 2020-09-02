@@ -265,7 +265,9 @@
     "delete_record.caption": "Potvrdit smazání",
     "delete_record.text": "Chtete opravdu smazat záznam {{value}}?",
     "delete_exemplar.caption": "Potvrdit smazání",
-    "delete_exemplar.text": "Chtete opravdu smazat exemplář {{value}}?"
+    "delete_exemplar.text": "Chtete opravdu smazat exemplář {{value}}?",
+    "delete_title.caption": "Potvrdit smazání",
+    "delete_title.text": "Chtete opravdu smazat metatitul {{value}} a vsechna jeho čísla ?"
   },
   "login": {
     "desc": "Prosím, přihlašte se",

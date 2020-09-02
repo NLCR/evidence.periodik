@@ -64,7 +64,7 @@
   </div>
   <div>
     <strong>{{ 'Chybějící čísla' | translate}}:</strong>
-    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of cisla">
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of chybejsicisla">
       <div fxFlex="200px">{{ f.datum | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>
       <div fxFlex="100px">{{f.cislo}}</div>
     </div>

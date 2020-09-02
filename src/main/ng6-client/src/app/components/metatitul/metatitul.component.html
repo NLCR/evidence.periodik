@@ -2,7 +2,7 @@
 
 <div class="app-metatitul-wrapper" fxLayout="row">
   <div fxFlex="320px" class="app-fx-left">
-    <div style="margin: 16px 0 0 16px;">
+    <div *ngIf="state.isAdmin" style="margin: 16px 0 0 16px;">
       <button mat-flat-button color="primary" (click)="newTitul()" type="button">{{ 'desc.add_new_title' | translate }}</button>
     </div>
     <mat-list role="list">
@@ -38,7 +38,8 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <button mat-flat-button color="primary" type="submit" [disabled]="!userForm.form.valid">{{ 'desc.save' | translate }}</button>
+      <button mat-flat-button color="primary" type="button" *ngIf="state.isAdmin" [disabled]="!userForm.form.valid || !state.isAdmin">{{ 'desc.save' | translate }}</button>
+      <button mat-flat-button color="primary" (click)="remove()" *ngIf="state.isAdmin" type="button">{{ 'desc.remove' | translate }}</button>
     </form>
   </div>
 </div>

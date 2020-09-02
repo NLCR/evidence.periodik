@@ -106,11 +106,12 @@ export class AppService {
       }));
   }
 
-  volumeOverview(carovy_kod: string): Observable<any> {
+  volumeOverview(carovy_kod: string, idTitul: string): Observable<any> {
     let params: HttpParams = new HttpParams();
 
     params = new HttpParams()
-      .set('q', carovy_kod)
+    .set('q', carovy_kod)
+      .set('fq', "id_titul:" + idTitul)
       .set('wt', 'json')
       .set('rows', '1000')
       .set('json.nl', 'arrntv')
@@ -257,12 +258,19 @@ export class AppService {
     return this.http.get(url, { params });
   }
 
-
   saveTitul(titul: Titul): Observable<any> {
     const url = 'index';
     const params: HttpParams = new HttpParams()
       .set('action', 'SAVE_TITUL')
       .set('json', JSON.stringify(titul));
+    return this.http.get(url, { params });
+  }
+
+  deleteTitul(id: string): Observable<any> {
+    const url = 'index';
+    const params: HttpParams = new HttpParams()
+      .set('action', 'DELETE_TITUL')
+      .set('id', id);
     return this.http.get(url, { params });
   }
 

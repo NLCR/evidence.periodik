@@ -74,7 +74,7 @@ public class SearchServlet extends HttpServlet {
         try (InputStream inputStream = RESTHelper.inputStream(solrhost, reqProps)) {
           //org.apache.commons.io.IOUtils.copy(inputStream, response.getOutputStream());
           out.print(org.apache.commons.io.IOUtils.toString(inputStream, "UTF8"));
-        }
+        } 
         
     } catch (IOException ex) {
       LOGGER.log(Level.SEVERE, null, ex);

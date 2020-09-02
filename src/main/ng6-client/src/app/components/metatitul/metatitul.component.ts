@@ -5,8 +5,9 @@ import { Titul } from 'src/app/models/titul';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AppConfiguration } from 'src/app/app-configuration';
-import { PromptDialogComponent } from '../prompt-dialog/prompt-dialog.component';
+import { PromptDialogComponent } from 'src/app/components/prompt-dialog/prompt-dialog.component';
 import { MatDialog } from '@angular/material';
+import { ConfirmDialogComponent } from 'src/app/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-metatitul',
@@ -37,15 +38,13 @@ export class MetatitulComponent implements OnInit, OnDestroy {
 
   load(id: string) {
     this.service.getTituly().subscribe(resp => {
-      //if (!this.titul) {
-        let idx = 0;
-        if (id) {
-          idx = this.state.tituly.findIndex(t => t.id === id);
-        }
-        if (idx > -1) {
-          this.loadTitul(this.state.tituly[idx]);
-        }
-      //}
+      let idx = 0;
+      if (id) {
+        idx = this.state.tituly.findIndex(t => t.id === id);
+      }
+      if (idx > -1) {
+        this.loadTitul(this.state.tituly[idx]);
+      }
 
     });
   }
@@ -95,7 +94,35 @@ export class MetatitulComponent implements OnInit, OnDestroy {
     });
   }
 
-  cancel() {
+  remove() {
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '650px',
+      data: {
+        caption: 'modal.delete_title.caption',
+        text: 'modal.delete_title.text',
+        param: {
+          value: this.titul.meta_nazev
+        }
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if (result) {
+        this.loading = true;
+        this.service.deleteTitul(this.titul.id).subscribe(res => {
+          this.loading = false;
+          if (res.error) {
+            this.service.showSnackBar('snackbar.title_error_deleting', res.error, true);
+          } else {
+            this.service.showSnackBar('snackbar.title_deleted');
+            this.load(res.resp.id);
+          }
+        });
+      }
+    });
+
+
 
   }
 

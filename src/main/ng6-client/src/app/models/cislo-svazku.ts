@@ -7,6 +7,7 @@ export class CisloSvazku {
   exemplar: Exemplar;
   datum_vydani: Date;
   numExists: boolean;
+  vydaniExists: boolean;
   cislo: number;
   mutace: string = '';
   vydani: string = '';
@@ -38,12 +39,14 @@ export class CisloSvazku {
     this.znak_oznaceni_vydani = issue.znak_oznaceni_vydani;
     this.odd = odd;
     this.numExists = false;
+    this.vydaniExists = true;
     if (issue.exemplare) {
       issue.exemplare.forEach(ex => {
         if (ex.carovy_kod === carovy_kod) {
           this.exemplar = ex;
           this.poznamka = ex.poznamka ? ex.poznamka : '';
           this.numExists = true;
+          this.vydaniExists = true;
           this.znak_oznaceni_vydani = ex.oznaceni;
           if (ex.stav) {
             this.destroyedPages = ex.stav.includes('PP');
