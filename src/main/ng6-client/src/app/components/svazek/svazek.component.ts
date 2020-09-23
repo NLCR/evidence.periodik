@@ -676,6 +676,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   addIssue(element: CisloSvazku, idx: number) {
     const newEl = Object.assign({}, element);
     newEl.vydani = '';
+    newEl.complete = false;
     newEl.destroyedPages = false;
     newEl.degradated = false;
     newEl.missingPages = false;
