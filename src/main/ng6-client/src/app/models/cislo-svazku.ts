@@ -15,6 +15,7 @@ export class CisloSvazku {
   podnazev: string = '';
   pocet_stran: number;
   znak_oznaceni_vydani: string = '';
+  complete: boolean;
   destroyedPages: boolean;
   degradated: boolean;
   missingPages: boolean;
@@ -49,6 +50,7 @@ export class CisloSvazku {
           this.vydaniExists = true;
           this.znak_oznaceni_vydani = ex.oznaceni;
           if (ex.stav) {
+            this.complete = ex.stav.includes('OK');
             this.destroyedPages = ex.stav.includes('PP');
             this.degradated = ex.stav.includes('Deg');
             this.missingPages = ex.stav.includes('ChS');

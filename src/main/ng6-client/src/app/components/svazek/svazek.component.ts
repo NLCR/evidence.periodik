@@ -47,6 +47,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     'podnazev',
     'pocet_stran',
     'znak_oznaceni_vydani',
+    'complete',
     'destroyedPages',
     'degradated',
     'missingPages',
@@ -144,8 +145,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
     }
     return arr;
   }
-
-
 
   pageChanged(e: PageEvent) {
     this.rows = e.pageSize;
@@ -481,6 +480,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     ex.oznaceni = cs.znak_oznaceni_vydani;
     ex.stav = [];
 
+    if (cs.complete) { ex.stav.push('OK'); }
     if (cs.destroyedPages) { ex.stav.push('PP'); }
     if (cs.degradated) { ex.stav.push('Deg'); }
     if (cs.missingPages) { ex.stav.push('ChS'); }
@@ -490,9 +490,11 @@ export class SvazekComponent implements OnInit, OnDestroy {
     if (cs.wronglyBound) { ex.stav.push('ChSv'); }
     if (cs.censored) { ex.stav.push('Cz'); }
 
-    if (ex.stav.length === 0 && origStav.length > 0) {
-      ex.stav.push('OK');
-    }
+    // if (ex.stav.length === 0 && origStav.length > 0) {
+    //   ex.stav.push('OK');
+    // }
+
+    // console.log(ex.stav);
 
     return issue;
 
