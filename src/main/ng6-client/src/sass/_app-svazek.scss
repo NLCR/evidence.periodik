@@ -157,13 +157,17 @@
             &.app-cell-rotate {
               height: $app-svazek-header-row-height;
               white-space: nowrap;
-              width: 30px !important;
 
               & > div {
                 transform: rotate(-90deg);
-                width: 30px !important;
                 margin-bottom: calc(#{$app-svazek-header-cell-bottom-space} * 2);
+                width: 30px !important;
               } 
+            }
+            
+
+            &.app-cell-rotate:not(.app-cell-mutacni) {
+              width: 30px !important;
             }
           }
         }
