@@ -214,7 +214,7 @@
   <div class="app-container-right">
     <div class="app-table-wrapper app-right">
       <div>Detailní popis svazku</div>
-      <table mat-table [dataSource]="dsExemplars">
+      <table mat-table [dataSource]="dsIssues">
         <!-- Edit issue Zrušit položku "Editovat issue" #153 -->
         <!-- <ng-container matColumnDef="edit_issue">
           <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
@@ -252,7 +252,7 @@
             <div>{{ 'desc.insert_next_edition' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element; let idx=index">
-            <a (click)="addExemplar(element, idx)" *ngIf="element.numExists">
+            <a (click)="addIssue(element, idx)" *ngIf="element.numExists">
               <mat-icon [matTooltip]="'desc.insert_next_edition' | translate" matTooltipPosition="above">
                 {{ config.icons.add_circle }}</mat-icon>
             </a>
@@ -267,6 +267,9 @@
           <td mat-cell *matCellDef="let element; let idx=index" class="app-edit-text">
             <mat-form-field *ngIf="element.numExists" class="app-short-text">
               <input type="text" matInput [(ngModel)]="element.cislo" style="width :20px;">
+              <button mat-icon-button matSuffix (click)="reNumber(element, idx, false)" [attr.aria-label]="'desc.renumber_up' | translate" [matTooltip]="'desc.renumber_up' | translate" matTooltipPosition="above">
+                <mat-icon>keyboard_arrow_up</mat-icon>
+              </button>
               <button mat-icon-button matSuffix (click)="reNumber(element, idx, true)" [attr.aria-label]="'desc.renumber_down' | translate" [matTooltip]="'desc.renumber_down' | translate" matTooltipPosition="above">
                 <mat-icon>keyboard_arrow_down</mat-icon>
               </button>
@@ -361,7 +364,7 @@
             <div>{{ 'record.complete' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.complete" (change)="updateStav(element)" class="check-ok" ></mat-checkbox>
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.complete" class="check-ok" ></mat-checkbox>
           </td>
         </ng-container>
 
@@ -371,7 +374,7 @@
             <div>{{ 'record.pages_damaged' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.destroyedPages" (change)="updateStav(element)" #dsp
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.destroyedPages" #dsp
               (mouseenter)="viewPS(element, 'destroyedPages', dsp, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
@@ -382,7 +385,7 @@
             <div>{{ 'record.StavIssue.Deg' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.degradated" (change)="updateStav(element)" #deg
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.degradated" #deg
               (mouseenter)="viewPS(element, 'degradated', deg, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
@@ -393,7 +396,7 @@
             <div>{{ 'record.StavIssue.ChS' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.missingPages" (change)="updateStav(element)" #mp
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.missingPages" #mp
               (mouseenter)="viewPS(element, 'missingPages', mp, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
@@ -404,7 +407,7 @@
             <div>{{ 'record.StavIssue.ChPag' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousPaging" (change)="updateStav(element)" #ep
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousPaging" #ep
               (mouseenter)="viewPS(element, 'erroneousPaging', ep, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
@@ -415,7 +418,7 @@
             <div>{{ 'record.StavIssue.ChDatum' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousDate" (change)="updateStav(element)" #ed
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousDate" #ed
               (mouseenter)="viewPS(element, 'erroneousDate', ed, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
@@ -426,7 +429,7 @@
             <div>{{ 'record.StavIssue.ChCis' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousNumbering" (change)="updateStav(element)" #en
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousNumbering" #en
               (mouseenter)="viewPS(element, 'erroneousNumbering', en, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
@@ -437,19 +440,8 @@
             <div>{{ 'record.StavIssue.ChSv' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.wronglyBound" (change)="updateStav(element)" #wb
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.wronglyBound" #wb
               (mouseenter)="viewPS(element, 'wronglyBound', wb, pagesPopup)"></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Nečitelně svázáno -->
-        <ng-container matColumnDef="necitelneSvazano">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.StavIssue.NS' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.necitelneSvazano" (change)="updateStav(element)" #ns
-              (mouseenter)="viewPS(element, 'necitelneSvazano', wb, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -459,7 +451,7 @@
             <div>{{ 'record.StavIssue.Cz' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.censored" (change)="updateStav(element)" #cz
+            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.censored" #cz
               (mouseenter)="viewPS(element, 'censored', cz, pagesPopup)"></mat-checkbox>
           </td>
         </ng-container>

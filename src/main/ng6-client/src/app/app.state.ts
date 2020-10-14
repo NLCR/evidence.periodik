@@ -127,7 +127,10 @@ export class AppState {
 
   setSearchResults(res: any) {
     this.searchResults = res;
-    this.numFound = this.searchResults.response.numFound;
+    
+    this.numFound = this.searchResults.response ? 
+      this.searchResults.response.numFound :
+      this.searchResults.grouped.id_issue.ngroups;
     if (this.searchResults.stats) {
       const stats = this.searchResults.stats.stats_fields.datum_vydani_den;
       this.start_date = stats.min;

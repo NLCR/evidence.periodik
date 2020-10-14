@@ -11,7 +11,7 @@ import { MatTableDataSource, MatPaginator, MatDialog, MatDatepickerInputEvent, M
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
 
 import { Issue } from 'src/app/models/issue';
-// import { CisloSvazku } from 'src/app/models/cislo-svazku';
+import { CisloSvazku } from 'src/app/models/cislo-svazku';
 import { DatePipe } from '@angular/common';
 import { Utils } from 'src/app/utils';
 import { OverlayRef, Overlay } from '@angular/cdk/overlay';
@@ -34,7 +34,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild('pickerOd', { read: undefined, static: false }) pickerOd: MatDatepicker<Date>;
 
-  dsExemplars: MatTableDataSource<Exemplar>;
+  dsIssues: MatTableDataSource<CisloSvazku>;
   issueColumns = [
     // 'edit_issue',
     'datum_vydani',
@@ -55,7 +55,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
     'erroneousDate',
     'erroneousNumbering',
     'wronglyBound',
-    'necitelneSvazano',
     'censored',
     'poznamka'
   ];
@@ -93,13 +92,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
   mutations: { name: string, type: string, value: number }[];
   oznaceni_list: { name: string, type: string, value: number }[];
 
-  // cislaVeSvazku: CisloSvazku[] = [];
-  exemplars: Exemplar[] = [];
+  cislaVeSvazku: CisloSvazku[] = [];
   popText: string;
   popShowPages: boolean;
   pagesRange: { label: string, sel: boolean }[];
   editingProp: string;
-  csEditing: Exemplar;
+  csEditing: CisloSvazku;
 
   poznText: string;
 
@@ -136,111 +134,130 @@ export class SvazekComponent implements OnInit, OnDestroy {
     }));
   }
 
-  read() {
-    this.loading = true;
-    this.dsExemplars = new MatTableDataSource([]);
-    this.state.currentTitul = new Titul();
-    const id = this.route.snapshot.paramMap.get('id');
-    // if (id) {
-    this.setData(id);
+  getDaysArray(start, end) {
+    const arr = [];
+    const dtend = this.datePipe.transform(new Date(end), 'yyyy-MM-dd');
+    const dt = new Date(start);
+
+    while (this.datePipe.transform(dt, 'yyyy-MM-dd') <= dtend) {
+      arr.push(this.datePipe.transform(new Date(dt), 'yyyy-MM-dd'));
+      dt.setDate(dt.getDate() + 1);
+    }
+    return arr;
   }
 
-  setData(id: string) {
-    this.service.getVolume(id).subscribe(res => {
-      if (res.length > 0) {
-        this.state.currentVolume = res[0];
-        this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
-        this.findTitul();
-        this.getExemplars(id, false);
-      } else {
-        this.getExemplars(id, true);
-      }
+  pageChanged(e: PageEvent) {
+    this.rows = e.pageSize;
+    this.page = e.pageIndex;
+
+    // this.loadIssues();
+  }
+
+  loadIssues() {
+    this.service.getIssuesOfVolume(this.state.currentVolume).subscribe(res => {
+      const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
+      this.numFound = res.numFound;
+      this.cislaVeSvazku = [];
+      let idx = 0;
+      let issue: Issue = res.docs[idx];
+      let odd = true;
+      dates.forEach((dt) => {
+        if (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') !== dt) {
+          const is = Object.assign({}, issue);
+          is.datum_vydani = dt;
+          is.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
+          is.cislo = null;
+          is.id = null;
+          //console.log(is.datum_vydani_den, issue);
+          this.cislaVeSvazku.push(new CisloSvazku(is, 'neexistujicicarovykod', odd));
+        } else {
+          while (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') === this.datePipe.transform(dt, 'yyyy-MM-dd')) {
+            const cs = new CisloSvazku(issue, this.state.currentVolume.carovy_kod, odd);
+            this.cislaVeSvazku.push(cs);
+            // console.log(cs.exemplar);
+            idx++;
+            issue = res.docs[idx];
+          }
+        }
+        odd = !odd;
+      });
+
+      this.dsIssues = new MatTableDataSource(this.cislaVeSvazku);
+      // this.dsIssues.paginator = this.paginator;
+      this.loading = false;
     });
   }
 
-  getExemplars(id: string, setVolume: boolean) {
-    this.service.getExemplarsByCarKod(id).subscribe(res2 => {
+  findTitul() {
+    this.service.getTitul(this.state.currentVolume.id_titul).subscribe(res2 => {
+      this.state.currentVolume.titul = res2;
+      this.state.currentVolume.id_titul = this.state.currentVolume.titul.id;
 
-      if (res2.response.numFound > 0) {
-        const ex: Exemplar = res2.response.docs[0] as Exemplar;
-        const datum_od = res2.stats.stats_fields.datum_vydani_den.min;
-        const datum_do = res2.stats.stats_fields.datum_vydani_den.max;
-        if (setVolume) {
+      this.state.currentTitul = res2;
+      for (let i = 0; i < this.state.tituly.length; i++) {
+        if (this.state.tituly[i].id === this.state.currentVolume.titul.id) {
+          this.titul_idx = i;
+        }
+      }
+
+      this.setVolumeFacets();
+
+      for (let i = 0; i < this.config.owners.length; i++) {
+        if (this.config.owners[i].name === this.state.currentVolume.vlastnik) {
+          this.vlastnik_idx = i;
+        }
+      }
+
+    });
+  }
+
+  setData(res: Volume[], id: string) {
+    if (res.length > 0) {
+      this.state.currentVolume = res[0];
+      this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
+      this.findTitul();
+      this.loadIssues();
+    } else {
+      // Pokus o vytvoreni svazku podle existujici issue s carovy kodem
+
+      this.service.searchByCarKod(id).subscribe(res2 => {
+
+        if (res2.response.numFound > 0) {
+          const issue: Issue = res2.response.docs[0] as Issue;
+          const datum_od = res2.stats.stats_fields.datum_vydani_den.min;
+          const datum_do = res2.stats.stats_fields.datum_vydani_den.max;
 
           this.state.currentVolume = new Volume(
             this.datePipe.transform(Utils.dateFromDay(datum_od), 'yyyy-MM-dd'),
             this.datePipe.transform(Utils.dateFromDay(datum_do), 'yyyy-MM-dd'));
           this.state.currentVolume.id = id;
           this.state.currentVolume.carovy_kod = id;
-          this.state.currentVolume.mutace = ex.mutace;
-          this.state.currentVolume.znak_oznaceni_vydani = ex.znak_oznaceni_vydani;
-          this.state.currentVolume.id_titul = ex.id_titul;
-          this.state.currentVolume.signatura = ex.signatura;
-          this.state.currentVolume.vlastnik = ex.vlastnik;
-        }
-        this.findTitul();
-        this.loadExemplars(res2.response);
-        this.loading = false;
-      } else {
-        if (setVolume) {
+          this.state.currentVolume.mutace = issue.mutace;
+          this.state.currentVolume.znak_oznaceni_vydani = issue.znak_oznaceni_vydani;
+          this.state.currentVolume.id_titul = issue.id_titul;
+          issue.exemplare.forEach(ex => {
+            if (ex.carovy_kod === id) {
+              this.state.currentVolume.signatura = ex.signatura;
+              this.state.currentVolume.vlastnik = ex.vlastnik;
+            }
+          });
+          this.findTitul();
+          this.loadIssues();
+
+        } else {
           const d = new Date().getFullYear() + '-01-01';
           this.state.currentVolume = new Volume(d, d);
           this.state.currentVolume.carovy_kod = id;
           this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
-        }
           this.loading = false;
-      }
-    });
+        }
+      });
+
+    }
 
     if (this.state.currentVolume) {
       this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
     }
-  }
-
-  loadExemplars(res) {
-    const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
-    this.numFound = res.numFound;
-    this.exemplars = [];
-    let idx = 0;
-    let exemplar: Exemplar = res.docs[idx];
-    let odd = true;
-    dates.forEach((dt) => {
-      if (exemplar && this.datePipe.transform(exemplar.datum_vydani, 'yyyy-MM-dd') !== dt) {
-        const ex = Object.assign({}, exemplar);
-        ex.datum_vydani = dt;
-        ex.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
-        ex.cislo = null;
-        ex.id = null;
-        ex.id_issue = null;
-        ex.numExists = false;
-        ex.odd = odd;
-        this.exemplars.push(ex);
-      } else {
-        while (exemplar && this.datePipe.transform(exemplar.datum_vydani, 'yyyy-MM-dd') === this.datePipe.transform(dt, 'yyyy-MM-dd')) {
-          exemplar.numExists = exemplar.numExists !== null ? exemplar.numExists : true;
-          exemplar.odd = odd;
-          if (exemplar.stav) {
-            exemplar.complete = exemplar.stav.includes('OK');
-            exemplar.destroyedPages = exemplar.stav.includes('PP');
-            exemplar.degradated = exemplar.stav.includes('Deg');
-            exemplar.missingPages = exemplar.stav.includes('ChS');
-            exemplar.erroneousPaging = exemplar.stav.includes('ChPag');
-            exemplar.erroneousDate = exemplar.stav.includes('ChDatum');
-            exemplar.erroneousNumbering = exemplar.stav.includes('ChCis');
-            exemplar.wronglyBound = exemplar.stav.includes('ChSv');
-            exemplar.necitelneSvazano = exemplar.stav.includes('NS');
-            exemplar.censored = exemplar.stav.includes('Cz');
-          }
-          this.exemplars.push(exemplar);
-          idx++;
-          exemplar = res.docs[idx];
-        }
-      }
-      odd = !odd;
-    });
-
-    this.dsExemplars = new MatTableDataSource(this.exemplars);
-    this.loading = false;
   }
 
   setVolumeFacets() {
@@ -290,51 +307,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   }
 
-
-  getDaysArray(start, end) {
-    const arr = [];
-    const dtend = this.datePipe.transform(new Date(end), 'yyyy-MM-dd');
-    const dt = new Date(start);
-
-    while (this.datePipe.transform(dt, 'yyyy-MM-dd') <= dtend) {
-      arr.push(this.datePipe.transform(new Date(dt), 'yyyy-MM-dd'));
-      dt.setDate(dt.getDate() + 1);
-    }
-    return arr;
-  }
-
-  pageChanged(e: PageEvent) {
-    this.rows = e.pageSize;
-    this.page = e.pageIndex;
-
-    // this.loadIssues();
-  }
-
-
-
-  findTitul() {
-    this.service.getTitul(this.state.currentVolume.id_titul).subscribe(res2 => {
-      this.state.currentVolume.titul = res2;
-      this.state.currentVolume.id_titul = this.state.currentVolume.titul.id;
-
-      this.state.currentTitul = res2;
-      for (let i = 0; i < this.state.tituly.length; i++) {
-        if (this.state.tituly[i].id === this.state.currentVolume.titul.id) {
-          this.titul_idx = i;
-        }
-      }
-
-      this.setVolumeFacets();
-
-      for (let i = 0; i < this.config.owners.length; i++) {
-        if (this.config.owners[i].name === this.state.currentVolume.vlastnik) {
-          this.vlastnik_idx = i;
-        }
-      }
-
-    });
-  }
-
   readClick() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '650px',
@@ -351,6 +323,35 @@ export class SvazekComponent implements OnInit, OnDestroy {
         this.read();
       }
     });
+  }
+
+  read() {
+    this.loading = true;
+    this.dsIssues = new MatTableDataSource([]);
+
+    this.state.currentTitul = new Titul();
+
+    // this.state.currentVolume = new Volume(
+    //   this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
+    //   this.datePipe.transform(new Date(), 'yyyy-MM-dd'));
+
+
+    // setTimeout(() => {
+    //   this.state.currentVolume.datum_od = this.datePipe.transform(Utils.dateFromDay('20190101'), 'yyyy-MM-dd');
+    //   this.state.currentVolume.datum_do = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+
+    //   this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
+    //   this.loading = false;
+    // }, 100);
+
+    const id = this.route.snapshot.paramMap.get('id');
+    // if (id) {
+    this.subscriptions.push(this.service.getVolume(id).subscribe(res => {
+      this.setData(res, id);
+    }));
+
+    // } else {
+    // }
   }
 
   setLastNumber() {
@@ -406,17 +407,96 @@ export class SvazekComponent implements OnInit, OnDestroy {
     const carovy_kod = this.state.currentVolume.carovy_kod;
     this.state.currentVolume.id = carovy_kod;
 
+    const issues: Issue[] = [];
+
     // console.log(this.dsIssues.data);
     this.loading = true;
+    let valid = true;
+    this.dsIssues.data.forEach((cs: CisloSvazku) => {
+      if (cs.numExists) {
+        const issue: Issue = this.cisloSvazkuToIssue(cs);
+        if (!issue) {
+          return;
+        }
+        issues.push(issue);
+      }
+    });
 
-    this.service.saveExemplars(this.state.currentVolume, this.exemplars).subscribe(res => {
+    if (!valid) {
+      this.loading = false;
+      return;
+    }
+
+    this.service.saveIssues(this.state.currentVolume, issues).subscribe(res => {
       this.loading = false;
       if (res.error) {
         this.service.showSnackBar('snackbar.error_saving_volume', res.error, true);
       } else {
         this.service.showSnackBar('snackbar.the_volume_was_saved_correctly');
       }
+
+      // console.log(res);
     });
+
+  }
+
+  cisloSvazkuToIssue(cs: CisloSvazku): Issue {
+
+    const carovy_kod = this.state.currentVolume.carovy_kod;
+    if (!cs.cislo) {
+      this.service.showSnackBar('číslo vytisku je povinne', '', true);
+      return null;
+    }
+    const issue: Issue = Object.assign({}, cs.issue);
+    issue.cislo = cs.cislo;
+    issue.mutace = cs.mutace;
+    issue.nazev = cs.nazev;
+    issue.podnazev = cs.podnazev;
+    issue.pocet_stran = cs.pocet_stran;
+    issue.vydani = cs.vydani;
+    // issue.znak_oznaceni_vydani = cs.znak_oznaceni_vydani;
+
+    // update exemplar.
+    // pokud neni, pridame
+    const idx = issue.exemplare.findIndex(el => el.carovy_kod === carovy_kod);
+    let ex: Exemplar;
+    if (idx < 0) {
+      ex = new Exemplar();
+      ex.vlastnik = this.state.currentVolume.vlastnik;
+      ex.carovy_kod = carovy_kod;
+      ex.signatura = this.state.currentVolume.signatura;
+      issue.exemplare.push(ex);
+    } else {
+      ex = issue.exemplare[idx];
+    }
+
+    const origStav = Object.assign([], ex.stav);
+
+    if (cs.exemplar) {
+      ex.pages = Object.assign({}, cs.exemplar.pages);
+      ex.stav_popis = cs.exemplar.stav_popis;
+    }
+
+    ex.oznaceni = cs.znak_oznaceni_vydani;
+    ex.stav = [];
+
+    if (cs.complete) { ex.stav.push('OK'); }
+    if (cs.destroyedPages) { ex.stav.push('PP'); }
+    if (cs.degradated) { ex.stav.push('Deg'); }
+    if (cs.missingPages) { ex.stav.push('ChS'); }
+    if (cs.erroneousPaging) { ex.stav.push('ChPag'); }
+    if (cs.erroneousDate) { ex.stav.push('ChDatum'); }
+    if (cs.erroneousNumbering) { ex.stav.push('ChCis'); }
+    if (cs.wronglyBound) { ex.stav.push('ChSv'); }
+    if (cs.censored) { ex.stav.push('Cz'); }
+
+    // if (ex.stav.length === 0 && origStav.length > 0) {
+    //   ex.stav.push('OK');
+    // }
+
+    // console.log(ex.stav);
+
+    return issue;
 
   }
 
@@ -445,7 +525,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   generate() {
     const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
-    this.exemplars = [];
+    this.cislaVeSvazku = [];
     let idx = this.state.currentVolume.prvni_cislo;
 
     let odd = true;
@@ -457,28 +537,30 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
         if (p.active) {
           if (p.den === dayStr) {
+            const is = new Issue();
+            is.datum_vydani = dt;
+            is.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
+            is.id_titul = this.state.currentVolume.id_titul;
+            is.meta_nazev = this.state.currentVolume.titul.meta_nazev;
+            is.znak_oznaceni_vydani = this.state.currentVolume.znak_oznaceni_vydani;
             const ex = new Exemplar();
-            ex.datum_vydani = dt;
-            ex.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
-            ex.id_titul = this.state.currentVolume.id_titul;
-            ex.meta_nazev = this.state.currentVolume.titul.meta_nazev;
-            ex.znak_oznaceni_vydani = this.state.currentVolume.znak_oznaceni_vydani;
             ex.carovy_kod = this.state.currentVolume.carovy_kod;
             ex.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
             ex.signatura = this.state.currentVolume.signatura;
             ex.vlastnik = this.state.currentVolume.vlastnik;
-            ex.mutace = this.state.currentVolume.mutace;
-            ex.numExists = true;
-            ex.vydaniExists = true;
-            ex.pocet_stran = p.pocet_stran;
-            ex.nazev = p.nazev;
-            ex.podnazev = p.podnazev;
-            ex.vydani = p.vydani;
-            ex.cislo = idx;
-            ex.odd = odd;
+            is.exemplare.push(ex);
+            const cvs = new CisloSvazku(is, this.state.currentVolume.carovy_kod, odd);
+            cvs.mutace = this.state.currentVolume.mutace;
+            cvs.numExists = true;
+            cvs.vydaniExists = true;
+            cvs.pocet_stran = p.pocet_stran;
+            cvs.nazev = p.nazev;
+            cvs.podnazev = p.podnazev;
+            cvs.vydani = p.vydani;
+            cvs.cislo = idx;
             idx++;
             inserted = true;
-            this.exemplars.push(ex);
+            this.cislaVeSvazku.push(cvs);
           }
         } else {
 
@@ -487,28 +569,29 @@ export class SvazekComponent implements OnInit, OnDestroy {
       });
 
       if (!inserted) {
-        const exemplar = new Exemplar();
-        exemplar.datum_vydani = dt;
-        exemplar.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
-        exemplar.id_titul = this.state.currentVolume.id_titul;
-        exemplar.meta_nazev = this.state.currentVolume.titul.meta_nazev;
-        exemplar.znak_oznaceni_vydani = this.state.currentVolume.znak_oznaceni_vydani;
-        exemplar.carovy_kod = this.state.currentVolume.carovy_kod;
-        exemplar.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
-        exemplar.signatura = this.state.currentVolume.signatura;
-        exemplar.vlastnik = this.state.currentVolume.vlastnik;
-
-        exemplar.mutace = this.state.currentVolume.mutace;
-        exemplar.numExists = false;
-        exemplar.vydaniExists = false;
-        exemplar.odd = odd;
-        this.exemplars.push(exemplar);
+        const issue = new Issue();
+        issue.datum_vydani = dt;
+        issue.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
+        issue.id_titul = this.state.currentVolume.id_titul;
+        issue.meta_nazev = this.state.currentVolume.titul.meta_nazev;
+        issue.znak_oznaceni_vydani = this.state.currentVolume.znak_oznaceni_vydani;
+        const ex = new Exemplar();
+        ex.carovy_kod = this.state.currentVolume.carovy_kod;
+        ex.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
+        ex.signatura = this.state.currentVolume.signatura;
+        ex.vlastnik = this.state.currentVolume.vlastnik;
+        issue.exemplare.push(ex);
+        const cvs2 = new CisloSvazku(issue, this.state.currentVolume.carovy_kod, odd);
+        cvs2.mutace = this.state.currentVolume.mutace;
+        cvs2.numExists = false;
+        cvs2.vydaniExists = false;
+        this.cislaVeSvazku.push(cvs2);
       }
 
       odd = !odd;
     });
 
-    this.dsExemplars = new MatTableDataSource(this.exemplars);
+    this.dsIssues = new MatTableDataSource(this.cislaVeSvazku);
   }
 
   setTitul() {
@@ -546,30 +629,53 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
   }
 
-  checkElementExists(cs: Exemplar) {
+  checkElementExists(cs: CisloSvazku) {
+    this.service.searchIssueByDate(this.datePipe.transform(cs.datum_vydani, 'yyyyMMdd'), this.state.currentVolume.id_titul)
+      .subscribe((docs: any[]) => {
+        if (docs.length > 0) {
+          let found = false;
+          docs.forEach((doc: Issue) => {
+            console.log(doc.exemplare);
+            const exe: Exemplar = doc.exemplare.find(ex => ex.carovy_kod === this.state.currentVolume.carovy_kod);
+            if (exe) {
+              cs.issue = Object.assign({}, doc);
+              cs.exemplar = Object.assign({}, exe);
+              found = true;
+            }
+          });
 
+          if (!found) {
+            // Issue exists but not the exemplar
+            cs.id_issue = docs[0].id;
+            cs.issue = Object.assign({}, docs[0]);
+            cs.exemplar = new Exemplar();
+            cs.exemplar.carovy_kod = this.state.currentVolume.carovy_kod;
+          }
+        } else {
+          cs.exemplar = new Exemplar();
+          cs.exemplar.carovy_kod = this.state.currentVolume.carovy_kod;
+        }
+      });
   }
 
-  reNumber(element: Exemplar, idx: number, down: boolean) {
+  reNumber(element: CisloSvazku, idx: number, down: boolean) {
     console.log(idx);
     const min = down ? idx : 0;
-    const max = down ? this.dsExemplars.data.length : idx;
-    let curCislo = this.dsExemplars.data[min].cislo;
+    const max = down ? this.dsIssues.data.length : idx;
+    let curCislo = this.dsIssues.data[min].cislo;
     // const maxCislo = this.dsIssues.data[min].cislo;
     for (let i = min; i < max; i++) {
-      const ex: Exemplar = this.dsExemplars.data[i];
-      if (ex.numExists) {
-        ex.cislo = curCislo;
+      const cs: CisloSvazku = this.dsIssues.data[i];
+      if (cs.numExists) {
+        cs.cislo = curCislo;
         curCislo++;
       }
     }
   }
 
-  addExemplar(element: Exemplar, idx: number) {
+  addIssue(element: CisloSvazku, idx: number) {
     const newEl = Object.assign({}, element);
     newEl.vydani = '';
-    newEl.id_issue = null;
-    newEl.id = null;
     newEl.complete = false;
     newEl.destroyedPages = false;
     newEl.degradated = false;
@@ -578,15 +684,13 @@ export class SvazekComponent implements OnInit, OnDestroy {
     newEl.erroneousDate = false;
     newEl.erroneousNumbering = false;
     newEl.wronglyBound = false;
-    newEl.necitelneSvazano = false;
     newEl.censored = false;
-    newEl.pages = { missing: [], damaged: [] };
-    newEl.stav = [];
-    newEl.stav_popis = '';
-    newEl.numExists = true;
+    newEl.exemplar.pages = { missing: [], damaged: [] };
+    newEl.exemplar.stav = [];
+    newEl.exemplar.stav_popis = '';
 
-    this.exemplars.splice(idx + 1, 0, newEl);
-    this.dsExemplars = new MatTableDataSource(this.exemplars);
+    this.cislaVeSvazku.splice(idx + 1, 0, newEl);
+    this.dsIssues = new MatTableDataSource(this.cislaVeSvazku);
   }
 
   rowColor(row): string {
@@ -596,40 +700,40 @@ export class SvazekComponent implements OnInit, OnDestroy {
     return row.odd ? '#fff' : '#f5f5f5';
   }
 
-  viewPozn(el: Exemplar, template: TemplateRef<any>, relative: any) {
+  viewPozn(el: CisloSvazku, template: TemplateRef<any>, relative: any) {
     this.closeInfoOverlay();
     this.csEditing = el;
-    this.poznText = el.poznamka;
+    this.poznText = el.exemplar.poznamka;
     setTimeout(() => {
       this.openInfoOverlay(relative._elementRef, template, 35);
     }, 100);
   }
 
 
-  viewPS(el: Exemplar, prop: string, relative: any, template: TemplateRef<any>) {
+  viewPS(el: CisloSvazku, prop: string, relative: any, template: TemplateRef<any>) {
 
     // Back compatibility.
     // From pages : string[] to pages: {missing: string[], damaged: string[]}
     // Assign to missing
-    if (el.pages && isArray(el.pages)) {
-      const pages = Object.assign([], el.pages);
-      el.pages = { missing: Object.assign([], el.pages), damaged: [] };
+    if (el.exemplar.pages && isArray(el.exemplar.pages)) {
+      const pages = Object.assign([], el.exemplar.pages);
+      el.exemplar.pages = { missing: Object.assign([], el.exemplar.pages), damaged: [] };
     }
 
     this.csEditing = el;
 
-    const openPop = (el.stav_popis && el.stav_popis !== '') || prop === 'missingPages' || prop === 'destroyedPages';
+    const openPop = (el.exemplar.stav_popis && el.exemplar.stav_popis !== '') || prop === 'missingPages' || prop === 'destroyedPages';
     if (openPop) {
       this.closeInfoOverlay();
       this.editingProp = prop === 'missingPages' ? 'missing' : 'damaged';
       setTimeout(() => {
         if (el[prop]) {
-          this.popText = el.stav_popis;
+          this.popText = el.exemplar.stav_popis;
           this.popShowPages = prop === 'missingPages' || prop === 'destroyedPages';
           if (this.popShowPages) {
             this.pagesRange = [];
             for (let i = 0; i < el.pocet_stran; i++) {
-              const sel = el.pages && el.pages[this.editingProp] && el.pages[this.editingProp].includes((i + 1) + '');
+              const sel = el.exemplar.pages && el.exemplar.pages[this.editingProp] && el.exemplar.pages[this.editingProp].includes((i + 1) + '');
               this.pagesRange.push({ label: (i + 1) + '', sel });
             }
           }
@@ -648,15 +752,19 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   updatePages() {
 
-    this.csEditing.pages[this.editingProp] = [];
+    this.csEditing.exemplar.pages[this.editingProp] = [];
     this.pagesRange.forEach(p => {
       if (p.sel) {
-        this.csEditing.pages[this.editingProp].push(p.label);
+        this.csEditing.exemplar.pages[this.editingProp].push(p.label);
       }
     });
-    this.csEditing.stav_popis = this.popText;
-
-    this.service.saveExemplar(this.csEditing).subscribe(res => {
+    this.csEditing.exemplar.stav_popis = this.popText;
+    const issue: Issue = this.cisloSvazkuToIssue(this.csEditing);
+    
+    if (!issue) {
+      return;
+    }
+    this.service.saveIssue(issue).subscribe(res => {
       this.loading = false;
       if (res.error) {
         this.service.showSnackBar('snackbar.error_saving_volume', res.error, true);
@@ -668,24 +776,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   }
 
-  updateStav(ex: Exemplar) {
-    console.log(ex, ex.necitelneSvazano);
-    ex.stav = [];
-    if (ex.complete) { ex.stav.push('OK'); }
-    if (ex.destroyedPages) { ex.stav.push('PP'); }
-    if (ex.degradated) { ex.stav.push('Deg'); }
-    if (ex.missingPages) { ex.stav.push('ChS'); }
-    if (ex.erroneousPaging) { ex.stav.push('ChPag'); }
-    if (ex.erroneousDate) { ex.stav.push('ChDatum'); }
-    if (ex.erroneousNumbering) { ex.stav.push('ChCis'); }
-    if (ex.wronglyBound) { ex.stav.push('ChSv'); }
-    if (ex.necitelneSvazano) { ex.stav.push('NS'); }
-    if (ex.censored) { ex.stav.push('Cz'); }
-    console.log(ex.stav);
-  }
-
   updatePoznamka() {
-    this.csEditing.poznamka = this.poznText;
+    this.csEditing.exemplar.poznamka = this.poznText;
     this.csEditing.poznamka = this.poznText;
     this.closePop();
   }

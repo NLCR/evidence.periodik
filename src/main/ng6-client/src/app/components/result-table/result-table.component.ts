@@ -85,7 +85,17 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     this.exs = {};
     this.displayedColumns = [];
     this.header = '';
-    this.data = Object.assign([], this.state.searchResults.response.docs);
+    this.data = [];
+    this.state.searchResults.grouped.id_issue.groups.forEach(group => {
+      const issue = group.doclist.docs[0] as Issue;
+      issue.id = group.groupValue;
+      issue.exemplare = [];
+      group.doclist.docs.forEach(doc => {
+        issue.exemplare.push(doc);
+      });
+      this.data.push(issue);
+    });
+    // this.data = Object.assign([], this.state.searchResults.response.docs);
     if (this.data.length === 0) {
       this.loading = false;
       return;

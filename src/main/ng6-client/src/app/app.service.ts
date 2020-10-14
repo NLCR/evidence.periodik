@@ -326,6 +326,73 @@ export class AppService {
     return ret;
   }
 
+  isExemplarValid(ex: Exemplar): {valid: boolean, error: string} {
+    const ret = {valid: true, error: ''};
+    try {
+      //      if (!this.isValidAsInteger(issue.rocnik)) {
+      //        return false;
+      //      }
+      if (!ex.datum_vydani) {
+        ret.valid = false;
+        ret.error = 'Pole datum_vydani je povinne';
+        return ret;
+      }
+      if (!ex.id_titul) {
+        ret.valid = false;
+        ret.error = 'Metatitul je povinne';
+        return ret;
+      }
+      if (!this.isValidAsInteger(ex.druhe_cislo)) {
+        ret.valid = false;
+        ret.error = 'Druhe cislo not nevalidni';
+        return ret;
+      }
+
+      // https://github.com/NKCR-INPROVE/evidence.periodik/issues/152
+      // pokud u mimořádného čísla není hodnota čísla uvedena, může zůstat prázdné - není to chyba
+      // if (!this.isValidAsInteger(ex.cislo)) {
+      //   ret.valid = false;
+      //   ret.error = 'Pole cislo neni validni';
+      //   return ret;
+      // }
+
+      // Cistime stavy, aby nebyly "null"
+      if (ex.stav && isArray(ex.stav)) {
+        ex.stav = ex.stav.filter(st => st !== 'null');
+      }
+        
+    } catch (ex) {
+      console.log(ex);
+      ret.valid = false;
+      ret.error = ex;
+    }
+
+    return ret;
+  }
+
+  saveExemplar(exemplar: Exemplar): Observable<any> {
+    const isValid = this.isExemplarValid(exemplar);
+    if (isValid.valid) {
+      const url = 'index';
+      const params: HttpParams = new HttpParams()
+        .set('action', 'SAVE_EXEMPLAR')
+        .set('json', JSON.stringify(exemplar));
+
+      return this.http.post(url, exemplar);
+    } else {
+      return of(isValid);
+    }
+  }
+
+  saveExemplars(vol: Volume, exemplars: Exemplar[]): Observable<any> {
+    const body = { svazek: vol, exemplars };
+    const url = 'index';
+    const params: HttpParams = new HttpParams()
+      .set('action', 'SAVE_EXEMPLARS');
+
+    return this.http.post(url, body, { params });
+  }
+
   saveIssues(vol: Volume, issues: Issue[]): Observable<any> {
     const body = { svazek: vol, issues };
     const url = 'index';
@@ -455,6 +522,33 @@ export class AppService {
       }));
   }
 
+  getExemplarsByCarKod(carKod: string): Observable<any> {
+    const url = '/api/search/exemplar/select';
+    const params: HttpParams = new HttpParams()
+      .set('q', '*')
+      .set('wt', 'json')
+      .set('fl', '*,pages:[json]')
+      .set('rows', '1000')
+      .set('sort', 'datum_vydani_den asc, vydani desc')
+      .set('stats', 'true')
+      .set('stats.field', 'datum_vydani_den')
+      .set('fq', 'carovy_kod:"' + carKod + '"');
+    return this.http.get(url, { params });
+  }
+
+  getExemplarsByCarKodVlastnik(carKodVlastnik: string): Observable<any> {
+    const url = '/api/search/exemplar/select';
+    const params: HttpParams = new HttpParams()
+      .set('q', '*')
+      .set('wt', 'json')
+      .set('fl', '*,pages:[json]')
+      .set('sort', 'datum_vydani_den asc, vydani desc')
+      .set('stats', 'true')
+      .set('stats.field', 'datum_vydani_den')
+      .set('fq', 'carovy_kod_vlastnik:"' + carKodVlastnik + '"');
+    return this.http.get(url, { params });
+  }
+
   getTitulTotals(id: string) {
     const url = '/api/search/issue/select';
     const params: HttpParams = new HttpParams()
@@ -515,9 +609,20 @@ export class AppService {
   }
 
   searchIssuesOfTitul(id: string) {
-    const url = '/api/search/issue/permonik';
+    // const url = '/api/search/issue/permonik';
+    // const params = this.doSearchParams()
+    //  .append('fq', 'id_titul:"' + id + '"');
+
+     
+    const url = '/api/search/exemplar/select';
     const params = this.doSearchParams()
-     .append('fq', 'id_titul:"' + id + '"');
+    .append('fq', 'id_titul:"' + id + '"')
+    .append('group', 'true')
+    .append('group.field', 'id_issue')
+    .append('group.limit', '20')
+    .append('group.ngroups', 'true');
+
+
     return this.http.get(url, { params });
   }
 

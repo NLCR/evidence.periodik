@@ -2,7 +2,7 @@
   "/search/**": {
     "target": "http://localhost:8983/solr/",
     "ignorePath": false,
-    "logLevel": "debug",
+    "logLevel": "info",
     "pathRewrite": {
       "^/search":""
     },
@@ -21,7 +21,7 @@
   "/index": {
     "target": "http://localhost:8080/permonik/index",
     "ignorePath": false,
-    "logLevel": "debug",
+    "logLevel": "info",
     "pathRewrite": {
       "^/index":""
     },
@@ -31,7 +31,7 @@
   "/lg": {
     "target": "http://localhost:4200/assets/test/login.json",
     "ignorePath": false,
-    "logLevel": "debug",
+    "logLevel": "info",
     "pathRewrite": {
       "^/lg":""
     },

@@ -30,6 +30,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.ResponseParser;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.impl.NoOpResponseParser;
@@ -38,6 +39,7 @@ import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.CursorMarkParams;
 import org.apache.solr.common.util.NamedList;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,6 +76,95 @@ public class Indexer {
             Options.getInstance().getString("solrhost", DEFAULT_HOST),
             core)).build();
     return client;
+  }
+
+  public JSONObject createExemplars() {
+    JSONObject ret = new JSONObject();
+    try (SolrClient solr = getClient()) {
+      int rows = 100;
+      SolrQuery query = (new SolrQuery("*"))
+              .setRows(rows)
+              .setFields("*,exemplare:[json]")
+              .setSort(SortClause.asc("id"));
+      String cursorMark = CursorMarkParams.CURSOR_MARK_START;
+      boolean done = false;
+      List<Exemplar> beans = new ArrayList<>();
+      while (!done) {
+
+        query.set(CursorMarkParams.CURSOR_MARK_PARAM, cursorMark);
+        JSONObject issue = json(query, "issue");
+
+        JSONArray docs = issue.getJSONObject("response").getJSONArray("docs");
+        for (int i = 0; i < docs.length(); i++) {
+          JSONObject doc = docs.getJSONObject(i);
+          if (doc.has("exemplare")) {
+            JSONArray exs = doc.getJSONArray("exemplare");
+            for (int j = 0; j < exs.length(); j++) {
+              JSONObject ex = exs.getJSONObject(j);
+              for (Object key : doc.keySet()) {
+                if (!"exemplare".equals(key) && !ex.has((String) key)) {
+                  ex.put((String) key, doc.get((String) key));
+                }
+              }
+              ex.put("numExists", true);
+              ex.put("id_issue", doc.getString("id"));
+              ex.put("id", doc.getString("id") + "_"
+                      + ex.getString("carovy_kod") + "_" + ex.optString("vlastnik", ""));
+              ex.put("carovy_kod_vlastnik", ex.getString("carovy_kod") + "_" + ex.optString("vlastnik", ""));
+              Exemplar exBean = Exemplar.fromJSON(ex);
+              beans.add(exBean);
+              // indexJSON(ex, "exemplar");
+            }
+          }
+        }
+
+        String nextCursorMark = issue.optString("nextCursorMark", cursorMark);
+        //extractExemplars(rsp, idocs);
+        if (cursorMark.equals(nextCursorMark)) {
+          done = true;
+        }
+        cursorMark = nextCursorMark;
+        ret = issue;
+        if (beans.size() > 999) {
+          solr.addBeans("exemplar", beans);
+          solr.commit("exemplar");
+          beans.clear();
+        }
+
+      }
+
+      if (!beans.isEmpty()) {
+        solr.addBeans("exemplar", beans);
+        solr.commit("exemplar");
+        beans.clear();
+      }
+    } catch (Exception ex) {
+      ret.put("error", ex);
+    }
+
+    return ret;
+  }
+
+  public JSONObject saveExemplars(JSONArray exs) {
+    JSONObject ret = new JSONObject();
+
+    try (SolrClient solr = getClient()) {
+      List<Exemplar> beans = new ArrayList<>();
+      for (int i = 0; i < exs.length(); i++) {
+        Exemplar ex = Exemplar.fromJSON(exs.getJSONObject(i));
+        beans.add(ex);
+        //      json.put("ex" + i, indexer.fromJSON(ja.getJSONObject(i)));
+        //json.put("issue"+i, ja.getJSONObject(i));
+      }
+      if (!beans.isEmpty()) {
+        solr.addBeans("exemplar", beans);
+        solr.commit("exemplar");
+        beans.clear();
+      }
+    } catch (Exception ex) {
+      ret.put("error", ex);
+    }
+    return ret;
   }
 
   public static boolean isSpecial(SolrClient solr, LocalDate date) {
@@ -414,6 +505,26 @@ public class Indexer {
       idoc.setField("id", generateId(idoc, Options.getInstance().getStrings("idfields")));
       return idoc;
     } catch (JSONException ex) {
+      LOGGER.log(Level.SEVERE, null, ex);
+      return null;
+    }
+  }
+
+  public static String generateId(JSONObject doc, String[] fields) {
+    try {
+      MessageDigest md = MessageDigest.getInstance("SHA-1");
+      StringBuilder sb = new StringBuilder();
+
+      for (String field : fields) {
+        if (doc.has(field)) {
+          sb.append(doc.get(field).toString()).append(" ");
+        }
+      }
+      md.update(sb.toString().getBytes());
+      BigInteger id = new BigInteger(1, md.digest());
+      return String.format("%032X", id);
+
+    } catch (NoSuchAlgorithmException | JSONException ex) {
       LOGGER.log(Level.SEVERE, null, ex);
       return null;
     }
