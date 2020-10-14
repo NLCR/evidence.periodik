@@ -375,10 +375,9 @@ export class AppService {
     if (isValid.valid) {
       const url = 'index';
       const params: HttpParams = new HttpParams()
-        .set('action', 'SAVE_EXEMPLAR')
-        .set('json', JSON.stringify(exemplar));
-
-      return this.http.post(url, exemplar);
+        .set('action', 'SAVE_EXEMPLAR');
+      const body = { exemplar };
+      return this.http.post(url, exemplar, { params });
     } else {
       return of(isValid);
     }

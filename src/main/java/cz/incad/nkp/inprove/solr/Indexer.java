@@ -167,6 +167,19 @@ public class Indexer {
     return ret;
   }
 
+  public JSONObject saveExemplar(JSONObject json) {
+    JSONObject ret = new JSONObject();
+
+    try (SolrClient solr = getClient()) {
+      Exemplar ex = Exemplar.fromJSON(json);
+      solr.addBean("exemplar", ex);
+      solr.commit("exemplar");
+    } catch (Exception ex) {
+      ret.put("error", ex);
+    }
+    return ret;
+  }
+
   public static boolean isSpecial(SolrClient solr, LocalDate date) {
     if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
       return true;

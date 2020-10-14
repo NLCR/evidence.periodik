@@ -669,7 +669,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   updateStav(ex: Exemplar) {
-    console.log(ex, ex.necitelneSvazano);
     ex.stav = [];
     if (ex.complete) { ex.stav.push('OK'); }
     if (ex.destroyedPages) { ex.stav.push('PP'); }
@@ -681,7 +680,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
     if (ex.wronglyBound) { ex.stav.push('ChSv'); }
     if (ex.necitelneSvazano) { ex.stav.push('NS'); }
     if (ex.censored) { ex.stav.push('Cz'); }
-    console.log(ex.stav);
   }
 
   updatePoznamka() {
