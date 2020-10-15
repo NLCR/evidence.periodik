@@ -110,12 +110,13 @@ export class AppService {
     let params: HttpParams = new HttpParams();
 
     params = new HttpParams()
-      .set('q', carovy_kod)
+      .set('q', '*')
       .set('fq', "id_titul:" + idTitul)
+      .set('fq', "carovy_kod:" + carovy_kod)
       .set('wt', 'json')
       .set('rows', '1000')
       .set('json.nl', 'arrntv')
-      .set('fl', '*,exemplare:[json], pages:[json]')
+      .set('fl', '*,pages:[json]')
       .set('sort', 'datum_vydani_den asc, vydani desc')
       .set('facet', 'true')
       .set('facet.mincount', '1')
@@ -131,7 +132,7 @@ export class AppService {
       .set('stats', 'true')
       .set('stats.field', 'cislo')
       .append('stats.field', 'datum_vydani_den');
-    const url = '/api/search/issue/select';
+    const url = '/api/search/exemplar/select';
 
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, { params });

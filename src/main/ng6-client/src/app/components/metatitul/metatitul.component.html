@@ -16,17 +16,17 @@
     </mat-list>
   </div>
   <div fxFlex class="app-fx-right" *ngIf="titul">
-    <form (ngSubmit)="save()" #userForm="ngForm">
+    <form #userForm="ngForm">
       <div fxLayout="row" fxLayoutGap="16px">
         <mat-form-field fxFlex>
           <input matInput [(ngModel)]="titul.meta_nazev" name="meta_nazev" id="meta_nazev" [placeholder]="'record.meta_title' | translate" required cdkFocusInitial />
         </mat-form-field>
 
-        <mat-form-field fxFlex>
+        <!--  
+         Odstraneno podle #138
+          <mat-form-field fxFlex>
           <input matInput [(ngModel)]="titul.uuid" name="uuid" id="uuid" [placeholder]="'record.uuid_title' | translate" />
         </mat-form-field>
-
-        <!-- Odstraneno podle #138
           <mat-form-field fxFlex>
           <input matInput [(ngModel)]="titul.pocet_stran" name="pocet_stran" id="pocet_stran" [placeholder]="'record.pages_count' | translate" type="number" min="1" />
         </mat-form-field> -->
@@ -38,7 +38,13 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <button mat-flat-button color="primary" type="button" *ngIf="state.isAdmin" [disabled]="!userForm.form.valid || !state.isAdmin">{{ 'desc.save' | translate }}</button>
+      <div fxLayout="row" fxLayoutGap="16px">
+        <mat-form-field fxFlex>
+          <mat-label>{{ 'record.poznamka' | translate }}</mat-label>
+          <textarea matInput [(ngModel)]="titul.poznamka" name="poznamka" id="poznamka" >{{titul.poznamka}}</textarea>
+        </mat-form-field>
+      </div>
+      <button mat-flat-button color="primary" (click)="save()" type="button" *ngIf="state.isAdmin" [disabled]="!userForm.form.valid || !state.isAdmin">{{ 'desc.save' | translate }}</button>
       <button mat-flat-button color="primary" (click)="remove()" *ngIf="state.isAdmin" type="button">{{ 'button.delete' | translate }}</button>
     </form>
   </div>

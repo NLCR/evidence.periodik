@@ -50,11 +50,11 @@ export class MetatitulComponent implements OnInit, OnDestroy {
   }
 
   selectTitul(id: string) {
-    this.titul = this.state.tituly.find(t => t.id === id);
+    this.titul = Object.assign({}, this.state.tituly.find(t => t.id === id));
   }
 
   loadTitul(t: Titul) {
-    this.titul = t;
+    this.titul = Object.assign({}, t);
   }
 
   save() {

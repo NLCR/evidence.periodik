@@ -19,7 +19,7 @@ public class Titul {
   @Field
   public String meta_nazev;
   @Field
-  public String uuid;
+  public String poznamka;
   @Field
   public String periodicita;
   
@@ -31,7 +31,7 @@ public class Titul {
   public static Titul fromJSON(JSONObject json) {
     Titul obj = JSON.parseObject(json.toString(), Titul.class);
     if (obj.id == null || obj.id.trim().isEmpty()) {
-      obj.id = MD5.generate(new String[]{obj.meta_nazev, obj.uuid});
+      obj.id = MD5.generate(new String[]{obj.meta_nazev});
     }
     return obj;
   }

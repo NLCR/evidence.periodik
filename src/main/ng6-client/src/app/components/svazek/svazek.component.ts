@@ -48,6 +48,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     'pocet_stran',
     'znak_oznaceni_vydani',
     'complete',
+    'chybiCislo',
     'destroyedPages',
     'degradated',
     'missingPages',
@@ -221,6 +222,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
           exemplar.odd = odd;
           if (exemplar.stav) {
             exemplar.complete = exemplar.stav.includes('OK');
+            exemplar.chybiCislo = exemplar.stav.includes('ChCC');
             exemplar.destroyedPages = exemplar.stav.includes('PP');
             exemplar.degradated = exemplar.stav.includes('Deg');
             exemplar.missingPages = exemplar.stav.includes('ChS');
@@ -571,6 +573,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     newEl.id_issue = null;
     newEl.id = null;
     newEl.complete = false;
+    newEl.chybiCislo = false;
     newEl.destroyedPages = false;
     newEl.degradated = false;
     newEl.missingPages = false;
@@ -671,6 +674,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   updateStav(ex: Exemplar) {
     ex.stav = [];
     if (ex.complete) { ex.stav.push('OK'); }
+    if (ex.chybiCislo) { ex.stav.push('ChCC'); }
     if (ex.destroyedPages) { ex.stav.push('PP'); }
     if (ex.degradated) { ex.stav.push('Deg'); }
     if (ex.missingPages) { ex.stav.push('ChS'); }

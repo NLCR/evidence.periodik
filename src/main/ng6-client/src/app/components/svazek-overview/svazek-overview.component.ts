@@ -8,6 +8,7 @@ import { Volume } from 'src/app/models/volume';
 import { Utils } from 'src/app/utils';
 import { Issue } from 'src/app/models/issue';
 import { Router } from '@angular/router';
+import { Exemplar } from 'src/app/models/exemplar';
 
 @Component({
   selector: 'app-svazek-overview',
@@ -50,7 +51,7 @@ export class SvazekOverviewComponent implements OnInit {
     this.service.volumeOverview(this.data.carKod, this.data.idTitul).subscribe(res => {
       console.log(res);
       this.result = res;
-      const issue: Issue = res.response.docs[0] as Issue;
+      const issue: Exemplar = res.response.docs[0] as Exemplar;
       const datum_od = res.stats.stats_fields.datum_vydani_den.min;
       const datum_do = res.stats.stats_fields.datum_vydani_den.max;
       this.volume = new Volume(
@@ -60,12 +61,9 @@ export class SvazekOverviewComponent implements OnInit {
       this.volume.carovy_kod = this.data.carKod;
       this.volume.id_titul = issue.id_titul;
 
-      issue.exemplare.forEach(ex => {
-        if (ex.carovy_kod === this.data.carKod) {
-          this.volume.signatura = ex.signatura;
-          this.volume.vlastnik = ex.vlastnik;
-        }
-      });
+      this.volume.signatura = issue.signatura;
+      this.volume.vlastnik = issue.vlastnik;
+
       this.findTitul();
       const facetDatum: { name: string, type: string, value: number }[] = res.facet_counts.facet_ranges.datum_vydani.counts;
       this.years = facetDatum.filter(f => f.value > 0);
@@ -88,34 +86,39 @@ export class SvazekOverviewComponent implements OnInit {
     let idx = 0;
     let issue: Issue = res[idx];
     // console.log(dates, issue.datum_vydani);
-    dates.forEach((dt) => {
-      if (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') !== dt) {
-        const exemplar = issue.exemplare.find(ex => ex.carovy_kod === this.data.carKod);
-        
-        this.chybejsicisla.push({ datum: dt, cislo: idx + this.prvniCislo });
-      } else {
-        while (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') === dt) {
-          idx++;
-          issue = res[idx];
-        }
-      }
-    });
+    // dates.forEach((dt) => {
+    //   if (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') !== dt) {
+    //     const exemplar = issue.exemplare.find(ex => ex.carovy_kod === this.data.carKod);
+
+
+    //   } else {
+    //     while (issue && this.datePipe.transform(issue.datum_vydani, 'yyyy-MM-dd') === dt) {
+    //       idx++;
+    //       issue = res[idx];
+
+          
+    //     }
+    //   }
+    // });
   }
 
-  processExemplars(issues) {
-    issues.forEach((issue: Issue) => {
-      issue.exemplare.forEach(ex => {
-        if (ex.carovy_kod === this.data.carKod) {
-          if (ex.stav && ex.stav.length > 0) {
-            this.stavyExt.push({ datum: issue.datum_vydani, cislo: issue.cislo });
-          }
+  processExemplars(exs) {
+    exs.forEach((ex: Exemplar) => {
+      // issue.exemplare.forEach(ex => {
+      //  if (ex.carovy_kod === this.data.carKod) {
+      if (ex.stav && ex.stav.length > 0) {
+        this.stavyExt.push({ datum: ex.datum_vydani, cislo: ex.cislo });
+      }
 
-          if (ex.poznamka && ex.poznamka !== '') {
-            this.poznamky.push({ datum: issue.datum_vydani, cislo: issue.cislo, note: ex.poznamka });
-          }
+      if (ex.poznamka && ex.poznamka !== '') {
+        this.poznamky.push({ datum: ex.datum_vydani, cislo: ex.cislo, note: ex.poznamka });
+      }
+      if (ex.stav && ex.stav.includes('ChCC')) {
+        this.chybejsicisla.push({ datum: ex.datum_vydani, cislo: ex.cislo });
+      }
 
-        }
-      });
+      //  }
+      // });
     });
   }
 
@@ -125,7 +128,7 @@ export class SvazekOverviewComponent implements OnInit {
       this.volume.titul = res2;
       this.volume.id_titul = this.volume.titul.id;
 
-      this.state.currentTitul = res2;
+      // this.state.currentTitul = res2;
 
     });
   }

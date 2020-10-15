@@ -6,6 +6,7 @@ export class Titul {
   
   periodicita: string = ""; //default periodicita
   // pocet_stran: number = 0; //default počet stran Odstraneno podle #138
-  uuid: string = ""; //uuid titulu	text	pokud je to z Krameria
+  // uuid: string = ""; //uuid titulu	text	pokud je to z Krameria
+  poznamka: string = ""; //uuid titulu	text	pokud je to z Krameria
   
 }

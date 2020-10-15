@@ -48,6 +48,7 @@ export class Exemplar {
 
   // Properties pro zobrazeni v tabulce svazku
   complete: boolean;
+  chybiCislo: boolean;
   destroyedPages: boolean;
   degradated: boolean;
   missingPages: boolean;
