@@ -33,10 +33,12 @@ export class ResultItemComponent implements OnInit {
   setTotals() {
     this.service.getTitulTotals(this.item.id).subscribe((res: any) => {
 
-      this.item.total = res.response.numFound;
+
+      this.item.total = res.response ?  res.response.numFound : res.grouped.id_issue.ngroups;
       if (res.stats) {
         this.item.num_mutace = res.stats.stats_fields.mutace.countDistinct;
-        this.item.num_exemplare = res.stats.stats_fields.exemplare.count;
+        // this.item.num_exemplare = res.stats.stats_fields.exemplare.count;
+        this.item.num_exemplare = res.grouped.id_issue.matches;
         this.item.num_vlastniku = res.stats.stats_fields.vlastnik.countDistinct;
 
         this.item.den_od = res.stats.stats_fields.den.min;

@@ -817,8 +817,8 @@ public class Indexer {
     return resp;
   }
 
-  public void delete(String id) {
-    try (SolrClient solr = getClient("issue")) {
+  public void deleteExemplar(String id) {
+    try (SolrClient solr = getClient("exemplar")) {
       solr.deleteById(id, 10);
     } catch (IOException | SolrServerException ex) {
       LOGGER.log(Level.SEVERE, null, ex);

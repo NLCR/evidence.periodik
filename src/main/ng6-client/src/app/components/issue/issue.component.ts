@@ -30,7 +30,7 @@ export class IssueComponent implements OnInit {
   titul_idx: number;
 
   initial_pages = 0;
-  
+
   loading: boolean;
 
   pagesRange: { label: string, index: number }[] = [];
@@ -55,18 +55,23 @@ export class IssueComponent implements OnInit {
   }
 
   setPagesRange() {
+    // this.pagesRange = [];
+    // if (this.state.currentIssue.pages.length === 0) {
+    //   for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
+    //     this.pagesRange.push({ label: (i + 1) + '', index: i });
+    //   }
+    // } else {
+    //   this.pagesRange = this.state.currentIssue.pages;
+    //   if (this.state.currentIssue.pages.length < this.state.currentIssue.pocet_stran) {
+    //     for (let i = this.state.currentIssue.pages.length; i < this.state.currentIssue.pocet_stran; i++) {
+    //       this.pagesRange.push({ label: (i + 1) + '', index: i });
+    //     }
+    //   }
+    // }
+
     this.pagesRange = [];
-    if (this.state.currentIssue.pages.length === 0) {
-      for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
-        this.pagesRange.push({ label: (i + 1) + '', index: i });
-      }
-    } else {
-      this.pagesRange = JSON.parse(JSON.stringify(this.state.currentIssue.pages));
-      if (this.state.currentIssue.pages.length < this.state.currentIssue.pocet_stran) {
-        for (let i = this.state.currentIssue.pages.length; i < this.state.currentIssue.pocet_stran; i++) {
-          this.pagesRange.push({ label: (i + 1) + '', index: i });
-        }
-      }
+    for (let i = 0; i < this.state.currentIssue.pocet_stran; i++) {
+      this.pagesRange.push({ label: (i + 1) + '', index: i });
     }
 
     if (!this.state.currentIssue.hasOwnProperty('exemplare')) {
@@ -98,19 +103,19 @@ export class IssueComponent implements OnInit {
     if (this.initial_pages < this.state.currentIssue.pocet_stran) {
       this.setPagesRange();
       // Pridat chybejici stranky pro vsechny exemplare
-      this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
-        if (!ex.stav) {
-          ex.stav = ['ChS'];
-        } else if (!ex.stav.includes('ChS')) {
-          ex.stav.push('ChS');
-        }
-        if (ex.stav.includes('OK')) {
-          ex.stav.splice(ex.stav.indexOf('OK'), 1);
-        }
-        for (let i = this.initial_pages; i < this.state.currentIssue.pocet_stran; i++) {
-          ex.pagesRange[i].sel = true;
-        }
-      });
+      // this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
+      //   if (!ex.stav) {
+      //     ex.stav = ['ChS'];
+      //   } else if (!ex.stav.includes('ChS')) {
+      //     ex.stav.push('ChS');
+      //   }
+      //   if (ex.stav.includes('OK')) {
+      //     ex.stav.splice(ex.stav.indexOf('OK'), 1);
+      //   }
+      //   for (let i = this.initial_pages; i < this.state.currentIssue.pocet_stran; i++) {
+      //     ex.pagesRange[i].sel = true;
+      //   }
+      // });
     }
     this.initial_pages = this.state.currentIssue.pocet_stran;
   }
@@ -118,7 +123,8 @@ export class IssueComponent implements OnInit {
   setData(res: any[]) {
     if (res.length > 0) {
       this.state.currentIssue = new Issue().fromJSON(res[0]);
-
+      this.state.currentIssue.exemplare = Object.assign([], res);
+      console.log(this.state.currentIssue);
       this.initial_pages = this.state.currentIssue.pocet_stran;
 
       this.setPagesRange();
@@ -222,22 +228,22 @@ export class IssueComponent implements OnInit {
   }
 
   addPub() {
-   /*  this.modalService.open(AddVydaniDialogComponent,
-      { 'issue': this.state.currentIssue, 'state': this.state, 'service': this.service }
-    ); */
+    /*  this.modalService.open(AddVydaniDialogComponent,
+       { 'issue': this.state.currentIssue, 'state': this.state, 'service': this.service }
+     ); */
     const dialogRef = this.dialog.open(AddVydaniDialogComponent, {
       width: '250px',
-      data: {issue: this.state.currentIssue}
+      data: { issue: this.state.currentIssue }
     });
 
   }
 
 
   editPages() {
-    
+
     const dialogRef = this.dialog.open(EditPagesComponent, {
       width: '250px',
-      data: {issue: this.state.currentIssue}
+      data: { issue: this.state.currentIssue }
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

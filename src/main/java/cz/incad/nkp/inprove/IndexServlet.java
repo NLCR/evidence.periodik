@@ -117,74 +117,92 @@ public class IndexServlet extends HttpServlet {
         out.println(json.toString(2));
       }
     },
-    ADD_ISSUE {
-      @Override
-      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-
-        resp.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = resp.getWriter();
-        JSONObject json = new JSONObject();
-        try {
-          Indexer indexer = new Indexer();
-          CloneParams jo = new CloneParams(new JSONObject(req.getParameter("cfg")));
-          indexer.clone(jo);
-
-        } catch (Exception ex) {
-          LOGGER.log(Level.SEVERE, null, ex);
-          json.put("error", ex.toString());
-        }
-        out.println(json.toString(2));
-      }
-    },
-    SAVE_ISSUE {
-      @Override
-      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-
-        resp.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = resp.getWriter();
-        JSONObject json = new JSONObject();
-        try {
-          Indexer indexer = new Indexer();
-          JSONObject jo;
-          if (req.getMethod().equals("POST")) {
-            jo = new JSONObject(IOUtils.toString(req.getInputStream(), "UTF-8"));
-          } else {
-            jo = new JSONObject(req.getParameter("json"));
-          }
-          json.put("save issue", indexer.fromJSON(jo));
-        } catch (Exception ex) {
-          LOGGER.log(Level.SEVERE, null, ex);
-          json.put("error", ex.toString());
-        }
-        out.println(json.toString(2));
-      }
-    },
-    SAVE_ISSUES {
-      @Override
-      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-
-        resp.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = resp.getWriter();
-        String js = IOUtils.toString(req.getInputStream(), "UTF-8");
-        JSONObject json = new JSONObject();
-        try {
-          Indexer indexer = new Indexer();
-          JSONObject jo = new JSONObject(js);
-          JSONArray ja = jo.getJSONArray("issues");
-          JSONObject svazek = jo.getJSONObject("svazek");
-
-          json.put("svazek", indexer.indexSvazek(svazek));
-          for (int i = 0; i < ja.length(); i++) {
-            json.put("issue" + i, indexer.fromJSON(ja.getJSONObject(i)));
-            //json.put("issue"+i, ja.getJSONObject(i));
-          }
-        } catch (Exception ex) {
-          LOGGER.log(Level.SEVERE, null, ex);
-          json.put("error", ex.toString());
-        }
-        out.println(json.toString(2));
-      }
-    },
+//    ADD_ISSUE {
+//      @Override
+//      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+//
+//        resp.setContentType("application/json;charset=UTF-8");
+//        PrintWriter out = resp.getWriter();
+//        JSONObject json = new JSONObject();
+//        try {
+//          Indexer indexer = new Indexer();
+//          CloneParams jo = new CloneParams(new JSONObject(req.getParameter("cfg")));
+//          indexer.clone(jo);
+//
+//        } catch (Exception ex) {
+//          LOGGER.log(Level.SEVERE, null, ex);
+//          json.put("error", ex.toString());
+//        }
+//        out.println(json.toString(2));
+//      }
+//    },
+//    SAVE_ISSUE {
+//      @Override
+//      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+//
+//        resp.setContentType("application/json;charset=UTF-8");
+//        PrintWriter out = resp.getWriter();
+//        JSONObject json = new JSONObject();
+//        try {
+//          Indexer indexer = new Indexer();
+//          JSONObject jo;
+//          if (req.getMethod().equals("POST")) {
+//            jo = new JSONObject(IOUtils.toString(req.getInputStream(), "UTF-8"));
+//          } else {
+//            jo = new JSONObject(req.getParameter("json"));
+//          }
+//          json.put("save issue", indexer.fromJSON(jo));
+//        } catch (Exception ex) {
+//          LOGGER.log(Level.SEVERE, null, ex);
+//          json.put("error", ex.toString());
+//        }
+//        out.println(json.toString(2));
+//      }
+//    },
+//    SAVE_ISSUES {
+//      @Override
+//      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+//
+//        resp.setContentType("application/json;charset=UTF-8");
+//        PrintWriter out = resp.getWriter();
+//        String js = IOUtils.toString(req.getInputStream(), "UTF-8");
+//        JSONObject json = new JSONObject();
+//        try {
+//          Indexer indexer = new Indexer();
+//          JSONObject jo = new JSONObject(js);
+//          JSONArray ja = jo.getJSONArray("issues");
+//          JSONObject svazek = jo.getJSONObject("svazek");
+//
+//          json.put("svazek", indexer.indexSvazek(svazek));
+//          for (int i = 0; i < ja.length(); i++) {
+//            json.put("issue" + i, indexer.fromJSON(ja.getJSONObject(i)));
+//            //json.put("issue"+i, ja.getJSONObject(i));
+//          }
+//        } catch (Exception ex) {
+//          LOGGER.log(Level.SEVERE, null, ex);
+//          json.put("error", ex.toString());
+//        }
+//        out.println(json.toString(2));
+//      }
+//    },
+//    DELETE_ISSUE {
+//      @Override
+//      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+//
+//        resp.setContentType("application/json;charset=UTF-8");
+//        PrintWriter out = resp.getWriter();
+//        JSONObject json = new JSONObject();
+//        try {
+//          Indexer indexer = new Indexer();
+//          indexer.delete(req.getParameter("id"));
+//
+//        } catch (Exception ex) {
+//          LOGGER.log(Level.SEVERE, null, ex);
+//          json.put("error", ex.toString());
+//        }
+//        out.println(json.toString(2));
+//      }
+//    },
     SAVE_EXEMPLARS {
       @Override
       void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
@@ -197,9 +215,9 @@ public class IndexServlet extends HttpServlet {
           Indexer indexer = new Indexer();
           JSONObject jo = new JSONObject(js);
           JSONArray ja = jo.getJSONArray("exemplars");
-          JSONObject svazek = jo.getJSONObject("svazek");
-
-          json.put("svazek", indexer.indexSvazek(svazek));
+          if (jo.has("svazek")){
+            json.put("svazek", indexer.indexSvazek(jo.getJSONObject("svazek")));
+          }
           indexer.saveExemplars(ja);
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);
@@ -221,6 +239,24 @@ public class IndexServlet extends HttpServlet {
           JSONObject jo = new JSONObject(js);
 
           json = indexer.saveExemplar(jo);
+        } catch (Exception ex) {
+          LOGGER.log(Level.SEVERE, null, ex);
+          json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
+    DELETE_EXEMPLAR {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          indexer.deleteExemplar(req.getParameter("id"));
+
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);
           json.put("error", ex.toString());
@@ -404,24 +440,6 @@ public class IndexServlet extends HttpServlet {
                     new JSONObject(req.getParameter("options"))
             );
           }
-
-        } catch (Exception ex) {
-          LOGGER.log(Level.SEVERE, null, ex);
-          json.put("error", ex.toString());
-        }
-        out.println(json.toString(2));
-      }
-    },
-    DELETE_ISSUE {
-      @Override
-      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-
-        resp.setContentType("application/json;charset=UTF-8");
-        PrintWriter out = resp.getWriter();
-        JSONObject json = new JSONObject();
-        try {
-          Indexer indexer = new Indexer();
-          indexer.delete(req.getParameter("id"));
 
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);

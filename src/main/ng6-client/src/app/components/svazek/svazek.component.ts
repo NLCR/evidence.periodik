@@ -749,6 +749,14 @@ export class SvazekComponent implements OnInit, OnDestroy {
     });
   }
 
+  fillNazev(element) {
+    console.log(element);
+    if (!element.nazev || element.nazev === '') {
+      element.nazev = this.state.currentVolume.titul.meta_nazev;
+    }
+  }
+
+
   log(element) {
     console.log(element);
   }

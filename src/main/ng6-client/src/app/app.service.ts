@@ -110,7 +110,7 @@ export class AppService {
     let params: HttpParams = new HttpParams();
 
     params = new HttpParams()
-    .set('q', carovy_kod)
+      .set('q', carovy_kod)
       .set('fq', "id_titul:" + idTitul)
       .set('wt', 'json')
       .set('rows', '1000')
@@ -284,8 +284,8 @@ export class AppService {
   }
 
 
-  isIssueValid(issue: Issue): {valid: boolean, error: string} {
-    const ret = {valid: true, error: ''};
+  isIssueValid(issue: Issue): { valid: boolean, error: string } {
+    const ret = { valid: true, error: '' };
     try {
       //      if (!this.isValidAsInteger(issue.rocnik)) {
       //        return false;
@@ -326,8 +326,8 @@ export class AppService {
     return ret;
   }
 
-  isExemplarValid(ex: Exemplar): {valid: boolean, error: string} {
-    const ret = {valid: true, error: ''};
+  isExemplarValid(ex: Exemplar): { valid: boolean, error: string } {
+    const ret = { valid: true, error: '' };
     try {
       //      if (!this.isValidAsInteger(issue.rocnik)) {
       //        return false;
@@ -360,7 +360,7 @@ export class AppService {
       if (ex.stav && isArray(ex.stav)) {
         ex.stav = ex.stav.filter(st => st !== 'null');
       }
-        
+
     } catch (ex) {
       console.log(ex);
       ret.valid = false;
@@ -404,12 +404,11 @@ export class AppService {
   saveIssue(issue: Issue): Observable<any> {
     const isValid = this.isIssueValid(issue);
     if (isValid.valid) {
-      const url = 'index?action=SAVE_ISSUE';
+      const url = 'index';
       const params: HttpParams = new HttpParams()
-        .set('action', 'SAVE_ISSUE')
-        .set('json', JSON.stringify(issue));
+        .set('action', 'SAVE_EXEMPLARS');
 
-      return this.http.post(url, issue);
+      return this.http.post(url, {exemplars: issue.exemplare}, { params });
     } else {
       return of(isValid);
     }
@@ -440,8 +439,8 @@ export class AppService {
   }
 
   duplicateExemplar(issue: Issue, vlastnik: string,
-                    start_cislo: number, onspecial: boolean,
-                    exemplar: Exemplar, start: string, end: string): Observable<any> {
+    start_cislo: number, onspecial: boolean,
+    exemplar: Exemplar, start: string, end: string): Observable<any> {
     // console.log(exemplar);
     const url = 'index';
     const params: HttpParams = new HttpParams()
@@ -480,27 +479,41 @@ export class AppService {
     // return this.http.get(url, { params });
 
     const url = 'index?action=COLLECT_VDK_SET';
-    const json = {issue, urlvdk, options};
+    const json = { issue, urlvdk, options };
 
     return this.http.post(url, json);
 
   }
 
   saveCurrentIssue(): Observable<any> {
-    const issue: Issue = JSON.parse(JSON.stringify(this.state.currentIssue));
+    const issue: Issue = this.state.currentIssue;
     issue.exemplare.forEach((ex: Exemplar) => {
-      delete ex.pagesRange;
+      // delete ex.pagesRange;
+      // copy issue changed properties to exemplar
+
+      ex.nazev = issue.nazev;
+      ex.podnazev = issue.podnazev;
+      ex.vydani = issue.vydani;
+      ex.znak_oznaceni_vydani = issue.znak_oznaceni_vydani;
+      ex.cas_vydani = issue.cas_vydani;
+      ex.mutace = issue.mutace;
+      ex.periodicita = issue.periodicita;
+      ex.pocet_stran = issue.pocet_stran;
+      ex.rocnik = issue.rocnik;
+      ex.cislo = issue.cislo;
+      ex.druhe_cislo = issue.druhe_cislo;
     });
     return this.saveIssue(issue);
   }
 
   getIssue(id: string): Observable<any[]> {
-    const url = '/api/search/issue/select';
+    const url = '/api/search/exemplar/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
-      .set('fl', '*,exemplare:[json],pages:[json]')
-      .set('fq', 'id:"' + id + '"');
+      .set('rows', '30')
+      .set('fl', '*,pages:[json]')
+      .set('fq', 'id_issue:"' + id + '"');
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
@@ -549,17 +562,21 @@ export class AppService {
   }
 
   getTitulTotals(id: string) {
-    const url = '/api/search/issue/select';
+    const url = '/api/search/exemplar/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
-      //    .set('fq', 'datum_vydani:"' + datum + '"')
+      .set('rows', '0')
       .append('fq', 'id_titul:"' + id + '"')
       .set('stats', 'true')
       .set('stats.field', '{!key=mutace countDistinct=true count=true}mutace')
       .append('stats.field', '{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
       .append('stats.field', '{!key=vlastnik countDistinct=true count=true max=true min=true}vlastnik')
-      .append('stats.field', 'exemplare');
+      // .append('stats.field', 'exemplare')
+      .append('group', 'true')
+      .append('group.field', 'id_issue')
+      .append('group.limit', '1')
+      .append('group.ngroups', 'true');
     return this.http.get(url, { params });
   }
 
@@ -612,14 +629,14 @@ export class AppService {
     // const params = this.doSearchParams()
     //  .append('fq', 'id_titul:"' + id + '"');
 
-     
+
     const url = '/api/search/exemplar/select';
     const params = this.doSearchParams()
-    .append('fq', 'id_titul:"' + id + '"')
-    .append('group', 'true')
-    .append('group.field', 'id_issue')
-    .append('group.limit', '20')
-    .append('group.ngroups', 'true');
+      .append('fq', 'id_titul:"' + id + '"')
+      .append('group', 'true')
+      .append('group.field', 'id_issue')
+      .append('group.limit', '20')
+      .append('group.ngroups', 'true');
 
 
     return this.http.get(url, { params });
@@ -629,20 +646,6 @@ export class AppService {
     const url = '/api/search/issue/permonik';
     let params = this.doSearchParams();
     params = params.append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
-    return this.http.get(url, { params });
-  }
-
-  searchTitulyHome() {
-    const url = '/api/search/issue/select';
-
-    const params: HttpParams = new HttpParams()
-      .set('q', '*')
-      .set('wt', 'json')
-      .set('rows', '500')
-      .set('sort', 'datum_vydani_den asc')
-      .set('fq', '{!collapse field=id_titul}')
-      .set('fl', '*, id_titul, exemplare:[json], pages:[json]');
-
     return this.http.get(url, { params });
   }
 
@@ -672,7 +675,6 @@ export class AppService {
   resetHeslo(json: { id: string, oldheslo: string, newheslo: string }) {
     return this.http.post<any>(`/api/users/resetpwd`, json);
   }
-
 
 
   showSnackBar(s: string, r: string = '', error: boolean = false) {

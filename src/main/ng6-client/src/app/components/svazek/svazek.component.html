@@ -127,7 +127,7 @@
             <div>{{ 'desc.number_exists' | translate }}</div>
           </th>
           <td mat-cell *matCellDef="let element">
-            <mat-checkbox [(ngModel)]="element.active"></mat-checkbox>
+            <mat-checkbox [(ngModel)]="element.active" (change)="fillNazev(element)"></mat-checkbox>
           </td>
           <td mat-footer-cell *matFooterCellDef colspan="7"></td>
         </ng-container>
