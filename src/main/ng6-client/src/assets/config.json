@@ -15,7 +15,8 @@
   "owners": [
     {"name":  "NKP", "url":"http://"},
     {"name":  "MZK", "url":"http://"},
-    {"name":  "VKOL", "url":"http://"}
+    {"name":  "VKOL", "url":"http://"},
+    {"name":  "SVKUL", "url":"http://"}
   ],
   "stavy": [
     "OK",
