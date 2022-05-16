@@ -1,8 +1,8 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {AppState} from '../../app.state';
-import {AppService} from '../../app.service';
-import {Titul} from '../../models/titul';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component } from '@angular/core';
+import { AppState } from '../../app.state';
+import { AppService } from '../../app.service';
+import { Titul } from '../../models/titul';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-titul-dialog',
@@ -13,9 +13,7 @@ export class AddTitulDialogComponent {
 
   titul: Titul = new Titul();
 
-  constructor(public dialogRef: MatDialogRef<AddTitulDialogComponent>,
-              public state: AppState,
-              private service: AppService) {
+  constructor(public dialogRef: MatDialogRef<AddTitulDialogComponent>, public state: AppState, private service: AppService) {
   }
 
   ok() {

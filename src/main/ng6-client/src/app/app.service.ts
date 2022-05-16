@@ -3,12 +3,10 @@ import { Router, ActivatedRoute, Params, NavigationStart, NavigationEnd, Navigat
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
-import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
-import { of } from 'rxjs';
 
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import { CloneParams } from './models/clone-params';
 import { AppState } from './app.state';
@@ -18,8 +16,7 @@ import { Issue } from './models/issue';
 import { Exemplar } from './models/exemplar';
 import { Volume } from './models/volume';
 import { User } from './models/user';
-import { MatSnackBar } from '@angular/material';
-import { isArray } from 'util';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class AppService {
@@ -314,7 +311,7 @@ export class AppService {
 
       // Cistime stavy, aby nebyly "null"
       issue.exemplare.forEach(ex => {
-        if (ex.stav && isArray(ex.stav)) {
+        if (ex.stav && Array.isArray(ex.stav)) {
           ex.stav = ex.stav.filter(st => st !== 'null');
         }
       });
@@ -358,7 +355,7 @@ export class AppService {
       // }
 
       // Cistime stavy, aby nebyly "null"
-      if (ex.stav && isArray(ex.stav)) {
+      if (ex.stav && Array.isArray(ex.stav)) {
         ex.stav = ex.stav.filter(st => st !== 'null');
       }
 
@@ -409,7 +406,7 @@ export class AppService {
       const params: HttpParams = new HttpParams()
         .set('action', 'SAVE_EXEMPLARS');
 
-      return this.http.post(url, {exemplars: issue.exemplare}, { params });
+      return this.http.post(url, { exemplars: issue.exemplare }, { params });
     } else {
       return of(isValid);
     }

@@ -1,17 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {DatePipe} from '@angular/common';
-import {Router, ActivatedRoute} from '@angular/router';
-import {Subscription} from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-import {AppState} from '../../../app.state';
-import {AppService} from '../../../app.service';
+import { AppState } from '../../../app.state';
+import { AppService } from '../../../app.service';
 
 @Component({
   selector: 'app-calendar-month',
   templateUrl: './calendar-month.component.html',
   styleUrls: ['./calendar-month.component.scss']
 })
-export class CalendarMonthComponent implements OnInit {
+export class CalendarMonthComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
@@ -25,7 +25,7 @@ export class CalendarMonthComponent implements OnInit {
     private service: AppService,
     private router: Router,
     private route: ActivatedRoute,
-    private datePipe: DatePipe) {}
+    private datePipe: DatePipe) { }
 
   ngOnInit() {
     this.state.calendarView = "month";
@@ -33,7 +33,7 @@ export class CalendarMonthComponent implements OnInit {
       this.setDays();
     }));
 
-      this.setDays();
+    this.setDays();
 
     this.subscriptions.push(this.state.searchChanged.subscribe(res => {
       this.setIssues();

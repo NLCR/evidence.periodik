@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AddVydaniDialogComponent } from './add-vydani-dialog.component';
 
@@ -6,7 +6,7 @@ describe('AddVydaniDialogComponent', () => {
   let component: AddVydaniDialogComponent;
   let fixture: ComponentFixture<AddVydaniDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AddVydaniDialogComponent ]
     })

@@ -75,7 +75,7 @@
 
       <ng-container matColumnDef="add">
         <th mat-header-cell *matHeaderCellDef>
-          <mat-checkbox (change)="toggleSelection()" [(ngModel)]="selection" [id]="'selection'" [indeterminate]="selection == null"></mat-checkbox>
+          <mat-checkbox (change)="toggleSelection()" [(ngModel)]="selection" [id]="'selection'" [indeterminate]="selection === null"></mat-checkbox>
         </th>
         <td mat-cell *matCellDef="let row" >
           <mat-checkbox (change)="checkSelection()" [(ngModel)]="row['selected']" [id]="'add_' + row.permonik.carovy_kod"></mat-checkbox>
@@ -187,7 +187,7 @@
                     (change)="toggleSelection()"
                     [(ngModel)]="selection"
                     [id]="'selection'"
-                    [indeterminate]="selection == null"
+                    [indeterminate]="selection === null"
                     type="checkbox" />
             </mz-checkbox-container>
           </th>

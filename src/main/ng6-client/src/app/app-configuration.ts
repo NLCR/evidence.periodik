@@ -98,7 +98,7 @@ import { Configuration } from './shared/configuration';
             }
         });
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             resolve();
         });
     }

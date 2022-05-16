@@ -5,7 +5,7 @@ import { User } from 'src/app/models/user';
 import { Md5 } from 'ts-md5';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { PromptDialogComponent } from '../prompt-dialog/prompt-dialog.component';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-admin',

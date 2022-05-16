@@ -1,19 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import {DatePipe} from '@angular/common';
-import {Router} from '@angular/router';
-import {Subscription} from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-import {AppState} from '../../../app.state';
-import {AppService} from '../../../app.service';
+import { AppState } from '../../../app.state';
+import { AppService } from '../../../app.service';
 
-import {ActivatedRoute} from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-calendar-list',
   templateUrl: './calendar-list.component.html',
   styleUrls: ['./calendar-list.component.scss']
 })
-export class CalendarListComponent implements OnInit {
+export class CalendarListComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
@@ -27,7 +27,7 @@ export class CalendarListComponent implements OnInit {
     private service: AppService,
     private router: Router,
     private route: ActivatedRoute,
-    private datePipe: DatePipe) {}
+    private datePipe: DatePipe) { }
 
   ngOnInit() {
     this.state.calendarView = "list";
@@ -35,16 +35,16 @@ export class CalendarListComponent implements OnInit {
       this.setDays();
     }));
 
-    
-      this.setDays();
-      
+
+    this.setDays();
+
 
     this.subscriptions.push(this.state.searchChanged.subscribe(res => {
       this.setIssues();
     }));
-    
+
     let day = this.route.snapshot.paramMap.get('day');
-    
+
     if (day) {
       let d: Date = new Date(parseInt(day.substr(0, 4)), parseInt(day.substr(4, 2)) - 1, parseInt(day.substr(6, 2)));
       this.state.changeCurrentDay(d);
@@ -98,7 +98,7 @@ export class CalendarListComponent implements OnInit {
     //let str2 =  this.datePipe.transform(this.currentDay, 'yyyy-MM');
     return this.issues.filter(e => this.datePipe.transform(new Date(e['datum_vydani']), 'yyyy-MM-dd') === str1);
   }
-  
+
   getIssues() {
     let month = this.datePipe.transform(this.state.currentDay, 'yyyy-MM');
     if (this.state.currentTitul.id && this.state.currentTitul.id !== "") {

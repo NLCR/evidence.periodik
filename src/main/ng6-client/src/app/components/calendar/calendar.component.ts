@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {Subscription} from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-import {AppState} from '../../app.state';
-import {AppService} from '../../app.service';
+import { AppState } from '../../app.state';
+import { AppService } from '../../app.service';
 
 import { AppConfiguration } from 'src/app/app-configuration';
 
@@ -12,7 +12,7 @@ import { AppConfiguration } from 'src/app/app-configuration';
     templateUrl: './calendar.component.html',
     styleUrls: ['./calendar.component.scss']
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnDestroy {
 
     subscriptions: Subscription[] = [];
 
@@ -22,7 +22,7 @@ export class CalendarComponent implements OnInit {
         public state: AppState,
         private service: AppService,
         public config: AppConfiguration
-    ) {}
+    ) { }
 
 
     ngOnDestroy() {
@@ -31,18 +31,18 @@ export class CalendarComponent implements OnInit {
         });
         this.subscriptions = [];
     }
-    
+
     ngOnInit() {
 
-//        this.subscriptions.push(this.state.stateChanged.subscribe(st => {
-//            this.analyze();
-//        }));
+        //        this.subscriptions.push(this.state.stateChanged.subscribe(st => {
+        //            this.analyze();
+        //        }));
 
         let id = this.route.snapshot.paramMap.get('id');
         if (id) {
             setTimeout(() => {
                 this.service.getTitul(id).subscribe(res => {
-                  this.state.setCurrentTitul(res)
+                    this.state.setCurrentTitul(res)
                 });
             }, 10);
         }

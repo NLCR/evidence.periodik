@@ -1,6 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {AppState} from '../../app.state';
-import {AppService} from '../../app.service';
+import { Component, OnInit } from '@angular/core';
+import { AppState } from '../../app.state';
 
 @Component({
   selector: 'app-home',

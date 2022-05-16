@@ -1,4 +1,4 @@
-<div fxLayout="row" *ngIf="issues?.length" class="app-calendar-list-item-wrapper" [class.app-disabled]="isOtherMonth()" [class.app-calendar-day-special-holiday]="special.type == 'svatek'" [class.app-calendar-day-special-event]="special.type == 'udalost'">
+<div fxLayout="row" *ngIf="issues?.length" class="app-calendar-list-item-wrapper" [class.app-disabled]="isOtherMonth()" [class.app-calendar-day-special-holiday]="special.type === 'svatek'" [class.app-calendar-day-special-event]="special.type === 'udalost'">
   <div fxFlexAlign="left" class="app-fx-left">
     <div class="app-calendar-list-item-weekday">
       {{ day | date : 'E' : null : state.currentLang }}

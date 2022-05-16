@@ -1,9 +1,9 @@
-import {Component, Inject} from '@angular/core';
+import { Component, Inject } from '@angular/core';
 
-import {AppState} from '../../app.state';
-import {AppService} from '../../app.service';
-import {Issue} from '../../models/issue';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { AppState } from '../../app.state';
+import { AppService } from '../../app.service';
+import { Issue } from '../../models/issue';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddTitulDialogComponent } from '../add-titul-dialog/add-titul-dialog.component';
 
 @Component({
@@ -17,10 +17,10 @@ export class AddVydaniDialogComponent {
   issue: Issue;
 
   constructor(public dialogRef: MatDialogRef<AddTitulDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: {issue: Issue},
-              public state: AppState,
-              private service: AppService) {
-      this.issue = data.issue;
+    @Inject(MAT_DIALOG_DATA) public data: { issue: Issue },
+    public state: AppState,
+    private service: AppService) {
+    this.issue = data.issue;
   }
 
   cancel() {

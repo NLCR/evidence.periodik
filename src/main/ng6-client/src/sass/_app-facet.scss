@@ -3,9 +3,7 @@
 .app-facet-wrapper {
   @extend .app-full-wrapper, .app-fx-facet;
   @import "app-facet-used";
-  
 
-  
   .mat-accordion {
     .mat-expansion-panel {
       @extend .app-clean-shadow, .app-clean-mg, .app-clean-radius;
@@ -40,17 +38,17 @@
       .mat-list-item {
         .mat-list-item-content {
           @extend .app-clean-pd;
+          justify-content: space-between;
 
           span {
             color: $app-gray-5;
             font-size: 14px;
             margin-left: 5px;
           }
-        } 
+        }
       }
-      
     }
-    
+
     .mat-list-item {
       @include setListItemView();
     }

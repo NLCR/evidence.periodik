@@ -12,12 +12,12 @@
   </mat-card-content>
   <mat-card-actions>
     <button mat-button *ngIf="item['num_exemplare'] > 0">{{ item['num_exemplare'] }} <span class="app-fl-low">{{ 'desc.specimens' | translate }}</span></button>
-    <button mat-button *ngIf="item['num_exemplare'] == 0">{{ item['num_exemplare'] }}  <span class="app-fl-low">{{ 'desc.specimens' | translate }}</span></button>
+    <button mat-button *ngIf="item['num_exemplare'] === 0">{{ item['num_exemplare'] }}  <span class="app-fl-low">{{ 'desc.specimens' | translate }}</span></button>
     <button mat-button *ngIf="item['num_mutace'] > 0">{{ item['num_mutace'] }} <span class="app-fl-low">{{ 'desc.mutations' | translate }}</span></button>
-    <button mat-button *ngIf="item['num_mutace'] == 0">{{ item['num_mutace'] }} <span class="app-fl-low">{{ 'desc.mutations' | translate }}</span></button>
+    <button mat-button *ngIf="item['num_mutace'] === 0">{{ item['num_mutace'] }} <span class="app-fl-low">{{ 'desc.mutations' | translate }}</span></button>
     <button mat-button *ngIf="item['num_vlastniku'] > 0">{{ item['num_vlastniku'] }} <span class="app-fl-low">{{ 'desc.owners' | translate }}</span></button>
-    <button mat-button *ngIf="item['num_vlastniku'] == 0">{{ item['num_vlastniku'] }} <span class="app-fl-low">{{ 'desc.owners' | translate }}</span></button>
+    <button mat-button *ngIf="item['num_vlastniku'] === 0">{{ item['num_vlastniku'] }} <span class="app-fl-low">{{ 'desc.owners' | translate }}</span></button>
     <button mat-button *ngIf="item['digitalizovano'] > 0">{{ item['digitalizovano'] }} <span class="app-fl-low">{{ 'desc.digitized' | translate }}</span></button>
-    <button mat-button *ngIf="item['digitalizovano'] == 0">{{ item['digitalizovano'] }} <span class="app-fl-low">{{ 'desc.digitized' | translate }}</span></button>
+    <button mat-button *ngIf="item['digitalizovano'] === 0">{{ item['digitalizovano'] }} <span class="app-fl-low">{{ 'desc.digitized' | translate }}</span></button>
   </mat-card-actions>
 </mat-card>

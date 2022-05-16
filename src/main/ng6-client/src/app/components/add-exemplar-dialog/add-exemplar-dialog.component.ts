@@ -4,10 +4,9 @@ import { AppService } from '../../app.service';
 import { Issue } from '../../models/issue';
 import { Exemplar } from '../../models/exemplar';
 import { Router } from '@angular/router';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { Utils } from 'src/app/utils';
-import { isArray } from 'util';
 import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
@@ -110,7 +109,7 @@ export class AddExemplarDialogComponent implements OnInit {
     // Back compatibility.
     // From pages : string[] to pages: {missing: string[], damaged: string[]}
     // Assign to missing
-    if (this.exemplar.pages && isArray(this.exemplar.pages) || !this.exemplar.pages.missing) {
+    if (this.exemplar.pages && Array.isArray(this.exemplar.pages) || !this.exemplar.pages.missing) {
       const pages = Object.assign([], this.exemplar.pages);
       this.exemplar.pages = { missing: Object.assign([], this.exemplar.pages), damaged: Object.assign([], this.exemplar.pages) };
     }

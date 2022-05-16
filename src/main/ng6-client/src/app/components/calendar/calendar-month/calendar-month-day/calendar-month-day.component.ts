@@ -14,10 +14,10 @@ import { AppConfiguration } from 'src/app/app-configuration';
 
 export class CalendarMonthDayComponent implements OnInit {
 
-  @Input('day') day: Date;
-  @Input('special') special: any;
-  @Input('current') current: Date;
-  @Input('issues') issues: any[];
+  @Input() day: Date;
+  @Input() special: any;
+  @Input() current: Date;
+  @Input() issues: any[];
   
   isSpecial: boolean;
   id: string;

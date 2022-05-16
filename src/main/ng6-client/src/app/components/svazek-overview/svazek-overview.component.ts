@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { AppState } from 'src/app/app.state';
 import { AppService } from 'src/app/app.service';
@@ -96,7 +96,7 @@ export class SvazekOverviewComponent implements OnInit {
     //       idx++;
     //       issue = res[idx];
 
-          
+
     //     }
     //   }
     // });

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource, MatDialog, PageEvent } from '@angular/material';
-import { Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Issue } from '../../models/issue';
 import { AppState } from '../../app.state';
 import { AddExemplarDialogComponent } from '../add-exemplar-dialog/add-exemplar-dialog.component';
@@ -38,7 +39,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     public state: AppState,
     public service: AppService,
     private translate: TranslateService,
-    public config: AppConfiguration) {}
+    public config: AppConfiguration) { }
 
   ngOnInit() {
 

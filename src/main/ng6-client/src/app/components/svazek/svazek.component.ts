@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewContainerRef, TemplateRef, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewContainerRef, TemplateRef, ViewChild, OnDestroy } from '@angular/core';
 import { AppState } from 'src/app/app.state';
 import { AddTitulDialogComponent } from 'src/app/components/add-titul-dialog/add-titul-dialog.component';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
@@ -7,17 +7,18 @@ import { Titul } from 'src/app/models/titul';
 import { Volume } from 'src/app/models/volume';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { MatTableDataSource, MatPaginator, MatDialog, MatDatepickerInputEvent, MatDatepicker, PageEvent } from '@angular/material';
+import { MatDatepickerInputEvent, MatDatepicker } from '@angular/material/datepicker';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
 
 import { Issue } from 'src/app/models/issue';
-// import { CisloSvazku } from 'src/app/models/cislo-svazku';
 import { DatePipe } from '@angular/common';
 import { Utils } from 'src/app/utils';
 import { OverlayRef, Overlay } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Exemplar } from 'src/app/models/exemplar';
-import { isArray } from 'util';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { SvazekOverviewComponent } from '../svazek-overview/svazek-overview.component';
 import { FormControl } from '@angular/forms';
@@ -32,7 +33,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   private overlayRef: OverlayRef;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild('pickerOd', { read: undefined, static: false }) pickerOd: MatDatepicker<Date>;
+  @ViewChild('pickerOd', { read: undefined }) pickerOd: MatDatepicker<Date>;
 
   dsExemplars: MatTableDataSource<Exemplar>;
   issueColumns = [
@@ -189,7 +190,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
           this.state.currentVolume.carovy_kod = id;
           this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
         }
-          this.loading = false;
+        this.loading = false;
       }
     });
 
@@ -614,7 +615,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // Back compatibility.
     // From pages : string[] to pages: {missing: string[], damaged: string[]}
     // Assign to missing
-    if (el.pages && isArray(el.pages)) {
+    if (el.pages && Array.isArray(el.pages)) {
       const pages = Object.assign([], el.pages);
       el.pages = { missing: Object.assign([], el.pages), damaged: [] };
     }

@@ -1,7 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AppService } from 'src/app/app.service';
 import { AppState } from 'src/app/app.state';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Md5 } from 'ts-md5';
 
@@ -33,7 +33,7 @@ export class PasswordDialogComponent implements OnInit {
 
   onSubmit() {
     if (this.hesloForm.invalid) {
-        return;
+      return;
     }
     const data = {
       id: this.state.user.id,

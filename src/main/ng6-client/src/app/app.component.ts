@@ -7,7 +7,6 @@ import { Subscription } from 'rxjs';
 
 import { AppService } from './app.service';
 import { AppState } from './app.state';
-import { HttpClient } from '@angular/common/http';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { AuthenticationService } from './shared/authentication.service';
 
@@ -30,7 +29,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private config: AppConfiguration,
     private translate: TranslateService,
     private titleService: Title,
-    private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router) { }
 
@@ -90,7 +88,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   showToolbarAndFacets() {
-    //state.activePage != '/' && state.activePage != '/home' && state.activePage != '/login' && state.activePage != '/add-record'
+    // state.activePage != '/' && state.activePage != '/home' && state.activePage != '/login' && state.activePage != '/add-record'
     return this.state.activePage.indexOf('/calendar') > -1 || this.state.activePage.indexOf('/result') > -1;
   }
 

@@ -17,33 +17,36 @@ import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
   { path: 'titul', component: MetatitulComponent },
-      { path: 'titul/:id', component: MetatitulComponent },
-      { path: 'admin', component: AdminComponent, canActivate: [AuthGuard]},
-      { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
-      { path: 'issue', component: IssueComponent, canActivate: [AuthGuard] },
-      { path: 'issue/:id', component: IssueComponent },
-      { path: 'home', component: HomeComponent },
-      { path: 'svazek', component: SvazekComponent },
-      { path: 'svazek/:id', component: SvazekComponent },
-      { path: 'result/:id', component: ResultComponent },
-      {
-        path: 'calendar/:id', component: CalendarComponent,
-        children: [
-          { path: '', redirectTo: 'month', pathMatch: 'full' },
-          { path: 'month/:day', component: CalendarMonthComponent },
-          { path: 'month', component: CalendarMonthComponent },
-          { path: 'year', component: CalendarYearComponent },
-          { path: 'year/:day', component: CalendarYearComponent },
-          { path: 'list', component: CalendarListComponent },
-          { path: 'list/:day', component: CalendarListComponent }
-        ]
-      },
-      { path: 'login', component: LoginComponent },
-      { path: '', redirectTo: 'home', pathMatch: 'full' }
+  { path: 'titul/:id', component: MetatitulComponent },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  /**
+   * #169 - remove add_record with functionality
+   * { path: 'issue', component: IssueComponent, canActivate: [AuthGuard] },
+   */
+  { path: 'issue/:id', component: IssueComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'svazek', component: SvazekComponent },
+  { path: 'svazek/:id', component: SvazekComponent },
+  { path: 'result/:id', component: ResultComponent },
+  {
+    path: 'calendar/:id', component: CalendarComponent,
+    children: [
+      { path: '', redirectTo: 'month', pathMatch: 'full' },
+      { path: 'month/:day', component: CalendarMonthComponent },
+      { path: 'month', component: CalendarMonthComponent },
+      { path: 'year', component: CalendarYearComponent },
+      { path: 'year/:day', component: CalendarYearComponent },
+      { path: 'list', component: CalendarListComponent },
+      { path: 'list/:day', component: CalendarListComponent }
+    ]
+  },
+  { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

@@ -1,6 +1,6 @@
 <div class="app-calendar-day-content" [class.app-disabled]="isOtherMonth()"
-  [class.app-calendar-day-special-holiday]="special.type == 'svatek'"
-  [class.app-calendar-day-special-event]="special.type == 'udalost'">
+  [class.app-calendar-day-special-holiday]="special.type === 'svatek'"
+  [class.app-calendar-day-special-event]="special.type === 'udalost'">
   <div fxLayout="row">
     <div fxFlex>
       <div *ngIf="special.type" class="app-calendar-day-content-title">
@@ -33,7 +33,7 @@
         </span>
       </div>
     </div>
-    <div *ngIf="idx == 3" class="app-btn-show-more">
+    <div *ngIf="idx === 3" class="app-btn-show-more">
       <a [routerLink]="['/calendar', id, 'list']" [matTooltip]="'calendar.tooltip.show_all_issues' | translate">
         <mat-icon>{{ config.icons.link }}</mat-icon> <span>{{ issues.length - 3 }}</span>
         {{ 'calendar.next_issues' | translate }}

@@ -19,7 +19,6 @@
     "home": "Home",
     "meta_titles": "Metatitles",
     "volume": "Volume",
-    "add_record": "Add record",
     "administration": "Administration",
     "user_profile": "User profile",
     "login": "Login",
@@ -89,17 +88,16 @@
     "edit_issue": "Edit issue",
     "date": "Date",
     "number": "Number",
-    "renumber_up": "Automatic renumber up",
-    "renumber_down": "Automatic renumber down"
+    "renumber_down": "Renumber down"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "TThis action is not allowed, you are not logged in."
   },
 
-  "formatvdk":{
-    "CISLO": "Issue", 
+  "formatvdk": {
+    "CISLO": "Issue",
     "MESIC": "month",
-    "MESIC_SLOVA":"Month name"
+    "MESIC_SLOVA": "Month name"
   },
   "record": {
     "meta_title": "Meta title",
@@ -130,10 +128,10 @@
       "afternoon": "Afternoon",
       "evening": "Evening",
       "special": "Special"
-    },    
+    },
     "pages_count": "Pages count",
     "complete": "Complete",
-    "lost_pages" : "Damaged/lost pages",
+    "lost_pages": "Damaged/lost pages",
     "pages_missing": "Missing pages",
     "pages_damaged": "Damaged paged",
     "state": "State",
@@ -202,7 +200,7 @@
     "password_reset": "Password reset",
     "prepare": "Prepare",
     "add": "Add",
-    "load_the_entire_volume": "(Reload) Load the entire volume",
+    "load_the_entire_volume": "Cancel changes",
     "save_the_entire_volume": "Save the entire volume",
     "generate_again": "Generate / generate again",
     "update": "Update",
@@ -227,7 +225,7 @@
     "stav": "State",
     "mutace": "Mutation",
     "znak_oznaceni_vydani": "Mutation edition",
-    "vydani":"Publication"
+    "vydani": "Publication"
   },
   "result": {
     "found_records": "Found records",
