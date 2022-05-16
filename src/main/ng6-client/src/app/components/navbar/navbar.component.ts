@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { AppState } from '../../app.state';
 import { AppService } from '../../app.service';
-import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
-import { Router } from "@angular/router";
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { AuthenticationService } from 'src/app/shared/authentication.service';
-import {MatSidenav} from '@angular/material/sidenav';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-navbar',
@@ -15,7 +15,7 @@ import {MatSidenav} from '@angular/material/sidenav';
 })
 export class NavbarComponent implements OnInit {
   currLang: string;
-  @ViewChild('sidenav', {static: true}) sidenav: MatSidenav;
+  @ViewChild('sidenav', { static: true }) sidenav: MatSidenav;
 
   reason = '';
 
@@ -44,7 +44,7 @@ export class NavbarComponent implements OnInit {
       userLang = this.config.defaultLang;
     }
     this.service.changeLang(userLang);
-    
+
   }
 
   showSearchBar() {
@@ -67,7 +67,7 @@ export class NavbarComponent implements OnInit {
   }
 
   activeRoute() {
-    
+
     if (this.state.activePage.indexOf('/issue') > -1) {
       return 'issue';
     }

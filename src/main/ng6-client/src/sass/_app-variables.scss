@@ -1,48 +1,48 @@
 // --- VARIABLES ---
+@use '@angular/material' as mat;
 
-@import '~@angular/material/theming';
-@include mat-core();
+@include mat.core();
 
-$app-primary: mat-palette($mat-cyan);
-$app-accent: mat-palette($mat-pink, A200, A100, A400);
-$app-theme:  mat-light-theme($app-primary, $app-accent);
+$app-primary: mat.define-palette(mat.$cyan-palette);
+$app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$app-theme:  mat.define-light-theme($app-primary, $app-accent);
 
-@include angular-material-theme($app-theme);
+@include mat.all-component-themes($app-theme);
 
 // theme colors
-$app-primary-color: mat-color($app-primary);
-$app-primary-color-darker: mat-color($app-primary, 600);
+$app-primary-color: mat.get-color-from-palette($app-primary);
+$app-primary-color-darker: mat.get-color-from-palette($app-primary, 600);
 
 // base colors
 $app-color-white: #ffffff!default;
 $app-color-black: #000000 !default;
-$app-success-color: mat-color($mat-green, A700);
-$app-warning-color: mat-color($mat-amber, A400);
-$app-danger-color: mat-color($mat-red, 800);
+$app-success-color: mat.get-color-from-palette(mat.$green-palette, A700);
+$app-warning-color: mat.get-color-from-palette(mat.$amber-palette, A400);
+$app-danger-color: mat.get-color-from-palette(mat.$red-palette, 800);
 
 // gray colors
-$app-gray-0: mat-color($mat-gray, 50) !default;
-$app-gray-1: mat-color($mat-gray, 100) !default;
-$app-gray-2: mat-color($mat-gray, 200) !default;
-$app-gray-3: mat-color($mat-gray, 300) !default;
-$app-gray-4: mat-color($mat-gray, 400) !default;
-$app-gray-5: mat-color($mat-gray, 500) !default;
-$app-gray-6: mat-color($mat-gray, 600) !default;
-$app-gray-7: mat-color($mat-gray, 700) !default;
-$app-gray-8: mat-color($mat-gray, 800) !default;
-$app-gray-9: mat-color($mat-gray, 900) !default;
+$app-gray-0: mat.get-color-from-palette(mat.$gray-palette, 50) !default;
+$app-gray-1: mat.get-color-from-palette(mat.$gray-palette, 100) !default;
+$app-gray-2: mat.get-color-from-palette(mat.$gray-palette, 200) !default;
+$app-gray-3: mat.get-color-from-palette(mat.$gray-palette, 300) !default;
+$app-gray-4: mat.get-color-from-palette(mat.$gray-palette, 400) !default;
+$app-gray-5: mat.get-color-from-palette(mat.$gray-palette, 500) !default;
+$app-gray-6: mat.get-color-from-palette(mat.$gray-palette, 600) !default;
+$app-gray-7: mat.get-color-from-palette(mat.$gray-palette, 700) !default;
+$app-gray-8: mat.get-color-from-palette(mat.$gray-palette, 800) !default;
+$app-gray-9: mat.get-color-from-palette(mat.$gray-palette, 900) !default;
 
-$app-red: mat-color($mat-red, A700) !default;
-$app-orange: mat-color($mat-orange, A200) !default;
+$app-red: mat.get-color-from-palette(mat.$red-palette, A700) !default;
+$app-orange: mat.get-color-from-palette(mat.$orange-palette, A200) !default;
 
 // day special colors
 $app-day-holiday-circle: $app-primary-color-darker !default;
-$app-day-event-circle: mat-color($mat-purple, 200) !default;
+$app-day-event-circle: mat.get-color-from-palette(mat.$purple-palette, 200) !default;
 $app-day-special-bg: $app-gray-1 !default;
 
 // state colors
-$app-state-ok: mat-color($mat-green, A700) !default;
-$app-state-auto: mat-color($mat-orange, A200) !default;
+$app-state-ok: mat.get-color-from-palette(mat.$green-palette, A700) !default;
+$app-state-auto: mat.get-color-from-palette(mat.$orange-palette, A200) !default;
 
 // grid behavior
 $app-gap: 16px !default;
@@ -97,21 +97,21 @@ $app-result-cell-datum-vydani-width: 80px !default;
 $app-result-cell-vydani-width: 60px !default;
 $app-result-cell-add-width: 62px !default;
 $app-result-cell-font-size: 12px !default;
-$app-result-header-cell-nkp-bg: mat-color($mat-deep-orange, 50) !default;
-$app-result-header-cell-nkp-color: mat-color($mat-deep-orange, 600) !default;
-$app-result-header-cell-mzk-bg: mat-color($mat-deep-purple, 50) !default;
-$app-result-header-cell-mzk-color: mat-color($mat-deep-purple, 600) !default;
-$app-result-header-cell-ukf-bg: mat-color($mat-teal, 50) !default;
-$app-result-header-cell-ukf-color: mat-color($mat-teal, 600) !default;
-$app-result-header-cell-vkol-bg: mat-color($mat-amber, 50) !default;
-$app-result-header-cell-vkol-color: mat-color($mat-amber, 800) !default;
+$app-result-header-cell-nkp-bg: mat.get-color-from-palette(mat.$deep-orange-palette, 50) !default;
+$app-result-header-cell-nkp-color: mat.get-color-from-palette(mat.$deep-orange-palette, 600) !default;
+$app-result-header-cell-mzk-bg: mat.get-color-from-palette(mat.$deep-purple-palette, 50) !default;
+$app-result-header-cell-mzk-color: mat.get-color-from-palette(mat.$deep-purple-palette, 600) !default;
+$app-result-header-cell-ukf-bg: mat.get-color-from-palette(mat.$teal-palette, 50) !default;
+$app-result-header-cell-ukf-color: mat.get-color-from-palette(mat.$teal-palette, 600) !default;
+$app-result-header-cell-vkol-bg: mat.get-color-from-palette(mat.$amber-palette, 50) !default;
+$app-result-header-cell-vkol-color: mat.get-color-from-palette(mat.$amber-palette, 800) !default;
 
 // icon color
 $app-icon-color-missing-page: $app-red !default;
 $app-icon-color-damaged-document: $app-red !default;
-$app-icon-color-complete-degradation: mat-color($mat-blue-gray, 200) !default;
-$app-icon-color-complete: mat-color($mat-green, 800) !default;
-$app-icon-color-uncontrolled: mat-color($mat-purple, 500) !default;
+$app-icon-color-complete-degradation: mat.get-color-from-palette(mat.$blue-gray-palette, 200) !default;
+$app-icon-color-complete: mat.get-color-from-palette(mat.$green-palette, 800) !default;
+$app-icon-color-uncontrolled: mat.get-color-from-palette(mat.$purple-palette, 500) !default;
 
 // progress bar
-$app-progress-bar-bg-fill: mat-color($app-primary, darker) !default;
+$app-progress-bar-bg-fill: mat.get-color-from-palette($app-primary, darker) !default;

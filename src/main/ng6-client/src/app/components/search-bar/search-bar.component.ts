@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {AppState} from '../../app.state';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AppState } from '../../app.state';
 import { AppConfiguration } from 'src/app/app-configuration';
 
 @Component({
@@ -8,20 +8,17 @@ import { AppConfiguration } from 'src/app/app-configuration';
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss']
 })
-export class SearchBarComponent implements OnInit {
+export class SearchBarComponent {
 
   constructor(
     private router: Router,
     public state: AppState,
-    public config: AppConfiguration) {}
-
-  ngOnInit() {
-  }
+    public config: AppConfiguration) { }
 
   search() {
-    if(this.router.routerState.snapshot.url.indexOf('/result') > -1){
+    if (this.router.routerState.snapshot.url.indexOf('/result') > -1) {
       this.state.fireSearch();
-    }else{
+    } else {
       this.router.navigate(['/result']);
     }
   }

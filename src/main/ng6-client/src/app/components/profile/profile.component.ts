@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { AppState } from 'src/app/app.state';
-import { Md5 } from 'ts-md5';
 import { AppService } from 'src/app/app.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { PasswordDialogComponent } from 'src/app/components/password-dialog/password-dialog.component';
 
 @Component({

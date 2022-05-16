@@ -5,7 +5,6 @@ import { registerLocaleData } from '@angular/common';
 import localeCs from '@angular/common/locales/cs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -13,48 +12,39 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import {
-  MatAutocompleteModule,
-  MatButtonModule,
-  MatButtonToggleModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatDividerModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatGridListModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatNativeDateModule,
-  MatPaginatorModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatRadioModule,
-  MatRippleModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSliderModule,
-  MatSlideToggleModule,
-  MatSnackBarModule,
-  MatSortModule,
-  MatStepperModule,
-  MatTableModule,
-  MatTabsModule,
-  MatToolbarModule,
-  MatTooltipModule,
-  MatBadgeModule,
-  MAT_DATE_LOCALE,
-  MAT_DATE_FORMATS,
-  NativeDateModule,
-  DateAdapter,
-  NativeDateAdapter,
-  MAT_NATIVE_DATE_FORMATS
-} from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatNativeDateModule, MatRippleModule, MAT_DATE_LOCALE, MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSortModule } from '@angular/material/sort';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CdkTableModule } from '@angular/cdk/table';
 
 import { AppState } from './app.state';
@@ -98,13 +88,10 @@ import { AdminComponent } from './components/admin/admin.component';
 import { PasswordDialogComponent } from './components/password-dialog/password-dialog.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { AppRoutingModule } from './app-routing.module';
-import { Platform } from '@angular/cdk/platform';
 import { SvazekOverviewComponent } from './components/svazek-overview/svazek-overview.component';
 import { PromptDialogComponent } from './components/prompt-dialog/prompt-dialog.component';
 
-
-import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
-
+import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 
 registerLocaleData(localeCs, 'cs');
 
@@ -119,8 +106,8 @@ export function createTranslateLoader(http: HttpClient) {
 const providers: any[] = [
   { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
   { provide: MAT_DATE_LOCALE, useValue: 'cs-CZ' },
-  {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
-  {provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS},
+  { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+  { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
   // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   { provide: APP_INITIALIZER, useFactory: (config: AppConfiguration) => () => config.load(), deps: [AppConfiguration], multi: true },
   HttpClient, DatePipe, AppConfiguration, AppState, AppService, AuthGuard];
@@ -130,7 +117,7 @@ const providers: any[] = [
     AppComponent,
     NavbarComponent,
     CalendarComponent,
-    //KalendarFullComponent,
+    // KalendarFullComponent,
     IssueComponent,
     FacetComponent,
     ToolbarComponent,
@@ -165,15 +152,6 @@ const providers: any[] = [
     PromptDialogComponent,
     SvazekOverviewComponent
   ],
-  entryComponents: [ConfirmDialogComponent,
-    CloneDialogComponent,
-    AddExemplarDialogComponent,
-    AddTitulDialogComponent,
-    AddVdkExComponent,
-    AddVydaniDialogComponent,
-    EditPagesComponent, SvazekOverviewComponent,
-    PasswordDialogComponent,
-    PromptDialogComponent],
   imports: [
     BrowserModule,
     FormsModule,

@@ -4,7 +4,7 @@
     "title": "Evidence periodik",
     "title1": "Evidence",
     "title2": "periodik",
-    "desc": "systém pro správu evidenci periodik"
+    "desc": "systém pro správu a evidenci periodik"
   },
   "route": {
     "home": "domovská stránka",
@@ -19,7 +19,6 @@
     "home": "Home",
     "meta_titles": "Metatituly",
     "volume": "Svazek",
-    "add_record": "Vložit záznam",
     "administration": "Správa",
     "user_profile": "Profil uživatele",
     "login": "Přihlásit",
@@ -89,18 +88,16 @@
     "edit_issue": "Editovat issue",
     "date": "Datum",
     "number": "Číslo",
-    "renumber_up": "Automatické přečíslování na horu",
-    "renumber_down": "Automatické přečíslování na dolu"
+    "renumber_down": "Přečíslovat dolů"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."
   },
 
-
-  "formatvdk":{
-    "CISLO": "Číslo (3)", 
+  "formatvdk": {
+    "CISLO": "Číslo (3)",
     "MESIC": "Měsíc(e) číslem(y) (1-155)",
-    "MESIC_SLOVA":"Měsíc(e) slovy (LED-DUB)"
+    "MESIC_SLOVA": "Měsíc(e) slovy (LED-DUB)"
   },
   "record": {
     "meta_title": "Meta název",
@@ -203,7 +200,7 @@
     "password_reset": "Reset hesla",
     "prepare": "Připravit",
     "add": "Přidat",
-    "load_the_entire_volume": "(Znovu) načíst celý svazek",
+    "load_the_entire_volume": "Zrušit změny",
     "save_the_entire_volume": "Uložit celý svazek",
     "generate_again": "Vygenerovat / vygenerovat znovu",
     "update": "Aktualizovat",

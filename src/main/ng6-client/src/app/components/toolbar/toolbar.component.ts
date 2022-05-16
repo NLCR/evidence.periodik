@@ -1,10 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, /*OnInit,*/ OnDestroy } from '@angular/core';
 
 import { AppState } from '../../app.state';
 import { AppService } from '../../app.service';
 
-import { Issue } from '../../models/issue';
-import { Titul } from '../../models/titul';
 import { CloneDialogComponent } from '../clone-dialog/clone-dialog.component';
 import { CloneParams } from '../../models/clone-params';
 import { AddVdkExComponent } from '../add-vdk-ex/add-vdk-ex.component';
@@ -13,7 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Exemplar } from 'src/app/models/exemplar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AppConfiguration } from 'src/app/app-configuration';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -21,7 +19,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss']
 })
-export class ToolbarComponent implements OnInit, OnDestroy {
+export class ToolbarComponent implements /*OnInit,*/ OnDestroy {
 
   subscriptions: Subscription[] = [];
   periods = [];
@@ -36,11 +34,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     public config: AppConfiguration) { }
 
+  /*
   ngOnInit() {
     // this.subscriptions.push(this.state.searchChanged.subscribe(res => {
     //   this.setHeader();
     // }));
   }
+  */
 
   ngOnDestroy() {
     this.subscriptions.forEach(s => {

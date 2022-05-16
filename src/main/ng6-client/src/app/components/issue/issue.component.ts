@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { AppState } from '../../app.state';
@@ -11,10 +11,8 @@ import { Exemplar } from '../../models/exemplar';
 import { AddTitulDialogComponent } from '../add-titul-dialog/add-titul-dialog.component';
 import { AddVydaniDialogComponent } from '../add-vydani-dialog/add-vydani-dialog.component';
 import { EditPagesComponent } from 'src/app/components/edit-pages/edit-pages.component';
-import { DateAdapter } from '@angular/material/core';
-import { isArray } from 'util';
 import { AppConfiguration } from 'src/app/app-configuration';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { SvazekOverviewComponent } from '../svazek-overview/svazek-overview.component';
 
 @Component({
@@ -22,7 +20,7 @@ import { SvazekOverviewComponent } from '../svazek-overview/svazek-overview.comp
   templateUrl: './issue.component.html',
   styleUrls: ['./issue.component.scss']
 })
-export class IssueComponent implements OnInit {
+export class IssueComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
 
@@ -84,7 +82,7 @@ export class IssueComponent implements OnInit {
         // Back compatibility.
         // From pages : string[] to pages: {missing: string[], damaged: string[]}
         // Assign to missing
-        if (ex.pages && isArray(ex.pages) || !ex.pages.missing) {
+        if (ex.pages && Array.isArray(ex.pages) || !ex.pages.missing) {
           const pages = Object.assign([], ex.pages);
           ex.pages = { missing: Object.assign([], ex.pages), damaged: Object.assign([], ex.pages) };
         }

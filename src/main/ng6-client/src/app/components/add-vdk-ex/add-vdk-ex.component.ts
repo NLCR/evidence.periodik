@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { MatSort, MatTableDataSource, MatDialogRef } from '@angular/material';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { AppState } from '../../app.state';
 import { AppService } from '../../app.service';
 import { Issue } from '../../models/issue';
-import { ViewChild } from '@angular/core';
 import { AddExemplarDialogComponent } from '../add-exemplar-dialog/add-exemplar-dialog.component';
 
 @Component({

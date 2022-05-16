@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AddVdkExComponent } from './add-vdk-ex.component';
 
@@ -6,7 +6,7 @@ describe('AddVdkExComponent', () => {
   let component: AddVdkExComponent;
   let fixture: ComponentFixture<AddVdkExComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ AddVdkExComponent ]
     })

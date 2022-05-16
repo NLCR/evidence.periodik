@@ -4,89 +4,120 @@
       <span>E</span>P<!--
     --></a>
     <span class="app-pipe"></span>
-    <span class="app-route">{{ 'route.' + activeRoute() | translate }}</span>
+    <span class="app-route">{{ "route." + activeRoute() | translate }}</span>
   </div>
-  
+
   <div fxFlex class="app-fx-middle" *ngIf="showSearchBar()">
     <app-search-bar></app-search-bar>
   </div>
 
   <div fxFlex class="app-fx-right app-desktop">
     <span>
-      <a routerLink="home" routerLinkActive="active">{{ 'navbar.home' | translate }}</a>
-    </span>
-    <span>
-      <a routerLink="titul" routerLinkActive="active">{{ 'navbar.meta_titles' | translate }}</a>
-    </span>
-    <span *ngIf="state.logged">
-      <a routerLink="svazek" routerLinkActive="active">{{ 'navbar.volume' | translate }}</a>
-    </span>
-    <span *ngIf="state.logged">
-      <a routerLink="issue" routerLinkActive="active">{{ 'navbar.add_record' | translate }}</a>
+      <a routerLink="home" routerLinkActive="active">{{
+        "navbar.home" | translate
+      }}</a>
     </span>
     <span *ngIf="state.isAdmin">
-      <a routerLink="admin" routerLinkActive="active">{{ 'navbar.administration' | translate }}</a>
+      <a routerLink="titul" routerLinkActive="active">{{
+        "navbar.meta_titles" | translate
+      }}</a>
+    </span>
+    <span *ngIf="state.logged">
+      <a routerLink="svazek" routerLinkActive="active">{{
+        "navbar.volume" | translate
+      }}</a>
+    </span>
+    <span *ngIf="state.isAdmin">
+      <a routerLink="admin" routerLinkActive="active">{{
+        "navbar.administration" | translate
+      }}</a>
     </span>
     <span *ngIf="!state.user">
-      <a (click)="gologin()">{{ 'navbar.login' | translate }}</a>
+      <a (click)="gologin()">{{ "navbar.login" | translate }}</a>
     </span>
     <ng-container *ngIf="state.logged">
       <a mat-flat-button [matMenuTriggerFor]="menu" class="app-user">
         <mat-icon>{{ config.icons.person }}</mat-icon> {{ state.user?.nazev }}
       </a>
       <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="profile">{{ 'navbar.user_profile' | translate }}</button>
-        <button mat-menu-item (click)="logout()">{{ 'navbar.logout' | translate }}</button>
+        <button mat-menu-item routerLink="profile">
+          {{ "navbar.user_profile" | translate }}
+        </button>
+        <button mat-menu-item (click)="logout()">
+          {{ "navbar.logout" | translate }}
+        </button>
       </mat-menu>
     </ng-container>
     <span *ngIf="currLang !== 'en'">
       <a (click)="changeLang('en')" title="Switch to english">English</a>
-    </span> 
+    </span>
     <span *ngIf="currLang !== 'cs'">
       <a (click)="changeLang('cs')" title="Přepni na češtinu">Česky</a>
     </span>
   </div>
-  <div fxFlex class="app-fx-right app-mobile"> 
+  <div fxFlex class="app-fx-right app-mobile">
     <span class="app-sidenav-btn">
-      <a (click)="sidenav.open()"><mat-icon>{{ config.icons.menu }}</mat-icon></a>
+      <a (click)="sidenav.open()"
+        ><mat-icon>{{ config.icons.menu }}</mat-icon></a
+      >
     </span>
   </div>
 </mat-toolbar>
 
-<mat-drawer-container class="app-sidenav-container" (backdropClick)="close('backdrop')">
-  <mat-drawer #sidenav (keydown.escape)="close('backdrop')" fixedInViewport="true">
+<mat-drawer-container
+  class="app-sidenav-container"
+  (backdropClick)="close('backdrop')"
+>
+  <mat-drawer
+    #sidenav
+    (keydown.escape)="close('backdrop')"
+    fixedInViewport="true"
+  >
     <mat-list role="list">
       <mat-list-item role="listitem">
         <button mat-flat-button (click)="close('backdrop')">
-          <mat-icon>{{ config.icons.close }}</mat-icon> {{ 'button.close_navigation' | translate}}
+          <mat-icon>{{ config.icons.close }}</mat-icon>
+          {{ "button.close_navigation" | translate }}
         </button>
       </mat-list-item>
       <mat-list-item role="listitem">
-        <a routerLink="home" routerLinkActive="active">{{ 'navbar.home' | translate }}</a>
+        <a routerLink="home" routerLinkActive="active">{{
+          "navbar.home" | translate
+        }}</a>
       </mat-list-item>
       <mat-list-item role="listitem">
-        <a routerLink="titul" routerLinkActive="active">{{ 'navbar.meta_titles' | translate }}</a>
+        <a routerLink="titul" routerLinkActive="active">{{
+          "navbar.meta_titles" | translate
+        }}</a>
       </mat-list-item>
       <mat-list-item role="listitem">
-        <a routerLink="issue" routerLinkActive="active">{{ 'navbar.add_record' | translate }}</a>
+        <a routerLink="issue" routerLinkActive="active">{{
+          "navbar.add_record" | translate
+        }}</a>
       </mat-list-item>
       <mat-list-item role="listitem">
-        <a routerLink="svazek" routerLinkActive="active">{{ 'navbar.volume' | translate }}uu</a>
+        <a routerLink="svazek" routerLinkActive="active"
+          >{{ "navbar.volume" | translate }}uu</a
+        >
       </mat-list-item>
       <mat-list-item role="listitem" *ngIf="state.isAdmin">
-        <a routerLink="admin" routerLinkActive="active">{{ 'navbar.administration' | translate }}</a>
+        <a routerLink="admin" routerLinkActive="active">{{
+          "navbar.administration" | translate
+        }}</a>
       </mat-list-item>
       <mat-list-item role="listitem" *ngIf="!state.user">
-        <a (click)="gologin()">{{ 'navbar.login' | translate }}</a>
+        <a (click)="gologin()">{{ "navbar.login" | translate }}</a>
       </mat-list-item>
       <mat-list-item role="listitem" *ngIf="state.logged">
         <mat-icon>{{ config.icons.person }}</mat-icon> {{ state.user.nazev }}
       </mat-list-item>
       <mat-list-item role="listitem" *ngIf="state.logged">
-        <a routerLink="profile" routerLinkActive="active">{{ 'navbar.user_profile' | translate }}</a>
+        <a routerLink="profile" routerLinkActive="active">{{
+          "navbar.user_profile" | translate
+        }}</a>
       </mat-list-item>
       <mat-list-item role="listitem" *ngIf="state.logged">
-        <a (click)="logout()">{{ 'navbar.logout' | translate }}</a>
+        <a (click)="logout()">{{ "navbar.logout" | translate }}</a>
       </mat-list-item>
       <mat-list-item role="listitem" *ngIf="currLang !== 'en'">
         <a (click)="changeLang('en')" title="Switch to english">English</a>
@@ -95,8 +126,5 @@
         <a (click)="changeLang('cs')" title="Přepni na češtinu">Česky</a>
       </mat-list-item>
     </mat-list>
-   
   </mat-drawer>
 </mat-drawer-container>
-
-
