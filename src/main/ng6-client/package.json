@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
-    "start.ui.mock": "ng serve --source-map=true --configuration=dev --proxy-config proxy.conf.js",
+    "start.ui.mock": "ng serve --configuration=dev --proxy-config proxy.conf.js",
     "build": "ng build",
     "build.prod": "ng build --configuration production",
     "test": "ng test",
@@ -57,6 +57,7 @@
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "~6.3.19",
     "karma-chrome-launcher": "~3.1.0",
+    "karma-firefox-launcher": "^2.1.2",
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~5.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",

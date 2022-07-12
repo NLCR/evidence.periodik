@@ -312,7 +312,7 @@ public class Indexer {
    * "pocet_stran": 12, "druhe_cislo": 2, "id_bib_zaznamu": "NKC01-000761161"
    *
    * }
-   * @param vdkRecord : JSONObject with vdk record data from solr
+   * @param vdkObject : JSONObject with vdk record data from solr
    *
    * We should generate next fields "id_bib_zaznamu", if it does not exists in
    * issueData "vlastnik" : [] "state": "auto", "datum_vydani": ,
@@ -409,7 +409,7 @@ public class Indexer {
         String vydani = (String) it.next();
         SolrInputDocument idoc = issues.get(vydani);
 
-        //Generate each day in month  
+        //Generate each day in month
         Date startDate = sdf1.parse(vydani);
 
         LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

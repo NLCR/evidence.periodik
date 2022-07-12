@@ -30,11 +30,11 @@
     "delete_query": "Delete query"
   },
   "desc": {
-    "records": "Records",
-    "specimens": "Specimens",
+    "records": "Records:",
+    "specimens": "Specimens:",
     "specimen": "Specimen",
-    "mutations": "Mutations",
-    "owners": "Owners",
+    "mutations": "Mutations:",
+    "owners": "Owners:",
     "digitized": "Digitized",
     "atribut": "Names",
     "hodnota": "Value",

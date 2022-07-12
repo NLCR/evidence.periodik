@@ -382,6 +382,7 @@ export class AppService {
   }
 
   saveExemplars(vol: Volume, exemplars: Exemplar[]): Observable<any> {
+    // console.log("Saving exemplars")
     const body = { svazek: vol, exemplars };
     const url = 'index';
     const params: HttpParams = new HttpParams()
@@ -505,6 +506,7 @@ export class AppService {
   }
 
   getIssue(id: string): Observable<any[]> {
+    // console.log("get issue api")
     const url = '/api/search/exemplar/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
@@ -532,10 +534,10 @@ export class AppService {
       }));
   }
 
-  getExemplarsByCarKod(carKod: string): Observable<any> {
+  getExemplarsByCarKod(carKod: string, dateRange: string): Observable<any> {
     const url = '/api/search/exemplar/select';
     const params: HttpParams = new HttpParams()
-      .set('q', '*')
+      .set('q', dateRange)
       .set('wt', 'json')
       .set('fl', '*,pages:[json]')
       .set('rows', '1000')
@@ -617,6 +619,7 @@ export class AppService {
   }
 
   search() {
+    // console.log("Search api")
     const url = '/api/search/issue/permonik';
     const params = this.doSearchParams();
     return this.http.get(url, { params });
@@ -626,6 +629,7 @@ export class AppService {
     // const url = '/api/search/issue/permonik';
     // const params = this.doSearchParams()
     //  .append('fq', 'id_titul:"' + id + '"');
+    // console.log("Search issue of titul")
 
 
     const url = '/api/search/exemplar/select';

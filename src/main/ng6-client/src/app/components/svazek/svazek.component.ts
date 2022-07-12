@@ -136,6 +136,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
       this.langChanged();
     }));
+    // console.log('Inited');
   }
 
   read() {
@@ -150,18 +151,22 @@ export class SvazekComponent implements OnInit, OnDestroy {
   setData(id: string) {
     this.service.getVolume(id).subscribe(res => {
       if (res.length > 0) {
+        // console.log("res > 0")
+        // console.log(res[0])
         this.state.currentVolume = res[0];
         this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
+        const dateRange = 'datum_vydani:[' + res[0].datum_od + ' TO ' + res[0].datum_do + ']';
         this.findTitul();
-        this.getExemplars(id, false);
+        this.getExemplars(id, dateRange, false);
       } else {
-        this.getExemplars(id, true);
+        // console.log("res = 0")
+        this.getExemplars(id, '*', true);
       }
     });
   }
 
-  getExemplars(id: string, setVolume: boolean) {
-    this.service.getExemplarsByCarKod(id).subscribe(res2 => {
+  getExemplars(id: string, dateRange: string, setVolume: boolean) {
+    this.service.getExemplarsByCarKod(id, dateRange).subscribe(res2 => {
 
       if (res2.response.numFound > 0) {
         const ex: Exemplar = res2.response.docs[0] as Exemplar;
@@ -326,7 +331,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
           this.titul_idx = i;
         }
       }
-
+      // console.log(this.state.currentTitul)
       this.setVolumeFacets();
 
       for (let i = 0; i < this.config.owners.length; i++) {

@@ -30,11 +30,11 @@
     "delete_query": "Odstranit dotaz"
   },
   "desc": {
-    "records": "Záznamů",
-    "specimens": "Exemplářů",
+    "records": "Záznamy:",
+    "specimens": "Exempláře:",
     "specimen": "Exemplář",
-    "mutations": "Mutací",
-    "owners": "Vlastníků",
+    "mutations": "Mutace:",
+    "owners": "Vlastníci:",
     "digitized": "Digitalizováno",
     "atribut": "Názvy",
     "hodnota": "Hodnota",

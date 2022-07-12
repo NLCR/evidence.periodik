@@ -15,7 +15,7 @@
     <context.name>permonik</context.name>
     <skipNg>false</skipNg>
   </properties>
-    
+
   <dependencies>
     <dependency>
       <groupId>org.apache.solr</groupId>
@@ -53,7 +53,7 @@
       <version>7.0</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>
@@ -74,7 +74,7 @@
             <configuration>
               <skip>${skipNg}</skip>
               <executable>npm</executable>
-              <workingDirectory>${project.basedir}/src/main/ng6-client</workingDirectory>  
+              <workingDirectory>${project.basedir}/src/main/ng6-client</workingDirectory>
               <arguments>
                 <argument>run</argument>
                 <argument>build.prod</argument>
@@ -86,7 +86,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <version>3.0.0</version>
@@ -110,13 +110,13 @@
           </filesets>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.7</version>
         <executions>
-          
+
           <execution>
             <id>copy-frontend-resources</id>
             <phase>generate-resources</phase>
@@ -135,85 +135,85 @@
               </resources>
             </configuration>
           </execution>
-          
-    
+
+
         </executions>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
-    
+
       <!-- Insert jsp pageEncoding tag to index.html -->
-      <plugin> 
-        <groupId>com.google.code.maven-replacer-plugin</groupId> 
-        <artifactId>replacer</artifactId> 
-        <version>1.5.3</version> 
-        <executions> 
-          <execution> 
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
+        <version>1.5.3</version>
+        <executions>
+          <execution>
             <id>replace-for-index</id>
-            <phase>prepare-package</phase> 
-            <goals> 
-              <goal>replace</goal> 
-            </goals>  
-            <configuration> 
-              <file>${project.basedir}/src/main/webapp/index.html</file> 
-              <replacements> 
-                <replacement> 
-                  <token>&lt;!doctype html&gt;</token> 
-                  <value>&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;&lt;!doctype html&gt;</value> 
-                </replacement> 
-                <replacement> 
-                  <token>base href="/"</token> 
-                  <value>base href="/${context.name}/"</value> 
-                </replacement> 
-              </replacements> 
-            </configuration> 
-          </execution> 
-	  
-          <execution> 
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/src/main/webapp/index.html</file>
+              <replacements>
+                <replacement>
+                  <token>&lt;!doctype html&gt;</token>
+                  <value>&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;&lt;!doctype html&gt;</value>
+                </replacement>
+                <replacement>
+                  <token>base href="/"</token>
+                  <value>base href="/${context.name}/"</value>
+                </replacement>
+              </replacements>
+            </configuration>
+          </execution>
+
+          <execution>
             <id>replace-for-config</id>
-            <phase>prepare-package</phase> 
-            <goals> 
-              <goal>replace</goal> 
-            </goals>  
-            <configuration> 
-              <file>${project.basedir}/src/main/webapp/assets/config.json</file> 
-              <replacements> 
-                <replacement> 
-                  <token>&lt;!doctype html&gt;</token> 
-                  <value>&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;&lt;!doctype html&gt;</value> 
-                </replacement> 
-                <replacement> 
-                  <token>"context": "",</token> 
-                  <value>"context": "/${context.name}/",</value> 
-                </replacement> 
-              </replacements> 
-            </configuration> 
-          </execution> 
-          
-          <execution> 
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+            <configuration>
+              <file>${project.basedir}/src/main/webapp/assets/config.json</file>
+              <replacements>
+                <replacement>
+                  <token>&lt;!doctype html&gt;</token>
+                  <value>&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;&lt;!doctype html&gt;</value>
+                </replacement>
+                <replacement>
+                  <token>"context": "",</token>
+                  <value>"context": "/${context.name}/",</value>
+                </replacement>
+              </replacements>
+            </configuration>
+          </execution>
+
+          <execution>
             <id>replace-for-styles</id>
-            <phase>prepare-package</phase> 
-            <goals> 
-              <goal>replace</goal> 
-            </goals> 
-            
-            <configuration> 
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+
+            <configuration>
               <includes>
                 <include>${project.basedir}/src/main/webapp/styles.*.css</include>
-              </includes> 
-              <replacements> 
-                <replacement> 
-                  <token>/assets/fonts/</token> 
-                  <value>assets/fonts/</value> 
-                </replacement> 
-              </replacements> 
-            </configuration>  
-          </execution> 
+              </includes>
+              <replacements>
+                <replacement>
+                  <token>/assets/fonts/</token>
+                  <value>assets/fonts/</value>
+                </replacement>
+              </replacements>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
-	  
-	  
+
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -229,7 +229,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.3</version>
+        <version>3.3.2</version>
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>

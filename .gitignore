@@ -11,6 +11,9 @@ buildNumber.properties
 # mac exception
 **/.DS_Store
 
+# IDEs
+/.idea
+
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
 /src/main/ng-client/nbproject/private/
