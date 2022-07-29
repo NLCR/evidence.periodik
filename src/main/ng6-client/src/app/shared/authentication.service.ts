@@ -69,6 +69,7 @@ export class AuthenticationService {
         localStorage.removeItem('currentUser');
         this.state.user = null;
         this.state.logged = false;
+        this.state.isAdmin = false;
         this.currentUserSubject.next(null);
     }
 }

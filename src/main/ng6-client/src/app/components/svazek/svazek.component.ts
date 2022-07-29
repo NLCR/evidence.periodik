@@ -1,27 +1,28 @@
-import { Component, OnInit, ViewContainerRef, TemplateRef, ViewChild, OnDestroy } from '@angular/core';
-import { AppState } from 'src/app/app.state';
-import { AddTitulDialogComponent } from 'src/app/components/add-titul-dialog/add-titul-dialog.component';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { AppService } from 'src/app/app.service';
-import { Titul } from 'src/app/models/titul';
-import { Volume } from 'src/app/models/volume';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { MatDatepickerInputEvent, MatDatepicker } from '@angular/material/datepicker';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
+import {Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {AppState} from 'src/app/app.state';
+import {AddTitulDialogComponent} from 'src/app/components/add-titul-dialog/add-titul-dialog.component';
+import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
+import {AppService} from 'src/app/app.service';
+import {Titul} from 'src/app/models/titul';
+import {Volume} from 'src/app/models/volume';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Subscription} from 'rxjs';
+import {MatDatepicker, MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
+import {PeriodicitaSvazku} from 'src/app/models/periodicita-svazku';
 
-import { Issue } from 'src/app/models/issue';
-import { DatePipe } from '@angular/common';
-import { Utils } from 'src/app/utils';
-import { OverlayRef, Overlay } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
-import { Exemplar } from 'src/app/models/exemplar';
-import { AppConfiguration } from 'src/app/app-configuration';
-import { SvazekOverviewComponent } from '../svazek-overview/svazek-overview.component';
-import { FormControl } from '@angular/forms';
+import {Issue} from 'src/app/models/issue';
+import {DatePipe} from '@angular/common';
+import {Utils} from 'src/app/utils';
+import {Overlay, OverlayRef} from '@angular/cdk/overlay';
+import {TemplatePortal} from '@angular/cdk/portal';
+import {Exemplar} from 'src/app/models/exemplar';
+import {AppConfiguration} from 'src/app/app-configuration';
+import {SvazekOverviewComponent} from '../svazek-overview/svazek-overview.component';
+import {FormControl} from '@angular/forms';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-svazek',
@@ -115,9 +116,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
   endDate = new FormControl(new Date());
   now = new Date();
 
-  rows: number = 25;
-  page: number = 0;
+  rows = 25;
+  page = 0;
   numFound: number;
+
+  minDate: Date;
+  maxDate: Date;
 
   constructor(
     public dialog: MatDialog,
@@ -132,6 +136,9 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.displayedColumnsLeftTableBottom.push('button');
+    const currentYear = new Date().getFullYear();
+    this.minDate = new Date(1600, 0, 1);
+    this.maxDate = new Date(currentYear, 11, 31);
     this.read();
     this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
       this.langChanged();
@@ -738,10 +745,14 @@ export class SvazekComponent implements OnInit, OnDestroy {
   setVolumeDatum(element: string, event: MatDatepickerInputEvent<Date>) {
     if (event.value) {
       this.state.currentVolume[element] = this.datePipe.transform(event.value, 'yyyy-MM-dd');
-    } else if (this.state.currentVolume[element]) {
-      // const d: Date = Utils.dateFromDay(e.value);
-      // this.pickerOd.select(d);
+      if (element === 'datum_od') {
+        this.state.currentVolume.datum_do = this.datePipe.transform(moment(event.value).endOf('month').toDate(), 'yyyy-MM-dd');
+      }
     }
+    // } else if (this.state.currentVolume[element]) {
+    //   // const d: Date = Utils.dateFromDay(e.value);
+    //   // this.pickerOd.select(d);
+    // }
 
   }
 

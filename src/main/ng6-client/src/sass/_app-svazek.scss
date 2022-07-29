@@ -32,7 +32,7 @@
       }
     }
   }
-  
+
   .app-container-right {
     flex: 2;
     padding: $app-container;
@@ -162,9 +162,9 @@
                 transform: rotate(-90deg);
                 margin-bottom: calc(#{$app-svazek-header-cell-bottom-space} * 2);
                 width: 30px !important;
-              } 
+              }
             }
-            
+
 
             &.app-cell-rotate:not(.app-cell-mutacni) {
               width: 30px !important;
@@ -224,7 +224,7 @@
               &:focus-within {
                 background-color: $app-color-black;
                 color: $app-color-white;
-  
+
                 .mat-icon,
                 .mat-form-field-label,
                 .mat-datepicker-toggle-default-icon {
@@ -257,6 +257,9 @@
 
             input {
               font-size: $app-svazek-cell-font-size;
+              &#datum_do:disabled, &#datum_od:disabled {
+                color: rgba(0, 0, 0, 1);
+              }
             }
           }
         }
@@ -283,5 +286,5 @@
 
   .check-ok.mat-checkbox-checked.mat-accent .mat-checkbox-background {
     background-color: green;
-  } 
+  }
 }

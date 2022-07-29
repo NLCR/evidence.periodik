@@ -1,8 +1,8 @@
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 <div class="app-svazek-wrapper" (click)="closeInfoOverlay()" *ngIf="state.currentVolume">
   <div class="app-container-left">
+    <div>{{'desc.input_data_edit' | translate}}</div>
     <div class="app-table-wrapper app-left-top">
-      <div>Editace vstupních dat</div>
       <table mat-table [dataSource]="dsSvazek" #table>
         <!-- Atribut -->
         <ng-container matColumnDef="attribute">
@@ -69,20 +69,20 @@
 
               <ng-container *ngSwitchCase="'datum_od'">
                 <mat-form-field floatLabel="never">
-                  <input matInput [matDatepicker]="pickerOd" [placeholder]="'desc.choose_date' | translate"
+                  <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="pickerOd" [placeholder]="'desc.choose_date' | translate"
                     (dateChange)="setVolumeDatum(element, $event)" [(ngModel)]="state.currentVolume[element]"
-                    id="datum_od" name="datum_od">
+                    id="datum_od" name="datum_od" disabled>
                   <mat-datepicker-toggle matSuffix [for]="pickerOd"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerOd></mat-datepicker>
+                  <mat-datepicker #pickerOd disabled="false"></mat-datepicker>
                 </mat-form-field>
               </ng-container>
               <ng-container *ngSwitchCase="'datum_do'">
                 <mat-form-field floatLabel="never">
-                  <input matInput [matDatepicker]="pickerDo" [placeholder]="'desc.choose_date' | translate"
+                  <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="pickerDo" [placeholder]="'desc.choose_date' | translate"
                     [(ngModel)]="state.currentVolume[element]" (dateChange)="setVolumeDatum(element, $event)"
-                    id="datum_do" name="datum_do">
+                    id="datum_do" name="datum_do" disabled>
                   <mat-datepicker-toggle matSuffix [for]="pickerDo"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerDo></mat-datepicker>
+                  <mat-datepicker #pickerDo disabled="false"></mat-datepicker>
                 </mat-form-field>
               </ng-container>
 
@@ -104,9 +104,8 @@
       </table>
     </div>
     <!--/.app-table-left-top -->
-
+    <div>{{'desc.daily_releases_table' | translate}}</div>
     <div class="app-table-wrapper app-left-bottom">
-      <div>Tabulka denních vydání</div>
       <table mat-table [dataSource]="state.currentVolume.periodicita">
         <!-- Vydani (den v tydnu) -->
         <ng-container matColumnDef="den">
@@ -212,8 +211,8 @@
   <!--/.app-container-left -->
 
   <div class="app-container-right">
+    <div>{{'desc.volume_detail' | translate}}</div>
     <div class="app-table-wrapper app-right">
-      <div>Detailní popis svazku</div>
       <table mat-table [dataSource]="dsExemplars">
         <!-- Edit issue Zrušit položku "Editovat issue" #153 -->
         <!-- <ng-container matColumnDef="edit_issue">

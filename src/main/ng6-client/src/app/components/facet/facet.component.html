@@ -8,29 +8,29 @@
           {{ 'facet.date' | translate}}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      
+
       <div fxLayout="row" fxLayoutGap="16px">
         <div fxFlex="40%">
           <mat-form-field class="app-full-width">
-            <input matInput 
-              [placeholder]="'modal.from' | translate" 
+            <input matInput
+              [placeholder]="'modal.from' | translate"
               [(ngModel)]="state.start_year"
               id="start_date" name="start_year"
               length="4"
               size="4"
-              type="number" 
+              type="number"
               validation="true"
               (keyup.enter)="state.addDateFilter()">
           </mat-form-field>
         </div>
         <div fxFlex="40%">
           <mat-form-field class="app-full-width">
-            <input matInput 
-              [placeholder]="'modal.till' | translate" 
+            <input matInput
+              [placeholder]="'modal.till' | translate"
               [(ngModel)]="state.end_year"
               id="end_date" name="end_year"
               length="4"
-              type="number" 
+              type="number"
               validation="true"
               size="4"
               (keyup.enter)="state.addDateFilter()">
@@ -62,7 +62,7 @@
               <a *ngSwitchCase="'vydani'" (click)="addFilter(facet, item.name)">{{'record.publication.' + item.name | translate}}
                 <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container>
               </a>
-              <a *ngSwitchDefault (click)="addFilter(facet, item.name)">{{ item.name }} 
+              <a *ngSwitchDefault (click)="addFilter(facet, item.name)">{{ item.name === "N" ? "Nečitelné" : item.name }}
                 <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container></a>
             </ng-container>
             <span>
