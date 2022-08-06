@@ -57,6 +57,12 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.authservice.logout();
+    // this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    // this.router.onSameUrlNavigation = 'reload';
+    // const currentUrl = this.router.url;
+    // this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+    //   this.router.navigate([currentUrl]);
+    // });
     this.router.navigate(['home']);
   }
 

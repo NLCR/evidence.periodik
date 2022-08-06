@@ -22,7 +22,7 @@
           <input matInput [(ngModel)]="titul.meta_nazev" name="meta_nazev" id="meta_nazev" [placeholder]="'record.meta_title' | translate" required cdkFocusInitial />
         </mat-form-field>
 
-        <!--  
+        <!--
          Odstraneno podle #138
           <mat-form-field fxFlex>
           <input matInput [(ngModel)]="titul.uuid" name="uuid" id="uuid" [placeholder]="'record.uuid_title' | translate" />
@@ -44,8 +44,16 @@
           <textarea matInput [(ngModel)]="titul.poznamka" name="poznamka" id="poznamka" >{{titul.poznamka}}</textarea>
         </mat-form-field>
       </div>
+
+<!--      //TODO práva-->
+
+<!--      <div fxLayout="row" fxLayoutGap="16px" class="custom-checkbox">-->
+<!--        <mat-checkbox (change)="allowNotLoggedUsers($event.checked)" [checked]="titul.allow_not_logged_users" color="primary"></mat-checkbox>-->
+<!--        <mat-label>{{ 'record.allowNotLoggedUsers' | translate }}</mat-label>-->
+<!--      </div>-->
       <button mat-flat-button color="primary" (click)="save()" type="button" *ngIf="state.isAdmin" [disabled]="!userForm.form.valid || !state.isAdmin">{{ 'desc.save' | translate }}</button>
       <button mat-flat-button color="primary" (click)="remove()" *ngIf="state.isAdmin" type="button">{{ 'button.delete' | translate }}</button>
+<!--      <button mat-flat-button color="accent" [routerLink]="this.routerLink" *ngIf="state.isAdmin" type="button">{{ 'button.specimens' | translate }}</button>-->
     </form>
   </div>
 </div>

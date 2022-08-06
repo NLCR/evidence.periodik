@@ -111,6 +111,7 @@
     "mutation": "Mutace",
     "mutace": "Mutace",
     "total": "Celkem",
+    "allowNotLoggedUsers": "Zobrazovat nepřihlášeným uživatelům",
     "date_publication": "Datum publikace",
     "znak_oznaceni_vydani": "Mutační vydání",
     "oznaceni": "Označení mutačního vydání (hvězdičky)",
@@ -207,7 +208,8 @@
     "save_the_entire_volume": "Uložit celý svazek",
     "generate_again": "Vygenerovat / vygenerovat znovu",
     "update": "Aktualizovat",
-    "close_navigation": "Zavřít navigaci"
+    "close_navigation": "Zavřít navigaci",
+    "specimens": "Exempláře"
   },
   "facet": {
     "title": {

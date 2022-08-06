@@ -11,7 +11,7 @@ import org.json.JSONObject;
  * @author alberto
  */
 public class Titul {
-  
+
 
   final static Logger LOGGER = Logger.getLogger(Titul.class.getName());
   @Field
@@ -22,12 +22,14 @@ public class Titul {
   public String poznamka;
   @Field
   public String periodicita;
-  
+  @Field
+  public Boolean allow_not_logged_users;
+
   // Odstraneno podle #138
 //  @Field
 //  public int pocet_stran;
-  
-  
+
+
   public static Titul fromJSON(JSONObject json) {
     Titul obj = JSON.parseObject(json.toString(), Titul.class);
     if (obj.id == null || obj.id.trim().isEmpty()) {
@@ -35,5 +37,5 @@ public class Titul {
     }
     return obj;
   }
-  
+
 }

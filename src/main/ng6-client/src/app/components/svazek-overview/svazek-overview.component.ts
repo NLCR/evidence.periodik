@@ -25,7 +25,7 @@ export class SvazekOverviewComponent implements OnInit {
   vydani: { name: string, type: string, value: number }[] = [];
   znaky: { name: string, type: string, value: number }[] = [];
   stavy: { name: string, value: number }[] = [];
-  chybejsicisla: { datum: Date, cislo: number }[] = [];
+  // chybejsicisla: { datum: Date, cislo: number }[] = [];
   fyzStavOk: boolean;
   stavyExt: { datum: Date, cislo: number }[] = [];
   poznamky: { datum: Date, cislo: number, note: string }[] = [];
@@ -82,7 +82,7 @@ export class SvazekOverviewComponent implements OnInit {
 
   loadDates(res) {
     const dates = this.service.getDaysArray(this.volume.datum_od, this.volume.datum_do);
-    this.chybejsicisla = [];
+    // this.chybejsicisla = [];
     let idx = 0;
     let issue: Issue = res[idx];
     // console.log(dates, issue.datum_vydani);
@@ -113,9 +113,9 @@ export class SvazekOverviewComponent implements OnInit {
       if (ex.poznamka && ex.poznamka !== '') {
         this.poznamky.push({ datum: ex.datum_vydani, cislo: ex.cislo, note: ex.poznamka });
       }
-      if (ex.stav && ex.stav.includes('ChCC')) {
-        this.chybejsicisla.push({ datum: ex.datum_vydani, cislo: ex.cislo });
-      }
+      // if (ex.stav && ex.stav.includes('ChCC')) {
+      //   this.chybejsicisla.push({ datum: ex.datum_vydani, cislo: ex.cislo });
+      // }
 
       //  }
       // });

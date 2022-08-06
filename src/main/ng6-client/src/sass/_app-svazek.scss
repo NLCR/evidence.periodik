@@ -10,6 +10,10 @@
     padding: $app-container;
     //overflow: auto;
 
+    .mat-datepicker-toggle{
+      margin-right: 6px;
+    }
+
     tfoot {
       background-color: $app-gray-1;
 
@@ -258,7 +262,7 @@
             input {
               font-size: $app-svazek-cell-font-size;
               &#datum_do:disabled, &#datum_od:disabled {
-                color: rgba(0, 0, 0, 1);
+                color: inherit;
               }
             }
           }

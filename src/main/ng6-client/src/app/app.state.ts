@@ -42,6 +42,10 @@ export class AppState {
   loginHttpError = false;
   loginHttpErrorMsg = '';
   logged = false;
+  // TODO práva
+  //
+  // logginChanged = false;
+  //
   redirectUrl = '/';
   loginuser = '';
   loginpwd = '';
@@ -127,8 +131,8 @@ export class AppState {
 
   setSearchResults(res: any) {
     this.searchResults = res;
-    
-    this.numFound = this.searchResults.response ? 
+
+    this.numFound = this.searchResults.response ?
       this.searchResults.response.numFound :
       this.searchResults.grouped.id_issue.ngroups;
     if (this.searchResults.stats) {

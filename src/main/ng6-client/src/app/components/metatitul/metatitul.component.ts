@@ -19,6 +19,7 @@ export class MetatitulComponent implements OnInit, OnDestroy {
 
   titul: Titul = null;
   loading: boolean;
+  routerLink: string;
 
   constructor(
     public dialog: MatDialog,
@@ -55,6 +56,7 @@ export class MetatitulComponent implements OnInit, OnDestroy {
 
   loadTitul(t: Titul) {
     this.titul = Object.assign({}, t);
+    this.routerLink = `/result/${this.titul.id}`;
   }
 
   save() {
@@ -107,7 +109,7 @@ export class MetatitulComponent implements OnInit, OnDestroy {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
+      // console.log(result);
       if (result) {
         this.loading = true;
         this.service.deleteTitul(this.titul.id).subscribe(res => {
@@ -121,9 +123,10 @@ export class MetatitulComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
 
-
-
+  allowNotLoggedUsers(value) {
+    this.titul.allow_not_logged_users = value;
   }
 
 

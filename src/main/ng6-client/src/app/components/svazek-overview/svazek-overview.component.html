@@ -32,7 +32,7 @@
     </div>
   </div>
   <div>
-    <strong>{{ 'desc.dates' | translate }}:</strong> 
+    <strong>{{ 'desc.dates' | translate }}:</strong>
     {{ volume.datum_od | date : 'dd.MM.yyy' : '+0430' : 'cs-CZ' }} - {{ volume.datum_do | date : 'dd.MM.yyy' : '+0430' : 'cs-CZ' }}
   </div>
   <div>
@@ -62,13 +62,13 @@
       <div fxFlex="100px">{{f.value}}x</div>
     </div>
   </div>
-  <div>
-    <strong>{{ 'Chybějící čísla' | translate}}:</strong>
-    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of chybejsicisla">
-      <div fxFlex="200px">{{ f.datum | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>
-      <div fxFlex="100px">{{f.cislo}}</div>
-    </div>
-  </div>
+<!--  <div>-->
+<!--    <strong>{{ 'Chybějící čísla' | translate}}:</strong>-->
+<!--    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of chybejsicisla">-->
+<!--      <div fxFlex="200px">{{ f.datum | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>-->
+<!--      <div fxFlex="100px">{{f.cislo}}</div>-->
+<!--    </div>-->
+<!--  </div>-->
   <div>
     <strong>{{ 'Fyzický stav' | translate }}:</strong> {{fyzStavOk ? 'Vyhovujici' : 'Poskozeny' | translate}} <!--  -->
   </div>
@@ -89,7 +89,7 @@
     </div>
   </div>
 </ng-container>
-  
+
 </div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close (click)="viewSvazek()">{{ 'Podrobný popis' | translate }}</button>

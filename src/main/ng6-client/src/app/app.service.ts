@@ -234,12 +234,23 @@ export class AppService {
       .set('q', '*')
       .set('sort', 'meta_nazev_sort asc')
       .set('rows', '500');
-
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
         this.state.tituly = res.response.docs;
       }));
   }
+
+  //TODO práva
+
+  //   return this.http.get(url, { params }).pipe(
+  //     map((res: any) => {
+  //       let allowed = [];
+  //       res.response.docs.map((doc) => {
+  //         if (doc.allow_not_logged_users || this.state.logged) { allowed = [...allowed, doc]; }
+  //       });
+  //       this.state.tituly = allowed;
+  //     }));
+  // }
 
   getVolumeFacets(id_titul: string): Observable<any> {
     const url = '/api/search/issue/select';

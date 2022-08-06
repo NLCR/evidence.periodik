@@ -19,5 +19,14 @@
   .app-fx-right {
     padding: $app-gap;
     overflow: auto;
+
+    .custom-checkbox {
+      margin: 0.5rem 0 1.5rem 0;
+      mat-label{
+        margin-top: 1px;
+      }
+    }
+
+
   }
 }

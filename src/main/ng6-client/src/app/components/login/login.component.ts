@@ -56,6 +56,10 @@ export class LoginComponent implements OnInit {
             this.error = data.error;
           } else {
             if (this.state.redirectUrl) {
+
+              //TODO práva
+
+              // this.state.logginChanged = true;
               this.router.navigate([this.state.redirectUrl]);
             }
           }
