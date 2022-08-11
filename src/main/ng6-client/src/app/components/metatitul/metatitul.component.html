@@ -53,7 +53,7 @@
 <!--      </div>-->
       <button mat-flat-button color="primary" (click)="save()" type="button" *ngIf="state.isAdmin" [disabled]="!userForm.form.valid || !state.isAdmin">{{ 'desc.save' | translate }}</button>
       <button mat-flat-button color="primary" (click)="remove()" *ngIf="state.isAdmin" type="button">{{ 'button.delete' | translate }}</button>
-<!--      <button mat-flat-button color="accent" [routerLink]="this.routerLink" *ngIf="state.isAdmin" type="button">{{ 'button.specimens' | translate }}</button>-->
+      <button mat-flat-button color="accent" [routerLink]="this.routerLink" *ngIf="state.isAdmin" type="button">{{ 'button.specimens' | translate }}</button>
     </form>
   </div>
 </div>
