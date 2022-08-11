@@ -1,6 +1,6 @@
 <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
 
-<div class="app-metatitul-wrapper" fxLayout="row">
+<div class="app-metatitul-wrapper" fxLayout="row" *ngIf="state.isAdmin">
   <div fxFlex="320px" class="app-fx-left">
     <div *ngIf="state.isAdmin" style="margin: 16px 0 0 16px;">
       <button mat-flat-button color="primary" (click)="newTitul()" type="button">{{ 'desc.add_new_title' | translate }}</button>

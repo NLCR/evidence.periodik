@@ -35,7 +35,7 @@
 
     .app-search-bar-wrapper {
       border-color: $app-gray-3;
-  
+
       &:hover {
         border-color: $app-gray-2;
       }
@@ -48,6 +48,12 @@
 
     app-result-item {
       margin-right: 16px !important;
+
+      .mat-button-base:not(.mat-flat-button){
+        margin: 0 4px !important;
+        padding: 0 9px;
+        font-size: 13px;
+      }
     }
   }
 }
