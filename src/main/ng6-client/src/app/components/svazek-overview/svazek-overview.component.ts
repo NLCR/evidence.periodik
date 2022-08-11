@@ -106,7 +106,8 @@ export class SvazekOverviewComponent implements OnInit {
     exs.forEach((ex: Exemplar) => {
       // issue.exemplare.forEach(ex => {
       //  if (ex.carovy_kod === this.data.carKod) {
-      if (ex.stav && ex.stav.length > 0) {
+      console.log(ex)
+      if (ex.stav && ex.stav.includes('PP') && ex.cislo >= 0) {
         this.stavyExt.push({ datum: ex.datum_vydani, cislo: ex.cislo });
       }
 

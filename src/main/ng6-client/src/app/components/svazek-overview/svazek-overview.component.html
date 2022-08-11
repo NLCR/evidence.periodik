@@ -76,7 +76,7 @@
     <strong>{{ 'Poškozená čísla' | translate}}:</strong>
     <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of stavyExt">
       <div fxFlex="100px">{{ f.datum | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>
-      <div fxFlex="100px">{{f.cislo}}</div>
+      <div fxFlex="100px">číslo {{f.cislo}}</div>
     </div>
   </div>
 
