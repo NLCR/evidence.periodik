@@ -126,7 +126,7 @@ export class MetatitulComponent implements OnInit, OnDestroy {
   }
 
   allowNotLoggedUsers(value) {
-    this.titul.allow_not_logged_users = value;
+    this.titul.show_to_not_logged_users = value;
   }
 
 

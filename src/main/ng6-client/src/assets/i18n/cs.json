@@ -206,6 +206,7 @@
     "add": "Přidat",
     "load_the_entire_volume": "Zrušit změny",
     "save_the_entire_volume": "Uložit celý svazek",
+    "delete_the_entire_volume": "Smazat celý svazek",
     "generate_again": "Vygenerovat / vygenerovat znovu",
     "update": "Aktualizovat",
     "close_navigation": "Zavřít navigaci",
@@ -270,7 +271,9 @@
     "delete_exemplar.caption": "Potvrdit smazání",
     "delete_exemplar.text": "Chtete opravdu smazat exemplář {{value}}?",
     "delete_title.caption": "Potvrdit smazání",
-    "delete_title.text": "Chtete opravdu smazat metatitul {{value}} a vsechna jeho čísla ?"
+    "delete_title.text": "Chtete opravdu smazat metatitul {{value}} a vsechna jeho čísla ?",
+    "delete_volume.caption": "Potvrdit smazání",
+    "delete_volume.text": "Chcete opravdu smazat celý svazek?"
   },
   "login": {
     "desc": "Prosím, přihlašte se",

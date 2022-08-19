@@ -8,5 +8,5 @@ export class Titul {
   // pocet_stran: number = 0; //default počet stran Odstraneno podle #138
   // uuid: string = ""; //uuid titulu	text	pokud je to z Krameria
   poznamka: string = ""; //uuid titulu	text	pokud je to z Krameria
-  allow_not_logged_users: boolean;
+  show_to_not_logged_users: boolean;
 }

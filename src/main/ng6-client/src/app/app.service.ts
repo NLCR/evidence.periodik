@@ -234,23 +234,20 @@ export class AppService {
       .set('q', '*')
       .set('sort', 'meta_nazev_sort asc')
       .set('rows', '500');
-    return this.http.get(url, { params }).pipe(
-      map((res: any) => {
-        this.state.tituly = res.response.docs;
-      }));
-  }
-
-  //TODO práva
-
   //   return this.http.get(url, { params }).pipe(
   //     map((res: any) => {
-  //       let allowed = [];
-  //       res.response.docs.map((doc) => {
-  //         if (doc.allow_not_logged_users || this.state.logged) { allowed = [...allowed, doc]; }
-  //       });
-  //       this.state.tituly = allowed;
+  //       this.state.tituly = res.response.docs;
   //     }));
   // }
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        let allowed = [];
+        res.response.docs.map((doc) => {
+          if (doc.show_to_not_logged_users || this.state.logged) { allowed = [...allowed, doc]; }
+        });
+        this.state.tituly = allowed;
+      }));
+  }
 
   getVolumeFacets(id_titul: string): Observable<any> {
     const url = '/api/search/issue/select';
@@ -590,6 +587,20 @@ export class AppService {
       .append('group.ngroups', 'true');
     return this.http.get(url, { params });
   }
+  //
+  // deleteVolume(barCode: string, dateRange: string): Observable<any> {
+  //   const volumeUrl = '/api/update/exemplar/delete';
+  //   const exemplarsUrl = '/api/update/exemplar/delete';
+  //   const params: HttpParams = new HttpParams()
+  //     .set('q', '*')
+  //     .set('wt', 'json')
+  //     .set('fl', '*,pages:[json]')
+  //     .set('sort', 'datum_vydani_den asc, vydani desc')
+  //     .set('stats', 'true')
+  //     .set('stats.field', 'datum_vydani_den')
+  //     .set('fq', 'carovy_kod_vlastnik:"' + carKodVlastnik + '"');
+  //   return this.http.get(url, { params });
+  // }
 
   doSearchParams(): HttpParams {
     let params: HttpParams = new HttpParams()

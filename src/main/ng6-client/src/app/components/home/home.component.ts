@@ -16,15 +16,15 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.state.reset();
-
-    //TODO práva
-
-    // if (this.state.logginChanged){
-    //   this.state.logginChanged = false;
-    //   this.state.tituly = [];
-    //   this.service.getTituly().subscribe();
-    // }
+    if (this.state.logginChanged){
+      this.state.logginChanged = false;
+      this.state.tituly = [];
+      location.reload();
+      // this.service.getTituly().subscribe();
+    }
   }
+
+
 
 
 }

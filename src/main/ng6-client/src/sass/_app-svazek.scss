@@ -17,6 +17,22 @@
     tfoot {
       background-color: $app-gray-1;
 
+      //td{
+      //  display: flex;
+      //  justify-content: flex-start;
+      //  align-items: center;
+      //}
+
+      .mat-flat-button{
+        font-size: 13px;
+        line-height: 32px;
+        padding: 0 6px;
+      }
+
+      .mat-icon-button{
+        width: auto;
+      }
+
       .mat-footer-row {
         .mat-footer-cell {
           @extend .app-clean-border;

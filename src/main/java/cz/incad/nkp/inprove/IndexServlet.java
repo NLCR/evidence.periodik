@@ -108,7 +108,7 @@ public class IndexServlet extends HttpServlet {
         JSONObject json = new JSONObject();
         try {
           Indexer indexer = new Indexer();
-          json = indexer.createExemplars(); 
+          json = indexer.createExemplars();
 
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);
@@ -384,7 +384,7 @@ public class IndexServlet extends HttpServlet {
           vp.getFromUrl(url);
 
           json.put("msg", vp.exemplarsToJson());
-          //JSONObject vdkJson = new JSONObject(s); 
+          //JSONObject vdkJson = new JSONObject(s);
           //indexer.fromVDK(new JSONObject(req.getParameter("cfg")), vdkJson.getJSONObject("response").getJSONArray("docs").getJSONObject(0));
 
         } catch (Exception ex) {

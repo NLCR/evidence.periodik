@@ -66,10 +66,6 @@ export class AuthenticationService {
 
     logout() {
         // remove user from local storage to log user out
-        //TODO práva
-
-      //  this.state.logginChanged = true;
-
         localStorage.removeItem('currentUser');
         this.state.user = null;
         this.state.logged = false;

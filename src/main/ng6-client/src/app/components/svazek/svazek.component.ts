@@ -166,7 +166,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
         this.findTitul();
         this.getExemplars(id, dateRange, false);
       } else {
-        // console.log("res = 0")
         this.getExemplars(id, '*', true);
       }
     });
@@ -174,7 +173,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   getExemplars(id: string, dateRange: string, setVolume: boolean) {
     this.service.getExemplarsByCarKod(id, dateRange).subscribe(res2 => {
-
       if (res2.response.numFound > 0) {
         const ex: Exemplar = res2.response.docs[0] as Exemplar;
         const datum_od = res2.stats.stats_fields.datum_vydani_den.min;
@@ -435,6 +433,53 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   }
 
+  deleteClick(){
+    if (!this.state.logged) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '650px',
+      data: {
+        caption: 'modal.delete_volume.caption',
+        text: 'modal.delete_volume.text',
+        param: {
+          value: ''
+        }
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.delete();
+      }
+    });
+
+  }
+
+  delete(){
+
+    if (!this.state.currentVolume.carovy_kod || this.state.currentVolume.carovy_kod.trim() === '') {
+      this.service.showSnackBar('snackbar.barcode_is_required', '', true);
+      return;
+    }
+
+    if (!this.state.currentVolume.datum_od) {
+      this.service.showSnackBar('snackbar.datum_od_is_required', '', true);
+      return;
+    }
+
+    if (!this.state.currentVolume.datum_do) {
+      this.service.showSnackBar('snackbar.datum_do_is_required', '', true);
+      return;
+    }
+
+    //carovy kod pro smazani svazku
+    //datum vydani a carovy kod pro smazani exemplaru
+
+
+
+  }
+
   generateClick() {
 
     if (!this.state.logged) {
@@ -469,7 +514,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
       const dayStr = this.datePipe.transform(dt, 'EEEE');
       let inserted = false;
       this.state.currentVolume.periodicita.forEach(p => {
-
         if (p.active) {
           if (p.den === dayStr) {
             const ex = new Exemplar();

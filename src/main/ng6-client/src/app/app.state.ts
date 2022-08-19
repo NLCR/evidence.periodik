@@ -42,10 +42,6 @@ export class AppState {
   loginHttpError = false;
   loginHttpErrorMsg = '';
   logged = false;
-  // TODO práva
-  //
-  // logginChanged = false;
-  //
   redirectUrl = '/';
   loginuser = '';
   loginpwd = '';
@@ -95,6 +91,7 @@ export class AppState {
   public filters: Filter[] = [];
 
   public filterByDate: boolean;
+  logginChanged: boolean;
 
   setConfig(config: AppConfiguration) {
 

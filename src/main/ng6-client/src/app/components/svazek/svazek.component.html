@@ -23,6 +23,11 @@
               <mat-icon [matTooltip]="'desc.volume_overview' | translate" (click)="showSvazekOverview()"
                 matTooltipPosition="above">{{ config.icons.info }}</mat-icon>
             </button>
+<!--            <button mat-flat-button color="accent" (click)="deleteClick()" [disabled]="!state.logged || loading">-->
+<!--              <mat-icon *ngIf="!state.logged" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"-->
+<!--                        matTooltipPosition="above">{{ config.icons.block }}</mat-icon>-->
+<!--              {{ 'button.delete_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}-->
+<!--            </button>-->
           </td>
         </ng-container>
 

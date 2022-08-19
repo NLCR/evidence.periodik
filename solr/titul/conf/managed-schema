@@ -39,8 +39,9 @@
       <tokenizer class="solr.KeywordTokenizerFactory"/>
     </analyzer>
   </fieldType>
+  <fieldType name="icu_sort_cs" class="solr.ICUCollationField" strength="tertiary" locale="cs"/>
   <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
-  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" maxDistErr="0.001" distErrPct="0.025" distanceUnits="kilometers"/>
+  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" omitNorms="true" omitTermFreqAndPositions="true" maxDistErr="0.001" termOffsets="false" distErrPct="0.025" distanceUnits="kilometers" termPositions="false" omitPositions="true"/>
   <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
     <analyzer>
       <tokenizer class="solr.KeywordTokenizerFactory"/>
@@ -171,20 +172,18 @@
       <tokenizer class="solr.WhitespaceTokenizerFactory"/>
     </analyzer>
   </fieldType>
-  <fieldType name="icu_sort_cs" class="solr.ICUCollationField"  locale="cs" strength="tertiary" />
-
-
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="meta_nazev" type="text_general" multiValued="false"/>
-  <field name="meta_nazev_str" type="string" multiValued="false"/>
   <field name="meta_nazev_sort" type="icu_sort_cs" multiValued="false"/>
-  <field name="uuid" type="string" multiValued="false"/>
-  <field name="periodicita" type="text_general" multiValued="false" indexed="true" stored="true" />
+  <field name="meta_nazev_str" type="string" multiValued="false"/>
+  <field name="periodicita" type="text_general" multiValued="false" indexed="true" stored="true"/>
   <field name="pocet_stran" type="plong" multiValued="false" indexed="true" stored="true"/>
-
+  <field name="poznamka" type="string" multiValued="false"/>
+  <field name="show_to_not_logged_users" type="boolean" uninvertible="true" default="true" indexed="true" stored="true"/>
+  <field name="uuid" type="string" multiValued="false"/>
   <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
   <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
   <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>
@@ -218,6 +217,6 @@
   <dynamicField name="*_f" type="pfloat" indexed="true" stored="true"/>
   <dynamicField name="*_d" type="pdouble" indexed="true" stored="true"/>
   <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
-  <copyField source="meta_nazev" dest="meta_nazev_str" maxChars="256"/>
   <copyField source="meta_nazev" dest="meta_nazev_sort" maxChars="256"/>
+  <copyField source="meta_nazev" dest="meta_nazev_str" maxChars="256"/>
 </schema>

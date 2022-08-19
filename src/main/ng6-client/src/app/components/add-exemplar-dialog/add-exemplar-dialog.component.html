@@ -37,9 +37,9 @@
           <mat-datepicker #pickerTo></mat-datepicker>
         </mat-form-field>
         <div fxFlex="33.3333%" fxLayout="row">
-          <mat-checkbox fxFlexAlign="center" [(ngModel)]="onspecial" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox> 
+          <mat-checkbox fxFlexAlign="center" [(ngModel)]="onspecial" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox>
         </div>
-      </div> 
+      </div>
     </div>
     <div *ngSwitchDefault>
       {{ 'desc.specimen' | translate }}: {{ exemplar.vlastnik }} <span class="app-font-bold">{{ exemplar.carovy_kod }}</span>
@@ -75,7 +75,7 @@
       <input matInput [placeholder]="'record.popis_oznaceni_vydani' | translate" [id]="'popis_oznaceni_vydani'" [name]="'popis_oznaceni_vydani'" [(ngModel)]="exemplar.popis_oznaceni_vydani" type="text">
     </mat-form-field>
   </div>
-  
+
   <!-- <div *ngIf="showPages">
     <span class="app-font-bold">{{ 'record.lost_pages' | translate }}</span>
     <div class="app-grid-wrapper">

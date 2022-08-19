@@ -57,9 +57,7 @@ export class LoginComponent implements OnInit {
           } else {
             if (this.state.redirectUrl) {
 
-              //TODO práva
-
-              // this.state.logginChanged = true;
+              this.state.logginChanged = true;
               this.router.navigate([this.state.redirectUrl]);
             }
           }

@@ -205,6 +205,7 @@
     "add": "Add",
     "load_the_entire_volume": "Cancel changes",
     "save_the_entire_volume": "Save the entire volume",
+    "delete_the_entire_volume": "Delete the entire volume",
     "generate_again": "Generate / generate again",
     "update": "Update",
     "close_navigation": "Close navigation",
@@ -269,7 +270,9 @@
     "delete_exemplar.caption": "Confirm delete",
     "delete_exemplar.text": "Are you sure you want delete exemplare {{value}}?",
     "delete_title.caption": "Confirm delete",
-    "delete_title.text": "Are you sure you want delete metatitul {{value}} and all his numbers ?"
+    "delete_title.text": "Are you sure you want delete metatitul {{value}} and all his numbers ?",
+    "delete_volume.caption": "Confirm delete",
+    "delete_volume.text": "Are you sure you want to delete whole volume?"
   },
   "login": {
     "desc": "Please, login",

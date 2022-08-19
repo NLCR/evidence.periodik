@@ -3,7 +3,7 @@
 <div fxLayout="row" fxLayoutGap="16px" class="app-issue-wrapper">
   <div fxFlex>
     <mat-form-field *ngIf="state.isNewIssue">
-      <mat-label>{{ 'record.meta_title' | translate }}</mat-label> 
+      <mat-label>{{ 'record.meta_title' | translate }}</mat-label>
       <mat-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (selectionChange)="setTitul()">
         <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx">
           {{ tit.meta_nazev }}
@@ -16,12 +16,12 @@
 
     <mat-form-field *ngIf="state.isNewIssue">
       <input matInput [matDatepicker]="picker" [placeholder]="'desc.choose_date' | translate"
-       [(ngModel)]="state.currentIssue.datum_vydani" 
+       [(ngModel)]="state.currentIssue.datum_vydani"
         id="datum_vydani" name="datum_vydani">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-    
+
 
     <mat-form-field>
       <input matInput [placeholder]="'record.name_title_page' | translate" id="nazev" name="nazev" [(ngModel)]="state.currentIssue.nazev">
@@ -57,7 +57,7 @@
     <mat-form-field>
       <input matInput [placeholder]="'record.mutation' | translate | translate" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace">
     </mat-form-field>
-    
+
     <mat-form-field *ngIf="!changingLang">
       <mat-label>{{ 'record.periodicita.placeholder' | translate }}</mat-label>
       <mat-select id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita">
@@ -88,10 +88,10 @@
       <input matInput [placeholder]="'record.second_number' | translate" id="druhe_cislo" name="druhe_cislo" [(ngModel)]="state.currentIssue.druhe_cislo" pattern="[0-9]+">
       <span class="validity"></span>
     </mat-form-field>
-<!-- 
+<!--
     <mat-form-field>
       <input matInput [placeholder]="'record.id_bib_record' | translate" id="id_bib_zaznamu" name="id_bib_zaznamu" [(ngModel)]="state.currentIssue.id_bib_zaznamu">
-    </mat-form-field>  
+    </mat-form-field>
 
     <mat-form-field>
       <input matInput [placeholder]="'record.url_bib_record' | translate" id="url_bib_zaznamu" name="url_bib_zaznamu" [(ngModel)]="state.currentIssue.url_bib_zaznamu">
@@ -106,7 +106,7 @@
       <input matInput [placeholder]="'record.url_kramerius' | translate" id="url_krameria" name="url_krameria" [(ngModel)]="state.currentIssue.url_krameria">
     </mat-form-field> -->
   </div>
-  
+
   <div fxFlex>
     <div fxLayout="row" class="app-accordation-header" *ngIf="!loading">
       <div fxFlex class="app-fx-left">
@@ -155,19 +155,19 @@
         <mat-form-field>
           <input matInput [placeholder]="'record.barcode' | translate" [id]="'carovy_kod'+idx" [name]="'carovy_kod'+idx" [(ngModel)]="ex.carovy_kod">
         </mat-form-field>
-        
+
         <mat-form-field>
           <input matInput [placeholder]="'record.signatura' | translate" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura">
         </mat-form-field>
-        
+
         <mat-form-field>
           <input matInput [placeholder]="'record.oznaceni' | translate" [id]="'oznaceni'+idx" [name]="'oznaceni'+idx" [(ngModel)]="ex.oznaceni" #box (keyup)="filterOznaceni(box.value, ex)">
         </mat-form-field>
-        
+
         <mat-form-field>
           <input matInput [placeholder]="'record.popis_oznaceni_vydani' | translate" [id]="'popis_oznaceni_vydani'+idx" [name]="'popis_oznaceni_vydani'+idx" [(ngModel)]="ex.popis_oznaceni_vydani">
         </mat-form-field>
-       
+
         <div *ngIf="showPages(ex)">
           <span class="app-font-bold">{{ 'record.pages_missing' | translate }}</span>
           <div class="app-grid-wrapper">
