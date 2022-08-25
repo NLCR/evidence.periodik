@@ -7,7 +7,7 @@
         <span *ngIf="idx !== 0 && data[idx-1]['nazev'] === data[idx]['nazev']"> -- || -- </span>
       </td>
     </ng-container>
-   
+
     <ng-container matColumnDef="mutace">
       <th mat-header-cell *matHeaderCellDef>{{ 'record.mutation' | translate }}</th>
       <td mat-cell *matCellDef="let row; let idx = index">
@@ -21,10 +21,10 @@
         {{ 'record.date_publication' | translate }}
       </th>
       <td mat-cell *matCellDef="let row">
-        <a (click)="onCalendarClick(row)">{{ row.datum_vydani | date: 'dd.MM.yyyy' }}</a> 
-      </td>    
-    </ng-container> 
-   
+        <a (click)="onCalendarClick(row)">{{ row.datum_vydani | date: 'dd.MM.yyyy' }}</a>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="nazev">
       <th mat-header-cell *matHeaderCellDef>{{ 'desc.name' | translate }}</th>
       <td mat-cell *matCellDef="let row; let idx = index">
@@ -40,21 +40,21 @@
       <td mat-cell *matCellDef="let row; let idx = index">
         <span *ngIf="row.vydani">{{ 'record.publication.' + row.vydani | translate }}</span>
         <span *ngIf="!row.vydani">{{ 'record.publication.empty' | translate }}</span>
-      </td>  
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="cislo">
       <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
         <div>{{ 'record.number' | translate }}</div>
       </th>
-      <td mat-cell *matCellDef="let row">{{ row.cislo }}</td>     
+      <td mat-cell *matCellDef="let row">{{ row.cislo }}</td>
     </ng-container>
 
     <ng-container matColumnDef="pocet_stran">
       <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
         <div>{{ 'record.pages_count' | translate }}</div>
       </th>
-      <td mat-cell *matCellDef="let row">{{ row.pocet_stran }}</td>  
+      <td mat-cell *matCellDef="let row">{{ row.pocet_stran }}</td>
     </ng-container>
 
     <ng-container matColumnDef="add">
@@ -62,16 +62,16 @@
         {{ 'record.total' | translate }}
       </th>
       <td mat-cell *matCellDef="let row">
-        {{ row.exemplare ? row.exemplare.length : 0 }} 
+        {{ row.exemplare ? row.exemplare.length : 0 }}
         <!-- <a (click)="addClick(row)" [matTooltip]="'desc.add_specimen' | translate" matTooltipPosition="above">
           <mat-icon>{{ config.icons.add_circle }}</mat-icon>
         </a> -->
         <a [matTooltip]="'desc.edit_record' | translate" matTooltipPosition="above" (click)="viewIssue(row)">
           <mat-icon>{{ config.icons.edit_issue }}</mat-icon>
         </a>
-      </td>   
+      </td>
     </ng-container>
-    
+
     <ng-container *ngFor="let vl of vlastnici" [matColumnDef]="vl.name">
       <th mat-header-cell *matHeaderCellDef [ngClass]="'app-header-cell-' + vl.name.toLowerCase()">
         <div fxLayout="row">
@@ -86,7 +86,7 @@
       <td mat-cell *matCellDef="let row; let idx = index;" [class.app-col-collapsed]="vl.collapsed">
         <span *ngFor="let ex of row.exemplare; let idxex = index">
           <ng-container *ngIf="ex.vlastnik === vl.name">[
-            <a (click)="showSvazekOverview(ex.carovy_kod)" matTooltipPosition="above" style="width:70px; display: inline-block;">{{ ex['carovy_kod'] }}</a>
+            <a (click)="showSvazekOverview(ex.carovy_kod)" matTooltipPosition="above" style="display: inline-block;">{{ ex['carovy_kod'] }}</a>
             <a [matTooltip]="'desc.edit_volume' | translate" matTooltipPosition="above" (click)="viewSvazek(ex['carovy_kod'])">
               <mat-icon>{{ config.icons.edit_volume }}</mat-icon>
             </a>
@@ -101,14 +101,14 @@
             </a>
           ]</ng-container>
         </span>
-      </td>     
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row [ngClass]="{'app-even': idx%2 === 1}" *matRowDef="let row; let idx = index; columns: displayedColumns;"></tr>
   </table>
   <mat-paginator [pageSizeOptions]="[5, 25, 50, 100]"
-  
+
   [pageSize]="25"
     [pageIndex]="state.currentPage"
     (page)="pageChanged($event)"

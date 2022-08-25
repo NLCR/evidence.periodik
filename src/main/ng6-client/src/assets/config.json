@@ -9,7 +9,7 @@
   "periodicity": [
     "P1D","P1W",
     "P1M",
-    "P6M", 
+    "P6M",
     "P1Y"
   ],
   "owners": [
@@ -59,7 +59,7 @@
     "send": "send",
     "menu": "menu",
     "close": "close",
-    
+
     "duplicate": "file_copy",
     "missing_page": "error",
     "uncontrolled": "visibility_off",
@@ -75,6 +75,6 @@
     "view_list": "view_list",
     "view_table": "table_chart",
     "digitized": "all_out"
-  }       
+  }
 }
 

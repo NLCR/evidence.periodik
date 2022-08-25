@@ -632,11 +632,20 @@ export class AppService {
       .append('facet.field', 'stav');
 
     // facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
-
+    let searchNotVerified = false;
     this.state.filters.forEach((f: Filter) => {
-      //    for (let f in this.state.filters){
-      params = params.append('fq', f.field + ':"' + f.value + '"');
+      if (f.field === 'stav' && f.value === 'notVerified') {
+        searchNotVerified = true;
+      }
     });
+
+    if (searchNotVerified) {
+      params = params.append('fq',  '*:* NOT stav:*');
+    } else {
+      this.state.filters.forEach((f: Filter) => {
+        params = params.append('fq', f.field + ':"' + f.value + '"');
+      });
+    }
 
     if (this.state.filterByDate) {
       params = params.append('fq', 'datum_vydani_den:[' + this.state.start_year + '0101 TO ' + this.state.end_year + '1231]');

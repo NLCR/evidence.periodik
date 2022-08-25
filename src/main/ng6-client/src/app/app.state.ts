@@ -127,6 +127,7 @@ export class AppState {
   }
 
   setSearchResults(res: any) {
+    res.facet_counts.facet_fields.stav.push({name: 'notVerified', type: 'string', value: '?'});
     this.searchResults = res;
 
     this.numFound = this.searchResults.response ?

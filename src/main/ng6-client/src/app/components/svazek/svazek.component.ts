@@ -391,9 +391,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
       return;
     }
     // Ulozit svazek (volume) a vsechny radky tabulky jako Issue.
-
     // carovy_kod je povinny, jelikoz pouzivame jako id svazku
-    if (!this.state.currentVolume.carovy_kod || this.state.currentVolume.carovy_kod.trim() === '') {
+    const barCode = this.state.currentVolume.carovy_kod;
+    const reg = new RegExp('^[0-9]*$');
+    if (!barCode || barCode.trim() === '' || !reg.test(barCode)) {
       this.setLastNumber();
       this.service.showSnackBar('snackbar.barcode_is_required', '', true);
       return;
@@ -411,6 +412,11 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
     if (this.state.currentVolume.datum_od > this.state.currentVolume.datum_do) {
       this.service.showSnackBar('snackbar.the_date_from_is_greater_than_the_date_to', '', true);
+      return;
+    }
+
+    if (!this.state.currentVolume.vlastnik || this.state.currentVolume.vlastnik.trim() === '') {
+      this.service.showSnackBar('snackbar.vlastnik_is_required', '', true);
       return;
     }
 

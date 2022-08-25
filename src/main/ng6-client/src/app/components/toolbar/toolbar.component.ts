@@ -97,8 +97,11 @@ export class ToolbarComponent implements /*OnInit,*/ OnDestroy {
   }
 
   saveRecord() {
-
+    let missingOwners = 0;
     this.state.currentIssue.exemplare.forEach((ex: Exemplar) => {
+      if (!ex.vlastnik || ex.vlastnik.trim() === ''){
+        missingOwners++;
+      }
       ex.pages = { missing: [], damaged: [] };
       ex.pagesRange.damaged.forEach(p => {
         if (p.sel) {
@@ -113,6 +116,11 @@ export class ToolbarComponent implements /*OnInit,*/ OnDestroy {
 
       });
     });
+
+    if (missingOwners > 0){
+      this.service.showSnackBar('snackbar.vlastnik_is_required', '', true);
+      return;
+    }
 
     this.state.currentIssue.state = 'ok';
     this.service.saveCurrentIssue().subscribe(res => {

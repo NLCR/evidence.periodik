@@ -159,7 +159,8 @@
       "ChCl": "Missing article",
       "NS": "Unreadably bound",
       "ZV": "Replacement Edition",
-      "NeS": "Unbound"
+      "NeS": "Unbound",
+      "notVerified": "Not verified"
     },
     "periodicita": {
       "placeholder": "Periodicity",
@@ -300,6 +301,9 @@
     "error_cloning": "Error cloning",
     "delete_success": "Delete success",
     "barcode_is_required": "Barcode is required",
+    "vlastnik_is_required": "Owner is required",
+    "datum_do_is_required": "Date to is required",
+    "datum_od_is_required": "Date to is required",
     "the_date_from_is_greater_than_the_date_to": "The date from is greater than the date to",
     "error_saving_volume": "Error saving volume",
     "the_volume_was_saved_correctly": "The volume was saved correctly",
