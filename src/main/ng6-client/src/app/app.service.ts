@@ -243,7 +243,12 @@ export class AppService {
       map((res: any) => {
         let allowed = [];
         res.response.docs.map((doc) => {
-          if (doc.show_to_not_logged_users || this.state.logged) { allowed = [...allowed, doc]; }
+          if (doc.show_to_not_logged_users || this.state.logged) {
+            if (typeof doc.show_to_not_logged_users === 'undefined'){
+              doc.show_to_not_logged_users = false;
+            }
+            allowed = [...allowed, doc];
+          }
         });
         this.state.tituly = allowed;
       }));

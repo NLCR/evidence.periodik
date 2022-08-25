@@ -55,20 +55,25 @@ export class MetatitulComponent implements OnInit, OnDestroy {
   }
 
   loadTitul(t: Titul) {
+    // console.log(t)
     this.titul = Object.assign({}, t);
     this.routerLink = `/result/${this.titul.id}`;
   }
 
   save() {
     this.loading = true;
+    // if (typeof this.titul.show_to_not_logged_users === 'undefined'){
+    //   this.titul.show_to_not_logged_users = false;
+    // }
+    // console.log('show', this.titul.show_to_not_logged_users);
     this.service.saveTitul(this.titul).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.loading = false;
       if (res.error) {
         this.service.showSnackBar('snackbar.title_error_saving', res.error, true);
       } else {
         this.service.showSnackBar('snackbar.title_saved');
-        this.load(res.resp.id);
+        setTimeout(() => this.load(res.resp.id), 250);
       }
     });
   }
@@ -90,6 +95,7 @@ export class MetatitulComponent implements OnInit, OnDestroy {
         } else {
           this.titul = new Titul();
           this.titul.meta_nazev = result;
+          this.titul.show_to_not_logged_users = false;
           this.state.tituly.push(this.titul);
         }
       }
@@ -127,6 +133,9 @@ export class MetatitulComponent implements OnInit, OnDestroy {
 
   allowNotLoggedUsers(value) {
     this.titul.show_to_not_logged_users = value;
+    // const titulInState = this.state.tituly.find(titul => titul.id === this.titul.id);
+    // this.state.tituly.find(titul => titul.id === this.titul.id).show_to_not_logged_users = value;
+    // console.log(this.state.tituly.find(titul => titul.id === this.titul.id))
   }
 
 

@@ -23,7 +23,7 @@ public class Titul {
   @Field
   public String periodicita;
   @Field
-  public Boolean allow_not_logged_users;
+  public Boolean show_to_not_logged_users;
 
   // Odstraneno podle #138
 //  @Field
