@@ -10,10 +10,10 @@ import { Subscription } from 'rxjs';
 export class ToolbarPaginationResultComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription[] = [];
-  
+
   numPages: number = 5;
   totalPages: number;
-  
+
   pages: number[] = [];
 
   constructor(
@@ -32,7 +32,7 @@ export class ToolbarPaginationResultComponent implements OnInit, OnDestroy {
     });
     this.subscriptions = [];
   }
-  
+
   setPages(){
     this.pages = [];
     this.totalPages = this.state.numFound / this.state.rows;
@@ -42,8 +42,8 @@ export class ToolbarPaginationResultComponent implements OnInit, OnDestroy {
     for(let i = min; i< max; i++){
       this.pages.push(i);
     }
-  }  
-  
+  }
+
   prev(){
     let current = Math.max(0, this.state.currentPage - 1);
     this.setPages();

@@ -87,11 +87,18 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     this.displayedColumns = [];
     this.header = '';
     this.data = [];
-    this.state.searchResults.grouped.id_issue.groups.forEach(group => {
+    // console.log(this.state.searchResults.grouped.id_issue.groups)
+    this.state.searchResults.grouped.id_issue.groups.forEach((group, index) => {
+      // console.log(group)
       const issue = group.doclist.docs[0] as Issue;
+      // console.log(index)
+      // console.log(issue)
+      // console.log(group.doclist.docs)
       issue.id = group.groupValue;
       issue.exemplare = [];
       group.doclist.docs.forEach(doc => {
+
+        // console.log(doc)
         issue.exemplare.push(doc);
       });
       this.data.push(issue);
@@ -229,7 +236,9 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   }
 
   deleteEx(issue: Issue, ex: Exemplar, idxex: number) {
-
+    // console.log(issue, ex, idxex)
+    // console.log(issue)
+    // console.log(ex)
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '650px',
@@ -243,6 +252,8 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        // console.log(idxex)
+        // console.log("issue: ",issue);
         issue.exemplare.splice(idxex, 1);
         // console.log(issue.exemplare);
         this.service.saveIssue(issue).subscribe(res => {
@@ -333,5 +344,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     // this.state.rows = e.pageSize;
     // this.state.gotoPage(e.pageIndex);
   }
+
+
 
 }
