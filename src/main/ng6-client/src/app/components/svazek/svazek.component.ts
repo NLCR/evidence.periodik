@@ -620,14 +620,45 @@ export class SvazekComponent implements OnInit, OnDestroy {
     const min = down ? idx : 0;
     const max = down ? this.dsExemplars.data.length : idx;
     let curCislo = this.dsExemplars.data[min].cislo;
+    let willBeRenumbered = 0;
+    let firstNumber = -1;
     // const maxCislo = this.dsIssues.data[min].cislo;
+
     for (let i = min; i < max; i++) {
       const ex: Exemplar = this.dsExemplars.data[i];
       if (ex.numExists) {
-        ex.cislo = curCislo;
-        curCislo++;
+        willBeRenumbered++;
       }
     }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '650px',
+      data: {
+        caption: 'modal.renumber.caption',
+        text: 'modal.renumber.text',
+        param: {
+          value: willBeRenumbered
+        }
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        for (let i = min; i < max; i++) {
+          const ex: Exemplar = this.dsExemplars.data[i];
+          if (ex.numExists) {
+            if (firstNumber < 0) {
+              firstNumber = curCislo;
+            }
+            ex.cislo = curCislo;
+            curCislo++;
+          }
+        }
+        const additionalInfo = this.state.currentLang === 'cs' ? ` čísel: ${willBeRenumbered} (v rozsahu od ${firstNumber} po ${curCislo - 1})` : ` numbers: ${willBeRenumbered} (in range from ${firstNumber} to ${curCislo - 1})`;
+        this.service.showSnackBar('snackbar.renumbered_correctly', '', false, additionalInfo, 4500);
+
+      }
+    });
+
   }
 
   addExemplar(element: Exemplar, idx: number) {

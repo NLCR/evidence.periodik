@@ -280,6 +280,9 @@
               &#datum_do:disabled, &#datum_od:disabled {
                 color: inherit;
               }
+              &#datum_do.not_logged, &#datum_od.not_logged {
+                color: rgba(0, 0, 0, 0.38);
+              }
             }
           }
         }

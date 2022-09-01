@@ -724,11 +724,11 @@ export class AppService {
   }
 
 
-  showSnackBar(s: string, r: string = '', error: boolean = false) {
+  showSnackBar(s: string, r: string = '', error: boolean = false, additionalInfo: string = '', duration: number = 0) {
     const right = r !== '' ? this.getTranslation(r) : '';
     const clazz = error ? 'app-snack-error' : 'app-snack-success';
-    this.snackBar.open(this.getTranslation(s), right, {
-      duration: 2000,
+    this.snackBar.open(this.getTranslation(s) + additionalInfo, right, {
+      duration: duration || 2000,
       verticalPosition: 'top',
       panelClass: clazz
     });

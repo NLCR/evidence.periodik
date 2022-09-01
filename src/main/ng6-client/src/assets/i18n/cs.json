@@ -274,7 +274,9 @@
     "delete_title.caption": "Potvrdit smazání",
     "delete_title.text": "Chtete opravdu smazat metatitul {{value}} a vsechna jeho čísla ?",
     "delete_volume.caption": "Potvrdit smazání",
-    "delete_volume.text": "Chcete opravdu smazat celý svazek?"
+    "delete_volume.text": "Chcete opravdu smazat celý svazek?",
+    "renumber.caption": "Potvrdit přečíslování",
+    "renumber.text": "Čísel k přečíslování: {{value}}. Opravdu chcete provést změny?"
   },
   "login": {
     "desc": "Prosím, přihlašte se",
@@ -314,6 +316,7 @@
     "the_current_issue_was_saved_correctly": "Aktuální výtisk byl úspěšně uložen",
     "error_saving_current_volume": "Chyba při ukládání aktuálního svazku",
     "the_current_volume_was_saved_correctly": "Aktuální svazek byl úspěšně uložen",
-    "error_deleting_volume": "Chyba při smazání svazku"
+    "error_deleting_volume": "Chyba při smazání svazku",
+    "renumbered_correctly": "Přečíslováno"
   }
 }

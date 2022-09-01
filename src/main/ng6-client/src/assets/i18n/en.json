@@ -273,7 +273,9 @@
     "delete_title.caption": "Confirm delete",
     "delete_title.text": "Are you sure you want delete metatitul {{value}} and all his numbers ?",
     "delete_volume.caption": "Confirm delete",
-    "delete_volume.text": "Are you sure you want to delete whole volume?"
+    "delete_volume.text": "Are you sure you want to delete whole volume?",
+    "renumber.caption": "Confirm renumber",
+    "renumber.text": "Numbers to renumber: {{value}}. Are you sure you want to apply changes?"
   },
   "login": {
     "desc": "Please, login",
@@ -313,6 +315,7 @@
     "the_current_issue_was_saved_correctly": "The current issue was saved correctly",
     "error_saving_current_volume": "Error saving current volume",
     "the_current_volume_was_saved_correctly": "The current volume was saved correctly",
-    "error_deleting_volume": "Error deleting volume"
+    "error_deleting_volume": "Error deleting volume",
+    "renumbered_correctly": "Renumbered"
   }
 }
