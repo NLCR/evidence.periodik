@@ -11,7 +11,7 @@
   .app-calendar-weekday {
     width: 14.28%;
     height: 25px;
-    margin: 0px;
+    margin: 0;
     color: $app-gray-6;
     padding: 0.3rem 0.5rem;
     font-size: 16px;
@@ -29,7 +29,8 @@
   .app-calendar-day {
     width: 14.28%;
     height: 16.6666%;
-    margin: 0px;
+    min-height: 130px;
+    margin: 0;
     @include set-border(right-bottom, 1, solid, $app-gray-3);
 
     &:nth-child(7n) {
@@ -47,11 +48,11 @@
         color: $app-gray-7;
         padding: 0.3rem 0.5rem;
       }
-      
+
       &[class*="app-calendar-day-special"] {
         .app-calendar-day-content-title {
           @extend .app-cursor-pointer;
-          
+
           > span {
             display: block;
             border-radius: 50%;
@@ -62,7 +63,7 @@
           }
         }
       }
-      
+
       // set day special
       &.app-calendar-day-special-holiday {@include setSpecialDay($app-day-special-bg, $app-day-holiday-circle, $app-color-white);}
       &.app-calendar-day-special-event {@include setSpecialDay($app-day-special-bg, $app-day-event-circle, $app-color-white);}
@@ -70,7 +71,7 @@
       .app-calendar-day-content-item {
         @extend .app-cursor-pointer;
         margin-bottom: 2px;
-        
+
         & > div:not(.app-btn-show-more) {
           padding: 0.1rem 0.5rem;
         }
@@ -79,7 +80,7 @@
           width: calc(100% - #{$app-container});
           border-radius: $app-border-radius;
           color: $app-color-white;
-          
+
           .app-count-ex {
             border-radius: 50%;
             width: 14px;
@@ -107,25 +108,25 @@
         // set states
         .app-state-ok {@include setState($app-state-ok, 5);}
         .app-state-auto {@include setState($app-state-auto, 7);}
-        
+
         // show more issues
         .app-btn-show-more {
           a {
             margin-right: $app-container;
             color: $app-gray-9;
-            
+
             &:hover {
-              color: lighten($app-gray-9, 50%); 
+              color: lighten($app-gray-9, 50%);
             }
-            
+
             span {
               @extend .app-font-bold;
             }
           }
         }
       }
-      
-      
+
+
       .app-calendar-day-content-menu {
         .mat-icon {
           color: $app-gray-5;

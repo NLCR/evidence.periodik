@@ -34,7 +34,7 @@
       </div>
     </div>
     <div *ngIf="idx === 3" class="app-btn-show-more">
-      <a [routerLink]="['/calendar', id, 'list']" [matTooltip]="'calendar.tooltip.show_all_issues' | translate">
+      <a [routerLink]="['/calendar', id, 'list', e.datum_vydani_den]" [matTooltip]="'calendar.tooltip.show_all_issues' | translate">
         <mat-icon>{{ config.icons.link }}</mat-icon> <span>{{ issues.length - 3 }}</span>
         {{ 'calendar.next_issues' | translate }}
       </a>

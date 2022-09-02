@@ -5,10 +5,15 @@
   @import "app-calendar-month";
   @import "app-calendar-list";
   position: relative;
-  
+
   .mat-flat-button {
     position: fixed;
     right: $app-container;
     bottom: $app-container;
+
+    .mat-icon {
+      margin-right: 0;
+    }
+
   }
 }

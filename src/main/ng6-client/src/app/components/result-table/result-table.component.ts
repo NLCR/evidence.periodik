@@ -30,7 +30,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'nazev', 'vydani'];
   header = '';
   dataSource: MatTableDataSource<Issue>;
-  loading: boolean = true;
+  loading = true;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -45,7 +45,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
 
     // this.dataSource = new MatTableDataSource([]);
     this.data = [];
-    this.setData();
+    // this.setData();
 
     this.subscriptions.push(this.state.searchChanged.subscribe(res => {
       this.dataSource = null;
