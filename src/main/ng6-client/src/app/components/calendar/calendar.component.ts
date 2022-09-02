@@ -38,11 +38,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
         //            this.analyze();
         //        }));
 
-        let id = this.route.snapshot.paramMap.get('id');
+        const id = this.route.snapshot.paramMap.get('id');
         if (id) {
             setTimeout(() => {
                 this.service.getTitul(id).subscribe(res => {
-                    this.state.setCurrentTitul(res)
+                    this.state.setCurrentTitul(res);
                 });
             }, 10);
         }

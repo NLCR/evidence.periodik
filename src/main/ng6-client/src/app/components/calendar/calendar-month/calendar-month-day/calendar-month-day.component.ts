@@ -18,10 +18,10 @@ export class CalendarMonthDayComponent implements OnInit {
   @Input() special: any;
   @Input() current: Date;
   @Input() issues: any[];
-  
+
   isSpecial: boolean;
   id: string;
-  
+
   constructor(
     private route: ActivatedRoute,
     public state: AppState,
@@ -29,12 +29,12 @@ export class CalendarMonthDayComponent implements OnInit {
     public config: AppConfiguration) { }
 
   ngOnInit() {
-    let id = this.route.snapshot.parent.paramMap.get('id');
+    const id = this.route.snapshot.parent.paramMap.get('id');
     if (id) {
       this.id = id;
     }
   }
-  
+
   isOtherMonth(){
     return this.day.getMonth() !== this.current.getMonth();
   }

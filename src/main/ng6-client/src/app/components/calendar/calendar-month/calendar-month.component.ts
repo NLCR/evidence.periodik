@@ -28,21 +28,21 @@ export class CalendarMonthComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe) { }
 
   ngOnInit() {
-    this.state.calendarView = "month";
+    this.state.calendarView = 'month';
     this.subscriptions.push(this.state.currentDayChanged.subscribe((state) => {
       this.setDays();
     }));
 
-    this.setDays();
+    // this.setDays();
 
     this.subscriptions.push(this.state.searchChanged.subscribe(res => {
       this.setIssues();
     }));
 
-    let day = this.route.snapshot.paramMap.get('day');
+    const day = this.route.snapshot.paramMap.get('day');
 
     if (day) {
-      let d: Date = new Date(parseInt(day.substr(0, 4)), parseInt(day.substr(4, 2)) - 1, parseInt(day.substr(6, 2)));
+      const d: Date = new Date(parseInt(day.substring(0, 4), 10), parseInt(day.substring(4, 6), 10) - 1, parseInt(day.substring(6, 8), 10));
       this.state.changeCurrentDay(d);
     } else {
       this.state.changeCurrentDay(new Date());
@@ -58,14 +58,14 @@ export class CalendarMonthComponent implements OnInit, OnDestroy {
   }
 
   getSpecial(d: Date) {
-    let exact = this.datePipe.transform(d, 'yyyyMMdd');
-    let partial = this.datePipe.transform(d, 'MMdd');
-    for (let i in this.specialDays) {
-      if (this.specialDays[i]['id'] === exact || this.specialDays[i]['id'] === partial) {
+    const exact = this.datePipe.transform(d, 'yyyyMMdd');
+    const partial = this.datePipe.transform(d, 'MMdd');
+    for (const i in this.specialDays) {
+      if (this.specialDays[i].id === exact || this.specialDays[i].id === partial) {
         return this.specialDays[i];
       }
     }
-    return {}
+    return {};
   }
 
   setDays() {
@@ -73,11 +73,11 @@ export class CalendarMonthComponent implements OnInit, OnDestroy {
     this.service.getSpecialDaysOfMonth(this.state.currentDay).subscribe(res => {
 
       this.specialDays = res;
-      var firstDayOfMonth = new Date(this.state.currentDay.getFullYear(), this.state.currentDay.getMonth(), 1);
-      let start = firstDayOfMonth.getDay() + 6; //pridame 6 aby zacatek byl pondeli
+      const firstDayOfMonth = new Date(this.state.currentDay.getFullYear(), this.state.currentDay.getMonth(), 1);
+      const start = firstDayOfMonth.getDay() + 6; // pridame 6 aby zacatek byl pondeli
 
       for (let i = 0; i < 42; i++) {
-        let d: Date = new Date(firstDayOfMonth);
+        const d: Date = new Date(firstDayOfMonth);
         d.setDate(firstDayOfMonth.getDate() + (i - start));
         this.days.push(d);
       }
@@ -88,15 +88,15 @@ export class CalendarMonthComponent implements OnInit, OnDestroy {
   }
 
   issuesOfDay(d: Date): any[] {
-    let str1 = this.datePipe.transform(d, 'yyyy-MM-dd');
-    //let str2 =  this.datePipe.transform(this.currentDay, 'yyyy-MM');
-    return this.issues.filter(e => this.datePipe.transform(new Date(e['datum_vydani']), 'yyyy-MM-dd') === str1);
+    const str1 = this.datePipe.transform(d, 'yyyy-MM-dd');
+    // let str2 =  this.datePipe.transform(this.currentDay, 'yyyy-MM');
+    return this.issues.filter(e => this.datePipe.transform(new Date(e.datum_vydani), 'yyyy-MM-dd') === str1);
   }
 
 
   getIssues() {
-    let month = this.datePipe.transform(this.state.currentDay, 'yyyy-MM');
-    if (this.state.currentTitul.id && this.state.currentTitul.id !== "") {
+    const month = this.datePipe.transform(this.state.currentDay, 'yyyy-MM');
+    if (this.state.currentTitul.id && this.state.currentTitul.id !== '') {
       this.service.searchCalendar(month).subscribe(res => {
         this.state.setSearchResults(res);
       });
@@ -110,7 +110,7 @@ export class CalendarMonthComponent implements OnInit, OnDestroy {
   }
 
   setIssues() {
-    this.issues = this.state.searchResults['response']['docs'];
+    this.issues = this.state.searchResults.response.docs;
   }
 
 }
