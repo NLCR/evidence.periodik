@@ -229,9 +229,6 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   }
 
   deleteEx(issue: Issue, ex: Exemplar, idxex: number) {
-    // console.log(issue, ex, idxex)
-    // console.log(issue)
-    // console.log(ex)
 
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '650px',
@@ -245,12 +242,25 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // console.log(idxex)
-        // console.log("issue: ",issue.exemplare);
-        issue.exemplare.splice(idxex, 1);
-        // console.log(issue.exemplare);
+        issue.exemplare[idxex].numExists = false;
+        issue.exemplare[idxex].cislo = 0;
+        issue.exemplare[idxex].signatura = '';
+        issue.exemplare[idxex].stav_popis = '';
+        issue.exemplare[idxex].pages = { missing: [], damaged: [] };
+        issue.exemplare[idxex].oznaceni = '';
+        issue.exemplare[idxex].poznamka = '';
+        issue.exemplare[idxex].nazev = '';
+        issue.exemplare[idxex].podnazev = '';
+        issue.exemplare[idxex].vydani = '';
+        issue.exemplare[idxex].mutace = '';
+        issue.exemplare[idxex].periodicita = '';
+        issue.exemplare[idxex].rocnik = '';
+        issue.exemplare[idxex].cas_vydani = 0;
+        issue.exemplare[idxex].pocet_stran = 0;
+        issue.exemplare[idxex].stav = [];
         this.service.saveIssue(issue).subscribe(res => {
           this.service.showSnackBar('snackbar.delete_success');
+          issue.exemplare.splice(idxex, 1);
         });
       }
     });
