@@ -33,7 +33,7 @@ export class CalendarMonthComponent implements OnInit, OnDestroy {
       this.setDays();
     }));
 
-    // this.setDays();
+    this.setDays();
 
     this.subscriptions.push(this.state.searchChanged.subscribe(res => {
       this.setIssues();
@@ -74,8 +74,10 @@ export class CalendarMonthComponent implements OnInit, OnDestroy {
 
       this.specialDays = res;
       const firstDayOfMonth = new Date(this.state.currentDay.getFullYear(), this.state.currentDay.getMonth(), 1);
+      // console.log(firstDayOfMonth)
       const start = firstDayOfMonth.getDay() + 6; // pridame 6 aby zacatek byl pondeli
-
+      // const start = firstDayOfMonth.getDay(); // pridame 6 aby zacatek byl pondeli
+      // console.log(start)
       for (let i = 0; i < 42; i++) {
         const d: Date = new Date(firstDayOfMonth);
         d.setDate(firstDayOfMonth.getDate() + (i - start));

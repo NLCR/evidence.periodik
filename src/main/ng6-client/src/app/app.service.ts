@@ -108,8 +108,8 @@ export class AppService {
 
     params = new HttpParams()
       .set('q', '*')
-      .set('fq', "id_titul:" + idTitul)
-      .set('fq', "carovy_kod:" + carovy_kod)
+      .set('fq', 'id_titul:' + idTitul)
+      .set('fq', 'carovy_kod:' + carovy_kod)
       .set('wt', 'json')
       .set('rows', '1000')
       .set('json.nl', 'arrntv')
@@ -415,6 +415,8 @@ export class AppService {
 
   saveIssue(issue: Issue): Observable<any> {
     const isValid = this.isIssueValid(issue);
+    // console.log("delete")
+    // console.log(issue)
     if (isValid.valid) {
       const url = 'index';
       const params: HttpParams = new HttpParams()
@@ -581,6 +583,7 @@ export class AppService {
       .set('wt', 'json')
       .set('rows', '0')
       .append('fq', 'id_titul:"' + id + '"')
+      .append('fq', 'numExists:true')
       .set('stats', 'true')
       .set('stats.field', '{!key=mutace countDistinct=true count=true}mutace')
       .append('stats.field', '{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
@@ -629,7 +632,8 @@ export class AppService {
       .append('facet.field', 'vydani')
       .append('facet.field', 'znak_oznaceni_vydani')
       .append('facet.field', 'vlastnik')
-      .append('facet.field', 'stav');
+      .append('facet.field', 'stav')
+      .append('fq', 'numExists:true');
 
     // facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
 
@@ -680,6 +684,7 @@ export class AppService {
     const url = '/api/search/exemplar/select';
     const params = this.doSearchParams()
       .append('fq', 'id_titul:"' + id + '"')
+      .append('fq', 'numExists:true')
       .append('group', 'true')
       .append('group.field', 'id_issue')
       .append('group.limit', '20')

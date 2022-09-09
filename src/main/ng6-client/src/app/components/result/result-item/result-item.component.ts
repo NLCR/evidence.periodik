@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AppState } from '../../../app.state';
 import { AppService } from '../../../app.service';
 import { Router } from '@angular/router';
-import { Titul } from '../../../models/titul';
-import { Issue } from '../../../models/issue';
+// import { Titul } from '../../../models/titul';
+// import { Issue } from '../../../models/issue';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -25,7 +25,7 @@ export class ResultItemComponent implements OnInit {
   }
 
   dayToDate(d: string): string {
-    const date = Date.UTC(parseInt(d.substr(0, 4)), parseInt(d.substr(4, 2)), parseInt(d.substr(6, 2)));
+    const date = Date.UTC(parseInt(d.substring(0, 4), 10), parseInt(d.substring(4, 6), 10), parseInt(d.substring(6, 8), 10));
     return this.datePipe.transform(date, 'dd.MM.yyyy');
 
   }

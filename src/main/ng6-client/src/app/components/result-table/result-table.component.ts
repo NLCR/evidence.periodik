@@ -45,7 +45,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
 
     // this.dataSource = new MatTableDataSource([]);
     this.data = [];
-    // this.setData();
+    this.setData();
 
     this.subscriptions.push(this.state.searchChanged.subscribe(res => {
       this.dataSource = null;
@@ -87,18 +87,11 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     this.displayedColumns = [];
     this.header = '';
     this.data = [];
-    // console.log(this.state.searchResults.grouped.id_issue.groups)
-    this.state.searchResults.grouped.id_issue.groups.forEach((group, index) => {
-      // console.log(group)
-      const issue = group.doclist.docs[0] as Issue;
-      // console.log(index)
-      // console.log(issue)
-      // console.log(group.doclist.docs)
+    this.state.searchResults.grouped.id_issue.groups.forEach((group) => {
+      const issue = new Issue().fromJSON(group.doclist.docs[0]);
       issue.id = group.groupValue;
       issue.exemplare = [];
       group.doclist.docs.forEach(doc => {
-
-        // console.log(doc)
         issue.exemplare.push(doc);
       });
       this.data.push(issue);
@@ -253,7 +246,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         // console.log(idxex)
-        // console.log("issue: ",issue);
+        // console.log("issue: ",issue.exemplare);
         issue.exemplare.splice(idxex, 1);
         // console.log(issue.exemplare);
         this.service.saveIssue(issue).subscribe(res => {
