@@ -11,7 +11,7 @@ import { ResultComponent } from './components/result/result.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { CalendarMonthComponent } from './components/calendar/calendar-month/calendar-month.component';
 import { CalendarYearComponent } from './components/calendar/calendar-year/calendar-year.component';
-import { CalendarListComponent } from './components/calendar/calendar-list/calendar-list.component';
+// import { CalendarListComponent } from './components/calendar/calendar-list/calendar-list.component';
 import { LoginComponent } from './components/login/login.component';
 
 
@@ -37,8 +37,11 @@ const routes: Routes = [
       { path: 'month', component: CalendarMonthComponent },
       { path: 'year', component: CalendarYearComponent },
       { path: 'year/:day', component: CalendarYearComponent },
-      { path: 'list', component: CalendarListComponent },
-      { path: 'list/:day', component: CalendarListComponent }
+      /**
+       * #123 - remove list component
+       * { path: 'list', component: CalendarListComponent },
+       * { path: 'list/:day', component: CalendarListComponent }
+       */
     ]
   },
   { path: 'login', component: LoginComponent },

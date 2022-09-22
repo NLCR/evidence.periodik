@@ -62,7 +62,7 @@ import { ResultComponent } from './components/result/result.component';
 import { ResultItemComponent } from './components/result/result-item/result-item.component';
 import { CalendarMonthComponent } from './components/calendar/calendar-month/calendar-month.component';
 import { CalendarYearComponent } from './components/calendar/calendar-year/calendar-year.component';
-import { CalendarListComponent } from './components/calendar/calendar-list/calendar-list.component';
+// import { CalendarListComponent } from './components/calendar/calendar-list/calendar-list.component';
 import { CalendarMonthDayComponent } from './components/calendar/calendar-month/calendar-month-day/calendar-month-day.component';
 import { LoginComponent } from './components/login/login.component';
 import { FacetUsedComponent } from './components/facet/facet-used/facet-used.component';
@@ -70,7 +70,7 @@ import { ToolbarPaginationResultComponent } from './components/toolbar/toolbar-p
 import { ToolbarPaginationCalendarComponent } from './components/toolbar/toolbar-pagination-calendar/toolbar-pagination-calendar.component';
 import { ToolbarNavViewsComponent } from './components/toolbar/toolbar-nav-views/toolbar-nav-views.component';
 import { ToolbarCountComponent } from './components/toolbar/toolbar-count/toolbar-count.component';
-import { CalendarListItemComponent } from './components/calendar/calendar-list/calendar-list-item/calendar-list-item.component';
+// import { CalendarListItemComponent } from './components/calendar/calendar-list/calendar-list-item/calendar-list-item.component';
 import { CloneDialogComponent } from './components/clone-dialog/clone-dialog.component';
 import { ResultTableComponent } from './components/result-table/result-table.component';
 import { AddExemplarDialogComponent } from './components/add-exemplar-dialog/add-exemplar-dialog.component';
@@ -128,7 +128,7 @@ const providers: any[] = [
     ResultItemComponent,
     CalendarMonthComponent,
     CalendarYearComponent,
-    CalendarListComponent,
+    // CalendarListComponent,
     CalendarMonthDayComponent,
     LoginComponent,
     FacetUsedComponent,
@@ -136,7 +136,7 @@ const providers: any[] = [
     ToolbarPaginationCalendarComponent,
     ToolbarNavViewsComponent,
     ToolbarCountComponent,
-    CalendarListItemComponent,
+    // CalendarListItemComponent,
     CloneDialogComponent,
     ResultTableComponent,
     AddExemplarDialogComponent,

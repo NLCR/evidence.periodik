@@ -10,6 +10,8 @@ import { AppState } from './app.state';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { AuthenticationService } from './shared/authentication.service';
 
+import packageJson from '../../package.json';
+
 
 @Component({
   selector: 'app-root',
@@ -17,6 +19,8 @@ import { AuthenticationService } from './shared/authentication.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+  public VERSION: string = packageJson.version;
+
   title = 'Evidence periodik';
   stavy = [];
 
@@ -33,6 +37,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router) { }
 
   ngOnInit() {
+    // tslint:disable-next-line:no-console
+    console.info('App version: ', this.VERSION);
 
     this.processUrl();
     this.authService.currentUser.subscribe(x => {

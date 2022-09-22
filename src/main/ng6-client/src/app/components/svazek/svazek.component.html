@@ -76,7 +76,7 @@
                 <mat-form-field floatLabel="never">
                   <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="pickerOd" [placeholder]="'desc.choose_date' | translate"
                     (dateChange)="setVolumeDatum(element, $event)" [(ngModel)]="state.currentVolume[element]"
-                    id="datum_od" name="datum_od" [class]="!state.logged && 'not_logged'" disabled>
+                    id="datum_od" name="datum_od" [class]="!state.logged ? 'not_logged' : ''" disabled>
                   <mat-datepicker-toggle matSuffix [for]="pickerOd"></mat-datepicker-toggle>
                   <mat-datepicker #pickerOd [disabled]=!state.logged></mat-datepicker>
                 </mat-form-field>
@@ -85,7 +85,7 @@
                 <mat-form-field floatLabel="never">
                   <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="pickerDo" [placeholder]="'desc.choose_date' | translate"
                     [(ngModel)]="state.currentVolume[element]" (dateChange)="setVolumeDatum(element, $event)"
-                    id="datum_do" name="datum_do" [class]="!state.logged && 'not_logged'" disabled>
+                    id="datum_do" name="datum_do" [class]="!state.logged ? 'not_logged' : ''" disabled>
                   <mat-datepicker-toggle matSuffix [for]="pickerDo"></mat-datepicker-toggle>
                   <mat-datepicker #pickerDo [disabled]=!state.logged></mat-datepicker>
                 </mat-form-field>
