@@ -275,8 +275,14 @@
     "delete_title.text": "Chtete opravdu smazat metatitul {{value}} a vsechna jeho čísla ?",
     "delete_volume.caption": "Potvrdit smazání",
     "delete_volume.text": "Chcete opravdu smazat celý svazek?",
+    "delete_volume.caption2": "Potvrdit smazání",
+    "delete_volume.text2": "Nechcete si to ještě rozmyslet?",
+    "delete_volume.accept": "Ano",
+    "delete_volume.decline": "Ne",
     "renumber.caption": "Potvrdit přečíslování",
-    "renumber.text": "Čísel k přečíslování: {{value}}. Opravdu chcete provést změny?"
+    "renumber.text": "Čísel k přečíslování: {{value}}. Opravdu chcete provést změny?",
+    "show_barcodes_in_calendar.caption": "Vstoupit do editace?",
+    "show_barcodes_in_calendar.text": "Čárové kódy: {{value}}"
   },
   "login": {
     "desc": "Prosím, přihlašte se",

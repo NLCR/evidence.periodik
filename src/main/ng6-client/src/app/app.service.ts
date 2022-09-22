@@ -85,10 +85,10 @@ export class AppService {
   }
 
   getIssuesOfTitul(uuid: string, month: string): Observable<any[]> {
-    let params: HttpParams = new HttpParams();
+    const params: HttpParams = new HttpParams();
     const url = '/api/search/issue/select';
 
-    params = new HttpParams()
+    params
       .set('q', '*')
       .set('wt', 'json')
       .set('rows', '200')
@@ -404,6 +404,15 @@ export class AppService {
     return this.http.post(url, body, { params });
   }
 
+  deleteSvazekAndExemplars(request: object): Observable<any> {
+    const body = request;
+    const url = 'index';
+    const params: HttpParams = new HttpParams()
+      .set('action', 'DELETE_SVAZEK_AND_EXEMPLARS');
+
+    return this.http.post(url, body, { params });
+  }
+
   saveIssues(vol: Volume, issues: Issue[]): Observable<any> {
     const body = { svazek: vol, issues };
     const url = 'index';
@@ -632,8 +641,8 @@ export class AppService {
       .append('facet.field', 'vydani')
       .append('facet.field', 'znak_oznaceni_vydani')
       .append('facet.field', 'vlastnik')
-      .append('facet.field', 'stav')
-      .append('fq', 'numExists:true');
+      .append('facet.field', 'stav');
+      // .append('fq', 'numExists:true');
 
     // facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
 

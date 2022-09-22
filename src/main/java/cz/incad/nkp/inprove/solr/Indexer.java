@@ -825,6 +825,22 @@ public class Indexer {
     }
   }
 
+  public void deleteExemplars(List<String> ids) {
+    try (SolrClient solr = getClient("exemplar")) {
+      solr.deleteById(ids, 10);
+    } catch (IOException | SolrServerException ex) {
+      LOGGER.log(Level.SEVERE, null, ex);
+    }
+  }
+
+  public void deleteSvazek(String id) {
+    try (SolrClient solr = getClient("svazek")) {
+      solr.deleteById(id, 10);
+    } catch (IOException | SolrServerException ex) {
+      LOGGER.log(Level.SEVERE, null, ex);
+    }
+  }
+
   public void setState(String id) {
     try (SolrClient solr = getClient("issue")) {
       SolrInputDocument doc = new SolrInputDocument();

@@ -451,12 +451,32 @@ export class SvazekComponent implements OnInit, OnDestroy {
         text: 'modal.delete_volume.text',
         param: {
           value: ''
-        }
+        },
+        customConfirmButton: 'modal.delete_volume.decline',
+        customDeclineButton: 'modal.delete_volume.accept'
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.delete();
+
+      if (!result && result !== undefined) {
+
+        const dialogRef2 = this.dialog.open(ConfirmDialogComponent, {
+          width: '650px',
+          data: {
+            caption: 'modal.delete_volume.caption2',
+            text: 'modal.delete_volume.text2',
+            param: {
+              value: ''
+            },
+            customConfirmButton: 'modal.delete_volume.accept',
+            customDeclineButton: 'modal.delete_volume.decline'
+          }
+        });
+        dialogRef2.afterClosed().subscribe(result2 => {
+          if (!result2 && result2 !== undefined) {
+            this.delete();
+          }
+        });
       }
     });
 
@@ -469,19 +489,36 @@ export class SvazekComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!this.state.currentVolume.datum_od) {
-      this.service.showSnackBar('snackbar.datum_od_is_required', '', true);
-      return;
-    }
+    // if (!this.state.currentVolume.datum_od) {
+    //   this.service.showSnackBar('snackbar.datum_od_is_required', '', true);
+    //   return;
+    // }
+    //
+    // if (!this.state.currentVolume.datum_do) {
+    //   this.service.showSnackBar('snackbar.datum_do_is_required', '', true);
+    //   return;
+    // }
 
-    if (!this.state.currentVolume.datum_do) {
-      this.service.showSnackBar('snackbar.datum_do_is_required', '', true);
-      return;
-    }
+    const request = {
+      id_svazek: this.state.currentVolume.carovy_kod,
+      exemplars: this.exemplars.map((exemplar) => {
+          return exemplar.id;
+        })
+    };
 
-    //carovy kod pro smazani svazku
-    //datum vydani a carovy kod pro smazani exemplaru
+    this.loading = true;
 
+    this.service.deleteSvazekAndExemplars(request).subscribe(res => {
+      this.loading = false;
+      if (res.error) {
+        this.service.showSnackBar('snackbar.error_deleting_volume', res.error, true);
+      } else {
+        this.service.showSnackBar('snackbar.delete_success');
+        setTimeout(() => {
+          this.router.navigate(['/result', this.state.currentVolume.id_titul]);
+        }, 500);
+      }
+    });
 
 
   }

@@ -122,7 +122,7 @@ export class IssueComponent implements OnInit, OnDestroy {
     if (res.length > 0) {
       this.state.currentIssue = new Issue().fromJSON(res[0]);
       this.state.currentIssue.exemplare = Object.assign([], res);
-      console.log(this.state.currentIssue);
+      // console.log(this.state.currentIssue);
       this.initial_pages = this.state.currentIssue.pocet_stran;
 
       this.setPagesRange();

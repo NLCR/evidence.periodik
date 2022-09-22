@@ -274,8 +274,14 @@
     "delete_title.text": "Are you sure you want delete metatitul {{value}} and all his numbers ?",
     "delete_volume.caption": "Confirm delete",
     "delete_volume.text": "Are you sure you want to delete whole volume?",
+    "delete_volume.caption2": "Confirm delete",
+    "delete_volume.text2": "Don't you want to think about it?",
+    "delete_volume.accept": "Yes",
+    "delete_volume.decline": "No",
     "renumber.caption": "Confirm renumber",
-    "renumber.text": "Numbers to renumber: {{value}}. Are you sure you want to apply changes?"
+    "renumber.text": "Numbers to renumber: {{value}}. Are you sure you want to apply changes?",
+    "show_barcodes_in_calendar.caption": "Enter edit?",
+    "show_barcodes_in_calendar.text": "Barcodes: {{value}}"
   },
   "login": {
     "desc": "Please, login",

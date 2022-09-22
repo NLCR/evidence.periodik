@@ -16,7 +16,9 @@ export class ConfirmDialogComponent {
       text: string,
       param: {
         value: string
-      }
+      },
+      customConfirmButton: string,
+      customDeclineButton: string
     }) { }
 
 
@@ -25,7 +27,7 @@ export class ConfirmDialogComponent {
   }
 
   cancel() {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
 }

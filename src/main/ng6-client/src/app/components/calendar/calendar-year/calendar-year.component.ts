@@ -12,7 +12,7 @@ export class CalendarYearComponent implements OnInit {
         public state: AppState) { }
 
   ngOnInit() {
-    this.state.calendarView = "year";
+    this.state.calendarView = 'year';
   }
 
 }

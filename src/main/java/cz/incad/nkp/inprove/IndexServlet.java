@@ -12,10 +12,8 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -256,6 +254,36 @@ public class IndexServlet extends HttpServlet {
         try {
           Indexer indexer = new Indexer();
           indexer.deleteExemplar(req.getParameter("id"));
+
+        } catch (Exception ex) {
+          LOGGER.log(Level.SEVERE, null, ex);
+          json.put("error", ex.toString());
+        }
+        out.println(json.toString(2));
+      }
+    },
+    DELETE_SVAZEK_AND_EXEMPLARS {
+      @Override
+      void doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+        String js = IOUtils.toString(req.getInputStream(), StandardCharsets.UTF_8);
+        JSONObject json = new JSONObject();
+        try {
+          Indexer indexer = new Indexer();
+          JSONObject jo = new JSONObject(js);
+
+          JSONArray exemplars = jo.getJSONArray("exemplars");
+          String svazek = jo.getString("id_svazek");
+
+          List<String> exemplarsIds = new ArrayList<String>();
+          for(int i = 0; i < exemplars.length(); i++){
+            exemplarsIds.add(exemplars.getString(i));
+          }
+
+          indexer.deleteExemplars(exemplarsIds);
+          indexer.deleteSvazek(svazek);
 
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);

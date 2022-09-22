@@ -1,10 +1,10 @@
 <h1 mat-dialog-title>{{ data.caption | translate }}</h1>
 <div mat-dialog-content>
   <div class="app-gap-bottom">
-      {{ data.text | translate: data.param }} 
+      {{ data.text | translate: data.param }}
   </div>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="ok()">OK</button>
-  <button mat-button (click)="cancel()">{{ 'button.close' | translate }}</button>
+  <button mat-button (click)="ok()">{{ data.customConfirmButton ? (data.customConfirmButton | translate) : 'OK' | translate }}</button>
+  <button mat-button (click)="cancel()">{{ data.customDeclineButton ? (data.customDeclineButton | translate) : 'button.close' | translate }}</button>
 </div>
