@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // tslint:disable-next-line:no-console
-    console.info('App version: ', this.VERSION);
+    console.info('App version:', this.VERSION);
 
     this.processUrl();
     this.authService.currentUser.subscribe(x => {

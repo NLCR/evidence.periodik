@@ -718,6 +718,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     newEl.stav = [];
     newEl.stav_popis = '';
     newEl.numExists = true;
+    newEl.poznamka = '';
 
     this.exemplars.splice(idx + 1, 0, newEl);
     this.dsExemplars = new MatTableDataSource(this.exemplars);
