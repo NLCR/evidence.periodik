@@ -80,6 +80,7 @@ export class AppState {
   end_date: string;
   start_year: string;
   end_year: string;
+  volume_id_for_search: string;
 
 
   private _searchParamsSubject = new Subject();
@@ -91,6 +92,7 @@ export class AppState {
   public filters: Filter[] = [];
 
   public filterByDate: boolean;
+  public filterByVolume: boolean;
   logginChanged: boolean;
 
   setConfig(config: AppConfiguration) {
@@ -164,8 +166,20 @@ export class AppState {
     this._searchParamsSubject.next(null);
   }
 
+  addVolumeFilter() {
+    this.filterByVolume = true;
+    this.currentPage = 0;
+    this._searchParamsSubject.next(null);
+  }
+
   removeDateFilter() {
     this.filterByDate = false;
+    this.currentPage = 0;
+    this._searchParamsSubject.next(null);
+  }
+
+  removeVolumeFilter() {
+    this.filterByVolume = false;
     this.currentPage = 0;
     this._searchParamsSubject.next(null);
   }
@@ -194,6 +208,7 @@ export class AppState {
     this.q = '';
     this.filters = [];
     this.filterByDate = false;
+    this.filterByVolume = false;
     this.currentPage = 0;
   }
 

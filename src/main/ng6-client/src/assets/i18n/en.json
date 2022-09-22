@@ -231,7 +231,9 @@
     "stav": "State",
     "mutace": "Mutation",
     "znak_oznaceni_vydani": "Mutation edition",
-    "vydani": "Publication"
+    "vydani": "Publication",
+    "volume": "Volume",
+    "volume_number": "Volume number"
   },
   "result": {
     "found_records": "Found records",

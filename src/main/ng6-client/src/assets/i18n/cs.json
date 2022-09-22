@@ -232,7 +232,9 @@
     "stav": "Stav",
     "mutace": "Mutace",
     "znak_oznaceni_vydani": "Mutační vydání",
-    "vydani": "Vydání"
+    "vydani": "Vydání",
+    "volume": "Svazek",
+    "volume_number": "Číslo svazku"
   },
   "result": {
     "found_records": "Nalezeno záznamů",

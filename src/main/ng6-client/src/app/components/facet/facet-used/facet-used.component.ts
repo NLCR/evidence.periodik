@@ -13,12 +13,14 @@ export class FacetUsedComponent implements OnInit, OnDestroy {
 
   public start_year: string;
   public end_year: string;
+  public volume_id_for_search: string;
   constructor(public state: AppState) {}
 
   ngOnInit() {
     this.subscriptions.push(this.state.searchChanged.subscribe(cfg => {
       this.start_year = this.state.start_year;
       this.end_year = this.state.end_year;
+      this.volume_id_for_search = this.state.volume_id_for_search;
     }));
   }
 

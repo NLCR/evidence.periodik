@@ -672,6 +672,10 @@ export class AppService {
     if (this.state.filterByDate) {
       params = params.append('fq', 'datum_vydani_den:[' + this.state.start_year + '0101 TO ' + this.state.end_year + '1231]');
     }
+
+    if (this.state.filterByVolume) {
+      params = params.append('fq', 'carovy_kod:' + this.state.volume_id_for_search);
+    }
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return params;
   }
