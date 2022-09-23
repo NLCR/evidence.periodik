@@ -691,7 +691,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
           }
         }
         const additionalInfo = this.state.currentLang === 'cs' ? ` čísel: ${willBeRenumbered} (v rozsahu od ${firstNumber} po ${curCislo - 1})` : ` numbers: ${willBeRenumbered} (in range from ${firstNumber} to ${curCislo - 1})`;
-        this.service.showSnackBar('snackbar.renumbered_correctly', '', false, additionalInfo, 4500);
+        this.service.showSnackBar('snackbar.renumbered_correctly', '', false, additionalInfo, 3000, true);
 
       }
     });

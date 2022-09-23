@@ -1,7 +1,7 @@
 // --- GLOBAL ---
 
 * {
-  box-sizing: border-box;    
+  box-sizing: border-box;
 }
 
 h1, h2, h3, h4, h5 {
@@ -109,7 +109,7 @@ a {
 
 .app-grid-wrapper {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); 
+  grid-template-columns: repeat(4, 1fr);
   margin-bottom: $app-gap;
 }
 
@@ -131,7 +131,7 @@ a {
     }
     &.right {
       margin-left: 5px;
-    } 
+    }
   }
 }
 
@@ -154,7 +154,7 @@ li.app-page-item label{
 }
 
 
-// custom popover 
+// custom popover
 .app-popover-card {
   max-width: 800px;
   box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 2px ;
@@ -192,7 +192,7 @@ li.app-page-item label{
 // toolbar
 .mat-toolbar {
   .mat-icon{
-    @include setIcon($va: middle); 
+    @include setIcon($va: middle);
   }
 }
 
@@ -243,10 +243,10 @@ li.app-page-item label{
   .mat-header-cell,
   .mat-cell {
     .mat-icon {
-      @include setIcon(16); 
-    } 
+      @include setIcon(16);
+    }
   }
-  
+
   .mat-datepicker-toggle-default-icon {
     width: 1.4em !important;
   }
@@ -291,7 +291,7 @@ li.app-page-item label{
         &:hover {
           background-color: $app-gray-2;
         }
-        
+
         .mat-cell {
           padding: 5px !important;
         }
@@ -303,9 +303,9 @@ li.app-page-item label{
 // button
 .mat-button-base {
   &:not(:last-child) {
-    margin-right: $app-gap-icon !important; 
+    margin-right: $app-gap-icon !important;
   }
-  
+
 
   &.mat-primary {
     background-color: $app-primary-color-darker;
@@ -313,8 +313,8 @@ li.app-page-item label{
 
   &.mat-flat-button {
     .mat-icon {
-      @include setIcon($size: 20, $va: middle, $color: inherit); 
-    } 
+      @include setIcon($size: 20, $va: middle, $color: inherit);
+    }
   }
 }
 
@@ -353,20 +353,24 @@ li.app-page-item label{
 // dialog
 .mat-dialog-container {
   .mat-icon {
-    @include setIcon(20, $va: middle); 
+    @include setIcon(20, $va: middle);
   }
 }
 
 
 // snack
-.app-snack-success {
+.app-snack-success, .app-snack-success-middle {
 	background-color: $app-success-color;
 	color: $app-color-white;
 }
 
-.app-snack-error {
+.app-snack-error, .app-snack-error-middle {
 	background-color: $app-warning-color;
 	color: $app-color-white;
+}
+
+.app-snack-success-middle, .app-snack-error-middle {
+  margin-top: 45vh !important;
 }
 
 

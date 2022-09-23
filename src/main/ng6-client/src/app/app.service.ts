@@ -742,13 +742,14 @@ export class AppService {
   }
 
 
-  showSnackBar(s: string, r: string = '', error: boolean = false, additionalInfo: string = '', duration: number = 0) {
+  // tslint:disable-next-line:max-line-length
+  showSnackBar(s: string, r: string = '', error: boolean = false, additionalInfo: string = '', duration: number = 0, positionMiddle: boolean = false) {
     const right = r !== '' ? this.getTranslation(r) : '';
-    const clazz = error ? 'app-snack-error' : 'app-snack-success';
+    const clazz = error ? ( positionMiddle ? 'app-snack-error-middle' : 'app-snack-error') : ( positionMiddle ? 'app-snack-success-middle' : 'app-snack-success');
     this.snackBar.open(this.getTranslation(s) + additionalInfo, right, {
       duration: duration || 2000,
       verticalPosition: 'top',
-      panelClass: clazz
+      panelClass: clazz,
     });
   }
 
