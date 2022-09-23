@@ -803,8 +803,11 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   }
 
-  updateStav(ex: Exemplar) {
+  updateStav(ex: Exemplar, setComplete = false) {
     ex.stav = [];
+    if (setComplete && ex.numExists) {
+      ex.complete = true;
+    }
     if (ex.complete) { ex.stav.push('OK'); }
     // if (ex.chybiCislo) { ex.stav.push('ChCC'); }
     if (ex.destroyedPages) { ex.stav.push('PP'); }
@@ -822,6 +825,13 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.csEditing.poznamka = this.poznText;
     this.csEditing.poznamka = this.poznText;
     this.closePop();
+  }
+
+  setVolumeComplete(){
+    this.exemplars.map(exemplar => {
+      this.updateStav(exemplar, true);
+    });
+    this.save();
   }
 
   ngOnDestroy() {

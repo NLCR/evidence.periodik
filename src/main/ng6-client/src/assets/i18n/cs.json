@@ -81,7 +81,7 @@
     "mutation_edition": "Mutační vydání",
     "numbers": "Čísla",
     "dates": "Data",
-    "complete": "Kompletní",
+    "complete": "Ověřeno",
     "comming": "Vychází",
     "number_exists": "Je ve svazku",
     "edition": "Vydání",
@@ -134,14 +134,14 @@
       "special": "Zvláštní"
     },
     "pages_count": "Počet stran",
-    "complete": "Kompletní",
+    "complete": "Ověřeno",
     "lost_pages": "Poškozené/Chybějicí strany",
     "pages_missing": "Chybějicí strany",
     "pages_damaged": "Poškozené strany",
     "state": "Stav",
     "state_com": "Stav popis",
     "StavIssue": {
-      "OK": "Kompletní",
+      "OK": "Ověřeno",
       "ChCC": "Chybí číslo",
       "ChS": "Chybí strany",
       "PP": "Poškozený dokument",
@@ -211,7 +211,8 @@
     "generate_again": "Vygenerovat / vygenerovat znovu",
     "update": "Aktualizovat",
     "close_navigation": "Zavřít navigaci",
-    "specimens": "Exempláře"
+    "specimens": "Exempláře",
+    "set_volume_complete": "Ověřeno"
   },
   "facet": {
     "title": {

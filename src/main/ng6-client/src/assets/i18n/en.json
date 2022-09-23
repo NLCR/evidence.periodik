@@ -81,7 +81,7 @@
     "mutation_edition": "Mutation Edition",
     "numbers": "Numbers",
     "dates": "Dates",
-    "complete": "Complete",
+    "complete": "Verified",
     "comming": "Comming",
     "number_exists": "Is in volume",
     "edition": "Edition",
@@ -133,14 +133,14 @@
       "special": "Special"
     },
     "pages_count": "Pages count",
-    "complete": "Complete",
+    "complete": "Verified",
     "lost_pages": "Damaged/lost pages",
     "pages_missing": "Missing pages",
     "pages_damaged": "Damaged paged",
     "state": "State",
     "state_com": "State comment",
     "StavIssue": {
-      "OK": "Complete",
+      "OK": "Verified",
       "ChCC": "Missing issue",
       "ChS": "Missing pages",
       "PP": "Damaged document",
@@ -210,7 +210,8 @@
     "generate_again": "Generate / generate again",
     "update": "Update",
     "close_navigation": "Close navigation",
-    "specimens": "Specimens"
+    "specimens": "Specimens",
+    "set_volume_complete": "Verified"
   },
   "facet": {
     "title": {

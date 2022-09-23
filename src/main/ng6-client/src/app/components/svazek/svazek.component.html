@@ -498,6 +498,13 @@
       </table>
       <!-- <mat-paginator [pageSizeOptions]="[25, 50, 100]" [length]="numFound" [pageSize]="rows"
         [pageIndex]="page" (page)="pageChanged($event)" showFirstLastButtons></mat-paginator> -->
+      <div fxLayout="row" fxLayoutAlign="end center" class="app-margin-top-bottom">
+        <button mat-flat-button color="primary" (click)="setVolumeComplete()" [disabled]="!state.logged || loading">
+          <mat-icon *ngIf="!state.logged" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
+                    matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
+          {{ 'button.set_volume_complete' | translate }} {{dataChanged ? '!!' : ''}}
+        </button>
+      </div>
     </div>
   </div>
 </div>
