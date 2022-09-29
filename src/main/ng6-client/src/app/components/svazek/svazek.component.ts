@@ -167,6 +167,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         this.getExemplars(id, dateRange, false);
       } else {
         this.getExemplars(id, '*', true);
+        this.vlastnik_idx = -1;
       }
     });
   }
@@ -638,7 +639,11 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   changeVlastnik() {
-    this.state.currentVolume.vlastnik = this.state.owners[this.vlastnik_idx].name;
+    if (this.vlastnik_idx < 0) {
+      this.state.currentVolume.vlastnik = '';
+    }else{
+      this.state.currentVolume.vlastnik = this.state.owners[this.vlastnik_idx].name;
+    }
   }
 
   addVydani(element, idx: number) {

@@ -66,6 +66,7 @@
               </ng-container>
               <ng-container *ngSwitchCase="'vlastnik'">
                 <mat-select [(ngModel)]="vlastnik_idx" (ngModelChange)="changeVlastnik()" [disabled]=!state.logged>
+                  <mat-option [value]=-1></mat-option>
                   <mat-option *ngFor="let vlastnik of config.owners; let idx=index;" [value]="idx">{{vlastnik.name}}
                   </mat-option>
                 </mat-select>

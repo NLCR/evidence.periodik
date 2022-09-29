@@ -129,12 +129,21 @@ export class AppState {
   }
 
   setSearchResults(res: any) {
-    res.facet_counts.facet_fields.stav.push({name: 'notVerified', type: 'string', value: '?'});
     this.searchResults = res;
-
     this.numFound = this.searchResults.response ?
       this.searchResults.response.numFound :
       this.searchResults.grouped.id_issue.ngroups;
+
+    const verifiedCount = this.searchResults.facet_counts.facet_fields.stav.find(s => s.name === 'OK');
+    let notVerifiedCount;
+    if (verifiedCount !== undefined){
+      notVerifiedCount = this.numFound - verifiedCount.value;
+    } else{
+      notVerifiedCount = this.numFound;
+    }
+
+    this.searchResults.facet_counts.facet_fields.stav.push({name: 'notVerified', type: 'int', value: notVerifiedCount});
+
     if (this.searchResults.stats) {
       const stats = this.searchResults.stats.stats_fields.datum_vydani_den;
       this.start_date = stats.min;

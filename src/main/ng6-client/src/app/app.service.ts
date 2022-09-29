@@ -592,7 +592,7 @@ export class AppService {
       .set('wt', 'json')
       .set('rows', '0')
       .append('fq', 'id_titul:"' + id + '"')
-      .append('fq', 'numExists:true')
+      .append('fq', 'numExists:"true"')
       .set('stats', 'true')
       .set('stats.field', '{!key=mutace countDistinct=true count=true}mutace')
       .append('stats.field', '{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
@@ -647,25 +647,29 @@ export class AppService {
     // facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
 
     // sorry for this code...
-    let searchForNotVerified = false;
+    // let searchForNotVerified = false;
+    // this.state.filters.forEach((f: Filter) => {
+    //   if (f.field === 'stav' && f.value === 'notVerified') {
+    //     searchForNotVerified = true;
+    //   }
+    // });
+
+    // if (searchForNotVerified) {
+    //   params = params.append('fq',  '*:* NOT stav:OK');
+    //   this.state.filters.forEach((f: Filter) => {
+    //     if (f.field !== 'stav') {
+    //       params = params.append('fq', f.field + ':"' + f.value + '"');
+    //     }
+    //   });
+    // } else {
     this.state.filters.forEach((f: Filter) => {
-      if (f.field === 'stav' && f.value === 'notVerified') {
-        searchForNotVerified = true;
+      if (f.value === 'notVerified'){
+        params = params.append('fq',  '!stav:"OK"');
+      } else{
+        params = params.append('fq', f.field + ':"' + f.value + '"');
       }
     });
-
-    if (searchForNotVerified) {
-      params = params.append('fq',  '*:* NOT stav:*');
-      this.state.filters.forEach((f: Filter) => {
-        if (f.field !== 'stav') {
-          params = params.append('fq', f.field + ':"' + f.value + '"');
-        }
-      });
-    } else {
-      this.state.filters.forEach((f: Filter) => {
-        params = params.append('fq', f.field + ':"' + f.value + '"');
-      });
-    }
+    // }
 
 
 
@@ -697,7 +701,7 @@ export class AppService {
     const url = '/api/search/exemplar/select';
     const params = this.doSearchParams()
       .append('fq', 'id_titul:"' + id + '"')
-      .append('fq', 'numExists:true')
+      .append('fq', 'numExists:"true"')
       .append('group', 'true')
       .append('group.field', 'id_issue')
       .append('group.limit', '20')
@@ -742,8 +746,7 @@ export class AppService {
   }
 
 
-  // tslint:disable-next-line:max-line-length
-  showSnackBar(s: string, r: string = '', error: boolean = false, additionalInfo: string = '', duration: number = 0, positionMiddle: boolean = false) {
+  showSnackBar(s: string, r: string = '', error: boolean = false, additionalInfo = '', duration = 0, positionMiddle = false) {
     const right = r !== '' ? this.getTranslation(r) : '';
     const clazz = error ? ( positionMiddle ? 'app-snack-error-middle' : 'app-snack-error') : ( positionMiddle ? 'app-snack-success-middle' : 'app-snack-success');
     this.snackBar.open(this.getTranslation(s) + additionalInfo, right, {

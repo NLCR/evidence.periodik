@@ -281,9 +281,13 @@ public class IndexServlet extends HttpServlet {
           for(int i = 0; i < exemplars.length(); i++){
             exemplarsIds.add(exemplars.getString(i));
           }
-
-          indexer.deleteExemplars(exemplarsIds);
-          indexer.deleteSvazek(svazek);
+          
+          if(exemplars.length() > 0){
+            indexer.deleteExemplars(exemplarsIds);
+          }
+          if(!svazek.equals("")){
+            indexer.deleteSvazek(svazek);
+          }
 
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);
