@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { User } from 'src/app/models/user';
 import { AppState } from '../app.state';
-import { Md5 } from 'ts-md5/dist/md5';
+import { Md5 } from 'ts-md5';
 import { AppConfiguration } from '../app-configuration';
 
 @Injectable({ providedIn: 'root' })

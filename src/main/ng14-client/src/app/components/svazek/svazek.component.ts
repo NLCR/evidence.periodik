@@ -22,7 +22,7 @@ import {Exemplar} from 'src/app/models/exemplar';
 import {AppConfiguration} from 'src/app/app-configuration';
 import {SvazekOverviewComponent} from '../svazek-overview/svazek-overview.component';
 import {FormControl} from '@angular/forms';
-import * as moment from 'moment';
+import moment from 'moment'
 
 @Component({
   selector: 'app-svazek',

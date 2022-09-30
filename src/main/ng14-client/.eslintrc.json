@@ -3,6 +3,9 @@
   "ignorePatterns": [
     "projects/**/*"
   ],
+  "env": {
+    "es6": true
+  },
   "overrides": [
     {
       "files": [
@@ -13,7 +16,8 @@
           "tsconfig.json",
           "e2e/tsconfig.json"
         ],
-        "createDefaultProgram": true
+        "createDefaultProgram": true,
+        "ecmaVersion": "latest"
       },
       "extends": [
         "plugin:@angular-eslint/recommended",
