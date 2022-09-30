@@ -23,7 +23,7 @@ buildNumber.properties
 /src/main/webapp/*.bundle.js
 /src/main/webapp/*.bundle.css
 /src/main/webapp/assets/*
-/src/main/ng6-client/nbproject/private/
+/src/main/ng14-client/nbproject/private/
 /src/main/webapp/Roboto-Light.3c37aa69cd77e6a53a06.woff2
 /src/main/webapp/Roboto-Condensed-LightItalic.506b155cfd33a0a90d3b.ttf
 /src/main/webapp/styles.4b67baad7cdae0bfe4ac.css

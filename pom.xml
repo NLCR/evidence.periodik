@@ -74,7 +74,7 @@
             <configuration>
               <skip>${skipNg}</skip>
               <executable>npm</executable>
-              <workingDirectory>${project.basedir}/src/main/ng6-client</workingDirectory>
+              <workingDirectory>${project.basedir}/src/main/ng14-client</workingDirectory>
               <arguments>
                 <argument>run</argument>
                 <argument>build.prod</argument>
@@ -127,7 +127,7 @@
               <outputDirectory>${project.basedir}/src/main/webapp</outputDirectory>
               <resources>
                 <resource>
-                  <directory>src/main/ng6-client/dist/ng-client</directory>
+                  <directory>src/main/ng14-client/dist/ng-client</directory>
                   <includes>
                     <include>*/**</include>
                   </includes>
