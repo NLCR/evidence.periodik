@@ -1,0 +1,56 @@
+// --- FACET ---
+
+.app-facet-wrapper {
+  @extend .app-full-wrapper, .app-fx-facet;
+  @import "app-facet-used";
+
+  .mat-accordion {
+    .mat-expansion-panel {
+      @extend .app-clean-shadow, .app-clean-mg, .app-clean-radius;
+      @include set-border(bottom, 1, solid, #{$app-gray-3});
+
+      .mat-list {
+        margin-top: -7px;
+      }
+
+      &.app-facet-date {
+        .mat-expansion-panel-body {
+          .mat-form-field-wrapper {
+            margin-bottom: -1.25em;
+          }
+
+          .app-fx-end {
+            align-items: flex-end;
+
+            .mat-icon {
+              color: $app-primary-color-darker;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .mat-list {
+    @extend .app-clean-pd;
+
+    &:not(.app-list-used-facet) {
+      .mat-list-item {
+        .mat-list-item-content {
+          @extend .app-clean-pd;
+          justify-content: space-between;
+
+          span {
+            color: $app-gray-5;
+            font-size: 14px;
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+
+    .mat-list-item {
+      @include setListItemView(fit-content);
+    }
+  }
+}

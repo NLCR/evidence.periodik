@@ -1,0 +1,117 @@
+// --- VARIABLES ---
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$app-primary: mat.define-palette(mat.$cyan-palette);
+$app-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$app-theme:  mat.define-light-theme($app-primary, $app-accent);
+
+@include mat.all-component-themes($app-theme);
+
+// theme colors
+$app-primary-color: mat.get-color-from-palette($app-primary);
+$app-primary-color-darker: mat.get-color-from-palette($app-primary, 600);
+
+// base colors
+$app-color-white: #ffffff!default;
+$app-color-black: #000000 !default;
+$app-success-color: mat.get-color-from-palette(mat.$green-palette, A700);
+$app-warning-color: mat.get-color-from-palette(mat.$amber-palette, A400);
+$app-danger-color: mat.get-color-from-palette(mat.$red-palette, 800);
+
+// gray colors
+$app-gray-0: mat.get-color-from-palette(mat.$gray-palette, 50) !default;
+$app-gray-1: mat.get-color-from-palette(mat.$gray-palette, 100) !default;
+$app-gray-2: mat.get-color-from-palette(mat.$gray-palette, 200) !default;
+$app-gray-3: mat.get-color-from-palette(mat.$gray-palette, 300) !default;
+$app-gray-4: mat.get-color-from-palette(mat.$gray-palette, 400) !default;
+$app-gray-5: mat.get-color-from-palette(mat.$gray-palette, 500) !default;
+$app-gray-6: mat.get-color-from-palette(mat.$gray-palette, 600) !default;
+$app-gray-7: mat.get-color-from-palette(mat.$gray-palette, 700) !default;
+$app-gray-8: mat.get-color-from-palette(mat.$gray-palette, 800) !default;
+$app-gray-9: mat.get-color-from-palette(mat.$gray-palette, 900) !default;
+
+$app-red: mat.get-color-from-palette(mat.$red-palette, A700) !default;
+$app-orange: mat.get-color-from-palette(mat.$orange-palette, A200) !default;
+
+// day special colors
+$app-day-holiday-circle: $app-primary-color-darker !default;
+$app-day-event-circle: mat.get-color-from-palette(mat.$purple-palette, 200) !default;
+$app-day-special-bg: $app-gray-1 !default;
+
+// state colors
+$app-state-ok: mat.get-color-from-palette(mat.$green-palette, A700) !default;
+$app-state-auto: mat.get-color-from-palette(mat.$orange-palette, A200) !default;
+
+// grid behavior
+$app-gap: 16px !default;
+$app-gap-icon: 5px !default;
+
+// global
+$app-container: 1.25rem !default;
+$app-border-radius: 4px !default;
+
+// navbar
+$app-navbar-font-color: lighten($app-primary-color, 65%) !default;
+$app-navbar-height: 68px !default;
+
+// search bar
+$app-search-bar-bg: $app-color-white !default;
+$app-search-bar-height: 46px !default;
+$app-search-bar-max-width: 640px !default;
+$app-search-bar-color: $app-color-black !default;
+$app-search-bar-font-size: 1rem !default;
+$app-search-bar-icon-gap: calc(#{$app-gap-icon} * 2) !default;
+
+// toolbar
+$app-toolbar-height: 57px !default;
+$app-toolbar-height-elements: 34px !default;
+
+// facet
+$app-facet-col-width: 320px;
+
+// list
+$app-list-view-facet-item-height: 22px !default;
+$app-list-view-facet-item-color: $app-gray-6 !default;
+
+// svazek table
+$app-svazek-table-left-height: 50% !default;
+$app-svazek-table-right-height: 100% !default;
+$app-svazek-header-row-height: 120px !default;
+$app-svazek-header-cell-bottom-space: 5px !default;
+
+$app-svazek-cell-den-width: 60px !default;
+$app-svazek-cell-datum-vydani-width: 90px !default;
+$app-svazek-cell-edit-issue-width: 10px !default;
+$app-svazek-cell-vydani-width: 80px !default;
+$app-svazek-cell-cislo-width: 50px !default;
+$app-svazek-cell-mutace-width: 60px !default;
+$app-svazek-cell-font-size: 12px !default;
+
+// result table
+$app-result-header-row-height: 90px !default;
+$app-result-header-cell-bottom-space: 5px !default;
+$app-result-cell-mutace-width: 80px !default;
+$app-result-cell-datum-vydani-width: 80px !default;
+$app-result-cell-vydani-width: 60px !default;
+$app-result-cell-add-width: 62px !default;
+$app-result-cell-font-size: 12px !default;
+$app-result-header-cell-nkp-bg: mat.get-color-from-palette(mat.$deep-orange-palette, 50) !default;
+$app-result-header-cell-nkp-color: mat.get-color-from-palette(mat.$deep-orange-palette, 600) !default;
+$app-result-header-cell-mzk-bg: mat.get-color-from-palette(mat.$deep-purple-palette, 50) !default;
+$app-result-header-cell-mzk-color: mat.get-color-from-palette(mat.$deep-purple-palette, 600) !default;
+$app-result-header-cell-ukf-bg: mat.get-color-from-palette(mat.$teal-palette, 50) !default;
+$app-result-header-cell-ukf-color: mat.get-color-from-palette(mat.$teal-palette, 600) !default;
+$app-result-header-cell-vkol-bg: mat.get-color-from-palette(mat.$amber-palette, 50) !default;
+$app-result-header-cell-vkol-color: mat.get-color-from-palette(mat.$amber-palette, 800) !default;
+
+// icon color
+$app-icon-color-missing-page: $app-red !default;
+$app-icon-color-damaged-document: $app-red !default;
+$app-icon-color-complete-degradation: mat.get-color-from-palette(mat.$blue-gray-palette, 200) !default;
+$app-icon-color-complete: mat.get-color-from-palette(mat.$green-palette, 800) !default;
+$app-icon-color-uncontrolled: mat.get-color-from-palette(mat.$purple-palette, 500) !default;
+
+// progress bar
+$app-progress-bar-bg-fill: mat.get-color-from-palette($app-primary, darker) !default;

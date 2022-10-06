@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>{{ 'Edit pages' | translate }}</h1>
+<div mat-dialog-content>
+  <mat-form-field *ngFor="let p of pages" class="app-full-width">
+    <input matInput [id]="'p_'+p.index" [(ngModel)]="p.label" size="5">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="ok()">OK</button>
+  <button mat-button (click)="cancel()">{{'button.close' | translate}}</button>
+</div>

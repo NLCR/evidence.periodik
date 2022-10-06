@@ -1,0 +1,25 @@
+<mat-paginator 
+  [length]="100"
+  [pageSize]="10"
+  [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>
+
+
+<!-- <ul class="pagination">
+  <li class="disabled">
+    <a (click)="prev()">
+      <i mz-icon-mdi [icon]="'chevron-left'" mz-tooltip [tooltip]="'result.pagination.previous_page' | translate" class="app-cursor-pointer"></i>
+    </a>
+  </li>
+  <li *ngFor="let page of pages" 
+    [class.active]="page === state.currentPage"
+    [class.waves-effect]="page !== state.currentPage"
+    >
+    <a (click)="gotoPage(page)">{{page+1}}</a>
+  </li>
+  <li class="waves-effect">
+    <a (click)="next()">
+      <i mz-icon-mdi [icon]="'chevron-right'" mz-tooltip [tooltip]="'result.pagination.next_page' | translate" class="app-cursor-pointer"></i>
+    </a>
+  </li>
+</ul> -->

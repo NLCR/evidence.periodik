@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>{{ data.title | translate }}</h1>
+<mat-dialog-content>
+	<mat-form-field class="app-full-width">
+		<input matInput [(ngModel)]="result" (keyup.enter)="ok()" cdkFocusInitial />
+	</mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+	<button mat-flat-button [mat-dialog-close]="result" >OK</button>
+	<button mat-flat-button mat-dialog-close>{{ 'button.cancel' | translate }}</button>
+</mat-dialog-actions>

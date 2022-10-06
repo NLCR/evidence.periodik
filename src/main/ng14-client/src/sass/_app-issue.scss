@@ -1,0 +1,23 @@
+// --- ISSUE ---
+
+.app-issue-wrapper {
+  @extend .app-full-wrapper;
+  padding: $app-gap;
+  background-color: $app-gray-1;
+
+
+  .mat-form-field {
+    width: 100%;
+    margin-bottom: $app-gap;
+  }
+
+  .app-accordation-header {
+    .app-fx-right {
+      text-align: right;
+
+      .mat-mini-fab {
+        margin-top: -5px;
+      }
+    }
+  }
+}

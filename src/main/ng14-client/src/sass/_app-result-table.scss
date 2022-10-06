@@ -1,0 +1,156 @@
+// --- RESULT TABLE ----
+
+app-result-table {
+  .app-table-wrapper {
+    height: 100%;
+    overflow: auto;
+
+    .mat-table {
+      width: 100%;
+
+      th, td {
+        &:last-child {
+          border-right: 0 !important;
+        }
+      }
+
+      thead {
+        .mat-header-row {
+          height: 40px;
+
+          .mat-header-cell {
+            @extend .app-clean-radius;
+            background-color: $app-gray-3;
+            vertical-align: bottom;
+            border-right: 1px solid white;
+            padding-bottom: $app-result-header-cell-bottom-space;
+            border-bottom: 0 !important;
+
+            &:first-of-type {
+              padding-left: 0;
+            }
+
+            &:last-of-type {
+              padding-right: 0;
+            }
+
+            // custom cell width
+            &.mat-column-mutace {
+              min-width: $app-result-cell-mutace-width;
+            }
+            
+            &.mat-column-datum_vydani {
+              min-width: $app-result-cell-datum-vydani-width;
+            }
+            
+            &.mat-column-vydani {
+              min-width: $app-result-cell-vydani-width;
+            }
+            
+            &.mat-column-add {
+              min-width: $app-result-cell-add-width;
+            }
+
+            &:not(.app-cell-rotate) {
+              padding-left: 5px;
+            }
+
+            &.app-cell-rotate {
+              height: $app-result-header-row-height;
+              white-space: nowrap;
+              width: 30px !important;
+
+              & > div {
+                transform: rotate(-90deg);
+                width: 30px !important;
+                margin-bottom: calc(#{$app-result-header-cell-bottom-space} * 2);
+              }
+            }
+
+            &.app-header-cell-nkp {
+              background-color: $app-result-header-cell-nkp-bg; 
+              color: $app-result-header-cell-nkp-color;
+
+              .mat-icon {
+                color: $app-result-header-cell-nkp-color;
+              }
+            }
+            &.app-header-cell-mzk {
+              background-color: $app-result-header-cell-mzk-bg; 
+              color: $app-result-header-cell-mzk-color;
+              
+              .mat-icon {
+                color: $app-result-header-cell-mzk-color;
+              }
+            }
+            &.app-header-cell-ukf {
+              background-color: $app-result-header-cell-ukf-bg; 
+              color: $app-result-header-cell-ukf-color;
+              
+              .mat-icon {
+                color: $app-result-header-cell-ukf-color;
+              }
+            }
+            &.app-header-cell-vkol {
+              background-color: $app-result-header-cell-vkol-bg; 
+              color: $app-result-header-cell-vkol-color;
+            
+              .mat-icon {
+                color: $app-result-header-cell-vkol-color;
+              }
+            }
+          }
+        }
+      }
+
+      tbody {
+        .mat-row {
+          &.app-even {
+            background-color: $app-gray-1;
+          }
+
+          &:hover {
+            background-color: $app-gray-2;
+          }
+
+          .mat-cell {
+            @extend .app-clean-radius;
+            padding: 0 0 0 5px !important;
+            font-size: $app-result-cell-font-size;
+            height: 32px;
+            white-space: pre;
+
+            .mat-icon {
+              color: $app-primary-color-darker;
+              margin-left: 3px;
+            }
+
+            &.mat-column-NKP,
+            &.mat-column-MZK,
+            &.mat-column-UKF,
+            &.mat-column-VKOL {
+              &.app-col-collapsed {
+                max-width: 60px;
+                width: 60px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              } 
+            }
+          }
+        }
+      }
+    }
+
+    .mat-paginator {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      box-shadow: 0px -4px 36px 4px rgba(0,0,0,0.15);
+
+      .mat-paginator-container {
+        justify-content: flex-start;
+      }
+    }
+  }
+}

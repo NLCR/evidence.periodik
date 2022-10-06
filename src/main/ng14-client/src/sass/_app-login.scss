@@ -1,0 +1,25 @@
+// --- LOGIN ---
+
+.app-login-wrapper {
+  height: 100%;
+  background-color: $app-gray-1;
+  overflow: auto;
+  justify-content: center;
+
+  .app-login-card {
+    width: 300px;
+    padding: $app-gap;
+    text-align: center;
+
+    .mat-form-field,
+    .mat-button-base,
+    .mat-card-header-text {
+      @extend .app-full-width;
+    }
+
+    .mat-card-actions {
+      @extend .app-clean-mg;
+    }
+  }
+  
+}

@@ -1,0 +1,97 @@
+<h1 mat-dialog-title>
+  {{ 'desc.volume_overview' | translate }}: {{ data.carKod }}
+</h1>
+<div mat-dialog-content class="app-svazek-overview">
+  <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+  <ng-container *ngIf="volume">
+  <div *ngIf="volume.titul">
+    <strong>{{ 'record.titul' | translate }}:</strong> {{ volume.titul.meta_nazev }}
+  </div>
+  <div>
+    <strong>{{ 'record.vlastnik' | translate}}:</strong> {{ volume.vlastnik }}
+  </div>
+  <div>
+    <strong>{{ 'record.signatura' | translate}}:</strong> {{ volume.signatura }}
+  </div>
+  <div>
+    <strong>{{ 'record.carovy_kod' | translate}}:</strong> {{ volume.carovy_kod }}
+  </div>
+  <div>
+    <strong>{{ 'record.mutace' | translate}}:</strong> {{ volume.mutace }}
+
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of mutace">
+      <div fxFlex="100px">{{f.name}}</div>
+      <div fxFlex="100px">{{f.value}}x</div>
+    </div>
+  </div>
+  <div>
+    <strong>{{ 'record.year' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let year of years">
+      <div fxFlex="40px">{{year.name | date : 'yyyy'}}</div>
+      <div fxFlex="40px">{{year.value}}x</div>
+    </div>
+  </div>
+  <div>
+    <strong>{{ 'desc.dates' | translate }}:</strong>
+    {{ volume.datum_od | date : 'dd.MM.yyy' : '+0430' : 'cs-CZ' }} - {{ volume.datum_do | date : 'dd.MM.yyy' : '+0430' : 'cs-CZ' }}
+  </div>
+  <div>
+    <strong>{{ 'desc.numbers' | translate }}:</strong> {{prvniCislo}} - {{ posledniCislo }}
+  </div>
+  <div>
+    <strong>{{ 'desc.mutation_edition' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of znaky">
+      <div fxFlex="100px">{{f.name}}</div>
+      <div fxFlex="100px">{{f.value}}x</div>
+    </div>
+  </div>
+  <div>
+    <strong>{{ 'desc.publication' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of vydani">
+      <div fxFlex="100px">{{'record.publication.' + f.name | translate}}</div>
+      <div fxFlex="100px">{{f.value}}x</div>
+    </div>
+  </div>
+  <div>
+    <strong>{{ 'desc.complete' | translate }}:</strong> Ano / Ne
+  </div>
+  <div>
+    <strong>{{ 'Přehled typů poškození' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of stavy">
+      <div fxFlex="150px">{{'record.StavIssue.' + f.name | translate}}</div>
+      <div fxFlex="100px">{{f.value}}x</div>
+    </div>
+  </div>
+<!--  <div>-->
+<!--    <strong>{{ 'Chybějící čísla' | translate}}:</strong>-->
+<!--    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of chybejsicisla">-->
+<!--      <div fxFlex="200px">{{ f.datum | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>-->
+<!--      <div fxFlex="100px">{{f.cislo}}</div>-->
+<!--    </div>-->
+<!--  </div>-->
+  <div>
+    <strong>{{ 'Fyzický stav' | translate }}:</strong> {{fyzStavOk ? 'Vyhovujici' : 'Poskozeny' | translate}} <!--  -->
+  </div>
+  <div>
+    <strong>{{ 'Poškozená čísla' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of stavyExt">
+      <div fxFlex="100px">{{ f.datum | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>
+      <div fxFlex="100px">číslo {{f.cislo}}</div>
+    </div>
+  </div>
+
+  <div>
+    <strong>{{ 'Poznamky' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of poznamky">
+      <div fxFlex="100px">{{ f.datum | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>
+      <div fxFlex="100px">{{f.cislo}}</div>
+      <div fxFlex="100px">{{ f.note }}</div>
+    </div>
+  </div>
+</ng-container>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close (click)="viewSvazek()">{{ 'Podrobný popis' | translate }}</button>
+  <button mat-button mat-dialog-close>{{ 'button.close' | translate }}</button>
+</div>

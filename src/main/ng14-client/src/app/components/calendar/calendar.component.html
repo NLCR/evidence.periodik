@@ -1,0 +1,9 @@
+<app-toolbar></app-toolbar>
+<!-- <app-facet></app-facet> -->
+
+<div class="app-calendar-wrapper">
+  <router-outlet></router-outlet>
+  <button mat-fab color="primary" routerLink="/issue" mat-flat-button [matTooltip]="'calendar.tooltip.add_record' | translate" matTooltipPosition="above">
+    <mat-icon>{{ config.icons.add }}</mat-icon>
+  </button>
+</div>

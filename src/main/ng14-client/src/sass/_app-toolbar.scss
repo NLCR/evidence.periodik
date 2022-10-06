@@ -1,0 +1,44 @@
+// --- TOOLBAR ---
+
+.mat-toolbar {
+  @include set-border(bottom, 1, solid, #{$app-gray-3});
+  height: $app-toolbar-height;
+  background-color: $app-color-white;
+
+  &.app-toolbar-issue { 
+    .app-fx-right {
+      text-align: right;
+    }
+  }
+
+  &.app-toolbar-result {
+
+  }
+
+  &.app-toolbar-calendar {
+    .app-fx-views {
+      text-align: right;
+    }
+
+    .mat-form-field {
+      @extend .app-font-family-rc;
+      margin-left: $app-gap;
+    }
+
+    // override currentColor from _themes.scss
+    .mat-form-field-appearance-legacy {
+      .mat-form-field-wrapper {
+        padding-bottom: .9em;
+
+        .mat-form-field-underline {
+          background-color: rgba(0, 0, 0, 0.42);
+          bottom: .9em;
+        }
+        
+        .mat-form-field-ripple {
+          background-color: $app-primary-color;
+        }
+      }
+    }
+  }
+}

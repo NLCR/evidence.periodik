@@ -1,11 +1,11 @@
 {
   "ex": [
-    {
+      {
       "id": "oai:aleph.mzk.cz:MZK01-000059177",
       "zdroj": "MZK",
       "file": "",
       "ex": [
-        {
+      {
           "carkod": "2620002854",
           "status": "A",
           "signatura": "TK-0258.215",
@@ -18,12 +18,12 @@
         }
       ]
     },
-    {
+      {
       "id": "oai:aleph.mzk.cz:MZK01-000068221",
       "zdroj": "MZK",
       "file": "",
       "ex": [
-        {
+      {
           "carkod": "3119003342",
           "status": "A",
           "signatura": "PK-0124.963",
@@ -36,12 +36,12 @@
         }
       ]
     },
-    {
+      {
       "id": "oai:aleph-nkp.cz:NKC01-000106873",
       "zdroj": "UKF",
       "file": "",
       "ex": [
-        {
+      {
           "carkod": "1000079042",
           "status": "P",
           "signatura": "54 H 164338",
@@ -52,7 +52,7 @@
           "cislo": "",
           "md5": "7e24b13212b499100d082a005812aa8a"
         },
-        {
+      {
           "carkod": "1000079043",
           "status": "AR",
           "signatura": "I 348299",

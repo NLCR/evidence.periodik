@@ -1,0 +1,9 @@
+// --- RESULT ---
+
+.app-result-wrapper {
+  @extend .app-full-wrapper;
+  background-color: $app-gray-1;
+  padding: $app-gap;
+
+  @import "app-result-table";
+}

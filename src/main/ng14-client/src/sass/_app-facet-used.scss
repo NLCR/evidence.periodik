@@ -1,0 +1,27 @@
+// --- FACET USED ---
+
+app-facet-used {
+  .mat-list {
+    @include set-border(bottom, 1, solid, #{$app-gray-3});
+    padding: 10px 0 !important;
+    
+    .mat-subheader {
+      @extend .app-font-bold;
+      color: $app-primary-color;
+      height: 0;
+
+      .mat-icon {
+        color: $app-red;
+        margin-left: $app-gap-icon;
+      }
+    }
+
+    .mat-list-item {
+      .mat-icon {
+        &:hover {
+          color: $app-red;
+        }
+      }
+    }
+  }
+}

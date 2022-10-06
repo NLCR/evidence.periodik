@@ -1,7 +1,0 @@
-<div class="day-content" [class.other-month]="isOtherMonth()">
-  <div class="title">{{day | date: 'dd'}}</div>
-  <div *ngFor="let e of issues" >
-    <div [class]="'state-'+e.state" [routerLink]="['/issue', e.id]">{{e.nazev}} ({{e.mutace}})</div>
-    <div >Pocet exemplaru: {{e.exemplare.length}}</div>
-  </div>
-</div>

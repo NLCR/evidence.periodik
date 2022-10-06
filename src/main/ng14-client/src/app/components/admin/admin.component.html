@@ -1,0 +1,11 @@
+<div *ngIf="state.isAdmin" class="app-admin-wrapper">
+  <div class="admin-menu">
+    <button mat-flat-button color="primary" routerLink="users" routerLinkActive="active">
+      {{"admin.users" | translate}}
+    </button>
+    <button mat-flat-button color="primary" routerLink="owners" routerLinkActive="active">
+      {{"admin.owners" | translate}}
+    </button>
+  </div>
+  <router-outlet></router-outlet>
+</div>

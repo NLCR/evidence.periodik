@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>{{ 'modal.clone_options' | translate }}</h1>
+<div mat-dialog-content>
+  <div fxLayout="row" fxLayoutGap="16px">
+    <mat-form-field fxFlex>
+      <input matInput [matDatepicker]="pickerOd" [placeholder]="'desc.choose_date' | translate" [(ngModel)]="data.params.start_date" (dateChange)="setDate('start_date', $event)">
+      <mat-datepicker-toggle matSuffix [for]="pickerOd"></mat-datepicker-toggle>
+      <mat-datepicker #pickerOd></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field fxFlex>
+      <input matInput [matDatepicker]="pickerDo" [placeholder]="'desc.choose_date' | translate" [(ngModel)]="data.params.end_date" (dateChange)="setDate('end_date', $event)">
+      <mat-datepicker-toggle matSuffix [for]="pickerDo"></mat-datepicker-toggle>
+      <mat-datepicker #pickerDo></mat-datepicker>
+    </mat-form-field>
+  </div>
+ 
+  <div fxLayout="row" fxLayoutGap="16px">
+    <mat-form-field fxFlex>
+      <mat-label>{{ 'record.periodicita.placeholder' | translate }}</mat-label>
+      <mat-select id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita">
+        <mat-option *ngFor="let v of state.periods" [value]="v">{{ 'record.periodicita.' + v | translate }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field fxFlex>
+      <input matInput [placeholder]="'modal.start_number' | translate" id="start_number" name="start_number" [(ngModel)]="data.params.start_number" type="text">
+    </mat-form-field>
+    <mat-form-field fxFlex>
+      <input matInput [placeholder]="'modal.start_year' | translate" id="start_year" name="start_year" [(ngModel)]="data.params.start_year" type="text">
+    </mat-form-field>
+  </div>
+
+  <div class="app-gap-bottom">
+    <mat-checkbox [(ngModel)]="data.params.onSpecialDays" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="ok()">OK</button>
+  <button mat-button (click)="cancel()">{{ 'button.cancel' | translate }}</button>
+</div>

@@ -1,7 +1,8 @@
 {
-  "morpho.host": "lindat.mff.cuni.cz/services/morphodita/api",
+  "solrhost": "http://localhost:8983/solr/",
+  "idfields": ["id_titul", "nazev", "podnazev", "vydani", "mutace", "datum_vydani_den", "znak_oznaceni_vydani"],
   "users":{
-    "test": "test"
+    "test": {"pwd": "test", "role": "user"}
   },
   "jobs": {}
 }

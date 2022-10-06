@@ -1,0 +1,80 @@
+{
+  "context": "",
+  "defaultLang": "cs",
+  "searchParams": {
+    "rows": 100
+  },
+  "expiredTime": 480,
+  "vdkFormats":["CISLO", "MESIC", "MESIC_SLOVA"],
+  "periodicity": [
+    "P1D","P1W",
+    "P1M",
+    "P6M",
+    "P1Y"
+  ],
+  "owners": [
+    {"name":  "NKP", "url":"http://"},
+    {"name":  "MZK", "url":"http://"},
+    {"name":  "VKOL", "url":"http://"},
+    {"name":  "SVKUL", "url":"http://"}
+  ],
+  "stavy": [
+    "OK",
+      "ChCC",
+      "ChS",
+      "PP",
+      "Deg",
+      "ChPag",
+      "ChCis",
+      "ChSv",
+      "Cz",
+      "CzV"
+  ],
+  "states":["ok", "auto"],
+  "vydani": ["", "morning", "midday", "afternoon", "evening", "special"],
+  "mutations": ["Brno", "Praha"],
+  "znak_oznaceni_vydani": ["*", "-"],
+  "test": false,
+  "icons": {
+    "search": "search",
+    "clear": "clear",
+    "person": "person",
+    "pencil": "create",
+    "info_outline": "info_outline",
+    "info": "info",
+    "check_circle": "check_circle",
+    "cancel": "cancel",
+    "block": "block",
+    "add_circle": "add_circle",
+    "add": "add",
+    "more_vert": "more_vert",
+    "open_in_new": "open_in_new",
+    "library_add": "library_add",
+    "arrow_left": "keyboard_arrow_left",
+    "arrow_right": "keyboard_arrow_right",
+    "link": "link",
+    "radio_button_checked": "radio_button_checked",
+    "radio_button_unchecked": "radio_button_unchecked",
+    "lock_outline": "lock_outline",
+    "send": "send",
+    "menu": "menu",
+    "close": "close",
+
+    "duplicate": "file_copy",
+    "missing_page": "error",
+    "uncontrolled": "visibility_off",
+    "damaged_document": "flash_on",
+    "complete_degradation": "remove_circle",
+    "edit_issue": "chrome_reader_mode",
+    "edit_volume": "layers",
+    "delete_specimen": "delete",
+    "collapse_this_column": "first_page",
+    "expand_this_column": "last_page",
+
+    "view_month": "insert_invitation",
+    "view_list": "view_list",
+    "view_table": "table_chart",
+    "digitized": "all_out"
+  }
+}
+
