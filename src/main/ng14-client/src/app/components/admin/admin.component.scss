@@ -1,10 +1,15 @@
 .admin-menu {
   padding: 10px 10px;
-  background: #006280;
+  background-color: #00bcd4;
+  border-top: 2px solid #00acc1;
   //h3{
   //  color: black;
   //}
   button.active {
     color: black
+  }
+  button {
+    background-color: #ccf1f6;
+    color: #0095a8;
   }
 }

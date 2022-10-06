@@ -12,7 +12,7 @@
     "svazek": "editace svazku",
     "issue": "editace výtisku",
     "titul": "editace meta titulu",
-    "admin": "administrace",
+    "admin": "administrace uživatelů",
     "admin.owners": "administrace vlastníků",
     "admin.users": "administrace uživatelů",
     "profile": "profil uživatele"

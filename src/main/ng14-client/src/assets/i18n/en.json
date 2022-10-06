@@ -12,7 +12,7 @@
     "svazek": "volume edit",
     "issue": "issue edit",
     "titul": "meta titul edit",
-    "admin": "administration",
+    "admin": "user administration",
     "admin.owners": "owners administration",
     "admin.users": "user administration",
     "profile": "user profile"
