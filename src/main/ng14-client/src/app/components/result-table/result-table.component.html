@@ -90,12 +90,12 @@
             <a [matTooltip]="'desc.edit_volume' | translate" matTooltipPosition="above" (click)="viewSvazek(ex['carovy_kod'])">
               <mat-icon>{{ config.icons.edit_volume }}</mat-icon>
             </a>
-            <a [matTooltip]="'desc.duplicate_specimen' | translate" matTooltipPosition="above" (click)="duplicate(row, ex)">
-              <mat-icon>{{ config.icons.duplicate }}</mat-icon>
-            </a>
-            <a [matTooltip]="'desc.delete_specimen' | translate" matTooltipPosition="above" (click)="deleteEx(row, ex, idxex)">
-              <mat-icon>{{ config.icons.delete_specimen }}</mat-icon>
-            </a>
+<!--            <a [matTooltip]="'desc.duplicate_specimen' | translate" matTooltipPosition="above" (click)="duplicate(row, ex)">-->
+<!--              <mat-icon>{{ config.icons.duplicate }}</mat-icon>-->
+<!--            </a>-->
+<!--            <a [matTooltip]="'desc.delete_specimen' | translate" matTooltipPosition="above" (click)="deleteEx(row, ex, idxex)">-->
+<!--              <mat-icon>{{ config.icons.delete_specimen }}</mat-icon>-->
+<!--            </a>-->
             <a [matTooltip]="formatStav(ex)" matTooltipPosition="above" (click)="viewClick(row, ex)">
               <mat-icon [ngClass]="classByStav(ex)">{{ iconByStav(ex) }}</mat-icon>
             </a>
