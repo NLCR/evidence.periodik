@@ -207,7 +207,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
           this.state.currentVolume.vlastnik = ex.vlastnik;
         }
         this.findTitul();
-        console.log(this.state.currentVolume.znak_oznaceni_vydani)
         this.loadExemplars(res2.response);
         this.loading = false;
       } else {
