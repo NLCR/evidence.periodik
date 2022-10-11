@@ -82,6 +82,21 @@ export class SvazekComponent implements OnInit, OnDestroy {
     'poznamka'
   ];
 
+  volume_znak_oznaceni_vydani_defaults = [
+    { value: "", name: "desc.without_name"},
+    { value: "•"},
+    { value: "•••"},
+    { value: "●●"},
+    { value: "●●●●"},
+    { value: "*"},
+    { value: "**"},
+    { value: "***"},
+    { value: "****"},
+    { value: "******"},
+    { value: "■"},
+    { value: "■■"}
+  ]
+
   displayedColumnsLeftTableBottom = Object.keys(new PeriodicitaSvazku());
   dsPeriodicita: MatTableDataSource<PeriodicitaSvazku>;
 
@@ -192,6 +207,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
           this.state.currentVolume.vlastnik = ex.vlastnik;
         }
         this.findTitul();
+        console.log(this.state.currentVolume.znak_oznaceni_vydani)
         this.loadExemplars(res2.response);
         this.loading = false;
       } else {

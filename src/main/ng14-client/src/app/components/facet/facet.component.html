@@ -79,19 +79,20 @@
         </mat-expansion-panel-header>
 
         <mat-list role="list">
-          <mat-list-item *ngFor="let item of state.searchResults['facet_counts']['facet_fields'][facet]">
+          <mat-list-item class="facet-item-list" *ngFor="let item of state.searchResults['facet_counts']['facet_fields'][facet]" (click)="addFilter(facet, item.name)">
             <!-- <mat-icon *ngIf="isUsed(facet, item.name) > -1">check_circle</mat-icon> -->
             <ng-container [ngSwitch]="facet">
-              <a *ngSwitchCase="'stav'" (click)="addFilter(facet, item.name)">{{'record.StavIssue.' + item.name | translate}}</a>
-              <a *ngSwitchCase="'vydani'" (click)="addFilter(facet, item.name)">{{'record.publication.' + item.name | translate}}
+              <a *ngSwitchCase="'stav'">{{'record.StavIssue.' + item.name | translate}}</a>
+              <a *ngSwitchCase="'vydani'" >{{'record.publication.' + item.name | translate}}
                 <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container>
               </a>
-              <a *ngSwitchDefault (click)="addFilter(facet, item.name)">{{ item.name === "N" ? "Nečitelné" : item.name }}
-                <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container></a>
+              <a *ngSwitchDefault>{{ item.name === "N" ? "Nečitelné" : item.name }}
+                <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container>
+              </a>
             </ng-container>
-            <span>
+            <a>
               ({{item.value}})
-            </span>
+            </a>
           </mat-list-item>
         </mat-list>
       </mat-expansion-panel>
