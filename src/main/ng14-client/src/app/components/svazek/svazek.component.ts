@@ -82,6 +82,21 @@ export class SvazekComponent implements OnInit, OnDestroy {
     'poznamka'
   ];
 
+  volume_znak_oznaceni_vydani_defaults = [
+    { value: "", name: "desc.without_name"},
+    { value: "•"},
+    { value: "•••"},
+    { value: "●●"},
+    { value: "●●●●"},
+    { value: "*"},
+    { value: "**"},
+    { value: "***"},
+    { value: "****"},
+    { value: "******"},
+    { value: "■"},
+    { value: "■■"}
+  ]
+
   displayedColumnsLeftTableBottom = Object.keys(new PeriodicitaSvazku());
   dsPeriodicita: MatTableDataSource<PeriodicitaSvazku>;
 

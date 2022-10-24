@@ -57,6 +57,11 @@
                 <mat-form-field>
                   <input type="text" matInput [(ngModel)]="state.currentVolume.znak_oznaceni_vydani"
                     [matAutocomplete]="auto" [disabled]=!state.logged>
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of volume_znak_oznaceni_vydani_defaults" [value]="option.value">
+                      {{option.name ? (option.name | translate) : option.value}}
+                    </mat-option>
+                  </mat-autocomplete>
                   <mat-icon>{{ config.icons.pencil }}</mat-icon>
                 </mat-form-field>
                 <mat-autocomplete #auto="matAutocomplete">
