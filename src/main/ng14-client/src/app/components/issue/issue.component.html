@@ -71,7 +71,7 @@
   <div fxFlex>
     <mat-form-field>
       <input matInput [placeholder]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" (change)="checkPagesChanged()" [(ngModel)]="state.currentIssue.pocet_stran" [disabled]=!state.logged>
-      <mat-icon class="app-cursor-pointer" matSuffix (click)="editPages()" [matTooltip]="'desc.edit_pages' | translate" matTooltipPosition="above">{{ config.icons.pencil }}</mat-icon>
+      <mat-icon class="app-cursor-pointer" [class]="!state.logged ? 'not_logged' : ''" matSuffix (click)="editPages()" [matTooltip]="'desc.edit_pages' | translate" matTooltipPosition="above">{{ config.icons.pencil }}</mat-icon>
     </mat-form-field>
 
     <mat-form-field>

@@ -239,6 +239,7 @@ export class IssueComponent implements OnInit, OnDestroy {
 
 
   editPages() {
+    if(!this.state.logged) return
 
     const dialogRef = this.dialog.open(EditPagesComponent, {
       width: '250px',
