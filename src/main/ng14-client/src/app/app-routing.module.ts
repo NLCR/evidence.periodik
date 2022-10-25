@@ -36,6 +36,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'svazek', component: SvazekComponent },
   { path: 'svazek/:id', component: SvazekComponent },
+  { path: 'result', component: ResultComponent },
   { path: 'result/:id', component: ResultComponent },
   {
     path: 'calendar/:id', component: CalendarComponent,
