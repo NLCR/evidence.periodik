@@ -1,4 +1,4 @@
-<mat-progress-bar *ngIf="!state.searchResults" mode="indeterminate"></mat-progress-bar>
+<mat-progress-bar *ngIf="!state.searchResults || this.state.loadingData" mode="indeterminate"></mat-progress-bar>
 <app-toolbar *ngIf="state.searchResults"></app-toolbar>
 
 

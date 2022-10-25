@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { Titul } from './models/titul';
 import { Issue } from './models/issue';
 import { Filter } from './models/filter';
-import { UrlSegment } from '@angular/router';
+// import { UrlSegment } from '@angular/router';
 import { AppConfiguration } from 'src/app/app-configuration';
 import { Volume } from 'src/app/models/volume';
 import { User } from './models/user';
@@ -81,6 +81,8 @@ export class AppState {
   start_year: string;
   end_year: string;
   volume_id_for_search: string;
+
+  loadingData: boolean;
 
 
   private _searchParamsSubject = new Subject();
@@ -170,12 +172,16 @@ export class AppState {
   }
 
   addDateFilter() {
+    if(this.loadingData) return;
+
     this.filterByDate = true;
     this.currentPage = 0;
     this._searchParamsSubject.next(null);
   }
 
   addVolumeFilter() {
+    if(this.loadingData) return;
+
     this.filterByVolume = true;
     this.currentPage = 0;
     this._searchParamsSubject.next(null);

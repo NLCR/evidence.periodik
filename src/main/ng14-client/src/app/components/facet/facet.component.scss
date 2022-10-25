@@ -2,3 +2,8 @@
   cursor: pointer;
   margin: 4px 0;
 }
+
+.loadingData {
+  filter: grayscale(1);
+  cursor: wait !important;
+}
