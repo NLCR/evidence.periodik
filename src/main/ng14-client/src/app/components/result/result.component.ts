@@ -15,11 +15,12 @@ export class ResultComponent implements OnInit, OnDestroy {
 
   // subscriptions: Subscription[] = [];
   exemplarsRequests = []
+  idTitul = null
   private exemplarsLookup$: Subject<void> = new Subject();
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   // public exemplarsLookup
   public searchChangedSub
-  public issuesOfTitulSub
+  // public issuesOfTitulSub
   public titulSub
 
   constructor(
@@ -30,12 +31,19 @@ export class ResultComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.state.searchResults = null
+    this.idTitul = this.route.snapshot.paramMap.get('id')
+    if (!this.idTitul) {
+      this.router.navigate(['/home'])
+    }
     // this.loadResultItems();
     // this.searchChangedSub = this.state.searchParamsChanged.subscribe(() => {
     //   this.loadResultItems();
     // });
 
     this.searchChangedSub = this.state.searchParamsChanged.subscribe(() => {
+      this.titulSub = this.service.getTitul(this.idTitul).subscribe(t => {
+        this.state.currentTitul = t
+      });
       this.exemplarsLookup$.next()
     });
 
@@ -44,12 +52,8 @@ export class ResultComponent implements OnInit, OnDestroy {
         map(() => this.exemplarsRequests = []),
         switchMap(() => {
           this.state.loadingData = true
-          const idTitul = this.route.snapshot.paramMap.get('id')
-          if (!idTitul) {
-            this.router.navigate(['/home']);
-          }
-          this.exemplarsRequests.push(idTitul);
-          return this.service.searchIssuesOfTitul(idTitul)
+          this.exemplarsRequests.push(this.idTitul);
+          return this.service.searchIssuesOfTitul(this.idTitul)
         }),
         takeUntil(this.destroyed$)
       ).subscribe(res => {
@@ -69,17 +73,17 @@ export class ResultComponent implements OnInit, OnDestroy {
     //   s.unsubscribe();
     // });
     // this.subscriptions = [];
-    this.searchChangedSub.unsubscribe()
+    if(this.searchChangedSub) this.searchChangedSub.unsubscribe()
     // this.issuesOfTitulSub.unsubscribe()
-    // this.titulSub.unsubscribe()
+    if(this.titulSub) this.titulSub.unsubscribe()
   }
 
-  loadResultItems() {
-    this.state.loadingData = true
-    const idTitul = this.route.snapshot.paramMap.get('id');
-    if (!idTitul) {
-      this.router.navigate(['/home']);
-    }
+  // loadResultItems() {
+    // this.state.loadingData = true
+    // const idTitul = this.route.snapshot.paramMap.get('id');
+    // if (!idTitul) {
+    //   this.router.navigate(['/home']);
+    // }
 
     // this.exemplarsLookup$
     //   .pipe(
@@ -106,6 +110,6 @@ export class ResultComponent implements OnInit, OnDestroy {
     //   this.state.currentTitul = t;
     // });
     // console.log(this.subscriptions)
-  }
+  // }
 
 }
