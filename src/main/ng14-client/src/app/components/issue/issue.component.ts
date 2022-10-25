@@ -226,6 +226,7 @@ export class IssueComponent implements OnInit, OnDestroy {
   }
 
   addPub() {
+    if(!this.state.logged) return
     /*  this.modalService.open(AddVydaniDialogComponent,
        { 'issue': this.state.currentIssue, 'state': this.state, 'service': this.service }
      ); */
