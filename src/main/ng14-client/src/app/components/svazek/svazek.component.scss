@@ -1,0 +1,10 @@
+.withSelectAllArrow{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  .mat-icon{
+    margin-right: 0;
+    cursor: pointer;
+  }
+}

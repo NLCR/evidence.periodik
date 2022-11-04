@@ -97,7 +97,8 @@
     "edit_issue": "Edit issue",
     "date": "Date",
     "number": "Number",
-    "renumber_down": "Renumber down"
+    "renumber_down": "Renumber down",
+    "select_all": "Select all"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "TThis action is not allowed, you are not logged in."

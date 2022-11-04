@@ -823,11 +823,25 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   }
 
-  updateStav(ex: Exemplar, setComplete = false) {
+  updateStav(ex: Exemplar, specificUpdate = "") {
     ex.stav = [];
-    if (setComplete && ex.numExists) {
-      ex.complete = true;
+
+    if(ex.numExists){
+      switch (specificUpdate){
+        case "OK":
+          ex.complete = true
+          break
+        case "Deg":
+          ex.degradated = true
+          break
+        case "NS":
+          ex.necitelneSvazano = true
+          break
+        default:
+
+      }
     }
+
     if (ex.complete) { ex.stav.push('OK'); }
     // if (ex.chybiCislo) { ex.stav.push('ChCC'); }
     if (ex.destroyedPages) { ex.stav.push('PP'); }
@@ -847,11 +861,14 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.closePop();
   }
 
-  setVolumeComplete(){
+  setAllInColumn(type: string, autoSave = false){
     this.exemplars.map(exemplar => {
-      this.updateStav(exemplar, true);
+      this.updateStav(exemplar, type);
     });
-    this.save();
+
+    if(autoSave){
+      this.save()
+    }
   }
 
   ngOnDestroy() {

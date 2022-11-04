@@ -97,7 +97,8 @@
     "edit_issue": "Editovat issue",
     "date": "Datum",
     "number": "Číslo",
-    "renumber_down": "Přečíslovat dolů"
+    "renumber_down": "Přečíslovat dolů",
+    "select_all": "Zatrhnout vše"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."
