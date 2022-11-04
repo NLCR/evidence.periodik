@@ -268,7 +268,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   }
 
   duplicate(issue: Issue, ex: Exemplar) {
-
+    console.warn("Using bad endpoint!!! Remove issue")
     const dialogRef = this.dialog.open(AddExemplarDialogComponent, {
       width: '650px',
       data: { issue, exemplar: ex, editType: 'duplicate' }

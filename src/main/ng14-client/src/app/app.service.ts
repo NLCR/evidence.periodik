@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Router, ActivatedRoute, Params, NavigationStart, NavigationEnd, NavigationExtras } from '@angular/router';
+// import { Router, ActivatedRoute, Params, NavigationStart, NavigationEnd, NavigationExtras } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
 import { Observable, Subject, of } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+// import { tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 
@@ -84,24 +86,24 @@ export class AppService {
       }));
   }
 
-  getIssuesOfTitul(uuid: string, month: string): Observable<any[]> {
-    const params: HttpParams = new HttpParams();
-    const url = '/api/search/issue/select';
-
-    params
-      .set('q', '*')
-      .set('wt', 'json')
-      .set('rows', '200')
-      .set('fl', '*,exemplare:[json], pages:[json]')
-      .set('fq', 'id_titul:"' + uuid + '"')
-      .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
-
-    // params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, { params }).pipe(
-      map((res: any) => {
-        return res.response.docs;
-      }));
-  }
+  // getIssuesOfTitul(uuid: string, month: string): Observable<any[]> {
+  //   const params: HttpParams = new HttpParams();
+  //   const url = '/api/search/issue/select';
+  //
+  //   params
+  //     .set('q', '*')
+  //     .set('wt', 'json')
+  //     .set('rows', '200')
+  //     .set('fl', '*,exemplare:[json], pages:[json]')
+  //     .set('fq', 'id_titul:"' + uuid + '"')
+  //     .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
+  //
+  //   // params.set('fl', 'start:datum_vydani,title:nazev,*')
+  //   return this.http.get(url, { params }).pipe(
+  //     map((res: any) => {
+  //       return res.response.docs;
+  //     }));
+  // }
 
   volumeOverview(carovy_kod: string, idTitul: string): Observable<any> {
     let params: HttpParams = new HttpParams();
@@ -135,62 +137,62 @@ export class AppService {
     return this.http.get(url, { params });
   }
 
-  searchByCarKod(carovy_kod: string): Observable<any> {
-    let params: HttpParams = new HttpParams();
+  // searchByCarKod(carovy_kod: string): Observable<any> {
+  //   let params: HttpParams = new HttpParams();
+  //
+  //   params = new HttpParams()
+  //     .set('q', carovy_kod)
+  //     .set('wt', 'json')
+  //     .set('rows', '1')
+  //     .set('fl', '*,exemplare:[json], pages:[json]')
+  //     .set('sort', 'datum_vydani_den asc, vydani desc')
+  //     .set('stats', 'true')
+  //     .set('stats.field', 'datum_vydani_den');
+  //   const url = '/api/search/issue/select';
+  //
+  //   // params.set('fl', 'start:datum_vydani,title:nazev,*')
+  //   return this.http.get(url, { params });
+  // }
 
-    params = new HttpParams()
-      .set('q', carovy_kod)
-      .set('wt', 'json')
-      .set('rows', '1')
-      .set('fl', '*,exemplare:[json], pages:[json]')
-      .set('sort', 'datum_vydani_den asc, vydani desc')
-      .set('stats', 'true')
-      .set('stats.field', 'datum_vydani_den');
-    const url = '/api/search/issue/select';
+  // getIssuesOfVolume(volume: Volume): Observable<any> {
+  //   let params: HttpParams = new HttpParams();
+  //
+  //   params = new HttpParams()
+  //     .set('q', volume.carovy_kod)
+  //     .set('wt', 'json')
+  //     .set('rows', '1000')
+  //     .set('fl', '*,exemplare:[json], pages:[json]')
+  //     .set('sort', 'datum_vydani_den asc, vydani desc')
+  //     .set('fq', 'id_titul:"' + volume.id_titul + '"')
+  //     .append('fq', 'datum_vydani:[' + volume.datum_od + ' TO ' + volume.datum_do + ']');
+  //   const url = '/api/search/issue/select';
+  //
+  //   // params.set('fl', 'start:datum_vydani,title:nazev,*')
+  //   return this.http.get(url, { params }).pipe(
+  //     map((res: any) => {
+  //       return res.response;
+  //     }));
+  // }
 
-    // params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, { params });
-  }
-
-  getIssuesOfVolume(volume: Volume): Observable<any> {
-    let params: HttpParams = new HttpParams();
-
-    params = new HttpParams()
-      .set('q', volume.carovy_kod)
-      .set('wt', 'json')
-      .set('rows', '1000')
-      .set('fl', '*,exemplare:[json], pages:[json]')
-      .set('sort', 'datum_vydani_den asc, vydani desc')
-      .set('fq', 'id_titul:"' + volume.id_titul + '"')
-      .append('fq', 'datum_vydani:[' + volume.datum_od + ' TO ' + volume.datum_do + ']');
-    const url = '/api/search/issue/select';
-
-    // params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, { params }).pipe(
-      map((res: any) => {
-        return res.response;
-      }));
-  }
-
-  searchIssueByDate(datum: string, id_titul: string): Observable<any[]> {
-    let params: HttpParams = new HttpParams();
-
-    params = new HttpParams()
-      .set('q', '*')
-      .set('wt', 'json')
-      .set('rows', '10')
-      .set('fl', '*,exemplare:[json], pages:[json]')
-      .set('sort', 'datum_vydani_den asc, vydani desc')
-      .set('fq', 'id_titul:"' + id_titul + '"')
-      .append('fq', 'datum_vydani_den:"' + datum + '"');
-    const url = '/api/search/issue/select';
-
-    // params.set('fl', 'start:datum_vydani,title:nazev,*')
-    return this.http.get(url, { params }).pipe(
-      map((res: any) => {
-        return res.response.docs;
-      }));
-  }
+  // searchIssueByDate(datum: string, id_titul: string): Observable<any[]> {
+  //   let params: HttpParams = new HttpParams();
+  //
+  //   params = new HttpParams()
+  //     .set('q', '*')
+  //     .set('wt', 'json')
+  //     .set('rows', '10')
+  //     .set('fl', '*,exemplare:[json], pages:[json]')
+  //     .set('sort', 'datum_vydani_den asc, vydani desc')
+  //     .set('fq', 'id_titul:"' + id_titul + '"')
+  //     .append('fq', 'datum_vydani_den:"' + datum + '"');
+  //   const url = '/api/search/issue/select';
+  //
+  //   // params.set('fl', 'start:datum_vydani,title:nazev,*')
+  //   return this.http.get(url, { params }).pipe(
+  //     map((res: any) => {
+  //       return res.response.docs;
+  //     }));
+  // }
 
   getTitul(id: string): Observable<Titul> {
     const url = '/api/search/titul/select';
@@ -209,23 +211,23 @@ export class AppService {
   }
 
 
-  getTitul_(id: string): Observable<Titul> {
-    const url = '/api/search/issue/select';
-    let params: HttpParams = new HttpParams();
-
-    params = params.set('q', '*').set('rows', '1').set('fq', 'id_titul:"' + id + '"');
-
-    return this.http.get<Titul>(url, { params }).pipe(
-      tap((res: any) => {
-        const t = new Titul();
-        t.id = id;
-        if (res.response.numFound > 0) {
-          t.meta_nazev = res.response.docs[0].nazev;
-        }
-        return t;
-
-      }));
-  }
+  // getTitul_(id: string): Observable<Titul> {
+  //   const url = '/api/search/issue/select';
+  //   let params: HttpParams = new HttpParams();
+  //
+  //   params = params.set('q', '*').set('rows', '1').set('fq', 'id_titul:"' + id + '"');
+  //
+  //   return this.http.get<Titul>(url, { params }).pipe(
+  //     tap((res: any) => {
+  //       const t = new Titul();
+  //       t.id = id;
+  //       if (res.response.numFound > 0) {
+  //         t.meta_nazev = res.response.docs[0].nazev;
+  //       }
+  //       return t;
+  //
+  //     }));
+  // }
 
 
   getTituly(): Observable<any> {
@@ -413,14 +415,14 @@ export class AppService {
     return this.http.post(url, body, { params });
   }
 
-  saveIssues(vol: Volume, issues: Issue[]): Observable<any> {
-    const body = { svazek: vol, issues };
-    const url = 'index';
-    const params: HttpParams = new HttpParams()
-      .set('action', 'SAVE_ISSUES');
-
-    return this.http.post(url, body, { params });
-  }
+  // saveIssues(vol: Volume, issues: Issue[]): Observable<any> {
+  //   const body = { svazek: vol, issues };
+  //   const url = 'index';
+  //   const params: HttpParams = new HttpParams()
+  //     .set('action', 'SAVE_ISSUES');
+  //
+  //   return this.http.post(url, body, { params });
+  // }
 
   saveIssue(issue: Issue): Observable<any> {
     const isValid = this.isIssueValid(issue);
@@ -479,17 +481,17 @@ export class AppService {
     return this.http.get(url, { params });
   }
 
-  addVdkEx(issue: Issue, urlvdk: string, options: any) {
-
-    const url = 'index';
-    const params: HttpParams = new HttpParams()
-      .set('action', 'ADD_VDK_SET')
-      .set('issue', JSON.stringify(issue))
-      .set('options', JSON.stringify(options))
-      .set('url', urlvdk);
-
-    return this.http.get(url, { params });
-  }
+  // addVdkEx(issue: Issue, urlvdk: string, options: any) {
+  //
+  //   const url = 'index';
+  //   const params: HttpParams = new HttpParams()
+  //     .set('action', 'ADD_VDK_SET')
+  //     .set('issue', JSON.stringify(issue))
+  //     .set('options', JSON.stringify(options))
+  //     .set('url', urlvdk);
+  //
+  //   return this.http.get(url, { params });
+  // }
 
   prepareVdkEx(issue: Issue, urlvdk: string, options: any): Observable<any> {
 
@@ -572,18 +574,18 @@ export class AppService {
     return this.http.get(url, { params });
   }
 
-  getExemplarsByCarKodVlastnik(carKodVlastnik: string): Observable<any> {
-    const url = '/api/search/exemplar/select';
-    const params: HttpParams = new HttpParams()
-      .set('q', '*')
-      .set('wt', 'json')
-      .set('fl', '*,pages:[json]')
-      .set('sort', 'datum_vydani_den asc, vydani desc')
-      .set('stats', 'true')
-      .set('stats.field', 'datum_vydani_den')
-      .set('fq', 'carovy_kod_vlastnik:"' + carKodVlastnik + '"');
-    return this.http.get(url, { params });
-  }
+  // getExemplarsByCarKodVlastnik(carKodVlastnik: string): Observable<any> {
+  //   const url = '/api/search/exemplar/select';
+  //   const params: HttpParams = new HttpParams()
+  //     .set('q', '*')
+  //     .set('wt', 'json')
+  //     .set('fl', '*,pages:[json]')
+  //     .set('sort', 'datum_vydani_den asc, vydani desc')
+  //     .set('stats', 'true')
+  //     .set('stats.field', 'datum_vydani_den')
+  //     .set('fq', 'carovy_kod_vlastnik:"' + carKodVlastnik + '"');
+  //   return this.http.get(url, { params });
+  // }
 
   getTitulTotals(id: string) {
     const url = '/api/search/exemplar/select';
@@ -646,22 +648,7 @@ export class AppService {
 
     // facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
 
-    // sorry for this code...
-    // let searchForNotVerified = false;
-    // this.state.filters.forEach((f: Filter) => {
-    //   if (f.field === 'stav' && f.value === 'notVerified') {
-    //     searchForNotVerified = true;
-    //   }
-    // });
 
-    // if (searchForNotVerified) {
-    //   params = params.append('fq',  '*:* NOT stav:OK');
-    //   this.state.filters.forEach((f: Filter) => {
-    //     if (f.field !== 'stav') {
-    //       params = params.append('fq', f.field + ':"' + f.value + '"');
-    //     }
-    //   });
-    // } else {
     this.state.filters.forEach((f: Filter) => {
       if (f.value === 'notVerified'){
         params = params.append('fq',  '!stav:"OK"');
@@ -711,10 +698,22 @@ export class AppService {
     return this.http.get(url, { params });
   }
 
+  // searchCalendar(month: string) {  //probably bad endpoint because of data migration
+  //   const url = '/api/search/issue/permonik';
+  //   let params = this.doSearchParams();
+  //   params = params.append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
+  //   return this.http.get(url, { params });
+  // }
+
   searchCalendar(month: string) {
-    const url = '/api/search/issue/permonik';
-    let params = this.doSearchParams();
-    params = params.append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
+    const url = '/api/search/exemplar/select';
+    let params = this.doSearchParams()
+    .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']')
+    .append('fq', 'numExists:"true"')
+    // .append('group', 'true')
+    // .append('group.field', 'id_issue')
+    // .append('group.limit', '1')
+    // .append('group.ngroups', 'true')
     return this.http.get(url, { params });
   }
 

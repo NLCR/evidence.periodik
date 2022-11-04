@@ -49,7 +49,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     }
 
     setTitul() {
-        this.router.navigate(['/id', this.state.currentTitul]);
+        return this.router.navigate(['/id', this.state.currentTitul]);
     }
 
 }
