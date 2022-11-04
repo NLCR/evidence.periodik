@@ -257,7 +257,7 @@ export class AppService {
   }
 
   getVolumeFacets(id_titul: string): Observable<any> {
-    const url = '/api/search/issue/select';
+    const url = '/api/search/exemplar/select';
     const params: HttpParams = new HttpParams()
       .set('q', 'id_titul:"' + id_titul + '"')
       .set('facet', 'true')
