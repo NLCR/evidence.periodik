@@ -23,6 +23,8 @@ export class FacetComponent {
 
 
   addFilter(field: string, value: string) {
+    if(this.state.loadingData) return;
+
     const idx = this.isUsed(field, value);
     if (idx > -1) {
       this.state.removeFilter(idx);

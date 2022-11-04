@@ -226,6 +226,7 @@ export class IssueComponent implements OnInit, OnDestroy {
   }
 
   addPub() {
+    if(!this.state.logged) return
     /*  this.modalService.open(AddVydaniDialogComponent,
        { 'issue': this.state.currentIssue, 'state': this.state, 'service': this.service }
      ); */
@@ -238,6 +239,7 @@ export class IssueComponent implements OnInit, OnDestroy {
 
 
   editPages() {
+    if(!this.state.logged) return
 
     const dialogRef = this.dialog.open(EditPagesComponent, {
       width: '250px',

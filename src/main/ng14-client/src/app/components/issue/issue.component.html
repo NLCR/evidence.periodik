@@ -4,7 +4,7 @@
   <div fxFlex>
     <mat-form-field *ngIf="state.isNewIssue">
       <mat-label>{{ 'record.meta_title' | translate }}</mat-label>
-      <mat-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (selectionChange)="setTitul()">
+      <mat-select [id]="'titul'" [name]="'titul'" [(ngModel)]="titul_idx" (selectionChange)="setTitul()" [disabled]=!state.logged>
         <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx">
           {{ tit.meta_nazev }}
         </mat-option>
@@ -17,50 +17,50 @@
     <mat-form-field *ngIf="state.isNewIssue">
       <input matInput [matDatepicker]="picker" [placeholder]="'desc.choose_date' | translate"
        [(ngModel)]="state.currentIssue.datum_vydani"
-        id="datum_vydani" name="datum_vydani">
+        id="datum_vydani" name="datum_vydani" [disabled]=!state.logged>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
 
     <mat-form-field>
-      <input matInput [placeholder]="'record.name_title_page' | translate" id="nazev" name="nazev" [(ngModel)]="state.currentIssue.nazev">
+      <input matInput [placeholder]="'record.name_title_page' | translate" id="nazev" name="nazev" [(ngModel)]="state.currentIssue.nazev" [disabled]=!state.logged>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput [placeholder]="'record.subname_title_page' | translate" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev">
+      <input matInput [placeholder]="'record.subname_title_page' | translate" id="podnazev" name="podnazev" [(ngModel)]="state.currentIssue.podnazev" [disabled]=!state.logged>
     </mat-form-field>
 
     <div fxLayout="row" fxLayoutGap="16px">
       <mat-form-field *ngIf="!changingLang" fxFlex="45%">
         <mat-label>{{ 'record.publication.placeholder' | translate }}</mat-label>
-        <mat-select id="vydani" name="vydani" [(ngModel)]="state.currentIssue.vydani">
+        <mat-select id="vydani" name="vydani" [(ngModel)]="state.currentIssue.vydani" [disabled]=!state.logged>
           <mat-option *ngFor="let v of state.vydani" [value]="v">
             {{ 'record.publication.' + v | translate }}
           </mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field fxFlex="45%">
-        <input matInput [placeholder]="'record.znak_oznaceni_vydani' | translate" id="znak_oznaceni_vydani" name="znak_oznaceni_vydani" [(ngModel)]="state.currentIssue.znak_oznaceni_vydani">
+        <input matInput [placeholder]="'record.znak_oznaceni_vydani' | translate" id="znak_oznaceni_vydani" name="znak_oznaceni_vydani" [(ngModel)]="state.currentIssue.znak_oznaceni_vydani" [disabled]=!state.logged>
       </mat-form-field>
       <div fxFlex="10%">
-        <button mat-mini-fab color="primary" [matTooltip]="'desc.duplicate_print_in_new_edition' | translate" matTooltipPosition="above" (click)="addPub()" class="mat-elevation-z0">
+        <button mat-mini-fab color="primary" [matTooltip]="'desc.duplicate_print_in_new_edition' | translate" matTooltipPosition="above" (click)="addPub()" class="mat-elevation-z0" [class]="!state.logged ? 'not_logged' : ''">
           <mat-icon>{{ config.icons.library_add }}</mat-icon>
         </button>
       </div>
     </div>
 
     <mat-form-field>
-      <input matInput [placeholder]="'record.time_publication' | translate" id="cas_vydani" name="cas_vydani" [(ngModel)]="state.currentIssue.cas_vydani">
+      <input matInput [placeholder]="'record.time_publication' | translate" id="cas_vydani" name="cas_vydani" [(ngModel)]="state.currentIssue.cas_vydani" [disabled]=!state.logged>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput [placeholder]="'record.mutation' | translate | translate" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace">
+      <input matInput [placeholder]="'record.mutation' | translate | translate" id="mutace" name="mutace" [(ngModel)]="state.currentIssue.mutace" [disabled]=!state.logged>
     </mat-form-field>
 
     <mat-form-field *ngIf="!changingLang">
       <mat-label>{{ 'record.periodicita.placeholder' | translate }}</mat-label>
-      <mat-select id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita">
+      <mat-select id="periodicita" name="periodicita" [(ngModel)]="state.currentIssue.periodicita" [disabled]=!state.logged>
         <mat-option *ngFor="let v of state.periods" [value]="v">
           {{'record.periodicita.' + v | translate }}
         </mat-option>
@@ -70,22 +70,22 @@
 
   <div fxFlex>
     <mat-form-field>
-      <input matInput [placeholder]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" (change)="checkPagesChanged()" [(ngModel)]="state.currentIssue.pocet_stran">
-      <mat-icon class="app-cursor-pointer" matSuffix (click)="editPages()" [matTooltip]="'desc.edit_pages' | translate" matTooltipPosition="above">{{ config.icons.pencil }}</mat-icon>
+      <input matInput [placeholder]="'record.pages_count' | translate" id="pocet_stran" name="pocet_stran" (change)="checkPagesChanged()" [(ngModel)]="state.currentIssue.pocet_stran" [disabled]=!state.logged>
+      <mat-icon class="app-cursor-pointer" [class]="!state.logged ? 'not_logged' : ''" matSuffix (click)="editPages()" [matTooltip]="'desc.edit_pages' | translate" matTooltipPosition="above">{{ config.icons.pencil }}</mat-icon>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput [placeholder]="'record.volume' | translate" id="rocnik" name="rocnik" [(ngModel)]="state.currentIssue.rocnik" min="1" step="1" type="number">
+      <input matInput [placeholder]="'record.volume' | translate" id="rocnik" name="rocnik" [(ngModel)]="state.currentIssue.rocnik" min="1" step="1" type="number" [disabled]=!state.logged>
       <span class="validity"></span>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput [placeholder]="'record.number' | translate" id="cislo" name="cislo" [(ngModel)]="state.currentIssue.cislo" min="1" step="1" type="number" pattern="[0-9]+">
+      <input matInput [placeholder]="'record.number' | translate" id="cislo" name="cislo" [(ngModel)]="state.currentIssue.cislo" min="1" step="1" type="number" pattern="[0-9]+" [disabled]=!state.logged>
       <span class="validity"></span>
     </mat-form-field>
 
     <mat-form-field>
-      <input matInput [placeholder]="'record.second_number' | translate" id="druhe_cislo" name="druhe_cislo" [(ngModel)]="state.currentIssue.druhe_cislo" pattern="[0-9]+">
+      <input matInput [placeholder]="'record.second_number' | translate" id="druhe_cislo" name="druhe_cislo" [(ngModel)]="state.currentIssue.druhe_cislo" pattern="[0-9]+" [disabled]=!state.logged>
       <span class="validity"></span>
     </mat-form-field>
 <!--
@@ -131,7 +131,7 @@
         </mat-expansion-panel-header>
 
         <mat-form-field *ngIf="!changingLang">
-          <mat-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav" multiple>
+          <mat-select [id]="'stav'+idx" [name]="'stav'+idx" [(ngModel)]="ex.stav" multiple [disabled]=!state.logged>
             <mat-label>{{ 'Stav' | translate }}</mat-label>
             <mat-option *ngFor="let stav of state.stavy" [value]="stav">
               {{ 'record.StavIssue.' + stav | translate }}
@@ -140,11 +140,11 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput [placeholder]="'record.state_com' | translate | translate" [id]="'stav_popis'+idx" [name]="'stav_popis'+idx" [(ngModel)]="ex.stav_popis">
+          <input matInput [placeholder]="'record.state_com' | translate | translate" [id]="'stav_popis'+idx" [name]="'stav_popis'+idx" [(ngModel)]="ex.stav_popis" [disabled]=!state.logged>
         </mat-form-field>
 
         <mat-form-field *ngIf="!changingLang">
-          <mat-select [id]="'owner'" [name]="'owner'" [(ngModel)]="ex.vlastnik">
+          <mat-select [id]="'owner'" [name]="'owner'" [(ngModel)]="ex.vlastnik" [disabled]=!state.logged>
             <mat-label>{{ 'record.ownership' | translate }}</mat-label>
             <mat-option *ngFor="let owner of state.owners" [value]="owner.name">
               {{ owner.name }}
@@ -153,19 +153,19 @@
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput [placeholder]="'record.barcode' | translate" [id]="'carovy_kod'+idx" [name]="'carovy_kod'+idx" [(ngModel)]="ex.carovy_kod">
+          <input matInput [placeholder]="'record.barcode' | translate" [id]="'carovy_kod'+idx" [name]="'carovy_kod'+idx" [(ngModel)]="ex.carovy_kod" [disabled]=!state.logged>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput [placeholder]="'record.signatura' | translate" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura">
+          <input matInput [placeholder]="'record.signatura' | translate" [id]="'signatura'+idx" [name]="'signatura'+idx" [(ngModel)]="ex.signatura" [disabled]=!state.logged>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput [placeholder]="'record.oznaceni' | translate" [id]="'oznaceni'+idx" [name]="'oznaceni'+idx" [(ngModel)]="ex.oznaceni" #box (keyup)="filterOznaceni(box.value, ex)">
+          <input matInput [placeholder]="'record.oznaceni' | translate" [id]="'oznaceni'+idx" [name]="'oznaceni'+idx" [(ngModel)]="ex.oznaceni" #box (keyup)="filterOznaceni(box.value, ex)" [disabled]=!state.logged>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput [placeholder]="'record.popis_oznaceni_vydani' | translate" [id]="'popis_oznaceni_vydani'+idx" [name]="'popis_oznaceni_vydani'+idx" [(ngModel)]="ex.popis_oznaceni_vydani">
+          <input matInput [placeholder]="'record.popis_oznaceni_vydani' | translate" [id]="'popis_oznaceni_vydani'+idx" [name]="'popis_oznaceni_vydani'+idx" [(ngModel)]="ex.popis_oznaceni_vydani" [disabled]=!state.logged>
         </mat-form-field>
 
         <div *ngIf="showPages(ex)">
@@ -184,7 +184,7 @@
           </div>
         </div>
 
-        <button mat-flat-button color="primary" (click)="removeExemplar(idx)">{{ 'button.delete_specimen' | translate }}</button>
+        <button mat-flat-button color="primary" (click)="removeExemplar(idx)" [disabled]=!state.logged>{{ 'button.delete_specimen' | translate }}</button>
       </mat-expansion-panel>
     </mat-accordion>
   </div>

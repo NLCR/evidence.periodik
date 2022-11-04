@@ -18,7 +18,8 @@
               id="start_date" name="start_year"
               size="4"
               type="number"
-              (keyup.enter)="state.addDateFilter()">
+              (keyup.enter)="state.addDateFilter()"
+              [disabled]="this.state.loadingData">
           </mat-form-field>
         </div>
         <div fxFlex="40%">
@@ -29,12 +30,16 @@
               id="end_date" name="end_year"
               type="number"
               size="4"
-              (keyup.enter)="state.addDateFilter()">
+              (keyup.enter)="state.addDateFilter()"
+              [disabled]="this.state.loadingData">
           </mat-form-field>
         </div>
         <div fxFlex="20%" class="app-fx-end">
           <div fxFlex>
-            <a *ngIf="!state.filterByDate" (click)="state.addDateFilter()" [matTooltip]="'facet.tooltip.use_this_filter' | translate">
+            <a *ngIf="!state.filterByDate"
+               (click)="state.addDateFilter()"
+               [matTooltip]="'facet.tooltip.use_this_filter' | translate"
+               [class]="state.loadingData ? 'loadingData' : ''">
               <mat-icon>{{ config.icons.send }}</mat-icon>
             </a>
           </div>
@@ -57,12 +62,16 @@
                    [(ngModel)]="state.volume_id_for_search"
                    id="volume_id_for_search" name="volume_id_for_search"
                    type="string"
-                   (keyup.enter)="state.addVolumeFilter()">
+                   (keyup.enter)="state.addVolumeFilter()"
+                   [disabled]="this.state.loadingData">
           </mat-form-field>
         </div>
         <div class="app-fx-end">
           <div fxFlex>
-            <a *ngIf="!state.filterByVolume" (click)="state.addVolumeFilter()" [matTooltip]="'facet.tooltip.use_this_filter' | translate">
+            <a *ngIf="!state.filterByVolume"
+               (click)="state.addVolumeFilter()"
+               [matTooltip]="'facet.tooltip.use_this_filter' | translate"
+               [class]="state.loadingData ? 'loadingData' : ''">
               <mat-icon>{{ config.icons.send }}</mat-icon>
             </a>
           </div>
@@ -79,18 +88,21 @@
         </mat-expansion-panel-header>
 
         <mat-list role="list">
-          <mat-list-item class="facet-item-list" *ngFor="let item of state.searchResults['facet_counts']['facet_fields'][facet]" (click)="addFilter(facet, item.name)">
+          <mat-list-item class="facet-item-list"
+                         *ngFor="let item of state.searchResults['facet_counts']['facet_fields'][facet]"
+                         (click)="addFilter(facet, item.name)"
+                         [class]="state.loadingData ? 'loadingData' : ''">
             <!-- <mat-icon *ngIf="isUsed(facet, item.name) > -1">check_circle</mat-icon> -->
             <ng-container [ngSwitch]="facet">
-              <a *ngSwitchCase="'stav'">{{'record.StavIssue.' + item.name | translate}}</a>
-              <a *ngSwitchCase="'vydani'" >{{'record.publication.' + item.name | translate}}
+              <a *ngSwitchCase="'stav'" [class]="state.loadingData ? 'loadingData' : ''">{{'record.StavIssue.' + item.name | translate}}</a>
+              <a *ngSwitchCase="'vydani'" [class]="state.loadingData ? 'loadingData' : ''">{{'record.publication.' + item.name | translate}}
                 <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container>
               </a>
-              <a *ngSwitchDefault>{{ item.name === "N" ? "Nečitelné" : item.name }}
+              <a *ngSwitchDefault [class]="state.loadingData ? 'loadingData' : ''">{{ item.name === "N" ? "Nečitelné" : item.name }}
                 <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container>
               </a>
             </ng-container>
-            <a>
+            <a [class]="state.loadingData ? 'loadingData' : ''">
               ({{item.value}})
             </a>
           </mat-list-item>

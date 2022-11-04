@@ -27,7 +27,7 @@
       <mat-icon>close</mat-icon>
     </a>
     {{ 'facet.date' | translate }}:&#160;
-    <span class="app-font-bold">{{ start_year }}</span>&#160;-&#160;<span class="app-font-bold">{{ end_year }}</span>
+    <span class="app-font-bold">{{ start_year || this.state.start_year }}</span>&#160;-&#160;<span class="app-font-bold">{{ end_year || this.state.end_year }}</span>
   </mat-list-item>
 
   <mat-list-item role="listitem"  *ngIf="state.filterByVolume">

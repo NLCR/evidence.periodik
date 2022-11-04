@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppService } from '../../app.service';
 import { AppState } from '../../app.state';
-import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ReplaySubject, Subject, switchMap, takeUntil } from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-result',
@@ -11,7 +12,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ResultComponent implements OnInit, OnDestroy {
 
-  subscriptions: Subscription[] = [];
+  private exemplarsRequests = []
+  private idTitul = null
+  private exemplarsLookup$: Subject<void> = new Subject();
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  private searchChangedSub
+  private titulSub
 
   constructor(
     private router: Router,
@@ -20,29 +26,45 @@ export class ResultComponent implements OnInit, OnDestroy {
     public state: AppState) { }
 
   ngOnInit() {
-    this.loadResultItems();
-    this.subscriptions.push(this.state.searchParamsChanged.subscribe(cfg => {
-      this.loadResultItems();
-    }));
+    this.state.searchResults = null
+    this.idTitul = this.route.snapshot.paramMap.get('id')
+    if (!this.idTitul) return this.router.navigate(['/home'])
+
+    this.loadTitulInfo()
+
+    this.searchChangedSub = this.state.searchParamsChanged.subscribe(() => {
+      this.loadTitulInfo()
+      this.exemplarsLookup$.next()
+    });
+
+    this.exemplarsLookup$
+      .pipe(
+        map(() => this.exemplarsRequests = []),
+        switchMap(() => {
+          this.state.loadingData = true
+          this.exemplarsRequests.push(this.idTitul);
+          return this.service.searchIssuesOfTitul(this.idTitul)
+        }),
+        takeUntil(this.destroyed$)
+      ).subscribe(res => {
+      this.state.setSearchResults(res);
+      this.exemplarsRequests.shift()
+      this.state.loadingData = false
+    })
+    this.exemplarsLookup$.next()
+
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(s => {
-      s.unsubscribe();
-    });
-    this.subscriptions = [];
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+    if(this.searchChangedSub) this.searchChangedSub.unsubscribe()
+    if(this.titulSub) this.titulSub.unsubscribe()
   }
 
-  loadResultItems() {
-    const idTitul = this.route.snapshot.paramMap.get('id');
-    if (!idTitul) {
-      this.router.navigate(['/home']);
-    }
-    this.service.searchIssuesOfTitul(idTitul).subscribe(res => {
-      this.state.setSearchResults(res);
-    });
-    this.service.getTitul(idTitul).subscribe(t => {
-      this.state.currentTitul = t;
+  loadTitulInfo(){
+    this.titulSub = this.service.getTitul(this.idTitul).subscribe(t => {
+      this.state.currentTitul = t
     });
   }
 
