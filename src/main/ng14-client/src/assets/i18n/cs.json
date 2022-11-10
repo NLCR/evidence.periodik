@@ -335,6 +335,7 @@
     "error_deleting_volume": "Chyba při smazání svazku",
     "renumbered_correctly": "Přečíslováno",
     "selected_all": "Vše vybráno",
-    "unselected_all": "Vše smazáno"
+    "unselected_all": "Vše smazáno",
+    "barcode_has_text": "Pozor, čárový kód obsahuje text"
   }
 }

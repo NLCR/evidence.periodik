@@ -410,10 +410,15 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // carovy_kod je povinny, jelikoz pouzivame jako id svazku
     const barCode = this.state.currentVolume.carovy_kod;
     const reg = new RegExp('^[0-9]*$');
-    if (!barCode || barCode.trim() === '' || !reg.test(barCode)) {
+    if (!barCode || barCode.trim() === '') {
       this.setLastNumber();
       this.service.showSnackBar('snackbar.barcode_is_required', '', true);
       return;
+    }
+
+    //only informative popup
+    if(!reg.test(barCode)){
+      this.service.showSnackBar('snackbar.barcode_has_text');
     }
 
     if (!this.state.currentVolume.datum_od) {

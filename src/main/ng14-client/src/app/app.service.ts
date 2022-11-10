@@ -106,14 +106,13 @@ export class AppService {
   // }
 
   volumeOverview(carovy_kod: string, idTitul: string): Observable<any> {
-    let params: HttpParams = new HttpParams();
-
-    params = new HttpParams()
+    const params: HttpParams = new HttpParams()
       .set('q', '*')
-      .set('fq', 'id_titul:' + idTitul)
+      // .set('fq', 'id_titul:' + idTitul)
       .set('fq', 'carovy_kod:' + carovy_kod)
+      .append('fq', 'numExists:"true"')
       .set('wt', 'json')
-      .set('rows', '1000')
+      .set('rows', this.state.rows)
       .set('json.nl', 'arrntv')
       .set('fl', '*,pages:[json]')
       .set('sort', 'datum_vydani_den asc, vydani desc')
@@ -127,10 +126,9 @@ export class AppService {
       .set('facet.range.start', 'NOW/YEAR-200YEARS')
       .set('facet.range.end', 'NOW/YEAR')
       .set('facet.range.gap', '+1YEAR')
-
       .set('stats', 'true')
       .set('stats.field', 'cislo')
-      .append('stats.field', 'datum_vydani_den');
+      .append('stats.field', 'datum_vydani_den')
     const url = '/api/search/exemplar/select';
 
     // params.set('fl', 'start:datum_vydani,title:nazev,*')

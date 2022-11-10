@@ -334,6 +334,7 @@
     "error_deleting_volume": "Error deleting volume",
     "renumbered_correctly": "Renumbered",
     "selected_all": "Selected all",
-    "unselected_all": "Deleted all"
+    "unselected_all": "Deleted all",
+    "barcode_has_text": "Warning, barcode contains text"
   }
 }
