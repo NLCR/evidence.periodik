@@ -509,7 +509,7 @@
             <a *ngIf="element.numExists" (click)="state.logged && viewPozn(element, poznPopup, poznEl)">
               <mat-icon #poznEl
                 [matTooltip]="('desc.edit_note' | translate) + (element.poznamka !== '' ? (': &quot;' + element.poznamka) + '&quot;' : '')"
-                matTooltipPosition="above">{{ element.poznamka === '' ? config.icons.info_outline : config.icons.info }}
+                matTooltipPosition="before">{{ element.poznamka === '' ? config.icons.info_outline : config.icons.info }}
               </mat-icon>
             </a>
           </td>
