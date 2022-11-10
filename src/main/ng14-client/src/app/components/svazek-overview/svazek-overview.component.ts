@@ -32,6 +32,7 @@ export class SvazekOverviewComponent implements OnInit {
 
   prvniCislo: number;
   posledniCislo: number;
+  pageCount: number
 
   loading: boolean;
 
@@ -74,6 +75,7 @@ export class SvazekOverviewComponent implements OnInit {
       this.fyzStavOk = !(res.facet_counts.facet_fields.stav.findIndex(f => f.name !== 'OK') > -1);
       this.prvniCislo = res.stats.stats_fields.cislo.min;
       this.posledniCislo = res.stats.stats_fields.cislo.max;
+      this.pageCount = res.stats.stats_fields.pocet_stran.sum
       this.loadDates(res.response.docs);
       this.processExemplars(res.response.docs);
       this.loading = false;

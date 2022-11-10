@@ -98,7 +98,8 @@
     "date": "Date",
     "number": "Number",
     "renumber_down": "Renumber down",
-    "select_all": "Select all"
+    "select_all": "Select all",
+    "pages_count": "Pages count"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "TThis action is not allowed, you are not logged in."

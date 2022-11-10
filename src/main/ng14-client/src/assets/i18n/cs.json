@@ -98,7 +98,8 @@
     "date": "Datum",
     "number": "Číslo",
     "renumber_down": "Přečíslovat dolů",
-    "select_all": "Zatrhnout vše"
+    "select_all": "Zatrhnout vše",
+    "pages_count": "Počet stran"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."

@@ -129,6 +129,7 @@ export class AppService {
       .set('stats', 'true')
       .set('stats.field', 'cislo')
       .append('stats.field', 'datum_vydani_den')
+      .append('stats.field', 'pocet_stran')
     const url = '/api/search/exemplar/select';
 
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
