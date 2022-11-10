@@ -18,7 +18,7 @@ import {DatePipe} from '@angular/common';
 import {Utils} from 'src/app/utils';
 import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {Exemplar} from 'src/app/models/exemplar';
+import {Exemplar, ExemplarStates} from 'src/app/models/exemplar';
 import {AppConfiguration} from 'src/app/app-configuration';
 import {SvazekOverviewComponent} from '../svazek-overview/svazek-overview.component';
 import {FormControl} from '@angular/forms';
@@ -823,19 +823,19 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   }
 
-  updateStav(ex: Exemplar, specificUpdate = "") {
+  updateStav(ex: Exemplar, specificUpdate: ExemplarStates = "", flip = false) {
     ex.stav = [];
 
     if(ex.numExists){
       switch (specificUpdate){
-        case "OK":
+        case "complete":
           ex.complete = true
           break
-        case "Deg":
-          ex.degradated = true
+        case "degradated":
+          ex.degradated = flip ? !ex.degradated : true
           break
-        case "NS":
-          ex.necitelneSvazano = true
+        case "necitelneSvazano":
+          ex.necitelneSvazano = flip ? !ex.necitelneSvazano : true
           break
         default:
 
@@ -861,10 +861,23 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.closePop();
   }
 
-  setAllInColumn(type: string, autoSave = false){
-    this.exemplars.map(exemplar => {
-      this.updateStav(exemplar, type);
-    });
+  setAllInColumn(type: ExemplarStates, autoSave = false, flip = false){
+    if(!this.state.logged) return
+
+    const statesAlreadySelected = this.exemplars.filter(e => e[type] && e.numExists).length
+    if(statesAlreadySelected === this.exemplars.filter(e => e.numExists).length && type !== "complete"){
+      this.exemplars.map(exemplar => {
+        this.updateStav(exemplar, type, flip);
+        })
+      this.service.showSnackBar(statesAlreadySelected > 0 ? 'snackbar.unselected_all' : "snackbar.selected_all");
+    } else{
+      this.exemplars.map(exemplar => {
+        this.updateStav(exemplar, type, false);
+      })
+      if(type !== "complete") this.service.showSnackBar("snackbar.selected_all");
+    }
+
+
 
     if(autoSave){
       this.save()

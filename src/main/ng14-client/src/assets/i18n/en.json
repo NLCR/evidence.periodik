@@ -332,6 +332,8 @@
     "error_saving_current_volume": "Error saving current volume",
     "the_current_volume_was_saved_correctly": "The current volume was saved correctly",
     "error_deleting_volume": "Error deleting volume",
-    "renumbered_correctly": "Renumbered"
+    "renumbered_correctly": "Renumbered",
+    "selected_all": "Selected all",
+    "unselected_all": "Deleted all"
   }
 }

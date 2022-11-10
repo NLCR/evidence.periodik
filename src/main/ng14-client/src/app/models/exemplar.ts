@@ -61,3 +61,15 @@ export class Exemplar {
   odd: boolean;
 
 }
+
+export type ExemplarStates =
+  "complete" |
+  "destroyedPages" |
+  "degradated" |
+  "missingPages" |
+  "erroneousPaging" |
+  "erroneousDate" |
+  "erroneousNumbering" |
+  "wronglyBound" |
+  "necitelneSvazano" |
+  "censored" | ""

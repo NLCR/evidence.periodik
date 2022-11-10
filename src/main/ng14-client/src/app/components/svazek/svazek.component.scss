@@ -1,10 +1,12 @@
 .withSelectAllArrow{
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
+  text-align: center;
   .mat-icon{
     margin-right: 0;
     cursor: pointer;
   }
+}
+
+.not_logged{
+  filter: grayscale(1);
+  cursor: default !important;
 }

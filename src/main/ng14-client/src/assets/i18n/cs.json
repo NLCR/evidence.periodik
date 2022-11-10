@@ -333,6 +333,8 @@
     "error_saving_current_volume": "Chyba při ukládání aktuálního svazku",
     "the_current_volume_was_saved_correctly": "Aktuální svazek byl úspěšně uložen",
     "error_deleting_volume": "Chyba při smazání svazku",
-    "renumbered_correctly": "Přečíslováno"
+    "renumbered_correctly": "Přečíslováno",
+    "selected_all": "Vše vybráno",
+    "unselected_all": "Vše smazáno"
   }
 }
