@@ -97,7 +97,8 @@
 <!--              <mat-icon>{{ config.icons.delete_specimen }}</mat-icon>-->
 <!--            </a>-->
             <a [matTooltip]="formatStav(ex)" matTooltipPosition="above" (click)="viewClick(row, ex)">
-              <mat-icon [ngClass]="classByStav(ex)">{{ iconByStav(ex) }}</mat-icon>
+<!--              <mat-icon [ngClass]="classByStav(ex)">{{ iconByStav(ex) }}</mat-icon>-->
+              <span [ngClass]="classByStav(ex)"></span>
             </a>
           ]</ng-container>
         </span>

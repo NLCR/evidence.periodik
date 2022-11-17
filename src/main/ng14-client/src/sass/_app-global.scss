@@ -336,6 +336,14 @@ li.app-page-item label{
   &.app-icon-uncontrolled {color: $app-icon-color-uncontrolled !important}
 }
 
+span {
+  &.app-icon-missing-page {background-color: #ed1c24 !important}
+  &.app-icon-damaged-document {background-color: #ff7f27 !important}
+  &.app-icon-complete-degradation {background-color: #ff7f27 !important}
+  &.app-icon-complete {background-color: #22b14c !important}
+  &.app-icon-uncontrolled {background-color: white !important; border: 1px solid black}
+}
+
 // facet view class
 .app-fx-facet {
   background-color: $app-color-white;

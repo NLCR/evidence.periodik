@@ -166,18 +166,18 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   classByStav(ex: Exemplar): string {
     if (ex.stav) {
       if (ex.stav.length === 0) {
-        return 'app-icon-uncontrolled';
+        return 'exStav app-icon-uncontrolled';
       } else if (ex.stav.indexOf('OK') > -1) {
         if (ex.stav.length > 1) {
-          return 'app-icon-complete-degradation';
+          return 'exStav app-icon-complete-degradation';
         } else {
-          return 'app-icon-complete';
+          return 'exStav app-icon-complete';
         }
       } else {
-        return 'app-icon-damaged-document';
+        return 'exStav app-icon-damaged-document';
       }
     } else {
-      return 'app-icon-uncontrolled';
+      return 'exStav app-icon-uncontrolled';
     }
   }
 
