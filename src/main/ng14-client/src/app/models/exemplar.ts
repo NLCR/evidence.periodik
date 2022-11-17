@@ -59,6 +59,7 @@ export class Exemplar {
   necitelneSvazano: boolean;
   censored: boolean;
   odd: boolean;
+  isPriloha: boolean
 
 }
 

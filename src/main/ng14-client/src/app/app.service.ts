@@ -108,8 +108,8 @@ export class AppService {
   volumeOverview(carovy_kod: string, idTitul: string): Observable<any> {
     const params: HttpParams = new HttpParams()
       .set('q', '*')
-      // .set('fq', 'id_titul:' + idTitul)
-      .set('fq', 'carovy_kod:' + carovy_kod)
+      .set('fq', 'id_titul:' + idTitul)
+      .append('fq', 'carovy_kod:' + carovy_kod)
       .append('fq', 'numExists:"true"')
       .set('wt', 'json')
       .set('rows', this.state.rows)
@@ -553,6 +553,19 @@ export class AppService {
       .set('wt', 'json')
       .set('fl', '*,periodicita:[json]')
       .set('fq', 'id:"' + id + '"');
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        return res.response.docs;
+      }));
+  }
+
+  getPeriodicals(id: string): Observable<any[]> {
+    const url = '/api/search/svazek/select';
+    const params: HttpParams = new HttpParams()
+      .set('q', '*')
+      .set('wt', 'json')
+      .set('fl', 'periodicita:[json]')
+      .set('fq', 'id:"' + id + '"')
     return this.http.get(url, { params }).pipe(
       map((res: any) => {
         return res.response.docs;

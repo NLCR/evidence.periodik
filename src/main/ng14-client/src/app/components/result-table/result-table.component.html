@@ -86,7 +86,7 @@
       <td mat-cell *matCellDef="let row; let idx = index;" [class.app-col-collapsed]="vl.collapsed">
         <span *ngFor="let ex of row.exemplare; let idxex = index;">
           <ng-container *ngIf="ex.vlastnik === vl.name">[
-            <a (click)="showSvazekOverview(ex.carovy_kod)" style="display: inline-block;">{{ ex['carovy_kod'] }}</a>
+            <a (click)="showSvazekOverview(ex.carovy_kod, ex.id_titul)" style="display: inline-block;">{{ ex['carovy_kod'] }}</a>
             <a [matTooltip]="'desc.edit_volume' | translate" matTooltipPosition="above" (click)="viewSvazek(ex['carovy_kod'])">
               <mat-icon>{{ config.icons.edit_volume }}</mat-icon>
             </a>

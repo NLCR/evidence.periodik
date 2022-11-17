@@ -334,11 +334,12 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     vl.collapsed = !vl.collapsed;
   }
 
-  showSvazekOverview(carKod: string) {
-    const dialogRef = this.dialog.open(SvazekOverviewComponent, {
+  showSvazekOverview(carKod: string, idTitul: string) {
+    this.dialog.open(SvazekOverviewComponent, {
       width: '650px',
       data: {
-        carKod
+        carKod,
+        idTitul
       }
     });
   }

@@ -95,7 +95,7 @@ export class AppState {
 
   public filterByDate: boolean;
   public filterByVolume: boolean;
-  logginChanged: boolean;
+  loginChanged: boolean;
 
   setConfig(config: AppConfiguration) {
 

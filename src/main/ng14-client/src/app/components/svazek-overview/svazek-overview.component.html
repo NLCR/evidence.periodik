@@ -3,7 +3,7 @@
 </h1>
 <div mat-dialog-content class="app-svazek-overview">
   <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
-  <ng-container *ngIf="volume">
+  <ng-container *ngIf="volume && !loading">
   <div *ngIf="volume.titul">
     <strong>{{ 'record.titul' | translate }}:</strong> {{ volume.titul.meta_nazev }}
   </div>
@@ -65,13 +65,13 @@
       <div fxFlex="100px">{{f.value}}x</div>
     </div>
   </div>
-<!--  <div>-->
-<!--    <strong>{{ 'Chybějící čísla' | translate}}:</strong>-->
-<!--    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of chybejsicisla">-->
-<!--      <div fxFlex="200px">{{ f.datum | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>-->
-<!--      <div fxFlex="100px">{{f.cislo}}</div>-->
-<!--    </div>-->
-<!--  </div>-->
+  <div>
+    <strong>{{ 'Chybějící čísla' | translate}}:</strong>
+    <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of missingNumbers">
+      <div fxFlex="100px">{{ f.date | date : 'dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>
+      <div fxFlex="100px">{{ "days." + f.day | translate}}</div>
+    </div>
+  </div>
   <div>
     <strong>{{ 'Fyzický stav' | translate }}:</strong> {{fyzStavOk ? 'Vyhovujici' : 'Poskozeny' | translate}} <!--  -->
   </div>
@@ -87,7 +87,7 @@
     <strong>{{ 'Poznamky' | translate}}:</strong>
     <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of poznamky">
       <div fxFlex="100px">{{ f.datum | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>
-      <div fxFlex="100px">{{f.cislo}}</div>
+      <div fxFlex="50px">{{f.cislo}}</div>
       <div fxFlex="100px">{{ f.note }}</div>
     </div>
   </div>
