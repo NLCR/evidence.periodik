@@ -545,7 +545,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
     const request = {
       id_svazek: this.state.currentVolume.carovy_kod,
-      exemplars: this.exemplars.map((exemplar) => {
+      exemplars: this.exemplars.filter(e => !!e?.id).map((exemplar) => {
           return exemplar.id;
         })
     };
@@ -978,7 +978,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   fillNazev(element) {
-    console.log(element);
+    // console.log(element);
     if (!element.nazev || element.nazev === '') {
       element.nazev = this.state.currentVolume.titul.meta_nazev;
     }
