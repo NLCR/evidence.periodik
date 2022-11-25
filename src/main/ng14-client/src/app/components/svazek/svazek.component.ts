@@ -1,4 +1,11 @@
-import {Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import {AppState} from 'src/app/app.state';
 import {AddTitulDialogComponent} from 'src/app/components/add-titul-dialog/add-titul-dialog.component';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
@@ -23,6 +30,7 @@ import {AppConfiguration} from 'src/app/app-configuration';
 import {SvazekOverviewComponent} from '../svazek-overview/svazek-overview.component';
 import {FormControl} from '@angular/forms';
 import moment from 'moment'
+import { SplitComponent, SplitAreaDirective } from 'angular-split'
 
 @Component({
   selector: 'app-svazek',
@@ -35,6 +43,16 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild('pickerOd', { read: undefined }) pickerOd: MatDatepicker<Date>;
+  @ViewChild('split') split: SplitComponent
+  @ViewChild('area1') area1: SplitAreaDirective
+  @ViewChild('area2') area2: SplitAreaDirective
+
+  sizes = {
+    percent: {
+      area1: 30,
+      area2: 70,
+    }
+  }
 
   dsExemplars: MatTableDataSource<Exemplar>;
   issueColumns = [
@@ -159,6 +177,11 @@ export class SvazekComponent implements OnInit, OnDestroy {
       this.langChanged();
     }));
     // console.log('Inited');
+  }
+
+  dragEnd({ sizes }) {
+    this.sizes.percent.area1 = sizes[0]
+    this.sizes.percent.area2 = sizes[1]
   }
 
   read() {

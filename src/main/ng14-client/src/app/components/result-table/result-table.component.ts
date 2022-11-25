@@ -165,16 +165,17 @@ export class ResultTableComponent implements OnInit, OnDestroy {
 
   classByStav(ex: Exemplar): string {
     if (ex.stav) {
+      if(ex.stav.includes("ChS")){
+        return "exStav app-icon-missing-page"
+      }
+      if(ex.stav.some(es => this.state.stavy.filter(s => s !== "OK").includes(es))){
+        return 'exStav app-icon-damaged-document';
+      }
+      if(ex.stav.includes("OK")){
+        return 'exStav app-icon-complete';
+      }
       if (ex.stav.length === 0) {
         return 'exStav app-icon-uncontrolled';
-      } else if (ex.stav.indexOf('OK') > -1) {
-        if (ex.stav.length > 1) {
-          return 'exStav app-icon-complete-degradation';
-        } else {
-          return 'exStav app-icon-complete';
-        }
-      } else {
-        return 'exStav app-icon-damaged-document';
       }
     } else {
       return 'exStav app-icon-uncontrolled';
