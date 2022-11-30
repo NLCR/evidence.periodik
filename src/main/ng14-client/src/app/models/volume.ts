@@ -1,7 +1,7 @@
 import {Titul} from 'src/app/models/titul';
 import { PeriodicitaSvazku } from 'src/app/models/periodicita-svazku';
-import { WeekDay } from '@angular/common';
-import { Issue } from './issue';
+// import { WeekDay } from '@angular/common';
+// import { Issue } from './issue';
 
 export class Volume {
   id: string = '';
@@ -18,6 +18,7 @@ export class Volume {
   poznamka: string = '';
   datum_od: string;
   datum_do: string;
+  show_attachments_at_the_end: boolean
 
   constructor(datum_od: string, datum_do: string) {
     this.datum_od = datum_od;

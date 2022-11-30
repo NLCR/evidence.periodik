@@ -61,6 +61,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     'numExists',
     'addNextEdition',
     'cislo',
+    "cislo_prilohy",
     'mutace',
     'vydani',
     'nazev',
@@ -202,15 +203,15 @@ export class SvazekComponent implements OnInit, OnDestroy {
         this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
         const dateRange = 'datum_vydani:[' + res[0].datum_od + ' TO ' + res[0].datum_do + ']';
         this.findTitul();
-        this.getExemplars(id, dateRange, false);
+        this.getExemplars(id, dateRange, false, this.state.currentVolume.show_attachments_at_the_end);
       } else {
-        this.getExemplars(id, '*', true);
+        this.getExemplars(id, '*', true, false);
         this.vlastnik_idx = -1;
       }
     });
   }
 
-  getExemplars(id: string, dateRange: string, setVolume: boolean) {
+  getExemplars(id: string, dateRange: string, setVolume: boolean, sortAttachments) {
     this.service.getExemplarsByCarKod(id, dateRange).subscribe(res2 => {
       if (res2.response.numFound > 0) {
         const ex: Exemplar = res2.response.docs[0] as Exemplar;
@@ -230,7 +231,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
           this.state.currentVolume.vlastnik = ex.vlastnik;
         }
         this.findTitul();
-        this.loadExemplars(res2.response);
+        this.loadExemplars(res2.response, sortAttachments);
         this.loading = false;
       } else {
         if (setVolume) {
@@ -248,13 +249,15 @@ export class SvazekComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadExemplars(res) {
+  loadExemplars(res, sortAttachments) {
     const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
     this.numFound = res.numFound;
     this.exemplars = [];
     let idx = 0;
     let exemplar: Exemplar = res.docs[idx];
     let odd = true;
+    let attachmentsAtTheEnd = []
+
     dates.forEach((dt) => {
       if (exemplar && this.datePipe.transform(exemplar.datum_vydani, 'yyyy-MM-dd') !== dt) {
         const ex = Object.assign({}, exemplar);
@@ -283,13 +286,19 @@ export class SvazekComponent implements OnInit, OnDestroy {
             exemplar.necitelneSvazano = exemplar.stav.includes('NS');
             exemplar.censored = exemplar.stav.includes('Cz');
           }
-          this.exemplars.push(exemplar);
+          if(sortAttachments && exemplar.isPriloha){
+            attachmentsAtTheEnd.push(exemplar)
+          }else{
+            this.exemplars.push(exemplar)
+          }
           idx++;
           exemplar = res.docs[idx];
         }
       }
       odd = !odd;
     });
+
+    this.exemplars = [...this.exemplars, ...attachmentsAtTheEnd]
 
     this.dsExemplars = new MatTableDataSource(this.exemplars);
     this.loading = false;
@@ -360,6 +369,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.page = e.pageIndex;
 
     // this.loadIssues();
+  }
+
+  attachmentSelected(newValue: string, exemplar: Exemplar){
+    exemplar.isPriloha = newValue === "attachment" || newValue === "periodic_attachment"
   }
 
 
@@ -478,6 +491,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         this.service.showSnackBar('snackbar.error_saving_volume', res.error, true);
       } else {
         this.service.showSnackBar('snackbar.the_volume_was_saved_correctly');
+        this.read()
       }
     });
 
@@ -594,6 +608,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
     const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
     this.exemplars = [];
     let idx = this.state.currentVolume.prvni_cislo;
+    let cisloPrilohy = 0
+    let attachmentsAtTheEnd = []
 
     let odd = true;
     dates.forEach((dt) => {
@@ -603,6 +619,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       this.state.currentVolume.periodicita.forEach(p => {
         if (p.active) {
           if (p.den === dayStr) {
+            const generateAttachment = p.vydani === "attachment" || p.vydani === "periodic_attachment"
             const ex = new Exemplar();
             ex.datum_vydani = dt;
             ex.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
@@ -620,14 +637,19 @@ export class SvazekComponent implements OnInit, OnDestroy {
             ex.nazev = p.nazev;
             ex.podnazev = p.podnazev;
             ex.vydani = p.vydani;
-            ex.cislo = idx;
+            ex.isPriloha = generateAttachment
+            ex.cislo = generateAttachment ? cisloPrilohy : idx
             ex.odd = odd;
-            idx++;
+            generateAttachment ? cisloPrilohy++ : idx++
             inserted = true;
-            this.exemplars.push(ex);
-          }
-        } else {
 
+            if(generateAttachment && this.state.currentVolume.show_attachments_at_the_end){
+              attachmentsAtTheEnd.push(ex)
+            }else{
+              this.exemplars.push(ex)
+            }
+
+          }
         }
 
       });
@@ -653,6 +675,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
       odd = !odd;
     });
+
+    this.exemplars = [...this.exemplars, ...attachmentsAtTheEnd]
 
     this.dsExemplars = new MatTableDataSource(this.exemplars);
   }
@@ -711,7 +735,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
     for (let i = min; i < max; i++) {
       const ex: Exemplar = this.dsExemplars.data[i];
-      if (ex.numExists) {
+      if (ex.numExists && !ex.isPriloha) {
         willBeRenumbered++;
       }
     }
@@ -730,7 +754,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       if (result) {
         for (let i = min; i < max; i++) {
           const ex: Exemplar = this.dsExemplars.data[i];
-          if (ex.numExists) {
+          if (ex.numExists && !ex.isPriloha) {
             if (firstNumber < 0) {
               firstNumber = curCislo;
             }

@@ -99,7 +99,8 @@
     "number": "Číslo",
     "renumber_down": "Přečíslovat dolů",
     "select_all": "Zatrhnout vše",
-    "pages_count": "Počet stran"
+    "pages_count": "Počet stran",
+    "attachment_number": "Číslo přílohy"
   },
   "note": {
     "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."
@@ -139,7 +140,9 @@
       "midday": "Polední",
       "afternoon": "Odpolední",
       "evening": "Večerní",
-      "special": "Zvláštní"
+      "special": "Zvláštní",
+      "attachment": "Příloha",
+      "periodic_attachment": "Pravidelná příloha"
     },
     "pages_count": "Počet stran",
     "complete": "Ověřeno",
@@ -220,7 +223,8 @@
     "update": "Aktualizovat",
     "close_navigation": "Zavřít navigaci",
     "specimens": "Exempláře",
-    "set_volume_complete": "Ověřeno"
+    "set_volume_complete": "Ověřeno",
+    "attachmentsAtTheEndOfThePage": "Přílohy na konci"
   },
   "facet": {
     "title": {
