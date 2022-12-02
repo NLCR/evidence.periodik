@@ -1,17 +1,10 @@
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-  ViewContainerRef
-} from '@angular/core';
+import {Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {AppState} from 'src/app/app.state';
 import {AddTitulDialogComponent} from 'src/app/components/add-titul-dialog/add-titul-dialog.component';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
 import {AppService} from 'src/app/app.service';
 import {Titul} from 'src/app/models/titul';
-import {Volume} from 'src/app/models/volume';
+import {BaseInfo, Volume} from 'src/app/models/volume';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {MatDatepicker, MatDatepickerInputEvent} from '@angular/material/datepicker';
@@ -19,9 +12,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {PeriodicitaSvazku} from 'src/app/models/periodicita-svazku';
-
 import {Issue} from 'src/app/models/issue';
-import {DatePipe} from '@angular/common';
+import {DatePipe, Location} from '@angular/common';
 import {Utils} from 'src/app/utils';
 import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
@@ -30,7 +22,7 @@ import {AppConfiguration} from 'src/app/app-configuration';
 import {SvazekOverviewComponent} from '../svazek-overview/svazek-overview.component';
 import {FormControl} from '@angular/forms';
 import moment from 'moment'
-import { SplitComponent, SplitAreaDirective } from 'angular-split'
+import {SplitAreaDirective, SplitComponent} from 'angular-split'
 
 @Component({
   selector: 'app-svazek',
@@ -157,6 +149,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
   minDate: Date;
   maxDate: Date;
 
+  newVolumeID = null
+
   constructor(
     public dialog: MatDialog,
     private overlay: Overlay,
@@ -166,6 +160,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe,
     public config: AppConfiguration,
     public state: AppState,
+    private location: Location,
     private service: AppService) { }
 
   ngOnInit() {
@@ -189,7 +184,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.dsExemplars = new MatTableDataSource([]);
     this.state.currentTitul = new Titul();
-    const id = this.route.snapshot.paramMap.get('id');
+    const id = this.newVolumeID || this.route.snapshot.paramMap.get('id');
     // if (id) {
     this.setData(id);
   }
@@ -447,7 +442,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     const barCode = this.state.currentVolume.carovy_kod;
     const reg = new RegExp('^[0-9]*$');
     if (!barCode || barCode.trim() === '') {
-      this.setLastNumber();
+      // this.setLastNumber();
       this.service.showSnackBar('snackbar.barcode_is_required', '', true);
       return;
     }
@@ -455,6 +450,11 @@ export class SvazekComponent implements OnInit, OnDestroy {
     //only informative popup
     if(!reg.test(barCode)){
       this.service.showSnackBar('snackbar.barcode_has_text');
+    }
+
+    if (!this.state.currentVolume.titul) {
+      this.service.showSnackBar('snackbar.metatitul_is_required', '', true);
+      return;
     }
 
     if (!this.state.currentVolume.datum_od) {
@@ -490,8 +490,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
       if (res.error) {
         this.service.showSnackBar('snackbar.error_saving_volume', res.error, true);
       } else {
-        this.service.showSnackBar('snackbar.the_volume_was_saved_correctly');
-        this.read()
+        this.service.showSnackBar('snackbar.the_volume_was_saved_correctly')
+        setTimeout(() => {
+          this.read()
+        }, 500);
       }
     });
 
@@ -573,12 +575,34 @@ export class SvazekComponent implements OnInit, OnDestroy {
       } else {
         this.service.showSnackBar('snackbar.delete_success');
         setTimeout(() => {
-          this.router.navigate(['/result', this.state.currentVolume.id_titul]);
+          return this.router.navigate(['/result', this.state.currentVolume.id_titul]);
         }, 500);
       }
     });
 
 
+  }
+
+  duplicateClick(){
+    if (!this.state.logged) {
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '650px',
+      data: {
+        caption: 'modal.duplicate_volume.caption',
+        text: 'modal.duplicate_volume.text',
+        param: {
+          value: ''
+        }
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.duplicateExemplars();
+      }
+    });
   }
 
   generateClick() {
@@ -604,10 +628,94 @@ export class SvazekComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  updateExemplars(value: string, type: BaseInfo){
+    const clonedExemplars = Object.assign([], this.exemplars)
+    let newExemplars
+
+    switch (type){
+      case "id_titul":
+        this.setTitul()
+        const newTitul = this.state.currentVolume.titul
+        newExemplars = clonedExemplars.map(e => {
+          e.meta_nazev = newTitul.meta_nazev
+          e.id_titul = newTitul.id
+          return e
+        })
+        break
+      case "vlastnik":
+        this.changeVlastnik()
+        newExemplars = clonedExemplars.map(e => {
+          e[type] = this.state.owners[value].name
+          return e
+        })
+        break
+      default:
+        newExemplars = clonedExemplars.map(e => {
+          e[type] = value
+          return e
+        })
+    }
+
+    if(type === "carovy_kod") {
+      this.location.replaceState(`/svazek/${value}`)
+      this.newVolumeID = value
+    }
+
+    // console.log(newExemplars[0])
+    if(this.exemplars.length > 0) this.service.showSnackBar('snackbar.data_changed', '', true, "", 3000)
+    this.dsExemplars = new MatTableDataSource(newExemplars)
+    // console.log(value, type)
+  }
+
+  duplicateExemplars(){
+    this.vlastnik_idx = -1
+    this.state.currentVolume.vlastnik = ""
+    this.state.currentVolume.carovy_kod =""
+    this.state.currentVolume.signatura =""
+    this.state.currentVolume.znak_oznaceni_vydani =""
+    this.location.replaceState("/svazek")
+
+    const currentVolume = this.state.currentVolume
+    const clonedExemplars = Object.assign([], this.exemplars)
+
+    clonedExemplars.map(e => {
+      e.id = ""
+      e.id_issue = ""
+      e.znak_oznaceni_vydani = currentVolume.znak_oznaceni_vydani;
+      e.carovy_kod = currentVolume.carovy_kod;
+      e.oznaceni = currentVolume.znak_oznaceni_vydani;
+      e.signatura = currentVolume.signatura;
+      e.vlastnik = currentVolume.vlastnik;
+      return e
+    })
+
+    this.exemplars = clonedExemplars
+    this.dsExemplars = new MatTableDataSource(this.exemplars)
+  }
+
+
   generate() {
-    const dates = this.getDaysArray(this.state.currentVolume.datum_od, this.state.currentVolume.datum_do);
+      const currentVolume = this.state.currentVolume
+      if (!currentVolume.titul) {
+        this.service.showSnackBar('snackbar.metatitul_is_required', '', true)
+        return
+      }
+
+      if (!currentVolume.carovy_kod || currentVolume.carovy_kod.trim() === '') {
+        this.service.showSnackBar('snackbar.barcode_is_required', '', true);
+        return
+      }
+
+      if (!currentVolume.vlastnik || currentVolume.vlastnik.trim() === '') {
+        this.service.showSnackBar('snackbar.vlastnik_is_required', '', true)
+        return
+      }
+
+    // console.log(currentVolume)
+    const dates = this.getDaysArray(currentVolume.datum_od, currentVolume.datum_do);
     this.exemplars = [];
-    let idx = this.state.currentVolume.prvni_cislo;
+    let idx = currentVolume.prvni_cislo;
     let cisloPrilohy = 0
     let attachmentsAtTheEnd = []
 
@@ -616,21 +724,21 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
       const dayStr = this.datePipe.transform(dt, 'EEEE');
       let inserted = false;
-      this.state.currentVolume.periodicita.forEach(p => {
+      currentVolume.periodicita.forEach(p => {
         if (p.active) {
           if (p.den === dayStr) {
             const generateAttachment = p.vydani === "attachment" || p.vydani === "periodic_attachment"
             const ex = new Exemplar();
             ex.datum_vydani = dt;
             ex.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
-            ex.id_titul = this.state.currentVolume.id_titul;
-            ex.meta_nazev = this.state.currentVolume.titul.meta_nazev;
-            ex.znak_oznaceni_vydani = this.state.currentVolume.znak_oznaceni_vydani;
-            ex.carovy_kod = this.state.currentVolume.carovy_kod;
-            ex.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
-            ex.signatura = this.state.currentVolume.signatura;
-            ex.vlastnik = this.state.currentVolume.vlastnik;
-            ex.mutace = this.state.currentVolume.mutace;
+            ex.id_titul = currentVolume.id_titul;
+            ex.meta_nazev = currentVolume.titul.meta_nazev;
+            ex.znak_oznaceni_vydani = currentVolume.znak_oznaceni_vydani;
+            ex.carovy_kod = currentVolume.carovy_kod;
+            ex.oznaceni = currentVolume.znak_oznaceni_vydani;
+            ex.signatura = currentVolume.signatura;
+            ex.vlastnik = currentVolume.vlastnik;
+            ex.mutace = currentVolume.mutace;
             ex.numExists = true;
             ex.vydaniExists = true;
             ex.pocet_stran = p.pocet_stran;
@@ -643,7 +751,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
             generateAttachment ? cisloPrilohy++ : idx++
             inserted = true;
 
-            if(generateAttachment && this.state.currentVolume.show_attachments_at_the_end){
+            if(generateAttachment && currentVolume.show_attachments_at_the_end){
               attachmentsAtTheEnd.push(ex)
             }else{
               this.exemplars.push(ex)
@@ -658,15 +766,15 @@ export class SvazekComponent implements OnInit, OnDestroy {
         const exemplar = new Exemplar();
         exemplar.datum_vydani = dt;
         exemplar.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
-        exemplar.id_titul = this.state.currentVolume.id_titul;
-        exemplar.meta_nazev = this.state.currentVolume.titul.meta_nazev;
-        exemplar.znak_oznaceni_vydani = this.state.currentVolume.znak_oznaceni_vydani;
-        exemplar.carovy_kod = this.state.currentVolume.carovy_kod;
-        exemplar.oznaceni = this.state.currentVolume.znak_oznaceni_vydani;
-        exemplar.signatura = this.state.currentVolume.signatura;
-        exemplar.vlastnik = this.state.currentVolume.vlastnik;
+        exemplar.id_titul = currentVolume.id_titul;
+        exemplar.meta_nazev = currentVolume.titul.meta_nazev;
+        exemplar.znak_oznaceni_vydani = currentVolume.znak_oznaceni_vydani;
+        exemplar.carovy_kod = currentVolume.carovy_kod;
+        exemplar.oznaceni = currentVolume.znak_oznaceni_vydani;
+        exemplar.signatura = currentVolume.signatura;
+        exemplar.vlastnik = currentVolume.vlastnik;
 
-        exemplar.mutace = this.state.currentVolume.mutace;
+        exemplar.mutace = currentVolume.mutace;
         exemplar.numExists = false;
         exemplar.vydaniExists = false;
         exemplar.odd = odd;
@@ -677,6 +785,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     });
 
     this.exemplars = [...this.exemplars, ...attachmentsAtTheEnd]
+    // console.log(this.exemplars)
 
     this.dsExemplars = new MatTableDataSource(this.exemplars);
   }
@@ -725,7 +834,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   reNumber(element: Exemplar, idx: number, down: boolean) {
-    console.log(idx);
+    // console.log(idx);
     const min = down ? idx : 0;
     const max = down ? this.dsExemplars.data.length : idx;
     let curCislo = this.dsExemplars.data[min].cislo;
@@ -1002,6 +1111,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   fillNazev(element) {
+    console.log(this.state.currentVolume.periodicita)
     // console.log(element);
     if (!element.nazev || element.nazev === '') {
       element.nazev = this.state.currentVolume.titul.meta_nazev;

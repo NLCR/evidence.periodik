@@ -223,7 +223,8 @@
     "close_navigation": "Close navigation",
     "specimens": "Specimens",
     "set_volume_complete": "Verified",
-    "attachmentsAtTheEndOfThePage": "Attachment at the end"
+    "attachmentsAtTheEndOfThePage": "Attachment at the end",
+    "duplicate_volume": "Duplicate volume"
   },
   "facet": {
     "title": {
@@ -296,7 +297,9 @@
     "renumber.caption": "Confirm renumber",
     "renumber.text": "Numbers to renumber: {{value}}. Are you sure you want to apply changes?",
     "show_barcodes_in_calendar.caption": "Enter edit?",
-    "show_barcodes_in_calendar.text": "Barcodes: {{value}}"
+    "show_barcodes_in_calendar.text": "Barcodes: {{value}}",
+    "duplicate_volume.caption": "Confirm duplication",
+    "duplicate_volume.text": "Are you sure you want to duplicate whole volume?"
   },
   "login": {
     "desc": "Please, login",
@@ -325,6 +328,7 @@
     "delete_success": "Delete success",
     "barcode_is_required": "Barcode is required",
     "vlastnik_is_required": "Owner is required",
+    "metatitul_is_required": "Metatitule is required",
     "datum_do_is_required": "Date to is required",
     "datum_od_is_required": "Date to is required",
     "the_date_from_is_greater_than_the_date_to": "The date from is greater than the date to",
@@ -340,6 +344,7 @@
     "renumbered_correctly": "Renumbered",
     "selected_all": "Selected all",
     "unselected_all": "Deleted all",
-    "barcode_has_text": "Warning, barcode contains text"
+    "barcode_has_text": "Warning, barcode contains text",
+    "data_changed": "Attention, the change has appeared in all specimens!"
   }
 }

@@ -224,7 +224,8 @@
     "close_navigation": "Zavřít navigaci",
     "specimens": "Exempláře",
     "set_volume_complete": "Ověřeno",
-    "attachmentsAtTheEndOfThePage": "Přílohy na konci"
+    "attachmentsAtTheEndOfThePage": "Přílohy na konci",
+    "duplicate_volume": "Duplikovat svazek"
   },
   "facet": {
     "title": {
@@ -297,7 +298,9 @@
     "renumber.caption": "Potvrdit přečíslování",
     "renumber.text": "Čísel k přečíslování: {{value}}. Opravdu chcete provést změny?",
     "show_barcodes_in_calendar.caption": "Vstoupit do editace?",
-    "show_barcodes_in_calendar.text": "Čárové kódy: {{value}}"
+    "show_barcodes_in_calendar.text": "Čárové kódy: {{value}}",
+    "duplicate_volume.caption": "Potvrdit duplikaci",
+    "duplicate_volume.text": "Opravdu chcete duplikovat svazek?"
   },
   "login": {
     "desc": "Prosím, přihlašte se",
@@ -325,6 +328,7 @@
     "error_cloning": "Chyba klonování",
     "delete_success": "Úspěšně vymazáno",
     "barcode_is_required": "Čárový kód je povinný",
+    "metatitul_is_required": "Metatitul je povinný",
     "vlastnik_is_required": "Vlastník je povinný",
     "datum_do_is_required": "Datum do je povinné",
     "datum_od_is_required": "Datum od je povinné",
@@ -341,6 +345,7 @@
     "renumbered_correctly": "Přečíslováno",
     "selected_all": "Vše vybráno",
     "unselected_all": "Vše smazáno",
-    "barcode_has_text": "Pozor, čárový kód obsahuje text"
+    "barcode_has_text": "Pozor, čárový kód obsahuje text",
+    "data_changed": "Pozor, změna se projevila ve všech exemplářích!"
   }
 }
