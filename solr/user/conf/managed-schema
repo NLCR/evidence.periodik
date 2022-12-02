@@ -40,7 +40,7 @@
     </analyzer>
   </fieldType>
   <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
-  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" maxDistErr="0.001" distErrPct="0.025" distanceUnits="kilometers"/>
+  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" omitNorms="true" omitTermFreqAndPositions="true" maxDistErr="0.001" termOffsets="false" distErrPct="0.025" distanceUnits="kilometers" termPositions="false" omitPositions="true"/>
   <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
     <analyzer>
       <tokenizer class="solr.KeywordTokenizerFactory"/>
@@ -174,16 +174,16 @@
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
+  <field name="active" type="boolean" indexed="true" stored="true"/>
+  <field name="email" type="string" indexed="false" stored="true"/>
+  <field name="heslo" type="string" indexed="true" stored="true"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
-  <field name="username" type="string" indexed="true" stored="true" />
-  <field name="nazev" type="string" indexed="true" stored="true" />
-  <field name="heslo" type="string" indexed="true" stored="true" />
-  <field name="role" type="string" indexed="true" stored="true" />
-  <field name="email" type="string" indexed="false" stored="true" />
-  <field name="poznamka" type="string" indexed="false" stored="true" />
-  <field name="active" type="boolean" indexed="true" stored="true" />
-  <field name="indextime" type="pdate" indexed="true" stored="true" default="NOW" />
-  
+  <field name="indextime" type="pdate" default="NOW" indexed="true" stored="true"/>
+  <field name="nazev" type="string" indexed="true" stored="true"/>
+  <field name="owner" type="string" indexed="true" stored="true"/>
+  <field name="poznamka" type="string" indexed="false" stored="true"/>
+  <field name="role" type="string" indexed="true" stored="true"/>
+  <field name="username" type="string" indexed="true" stored="true"/>
   <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
   <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
   <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>
@@ -217,5 +217,4 @@
   <dynamicField name="*_f" type="pfloat" indexed="true" stored="true"/>
   <dynamicField name="*_d" type="pdouble" indexed="true" stored="true"/>
   <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
-  
 </schema>

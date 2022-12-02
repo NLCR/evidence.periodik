@@ -53,26 +53,26 @@
   <div fxLayout="row" fxLayoutGap="16px">
     <mat-form-field fxFlex="33.3333%">
       <mat-label>{{ 'desc.select_state' | translate }}</mat-label>
-      <mat-select [id]="'stav'" [name]="'stav'" [(ngModel)]="exemplar.stav" multiple [disabled]=!state.logged>
+      <mat-select [id]="'stav'" [name]="'stav'" [(ngModel)]="exemplar.stav" multiple [disabled]="!state.logged || !isOwner">
         <mat-option *ngFor="let stav of state.stavy" [value]="stav">
           {{ 'record.StavIssue.' + stav | translate }}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field  fxFlex="33.3333%">
-      <input matInput [placeholder]="'record.state_com' | translate" [id]="'stav_popis'" [name]="'stav_popis'" [(ngModel)]="exemplar.stav_popis" type="text" [disabled]=!state.logged>
+      <input matInput [placeholder]="'record.state_com' | translate" [id]="'stav_popis'" [name]="'stav_popis'" [(ngModel)]="exemplar.stav_popis" type="text" [disabled]="!state.logged || !isOwner">
     </mat-form-field>
     <mat-form-field  fxFlex="33.3333%">
-      <input matInput [placeholder]="'record.signatura' | translate" id="signatura" name="signatura" [(ngModel)]="exemplar.signatura" type="text" autocomplete="on" [disabled]=!state.logged>
+      <input matInput [placeholder]="'record.signatura' | translate" id="signatura" name="signatura" [(ngModel)]="exemplar.signatura" type="text" autocomplete="on" [disabled]="!state.logged || !isOwner">
     </mat-form-field>
   </div>
 
   <div fxLayout="row" fxLayoutGap="16px">
     <mat-form-field fxFlex="50%">
-      <input matInput [placeholder]="'record.oznaceni' | translate" [id]="'oznaceni'" [name]="'oznaceni'" [(ngModel)]="exemplar.oznaceni" type="text" #box (keyup)="filterOznaceni(box.value)" [disabled]=!state.logged>
+      <input matInput [placeholder]="'record.oznaceni' | translate" [id]="'oznaceni'" [name]="'oznaceni'" [(ngModel)]="exemplar.oznaceni" type="text" #box (keyup)="filterOznaceni(box.value)" [disabled]="!state.logged || !isOwner">
     </mat-form-field>
     <mat-form-field fxFlex="50%">
-      <input matInput [placeholder]="'record.popis_oznaceni_vydani' | translate" [id]="'popis_oznaceni_vydani'" [name]="'popis_oznaceni_vydani'" [(ngModel)]="exemplar.popis_oznaceni_vydani" type="text" [disabled]=!state.logged>
+      <input matInput [placeholder]="'record.popis_oznaceni_vydani' | translate" [id]="'popis_oznaceni_vydani'" [name]="'popis_oznaceni_vydani'" [(ngModel)]="exemplar.popis_oznaceni_vydani" type="text" [disabled]="!state.logged || !isOwner">
     </mat-form-field>
   </div>
 
@@ -104,6 +104,6 @@
 
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="ok()" [disabled]=!state.logged>OK</button>
+  <button mat-button (click)="ok()" [disabled]="!state.logged || !isOwner">OK</button>
   <button mat-button (click)="cancel()">{{ 'button.cancel' | translate }}</button>
 </div>

@@ -7,7 +7,7 @@ export class Configuration {
   };
   vdkFormats: string[];
   periodicity: string[];
-  owners: {name: string, url: string}[];
+  owners: {id: number, name: string, url: string}[];
   stavy: string[];
   states: string[];
   vydani: string[];

@@ -43,6 +43,14 @@
             <mat-option *ngFor="let role of roles" [value]="role.id">{{'desc.' + role.name | translate }}</mat-option>
           </mat-select>
         </mat-form-field>
+
+        <mat-form-field fxFlex>
+          <mat-label>{{ 'desc.user_owners' | translate }}</mat-label>
+          <mat-select [(ngModel)]="user.owner" id="owner" name="owner">
+
+            <mat-option *ngFor="let owner of owners" [value]="owner.name">{{ owner.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
       <button mat-flat-button color="primary" (click)="newUser()" type="button">{{ 'button.add_user' | translate }}</button>
       <button mat-flat-button color="primary" type="submit" [disabled]="!userForm.form.valid">{{ 'button.save' | translate }}</button>

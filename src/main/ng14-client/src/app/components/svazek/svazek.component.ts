@@ -117,7 +117,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   mutace: string;
   oznaceni_idx: number;
   oznaceni: string;
-  vlastnik_idx: number;
+  // vlastnik_idx: number;
 
   mutations: { name: string, type: string, value: number }[];
   oznaceni_list: { name: string, type: string, value: number }[];
@@ -136,6 +136,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
   // private dataDiffer: KeyValueDiffer<string, any>;
 
   loading: boolean;
+
+  isOwner = false
 
   // Holds dates in calendar. Should convert to yyyyMMdd for volume
   startDate = new FormControl(new Date());
@@ -201,7 +203,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         this.getExemplars(id, dateRange, false, this.state.currentVolume.show_attachments_at_the_end);
       } else {
         this.getExemplars(id, '*', true, false);
-        this.vlastnik_idx = -1;
+        // this.vlastnik_idx = -1;
       }
     });
   }
@@ -233,10 +235,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
           const d = new Date().getFullYear() + '-01-01';
           this.state.currentVolume = new Volume(d, d);
           this.state.currentVolume.carovy_kod = id;
+          this.state.currentVolume.vlastnik = this.state.user.owner
           this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
         }
         this.loading = false;
       }
+      this.isOwner = this.state.user.owner && (this.state.user.owner === this.state.currentVolume.vlastnik)
     });
 
     if (this.state.currentVolume) {
@@ -296,7 +300,6 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.exemplars = [...this.exemplars, ...attachmentsAtTheEnd]
 
     this.dsExemplars = new MatTableDataSource(this.exemplars);
-    this.loading = false;
   }
 
   setVolumeFacets() {
@@ -386,11 +389,11 @@ export class SvazekComponent implements OnInit, OnDestroy {
       // console.log(this.state.currentTitul)
       this.setVolumeFacets();
 
-      for (let i = 0; i < this.config.owners.length; i++) {
-        if (this.config.owners[i].name === this.state.currentVolume.vlastnik) {
-          this.vlastnik_idx = i;
-        }
-      }
+      // for (let i = 0; i < this.config.owners.length; i++) {
+      //   if (this.config.owners[i].name === this.state.currentVolume.vlastnik) {
+      //     this.vlastnik_idx = i;
+      //   }
+      // }
 
     });
   }
@@ -434,7 +437,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    if (!this.state.logged) {
+    if (!this.state.logged || !this.isOwner) {
       return;
     }
     // Ulozit svazek (volume) a vsechny radky tabulky jako Issue.
@@ -500,7 +503,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   deleteClick(){
-    if (!this.state.logged) {
+    if (!this.state.logged || !this.isOwner) {
       return;
     }
 
@@ -584,7 +587,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   duplicateClick(){
-    if (!this.state.logged) {
+    if (!this.state.logged || !this.isOwner) {
       return;
     }
 
@@ -607,7 +610,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   generateClick() {
 
-    if (!this.state.logged) {
+    if (!this.state.logged || !this.isOwner) {
       return;
     }
 
@@ -644,11 +647,11 @@ export class SvazekComponent implements OnInit, OnDestroy {
         })
         break
       case "vlastnik":
-        this.changeVlastnik()
-        newExemplars = clonedExemplars.map(e => {
-          e[type] = this.state.owners[value].name
-          return e
-        })
+        // this.changeVlastnik()
+        // newExemplars = clonedExemplars.map(e => {
+        //   e[type] = this.state.owners[value].name
+        //   return e
+        // })
         break
       default:
         newExemplars = clonedExemplars.map(e => {
@@ -669,12 +672,13 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   duplicateExemplars(){
-    this.vlastnik_idx = -1
-    this.state.currentVolume.vlastnik = ""
+    // this.vlastnik_idx = -1
+    this.state.currentVolume.vlastnik = this.state.user.owner
     this.state.currentVolume.carovy_kod =""
     this.state.currentVolume.signatura =""
     this.state.currentVolume.znak_oznaceni_vydani =""
     this.location.replaceState("/svazek")
+    this.isOwner = true
 
     const currentVolume = this.state.currentVolume
     const clonedExemplars = Object.assign([], this.exemplars)
@@ -814,13 +818,13 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   }
 
-  changeVlastnik() {
-    if (this.vlastnik_idx < 0) {
-      this.state.currentVolume.vlastnik = '';
-    }else{
-      this.state.currentVolume.vlastnik = this.state.owners[this.vlastnik_idx].name;
-    }
-  }
+  // changeVlastnik() {
+  //   if (this.vlastnik_idx < 0) {
+  //     this.state.currentVolume.vlastnik = '';
+  //   }else{
+  //     this.state.currentVolume.vlastnik = this.state.owners[this.vlastnik_idx].name;
+  //   }
+  // }
 
   addVydani(element, idx: number) {
     const n = Object.assign([], this.state.currentVolume.periodicita);
@@ -1023,7 +1027,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   setAllInColumn(type: ExemplarStates, autoSave = false, flip = false){
-    if(!this.state.logged) return
+    if(!this.state.logged || !this.isOwner) return
 
     const statesAlreadySelected = this.exemplars.filter(e => e[type] && e.numExists).length
     if(statesAlreadySelected === this.exemplars.filter(e => e.numExists).length && type !== "complete"){

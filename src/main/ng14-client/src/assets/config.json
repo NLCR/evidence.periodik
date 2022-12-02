@@ -13,10 +13,10 @@
     "P1Y"
   ],
   "owners": [
-    {"name":  "NKP", "url":"http://"},
-    {"name":  "MZK", "url":"http://"},
-    {"name":  "VKOL", "url":"http://"},
-    {"name":  "SVKUL", "url":"http://"}
+    {"id":  1, "name":  "NKP", "url":"http://"},
+    {"id":  2,"name":  "MZK", "url":"http://"},
+    {"id":  3,"name":  "VKOL", "url":"http://"},
+    {"id":  4,"name":  "SVKUL", "url":"http://"}
   ],
   "stavy": [
     "OK",

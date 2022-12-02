@@ -57,6 +57,7 @@
     "note": "Note",
     "user_roles": "User roles",
     "user_role": "User",
+    "user_owners": "Owner",
     "admin_role": "Admin",
     "add_specimen": "Add a specimen",
     "edit_specimen": "Edit specimen",

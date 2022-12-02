@@ -9,5 +9,6 @@ export class User {
   active: boolean;
   authdata?: string;
   date: Date;
+  owner: string
 
 }
