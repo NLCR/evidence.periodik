@@ -108,7 +108,7 @@ export class ResultComponent implements OnInit, OnDestroy {
     }
     if(searchParams.search?.length > 0) queryMap.set("q", searchParams.search)
 
-    return this.router.navigate(['.'], { relativeTo: this.route, queryParams: Object.fromEntries(queryMap.entries())})
+    return this.router.navigate(['.'], { relativeTo: this.route, replaceUrl: true, queryParams: Object.fromEntries(queryMap.entries())})
   }
 
 }
