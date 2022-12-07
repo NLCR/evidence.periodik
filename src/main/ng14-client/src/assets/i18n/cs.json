@@ -249,7 +249,8 @@
     "znak_oznaceni_vydani": "Mutační vydání",
     "vydani": "Vydání",
     "volume": "Svazek",
-    "volume_number": "Číslo svazku"
+    "volume_number": "Číslo svazku",
+    "": "Bez označení"
   },
   "result": {
     "found_records": "Nalezeno záznamů",

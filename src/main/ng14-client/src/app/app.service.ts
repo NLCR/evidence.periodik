@@ -112,7 +112,8 @@ export class AppService {
       .append('fq', 'carovy_kod:' + carovy_kod)
       .append('fq', 'numExists:"true"')
       .set('wt', 'json')
-      .set('rows', this.state.rows)
+      // .set('rows', this.state.rows)
+      .set('rows', 200000)
       .set('json.nl', 'arrntv')
       .set('fl', '*,pages:[json]')
       .set('sort', 'datum_vydani_den asc, vydani desc')
@@ -388,7 +389,7 @@ export class AppService {
       const url = 'index';
       const params: HttpParams = new HttpParams()
         .set('action', 'SAVE_EXEMPLAR');
-      const body = { exemplar };
+      // const body = { exemplar };
       return this.http.post(url, exemplar, { params });
     } else {
       return of(isValid);
@@ -633,12 +634,12 @@ export class AppService {
   //   return this.http.get(url, { params });
   // }
 
-  doSearchParams(): HttpParams {
+  doSearchParams(includeRowsLimit = false): HttpParams {
     let params: HttpParams = new HttpParams()
       .set('q', this.state.q ? this.state.q : '*')
       .set('wt', 'json')
-      .set('rows', '' + this.state.rows)
-      .set('start', '' + (this.state.currentPage * this.state.rows))
+      // .set('rows', '' + this.state.rows)
+      // .set('start', '' + (this.state.currentPage * this.state.rows))
       .set('sort', 'datum_vydani_den asc, vydani desc')
       // .set('fq', 'exemplare:[* TO *]')
       // .set('fq', '{!collapse field=id_titul}')
@@ -657,6 +658,13 @@ export class AppService {
       .append('facet.field', 'vlastnik')
       .append('facet.field', 'stav');
       // .append('fq', 'numExists:true');
+
+    if(includeRowsLimit){
+      params = params.set('rows', '' + this.state.rows)
+      params = params.set('start', '' + (this.state.currentPage * this.state.rows))
+    } else{
+      params = params.set('rows', '' + 100000)
+    }
 
     // facet.range=datum_vydani&facet.range.start=NOW/YEAR-200YEARS&facet.range.end=NOW&facet.range.gap=%2B1YEAR
 
@@ -698,7 +706,7 @@ export class AppService {
 
 
     const url = '/api/search/exemplar/select';
-    const params = this.doSearchParams()
+    const params = this.doSearchParams(true)
       .append('fq', 'id_titul:"' + id + '"')
       .append('fq', 'numExists:"true"')
       .append('group', 'true')

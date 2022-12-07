@@ -18,7 +18,7 @@
       <mat-icon>close</mat-icon>
     </a>
     {{ 'facet.' + filter.field | translate }}:&#160;
-    <span class="app-font-bold" *ngIf="filter.field !== 'stav'">{{ filter.value }}</span>
+    <span class="app-font-bold" *ngIf="filter.field !== 'stav'">{{ filter.value === "" ? ("desc.without_name" | translate) : filter.value}}</span>
     <span class="app-font-bold" *ngIf="filter.field === 'stav'">{{ 'record.StavIssue.' + filter.value | translate }}</span>
   </mat-list-item>
 

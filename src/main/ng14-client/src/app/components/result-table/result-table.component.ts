@@ -30,7 +30,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'nazev', 'vydani'];
   header = '';
   dataSource: MatTableDataSource<Issue>;
-  loading = true;
+  // loading = true;
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -47,13 +47,13 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     this.data = [];
     this.setData();
 
-    this.subscriptions.push(this.state.searchChanged.subscribe(res => {
+    this.subscriptions.push(this.state.searchChanged.subscribe(() => {
       this.dataSource = null;
       this.vlastnici = null;
       this.data = [];
-      setTimeout(() => {
-        this.setData();
-      }, 1);
+      // setTimeout(() => {
+       this.setData();
+      // }, 1);
     }));
   }
 
@@ -76,9 +76,10 @@ export class ResultTableComponent implements OnInit, OnDestroy {
 
   setData() {
 
-    this.dataSource = null;
-    this.loading = true;
+    // this.dataSource = null;
+    // this.loading = true;
     if (!this.state.searchResults) {
+      this.state.loadingData = false
       return;
     }
     // Extract exemplare per vlastnik
@@ -98,7 +99,8 @@ export class ResultTableComponent implements OnInit, OnDestroy {
     });
     // this.data = Object.assign([], this.state.searchResults.response.docs);
     if (this.data.length === 0) {
-      this.loading = false;
+      // this.loading = false;
+      this.state.loadingData = false
       return;
     }
 
@@ -130,8 +132,9 @@ export class ResultTableComponent implements OnInit, OnDestroy {
       }
     });
     this.dataSource = new MatTableDataSource(this.data);
-    this.dataSource.paginator = this.paginator;
-    this.loading = false;
+    // this.dataSource.paginator = this.paginator;
+    // this.loading = false;
+    this.state.loadingData = false
     this.cdr.detectChanges();
   }
 
@@ -259,7 +262,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
         issue.exemplare[idxex].cas_vydani = 0;
         issue.exemplare[idxex].pocet_stran = 0;
         issue.exemplare[idxex].stav = [];
-        this.service.saveIssue(issue).subscribe(res => {
+        this.service.saveIssue(issue).subscribe(() => {
           this.service.showSnackBar('snackbar.delete_success');
           issue.exemplare.splice(idxex, 1);
         });
@@ -346,6 +349,8 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   }
 
   pageChanged(e: PageEvent) {
+    this.state.rows = e.pageSize
+    this.state.gotoPage(e.pageIndex)
     // this.state.rows = e.pageSize;
     // this.state.gotoPage(e.pageIndex);
   }

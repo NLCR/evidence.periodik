@@ -19,7 +19,7 @@ export class SearchBarComponent {
     if (this.router.routerState.snapshot.url.indexOf('/result') > -1) {
       this.state.fireSearch();
     } else {
-      this.router.navigate(['/result']);
+      return this.router.navigate(['/result']);
     }
   }
 

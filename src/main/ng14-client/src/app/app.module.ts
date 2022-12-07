@@ -66,7 +66,7 @@ import { CalendarYearComponent } from './components/calendar/calendar-year/calen
 import { CalendarMonthDayComponent } from './components/calendar/calendar-month/calendar-month-day/calendar-month-day.component';
 import { LoginComponent } from './components/login/login.component';
 import { FacetUsedComponent } from './components/facet/facet-used/facet-used.component';
-import { ToolbarPaginationResultComponent } from './components/toolbar/toolbar-pagination-result/toolbar-pagination-result.component';
+// import { ToolbarPaginationResultComponent } from './components/toolbar/toolbar-pagination-result/toolbar-pagination-result.component';
 import { ToolbarPaginationCalendarComponent } from './components/toolbar/toolbar-pagination-calendar/toolbar-pagination-calendar.component';
 import { ToolbarNavViewsComponent } from './components/toolbar/toolbar-nav-views/toolbar-nav-views.component';
 import { ToolbarCountComponent } from './components/toolbar/toolbar-count/toolbar-count.component';
@@ -135,7 +135,7 @@ const providers: any[] = [
     CalendarMonthDayComponent,
     LoginComponent,
     FacetUsedComponent,
-    ToolbarPaginationResultComponent,
+    // ToolbarPaginationResultComponent,
     ToolbarPaginationCalendarComponent,
     ToolbarNavViewsComponent,
     ToolbarCountComponent,
