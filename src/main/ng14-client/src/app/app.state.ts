@@ -131,6 +131,9 @@ export class AppState {
         this[realKey] = value
       }
 
+      if(realKey === "volume_id_for_search") this.filterByVolume = true
+      if(realKey === "start_year" || "end_year") this.filterByDate = true
+
       // console.log(`${realKey}: ${value}`);
     }
 
