@@ -209,7 +209,12 @@
               </th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <mat-form-field *ngIf="element.active">
-                  <input type="text" matInput [(ngModel)]="element.nazev" [disabled]="!state.logged || !isOwner">
+                  <input type="text" matInput [(ngModel)]="element.nazev" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                  <mat-autocomplete #name="matAutocomplete">
+                    <mat-option *ngFor="let name of periodicalsAutocomplete.name" [value]="name">
+                      {{name}}
+                    </mat-option>
+                  </mat-autocomplete>
                   <mat-icon>{{ config.icons.pencil }}</mat-icon>
                 </mat-form-field>
               </td>
@@ -223,7 +228,12 @@
               </th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <mat-form-field *ngIf="element.active">
-                  <input type="text" matInput [(ngModel)]="element.podnazev" [disabled]="!state.logged || !isOwner">
+                  <input type="text" matInput [(ngModel)]="element.podnazev" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                  <mat-autocomplete #subName="matAutocomplete">
+                    <mat-option *ngFor="let subName of periodicalsAutocomplete.subName" [value]="subName">
+                      {{subName}}
+                    </mat-option>
+                  </mat-autocomplete>
                   <mat-icon>{{ config.icons.pencil }}</mat-icon>
                 </mat-form-field>
               </td>
@@ -367,8 +377,22 @@
               </th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <ng-container *ngIf="element.numExists">
-                  <mat-form-field>
-                    <input type="text" matInput [(ngModel)]="element.nazev" [disabled]="!state.logged || !isOwner">
+                  <mat-form-field *ngIf="element.isPriloha">
+                    <input type="text" matInput [(ngModel)]="element.nazev" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                    <mat-autocomplete #name="matAutocomplete">
+                      <mat-option *ngFor="let name of attachmentsAutocomplete.name" [value]="name">
+                        {{name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                  </mat-form-field>
+                  <mat-form-field *ngIf="!element.isPriloha">
+                    <input type="text" matInput [(ngModel)]="element.nazev" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                    <mat-autocomplete #name="matAutocomplete">
+                      <mat-option *ngFor="let name of exemplarsAutocomplete.name" [value]="name">
+                        {{name}}
+                      </mat-option>
+                    </mat-autocomplete>
                     <mat-icon>{{ config.icons.pencil }}</mat-icon>
                   </mat-form-field>
                 </ng-container>
@@ -382,8 +406,22 @@
               </th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <ng-container *ngIf="element.numExists">
-                  <mat-form-field>
-                    <input type="text" matInput [(ngModel)]="element.podnazev" [disabled]="!state.logged || !isOwner">
+                  <mat-form-field *ngIf="element.isPriloha">
+                    <input type="text" matInput [(ngModel)]="element.podnazev" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                    <mat-autocomplete #subName="matAutocomplete">
+                      <mat-option *ngFor="let subName of attachmentsAutocomplete.subName" [value]="subName">
+                        {{subName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                  </mat-form-field>
+                  <mat-form-field *ngIf="!element.isPriloha">
+                    <input type="text" matInput [(ngModel)]="element.podnazev" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                    <mat-autocomplete #subName="matAutocomplete">
+                      <mat-option *ngFor="let subName of exemplarsAutocomplete.subName" [value]="subName">
+                        {{subName}}
+                      </mat-option>
+                    </mat-autocomplete>
                     <mat-icon>{{ config.icons.pencil }}</mat-icon>
                   </mat-form-field>
                 </ng-container>

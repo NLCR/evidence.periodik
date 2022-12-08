@@ -573,6 +573,39 @@ export class AppService {
       }));
   }
 
+  getMetaTitlePeriodicals(id: string): Observable<any[]> {
+    const url = '/api/search/svazek/select'
+    const params: HttpParams = new HttpParams()
+      .set('q', '*')
+      .set('wt', 'json')
+      .set('fl', 'periodicita:[json]')
+      .set('fq', 'id_titul:"' + id + '"')
+      .set("rows", "100000")
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        return res.response.docs
+      }))
+  }
+
+  getDistinctValuesOfMetaTitleForAttachments(id: string): Observable<any[]> {
+    const url = '/api/search/exemplar/select'
+    const params: HttpParams = new HttpParams()
+      .set('q', '*')
+      .set('wt', 'json')
+      .set('stats', 'true')
+      .set('stats.calcdistinct', 'true')
+      .set('stats.field', 'nazev')
+      .append('stats.field', 'podnazev')
+      .set('fq', 'id_titul:"' + id + '"')
+      .append('fq', 'numExists:"true"')
+      .append('fq', 'isPriloha:"true"')
+      // .set("rows", "1000")
+    return this.http.get(url, { params }).pipe(
+      map((res: any) => {
+        return res.stats.stats_fields
+      }))
+  }
+
   getExemplarsByCarKod(carKod: string, dateRange: string): Observable<any> {
     const url = '/api/search/exemplar/select';
     const params: HttpParams = new HttpParams()

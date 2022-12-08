@@ -6,10 +6,10 @@ import {AppService} from 'src/app/app.service';
 import {Titul} from 'src/app/models/titul';
 import {BaseInfo, Volume} from 'src/app/models/volume';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
+import {combineLatestWith, ReplaySubject, takeUntil} from 'rxjs';
 import {MatDatepicker, MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {PeriodicitaSvazku} from 'src/app/models/periodicita-svazku';
 import {Issue} from 'src/app/models/issue';
@@ -20,7 +20,7 @@ import {TemplatePortal} from '@angular/cdk/portal';
 import {Exemplar, ExemplarStates} from 'src/app/models/exemplar';
 import {AppConfiguration} from 'src/app/app-configuration';
 import {SvazekOverviewComponent} from '../svazek-overview/svazek-overview.component';
-import {FormControl} from '@angular/forms';
+// import {FormControl} from '@angular/forms';
 import moment from 'moment'
 import {SplitAreaDirective, SplitComponent} from 'angular-split'
 
@@ -111,7 +111,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   displayedColumnsLeftTableBottom = Object.keys(new PeriodicitaSvazku());
   dsPeriodicita: MatTableDataSource<PeriodicitaSvazku>;
 
-  subscriptions: Subscription[] = [];
+  // subscriptions: Subscription[] = [];
   titul_idx: number;
   mutace_idx: number;
   mutace: string;
@@ -140,18 +140,30 @@ export class SvazekComponent implements OnInit, OnDestroy {
   isOwner = false
 
   // Holds dates in calendar. Should convert to yyyyMMdd for volume
-  startDate = new FormControl(new Date());
-  endDate = new FormControl(new Date());
-  now = new Date();
+  // startDate = new FormControl(new Date());
+  // endDate = new FormControl(new Date());
+  // now = new Date();
 
-  rows = 25;
-  page = 0;
+  // rows = 25;
+  // page = 0;
   numFound: number;
 
   minDate: Date;
   maxDate: Date;
-
   newVolumeID = null
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  exemplarsAutocomplete = {
+    name: [],
+    subName: []
+  }
+  periodicalsAutocomplete = {
+    name: [],
+    subName: []
+  }
+  attachmentsAutocomplete = {
+    name: [],
+    subName: []
+  }
 
   constructor(
     public dialog: MatDialog,
@@ -171,10 +183,9 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.minDate = new Date(1600, 0, 1);
     this.maxDate = new Date(currentYear, 11, 31);
     this.read();
-    this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
-      this.langChanged();
-    }));
-    // console.log('Inited');
+    // this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
+    //   this.langChanged();
+    // }));
   }
 
   dragEnd({ sizes }) {
@@ -187,15 +198,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
     this.dsExemplars = new MatTableDataSource([]);
     this.state.currentTitul = new Titul();
     const id = this.newVolumeID || this.route.snapshot.paramMap.get('id');
-    // if (id) {
     this.setData(id);
   }
 
   setData(id: string) {
     this.service.getVolume(id).subscribe(res => {
       if (res.length > 0) {
-        // console.log("res > 0")
-        // console.log(res[0])
         this.state.currentVolume = res[0];
         this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
         const dateRange = 'datum_vydani:[' + res[0].datum_od + ' TO ' + res[0].datum_do + ']';
@@ -206,6 +214,61 @@ export class SvazekComponent implements OnInit, OnDestroy {
         // this.vlastnik_idx = -1;
       }
     });
+  }
+
+  setExemplarsAutocomplete(){
+    const periodicals = this.state.currentVolume.periodicita.filter(p => p.active)
+    const exemplars = this.exemplars.filter(e => e.numExists && !e.isPriloha)
+    const texts = {
+      name: [],
+      subName: []
+    }
+
+    periodicals.forEach(p => {
+      if(p.nazev !== "") texts.name.push(p.nazev)
+      if(p.podnazev !== "") texts.subName.push(p.podnazev)
+    })
+
+    exemplars.forEach(e => {
+      if(e.nazev !== "") texts.name.push(e.nazev)
+      if(e.podnazev !== "") texts.subName.push(e.podnazev)
+    })
+
+    this.exemplarsAutocomplete.name = [...new Set([...texts.name])]
+    this.exemplarsAutocomplete.subName = [...new Set([...texts.subName])]
+
+  }
+
+  setAutocompletes(){
+    const attachments$ = this.service.getDistinctValuesOfMetaTitleForAttachments(this.state.currentVolume.id_titul)
+    const periodicals$ = this.service.getMetaTitlePeriodicals(this.state.currentVolume.id_titul)
+
+    attachments$.pipe(combineLatestWith(periodicals$), takeUntil(this.destroyed$)).subscribe(([attachments, periodicals]) => {
+
+      // @ts-ignore
+      const attachmentsName = attachments?.nazev.distinctValues.filter(a => a !== "")
+      // @ts-ignore
+      const attachmentsSubName = attachments?.podnazev.distinctValues.filter(a => a !== "")
+
+      this.attachmentsAutocomplete.name = [...new Set([...attachmentsName])]
+      this.attachmentsAutocomplete.subName = [...new Set([...attachmentsSubName])]
+
+      const texts = {
+        name: [],
+        subName: []
+      }
+
+      periodicals.forEach(p => {
+       p.periodicita.forEach(p => {
+          if(p.active && p.nazev !== "") texts.name.push(p.nazev)
+          if(p.active && p.podnazev !== "") texts.subName.push(p.podnazev)
+        })
+      })
+
+      this.periodicalsAutocomplete.name = [...new Set([...texts.name])]
+      this.periodicalsAutocomplete.subName = [...new Set([...texts.subName])]
+
+    })
   }
 
   getExemplars(id: string, dateRange: string, setVolume: boolean, sortAttachments) {
@@ -227,7 +290,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
           this.state.currentVolume.signatura = ex.signatura;
           this.state.currentVolume.vlastnik = ex.vlastnik;
         }
-        this.findTitul();
+        // this.findTitul();
         this.loadExemplars(res2.response, sortAttachments);
         this.loading = false;
       } else {
@@ -241,6 +304,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         this.loading = false;
       }
       this.isOwner = this.state.user.owner && (this.state.user.owner === this.state.currentVolume.vlastnik)
+      this.setExemplarsAutocomplete()
     });
 
     if (this.state.currentVolume) {
@@ -345,9 +409,9 @@ export class SvazekComponent implements OnInit, OnDestroy {
     });
   }
 
-  langChanged() {
-
-  }
+  // langChanged() {
+  //
+  // }
 
 
   getDaysArray(start, end) {
@@ -362,12 +426,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
     return arr;
   }
 
-  pageChanged(e: PageEvent) {
-    this.rows = e.pageSize;
-    this.page = e.pageIndex;
-
+  // pageChanged(e: PageEvent) {
+  //   this.rows = e.pageSize;
+  //   this.page = e.pageIndex;
+  //
     // this.loadIssues();
-  }
+  // }
 
   attachmentSelected(newValue: string, exemplar: Exemplar){
     exemplar.isPriloha = newValue === "attachment" || newValue === "periodic_attachment"
@@ -387,6 +451,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         }
       }
       // console.log(this.state.currentTitul)
+      this.setAutocompletes()
       this.setVolumeFacets();
 
       // for (let i = 0; i < this.config.owners.length; i++) {
@@ -482,8 +547,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
     this.setLastNumber();
 
-    const carovy_kod = this.state.currentVolume.carovy_kod;
-    this.state.currentVolume.id = carovy_kod;
+    this.state.currentVolume.id = this.state.currentVolume.carovy_kod;
 
     // console.log(this.dsIssues.data);
     this.loading = true;
@@ -639,6 +703,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     switch (type){
       case "id_titul":
         this.setTitul()
+        this.setAutocompletes()
         const newTitul = this.state.currentVolume.titul
         newExemplars = clonedExemplars.map(e => {
           e.meta_nazev = newTitul.meta_nazev
@@ -792,6 +857,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // console.log(this.exemplars)
 
     this.dsExemplars = new MatTableDataSource(this.exemplars);
+    this.setExemplarsAutocomplete()
   }
 
   setTitul() {
@@ -932,7 +998,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // From pages : string[] to pages: {missing: string[], damaged: string[]}
     // Assign to missing
     if (el.pages && Array.isArray(el.pages)) {
-      const pages = Object.assign([], el.pages);
+      // const pages = Object.assign([], el.pages);
       el.pages = { missing: Object.assign([], el.pages), damaged: [] };
     }
 
@@ -1051,7 +1117,9 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.closeInfoOverlay();
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+    // this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   closePop() {
@@ -1115,7 +1183,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
   }
 
   fillNazev(element) {
-    console.log(this.state.currentVolume.periodicita)
+    // console.log(this.state.currentVolume.periodicita)
     // console.log(element);
     if (!element.nazev || element.nazev === '') {
       element.nazev = this.state.currentVolume.titul.meta_nazev;
