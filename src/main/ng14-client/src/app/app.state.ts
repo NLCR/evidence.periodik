@@ -132,7 +132,7 @@ export class AppState {
       }
 
       if(realKey === "volume_id_for_search") this.filterByVolume = true
-      if(realKey === "start_year" || "end_year") this.filterByDate = true
+      if(realKey === "start_year" || realKey === "end_year") this.filterByDate = true
 
       // console.log(`${realKey}: ${value}`);
     }

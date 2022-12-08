@@ -1,5 +1,5 @@
 <div class="app-table-wrapper">
-  <table mat-table [dataSource]="dataSource" >
+  <table mat-table [dataSource]="dataSource" [class]="state.loadingData ? 'loadingData' : ''">
     <ng-container matColumnDef="meta_nazev">
       <th mat-header-cell *matHeaderCellDef>{{ 'record.meta_title' | translate }}</th>
       <td mat-cell *matCellDef="let row; let idx = index" style="white-space: nowrap;"  [routerLink]="['/issue', row.id]">
