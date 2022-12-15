@@ -1,4 +1,12 @@
-import {Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+  Renderer2
+} from '@angular/core';
 import {AppState} from 'src/app/app.state';
 import {AddTitulDialogComponent} from 'src/app/components/add-titul-dialog/add-titul-dialog.component';
 import {ConfirmDialogComponent} from '../confirm-dialog/confirm-dialog.component';
@@ -93,20 +101,36 @@ export class SvazekComponent implements OnInit, OnDestroy {
     'poznamka'
   ];
 
+  // volume_znak_oznaceni_vydani_defaults = [
+  //   { value: "", name: "desc.without_name"},
+  //   { value: "•"},
+  //   { value: "•••"},
+  //   { value: "●●"},
+  //   { value: "●●●●"},
+  //   { value: "*"},
+  //   { value: "**"},
+  //   { value: "***"},
+  //   { value: "****"},
+  //   { value: "******"},
+  //   { value: "■"},
+  //   { value: "■■"}
+  // ]
+
   volume_znak_oznaceni_vydani_defaults = [
-    { value: "", name: "desc.without_name"},
-    { value: "•"},
-    { value: "•••"},
-    { value: "●●"},
-    { value: "●●●●"},
-    { value: "*"},
-    { value: "**"},
-    { value: "***"},
-    { value: "****"},
-    { value: "******"},
+    { value: "●"},
+    { value: "○"},
     { value: "■"},
-    { value: "■■"}
+    { value: "□"},
+    { value: "★"},
+    { value: "☆"},
+    { value: "△"},
+    { value: "▲"},
+    { value: "✶"},
   ]
+
+  znak_oznaceni_vydani_select_open = false
+  znak_oznaceni_vydani_select_click = false
+
 
   displayedColumnsLeftTableBottom = Object.keys(new PeriodicitaSvazku());
   dsPeriodicita: MatTableDataSource<PeriodicitaSvazku>;
@@ -175,7 +199,16 @@ export class SvazekComponent implements OnInit, OnDestroy {
     public config: AppConfiguration,
     public state: AppState,
     private location: Location,
-    private service: AppService) { }
+    private service: AppService,
+    private renderer: Renderer2
+  ) {
+    this.renderer.listen('window', 'click', (e: Event) => {
+      if (!this.znak_oznaceni_vydani_select_click) {
+        this.znak_oznaceni_vydani_select_open = false;
+      }
+      this.znak_oznaceni_vydani_select_click = false;
+    });
+  }
 
   ngOnInit() {
     this.displayedColumnsLeftTableBottom.push('button');
@@ -186,6 +219,22 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // this.subscriptions.push(this.service.langSubject.subscribe((lang) => {
     //   this.langChanged();
     // }));
+  }
+
+  openDropdownTable(){
+    if(!this.znak_oznaceni_vydani_select_open) this.znak_oznaceni_vydani_select_open = true
+  }
+
+  preventDropdownTableClose(){
+    this.znak_oznaceni_vydani_select_click = true
+  }
+
+  selectZnakOznaceniVydani(value: string){
+    const currentValue = this.state.currentVolume.znak_oznaceni_vydani
+    if(currentValue === "" || currentValue.includes(value)){
+      this.state.currentVolume.znak_oznaceni_vydani += value
+      this.updateExemplars(this.state.currentVolume.znak_oznaceni_vydani, 'znak_oznaceni_vydani')
+    }
   }
 
   dragEnd({ sizes }) {

@@ -66,17 +66,28 @@
                       <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
                     </mat-autocomplete>
                   </ng-container>
-                  <ng-container *ngSwitchCase="'znak_oznaceni_vydani'">
-                    <mat-form-field>
-                      <input type="text" matInput [(ngModel)]="state.currentVolume.znak_oznaceni_vydani" (ngModelChange)="updateExemplars($event, 'znak_oznaceni_vydani')"
-                           [matAutocomplete]="auto" [disabled]="!state.logged || !isOwner"><!--
-<input type="text" matInput [(ngModel)]="state.currentVolume.znak_oznaceni_vydani"-->
-<!--                        [matAutocomplete]="auto" [disabled]=!state.logged>-->
-                      <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of volume_znak_oznaceni_vydani_defaults" [value]="option.value">
-                          {{option.name ? (option.name | translate) : option.value}}
-                        </mat-option>
-                      </mat-autocomplete>
+                  <ng-container *ngSwitchCase="'znak_oznaceni_vydani'" class="znak_oznaceni_vydani_container">
+                    <mat-form-field (click)="preventDropdownTableClose(); openDropdownTable()">
+                      <input type="text" matInput [(ngModel)]="state.currentVolume.znak_oznaceni_vydani" (ngModelChange)="updateExemplars($event, 'znak_oznaceni_vydani')" [disabled]="!state.logged || !isOwner">
+                      <div *ngIf="znak_oznaceni_vydani_select_open" class="znak_oznaceni_vydani_select">
+<!--                      <div class="znak_oznaceni_vydani_select">-->
+                        <div class="options">
+                          <span *ngFor="let option of volume_znak_oznaceni_vydani_defaults" (click)="selectZnakOznaceniVydani(option.value)">
+                            {{option.name ? (option.name | translate) : option.value}}
+                          </span>
+                        </div>
+<!--                        <span (click)="selectZnakOznaceniVydani('')">-->
+<!--                          {{"desc.without_name" | translate}}-->
+<!--                        </span>-->
+                      </div>
+
+
+<!--                    [matAutocomplete]="auto" [disabled]=!state.logged>-->
+<!--                      <mat-autocomplete #auto="matAutocomplete">-->
+<!--                        <mat-option *ngFor="let option of volume_znak_oznaceni_vydani_defaults" [value]="option.value">-->
+<!--                          {{option.name ? (option.name | translate) : option.value}}-->
+<!--                        </mat-option>-->
+<!--                      </mat-autocomplete>-->
                       <mat-icon>{{ config.icons.pencil }}</mat-icon>
                     </mat-form-field>
                     <mat-autocomplete #auto="matAutocomplete">
