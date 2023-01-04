@@ -138,7 +138,7 @@
 
                   <ng-container *ngSwitchDefault>
                     <mat-form-field>
-                      <input type="text" matInput [(ngModel)]="state.currentVolume[element]" [disabled]="!state.logged || !isOwner">
+                      <input type="text" matInput [(ngModel)]="state.currentVolume[element]" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
                       <mat-icon>{{ config.icons.pencil }}</mat-icon>
                     </mat-form-field>
                   </ng-container>
@@ -169,7 +169,12 @@
 <!--                <button mat-flat-button color="accent" (click)="attachmentsAtTheEndOfThePage = !attachmentsAtTheEndOfThePage" [disabled]="!state.logged || loading">-->
 <!--                  <mat-icon *ngIf="!state.logged" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"-->
 <!--                            matTooltipPosition="above">{{ config.icons.block }}</mat-icon>-->
-                  <mat-checkbox class="attachmentsAtTheEndOfThePage" [(ngModel)]="state.currentVolume.show_attachments_at_the_end" [disabled]="!state.logged || !isOwner">{{ 'button.attachmentsAtTheEndOfThePage' | translate }}</mat-checkbox>
+                  <mat-checkbox class="attachmentsAtTheEndOfThePage"
+                                [(ngModel)]="state.currentVolume.show_attachments_at_the_end"
+                                [disabled]="!state.logged || !isOwner"
+                                (change)="setDataChanged()">
+                    {{ 'button.attachmentsAtTheEndOfThePage' | translate }}
+                  </mat-checkbox>
 
 <!--                </button>-->
               </td>
@@ -191,7 +196,7 @@
               <th mat-header-cell *matHeaderCellDef>{{ 'desc.edition' | translate }}</th>
               <td mat-cell *matCellDef="let element">
                 <mat-form-field *ngIf="element.active">
-                  <mat-select [(ngModel)]="element.vydani" [disabled]="!state.logged || !isOwner">
+                  <mat-select [(ngModel)]="element.vydani" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
                     <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}
                     </mat-option>
                   </mat-select>
@@ -207,7 +212,7 @@
               </th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <mat-form-field *ngIf="element.active" class="app-short-text">
-                  <input type="text" matInput [(ngModel)]="element.pocet_stran" [disabled]="!state.logged || !isOwner">
+                  <input type="text" matInput [(ngModel)]="element.pocet_stran" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
                 </mat-form-field>
               </td>
               <td mat-footer-cell *matFooterCellDef colspan="7"></td>
@@ -331,7 +336,7 @@
               </th>
               <td mat-cell *matCellDef="let element; let idx=index" class="app-edit-text">
                 <mat-form-field *ngIf="element.numExists && !element.isPriloha" class="app-short-text">
-                  <input type="text" matInput [(ngModel)]="element.cislo" style="width :20px;" [disabled]="!state.logged || !isOwner">
+                  <input type="text" matInput [(ngModel)]="element.cislo" style="width :20px;" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
                   <button [disabled]="!state.logged || !isOwner" mat-icon-button matSuffix (click)="reNumber(element, idx, true)" [attr.aria-label]="'desc.renumber_down' | translate" [matTooltip]="'desc.renumber_down' | translate" matTooltipPosition="above">
                     <mat-icon [class]="!state.logged || !isOwner ? 'not_logged' : ''">keyboard_arrow_down</mat-icon>
                   </button>
@@ -346,7 +351,7 @@
               </th>
               <td mat-cell *matCellDef="let element; let idx=index" class="app-edit-text">
                 <mat-form-field *ngIf="element.numExists && element.isPriloha" class="app-short-text">
-                  <input type="text" matInput [(ngModel)]="element.cislo" style="width :20px;" [disabled]="!state.logged || !isOwner">
+                  <input type="text" matInput [(ngModel)]="element.cislo" style="width :20px;" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
 <!--                  <button [disabled]=!state.logged mat-icon-button matSuffix (click)="reNumber(element, idx, true)" [attr.aria-label]="'desc.renumber_down' | translate" [matTooltip]="'desc.renumber_down' | translate" matTooltipPosition="above">-->
 <!--                    <mat-icon [class]="!state.logged ? 'not_logged' : ''">keyboard_arrow_down</mat-icon>-->
 <!--                  </button>-->
@@ -359,7 +364,7 @@
               <th mat-header-cell *matHeaderCellDef>{{ 'record.mutation' | translate }}</th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <mat-form-field *ngIf="element.numExists">
-                  <input type="text" matInput [(ngModel)]="element.mutace" [matAutocomplete]="auto3" [disabled]="!state.logged || !isOwner">
+                  <input type="text" matInput [(ngModel)]="element.mutace" (ngModelChange)="setDataChanged()" [matAutocomplete]="auto3" [disabled]="!state.logged || !isOwner">
                   <mat-icon>{{ config.icons.pencil }}</mat-icon>
                 </mat-form-field>
                 <mat-autocomplete #auto3="matAutocomplete">
@@ -389,7 +394,7 @@
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <ng-container *ngIf="element.numExists">
                   <mat-form-field *ngIf="element.isPriloha">
-                    <input type="text" matInput [(ngModel)]="element.nazev" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                    <input type="text" matInput [(ngModel)]="element.nazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
                     <mat-autocomplete #name="matAutocomplete">
                       <mat-option *ngFor="let name of attachmentsAutocomplete.name" [value]="name">
                         {{name}}
@@ -398,7 +403,7 @@
                     <mat-icon>{{ config.icons.pencil }}</mat-icon>
                   </mat-form-field>
                   <mat-form-field *ngIf="!element.isPriloha">
-                    <input type="text" matInput [(ngModel)]="element.nazev" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                    <input type="text" matInput [(ngModel)]="element.nazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
                     <mat-autocomplete #name="matAutocomplete">
                       <mat-option *ngFor="let name of exemplarsAutocomplete.name" [value]="name">
                         {{name}}
@@ -418,7 +423,7 @@
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <ng-container *ngIf="element.numExists">
                   <mat-form-field *ngIf="element.isPriloha">
-                    <input type="text" matInput [(ngModel)]="element.podnazev" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                    <input type="text" matInput [(ngModel)]="element.podnazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
                     <mat-autocomplete #subName="matAutocomplete">
                       <mat-option *ngFor="let subName of attachmentsAutocomplete.subName" [value]="subName">
                         {{subName}}
@@ -427,7 +432,7 @@
                     <mat-icon>{{ config.icons.pencil }}</mat-icon>
                   </mat-form-field>
                   <mat-form-field *ngIf="!element.isPriloha">
-                    <input type="text" matInput [(ngModel)]="element.podnazev" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                    <input type="text" matInput [(ngModel)]="element.podnazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
                     <mat-autocomplete #subName="matAutocomplete">
                       <mat-option *ngFor="let subName of exemplarsAutocomplete.subName" [value]="subName">
                         {{subName}}
@@ -446,7 +451,7 @@
               </th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <mat-form-field *ngIf="element.numExists" class="app-short-text">
-                  <input type="text" matInput [(ngModel)]="element.pocet_stran" [disabled]="!state.logged || !isOwner">
+                  <input type="text" matInput [(ngModel)]="element.pocet_stran" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
                 </mat-form-field>
               </td>
             </ng-container>
