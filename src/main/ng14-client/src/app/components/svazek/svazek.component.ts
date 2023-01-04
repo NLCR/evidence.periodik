@@ -31,13 +31,14 @@ import {SvazekOverviewComponent} from '../svazek-overview/svazek-overview.compon
 // import {FormControl} from '@angular/forms';
 import moment from 'moment'
 import {SplitAreaDirective, SplitComponent} from 'angular-split'
+import {ComponentCanDeactivate} from "../can-deactivate/component-can-deactivate";
 
 @Component({
   selector: 'app-svazek',
   templateUrl: './svazek.component.html',
   styleUrls: ['./svazek.component.scss']
 })
-export class SvazekComponent implements OnInit, OnDestroy {
+export class SvazekComponent extends ComponentCanDeactivate implements OnInit, OnDestroy {
 
   private overlayRef: OverlayRef;
 
@@ -156,7 +157,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   poznText: string;
 
-  dataChanged: boolean;
+  dataChanged = false;
   // private dataDiffer: KeyValueDiffer<string, any>;
 
   loading: boolean;
@@ -189,6 +190,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
     subName: []
   }
 
+  canDeactivate(): boolean {
+    return !this.dataChanged
+  }
+
   constructor(
     public dialog: MatDialog,
     private overlay: Overlay,
@@ -202,6 +207,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     private service: AppService,
     private renderer: Renderer2
   ) {
+    super();
     this.renderer.listen('window', 'click', (e: Event) => {
       if (!this.znak_oznaceni_vydani_select_click) {
         this.znak_oznaceni_vydani_select_open = false;
@@ -352,7 +358,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         }
         this.loading = false;
       }
-      this.isOwner = this.state.user.owner && (this.state.user.owner === this.state.currentVolume.vlastnik)
+      this.isOwner = this.state.user?.owner && (this.state.user.owner === this.state.currentVolume.vlastnik)
       this.setExemplarsAutocomplete()
     });
 
@@ -484,6 +490,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   attachmentSelected(newValue: string, exemplar: Exemplar){
     exemplar.isPriloha = newValue === "attachment" || newValue === "periodic_attachment"
+    this.setDataChanged()
   }
 
 
@@ -607,6 +614,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         this.service.showSnackBar('snackbar.error_saving_volume', res.error, true);
       } else {
         this.service.showSnackBar('snackbar.the_volume_was_saved_correctly')
+        this.dataChanged = false
         setTimeout(() => {
           this.read()
         }, 500);
@@ -780,6 +788,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     }
 
     // console.log(newExemplars[0])
+    this.setDataChanged()
     if(this.exemplars.length > 0) this.service.showSnackBar('snackbar.data_changed', '', true, "", 3000)
     this.dsExemplars = new MatTableDataSource(newExemplars)
     // console.log(value, type)
@@ -907,6 +916,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
     this.dsExemplars = new MatTableDataSource(this.exemplars);
     this.setExemplarsAutocomplete()
+    this.setDataChanged()
   }
 
   setTitul() {
@@ -945,11 +955,12 @@ export class SvazekComponent implements OnInit, OnDestroy {
     const n = Object.assign([], this.state.currentVolume.periodicita);
     n.splice(idx + 1, 0, Object.assign({}, element));
     this.state.currentVolume.periodicita = Object.assign([], n);
+    this.setDataChanged()
     // this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
   }
 
   checkElementExists(cs: Exemplar) {
-
+    this.setDataChanged()
   }
 
   reNumber(element: Exemplar, idx: number, down: boolean) {
@@ -992,7 +1003,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
         }
         const additionalInfo = this.state.currentLang === 'cs' ? ` čísel: ${willBeRenumbered} (v rozsahu od ${firstNumber} po ${curCislo - 1})` : ` numbers: ${willBeRenumbered} (in range from ${firstNumber} to ${curCislo - 1})`;
         this.service.showSnackBar('snackbar.renumbered_correctly', '', false, additionalInfo, 3000, true);
-
+        this.setDataChanged()
       }
     });
 
@@ -1022,6 +1033,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
     this.exemplars.splice(idx + 1, 0, newEl);
     this.dsExemplars = new MatTableDataSource(this.exemplars);
+    this.setDataChanged()
   }
 
   rowColor(row): string {
@@ -1096,6 +1108,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       if (res.error) {
         this.service.showSnackBar('snackbar.error_saving_volume', res.error, true);
       } else {
+        this.dataChanged = false
         this.service.showSnackBar('snackbar.the_volume_was_saved_correctly');
       }
       this.closePop();
@@ -1133,11 +1146,13 @@ export class SvazekComponent implements OnInit, OnDestroy {
     if (ex.wronglyBound) { ex.stav.push('ChSv'); }
     if (ex.necitelneSvazano) { ex.stav.push('NS'); }
     if (ex.censored) { ex.stav.push('Cz'); }
+    this.setDataChanged()
   }
 
   updatePoznamka() {
     this.csEditing.poznamka = this.poznText;
-    this.csEditing.poznamka = this.poznText;
+    // this.csEditing.poznamka = this.poznText;
+    this.setDataChanged()
     this.closePop();
   }
 
@@ -1157,7 +1172,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
       if(type !== "complete") this.service.showSnackBar("snackbar.selected_all");
     }
 
-
+    this.setDataChanged()
 
     if(autoSave){
       this.save()
@@ -1205,6 +1220,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
 
   setVolumeDatum(element: string, event: MatDatepickerInputEvent<Date>) {
     if (event.value) {
+      this.setDataChanged()
       this.state.currentVolume[element] = this.datePipe.transform(event.value, 'yyyy-MM-dd');
       if (element === 'datum_od') {
         this.state.currentVolume.datum_do = this.datePipe.transform(moment(event.value).endOf('month').toDate(), 'yyyy-MM-dd');
@@ -1215,6 +1231,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
     //   // this.pickerOd.select(d);
     // }
 
+  }
+
+  setDataChanged(){
+    this.dataChanged = true
   }
 
   dateChanged(element, e) {
@@ -1235,6 +1255,7 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // console.log(this.state.currentVolume.periodicita)
     // console.log(element);
     if (!element.nazev || element.nazev === '') {
+      this.setDataChanged()
       element.nazev = this.state.currentVolume.titul.meta_nazev;
     }
   }

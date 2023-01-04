@@ -104,7 +104,8 @@
     "attachment_number": "Číslo přílohy"
   },
   "note": {
-    "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."
+    "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen.",
+    "save_data_before_leaving": "Máte neuložené změny! Pokud stránku opustíte, vaše změny budou ztraceny."
   },
 
   "formatvdk": {

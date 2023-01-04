@@ -104,7 +104,8 @@
     "attachment_number": "Attachment number"
   },
   "note": {
-    "this_action_is_not_allowed_not_login": "TThis action is not allowed, you are not logged in."
+    "this_action_is_not_allowed_not_login": "This action is not allowed, you are not logged in.",
+    "save_data_before_leaving": "You have unsaved changes! If you leave, your changes will be lost."
   },
 
   "formatvdk": {

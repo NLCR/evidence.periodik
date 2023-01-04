@@ -96,6 +96,7 @@ import {A11yModule} from '@angular/cdk/a11y';
 import {AdminUsersComponent} from './components/admin/admin-users/admin-users-component';
 import {AdminOwnersComponent} from './components/admin/admin-owners/admin-owners.component';
 import {AngularSplitModule} from "angular-split";
+import {CanDeactivateGuard} from "./components/can-deactivate/can-deactivate.guard";
 
 registerLocaleData(localeCs, 'cs');
 
@@ -114,7 +115,7 @@ const providers: any[] = [
   { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
   // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   { provide: APP_INITIALIZER, useFactory: (config: AppConfiguration) => () => config.load(), deps: [AppConfiguration], multi: true },
-  HttpClient, DatePipe, AppConfiguration, AppState, AppService, AuthGuard];
+  HttpClient, DatePipe, AppConfiguration, AppState, AppService, AuthGuard, CanDeactivateGuard];
 
 @NgModule({
   declarations: [
