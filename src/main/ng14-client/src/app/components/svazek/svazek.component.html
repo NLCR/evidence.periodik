@@ -67,9 +67,9 @@
                     </mat-autocomplete>
                   </ng-container>
                   <ng-container *ngSwitchCase="'znak_oznaceni_vydani'" class="znak_oznaceni_vydani_container">
-                    <mat-form-field (click)="preventDropdownTableClose(); openDropdownTable()">
+                    <mat-form-field (click)="preventDropdownTableClose(); openDropdownTable('volume')">
                       <input type="text" matInput [(ngModel)]="state.currentVolume.znak_oznaceni_vydani" (ngModelChange)="updateExemplars($event, 'znak_oznaceni_vydani')" [disabled]="!state.logged || !isOwner">
-                      <div *ngIf="znak_oznaceni_vydani_select_open" class="znak_oznaceni_vydani_select">
+                      <div *ngIf="znak_oznaceni_vydani_select_open.open && znak_oznaceni_vydani_select_open.id === 'volume'" class="znak_oznaceni_vydani_select">
 <!--                      <div class="znak_oznaceni_vydani_select">-->
                         <div class="options">
                           <span *ngFor="let option of volume_znak_oznaceni_vydani_defaults" (click)="selectZnakOznaceniVydani(option.value)">
@@ -459,7 +459,7 @@
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <mat-form-field *ngIf="element.numExists" class="app-short-text" (click)="preventDropdownTableClose(); openDropdownTable(element.id)">
                   <input type="text" matInput [(ngModel)]="element.znak_oznaceni_vydani" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
-                  <div *ngIf="znak_oznaceni_vydani_select_open.open && znak_oznaceni_vydani_select_open.id === element.id" class="znak_oznaceni_vydani_select {{element.id}}">
+                  <div *ngIf="znak_oznaceni_vydani_select_open.open && znak_oznaceni_vydani_select_open.id === element.id" class="znak_oznaceni_vydani_select">
                     <div class="options">
                           <span *ngFor="let option of volume_znak_oznaceni_vydani_defaults" (click)="selectZnakOznaceniVydani(option.value, element)">
                             {{option.name ? (option.name | translate) : option.value}}
