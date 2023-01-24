@@ -250,6 +250,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
       const currentValue = exemplar.znak_oznaceni_vydani
       if(currentValue === "" || currentValue.includes(value)){
         exemplar.znak_oznaceni_vydani += value
+        this.setDataChanged()
       }
     }else{
       const currentValue = this.state.currentVolume.znak_oznaceni_vydani
