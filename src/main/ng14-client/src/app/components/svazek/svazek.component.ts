@@ -128,7 +128,10 @@ export class SvazekComponent implements OnInit, OnDestroy {
     { value: "✶"},
   ]
 
-  znak_oznaceni_vydani_select_open = false
+  znak_oznaceni_vydani_select_open = {
+    open: false,
+    id: ""
+  }
   znak_oznaceni_vydani_select_click = false
 
 
@@ -204,7 +207,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
   ) {
     this.renderer.listen('window', 'click', (e: Event) => {
       if (!this.znak_oznaceni_vydani_select_click) {
-        this.znak_oznaceni_vydani_select_open = false;
+        this.znak_oznaceni_vydani_select_open.open = false;
+        this.znak_oznaceni_vydani_select_open.id = ""
       }
       this.znak_oznaceni_vydani_select_click = false;
     });
@@ -221,19 +225,32 @@ export class SvazekComponent implements OnInit, OnDestroy {
     // }));
   }
 
-  openDropdownTable(){
-    if(!this.znak_oznaceni_vydani_select_open) this.znak_oznaceni_vydani_select_open = true
+  openDropdownTable(id: string){
+    if(!this.znak_oznaceni_vydani_select_open.open) {
+      this.znak_oznaceni_vydani_select_open.open = true
+      this.znak_oznaceni_vydani_select_open.id = id
+    }
+    if(this.znak_oznaceni_vydani_select_open.open && this.znak_oznaceni_vydani_select_open.id !== id){
+      this.znak_oznaceni_vydani_select_open.id = id
+    }
   }
 
   preventDropdownTableClose(){
     this.znak_oznaceni_vydani_select_click = true
   }
 
-  selectZnakOznaceniVydani(value: string){
-    const currentValue = this.state.currentVolume.znak_oznaceni_vydani
-    if(currentValue === "" || currentValue.includes(value)){
-      this.state.currentVolume.znak_oznaceni_vydani += value
-      this.updateExemplars(this.state.currentVolume.znak_oznaceni_vydani, 'znak_oznaceni_vydani')
+  selectZnakOznaceniVydani(value: string, exemplar: Exemplar = null){
+    if(exemplar){
+      const currentValue = exemplar.znak_oznaceni_vydani
+      if(currentValue === "" || currentValue.includes(value)){
+        exemplar.znak_oznaceni_vydani += value
+      }
+    }else{
+      const currentValue = this.state.currentVolume.znak_oznaceni_vydani
+      if(currentValue === "" || currentValue.includes(value)){
+        this.state.currentVolume.znak_oznaceni_vydani += value
+        this.updateExemplars(this.state.currentVolume.znak_oznaceni_vydani, 'znak_oznaceni_vydani')
+      }
     }
   }
 
@@ -834,7 +851,8 @@ export class SvazekComponent implements OnInit, OnDestroy {
     const dates = this.getDaysArray(currentVolume.datum_od, currentVolume.datum_do);
     this.exemplars = [];
     let idx = currentVolume.prvni_cislo;
-    let cisloPrilohy = 0
+    let attachmentNumber = 1
+    let periodicAttachmentNumber = 1
     let attachmentsAtTheEnd = []
 
     let odd = true;
@@ -864,9 +882,9 @@ export class SvazekComponent implements OnInit, OnDestroy {
             ex.podnazev = p.podnazev;
             ex.vydani = p.vydani;
             ex.isPriloha = generateAttachment
-            ex.cislo = generateAttachment ? cisloPrilohy : idx
+            ex.cislo = p.vydani === "attachment" ? attachmentNumber :  p.vydani === "periodic_attachment" ? periodicAttachmentNumber : idx
             ex.odd = odd;
-            generateAttachment ? cisloPrilohy++ : idx++
+            generateAttachment ? p.vydani === "attachment" ? attachmentNumber++ : periodicAttachmentNumber++ : idx++
             inserted = true;
 
             if(generateAttachment && currentVolume.show_attachments_at_the_end){
