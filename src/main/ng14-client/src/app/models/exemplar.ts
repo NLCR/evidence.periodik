@@ -59,5 +59,18 @@ export class Exemplar {
   necitelneSvazano: boolean;
   censored: boolean;
   odd: boolean;
+  isPriloha: boolean
 
 }
+
+export type ExemplarStates =
+  "complete" |
+  "destroyedPages" |
+  "degradated" |
+  "missingPages" |
+  "erroneousPaging" |
+  "erroneousDate" |
+  "erroneousNumbering" |
+  "wronglyBound" |
+  "necitelneSvazano" |
+  "censored" | ""

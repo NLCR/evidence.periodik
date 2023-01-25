@@ -22,6 +22,8 @@ export class AdminUsersComponent implements OnInit {
     { id: 'admin', name: 'admin_role' }
   ];
 
+  owners = this.state.owners
+
   constructor(
     public dialog: MatDialog,
     private service: AppService,

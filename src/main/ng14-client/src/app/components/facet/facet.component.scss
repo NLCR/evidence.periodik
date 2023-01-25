@@ -4,6 +4,7 @@
 }
 
 .loadingData {
+  color: #949494;
   filter: grayscale(1);
-  cursor: wait !important;
+  cursor: default !important;
 }

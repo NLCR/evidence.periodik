@@ -28,7 +28,7 @@ export class AppState {
   vdkFormats: string[] = [];
   vydani = [];
   configured = false;
-  owners: { name: string, url: string }[] = [];
+  owners: { id: number, name: string, url: string }[] = [];
   stavy: string[] = [];
   states = [];
 
@@ -90,12 +90,13 @@ export class AppState {
 
   q: string;
   currentPage = 0;
-  rows = 20000;
+  rows = 50;
+
   public filters: Filter[] = [];
 
   public filterByDate: boolean;
   public filterByVolume: boolean;
-  logginChanged: boolean;
+  loginChanged: boolean;
 
   setConfig(config: AppConfiguration) {
 
@@ -110,6 +111,35 @@ export class AppState {
 
     this.configured = true;
     // this._configSubject.next(cfg);
+  }
+
+  parseSearchQuery(searchQuery){
+    if(!Object.keys(searchQuery.params).length) return
+    const params = searchQuery.params
+
+    for (const [key, value] of Object.entries(params)) {
+      let realKey = key
+      const separatorIndex = realKey.indexOf("-")
+      if(separatorIndex > 0){
+        realKey = realKey.substring(0, separatorIndex)
+      }
+
+      if(["stav", "znak_oznaceni_vydani", "nazev", "mutace", "vydani", "vlastnik"].includes(realKey)){
+        const filter = new Filter(realKey, value as string)
+        this.filters.push(filter)
+      }else{
+        this[realKey] = value
+      }
+
+      if(realKey === "volume_id_for_search") this.filterByVolume = true
+      if(realKey === "start_year" || realKey === "end_year") this.filterByDate = true
+
+      // console.log(`${realKey}: ${value}`);
+    }
+
+    this._searchParamsSubject.next(null)
+    // console.log(params)
+
   }
 
   changeLang(lang) {

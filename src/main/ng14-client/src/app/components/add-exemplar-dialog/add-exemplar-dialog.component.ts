@@ -33,6 +33,8 @@ export class AddExemplarDialogComponent implements OnInit {
   saved = false;
   onspecial = false;
 
+  isOwner = false
+
   showPages: boolean;
   // pagesRange: { label: string, sel: boolean }[] = [];
   pagesRange: { label: string, index: number }[] = [];
@@ -54,6 +56,7 @@ export class AddExemplarDialogComponent implements OnInit {
     this.exemplar = this.data.exemplar;
     // console.log(this.issue, this.exemplar);
     this.editType = this.data.editType;
+    this.isOwner = this.exemplar.vlastnik === this.state.user.owner
     if (this.issue) {
 
       this.startDate = Utils.dateFromDay(this.issue.datum_vydani_den);

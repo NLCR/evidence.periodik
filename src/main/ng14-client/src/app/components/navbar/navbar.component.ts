@@ -60,15 +60,15 @@ export class NavbarComponent implements OnInit {
     if (this.router.url === '/home') {
       location.reload();
     } else{
-      this.state.logginChanged = true;
-      this.router.navigate(['home']);
+      this.state.loginChanged = true;
+      return this.router.navigate(['home']);
     }
   }
 
   gologin() {
     this.state.redirectUrl = this.router.url;
 
-    this.router.navigate(['login']);
+    return this.router.navigate(['login']);
   }
 
   activeRoute() {

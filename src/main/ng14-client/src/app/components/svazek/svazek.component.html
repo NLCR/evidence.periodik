@@ -1,518 +1,646 @@
 <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
 <div class="app-svazek-wrapper" (click)="closeInfoOverlay()" *ngIf="state.currentVolume">
-  <div class="app-container-left">
-    <div>{{'desc.input_data_edit' | translate}}</div>
-    <div class="app-table-wrapper app-left-top">
-      <table mat-table [dataSource]="dsSvazek" #table>
-        <!-- Atribut -->
-        <ng-container matColumnDef="attribute">
-          <th mat-header-cell *matHeaderCellDef>{{'desc.atribut' | translate}}</th>
-          <td mat-cell *matCellDef="let element">{{ 'record.' + element | translate}}</td>
-          <td mat-footer-cell *matFooterCellDef colspan="2">
-            <button mat-flat-button color="primary" (click)="readClick()" [disabled]="!state.logged || loading">
-              {{ 'button.load_the_entire_volume' | translate }}
-            </button>
-            <button mat-flat-button color="primary" (click)="save()" [disabled]="!state.logged || loading">
-              <mat-icon *ngIf="!state.logged" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
-                matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
-              {{ 'button.save_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}
-            </button>
-            <button mat-icon-button [disabled]="loading">
-              <mat-icon [routerLink]="'/result/'+ state.currentTitul.id" [matTooltip]="'desc.display_table' | translate">
-                {{ config.icons.view_table }}</mat-icon>
-              <mat-icon [matTooltip]="'desc.volume_overview' | translate" (click)="showSvazekOverview()"
-                matTooltipPosition="above">{{ config.icons.info }}</mat-icon>
-            </button>
-            <button mat-flat-button color="accent" (click)="deleteClick()" [disabled]="!state.logged || loading">
-              <mat-icon *ngIf="!state.logged" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
-                        matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
-              {{ 'button.delete_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}
-            </button>
-          </td>
-        </ng-container>
+  <as-split
+    unit="percent"
+    gutterAriaLabel="adjustable divider between two views"
+    (dragEnd)="dragEnd($event)"
+    #split="asSplit"
+  >
+    <as-split-area size="30" #area1="asSplitArea" class="split-area">
+      <div class="app-container-left">
+        <div>{{'desc.input_data_edit' | translate}}</div>
+        <div class="app-table-wrapper app-left-top">
+          <table mat-table [dataSource]="dsSvazek" #table>
+            <!-- Atribut -->
+            <ng-container matColumnDef="attribute">
+              <th mat-header-cell *matHeaderCellDef>{{'desc.atribut' | translate}}</th>
+              <td mat-cell *matCellDef="let element">{{ 'record.' + element | translate}}</td>
+              <td mat-footer-cell *matFooterCellDef colspan="2">
+                <button mat-flat-button color="primary" (click)="readClick()" [disabled]="!state.logged || loading || !isOwner">
+                  {{ 'button.load_the_entire_volume' | translate }}
+                </button>
+                <button mat-flat-button color="primary" (click)="save()" [disabled]="!state.logged || loading || !isOwner">
+                  <mat-icon *ngIf="!state.logged  || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
+                    matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
+                  {{ 'button.save_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}
+                </button>
+                <button mat-icon-button [disabled]="loading || !state.logged">
+                  <mat-icon [routerLink]="'/result/'+ state.currentTitul.id" [matTooltip]="'desc.display_table' | translate">
+                    {{ config.icons.view_table }}</mat-icon>
+                  <mat-icon style="margin-left: 5px" [matTooltip]="'desc.volume_overview' | translate" (click)="showSvazekOverview()"
+                    matTooltipPosition="above">{{ config.icons.info }}</mat-icon>
+                </button>
+                <br />
+                <button style="margin-top: 5px" mat-flat-button color="accent" (click)="deleteClick()" [disabled]="!state.logged || loading || !isOwner">
+                  <mat-icon *ngIf="!state.logged || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
+                            matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
+                  {{ 'button.delete_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}
+                </button>
+                <button style="margin-top: 5px" mat-flat-button color="accent" (click)="duplicateClick()" [disabled]="!state.logged || loading || !isOwner">
+                  <mat-icon *ngIf="!state.logged || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
+                            matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
+                  {{ 'button.duplicate_volume' | translate }} {{dataChanged ? '!!' : ''}}
+                </button>
+              </td>
+            </ng-container>
 
-        <!-- Value -->
-        <ng-container matColumnDef="value">
-          <th mat-header-cell *matHeaderCellDef>{{'desc.hodnota' | translate}}</th>
-          <td mat-cell *matCellDef="let element"
-            [ngClass]="{'app-edit-text' : element !== 'titul' && element !== 'vlastnik'}">
-            <ng-container [ngSwitch]="element">
-              <ng-container *ngSwitchCase="'titul'">
-                <mat-select [(ngModel)]="titul_idx" (ngModelChange)="setTitul()" [disabled]=!state.logged>
-                  <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx">{{tit.meta_nazev}}
-                  </mat-option>
-                  <mat-option [value]="-1">{{'desc.add_new_title' | translate}}</mat-option>
-                </mat-select>
-              </ng-container>
-              <ng-container *ngSwitchCase="'mutace'">
-                <mat-form-field>
-                  <input type="text" matInput [(ngModel)]="state.currentVolume.mutace" [matAutocomplete]="auto2" [disabled]=!state.logged>
-                  <mat-icon>{{ config.icons.pencil }}</mat-icon>
+            <!-- Value -->
+            <ng-container matColumnDef="value">
+              <th mat-header-cell *matHeaderCellDef>{{'desc.hodnota' | translate}}</th>
+              <td mat-cell *matCellDef="let element"
+                [ngClass]="{'app-edit-text' : element !== 'titul' && element !== 'vlastnik'}">
+                <ng-container [ngSwitch]="element">
+                  <ng-container *ngSwitchCase="'titul'">
+                    <mat-select [(ngModel)]="titul_idx" (ngModelChange)="updateExemplars($event, 'id_titul')" [disabled]="!state.logged || !isOwner">
+                      <mat-option *ngFor="let tit of state.tituly; let idx=index;" [value]="idx">{{tit.meta_nazev}}
+                      </mat-option>
+                      <mat-option [value]="-1">{{'desc.add_new_title' | translate}}</mat-option>
+                    </mat-select>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'mutace'">
+                    <mat-form-field>
+                      <input type="text" matInput [(ngModel)]="state.currentVolume.mutace" (ngModelChange)="updateExemplars($event, 'mutace')" [matAutocomplete]="auto2" [disabled]="!state.logged || !isOwner">
+                      <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                    </mat-form-field>
+                    <mat-autocomplete #auto2="matAutocomplete">
+                      <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
+                    </mat-autocomplete>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'znak_oznaceni_vydani'" class="znak_oznaceni_vydani_container">
+                    <mat-form-field (click)="preventDropdownTableClose(); openDropdownTable('volume')">
+                      <input type="text" matInput [(ngModel)]="state.currentVolume.znak_oznaceni_vydani" (ngModelChange)="updateExemplars($event, 'znak_oznaceni_vydani')" [disabled]="!state.logged || !isOwner">
+                      <div *ngIf="znak_oznaceni_vydani_select_open.open && znak_oznaceni_vydani_select_open.id === 'volume'" class="znak_oznaceni_vydani_select">
+<!--                      <div class="znak_oznaceni_vydani_select">-->
+                        <div class="options">
+                          <span *ngFor="let option of volume_znak_oznaceni_vydani_defaults" (click)="selectZnakOznaceniVydani(option.value)">
+                            {{option.name ? (option.name | translate) : option.value}}
+                          </span>
+                        </div>
+<!--                        <span (click)="selectZnakOznaceniVydani('')">-->
+<!--                          {{"desc.without_name" | translate}}-->
+<!--                        </span>-->
+                      </div>
+
+
+<!--                    [matAutocomplete]="auto" [disabled]=!state.logged>-->
+<!--                      <mat-autocomplete #auto="matAutocomplete">-->
+<!--                        <mat-option *ngFor="let option of volume_znak_oznaceni_vydani_defaults" [value]="option.value">-->
+<!--                          {{option.name ? (option.name | translate) : option.value}}-->
+<!--                        </mat-option>-->
+<!--                      </mat-autocomplete>-->
+                      <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                    </mat-form-field>
+<!--                    <mat-autocomplete #auto="matAutocomplete">-->
+<!--                      <mat-option *ngFor="let oznaceni of oznaceni_list; let idx=index;" [value]="oznaceni.name">-->
+<!--                        {{oznaceni.name}}</mat-option>-->
+<!--                    </mat-autocomplete>-->
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'vlastnik'">
+<!--                    <mat-select [(ngModel)]="vlastnik_idx" [disabled]=!state.logged (ngModelChange)="updateExemplars($event, 'vlastnik')">-->
+<!--                      <mat-option [value]=-1></mat-option>-->
+<!--                      <mat-option *ngFor="let vlastnik of config.owners; let idx=index;" [value]="idx">{{vlastnik.name}}-->
+<!--                      </mat-option>-->
+<!--                    </mat-select>-->
+                    <input matInput type="text" [(ngModel)]="state.currentVolume.vlastnik" id="volume_owner" name="volume_owner" disabled>
+                  </ng-container>
+
+
+                  <ng-container *ngSwitchCase="'datum_od'">
+                    <mat-form-field floatLabel="never">
+                      <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="pickerOd" [placeholder]="'desc.choose_date' | translate"
+                        (dateChange)="setVolumeDatum(element, $event)" [(ngModel)]="state.currentVolume[element]"
+                        id="datum_od" name="datum_od" [class]="!state.logged || !isOwner ? 'not_logged' : ''" disabled>
+                      <mat-datepicker-toggle matSuffix [for]="pickerOd"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerOd [disabled]="!state.logged || !isOwner"></mat-datepicker>
+                    </mat-form-field>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'datum_do'">
+                    <mat-form-field floatLabel="never">
+                      <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="pickerDo" [placeholder]="'desc.choose_date' | translate"
+                        [(ngModel)]="state.currentVolume[element]" (dateChange)="setVolumeDatum(element, $event)"
+                        id="datum_do" name="datum_do" [class]="!state.logged || !isOwner ? 'not_logged' : ''" disabled>
+                      <mat-datepicker-toggle matSuffix [for]="pickerDo"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerDo [disabled]="!state.logged || !isOwner"></mat-datepicker>
+                    </mat-form-field>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'signatura'">
+                    <mat-form-field>
+                      <input type="text" matInput [(ngModel)]="state.currentVolume[element]" (ngModelChange)="updateExemplars($event, 'signatura')" [disabled]="!state.logged || !isOwner">
+                      <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                    </mat-form-field>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="'carovy_kod'">
+                    <mat-form-field>
+                      <input type="text" matInput [(ngModel)]="state.currentVolume[element]" (ngModelChange)="updateExemplars($event, 'carovy_kod')" [disabled]="!state.logged || !isOwner">
+                      <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                    </mat-form-field>
+                  </ng-container>
+
+                  <ng-container *ngSwitchDefault>
+                    <mat-form-field>
+                      <input type="text" matInput [(ngModel)]="state.currentVolume[element]" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                      <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                    </mat-form-field>
+                  </ng-container>
+                </ng-container>
+              </td>
+              <td mat-footer-cell *matFooterCellDef colspan="0"></td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="svazekColumns; sticky: true" class="app-header-row-left-top"></tr>
+            <tr mat-row *matRowDef="let row; columns: svazekColumns;"></tr>
+            <tr mat-footer-row *matFooterRowDef="svazekColumns; sticky: true"></tr>
+          </table>
+        </div>
+        <!--/.app-table-left-top -->
+        <div>{{'desc.daily_releases_table' | translate}}</div>
+        <div class="app-table-wrapper app-left-bottom">
+          <table mat-table [dataSource]="state.currentVolume.periodicita">
+            <!-- Vydani (den v tydnu) -->
+            <ng-container matColumnDef="den">
+              <th mat-header-cell *matHeaderCellDef>{{ 'desc.comming'  | translate }}</th>
+              <td mat-cell *matCellDef="let element" [class]="!state.currentVolume.titul ? 'disabled' : ''">{{ 'days.' + element.den | translate}}</td>
+              <td mat-footer-cell *matFooterCellDef colspan="7">
+                <button mat-flat-button color="primary" (click)="generateClick()" [disabled]="!state.logged || loading || !isOwner">
+                  <mat-icon *ngIf="!state.logged || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
+                    matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
+                  {{ 'button.generate_again' | translate }}
+                </button>
+<!--                <button mat-flat-button color="accent" (click)="attachmentsAtTheEndOfThePage = !attachmentsAtTheEndOfThePage" [disabled]="!state.logged || loading">-->
+<!--                  <mat-icon *ngIf="!state.logged" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"-->
+<!--                            matTooltipPosition="above">{{ config.icons.block }}</mat-icon>-->
+                  <mat-checkbox class="attachmentsAtTheEndOfThePage"
+                                [(ngModel)]="state.currentVolume.show_attachments_at_the_end"
+                                [disabled]="!state.logged || !isOwner"
+                                (change)="setDataChanged()">
+                    {{ 'button.attachmentsAtTheEndOfThePage' | translate }}
+                  </mat-checkbox>
+
+<!--                </button>-->
+              </td>
+            </ng-container>
+
+            <!-- Number exist -->
+            <ng-container matColumnDef="active">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'desc.number_exists' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox [(ngModel)]="element.active" (change)="fillNazev(element)" [disabled]="!state.logged || !state.currentVolume.titul || !isOwner" ></mat-checkbox>
+              </td>
+              <td mat-footer-cell *matFooterCellDef colspan="7"></td>
+            </ng-container>
+
+            <!-- Vydani -->
+            <ng-container matColumnDef="vydani">
+              <th mat-header-cell *matHeaderCellDef>{{ 'desc.edition' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                <mat-form-field *ngIf="element.active">
+                  <mat-select [(ngModel)]="element.vydani" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                    <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
-                <mat-autocomplete #auto2="matAutocomplete">
-                  <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
-                </mat-autocomplete>
-              </ng-container>
-              <ng-container *ngSwitchCase="'znak_oznaceni_vydani'">
-                <mat-form-field>
-                  <input type="text" matInput [(ngModel)]="state.currentVolume.znak_oznaceni_vydani"
-                    [matAutocomplete]="auto" [disabled]=!state.logged>
-                  <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of volume_znak_oznaceni_vydani_defaults" [value]="option.value">
-                      {{option.name ? (option.name | translate) : option.value}}
+              </td>
+              <td mat-footer-cell *matFooterCellDef colspan="7"></td>
+            </ng-container>
+
+            <!-- Pocet stranek -->
+            <ng-container matColumnDef="pocet_stran">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'record.pages_count' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="app-edit-text">
+                <mat-form-field *ngIf="element.active" class="app-short-text">
+                  <input type="text" matInput [(ngModel)]="element.pocet_stran" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                </mat-form-field>
+              </td>
+              <td mat-footer-cell *matFooterCellDef colspan="7"></td>
+            </ng-container>
+
+            <!-- Name -->
+            <ng-container matColumnDef="nazev">
+              <th mat-header-cell *matHeaderCellDef>
+                <div>{{ 'desc.name' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="app-edit-text">
+                <mat-form-field *ngIf="element.active">
+                  <input type="text" matInput [(ngModel)]="element.nazev" (ngModelChange)="setExemplarsAutocomplete(); setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                  <mat-autocomplete #name="matAutocomplete">
+                    <mat-option *ngFor="let name of periodicalsAutocomplete.name" [value]="name">
+                      {{name}}
                     </mat-option>
                   </mat-autocomplete>
                   <mat-icon>{{ config.icons.pencil }}</mat-icon>
                 </mat-form-field>
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let oznaceni of oznaceni_list; let idx=index;" [value]="oznaceni.name">
-                    {{oznaceni.name}}</mat-option>
-                </mat-autocomplete>
-              </ng-container>
-              <ng-container *ngSwitchCase="'vlastnik'">
-                <mat-select [(ngModel)]="vlastnik_idx" (ngModelChange)="changeVlastnik()" [disabled]=!state.logged>
-                  <mat-option [value]=-1></mat-option>
-                  <mat-option *ngFor="let vlastnik of config.owners; let idx=index;" [value]="idx">{{vlastnik.name}}
-                  </mat-option>
-                </mat-select>
-              </ng-container>
+              </td>
+              <td mat-footer-cell *matFooterCellDef colspan="7"></td>
+            </ng-container>
 
-
-              <ng-container *ngSwitchCase="'datum_od'">
-                <mat-form-field floatLabel="never">
-                  <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="pickerOd" [placeholder]="'desc.choose_date' | translate"
-                    (dateChange)="setVolumeDatum(element, $event)" [(ngModel)]="state.currentVolume[element]"
-                    id="datum_od" name="datum_od" [class]="!state.logged ? 'not_logged' : ''" disabled>
-                  <mat-datepicker-toggle matSuffix [for]="pickerOd"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerOd [disabled]=!state.logged></mat-datepicker>
-                </mat-form-field>
-              </ng-container>
-              <ng-container *ngSwitchCase="'datum_do'">
-                <mat-form-field floatLabel="never">
-                  <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="pickerDo" [placeholder]="'desc.choose_date' | translate"
-                    [(ngModel)]="state.currentVolume[element]" (dateChange)="setVolumeDatum(element, $event)"
-                    id="datum_do" name="datum_do" [class]="!state.logged ? 'not_logged' : ''" disabled>
-                  <mat-datepicker-toggle matSuffix [for]="pickerDo"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerDo [disabled]=!state.logged></mat-datepicker>
-                </mat-form-field>
-              </ng-container>
-
-
-              <ng-container *ngSwitchDefault>
-                <mat-form-field>
-                  <input type="text" matInput [(ngModel)]="state.currentVolume[element]" [disabled]="!state.logged">
+            <!-- Subname -->
+            <ng-container matColumnDef="podnazev">
+              <th mat-header-cell *matHeaderCellDef>
+                <div>{{ 'desc.subname' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="app-edit-text">
+                <mat-form-field *ngIf="element.active">
+                  <input type="text" matInput [(ngModel)]="element.podnazev" (ngModelChange)="setExemplarsAutocomplete(); setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                  <mat-autocomplete #subName="matAutocomplete">
+                    <mat-option *ngFor="let subName of periodicalsAutocomplete.subName" [value]="subName">
+                      {{subName}}
+                    </mat-option>
+                  </mat-autocomplete>
                   <mat-icon>{{ config.icons.pencil }}</mat-icon>
                 </mat-form-field>
-              </ng-container>
+              </td>
+              <td mat-footer-cell *matFooterCellDef colspan="7"></td>
             </ng-container>
-          </td>
-          <td mat-footer-cell *matFooterCellDef colspan="0"></td>
-        </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="svazekColumns; sticky: true" class="app-header-row-left-top"></tr>
-        <tr mat-row *matRowDef="let row; columns: svazekColumns;"></tr>
-        <tr mat-footer-row *matFooterRowDef="svazekColumns; sticky: true"></tr>
-      </table>
-    </div>
-    <!--/.app-table-left-top -->
-    <div>{{'desc.daily_releases_table' | translate}}</div>
-    <div class="app-table-wrapper app-left-bottom">
-      <table mat-table [dataSource]="state.currentVolume.periodicita">
-        <!-- Vydani (den v tydnu) -->
-        <ng-container matColumnDef="den">
-          <th mat-header-cell *matHeaderCellDef>{{ 'desc.comming'  | translate }}</th>
-          <td mat-cell *matCellDef="let element">{{ 'days.' + element.den | translate}}</td>
-          <td mat-footer-cell *matFooterCellDef colspan="7">
-            <button mat-flat-button color="primary" (click)="generateClick()" [disabled]="!state.logged || loading">
-              <mat-icon *ngIf="!state.logged" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
-                matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
-              {{ 'button.generate_again' | translate }}
-            </button>
-          </td>
-        </ng-container>
-
-        <!-- Number exist -->
-        <ng-container matColumnDef="active">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'desc.number_exists' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox [(ngModel)]="element.active" (change)="fillNazev(element)" [disabled]=!state.logged ></mat-checkbox>
-          </td>
-          <td mat-footer-cell *matFooterCellDef colspan="7"></td>
-        </ng-container>
-
-        <!-- Vydani -->
-        <ng-container matColumnDef="vydani">
-          <th mat-header-cell *matHeaderCellDef>{{ 'desc.edition' | translate }}</th>
-          <td mat-cell *matCellDef="let element">
-            <mat-form-field *ngIf="element.active">
-              <mat-select [(ngModel)]="element.vydani" [disabled]=!state.logged>
-                <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </td>
-          <td mat-footer-cell *matFooterCellDef colspan="7"></td>
-        </ng-container>
-
-        <!-- Pocet stranek -->
-        <ng-container matColumnDef="pocet_stran">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.pages_count' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element" class="app-edit-text">
-            <mat-form-field *ngIf="element.active" class="app-short-text">
-              <input type="text" matInput [(ngModel)]="element.pocet_stran" [disabled]=!state.logged>
-            </mat-form-field>
-          </td>
-          <td mat-footer-cell *matFooterCellDef colspan="7"></td>
-        </ng-container>
-
-        <!-- Name -->
-        <ng-container matColumnDef="nazev">
-          <th mat-header-cell *matHeaderCellDef>
-            <div>{{ 'desc.name' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element" class="app-edit-text">
-            <mat-form-field *ngIf="element.active">
-              <input type="text" matInput [(ngModel)]="element.nazev" [disabled]=!state.logged>
-              <mat-icon>{{ config.icons.pencil }}</mat-icon>
-            </mat-form-field>
-          </td>
-          <td mat-footer-cell *matFooterCellDef colspan="7"></td>
-        </ng-container>
-
-        <!-- Subname -->
-        <ng-container matColumnDef="podnazev">
-          <th mat-header-cell *matHeaderCellDef>
-            <div>{{ 'desc.subname' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element" class="app-edit-text">
-            <mat-form-field *ngIf="element.active">
-              <input type="text" matInput [(ngModel)]="element.podnazev" [disabled]=!state.logged>
-              <mat-icon>{{ config.icons.pencil }}</mat-icon>
-            </mat-form-field>
-          </td>
-          <td mat-footer-cell *matFooterCellDef colspan="7"></td>
-        </ng-container>
-
-        <!-- Button-->
-        <ng-container matColumnDef="button">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'desc.insert_next_edition' | translate}}</div>
-          </th>
-          <td mat-cell *matCellDef="let element; let idx=index">
-            <a *ngIf="element.active && state.logged" (click)="addVydani(element, idx)"
-              [matTooltip]="'desc.insert_next_edition' | translate" matTooltipPosition="above">
-              <mat-icon>{{ config.icons.add_circle }}</mat-icon>
-            </a>
-          </td>
-          <td mat-footer-cell *matFooterCellDef colspan="7"></td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsLeftTableBottom; sticky: true"
-          class="app-header-row-left-bottom"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsLeftTableBottom;"></tr>
-        <tr mat-footer-row *matFooterRowDef="displayedColumnsLeftTableBottom; sticky: true"></tr>
-      </table>
-    </div>
-    <!--/.app-table-left-bottom -->
-  </div>
-  <!--/.app-container-left -->
-
-  <div class="app-container-right">
-    <div>{{'desc.volume_detail' | translate}}</div>
-    <div class="app-table-wrapper app-right">
-      <table mat-table [dataSource]="dsExemplars">
-        <!-- Edit issue Zrušit položku "Editovat issue" #153 -->
-        <!-- <ng-container matColumnDef="edit_issue">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'desc.edit_issue' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <a (click)="viewIssue(element.issue)">
-              <mat-icon [matTooltip]="'desc.edit_issue' | translate" matTooltipPosition="above">
-                {{ config.icons.edit_issue }}</mat-icon>
-            </a>
-          </td>
-        </ng-container> -->
-
-        <!-- Date -->
-        <ng-container matColumnDef="datum_vydani">
-          <th mat-header-cell *matHeaderCellDef>{{ 'desc.date' | translate }}</th>
-          <td mat-cell *matCellDef="let element">
-            {{ element.datum_vydani | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}
-          </td>
-        </ng-container>
-
-        <!-- Number exist -->
-        <ng-container matColumnDef="numExists">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'desc.number_exists' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox [(ngModel)]="element.numExists" (change)="checkElementExists(element)" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Add next edition -->
-        <ng-container matColumnDef="addNextEdition">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'desc.insert_next_edition' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element; let idx=index">
-            <a (click)="addExemplar(element, idx)" *ngIf="element.numExists && state.logged">
-              <mat-icon [matTooltip]="'desc.insert_next_edition' | translate" matTooltipPosition="above">
-                {{ config.icons.add_circle }}</mat-icon>
-            </a>
-          </td>
-        </ng-container>
-
-        <!-- Edition number -->
-        <ng-container matColumnDef="cislo">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'desc.number' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element; let idx=index" class="app-edit-text">
-            <mat-form-field *ngIf="element.numExists" class="app-short-text">
-              <input type="text" matInput [(ngModel)]="element.cislo" style="width :20px;" [disabled]=!state.logged>
-              <button mat-icon-button matSuffix (click)="reNumber(element, idx, true)" [attr.aria-label]="'desc.renumber_down' | translate" [matTooltip]="'desc.renumber_down' | translate" matTooltipPosition="above">
-                <mat-icon>keyboard_arrow_down</mat-icon>
-              </button>
-            </mat-form-field>
-          </td>
-        </ng-container>
-
-        <!-- Mutation -->
-        <ng-container matColumnDef="mutace">
-          <th mat-header-cell *matHeaderCellDef>{{ 'record.mutation' | translate }}</th>
-          <td mat-cell *matCellDef="let element" class="app-edit-text">
-            <mat-form-field *ngIf="element.numExists">
-              <input type="text" matInput [(ngModel)]="element.mutace" [matAutocomplete]="auto3" [disabled]=!state.logged>
-              <mat-icon>{{ config.icons.pencil }}</mat-icon>
-            </mat-form-field>
-            <mat-autocomplete #auto3="matAutocomplete">
-              <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
-            </mat-autocomplete>
-          </td>
-        </ng-container>
-
-        <!-- Edition -->
-        <ng-container matColumnDef="vydani">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-edition">{{ 'desc.edition' | translate }}</th>
-          <td mat-cell *matCellDef="let element" class="app-cell-edition">
-            <mat-form-field *ngIf="element.numExists">
-              <mat-select [(ngModel)]="element.vydani" [disabled]=!state.logged>
-                <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </td>
-        </ng-container>
-
-        <!-- Name -->
-        <ng-container matColumnDef="nazev">
-          <th mat-header-cell *matHeaderCellDef>
-            <div>{{ 'desc.name' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element" class="app-edit-text">
-            <ng-container *ngIf="element.numExists">
-              <mat-form-field>
-                <input type="text" matInput [(ngModel)]="element.nazev" [disabled]=!state.logged>
-                <mat-icon>{{ config.icons.pencil }}</mat-icon>
-              </mat-form-field>
+            <!-- Button-->
+            <ng-container matColumnDef="button">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'desc.insert_next_edition' | translate}}</div>
+              </th>
+              <td mat-cell *matCellDef="let element; let idx=index">
+                <a *ngIf="element.active && state.logged && isOwner" (click)="addVydani(element, idx)"
+                  [matTooltip]="'desc.insert_next_edition' | translate" matTooltipPosition="above">
+                  <mat-icon>{{ config.icons.add_circle }}</mat-icon>
+                </a>
+              </td>
+              <td mat-footer-cell *matFooterCellDef colspan="7"></td>
             </ng-container>
-          </td>
-        </ng-container>
 
-        <!-- Subname -->
-        <ng-container matColumnDef="podnazev">
-          <th mat-header-cell *matHeaderCellDef>
-            <div>{{ 'desc.subname' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element" class="app-edit-text">
-            <ng-container *ngIf="element.numExists">
-              <mat-form-field>
-                <input type="text" matInput [(ngModel)]="element.podnazev" [disabled]=!state.logged>
-                <mat-icon>{{ config.icons.pencil }}</mat-icon>
-              </mat-form-field>
-            </ng-container>
-          </td>
-        </ng-container>
-
-        <!-- Page number -->
-        <ng-container matColumnDef="pocet_stran">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.pages_count' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element" class="app-edit-text">
-            <mat-form-field *ngIf="element.numExists" class="app-short-text">
-              <input type="text" matInput [(ngModel)]="element.pocet_stran" [disabled]=!state.logged>
-            </mat-form-field>
-          </td>
-        </ng-container>
-
-        <!-- Mutation edition -->
-        <ng-container matColumnDef="znak_oznaceni_vydani">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate app-cell-mutacni">
-            <div>{{ 'desc.mutation_edition' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element" class="app-edit-text">
-            <mat-form-field *ngIf="element.numExists" class="app-short-text">
-              <input type="text" matInput [(ngModel)]="element.znak_oznaceni_vydani" [disabled]=!state.logged>
-            </mat-form-field>
-          </td>
-        </ng-container>
-
-        <!-- KOmpletni -->
-        <ng-container matColumnDef="complete">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.complete' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.complete" (change)="updateStav(element)" class="check-ok" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Missing number -->
-<!--        <ng-container matColumnDef="chybiCislo">-->
-<!--          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">-->
-<!--            <div>{{ 'record.StavIssue.ChCC' | translate }}</div>-->
-<!--          </th>-->
-<!--          <td mat-cell *matCellDef="let element">-->
-<!--            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.chybiCislo" (change)="updateStav(element)" [disabled]=!state.logged></mat-checkbox>-->
-<!--          </td>-->
-<!--        </ng-container>-->
-
-        <!-- Destroyed pages -->
-        <ng-container matColumnDef="destroyedPages">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.pages_damaged' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.destroyedPages" (change)="updateStav(element)" #dsp
-              (mouseenter)="state.logged && viewPS(element, 'destroyedPages', dsp, pagesPopup)" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Degradated -->
-        <ng-container matColumnDef="degradated">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.StavIssue.Deg' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.degradated" (change)="updateStav(element)" #deg
-              (mouseenter)="state.logged && viewPS(element, 'degradated', deg, pagesPopup)" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Missing pages -->
-        <ng-container matColumnDef="missingPages">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.StavIssue.ChS' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.missingPages" (change)="updateStav(element)" #mp
-              (mouseenter)="state.logged && viewPS(element, 'missingPages', mp, pagesPopup)" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Erroneous paging -->
-        <ng-container matColumnDef="erroneousPaging">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.StavIssue.ChPag' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousPaging" (change)="updateStav(element)" #ep
-              (mouseenter)="state.logged && viewPS(element, 'erroneousPaging', ep, pagesPopup)" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Erroneous date -->
-        <ng-container matColumnDef="erroneousDate">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.StavIssue.ChDatum' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousDate" (change)="updateStav(element)" #ed
-              (mouseenter)="state.logged && viewPS(element, 'erroneousDate', ed, pagesPopup)" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Erroneous numbering -->
-        <ng-container matColumnDef="erroneousNumbering">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.StavIssue.ChCis' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousNumbering" (change)="updateStav(element)" #en
-              (mouseenter)="state.logged && viewPS(element, 'erroneousNumbering', en, pagesPopup)" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Wrongly bound -->
-        <ng-container matColumnDef="wronglyBound">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.StavIssue.ChSv' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.wronglyBound" (change)="updateStav(element)" #wb
-              (mouseenter)="state.logged && viewPS(element, 'wronglyBound', wb, pagesPopup)" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Nečitelně svázáno -->
-        <ng-container matColumnDef="necitelneSvazano">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.StavIssue.NS' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.necitelneSvazano" (change)="updateStav(element)" #ns
-              (mouseenter)="state.logged && viewPS(element, 'necitelneSvazano', ns, pagesPopup)" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Censored -->
-        <ng-container matColumnDef="censored">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'record.StavIssue.Cz' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.censored" (change)="updateStav(element)" #cz
-              (mouseenter)="state.logged && viewPS(element, 'censored', cz, pagesPopup)" [disabled]=!state.logged></mat-checkbox>
-          </td>
-        </ng-container>
-
-        <!-- Poznamka -->
-        <ng-container matColumnDef="poznamka">
-          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
-            <div>{{ 'desc.note' | translate }}</div>
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <a *ngIf="element.numExists" (click)="state.logged && viewPozn(element, poznPopup, poznEl)">
-              <mat-icon #poznEl
-                [matTooltip]="('desc.edit_note' | translate) + (element.poznamka !== '' ? (': &quot;' + element.poznamka) + '&quot;' : '')"
-                matTooltipPosition="above">{{ element.poznamka === '' ? config.icons.info_outline : config.icons.info }}
-              </mat-icon>
-            </a>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="issueColumns; sticky: true" class="app-header-row-right"></tr>
-        <tr mat-row *matRowDef="let row; columns: issueColumns;" [style.background]="rowColor(row)"></tr>
-      </table>
-      <!-- <mat-paginator [pageSizeOptions]="[25, 50, 100]" [length]="numFound" [pageSize]="rows"
-        [pageIndex]="page" (page)="pageChanged($event)" showFirstLastButtons></mat-paginator> -->
-      <div fxLayout="row" fxLayoutAlign="end center" class="app-margin-top-bottom">
-        <button mat-flat-button color="primary" (click)="setVolumeComplete()" [disabled]="!state.logged || loading">
-          <mat-icon *ngIf="!state.logged" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
-                    matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
-          {{ 'button.set_volume_complete' | translate }} {{dataChanged ? '!!' : ''}}
-        </button>
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsLeftTableBottom; sticky: true"
+              class="app-header-row-left-bottom"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsLeftTableBottom;"></tr>
+            <tr mat-footer-row *matFooterRowDef="displayedColumnsLeftTableBottom; sticky: true"></tr>
+          </table>
+        </div>
+        <!--/.app-table-left-bottom -->
       </div>
-    </div>
-  </div>
+    </as-split-area>
+  <!--/.app-container-left -->
+    <as-split-area size="70" #area2="asSplitArea" class="split-area">
+      <div class="app-container-right">
+        <div>{{'desc.volume_detail' | translate}}</div>
+        <div class="app-table-wrapper app-right">
+          <table mat-table [dataSource]="dsExemplars">
+            <!-- Edit issue Zrušit položku "Editovat issue" #153 -->
+            <!-- <ng-container matColumnDef="edit_issue">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'desc.edit_issue' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <a (click)="viewIssue(element.issue)">
+                  <mat-icon [matTooltip]="'desc.edit_issue' | translate" matTooltipPosition="above">
+                    {{ config.icons.edit_issue }}</mat-icon>
+                </a>
+              </td>
+            </ng-container> -->
+
+            <!-- Date -->
+            <ng-container matColumnDef="datum_vydani">
+              <th mat-header-cell *matHeaderCellDef>{{ 'desc.date' | translate }}</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.datum_vydani | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}
+              </td>
+            </ng-container>
+
+            <!-- Number exist -->
+            <ng-container matColumnDef="numExists">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'desc.number_exists' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox [(ngModel)]="element.numExists" (change)="checkElementExists(element)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Add next edition -->
+            <ng-container matColumnDef="addNextEdition">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'desc.insert_next_edition' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element; let idx=index">
+                <a (click)="addExemplar(element, idx)" *ngIf="element.numExists && state.logged && isOwner">
+                  <mat-icon [matTooltip]="'desc.insert_next_edition' | translate" matTooltipPosition="above">
+                    {{ config.icons.add_circle }}</mat-icon>
+                </a>
+              </td>
+            </ng-container>
+
+            <!-- Edition number -->
+            <ng-container matColumnDef="cislo">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'desc.number' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element; let idx=index" class="app-edit-text">
+                <mat-form-field *ngIf="element.numExists && !element.isPriloha" class="app-short-text">
+                  <input type="text" matInput [(ngModel)]="element.cislo" style="width :20px;" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                  <button [disabled]="!state.logged || !isOwner" mat-icon-button matSuffix (click)="reNumber(element, idx, true)" [attr.aria-label]="'desc.renumber_down' | translate" [matTooltip]="'desc.renumber_down' | translate" matTooltipPosition="above">
+                    <mat-icon [class]="!state.logged || !isOwner ? 'not_logged' : ''">keyboard_arrow_down</mat-icon>
+                  </button>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <!-- Attachment number -->
+            <ng-container matColumnDef="cislo_prilohy">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'desc.attachment_number' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element; let idx=index" class="app-edit-text">
+                <mat-form-field *ngIf="element.numExists && element.isPriloha" class="app-short-text">
+                  <input type="text" matInput [(ngModel)]="element.cislo" style="width :20px;" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+<!--                  <button [disabled]=!state.logged mat-icon-button matSuffix (click)="reNumber(element, idx, true)" [attr.aria-label]="'desc.renumber_down' | translate" [matTooltip]="'desc.renumber_down' | translate" matTooltipPosition="above">-->
+<!--                    <mat-icon [class]="!state.logged ? 'not_logged' : ''">keyboard_arrow_down</mat-icon>-->
+<!--                  </button>-->
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <!-- Mutation -->
+            <ng-container matColumnDef="mutace">
+              <th mat-header-cell *matHeaderCellDef>{{ 'record.mutation' | translate }}</th>
+              <td mat-cell *matCellDef="let element" class="app-edit-text">
+                <mat-form-field *ngIf="element.numExists">
+                  <input type="text" matInput [(ngModel)]="element.mutace" (ngModelChange)="setDataChanged()" [matAutocomplete]="auto3" [disabled]="!state.logged || !isOwner">
+                  <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                </mat-form-field>
+                <mat-autocomplete #auto3="matAutocomplete">
+                  <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
+                </mat-autocomplete>
+              </td>
+            </ng-container>
+
+            <!-- Edition -->
+            <ng-container matColumnDef="vydani">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-edition">{{ 'desc.edition' | translate }}</th>
+              <td mat-cell *matCellDef="let element" class="app-cell-edition">
+                <mat-form-field *ngIf="element.numExists">
+                  <mat-select [(ngModel)]="element.vydani" (ngModelChange)="attachmentSelected($event, element)" [disabled]="!state.logged || !isOwner">
+                    <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <!-- Name -->
+            <ng-container matColumnDef="nazev">
+              <th mat-header-cell *matHeaderCellDef>
+                <div>{{ 'desc.name' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="app-edit-text">
+                <ng-container *ngIf="element.numExists">
+                  <mat-form-field *ngIf="element.isPriloha">
+                    <input type="text" matInput [(ngModel)]="element.nazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                    <mat-autocomplete #name="matAutocomplete">
+                      <mat-option *ngFor="let name of attachmentsAutocomplete.name" [value]="name">
+                        {{name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                  </mat-form-field>
+                  <mat-form-field *ngIf="!element.isPriloha">
+                    <input type="text" matInput [(ngModel)]="element.nazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                    <mat-autocomplete #name="matAutocomplete">
+                      <mat-option *ngFor="let name of exemplarsAutocomplete.name" [value]="name">
+                        {{name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                  </mat-form-field>
+                </ng-container>
+              </td>
+            </ng-container>
+
+            <!-- Subname -->
+            <ng-container matColumnDef="podnazev">
+              <th mat-header-cell *matHeaderCellDef>
+                <div>{{ 'desc.subname' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="app-edit-text">
+                <ng-container *ngIf="element.numExists">
+                  <mat-form-field *ngIf="element.isPriloha">
+                    <input type="text" matInput [(ngModel)]="element.podnazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                    <mat-autocomplete #subName="matAutocomplete">
+                      <mat-option *ngFor="let subName of attachmentsAutocomplete.subName" [value]="subName">
+                        {{subName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                  </mat-form-field>
+                  <mat-form-field *ngIf="!element.isPriloha">
+                    <input type="text" matInput [(ngModel)]="element.podnazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                    <mat-autocomplete #subName="matAutocomplete">
+                      <mat-option *ngFor="let subName of exemplarsAutocomplete.subName" [value]="subName">
+                        {{subName}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                  </mat-form-field>
+                </ng-container>
+              </td>
+            </ng-container>
+
+            <!-- Page number -->
+            <ng-container matColumnDef="pocet_stran">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'record.pages_count' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="app-edit-text">
+                <mat-form-field *ngIf="element.numExists" class="app-short-text">
+                  <input type="text" matInput [(ngModel)]="element.pocet_stran" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <!-- Mutation edition -->
+            <ng-container matColumnDef="znak_oznaceni_vydani">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate app-cell-mutacni">
+                <div>{{ 'desc.mutation_edition' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element" class="app-edit-text">
+                <mat-form-field *ngIf="element.numExists" class="app-short-text" (click)="preventDropdownTableClose(); openDropdownTable(element.id)">
+                  <input type="text" matInput [(ngModel)]="element.znak_oznaceni_vydani" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                  <div *ngIf="znak_oznaceni_vydani_select_open.open && znak_oznaceni_vydani_select_open.id === element.id" class="znak_oznaceni_vydani_select">
+                    <div class="options">
+                          <span *ngFor="let option of volume_znak_oznaceni_vydani_defaults" (click)="selectZnakOznaceniVydani(option.value, element)">
+                            {{option.name ? (option.name | translate) : option.value}}
+                          </span>
+                    </div>
+                  </div>
+                </mat-form-field>
+              </td>
+            </ng-container>
+
+            <!-- KOmpletni -->
+            <ng-container matColumnDef="complete">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'record.complete' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.complete" (change)="updateStav(element)" class="check-ok" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Missing number -->
+    <!--        <ng-container matColumnDef="chybiCislo">-->
+    <!--          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">-->
+    <!--            <div>{{ 'record.StavIssue.ChCC' | translate }}</div>-->
+    <!--          </th>-->
+    <!--          <td mat-cell *matCellDef="let element">-->
+    <!--            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.chybiCislo" (change)="updateStav(element)" [disabled]=!state.logged></mat-checkbox>-->
+    <!--          </td>-->
+    <!--        </ng-container>-->
+
+            <!-- Destroyed pages -->
+            <ng-container matColumnDef="destroyedPages">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'record.pages_damaged' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.destroyedPages" (change)="updateStav(element)" #dsp
+                  (mouseenter)="state.logged && isOwner && viewPS(element, 'destroyedPages', dsp, pagesPopup)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Degradated -->
+            <ng-container matColumnDef="degradated">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate withSelectAllArrow">
+                <div>{{ 'record.StavIssue.Deg' | translate }}</div>
+                <mat-icon
+                  [attr.aria-label]="'desc.select_all' | translate"
+                  [matTooltip]="'desc.select_all' | translate"
+                  matTooltipPosition="above"
+                  [class]="!state.logged || !isOwner ? 'not_logged' : ''"
+                  (click)="setAllInColumn('degradated', false, true)">
+                  keyboard_arrow_down
+                </mat-icon>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.degradated" (change)="updateStav(element)" #deg
+                  (mouseenter)="state.logged && isOwner && viewPS(element, 'degradated', deg, pagesPopup)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Missing pages -->
+            <ng-container matColumnDef="missingPages">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'record.StavIssue.ChS' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.missingPages" (change)="updateStav(element)" #mp
+                  (mouseenter)="state.logged && isOwner && viewPS(element, 'missingPages', mp, pagesPopup)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Erroneous paging -->
+            <ng-container matColumnDef="erroneousPaging">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'record.StavIssue.ChPag' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousPaging" (change)="updateStav(element)" #ep
+                  (mouseenter)="state.logged && isOwner && viewPS(element, 'erroneousPaging', ep, pagesPopup)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Erroneous date -->
+            <ng-container matColumnDef="erroneousDate">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'record.StavIssue.ChDatum' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousDate" (change)="updateStav(element)" #ed
+                  (mouseenter)="state.logged && isOwner && viewPS(element, 'erroneousDate', ed, pagesPopup)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Erroneous numbering -->
+            <ng-container matColumnDef="erroneousNumbering">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'record.StavIssue.ChCis' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.erroneousNumbering" (change)="updateStav(element)" #en
+                  (mouseenter)="state.logged && isOwner && viewPS(element, 'erroneousNumbering', en, pagesPopup)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Wrongly bound -->
+            <ng-container matColumnDef="wronglyBound">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'record.StavIssue.ChSv' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.wronglyBound" (change)="updateStav(element)" #wb
+                  (mouseenter)="state.logged && isOwner && viewPS(element, 'wronglyBound', wb, pagesPopup)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Nečitelně svázáno -->
+            <ng-container matColumnDef="necitelneSvazano">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate withSelectAllArrow">
+                <div>{{ 'record.StavIssue.NS' | translate }}</div>
+                <mat-icon
+                  [attr.aria-label]="'desc.select_all' | translate"
+                  [matTooltip]="'desc.select_all' | translate"
+                  matTooltipPosition="above"
+                  [class]="!state.logged || !isOwner ? 'not_logged' : ''"
+                  (click)="setAllInColumn('necitelneSvazano', false, true)">
+                  keyboard_arrow_down
+                </mat-icon>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.necitelneSvazano" (change)="updateStav(element)" #ns
+                  (mouseenter)="state.logged && isOwner && viewPS(element, 'necitelneSvazano', ns, pagesPopup)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Censored -->
+            <ng-container matColumnDef="censored">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'record.StavIssue.Cz' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.censored" (change)="updateStav(element)" #cz
+                  (mouseenter)="state.logged && isOwner && viewPS(element, 'censored', cz, pagesPopup)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Poznamka -->
+            <ng-container matColumnDef="poznamka">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'desc.note' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <a *ngIf="element.numExists" (click)="state.logged && isOwner && viewPozn(element, poznPopup, poznEl)">
+                  <mat-icon #poznEl
+                    [matTooltip]="('desc.edit_note' | translate) + (element.poznamka !== '' ? (': &quot;' + element.poznamka) + '&quot;' : '')"
+                    matTooltipPosition="before">{{ element.poznamka === '' ? config.icons.info_outline : config.icons.info }}
+                  </mat-icon>
+                </a>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="issueColumns; sticky: true" class="app-header-row-right"></tr>
+            <tr mat-row *matRowDef="let row; columns: issueColumns;" [style.background]="rowColor(row)"></tr>
+          </table>
+          <!-- <mat-paginator [pageSizeOptions]="[25, 50, 100]" [length]="numFound" [pageSize]="rows"
+            [pageIndex]="page" (page)="pageChanged($event)" showFirstLastButtons></mat-paginator> -->
+          <div fxLayout="row" fxLayoutAlign="end center" class="app-margin-top-bottom">
+            <button mat-flat-button color="primary" (click)="setAllInColumn('complete', true)" [disabled]="!state.logged || loading || !isOwner">
+              <mat-icon *ngIf="!state.logged || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
+                        matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
+              {{ 'button.set_volume_complete' | translate }} {{dataChanged ? '!!' : ''}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </as-split-area>
+  </as-split>
 </div>
 
 <ng-template #pagesPopup>
@@ -525,7 +653,7 @@
         <div class="app-font-bold">{{ 'record.pages_' + editingProp | translate }}</div>
         <div class="app-grid-wrapper">
           <div *ngFor="let page of pagesRange">
-            <mat-checkbox [id]="'pg'+page.label" [(ngModel)]="page.sel" [disabled]=!state.logged>{{ page.label }}</mat-checkbox>
+            <mat-checkbox [id]="'pg'+page.label" [(ngModel)]="page.sel" [disabled]="!state.logged || !isOwner">{{ page.label }}</mat-checkbox>
           </div>
         </div>
       </ng-container>

@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AppConfiguration } from 'src/app/app-configuration';
-
 import { AppState } from '../../../app.state';
 
 @Component({
@@ -19,6 +18,7 @@ export class ToolbarPaginationCalendarComponent implements OnInit, OnDestroy {
   constructor(
     public state: AppState,
     private datePipe: DatePipe,
+    private location: Location,
     public config: AppConfiguration) { }
 
   ngOnInit() {
@@ -41,11 +41,24 @@ export class ToolbarPaginationCalendarComponent implements OnInit, OnDestroy {
   }
 
   changeMonth(dir: number) {
-    this.state.changeCurrentDay(new Date(this.state.currentDay.getFullYear(), this.state.currentDay.getMonth() + dir, 1));
+    const prevFormattedDate = this.datePipe.transform(this.state.currentDay, 'yyyyMMdd')
+
+    const newDate = new Date(this.state.currentDay.getFullYear(), this.state.currentDay.getMonth() + dir, 1)
+    this.state.changeCurrentDay(newDate);
+
+    const newFormattedDate = this.datePipe.transform(newDate, 'yyyyMMdd')
+    const newUrl = this.location.path().replace(`month/${prevFormattedDate}`, `month/${newFormattedDate}`)
+    this.location.replaceState(newUrl)
   }
 
   changeYear() {
+    const prevFormattedYear = this.datePipe.transform(this.state.currentDay, 'yyyy')
+
     this.state.changeCurrentDay(new Date(parseInt(this.year), this.state.currentDay.getMonth(), 1));
+
+    const newFormattedYear = this.datePipe.transform(this.state.currentDay, 'yyyy')
+    const newUrl = this.location.path().replace(`month/${prevFormattedYear}`, `month/${newFormattedYear}`)
+    this.location.replaceState(newUrl)
   }
 
 }

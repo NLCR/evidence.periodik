@@ -13,10 +13,10 @@
     "P1Y"
   ],
   "owners": [
-    {"name":  "NKP", "url":"http://"},
-    {"name":  "MZK", "url":"http://"},
-    {"name":  "VKOL", "url":"http://"},
-    {"name":  "SVKUL", "url":"http://"}
+    {"id":  1, "name":  "NKP", "url":"http://"},
+    {"id":  2,"name":  "MZK", "url":"http://"},
+    {"id":  3,"name":  "VKOL", "url":"http://"},
+    {"id":  4,"name":  "SVKUL", "url":"http://"}
   ],
   "stavy": [
     "OK",
@@ -28,10 +28,11 @@
       "ChCis",
       "ChSv",
       "Cz",
+      "NS",
       "CzV"
   ],
   "states":["ok", "auto"],
-  "vydani": ["", "morning", "midday", "afternoon", "evening", "special"],
+  "vydani": ["", "morning", "midday", "afternoon", "evening", "special", "attachment", "periodic_attachment"],
   "mutations": ["Brno", "Praha"],
   "znak_oznaceni_vydani": ["*", "-"],
   "test": false,

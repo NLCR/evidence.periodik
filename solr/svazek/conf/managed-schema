@@ -40,7 +40,7 @@
     </analyzer>
   </fieldType>
   <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
-  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" maxDistErr="0.001" distErrPct="0.025" distanceUnits="kilometers"/>
+  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" omitNorms="true" omitTermFreqAndPositions="true" maxDistErr="0.001" termOffsets="false" distErrPct="0.025" distanceUnits="kilometers" termPositions="false" omitPositions="true"/>
   <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
     <analyzer>
       <tokenizer class="solr.KeywordTokenizerFactory"/>
@@ -48,7 +48,6 @@
     </analyzer>
   </fieldType>
   <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
-  <fieldType name="rdate" class="solr.DateRangeField"/>
   <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
   <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
   <fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true"/>
@@ -59,6 +58,7 @@
   <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
   <fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true"/>
   <fieldType name="point" class="solr.PointType" subFieldSuffix="_d" dimension="2"/>
+  <fieldType name="rdate" class="solr.DateRangeField" omitNorms="true" omitTermFreqAndPositions="true" termOffsets="false" termPositions="false" omitPositions="true"/>
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
   <fieldType name="text_cz" class="solr.TextField" positionIncrementGap="100">
@@ -175,21 +175,21 @@
   <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
   <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
+  <field name="carovy_kod" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="datum_do" type="rdate" multiValued="false" indexed="true" stored="true"/>
+  <field name="datum_od" type="rdate" multiValued="false" indexed="true" stored="true"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="id_titul" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="mutace" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="znak_oznaceni_vydani" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="carovy_kod" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="signatura" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="prvni_cislo" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="posledni_cislo" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="datum_od" type="rdate" multiValued="false" indexed="true" stored="true"/>
-  <field name="datum_do" type="rdate" multiValued="false" indexed="true" stored="true"/>
-  <field name="vlastnik" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="poznamka" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="periodicita" type="string" multiValued="false" indexed="false" stored="true"/>
-  
   <field name="pocet_stran" type="plong" multiValued="false" indexed="true" stored="true"/>
+  <field name="posledni_cislo" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="poznamka" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="prvni_cislo" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="show_attachments_at_the_end" type="boolean" uninvertible="true" default="false" indexed="true" stored="true"/>
+  <field name="signatura" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="vlastnik" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="znak_oznaceni_vydani" type="string" multiValued="false" indexed="true" stored="true"/>
   <dynamicField name="*_txt_en_split_tight" type="text_en_splitting_tight" indexed="true" stored="true"/>
   <dynamicField name="*_descendent_path" type="descendent_path" indexed="true" stored="true"/>
   <dynamicField name="*_ancestor_path" type="ancestor_path" indexed="true" stored="true"/>
@@ -223,5 +223,4 @@
   <dynamicField name="*_f" type="pfloat" indexed="true" stored="true"/>
   <dynamicField name="*_d" type="pdouble" indexed="true" stored="true"/>
   <dynamicField name="*_p" type="location" indexed="true" stored="true"/>
-  
 </schema>

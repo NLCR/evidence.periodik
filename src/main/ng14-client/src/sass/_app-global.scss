@@ -320,6 +320,7 @@ li.app-page-item label{
 
 // progress bar
 .mat-progress-bar {
+  position: absolute !important;
   .mat-progress-bar-fill {
     &:after {
       background-color: $app-progress-bar-bg-fill;
@@ -334,6 +335,14 @@ li.app-page-item label{
   &.app-icon-complete-degradation {color: $app-icon-color-complete-degradation !important}
   &.app-icon-complete {color: $app-icon-color-complete !important}
   &.app-icon-uncontrolled {color: $app-icon-color-uncontrolled !important}
+}
+
+span {
+  &.app-icon-missing-page {background-color: #ed1c24 !important}
+  &.app-icon-damaged-document {background-color: #ff7f27 !important}
+  &.app-icon-complete-degradation {background-color: #ff7f27 !important}
+  &.app-icon-complete {background-color: #22b14c !important}
+  &.app-icon-uncontrolled {background-color: white !important; border: 1px solid black}
 }
 
 // facet view class

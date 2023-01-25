@@ -28,6 +28,8 @@ public class User {
   public boolean active;
   @Field
   public String poznamka;
+  @Field
+  public String owner;
   
   
   public static User fromJSON(JSONObject json) {

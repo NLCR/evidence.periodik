@@ -57,6 +57,7 @@
     "note": "Poznámka",
     "user_roles": "Uživatelské role",
     "user_role": "Uživatel",
+    "user_owners": "Vlastník",
     "admin_role": "Admin",
     "add_specimen": "Přidat exemplář",
     "edit_specimen": "Editovat exemplář",
@@ -97,10 +98,14 @@
     "edit_issue": "Editovat issue",
     "date": "Datum",
     "number": "Číslo",
-    "renumber_down": "Přečíslovat dolů"
+    "renumber_down": "Přečíslovat dolů",
+    "select_all": "Zatrhnout vše",
+    "pages_count": "Počet stran",
+    "attachment_number": "Číslo přílohy"
   },
   "note": {
-    "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen."
+    "this_action_is_not_allowed_not_login": "Tato akce není povolená, nejste přihlášen.",
+    "save_data_before_leaving": "Máte neuložené změny! Pokud stránku opustíte, vaše změny budou ztraceny."
   },
 
   "formatvdk": {
@@ -137,7 +142,9 @@
       "midday": "Polední",
       "afternoon": "Odpolední",
       "evening": "Večerní",
-      "special": "Zvláštní"
+      "special": "Zvláštní",
+      "attachment": "Příloha",
+      "periodic_attachment": "Pravidelná příloha"
     },
     "pages_count": "Počet stran",
     "complete": "Ověřeno",
@@ -218,7 +225,9 @@
     "update": "Aktualizovat",
     "close_navigation": "Zavřít navigaci",
     "specimens": "Exempláře",
-    "set_volume_complete": "Ověřeno"
+    "set_volume_complete": "Ověřeno",
+    "attachmentsAtTheEndOfThePage": "Přílohy na konci",
+    "duplicate_volume": "Duplikovat svazek"
   },
   "facet": {
     "title": {
@@ -241,7 +250,8 @@
     "znak_oznaceni_vydani": "Mutační vydání",
     "vydani": "Vydání",
     "volume": "Svazek",
-    "volume_number": "Číslo svazku"
+    "volume_number": "Číslo svazku",
+    "": "Bez označení"
   },
   "result": {
     "found_records": "Nalezeno záznamů",
@@ -291,7 +301,9 @@
     "renumber.caption": "Potvrdit přečíslování",
     "renumber.text": "Čísel k přečíslování: {{value}}. Opravdu chcete provést změny?",
     "show_barcodes_in_calendar.caption": "Vstoupit do editace?",
-    "show_barcodes_in_calendar.text": "Čárové kódy: {{value}}"
+    "show_barcodes_in_calendar.text": "Čárové kódy: {{value}}",
+    "duplicate_volume.caption": "Potvrdit duplikaci",
+    "duplicate_volume.text": "Opravdu chcete duplikovat svazek?"
   },
   "login": {
     "desc": "Prosím, přihlašte se",
@@ -319,6 +331,7 @@
     "error_cloning": "Chyba klonování",
     "delete_success": "Úspěšně vymazáno",
     "barcode_is_required": "Čárový kód je povinný",
+    "metatitul_is_required": "Metatitul je povinný",
     "vlastnik_is_required": "Vlastník je povinný",
     "datum_do_is_required": "Datum do je povinné",
     "datum_od_is_required": "Datum od je povinné",
@@ -332,6 +345,10 @@
     "error_saving_current_volume": "Chyba při ukládání aktuálního svazku",
     "the_current_volume_was_saved_correctly": "Aktuální svazek byl úspěšně uložen",
     "error_deleting_volume": "Chyba při smazání svazku",
-    "renumbered_correctly": "Přečíslováno"
+    "renumbered_correctly": "Přečíslováno",
+    "selected_all": "Vše vybráno",
+    "unselected_all": "Vše smazáno",
+    "barcode_has_text": "Pozor, čárový kód obsahuje text",
+    "data_changed": "Pozor, změna se projevila ve všech exemplářích!"
   }
 }

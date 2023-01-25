@@ -6,4 +6,14 @@
   padding: $app-gap;
 
   @import "app-result-table";
+
+
+  .exStav {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 4px;
+    vertical-align: text-top;
+  }
 }

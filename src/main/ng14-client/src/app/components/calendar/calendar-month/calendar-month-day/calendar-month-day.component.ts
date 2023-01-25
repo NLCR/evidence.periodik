@@ -66,7 +66,7 @@ export class CalendarMonthDayComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.router.navigate(['/issue', e.id]);
+        return this.router.navigate(['/issue', e.id]);
       }
     });
   }

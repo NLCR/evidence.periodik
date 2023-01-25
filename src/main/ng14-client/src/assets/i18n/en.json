@@ -57,6 +57,7 @@
     "note": "Note",
     "user_roles": "User roles",
     "user_role": "User",
+    "user_owners": "Owner",
     "admin_role": "Admin",
     "add_specimen": "Add a specimen",
     "edit_specimen": "Edit specimen",
@@ -97,10 +98,14 @@
     "edit_issue": "Edit issue",
     "date": "Date",
     "number": "Number",
-    "renumber_down": "Renumber down"
+    "renumber_down": "Renumber down",
+    "select_all": "Select all",
+    "pages_count": "Pages count",
+    "attachment_number": "Attachment number"
   },
   "note": {
-    "this_action_is_not_allowed_not_login": "TThis action is not allowed, you are not logged in."
+    "this_action_is_not_allowed_not_login": "This action is not allowed, you are not logged in.",
+    "save_data_before_leaving": "You have unsaved changes! If you leave, your changes will be lost."
   },
 
   "formatvdk": {
@@ -136,7 +141,9 @@
       "midday": "Midday",
       "afternoon": "Afternoon",
       "evening": "Evening",
-      "special": "Special"
+      "special": "Special",
+      "attachment": "Attachment",
+      "periodic_attachment": "Periodic attachment"
     },
     "pages_count": "Pages count",
     "complete": "Verified",
@@ -217,7 +224,9 @@
     "update": "Update",
     "close_navigation": "Close navigation",
     "specimens": "Specimens",
-    "set_volume_complete": "Verified"
+    "set_volume_complete": "Verified",
+    "attachmentsAtTheEndOfThePage": "Attachment at the end",
+    "duplicate_volume": "Duplicate volume"
   },
   "facet": {
     "title": {
@@ -290,7 +299,9 @@
     "renumber.caption": "Confirm renumber",
     "renumber.text": "Numbers to renumber: {{value}}. Are you sure you want to apply changes?",
     "show_barcodes_in_calendar.caption": "Enter edit?",
-    "show_barcodes_in_calendar.text": "Barcodes: {{value}}"
+    "show_barcodes_in_calendar.text": "Barcodes: {{value}}",
+    "duplicate_volume.caption": "Confirm duplication",
+    "duplicate_volume.text": "Are you sure you want to duplicate whole volume?"
   },
   "login": {
     "desc": "Please, login",
@@ -319,6 +330,7 @@
     "delete_success": "Delete success",
     "barcode_is_required": "Barcode is required",
     "vlastnik_is_required": "Owner is required",
+    "metatitul_is_required": "Metatitule is required",
     "datum_do_is_required": "Date to is required",
     "datum_od_is_required": "Date to is required",
     "the_date_from_is_greater_than_the_date_to": "The date from is greater than the date to",
@@ -331,6 +343,10 @@
     "error_saving_current_volume": "Error saving current volume",
     "the_current_volume_was_saved_correctly": "The current volume was saved correctly",
     "error_deleting_volume": "Error deleting volume",
-    "renumbered_correctly": "Renumbered"
+    "renumbered_correctly": "Renumbered",
+    "selected_all": "Selected all",
+    "unselected_all": "Deleted all",
+    "barcode_has_text": "Warning, barcode contains text",
+    "data_changed": "Attention, the change has appeared in all specimens!"
   }
 }

@@ -59,7 +59,7 @@ export class ResultItemComponent implements OnInit {
     // this.addFilter(this.item['meta_nazev']);
     this.state.setCurrentTitul(this.item);
 
-    this.router.navigate(['/result', this.item.id]);
+    return this.router.navigate(['/result', this.item.id]);
     //        if(this.item['num_exemplare'] > 1){
     //          this.addFilter(this.item['meta_nazev']);
     //        } else {

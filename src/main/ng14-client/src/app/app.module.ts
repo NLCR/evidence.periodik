@@ -66,7 +66,7 @@ import { CalendarYearComponent } from './components/calendar/calendar-year/calen
 import { CalendarMonthDayComponent } from './components/calendar/calendar-month/calendar-month-day/calendar-month-day.component';
 import { LoginComponent } from './components/login/login.component';
 import { FacetUsedComponent } from './components/facet/facet-used/facet-used.component';
-import { ToolbarPaginationResultComponent } from './components/toolbar/toolbar-pagination-result/toolbar-pagination-result.component';
+// import { ToolbarPaginationResultComponent } from './components/toolbar/toolbar-pagination-result/toolbar-pagination-result.component';
 import { ToolbarPaginationCalendarComponent } from './components/toolbar/toolbar-pagination-calendar/toolbar-pagination-calendar.component';
 import { ToolbarNavViewsComponent } from './components/toolbar/toolbar-nav-views/toolbar-nav-views.component';
 import { ToolbarCountComponent } from './components/toolbar/toolbar-count/toolbar-count.component';
@@ -95,6 +95,8 @@ import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-mo
 import {A11yModule} from '@angular/cdk/a11y';
 import {AdminUsersComponent} from './components/admin/admin-users/admin-users-component';
 import {AdminOwnersComponent} from './components/admin/admin-owners/admin-owners.component';
+import {AngularSplitModule} from "angular-split";
+import {CanDeactivateGuard} from "./components/can-deactivate/can-deactivate.guard";
 
 registerLocaleData(localeCs, 'cs');
 
@@ -113,7 +115,7 @@ const providers: any[] = [
   { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
   // { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   { provide: APP_INITIALIZER, useFactory: (config: AppConfiguration) => () => config.load(), deps: [AppConfiguration], multi: true },
-  HttpClient, DatePipe, AppConfiguration, AppState, AppService, AuthGuard];
+  HttpClient, DatePipe, AppConfiguration, AppState, AppService, AuthGuard, CanDeactivateGuard];
 
 @NgModule({
   declarations: [
@@ -134,7 +136,7 @@ const providers: any[] = [
     CalendarMonthDayComponent,
     LoginComponent,
     FacetUsedComponent,
-    ToolbarPaginationResultComponent,
+    // ToolbarPaginationResultComponent,
     ToolbarPaginationCalendarComponent,
     ToolbarNavViewsComponent,
     ToolbarCountComponent,
@@ -157,59 +159,60 @@ const providers: any[] = [
     PromptDialogComponent,
     SvazekOverviewComponent
   ],
-    imports: [
-        BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: createTranslateLoader,
-                deps: [HttpClient]
-            }
-        }),
-        BrowserAnimationsModule,
-        MatAutocompleteModule,
-        MatButtonModule,
-        MatButtonToggleModule,
-        MatCardModule,
-        MatCheckboxModule,
-        MatChipsModule,
-        MatDatepickerModule,
-        MatDialogModule,
-        MatDividerModule,
-        MatExpansionModule,
-        MatFormFieldModule,
-        MatGridListModule,
-        MatIconModule,
-        MatInputModule,
-        MatListModule,
-        MatMenuModule,
-        MatNativeDateModule,
-        MatPaginatorModule,
-        MatProgressBarModule,
-        MatProgressSpinnerModule,
-        MatRadioModule,
-        MatRippleModule,
-        MatSelectModule,
-        MatSidenavModule,
-        MatSliderModule,
-        MatSlideToggleModule,
-        MatSnackBarModule,
-        MatSortModule,
-        MatStepperModule,
-        MatTableModule,
-        MatTabsModule,
-        MatToolbarModule,
-        MatTooltipModule,
-        MatBadgeModule,
-        MatSidenavModule,
-        FlexLayoutModule,
-        CdkTableModule,
-        AppRoutingModule,
-        A11yModule
-    ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient]
+      }
+    }),
+    BrowserAnimationsModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatGridListModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatNativeDateModule,
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
+    MatRadioModule,
+    MatRippleModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatSliderModule,
+    MatSlideToggleModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatStepperModule,
+    MatTableModule,
+    MatTabsModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatBadgeModule,
+    MatSidenavModule,
+    FlexLayoutModule,
+    CdkTableModule,
+    AppRoutingModule,
+    A11yModule,
+    AngularSplitModule
+  ],
   providers,
   bootstrap: [AppComponent]
 })

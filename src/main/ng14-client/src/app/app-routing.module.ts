@@ -15,6 +15,7 @@ import { CalendarYearComponent } from './components/calendar/calendar-year/calen
 import { LoginComponent } from './components/login/login.component';
 import { AdminUsersComponent } from './components/admin/admin-users/admin-users-component';
 import { AdminOwnersComponent } from './components/admin/admin-owners/admin-owners.component';
+import {CanDeactivateGuard} from "./components/can-deactivate/can-deactivate.guard";
 
 
 const routes: Routes = [
@@ -34,8 +35,8 @@ const routes: Routes = [
    */
   { path: 'issue/:id', component: IssueComponent },
   { path: 'home', component: HomeComponent },
-  { path: 'svazek', component: SvazekComponent },
-  { path: 'svazek/:id', component: SvazekComponent },
+  { path: 'svazek', component: SvazekComponent, canDeactivate: [CanDeactivateGuard] },
+  { path: 'svazek/:id', component: SvazekComponent, canDeactivate: [CanDeactivateGuard] },
   { path: 'result', component: ResultComponent },
   { path: 'result/:id', component: ResultComponent },
   {

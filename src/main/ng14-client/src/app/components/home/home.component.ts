@@ -16,8 +16,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.state.reset();
-    if (this.state.logginChanged){
-      this.state.logginChanged = false;
+    if (this.state.loginChanged){
+      this.state.loginChanged = false;
       this.state.tituly = [];
       location.reload();
       // this.service.getTituly().subscribe();
