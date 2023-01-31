@@ -1068,7 +1068,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     this.poznText = el.poznamka;
     setTimeout(() => {
       this.openInfoOverlay(relative._elementRef, template, 35);
-    }, 100);
+    }, 50);
   }
 
 
@@ -1101,7 +1101,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
           }
           this.openInfoOverlay(relative._elementRef, template);
         }
-      }, 500);
+      }, 50);
     }
   }
 
@@ -1210,7 +1210,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
   }
 
   openInfoOverlay(relative: any, template: TemplateRef<any>, xOffset: number = 6) {
-    this.closeInfoOverlay();
+    // this.closeInfoOverlay();
 
     this.overlayRef = this.overlay.create({
       positionStrategy: this.overlay.position().flexibleConnectedTo(relative).withPositions([{
