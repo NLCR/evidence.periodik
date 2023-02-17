@@ -22,7 +22,8 @@
                 <button mat-flat-button color="primary" (click)="save()" [disabled]="!state.logged || loading || !isOwner">
                   <mat-icon *ngIf="!state.logged  || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
                     matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
-                  {{ 'button.save_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}
+                  {{ 'button.save_the_entire_volume' | translate }}
+<!--                  {{dataChanged ? '!!' : ''}}-->
                 </button>
                 <button mat-icon-button [disabled]="loading || !state.logged">
                   <mat-icon [routerLink]="'/result/'+ state.currentTitul.id" [matTooltip]="'desc.display_table' | translate">
@@ -34,12 +35,14 @@
                 <button style="margin-top: 5px" mat-flat-button color="accent" (click)="deleteClick()" [disabled]="!state.logged || loading || !isOwner">
                   <mat-icon *ngIf="!state.logged || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
                             matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
-                  {{ 'button.delete_the_entire_volume' | translate }} {{dataChanged ? '!!' : ''}}
+                  {{ 'button.delete_the_entire_volume' | translate }}
+<!--                  {{dataChanged ? '!!' : ''}}-->
                 </button>
                 <button style="margin-top: 5px" mat-flat-button color="accent" (click)="duplicateClick()" [disabled]="!state.logged || loading || !isOwner">
                   <mat-icon *ngIf="!state.logged || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
                             matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
-                  {{ 'button.duplicate_volume' | translate }} {{dataChanged ? '!!' : ''}}
+                  {{ 'button.duplicate_volume' | translate }}
+<!--                  {{dataChanged ? '!!' : ''}}-->
                 </button>
               </td>
             </ng-container>
@@ -688,7 +691,8 @@
             <button mat-flat-button color="primary" (click)="setAllInColumn('complete', true)" [disabled]="!state.logged || loading || !isOwner">
               <mat-icon *ngIf="!state.logged || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
                         matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
-              {{ 'button.set_volume_complete' | translate }} {{dataChanged ? '!!' : ''}}
+              {{ 'button.set_volume_complete' | translate }}
+<!--              {{dataChanged ? '!!' : ''}}-->
             </button>
           </div>
         </div>

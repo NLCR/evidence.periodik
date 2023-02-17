@@ -79,7 +79,7 @@ export class SvazekOverviewComponent implements OnInit, OnDestroy {
       this.stavy = facets.stav.filter(f => f.value > 0);
       this.fyzStavOk = !(facets.stav.findIndex(f => f.name !== 'OK') > -1);
 
-      const numbers = exRes.map(e => parseInt(e.cislo))
+      const numbers = exRes.map(e => parseInt(e.cislo)).filter(n => !isNaN(n))
       this.prvniCislo = Math.min(...numbers)
       this.posledniCislo = Math.max(...numbers)
 
@@ -117,7 +117,7 @@ export class SvazekOverviewComponent implements OnInit, OnDestroy {
       return {date: d, exemplar: exemplars.filter(ex => ex.datum_vydani === d && !ex.isPriloha)}
     })
 
-    let missingExemplars = []
+    // let missingExemplars = []
     datesWithExemplars.forEach((dx) => {
       const dayStr = this.datePipe.transform(dx.date, 'EEEE')
       const foundedPeriodic = periodicals.find(ap => ap.den === dayStr && ap.active)
