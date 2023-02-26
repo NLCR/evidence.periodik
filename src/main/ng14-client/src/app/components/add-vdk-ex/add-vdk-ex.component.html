@@ -13,10 +13,10 @@
     <mat-form-field fxFlex>
       <mat-label>{{ 'record.ownership' | translate }}</mat-label>
       <mat-select [id]="'owner'" [name]="'owner'" [(ngModel)]="vlastnik">
-        <mat-option *ngFor="let owner of state.owners" [value]="owner.name">{{ owner.name }}</mat-option>
+        <mat-option *ngFor="let owner of state.owners" [value]="owner.id">{{ owner.name }}</mat-option>
       </mat-select>
     </mat-form-field>
-  
+
     <mat-form-field fxFlex>
       <mat-label>{{ 'desc.format_by_field_i' | translate }}</mat-label>
       <mat-select [id]="'format'" [name]="'format'" [(ngModel)]="format">
@@ -26,9 +26,9 @@
   </div>
 
   <div class="app-gap-bottom">
-    <mat-checkbox [(ngModel)]="onspecial" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox> 
+    <mat-checkbox [(ngModel)]="onspecial" id="onSpecialDays">{{ 'modal.on_special_days' | translate }}</mat-checkbox>
   </div>
-  
+
   <div class="app-gap-bottom">
     <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
     <table mat-table [dataSource]="dataSource" class="app-table-gap-5">
@@ -135,7 +135,7 @@
         </mz-checkbox-container>
 
       </div>
-    </div>  
+    </div>
 
     <div class="mat-elevation-z8 app-progressbar-wrapper">
       <ng-progress id="bar-1" #progressBar [color]="'#4285f4'"></ng-progress>
@@ -148,7 +148,7 @@
 
         <ng-container matColumnDef="year">
           <th mat-header-cell *matHeaderCellDef><mz-input-container>
-            <input mz-input [label]="'year' | translate" [id]="'yf'" [name]="'yf'" 
+            <input mz-input [label]="'year' | translate" [id]="'yf'" [name]="'yf'"
                    [(ngModel)]="year_filter" type="text"
                    (keyup.enter)="filter()" />
           </mz-input-container></th>

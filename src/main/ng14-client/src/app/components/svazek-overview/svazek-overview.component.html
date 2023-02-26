@@ -8,7 +8,7 @@
     <strong>{{ 'record.titul' | translate }}:</strong> {{ volume.titul.meta_nazev }}
   </div>
   <div>
-    <strong>{{ 'record.vlastnik' | translate}}:</strong> {{ volume.vlastnik }}
+    <strong>{{ 'record.vlastnik' | translate}}:</strong> {{ state.owners[volume.vlastnik].name }}
   </div>
   <div>
     <strong>{{ 'record.signatura' | translate}}:</strong> {{ volume.signatura }}

@@ -104,7 +104,7 @@
 <!--                      <mat-option *ngFor="let vlastnik of config.owners; let idx=index;" [value]="idx">{{vlastnik.name}}-->
 <!--                      </mat-option>-->
 <!--                    </mat-select>-->
-                    <input matInput type="text" [(ngModel)]="state.currentVolume.vlastnik" id="volume_owner" name="volume_owner" disabled>
+                    <input matInput type="text" [(ngModel)]="state.owners[state.currentVolume.vlastnik].name" id="volume_owner" name="volume_owner" disabled>
                   </ng-container>
 
 

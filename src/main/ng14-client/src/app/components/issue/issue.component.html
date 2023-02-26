@@ -146,7 +146,7 @@
         <mat-form-field *ngIf="!changingLang">
           <mat-select [id]="'owner'" [name]="'owner'" [(ngModel)]="ex.vlastnik" [disabled]=!state.logged>
             <mat-label>{{ 'record.ownership' | translate }}</mat-label>
-            <mat-option *ngFor="let owner of state.owners" [value]="owner.name">
+            <mat-option *ngFor="let owner of state.owners" [value]="owner.id">
               {{ owner.name }}
             </mat-option>
           </mat-select>

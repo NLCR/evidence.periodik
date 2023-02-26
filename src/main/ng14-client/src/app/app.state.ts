@@ -28,7 +28,7 @@ export class AppState {
   vdkFormats: string[] = [];
   vydani = [];
   configured = false;
-  owners: { id: number, name: string, url: string }[] = [];
+  owners: { id: number, name: string, sigla: string }[] = [];
   stavy: string[] = [];
   states = [];
 

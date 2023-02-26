@@ -13,10 +13,10 @@
     "P1Y"
   ],
   "owners": [
-    {"id":  1, "name":  "NKP", "url":"http://"},
-    {"id":  2,"name":  "MZK", "url":"http://"},
-    {"id":  3,"name":  "VKOL", "url":"http://"},
-    {"id":  4,"name":  "SVKUL", "url":"http://"}
+    {"id":  0, "name":  "NKP", "sigla":  "ABA001"},
+    {"id":  1,"name":  "MZK", "sigla":  "BOA001"},
+    {"id":  2,"name":  "VKOL", "sigla": "OLA001"},
+    {"id":  3,"name":  "KUK", "sigla":  "ULG001"}
   ],
   "stavy": [
     "OK",
