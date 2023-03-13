@@ -11,7 +11,7 @@ import org.json.JSONObject;
  *
  * @author alberto
  */
-public class LoginController {
+public class LoginService {
   public static JSONObject get(HttpServletRequest req){
     Object session = req.getSession().getAttribute("login");
     return session != null ? (JSONObject) session : null;
@@ -31,7 +31,7 @@ public class LoginController {
       }
       return false;
     } catch (JSONException ex) {
-      Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(LoginService.class.getName()).log(Level.SEVERE, null, ex);
       return false;
     }
   }

@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class LoginControllerTest {
+class LoginServiceTest {
 
     @Mock
     private HttpServletRequest httpServletRequest;
@@ -21,7 +21,7 @@ class LoginControllerTest {
     @Test
     void logout() {
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
-        LoginController.logout(httpServletRequest);
+        LoginService.logout(httpServletRequest);
         assertThat(5).isEqualTo(5);
     }
 }

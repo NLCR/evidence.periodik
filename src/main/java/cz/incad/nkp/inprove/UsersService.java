@@ -24,9 +24,9 @@ import org.json.JSONObject;
  *
  * @author alberto
  */
-public class UsersController {
+public class UsersService {
 
-  final static Logger LOGGER = Logger.getLogger(UsersController.class.getName());
+  final static Logger LOGGER = Logger.getLogger(UsersService.class.getName());
 
   public static JSONObject get(HttpServletRequest req) {
     JSONObject jo = new JSONObject();

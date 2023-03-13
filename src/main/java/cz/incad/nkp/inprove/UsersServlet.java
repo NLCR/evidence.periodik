@@ -99,9 +99,9 @@ static boolean isLocalhost = false;
         try {
           if (req.getMethod().equals("POST")) {
             String js = IOUtils.toString(req.getInputStream(), "UTF-8");
-            jo = UsersController.add(new JSONObject(js));
+            jo = UsersService.add(new JSONObject(js));
           } else {
-            jo = UsersController.add(new JSONObject(req.getParameter("json")));
+            jo = UsersService.add(new JSONObject(req.getParameter("json")));
           }
 
         } catch (Exception ex) {
@@ -121,7 +121,7 @@ static boolean isLocalhost = false;
         try {
           if (isLocalhost) {
           String pwd = req.getParameter("pwd");
-          jo = UsersController.initAdmin(pwd);
+          jo = UsersService.initAdmin(pwd);
           
           } else {
             jo.put("error", "Operation allowed only from localhost");
@@ -148,9 +148,9 @@ static boolean isLocalhost = false;
           }
           
           if (js.has("id")) {
-            jo = UsersController.save(js);
+            jo = UsersService.save(js);
           } else {
-            jo = UsersController.add(js);
+            jo = UsersService.add(js);
           }
           
 
@@ -174,7 +174,7 @@ static boolean isLocalhost = false;
           } else {
             js = new JSONObject(req.getParameter("json"));
           }
-          jo = UsersController.resetHeslo(js);
+          jo = UsersService.resetHeslo(js);
 
         } catch (Exception ex) {
           LOGGER.log(Level.SEVERE, null, ex);
@@ -199,7 +199,7 @@ static boolean isLocalhost = false;
           }
 
           if (user != null) {
-            JSONObject j = UsersController.login(req, user, pwd);
+            JSONObject j = UsersService.login(req, user, pwd);
             if (j != null) {
               jo.put("logged", true);
               jo.put("user", j);
@@ -244,7 +244,7 @@ static boolean isLocalhost = false;
       @Override
       JSONObject doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 
-        JSONObject jo = UsersController.getAll();
+        JSONObject jo = UsersService.getAll();
         return jo;
 
       }
@@ -252,7 +252,7 @@ static boolean isLocalhost = false;
     CHECK {
       @Override
       JSONObject doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        JSONObject jo = UsersController.exists(req.getParameter("username"));
+        JSONObject jo = UsersService.exists(req.getParameter("username"));
         return jo;
       }
     },
@@ -261,7 +261,7 @@ static boolean isLocalhost = false;
       JSONObject doPerform(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         JSONObject jo = new JSONObject();
         try {
-          jo = (JSONObject) UsersController.get(req);
+          jo = (JSONObject) UsersService.get(req);
           if (jo == null) {
             jo = new JSONObject();
             jo.put("error", "nologged");
@@ -278,7 +278,7 @@ static boolean isLocalhost = false;
       JSONObject doPerform(HttpServletRequest req, HttpServletResponse response) throws Exception {
         JSONObject jo = new JSONObject();
         try {
-          jo = UsersController.getOne(req.getParameter("code"), false);
+          jo = UsersService.getOne(req.getParameter("code"), false);
         } catch (JSONException ex) {
           LOGGER.log(Level.SEVERE, null, ex);
           jo.put("error", ex.toString());
