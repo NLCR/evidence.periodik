@@ -52,7 +52,7 @@ public class Options {
 
     //Get server options
     
-    File fserver = FileUtils.toFile(Options.class.getResource("server_config.json"));
+    File fserver = FileUtils.toFile(Options.class.getResource("/server_config.json"));
     String sjson = FileUtils.readFileToString(fserver, "UTF-8");
     server_conf = new JSONObject(sjson);
 
