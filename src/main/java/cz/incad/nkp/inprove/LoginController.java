@@ -1,12 +1,11 @@
 
 package cz.incad.nkp.inprove;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *
@@ -14,13 +13,8 @@ import java.util.logging.Logger;
  */
 public class LoginController {
   public static JSONObject get(HttpServletRequest req){
-    JSONObject jo = new JSONObject();
     Object session = req.getSession().getAttribute("login");
-    if(session != null){
-      return (JSONObject) session;
-    } else {
-      return null;
-    }
+    return session != null ? (JSONObject) session : null;
   }
   
   public static void logout(HttpServletRequest req){
@@ -29,7 +23,6 @@ public class LoginController {
   
   public static boolean login(HttpServletRequest req, String user, String pwd){
     try {
-      JSONObject jo = new JSONObject();
       Options opts = Options.getInstance();
       JSONObject users = opts.getJSONObject("users");
       if(users.has(user) && users.getJSONObject(user).getString("pwd").equals(pwd)){

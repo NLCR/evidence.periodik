@@ -1,4 +1,4 @@
-package cz.incad.utils;
+package cz.incad.nkp.inprove.utils;
 
 import java.util.Calendar;
 

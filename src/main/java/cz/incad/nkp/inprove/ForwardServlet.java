@@ -17,7 +17,7 @@
  */
 package cz.incad.nkp.inprove;
 
-import cz.incad.utils.RESTHelper;
+import cz.incad.nkp.inprove.utils.RESTHelper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
