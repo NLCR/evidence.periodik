@@ -21,6 +21,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import cz.incad.nkp.inprove.entities.user.UsersService;
+import cz.incad.nkp.inprove.utils.RESTHelper;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -1,8 +1,10 @@
 
-package cz.incad.nkp.inprove.solr;
+package cz.incad.nkp.inprove.entities.title;
 
 import com.alibaba.fastjson2.JSON;
 import java.util.logging.Logger;
+
+import cz.incad.nkp.inprove.utils.MD5;
 import org.apache.solr.client.solrj.beans.Field;
 import org.json.JSONObject;
 
@@ -10,10 +12,10 @@ import org.json.JSONObject;
  *
  * @author alberto
  */
-public class Titul {
+public class Title {
 
 
-  final static Logger LOGGER = Logger.getLogger(Titul.class.getName());
+  final static Logger LOGGER = Logger.getLogger(Title.class.getName());
   @Field
   public String id;
   @Field
@@ -30,8 +32,8 @@ public class Titul {
 //  public int pocet_stran;
 
 
-  public static Titul fromJSON(JSONObject json) {
-    Titul obj = JSON.parseObject(json.toString(), Titul.class);
+  public static Title fromJSON(JSONObject json) {
+    Title obj = JSON.parseObject(json.toString(), Title.class);
     if (obj.id == null || obj.id.trim().isEmpty()) {
       obj.id = MD5.generate(new String[]{obj.meta_nazev});
     }

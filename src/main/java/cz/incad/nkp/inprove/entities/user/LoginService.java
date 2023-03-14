@@ -1,9 +1,11 @@
 
-package cz.incad.nkp.inprove;
+package cz.incad.nkp.inprove.entities.user;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
+
+import cz.incad.nkp.inprove.Options;
 import org.json.JSONException;
 import org.json.JSONObject;
 

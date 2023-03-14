@@ -32,7 +32,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>UsersServlet</servlet-name>
-        <servlet-class>cz.incad.nkp.inprove.UsersServlet</servlet-class>
+        <servlet-class>cz.incad.nkp.inprove.user.UsersServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UsersServlet</servlet-name>
@@ -41,7 +41,7 @@
     -->
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
-        <servlet-class>cz.incad.nkp.inprove.LoginServlet</servlet-class>
+        <servlet-class>cz.incad.nkp.inprove.entities.user.LoginServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -59,7 +59,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>I18nServlet</servlet-name>
-        <servlet-class>cz.incad.nkp.inprove.I18nServlet</servlet-class>
+        <servlet-class>cz.incad.nkp.inprove.i18n.I18nServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>I18nServlet</servlet-name>

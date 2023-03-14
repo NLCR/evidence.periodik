@@ -1,10 +1,6 @@
 
-package cz.incad.nkp.inprove;
+package cz.incad.nkp.inprove.i18n;
 
-
-import org.apache.commons.io.FileUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +9,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import cz.incad.nkp.inprove.InitServlet;
+import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *

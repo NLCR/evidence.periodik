@@ -1,10 +1,12 @@
 
-package cz.incad.nkp.inprove.solr;
+package cz.incad.nkp.inprove.entities.exemplar;
 
 import com.alibaba.fastjson2.JSON;
 import cz.incad.nkp.inprove.Options;
 import java.util.List;
 import java.util.logging.Logger;
+
+import cz.incad.nkp.inprove.solr.Indexer;
 import org.apache.solr.client.solrj.beans.Field;
 import org.json.JSONObject;
 

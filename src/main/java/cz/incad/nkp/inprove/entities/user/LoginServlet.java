@@ -1,5 +1,5 @@
 
-package cz.incad.nkp.inprove;
+package cz.incad.nkp.inprove.entities.user;
 
 
 import java.io.IOException;

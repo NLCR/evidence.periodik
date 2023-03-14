@@ -1,5 +1,6 @@
 package cz.incad.nkp.inprove;
 
+import cz.incad.nkp.inprove.entities.user.LoginService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

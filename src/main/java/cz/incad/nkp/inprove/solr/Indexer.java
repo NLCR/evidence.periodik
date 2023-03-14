@@ -2,8 +2,33 @@ package cz.incad.nkp.inprove.solr;
 
 import cz.incad.nkp.inprove.CloneParams;
 import cz.incad.nkp.inprove.Options;
+import cz.incad.nkp.inprove.entities.exemplar.Exemplar;
 import cz.incad.nkp.inprove.importing.VDKSetImportOptions;
 import cz.incad.nkp.inprove.importing.VDKSetProcessor;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import cz.incad.nkp.inprove.entities.title.Title;
 import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -22,24 +47,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.math.BigInteger;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -680,7 +687,7 @@ public class Indexer {
   public JSONObject saveTitul(JSONObject json) {
     JSONObject ret = new JSONObject();
     try (SolrClient solr = getClient()) {
-      Titul titul = Titul.fromJSON(json);
+      Title titul = Title.fromJSON(json);
       solr.addBean("titul", titul, 100);
       ret.put("id", titul.id);
     } catch (SolrServerException | IOException ex) {

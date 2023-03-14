@@ -1,3 +1,4 @@
+
 package cz.incad.nkp.inprove.utils;
 
 import java.io.IOException;
@@ -31,8 +32,8 @@ public class RESTHelper {
         uc.setConnectTimeout(Integer.parseInt("10000"));
         return uc;
     }
-    
-    
+
+
 
     public static InputStream inputStream(String urlString, Map<String, String> reqProps) throws IOException {
         URLConnection uc = openConnection(urlString, reqProps);
@@ -53,7 +54,7 @@ public class RESTHelper {
         for (Map.Entry<String, String> entry : reqProps.entrySet()) {
             uc.setRequestProperty(entry.getKey(), entry.getValue());
         }
-        
+
         return uc;
     }
 
