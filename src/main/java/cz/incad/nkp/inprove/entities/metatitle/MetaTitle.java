@@ -1,5 +1,5 @@
 
-package cz.incad.nkp.inprove.entities.title;
+package cz.incad.nkp.inprove.entities.metatitle;
 
 import com.alibaba.fastjson2.JSON;
 import java.util.logging.Logger;
@@ -12,10 +12,10 @@ import org.json.JSONObject;
  *
  * @author alberto
  */
-public class Title {
+public class MetaTitle {
 
 
-  final static Logger LOGGER = Logger.getLogger(Title.class.getName());
+  final static Logger LOGGER = Logger.getLogger(MetaTitle.class.getName());
   @Field
   public String id;
   @Field
@@ -32,8 +32,8 @@ public class Title {
 //  public int pocet_stran;
 
 
-  public static Title fromJSON(JSONObject json) {
-    Title obj = JSON.parseObject(json.toString(), Title.class);
+  public static MetaTitle fromJSON(JSONObject json) {
+    MetaTitle obj = JSON.parseObject(json.toString(), MetaTitle.class);
     if (obj.id == null || obj.id.trim().isEmpty()) {
       obj.id = MD5.generate(new String[]{obj.meta_nazev});
     }

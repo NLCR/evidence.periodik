@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import cz.incad.nkp.inprove.entities.title.Title;
+import cz.incad.nkp.inprove.entities.metatitle.MetaTitle;
 import org.apache.commons.io.IOUtils;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -687,7 +687,7 @@ public class Indexer {
   public JSONObject saveTitul(JSONObject json) {
     JSONObject ret = new JSONObject();
     try (SolrClient solr = getClient()) {
-      Title titul = Title.fromJSON(json);
+      MetaTitle titul = MetaTitle.fromJSON(json);
       solr.addBean("titul", titul, 100);
       ret.put("id", titul.id);
     } catch (SolrServerException | IOException ex) {
