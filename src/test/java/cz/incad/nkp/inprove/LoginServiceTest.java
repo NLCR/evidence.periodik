@@ -19,10 +19,12 @@ class LoginServiceTest {
     @Mock
     private HttpServletRequest httpServletRequest;
 
+    private final LoginService loginService = new LoginService();
+
     @Test
     void logout() {
         when(httpServletRequest.getSession()).thenReturn(mock(HttpSession.class));
-        LoginService.logout(httpServletRequest);
+        loginService.logout(httpServletRequest);
         assertThat(5).isEqualTo(5);
     }
 }
