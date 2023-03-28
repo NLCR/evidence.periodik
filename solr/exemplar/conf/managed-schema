@@ -40,7 +40,7 @@
     </analyzer>
   </fieldType>
   <fieldType name="location" class="solr.LatLonPointSpatialField" docValues="true"/>
-  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" maxDistErr="0.001" distErrPct="0.025" distanceUnits="kilometers"/>
+  <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" omitNorms="true" omitTermFreqAndPositions="true" maxDistErr="0.001" termOffsets="false" distErrPct="0.025" distanceUnits="kilometers" termPositions="false" omitPositions="true"/>
   <fieldType name="lowercase" class="solr.TextField" positionIncrementGap="100">
     <analyzer>
       <tokenizer class="solr.KeywordTokenizerFactory"/>
@@ -49,7 +49,6 @@
   </fieldType>
   <fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
   <fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
-  <fieldType name="rdate" class="solr.DateRangeField"/>
   <fieldType name="pdouble" class="solr.DoublePointField" docValues="true"/>
   <fieldType name="pdoubles" class="solr.DoublePointField" docValues="true" multiValued="true"/>
   <fieldType name="pfloat" class="solr.FloatPointField" docValues="true"/>
@@ -65,6 +64,7 @@
   <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
   <fieldType name="plongs" class="solr.LongPointField" docValues="true" multiValued="true"/>
   <fieldType name="point" class="solr.PointType" subFieldSuffix="_d" dimension="2"/>
+  <fieldType name="rdate" class="solr.DateRangeField" omitNorms="true" omitTermFreqAndPositions="true" termOffsets="false" termPositions="false" omitPositions="true"/>
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
   <fieldType name="text_ar" class="solr.TextField" positionIncrementGap="100">
@@ -433,50 +433,41 @@
   <field name="_version_" type="plong" indexed="false" stored="false"/>
   <field name="carovy_kod" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="carovy_kod_vlastnik" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="numExists" type="boolean" multiValued="false" indexed="true" stored="true"/>
-  <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
-  <field name="id_issue" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
-  <field name="indextime" type="pdate" default="NOW" multiValued="false" indexed="true" stored="true"/>
-  <field name="oznaceni" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="pages" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="pagesRange" type="string" multiValued="true" indexed="true" stored="true"/>
-  <field name="popis_oznaceni_vydani" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="poznamka" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="signatura" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="stav" type="string" multiValued="true" indexed="true" stored="true"/>
-  <field name="stav_popis" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="vlastnik" type="string" multiValued="false" indexed="true" stored="true"/>
-
-
   <field name="cas_vydani" type="pint" multiValued="false" indexed="true" stored="true"/>
   <field name="cas_vydani_str" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="cislo" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="datum_vydani" type="rdate" multiValued="false" indexed="true" stored="true"/>
-  <!-- datum_vydani_den ma format yyyymmdd -->
   <field name="datum_vydani_den" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="datum_vydani_str" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="digitalizovano" type="booleans"/>
   <field name="druhe_cislo" type="pint" multiValued="false" indexed="true" stored="true"/>
-
   <field name="fyzicka_jednotka" type="string" multiValued="true" indexed="true" stored="true"/>
-
+  <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="id_issue" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="id_titul" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="indextime" type="pdate" default="NOW" multiValued="false" indexed="true" stored="true"/>
+  <field name="isPriloha" type="boolean" multiValued="false" indexed="true" stored="true"/>
+  <field name="meta_nazev" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="missing_number" type="boolean" uninvertible="false" default="" indexed="true" stored="true"/>
   <field name="mutace" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="nazev" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="meta_nazev" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="nazev_prilohy" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="numExists" type="boolean" multiValued="false" indexed="true" stored="true"/>
+  <field name="oznaceni" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="pages" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="pagesRange" type="string" multiValued="true" indexed="true" stored="true"/>
   <field name="periodicita" type="string" multiValued="false" indexed="true" stored="true"/>
-
   <field name="pocet_stran" type="pint" multiValued="false" indexed="true" stored="true"/>
   <field name="podnazev" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="popis_oznaceni_vydani" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="poznamka" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="rocnik" type="string" multiValued="false" indexed="true" stored="true"/>
+  <field name="signatura" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="state" type="string" multiValued="false" indexed="true" stored="true"/>
-
+  <field name="stav" type="string" multiValued="true" indexed="true" stored="true"/>
+  <field name="stav_popis" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="typ" type="string" multiValued="false" indexed="true" stored="true"/>
-
+  <field name="vlastnik" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="vydani" type="string" multiValued="false" indexed="true" stored="true"/>
   <field name="znak_oznaceni_vydani" type="string" multiValued="false" indexed="true" stored="true"/>
-  <field name="isPriloha" type="boolean" multiValued="false" indexed="true" stored="true"/>
-  <field name="nazev_prilohy" type="string" multiValued="false" indexed="true" stored="true"/>
-
-
 </schema>

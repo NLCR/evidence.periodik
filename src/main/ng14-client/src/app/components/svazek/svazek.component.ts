@@ -94,6 +94,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     'znak_oznaceni_vydani',
     'carovy_kod',
     'signatura',
+    "year",
     'datum_od',
     'prvni_cislo',
     'datum_do',

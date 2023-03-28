@@ -132,6 +132,12 @@
                       <mat-icon>{{ config.icons.pencil }}</mat-icon>
                     </mat-form-field>
                   </ng-container>
+                  <ng-container *ngSwitchCase="'year'">
+                    <mat-form-field>
+                      <input type="text" matInput [(ngModel)]="state.currentVolume[element]" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                      <mat-icon>{{ config.icons.pencil }}</mat-icon>
+                    </mat-form-field>
+                  </ng-container>
                   <ng-container *ngSwitchCase="'carovy_kod'">
                     <mat-form-field>
                       <input type="text" matInput [(ngModel)]="state.currentVolume[element]" (ngModelChange)="updateExemplars($event, 'carovy_kod')" [disabled]="!state.logged || !isOwner">
