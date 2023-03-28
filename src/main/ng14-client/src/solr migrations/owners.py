@@ -16,9 +16,9 @@ for owner in owners:
 
     PARAMS = []
     for ex in ids["response"]["docs"]:
-        print(f"Exemplar {ex['id']} with owner {owner['name']} -> {owner['id']}")
+        # print(f"Exemplar {ex['id']} with owner {owner['name']} -> {owner['id']}")
         PARAMS.append({"id": ex["id"], "vlastnik": {"set": owner["id"]}})
-
+    print("Updating exemplars")
     r = requests.post(url="http://localhost:8983/solr/exemplar/update?commit=true", json=PARAMS)
     response = r.json()
     print(response)
@@ -32,9 +32,9 @@ for owner in owners:
 
     PARAMS = []
     for user in ids["response"]["docs"]:
-        print(f"User {user['id']} with owner {owner['name']} -> {owner['id']}")
+        # print(f"User {user['id']} with owner {owner['name']} -> {owner['id']}")
         PARAMS.append({"id": user["id"], "owner": {"set": owner["id"]}})
-
+    print("Updating users")
     r = requests.post(url="http://localhost:8983/solr/user/update?commit=true", json=PARAMS)
     response = r.json()
     print(response)
@@ -53,7 +53,7 @@ for owner in owners:
         newVolume["vlastnik"] = owner["id"]
         del(newVolume["_version_"])
         editedVolumes.append(newVolume)
-        print(f"Svazek {newVolume['id']} with owner {owner['name']} -> {owner['id']}")
+        # print(f"Svazek {newVolume['id']} with owner {owner['name']} -> {owner['id']}")
 
     del volumes
 
@@ -61,7 +61,7 @@ print("Volumes count")
 print(len(editedVolumes))
 # wait for core change
 input("Press Enter to continue...")
-print("Inserting")
+print("Inserting volumes")
 r = requests.post(url="http://localhost:8983/solr/svazek/update?commit=true", json=editedVolumes)
 response = r.json()
 print(response)

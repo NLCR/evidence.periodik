@@ -68,6 +68,7 @@
   <fieldType name="point" class="solr.PointType" subFieldSuffix="_d" dimension="2"/>
   <fieldType name="random" class="solr.RandomSortField" indexed="true"/>
   <fieldType name="rank" class="solr.RankField"/>
+  <fieldType name="rdate" class="solr.DateRangeField" omitNorms="true" omitTermFreqAndPositions="true" termOffsets="false" termPositions="false" omitPositions="true"/>
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <fieldType name="strings" class="solr.StrField" sortMissingLast="true" docValues="true" multiValued="true"/>
   <fieldType name="text_ar" class="solr.TextField" positionIncrementGap="100">
@@ -452,8 +453,8 @@
   <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
   <field name="carovy_kod" type="string" uninvertible="false" indexed="true" stored="true"/>
-  <field name="datum_do" type="pdate" uninvertible="false" indexed="true" stored="true"/>
-  <field name="datum_od" type="pdate" uninvertible="false" indexed="true" stored="true"/>
+  <field name="datum_do" type="rdate" uninvertible="false" indexed="true" stored="true"/>
+  <field name="datum_od" type="rdate" uninvertible="false" indexed="true" stored="true"/>
   <field name="id" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="id_titul" type="string" uninvertible="false" indexed="true" stored="true"/>
   <field name="mutace" type="string" uninvertible="false" indexed="true" stored="true"/>
