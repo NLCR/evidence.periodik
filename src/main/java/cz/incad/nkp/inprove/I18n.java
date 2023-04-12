@@ -2,24 +2,17 @@
 package cz.incad.nkp.inprove;
 
 
+import org.apache.commons.io.FileUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
-import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  *

@@ -1,12 +1,12 @@
 
 package cz.incad.nkp.inprove;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *

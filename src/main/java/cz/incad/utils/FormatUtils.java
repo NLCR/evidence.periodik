@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.incad;
+package cz.incad.utils;
 
 import java.util.concurrent.TimeUnit;
 

@@ -13,6 +13,7 @@ import org.apache.solr.common.util.ContentStreamBase;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
 import org.apache.solr.client.solrj.SolrRequest;
@@ -47,7 +48,7 @@ public class JSONUpdateRequest extends AbstractUpdateRequest {
      */
     public JSONUpdateRequest(JSONObject json) throws UnsupportedEncodingException {
       super(SolrRequest.METHOD.POST, "/update/json/docs");
-        byte[] jsonBytes = json.toString().getBytes("UTF-8");
+        byte[] jsonBytes = json.toString().getBytes(StandardCharsets.UTF_8);
         this.jsonInputStream = new ByteArrayInputStream(jsonBytes);
         this.setParam("json.command", "false");
     }
