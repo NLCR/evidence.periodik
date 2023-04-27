@@ -110,7 +110,7 @@ export class AppService {
       .set('q', '*')
       .set('fq', 'id_titul:' + idTitul)
       .append('fq', 'carovy_kod:' + carovy_kod)
-      // .append('fq', 'numExists:"true"')
+      .append('fq', '(numExists:"true" OR missing_number:"true")')
       .set('wt', 'json')
       // .set('rows', this.state.rows)
       .set('rows', 200000)
@@ -597,7 +597,7 @@ export class AppService {
       .set('stats.field', 'nazev')
       .append('stats.field', 'podnazev')
       .set('fq', 'id_titul:"' + id + '"')
-      .append('fq', 'numExists:"true"')
+      .append('fq', '(numExists:"true" OR missing_number:"true")')
       .append('fq', 'isPriloha:"true"')
       // .set("rows", "1000")
     return this.http.get(url, { params }).pipe(

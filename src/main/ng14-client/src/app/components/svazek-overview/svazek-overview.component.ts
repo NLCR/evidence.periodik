@@ -127,7 +127,7 @@ export class SvazekOverviewComponent implements OnInit, OnDestroy {
     //   const dayStr = this.datePipe.transform(dx.date, 'EEEE')
       // const foundedPeriodic = periodicals.find(ap => ap.den === dayStr && ap.active)
       // if(foundedPeriodic && !dx.exemplar.length){
-      if(dx.exemplar.missing_number){
+      if(dx.exemplar?.missing_number){
         this.missingNumbers.push({date: dx.exemplar.datum_vydani, number: dx.exemplar.cislo})
       }
     })
