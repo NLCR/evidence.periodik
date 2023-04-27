@@ -66,13 +66,11 @@
                     </mat-select>
                   </ng-container>
                   <ng-container *ngSwitchCase="'mutace'">
-                    <mat-form-field>
-                      <input type="text" matInput [(ngModel)]="state.currentVolume.mutace" (ngModelChange)="updateExemplars($event, 'mutace')" [matAutocomplete]="auto2" [disabled]="!state.logged || !isOwner">
-                      <mat-icon>{{ config.icons.pencil }}</mat-icon>
-                    </mat-form-field>
-                    <mat-autocomplete #auto2="matAutocomplete">
-                      <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
-                    </mat-autocomplete>
+                    <ng-container>
+                      <mat-select [(ngModel)]="state.currentVolume.mutace" (ngModelChange)="updateExemplars($event, 'mutace')" [disabled]="!state.logged || !isOwner">
+                        <mat-option *ngFor="let mut of state.mutations" [value]="mut.id.toString()">{{ 'record.mutations.' + mut.id | translate }}</mat-option>
+                      </mat-select>
+                    </ng-container>
                   </ng-container>
                   <ng-container *ngSwitchCase="'znak_oznaceni_vydani'" class="znak_oznaceni_vydani_container">
                     <mat-form-field (click)="preventDropdownTableClose(); openDropdownTable('volume')">
@@ -211,7 +209,7 @@
               <td mat-cell *matCellDef="let element">
                 <mat-form-field *ngIf="element.active">
                   <mat-select [(ngModel)]="element.vydani" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
-                    <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}
+                    <mat-option *ngFor="let v of state.vydani" [value]="v.id.toString()">{{'record.publication.' + v.id | translate }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -359,7 +357,7 @@
                 <div>{{ 'desc.number' | translate }}</div>
               </th>
               <td mat-cell *matCellDef="let element; let idx=index" class="app-edit-text">
-                <mat-form-field *ngIf="element.numExists && !element.isPriloha" class="app-short-text">
+                <mat-form-field *ngIf="(element.numExists || element.missing_number) && !element.isPriloha" class="app-short-text">
                   <input type="text" matInput [(ngModel)]="element.cislo" style="width :20px;" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
                   <button [disabled]="!state.logged || !isOwner" mat-icon-button matSuffix (click)="reNumber(element, idx, true)" [attr.aria-label]="'desc.renumber_down' | translate" [matTooltip]="'desc.renumber_down' | translate" matTooltipPosition="above">
                     <mat-icon [class]="!state.logged || !isOwner ? 'not_logged' : ''">keyboard_arrow_down</mat-icon>
@@ -387,13 +385,11 @@
             <ng-container matColumnDef="mutace">
               <th mat-header-cell *matHeaderCellDef>{{ 'record.mutation' | translate }}</th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
-                <mat-form-field *ngIf="element.numExists">
-                  <input type="text" matInput [(ngModel)]="element.mutace" (ngModelChange)="setDataChanged()" [matAutocomplete]="auto3" [disabled]="!state.logged || !isOwner">
-                  <mat-icon>{{ config.icons.pencil }}</mat-icon>
-                </mat-form-field>
-                <mat-autocomplete #auto3="matAutocomplete">
-                  <mat-option *ngFor="let mut of mutations;" [value]="mut.name">{{mut.name}}</mat-option>
-                </mat-autocomplete>
+                <ng-container *ngIf="element.numExists">
+                  <mat-select [(ngModel)]="element.mutace" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                    <mat-option *ngFor="let mut of state.mutations" [value]="mut.id.toString()">{{ 'record.mutations.' + mut.id | translate }}</mat-option>
+                  </mat-select>
+                </ng-container>
               </td>
             </ng-container>
 
@@ -403,7 +399,7 @@
               <td mat-cell *matCellDef="let element" class="app-cell-edition">
                 <mat-form-field *ngIf="element.numExists">
                   <mat-select [(ngModel)]="element.vydani" (ngModelChange)="attachmentSelected($event, element)" [disabled]="!state.logged || !isOwner">
-                    <mat-option *ngFor="let v of state.vydani" [value]="v">{{'record.publication.' + v | translate }}
+                    <mat-option *ngFor="let v of state.vydani" [value]="v.id.toString()">{{'record.publication.' + v.id | translate }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>

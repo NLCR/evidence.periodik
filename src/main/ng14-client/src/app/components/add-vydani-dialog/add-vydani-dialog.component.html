@@ -3,7 +3,7 @@
   <mat-form-field>
     <mat-label>{{ 'record.publication.placeholder' | translate }}</mat-label>
     <mat-select id="vydani" name="vydani" [(ngModel)]="vydani">
-      <mat-option *ngFor="let v of state.vydani" [value]="v" [disabled]="v === state.currentIssue.vydani">{{'record.publication.' + v | translate }}</mat-option>
+      <mat-option *ngFor="let v of state.vydani" [value]="v.id" [disabled]="v === state.currentIssue.vydani">{{'record.publication.' + v.name | translate }}</mat-option>
     </mat-select>
   </mat-form-field>
 </div>
@@ -20,9 +20,9 @@
 
   <mz-modal-content>
     <mz-select-container>
-      <select mz-select id="vydani" name="vydani" [placeholder]="'record.publication.placeholder' | translate" 
+      <select mz-select id="vydani" name="vydani" [placeholder]="'record.publication.placeholder' | translate"
               [(ngModel)]="vydani">
-              
+
               <option *ngFor="let v of state.vydani" [value]="v" [disabled]="v === state.currentIssue.vydani">{{'record.publication.' + v | translate }}</option>
       </select>
     </mz-select-container>

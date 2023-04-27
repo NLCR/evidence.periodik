@@ -32,6 +32,7 @@ import {SvazekOverviewComponent} from '../svazek-overview/svazek-overview.compon
 import moment from 'moment'
 import {SplitAreaDirective, SplitComponent} from 'angular-split'
 import {ComponentCanDeactivate} from "../can-deactivate/component-can-deactivate";
+import {first} from "rxjs/operators";
 
 @Component({
   selector: 'app-svazek',
@@ -149,7 +150,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
   oznaceni: string;
   // vlastnik_idx: number;
 
-  mutations: { name: string, type: string, value: number }[];
+  // mutations: { name: string, type: string, value: number }[];
   oznaceni_list: { name: string, type: string, value: number }[];
 
   // cislaVeSvazku: CisloSvazku[] = [];
@@ -280,6 +281,20 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     this.service.getVolume(id).subscribe(res => {
       if (res.length > 0) {
         this.state.currentVolume = res[0];
+
+        //vydani migration fix to ids
+        const permPeriodicals = Object.assign([], this.state.currentVolume.periodicita)
+        const editedPeriodicals = []
+        permPeriodicals.forEach(p => {
+          const found = this.state.vydani.find(v => v.name === p.vydani)
+          if(found){
+            editedPeriodicals.push({...p, vydani: found.id.toString()})
+          } else{
+            editedPeriodicals.push(p)
+          }
+        })
+        this.state.currentVolume.periodicita = editedPeriodicals
+
         this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
         const dateRange = 'datum_vydani:[' + res[0].datum_od + ' TO ' + res[0].datum_do + ']';
         this.findTitul();
@@ -448,20 +463,20 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
       this.mutace_idx = -1;
       this.mutace = '';
       this.oznaceni_list = Object.assign([], res.facet_counts.facet_fields.znak_oznaceni_vydani);
-      this.mutations = Object.assign([], res.facet_counts.facet_fields.mutace);
+      // this.mutations = Object.assign([], res.facet_counts.facet_fields.mutace);
 
-      for (let i = 0; i < this.mutations.length; i++) {
-        if (this.mutations[i].name === this.state.currentVolume.mutace) {
-          this.mutace_idx = i;
-          this.mutace = this.mutations[i].name;
-        }
-      }
+      // for (let i = 0; i < this.mutations.length; i++) {
+      //   if (this.mutations[i].name === this.state.currentVolume.mutace) {
+      //     this.mutace_idx = i;
+      //     this.mutace = this.mutations[i].name;
+      //   }
+      // }
 
       if (this.mutace_idx === -1) {
         // Udaj ve svazku neni mezi facety
         // Pridame
-        this.mutations.push({ name: this.state.currentVolume.mutace, type: 'int', value: 0 });
-        this.mutace_idx = this.mutations.length - 1;
+        // this.mutations.push({ name: this.state.currentVolume.mutace, type: 'int', value: 0 });
+        // this.mutace_idx = this.mutations.length - 1;
         this.mutace = this.state.currentVolume.mutace;
       }
 
@@ -955,14 +970,14 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     }
   }
 
-  changeMutace() {
-    this.state.currentVolume.mutace = this.config.mutations[this.mutace_idx];
-  }
+  // changeMutace() {
+  //   this.state.currentVolume.mutace = this.config.mutations[this.mutace_idx];
+  // }
 
-  changeOznaceni() {
-    this.state.currentVolume.znak_oznaceni_vydani = this.config.znak_oznaceni_vydani[this.oznaceni_idx];
-
-  }
+  // changeOznaceni() {
+  //   this.state.currentVolume.znak_oznaceni_vydani = this.config.znak_oznaceni_vydani[this.oznaceni_idx];
+  //
+  // }
 
   // changeVlastnik() {
   //   if (this.vlastnik_idx < 0) {
@@ -991,11 +1006,12 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     let curCislo = this.dsExemplars.data[min].cislo;
     let willBeRenumbered = 0;
     let firstNumber = -1;
+    console.log(min, max, curCislo, idx, down)
     // const maxCislo = this.dsIssues.data[min].cislo;
 
     for (let i = min; i < max; i++) {
       const ex: Exemplar = this.dsExemplars.data[i];
-      if (ex.numExists && !ex.isPriloha) {
+      if ((ex.numExists || ex.missing_number) && !ex.isPriloha) {
         willBeRenumbered++;
       }
     }
@@ -1010,16 +1026,17 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
         }
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(first()).subscribe(result => {
       if (result) {
         for (let i = min; i < max; i++) {
           const ex: Exemplar = this.dsExemplars.data[i];
-          if (ex.numExists && !ex.isPriloha) {
+          if ((ex.numExists || ex.missing_number) && !ex.isPriloha) {
             if (firstNumber < 0) {
               firstNumber = curCislo;
             }
             ex.cislo = curCislo;
             curCislo++;
+            console.log(i)
           }
         }
         const additionalInfo = this.state.currentLang === 'cs' ? ` čísel: ${willBeRenumbered} (v rozsahu od ${firstNumber} po ${curCislo - 1})` : ` numbers: ${willBeRenumbered} (in range from ${firstNumber} to ${curCislo - 1})`;

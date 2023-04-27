@@ -110,7 +110,7 @@ export class AppService {
       .set('q', '*')
       .set('fq', 'id_titul:' + idTitul)
       .append('fq', 'carovy_kod:' + carovy_kod)
-      .append('fq', 'numExists:"true"')
+      // .append('fq', 'numExists:"true"')
       .set('wt', 'json')
       // .set('rows', this.state.rows)
       .set('rows', 200000)

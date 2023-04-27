@@ -53,7 +53,7 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 
-import { IssueComponent } from './components/issue/issue.component';
+// import { IssueComponent } from './components/issue/issue.component';
 import { FacetComponent } from './components/facet/facet.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
@@ -76,7 +76,7 @@ import { ResultTableComponent } from './components/result-table/result-table.com
 import { AddExemplarDialogComponent } from './components/add-exemplar-dialog/add-exemplar-dialog.component';
 import { AddTitulDialogComponent } from './components/add-titul-dialog/add-titul-dialog.component';
 import { AddVdkExComponent } from './components/add-vdk-ex/add-vdk-ex.component';
-import { AddVydaniDialogComponent } from './components/add-vydani-dialog/add-vydani-dialog.component';
+// import { AddVydaniDialogComponent } from './components/add-vydani-dialog/add-vydani-dialog.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { AuthGuard } from './auth-guard';
 import { EditPagesComponent } from './components/edit-pages/edit-pages.component';
@@ -123,7 +123,7 @@ const providers: any[] = [
     NavbarComponent,
     CalendarComponent,
     // KalendarFullComponent,
-    IssueComponent,
+    // IssueComponent,
     FacetComponent,
     ToolbarComponent,
     SearchBarComponent,
@@ -146,7 +146,7 @@ const providers: any[] = [
     AddExemplarDialogComponent,
     AddTitulDialogComponent,
     AddVdkExComponent,
-    AddVydaniDialogComponent,
+    // AddVydaniDialogComponent,
     ConfirmDialogComponent,
     EditPagesComponent,
     SvazekComponent,
