@@ -640,7 +640,7 @@ export class AppService {
       .set('wt', 'json')
       .set('rows', '0')
       .append('fq', 'id_titul:"' + id + '"')
-      .append('fq', 'numExists:"true"')
+      .append('fq', '(numExists:"true" OR missing_number:"true")')
       .set('stats', 'true')
       .set('stats.field', '{!key=mutace countDistinct=true count=true}mutace')
       .append('stats.field', '{!key=den countDistinct=true count=true max=true min=true}datum_vydani_den')
@@ -741,7 +741,7 @@ export class AppService {
     const url = '/api/search/exemplar/select';
     const params = this.doSearchParams(true)
       .append('fq', 'id_titul:"' + id + '"')
-      .append('fq', 'numExists:"true"')
+      .append('fq', '(numExists:"true" OR missing_number:"true")')
       .append('group', 'true')
       .append('group.field', 'id_issue')
       .append('group.limit', '20')
@@ -762,7 +762,7 @@ export class AppService {
     const url = '/api/search/exemplar/select';
     let params = this.doSearchParams()
     .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']')
-    .append('fq', 'numExists:"true"')
+    .append('fq', '(numExists:"true" OR missing_number:"true")')
     // .append('group', 'true')
     // .append('group.field', 'id_issue')
     // .append('group.limit', '1')
