@@ -60,6 +60,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     // 'edit_issue',
     'datum_vydani',
     'numExists',
+    "missing_number",
     'addNextEdition',
     'cislo',
     "cislo_prilohy",

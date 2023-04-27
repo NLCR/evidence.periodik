@@ -25,6 +25,8 @@ public class Exemplar {
   @Field
   public boolean numExists;
   @Field
+  public boolean missing_number;
+  @Field
   public String carovy_kod_vlastnik;
   @Field
   public String signatura;

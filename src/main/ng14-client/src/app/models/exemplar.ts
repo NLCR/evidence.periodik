@@ -3,6 +3,7 @@ export class Exemplar {
   id: string;
   id_issue: string;
   numExists: boolean;
+  missing_number: boolean
   vydaniExists: boolean;
   // stav	kód	kódovaný údaj, významy: ok, poškozeno - čitelné, poškozeno - ztráta informace, chybí celé stránky, není vůbec (zničeno/ztráta)
   stav: string[] = [];

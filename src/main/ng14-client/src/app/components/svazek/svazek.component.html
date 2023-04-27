@@ -25,11 +25,16 @@
                   {{ 'button.save_the_entire_volume' | translate }}
 <!--                  {{dataChanged ? '!!' : ''}}-->
                 </button>
-                <button mat-icon-button [disabled]="loading || !state.logged">
-                  <mat-icon [routerLink]="'/result/'+ state.currentTitul.id" [matTooltip]="'desc.display_table' | translate">
+                <br />
+                <button style="margin-top: 5px" mat-flat-button color="primary" [routerLink]="'/result/'+ state.currentTitul.id" [disabled]="!state.logged || loading || !isOwner">
+                  <mat-icon [matTooltip]="'desc.display_table' | translate">
                     {{ config.icons.view_table }}</mat-icon>
-                  <mat-icon style="margin-left: 5px" [matTooltip]="'desc.volume_overview' | translate" (click)="showSvazekOverview()"
-                    matTooltipPosition="above">{{ config.icons.info }}</mat-icon>
+                  {{ 'desc.display_table' | translate }}
+                </button>
+                <button style="margin-top: 5px" mat-flat-button color="primary" (click)="showSvazekOverview()" [disabled]="!state.logged || loading || !isOwner">
+                  <mat-icon style="margin-left: 5px" [matTooltip]="'desc.volume_overview' | translate"
+                            matTooltipPosition="above">{{ config.icons.info }}</mat-icon>
+                  {{ 'desc.volume_overview' | translate }}
                 </button>
                 <br />
                 <button style="margin-top: 5px" mat-flat-button color="accent" (click)="deleteClick()" [disabled]="!state.logged || loading || !isOwner">
@@ -321,7 +326,17 @@
                 <div>{{ 'desc.number_exists' | translate }}</div>
               </th>
               <td mat-cell *matCellDef="let element">
-                <mat-checkbox [(ngModel)]="element.numExists" (change)="checkElementExists(element)" [disabled]="!state.logged || !isOwner"></mat-checkbox>
+                <mat-checkbox [(ngModel)]="element.numExists" (change)="checkElementExists(element)" [disabled]="!state.logged || !isOwner || element.missing_number"></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- Number missing -->
+            <ng-container matColumnDef="missing_number">
+              <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">
+                <div>{{ 'desc.missing_number' | translate }}</div>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox color="primary" [(ngModel)]="element.missing_number" (change)="setDataChanged()" [disabled]="!state.logged || !isOwner || element.numExists"></mat-checkbox>
               </td>
             </ng-container>
 
@@ -493,16 +508,6 @@
                 <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.complete" (change)="updateStav(element)" class="check-ok" [disabled]="!state.logged || !isOwner"></mat-checkbox>
               </td>
             </ng-container>
-
-            <!-- Missing number -->
-    <!--        <ng-container matColumnDef="chybiCislo">-->
-    <!--          <th mat-header-cell *matHeaderCellDef class="app-cell-rotate">-->
-    <!--            <div>{{ 'record.StavIssue.ChCC' | translate }}</div>-->
-    <!--          </th>-->
-    <!--          <td mat-cell *matCellDef="let element">-->
-    <!--            <mat-checkbox *ngIf="element.numExists" [(ngModel)]="element.chybiCislo" (change)="updateStav(element)" [disabled]=!state.logged></mat-checkbox>-->
-    <!--          </td>-->
-    <!--        </ng-container>-->
 
             <!-- Destroyed pages -->
             <ng-container matColumnDef="destroyedPages">
