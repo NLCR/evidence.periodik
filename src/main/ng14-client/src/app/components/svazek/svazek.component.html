@@ -25,18 +25,17 @@
                   {{ 'button.save_the_entire_volume' | translate }}
 <!--                  {{dataChanged ? '!!' : ''}}-->
                 </button>
-                <br />
-                <button style="margin-top: 5px" mat-flat-button color="primary" [routerLink]="'/result/'+ state.currentTitul.id" [disabled]="!state.logged || loading || !isOwner">
-                  <mat-icon [matTooltip]="'desc.display_table' | translate">
-                    {{ config.icons.view_table }}</mat-icon>
+                <button mat-flat-button color="primary" [routerLink]="'/result/'+ state.currentTitul.id" [disabled]="!state.logged || loading || !isOwner">
+                  <mat-icon *ngIf="!state.logged  || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate">
+                    {{ config.icons.block }}</mat-icon>
                   {{ 'desc.display_table' | translate }}
                 </button>
+                <br />
                 <button style="margin-top: 5px" mat-flat-button color="primary" (click)="showSvazekOverview()" [disabled]="!state.logged || loading || !isOwner">
-                  <mat-icon style="margin-left: 5px" [matTooltip]="'desc.volume_overview' | translate"
-                            matTooltipPosition="above">{{ config.icons.info }}</mat-icon>
+                  <mat-icon style="margin-left: 5px" *ngIf="!state.logged  || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
+                            matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
                   {{ 'desc.volume_overview' | translate }}
                 </button>
-                <br />
                 <button style="margin-top: 5px" mat-flat-button color="accent" (click)="deleteClick()" [disabled]="!state.logged || loading || !isOwner">
                   <mat-icon *ngIf="!state.logged || !isOwner" [matTooltip]="'note.this_action_is_not_allowed_not_login' | translate"
                             matTooltipPosition="above">{{ config.icons.block }}</mat-icon>
