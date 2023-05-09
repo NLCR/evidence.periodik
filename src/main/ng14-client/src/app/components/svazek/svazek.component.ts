@@ -524,7 +524,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
   // }
 
   attachmentSelected(newValue: string, exemplar: Exemplar){
-    exemplar.isPriloha = newValue === "attachment" || newValue === "periodic_attachment"
+    exemplar.isPriloha = newValue === "6" || newValue === "7"
     this.setDataChanged()
   }
 
@@ -890,7 +890,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
       currentVolume.periodicita.forEach(p => {
         if (p.active) {
           if (p.den === dayStr) {
-            const generateAttachment = p.vydani === "attachment" || p.vydani === "periodic_attachment"
+            const generateAttachment = p.vydani === "6" || p.vydani === "7"
             const ex = new Exemplar();
             ex.datum_vydani = dt;
             ex.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
@@ -909,9 +909,9 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
             ex.podnazev = p.podnazev;
             ex.vydani = p.vydani;
             ex.isPriloha = generateAttachment
-            ex.cislo = p.vydani === "attachment" ? attachmentNumber :  p.vydani === "periodic_attachment" ? periodicAttachmentNumber : idx
+            ex.cislo = p.vydani === "6" ? attachmentNumber :  p.vydani === "7" ? periodicAttachmentNumber : idx
             ex.odd = odd;
-            generateAttachment ? p.vydani === "attachment" ? attachmentNumber++ : periodicAttachmentNumber++ : idx++
+            generateAttachment ? p.vydani === "6" ? attachmentNumber++ : periodicAttachmentNumber++ : idx++
             inserted = true;
 
             if(generateAttachment && currentVolume.show_attachments_at_the_end){
