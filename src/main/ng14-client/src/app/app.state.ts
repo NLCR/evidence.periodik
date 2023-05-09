@@ -26,9 +26,10 @@ export class AppState {
   // config: AppConfiguration;
   periods: string[] = [];
   vdkFormats: string[] = [];
-  vydani = [];
+  vydani: {id: number, name: string}[] = [];
+  mutations: {id: number, name: string}[] = [];
   configured = false;
-  owners: { id: number, name: string, url: string }[] = [];
+  owners: { id: number, name: string, sigla: string }[] = [];
   stavy: string[] = [];
   states = [];
 
@@ -108,6 +109,7 @@ export class AppState {
     this.vdkFormats = config.vdkFormats;
 
     config.vydani.map(k => { this.vydani.push(k); });
+    config.mutations.map(k => { this.mutations.push(k); });
 
     this.configured = true;
     // this._configSubject.next(cfg);

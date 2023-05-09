@@ -13,10 +13,10 @@
     "P1Y"
   ],
   "owners": [
-    {"id":  1, "name":  "NKP", "url":"http://"},
-    {"id":  2,"name":  "MZK", "url":"http://"},
-    {"id":  3,"name":  "VKOL", "url":"http://"},
-    {"id":  4,"name":  "SVKUL", "url":"http://"}
+    {"id":  0, "name":  "NKP", "sigla":  "ABA001"},
+    {"id":  1,"name":  "MZK", "sigla":  "BOA001"},
+    {"id":  2,"name":  "VKOL", "sigla": "OLA001"},
+    {"id":  3,"name":  "KUK", "sigla":  "ULG001"}
   ],
   "stavy": [
     "OK",
@@ -32,8 +32,22 @@
       "CzV"
   ],
   "states":["ok", "auto"],
-  "vydani": ["", "morning", "midday", "afternoon", "evening", "special", "attachment", "periodic_attachment"],
-  "mutations": ["Brno", "Praha"],
+  "vydani": [
+    {"id": 0, "name": ""},
+    {"id": 1, "name": "morning"},
+    {"id": 2, "name": "midday"},
+    {"id": 3, "name": "afternoon"},
+    {"id": 4, "name": "evening"},
+    {"id": 5, "name": "special"},
+    {"id": 7, "name": "periodic_attachment"},
+    {"id": 6, "name": "attachment"}
+  ],
+  "mutations": [
+    {"id": 0, "name": ""},
+    {"id": 1, "name": "Brno"},
+    {"id": 2, "name": "Praha"},
+    {"id": 3, "name": "Ostrava"}
+  ],
   "znak_oznaceni_vydani": ["*", "-"],
   "test": false,
   "icons": {

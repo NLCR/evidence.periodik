@@ -13,6 +13,7 @@ export class Volume {
   znak_oznaceni_vydani: string = '';
   carovy_kod: string = '';
   signatura: string = '';
+  year: string = ""
   vlastnik: string = '';
   periodicita: PeriodicitaSvazku[];
   prvni_cislo: number = 0;

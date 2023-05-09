@@ -98,12 +98,18 @@
               <a *ngSwitchCase="'vydani'" [class]="state.loadingData ? 'loadingData' : ''">{{'record.publication.' + item.name | translate}}
                 <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container>
               </a>
+              <a *ngSwitchCase="'mutace'" [class]="state.loadingData ? 'loadingData' : ''">{{'record.mutations.' + item.name | translate}}
+                <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container>
+              </a>
+            <a *ngSwitchCase="'vlastnik'" [class]="state.loadingData ? 'loadingData' : ''">{{state.owners[item.name].name}}
+                <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container>
+            </a>
               <a *ngSwitchDefault [class]="state.loadingData ? 'loadingData' : ''">{{ item.name === "N" ? "Nečitelné" : item.name }}
                 <ng-container *ngIf="item.name === ''">{{ 'desc.without_name' | translate }}</ng-container>
               </a>
             </ng-container>
             <a [class]="state.loadingData ? 'loadingData' : ''">
-              ({{item.value}})
+              ({{ item.value}})
             </a>
           </mat-list-item>
         </mat-list>

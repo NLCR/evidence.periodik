@@ -1,6 +1,6 @@
 package cz.incad.nkp.inprove;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import cz.incad.nkp.inprove.solr.Indexer;
 import cz.incad.nkp.inprove.solr.MD5;
 import cz.incad.nkp.inprove.solr.User;

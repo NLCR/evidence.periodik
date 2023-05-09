@@ -18,8 +18,13 @@
       <mat-icon>close</mat-icon>
     </a>
     {{ 'facet.' + filter.field | translate }}:&#160;
-    <span class="app-font-bold" *ngIf="filter.field !== 'stav'">{{ filter.value === "" ? ("desc.without_name" | translate) : filter.value}}</span>
-    <span class="app-font-bold" *ngIf="filter.field === 'stav'">{{ 'record.StavIssue.' + filter.value | translate }}</span>
+    <span [ngSwitch]="filter.field">
+      <span class="app-font-bold" *ngSwitchCase="'stav'">{{ 'record.StavIssue.' + filter.value | translate }}</span>
+      <span class="app-font-bold" *ngSwitchCase="'mutace'">{{ 'record.mutations.' + filter.value | translate }}</span>
+      <span class="app-font-bold" *ngSwitchCase="'vydani'">{{ 'record.publication.' + filter.value | translate }}</span>
+      <span class="app-font-bold" *ngSwitchCase="'vlastnik'">{{ state.owners[filter.value].name }}</span>
+      <span class="app-font-bold" *ngSwitchDefault>{{ filter.value === "" ? ("desc.without_name" | translate) : filter.value}}</span>
+    </span>
   </mat-list-item>
 
   <mat-list-item role="listitem"  *ngIf="state.filterByDate">

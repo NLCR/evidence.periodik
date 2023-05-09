@@ -25,7 +25,7 @@ export class ResultTableComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   subscriptions: Subscription[] = [];
   data: Issue[];
-  vlastnici: { name: string, collapsed: boolean }[] = [];
+  vlastnici: { name: string, id: number, collapsed: boolean }[] = [];
   exs: any = {};
   displayedColumns = ['meta_nazev', 'mutace', 'datum_vydani', 'nazev', 'vydani'];
   header = '';
@@ -122,9 +122,10 @@ export class ResultTableComponent implements OnInit, OnDestroy {
         exs.forEach(ex => {
           const vlastnik = ex.vlastnik;
           if (!this.exs.hasOwnProperty(vlastnik) && vlastnik !== '') {
-            this.vlastnici.push({ name: vlastnik, collapsed: false });
+            const foundedOwner = this.state.owners.find(owner => owner.id.toString() === vlastnik)
+            this.vlastnici.push({ name: foundedOwner.name, id: foundedOwner.id, collapsed: false });
             this.exs[vlastnik] = ex;
-            this.displayedColumns.push(vlastnik);
+            this.displayedColumns.push(this.state.owners.find(owner => owner.id.toString() === vlastnik).name);
           } else {
 
           }

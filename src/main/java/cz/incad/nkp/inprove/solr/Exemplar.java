@@ -1,7 +1,7 @@
 
 package cz.incad.nkp.inprove.solr;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import cz.incad.nkp.inprove.Options;
 import java.util.List;
 import java.util.logging.Logger;
@@ -24,6 +24,8 @@ public class Exemplar {
   public String carovy_kod;
   @Field
   public boolean numExists;
+  @Field
+  public boolean missing_number;
   @Field
   public String carovy_kod_vlastnik;
   @Field

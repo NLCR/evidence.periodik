@@ -41,6 +41,9 @@ export class AdminUsersComponent implements OnInit {
       if (!this.user) {
         this.loadUser(this.users[0]);
       }
+      // if(!this.user.owner) {
+      //   this.user.owner = "0"
+      // }
     });
   }
 

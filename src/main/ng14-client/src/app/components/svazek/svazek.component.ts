@@ -32,6 +32,7 @@ import {SvazekOverviewComponent} from '../svazek-overview/svazek-overview.compon
 import moment from 'moment'
 import {SplitAreaDirective, SplitComponent} from 'angular-split'
 import {ComponentCanDeactivate} from "../can-deactivate/component-can-deactivate";
+import {first} from "rxjs/operators";
 
 @Component({
   selector: 'app-svazek',
@@ -60,6 +61,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     // 'edit_issue',
     'datum_vydani',
     'numExists',
+    "missing_number",
     'addNextEdition',
     'cislo',
     "cislo_prilohy",
@@ -94,6 +96,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     'znak_oznaceni_vydani',
     'carovy_kod',
     'signatura',
+    "year",
     'datum_od',
     'prvni_cislo',
     'datum_do',
@@ -147,7 +150,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
   oznaceni: string;
   // vlastnik_idx: number;
 
-  mutations: { name: string, type: string, value: number }[];
+  // mutations: { name: string, type: string, value: number }[];
   oznaceni_list: { name: string, type: string, value: number }[];
 
   // cislaVeSvazku: CisloSvazku[] = [];
@@ -278,6 +281,20 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     this.service.getVolume(id).subscribe(res => {
       if (res.length > 0) {
         this.state.currentVolume = res[0];
+
+        //vydani migration fix to ids
+        const permPeriodicals = Object.assign([], this.state.currentVolume.periodicita)
+        const editedPeriodicals = []
+        permPeriodicals.forEach(p => {
+          const found = this.state.vydani.find(v => v.name === p.vydani)
+          if(found){
+            editedPeriodicals.push({...p, vydani: found.id.toString()})
+          } else{
+            editedPeriodicals.push(p)
+          }
+        })
+        this.state.currentVolume.periodicita = editedPeriodicals
+
         this.dsPeriodicita = new MatTableDataSource(this.state.currentVolume.periodicita);
         const dateRange = 'datum_vydani:[' + res[0].datum_od + ' TO ' + res[0].datum_do + ']';
         this.findTitul();
@@ -446,20 +463,20 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
       this.mutace_idx = -1;
       this.mutace = '';
       this.oznaceni_list = Object.assign([], res.facet_counts.facet_fields.znak_oznaceni_vydani);
-      this.mutations = Object.assign([], res.facet_counts.facet_fields.mutace);
+      // this.mutations = Object.assign([], res.facet_counts.facet_fields.mutace);
 
-      for (let i = 0; i < this.mutations.length; i++) {
-        if (this.mutations[i].name === this.state.currentVolume.mutace) {
-          this.mutace_idx = i;
-          this.mutace = this.mutations[i].name;
-        }
-      }
+      // for (let i = 0; i < this.mutations.length; i++) {
+      //   if (this.mutations[i].name === this.state.currentVolume.mutace) {
+      //     this.mutace_idx = i;
+      //     this.mutace = this.mutations[i].name;
+      //   }
+      // }
 
       if (this.mutace_idx === -1) {
         // Udaj ve svazku neni mezi facety
         // Pridame
-        this.mutations.push({ name: this.state.currentVolume.mutace, type: 'int', value: 0 });
-        this.mutace_idx = this.mutations.length - 1;
+        // this.mutations.push({ name: this.state.currentVolume.mutace, type: 'int', value: 0 });
+        // this.mutace_idx = this.mutations.length - 1;
         this.mutace = this.state.currentVolume.mutace;
       }
 
@@ -507,7 +524,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
   // }
 
   attachmentSelected(newValue: string, exemplar: Exemplar){
-    exemplar.isPriloha = newValue === "attachment" || newValue === "periodic_attachment"
+    exemplar.isPriloha = newValue === "6" || newValue === "7"
     this.setDataChanged()
   }
 
@@ -873,7 +890,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
       currentVolume.periodicita.forEach(p => {
         if (p.active) {
           if (p.den === dayStr) {
-            const generateAttachment = p.vydani === "attachment" || p.vydani === "periodic_attachment"
+            const generateAttachment = p.vydani === "6" || p.vydani === "7"
             const ex = new Exemplar();
             ex.datum_vydani = dt;
             ex.datum_vydani_den = this.datePipe.transform(dt, 'yyyyMMdd');
@@ -892,9 +909,9 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
             ex.podnazev = p.podnazev;
             ex.vydani = p.vydani;
             ex.isPriloha = generateAttachment
-            ex.cislo = p.vydani === "attachment" ? attachmentNumber :  p.vydani === "periodic_attachment" ? periodicAttachmentNumber : idx
+            ex.cislo = p.vydani === "6" ? attachmentNumber :  p.vydani === "7" ? periodicAttachmentNumber : idx
             ex.odd = odd;
-            generateAttachment ? p.vydani === "attachment" ? attachmentNumber++ : periodicAttachmentNumber++ : idx++
+            generateAttachment ? p.vydani === "6" ? attachmentNumber++ : periodicAttachmentNumber++ : idx++
             inserted = true;
 
             if(generateAttachment && currentVolume.show_attachments_at_the_end){
@@ -953,14 +970,14 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     }
   }
 
-  changeMutace() {
-    this.state.currentVolume.mutace = this.config.mutations[this.mutace_idx];
-  }
+  // changeMutace() {
+  //   this.state.currentVolume.mutace = this.config.mutations[this.mutace_idx];
+  // }
 
-  changeOznaceni() {
-    this.state.currentVolume.znak_oznaceni_vydani = this.config.znak_oznaceni_vydani[this.oznaceni_idx];
-
-  }
+  // changeOznaceni() {
+  //   this.state.currentVolume.znak_oznaceni_vydani = this.config.znak_oznaceni_vydani[this.oznaceni_idx];
+  //
+  // }
 
   // changeVlastnik() {
   //   if (this.vlastnik_idx < 0) {
@@ -989,11 +1006,12 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     let curCislo = this.dsExemplars.data[min].cislo;
     let willBeRenumbered = 0;
     let firstNumber = -1;
+    console.log(min, max, curCislo, idx, down)
     // const maxCislo = this.dsIssues.data[min].cislo;
 
     for (let i = min; i < max; i++) {
       const ex: Exemplar = this.dsExemplars.data[i];
-      if (ex.numExists && !ex.isPriloha) {
+      if ((ex.numExists || ex.missing_number) && !ex.isPriloha) {
         willBeRenumbered++;
       }
     }
@@ -1008,16 +1026,17 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
         }
       }
     });
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().pipe(first()).subscribe(result => {
       if (result) {
         for (let i = min; i < max; i++) {
           const ex: Exemplar = this.dsExemplars.data[i];
-          if (ex.numExists && !ex.isPriloha) {
+          if ((ex.numExists || ex.missing_number) && !ex.isPriloha) {
             if (firstNumber < 0) {
               firstNumber = curCislo;
             }
             ex.cislo = curCislo;
             curCislo++;
+            console.log(i)
           }
         }
         const additionalInfo = this.state.currentLang === 'cs' ? ` čísel: ${willBeRenumbered} (v rozsahu od ${firstNumber} po ${curCislo - 1})` : ` numbers: ${willBeRenumbered} (in range from ${firstNumber} to ${curCislo - 1})`;
@@ -1068,7 +1087,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     this.poznText = el.poznamka;
     setTimeout(() => {
       this.openInfoOverlay(relative._elementRef, template, 35);
-    }, 100);
+    }, 50);
   }
 
 
@@ -1101,7 +1120,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
           }
           this.openInfoOverlay(relative._elementRef, template);
         }
-      }, 500);
+      }, 50);
     }
   }
 
@@ -1210,7 +1229,7 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
   }
 
   openInfoOverlay(relative: any, template: TemplateRef<any>, xOffset: number = 6) {
-    this.closeInfoOverlay();
+    // this.closeInfoOverlay();
 
     this.overlayRef = this.overlay.create({
       positionStrategy: this.overlay.position().flexibleConnectedTo(relative).withPositions([{

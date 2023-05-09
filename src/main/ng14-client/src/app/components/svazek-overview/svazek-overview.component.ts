@@ -25,7 +25,9 @@ export class SvazekOverviewComponent implements OnInit, OnDestroy {
   vydani: { name: string, type: string, value: number }[] = [];
   znaky: { name: string, type: string, value: number }[] = [];
   stavy: { name: string, value: number }[] = [];
-  missingNumbers: { date: string, day: string }[] = [];
+  ok: {yes: number, no: number} = {yes: 0, no: 0}
+  // missingNumbers: { date: string, day: string }[] = [];
+  missingNumbers: { date: string, number: number }[] = [];
   fyzStavOk: boolean;
   stavyExt: { datum: Date, cislo: number }[] = [];
   poznamky: { datum: Date, cislo: number, note: string }[] = [];
@@ -76,10 +78,12 @@ export class SvazekOverviewComponent implements OnInit, OnDestroy {
       this.mutace = facets.mutace.filter(f => f.value > 0);
       this.znaky = facets.znak_oznaceni_vydani.filter(f => f.value > 0);
       this.vydani = facets.vydani.filter(f => f.value > 0);
-      this.stavy = facets.stav.filter(f => f.value > 0);
+      this.stavy = facets.stav.filter(f => f.value > 0 && f.name !== "OK");
       this.fyzStavOk = !(facets.stav.findIndex(f => f.name !== 'OK') > -1);
+      this.ok.yes = exRes.filter(ex => ex.numExists && ex.stav.find(s => s === "OK")).length
+      this.ok.no = exRes.filter(ex => ex.numExists && !ex.stav.find(s => s === "OK")).length
 
-      const numbers = exRes.map(e => parseInt(e.cislo))
+      const numbers = exRes.map(e => parseInt(e.cislo)).filter(n => !isNaN(n))
       this.prvniCislo = Math.min(...numbers)
       this.posledniCislo = Math.max(...numbers)
 
@@ -114,15 +118,17 @@ export class SvazekOverviewComponent implements OnInit, OnDestroy {
   setMissingPeriodicals(periodicals, exemplars){
     const dates = this.getDaysArray(this.volume.datum_od, this.volume.datum_do);
     const datesWithExemplars = dates.map((d) => {
-      return {date: d, exemplar: exemplars.filter(ex => ex.datum_vydani === d && !ex.isPriloha)}
+      return {date: d, exemplar: exemplars.find(ex => ex.datum_vydani === d && !ex.isPriloha)}
     })
 
-    let missingExemplars = []
+    // let missingExemplars = []
     datesWithExemplars.forEach((dx) => {
-      const dayStr = this.datePipe.transform(dx.date, 'EEEE')
-      const foundedPeriodic = periodicals.find(ap => ap.den === dayStr && ap.active)
-      if(foundedPeriodic && !dx.exemplar.length){
-        this.missingNumbers.push({date: dx.date, day: foundedPeriodic.den})
+    // exemplars.forEach((dx) => {
+    //   const dayStr = this.datePipe.transform(dx.date, 'EEEE')
+      // const foundedPeriodic = periodicals.find(ap => ap.den === dayStr && ap.active)
+      // if(foundedPeriodic && !dx.exemplar.length){
+      if(dx.exemplar?.missing_number){
+        this.missingNumbers.push({date: dx.exemplar.datum_vydani, number: dx.exemplar.cislo})
       }
     })
   }

@@ -8,7 +8,7 @@
     <strong>{{ 'record.titul' | translate }}:</strong> {{ volume.titul.meta_nazev }}
   </div>
   <div>
-    <strong>{{ 'record.vlastnik' | translate}}:</strong> {{ volume.vlastnik }}
+    <strong>{{ 'record.vlastnik' | translate}}:</strong> {{ state.owners[volume.vlastnik].name }}
   </div>
   <div>
     <strong>{{ 'record.signatura' | translate}}:</strong> {{ volume.signatura }}
@@ -17,10 +17,10 @@
     <strong>{{ 'record.carovy_kod' | translate}}:</strong> {{ volume.carovy_kod }}
   </div>
   <div>
-    <strong>{{ 'record.mutace' | translate}}:</strong> {{ volume.mutace }}
+    <strong>{{ 'record.mutace' | translate}}:</strong><!--    {{ volume.mutace }}-->
 
     <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of mutace">
-      <div fxFlex="100px">{{f.name}}</div>
+      <div fxFlex="100px">{{ 'record.mutations.' + f.name | translate }}</div>
       <div fxFlex="100px">{{f.value}}x</div>
     </div>
   </div>
@@ -56,7 +56,8 @@
     </div>
   </div>
   <div>
-    <strong>{{ 'desc.complete' | translate }}:</strong> Ano / Ne
+    <strong>{{ 'desc.complete' | translate }}:</strong>
+    <span>Ano: {{ok.yes}} Ne: {{ok.no}}</span>
   </div>
   <div>
     <strong>{{ 'Přehled typů poškození' | translate}}:</strong>
@@ -68,12 +69,13 @@
   <div>
     <strong>{{ 'Chybějící čísla' | translate}}:</strong>
     <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of missingNumbers">
-      <div fxFlex="100px">{{ f.date | date : 'dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>
-      <div fxFlex="100px">{{ "days." + f.day | translate}}</div>
+      <span>{{f.number}}</span>
+      <div fxFlex="100px">[{{f.date | date : 'EE' : '+0430' : 'cs-CZ'}} {{ f.date | date : 'dd.MM.yyy' : '+0430' : 'cs-CZ' }}]</div>
+<!--      <div fxFlex="100px">{{ "days." + f.day | translate}}</div>-->
     </div>
   </div>
   <div>
-    <strong>{{ 'Fyzický stav' | translate }}:</strong> {{fyzStavOk ? 'Vyhovujici' : 'Poskozeny' | translate}} <!--  -->
+    <strong>{{ 'Fyzický stav' | translate }}:</strong> {{fyzStavOk ? 'Vyhovující' : 'Poškozený' | translate}} <!--  -->
   </div>
   <div>
     <strong>{{ 'Poškozená čísla' | translate}}:</strong>
@@ -84,7 +86,7 @@
   </div>
 
   <div>
-    <strong>{{ 'Poznamky' | translate}}:</strong>
+    <strong>{{ 'Poznámky' | translate}}:</strong>
     <div fxLayout="row" fxLayoutGap="16px" *ngFor="let f of poznamky">
       <div fxFlex="100px">{{ f.datum | date : 'EE dd.MM.yyy' : '+0430' : 'cs-CZ' }}</div>
       <div fxFlex="50px">{{f.cislo}}</div>

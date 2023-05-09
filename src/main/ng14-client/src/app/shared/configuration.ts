@@ -7,11 +7,11 @@ export class Configuration {
   };
   vdkFormats: string[];
   periodicity: string[];
-  owners: {id: number, name: string, url: string}[];
+  owners: {id: number, name: string, sigla: string}[];
   stavy: string[];
   states: string[];
-  vydani: string[];
-  mutations: string[];
+  vydani: {id: number, name: string}[];
+  mutations: {id: number, name: string}[];
   znak_oznaceni_vydani: string[];
   test: boolean;
   icons: {[key: string]:string};
