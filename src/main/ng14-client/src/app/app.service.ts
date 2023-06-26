@@ -741,7 +741,7 @@ export class AppService {
     const url = '/api/search/exemplar/select';
     const params = this.doSearchParams(true)
       .append('fq', 'id_titul:"' + id + '"')
-      .append('fq', '(numExists:"true" OR missing_number:"true")')
+      .append('fq', '(numExists:"true")')
       .append('group', 'true')
       .append('group.field', 'id_issue')
       .append('group.limit', '20')
