@@ -80,8 +80,8 @@ export class SvazekOverviewComponent implements OnInit, OnDestroy {
       this.vydani = facets.vydani.filter(f => f.value > 0);
       this.stavy = facets.stav.filter(f => f.value > 0 && f.name !== "OK");
       this.fyzStavOk = !(facets.stav.findIndex(f => f.name !== 'OK') > -1);
-      this.ok.yes = exRes.filter(ex => ex.numExists && ex.stav.find(s => s === "OK")).length
-      this.ok.no = exRes.filter(ex => ex.numExists && !ex.stav.find(s => s === "OK")).length
+      this.ok.yes = exRes.filter(ex => ex.numExists && ex.stav?.find(s => s === "OK")).length
+      this.ok.no = exRes.filter(ex => ex.numExists && !ex.stav?.find(s => s === "OK")).length
 
       const numbers = exRes.map(e => parseInt(e.cislo)).filter(n => !isNaN(n))
       this.prvniCislo = Math.min(...numbers)
@@ -135,7 +135,7 @@ export class SvazekOverviewComponent implements OnInit, OnDestroy {
 
   processExemplars(exs) {
     exs.forEach((ex: Exemplar) => {
-      if (ex.stav && ex.stav.includes('PP') && ex.cislo >= 0) {
+      if (ex.stav && ex.stav.includes('PP') && ex.cislo >= 0 && !ex.missing_number) {
         this.stavyExt.push({ datum: ex.datum_vydani, cislo: ex.cislo });
       }
 
