@@ -613,7 +613,7 @@ export class AppService {
       .set('wt', 'json')
       .set('fl', '*,pages:[json]')
       .set('rows', '1000')
-      .set('sort', 'datum_vydani_den asc, vydani desc')
+      .set('sort', 'datum_vydani_den asc, vydani asc')
       .set('stats', 'true')
       .set('stats.field', 'datum_vydani_den')
       .set('fq', 'carovy_kod:"' + carKod + '"');
