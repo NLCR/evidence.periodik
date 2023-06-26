@@ -118,6 +118,7 @@ export class AppState {
   parseSearchQuery(searchQuery){
     if(!Object.keys(searchQuery.params).length) return
     const params = searchQuery.params
+    this.filters = []
 
     for (const [key, value] of Object.entries(params)) {
       let realKey = key
