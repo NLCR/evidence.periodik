@@ -1,88 +1,51 @@
 package cz.incad.nkp.inprove.entities.user;
 
-import com.alibaba.fastjson2.JSON;
-import java.util.logging.Logger;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import cz.incad.nkp.inprove.entities.DomainObject;
+import lombok.*;
+import org.springframework.data.solr.core.mapping.Indexed;
+import org.springframework.data.solr.core.mapping.SolrDocument;
 
-import cz.incad.nkp.inprove.utils.MD5;
-import org.apache.solr.client.solrj.beans.Field;
-import org.json.JSONObject;
+import java.io.Serializable;
+import java.util.Date;
 
-/**
- *
- * @author alberto
- */
-public class User {
+import static cz.incad.nkp.inprove.entities.user.User.CORE_NAME;
 
-  final static Logger LOGGER = Logger.getLogger(User.class.getName());
-  @Field
-  public String id;
-  @Field
-  public String username;
-  @Field
-  public String nazev;
-  @Field
-  public String heslo;
-  @Field
-  public String role;
-  @Field
-  public String email;
-  @Field
-  public boolean active;
-  @Field
-  public String poznamka;
-  @Field
-  public String owner;
-  
-  
-  public static User fromJSON(JSONObject json) {
-    User user = JSON.parseObject(json.toString(), User.class);
-    if (user.id == null || user.id.trim().isEmpty()) {
-      user.id = MD5.generate(new String[]{user.nazev, user.email});
-    }
-    return user;
-  }
-  
-//  public static User fromJSONx(JSONObject json) {
-//    
-//    User user = new User();
-//    user.code = json.getString("code");
-//    user.username = json.getString("username");
-//    user.heslo = MD5.generate(json.getString("heslo"));
-//    user.nazev = json.getString("nazev");
-//    user.role = json.getString("role");
-//    user.priorita = json.getInt("priorita");
-//    user.telefon = json.getString("telefon");
-//    user.email = json.getString("email");
-//    user.sigla = json.getString("sigla");
-//    user.adresa = json.getString("adresa");
-//    user.active = json.getBoolean("active");
-//    return user;
-//  }
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@SolrDocument(collection = CORE_NAME)
+public class User extends DomainObject implements Serializable {
 
-//  public static User byCode(String code) {
-//    try {
-//      SolrQuery query = new SolrQuery("code:\"" + code + "\"");
-//      return query(query);
-//    } catch (IOException ex) {
-//      LOGGER.log(Level.SEVERE, null, ex);
-//      return null;
-//    }
-//  }
+    public static final String CORE_NAME = "user";
 
-//  private static User query(SolrQuery query) throws IOException {
-//
-//    Options opts = Options.getInstance();
-//    try (SolrClient client = new HttpSolrClient.Builder(String.format("%s/%s/",
-//            opts.getString("solrHost", "http://localhost:8983/solr"),
-//            opts.getString("usersCore", "users")))
-//            .build()) {
-//
-//      final QueryResponse response = client.query(query);
-//      return response.getBeans(User.class).get(0);
-//
-//    } catch (SolrServerException | IOException ex) {
-//      LOGGER.log(Level.SEVERE, null, ex);
-//      return null;
-//    }
-//  }
+    @Indexed(name = "email", type = "string")
+    private String email;
+
+    @Indexed(name = "username", type = "string")
+    private String username;
+
+    @Indexed(name = "nazev", type = "string")
+    private String nazev;
+
+    @JsonIgnore
+    @Indexed(name = "heslo", type = "string")
+    private String heslo;
+
+    @Indexed(name = "role", type = "string")
+    private String role;
+
+    @Indexed(name = "active", type = "boolean")
+    private Boolean active;
+
+    @Indexed(name = "poznamka", type = "string")
+    private String poznamka;
+
+    @Indexed(name = "owner", type = "string")
+    private String owner;
+
+    @Indexed(name = "indextime", type = "pdate")
+    private Date indextime;
 }

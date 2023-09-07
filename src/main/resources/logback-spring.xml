@@ -2,8 +2,15 @@
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
     <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
     <property name="FILE_LOG_PATTERN" value="%date %level [%thread] %logger{10} [%file:%line] %msg%n"/>
+
+    <property name="FOLDER_PATH" value="logs/"/>
+
+    <springProfile name="test | prod">
+        <property name="FOLDER_PATH" value="/opt/permonik/logs/" />
+    </springProfile>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -12,9 +19,9 @@
     </appender>
 
     <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs_permonik/debug/permonik.log</file>
+        <file>${FOLDER_PATH}debug/permonik.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs_permonik/debug/permonik.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${FOLDER_PATH}debug/permonik.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxHistory>90</maxHistory>
             <maxFileSize>300MB</maxFileSize>
             <totalSizeCap>2GB</totalSizeCap>
@@ -28,9 +35,9 @@
     </appender>
 
     <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs_permonik/error/permonik.error.log</file>
+        <file>${FOLDER_PATH}error/permonik.error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs_permonik/error/permonik.error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${FOLDER_PATH}error/permonik.error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxHistory>90</maxHistory>
             <maxFileSize>300MB</maxFileSize>
             <totalSizeCap>1GB</totalSizeCap>

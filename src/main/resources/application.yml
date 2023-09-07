@@ -1,0 +1,24 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: true
+    include-exception: true
+    include-message: always
+
+spring:
+  profiles:
+    active: dev
+  mvc:
+    servlet:
+      path: /
+  config:
+    additional-location:
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api/swagger-ui/docs
+  swagger-ui:
+    enabled: true
+    path: /api/swagger-ui # do not change -> now it is correctly on /api/swagger-ui/index.html
