@@ -2,15 +2,15 @@ package cz.incad.nkp.inprove.auth;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +29,10 @@ public class AuthApi {
             @ApiResponse(responseCode = "403", description = "Authentication failed")})
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/login/basic")
-    public void basicLogin() { /* For unified basic login endpoint and openApi documentation reasons */ }
+    public void basicLogin(@Parameter(description = "BASIC authorization with username:password encoded in BASE 64")
+                               @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+        /* For unified basic login endpoint and openApi documentation reasons */
+    }
 
     @Operation(summary = "USE 'permonik(-test).nkp.cz/login/shibboleth' FOR SHIBBOLETH AUTH. This is for " +
             "internal handling shibboleth authentication")

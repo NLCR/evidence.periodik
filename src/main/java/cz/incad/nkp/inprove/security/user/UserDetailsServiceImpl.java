@@ -1,8 +1,8 @@
 package cz.incad.nkp.inprove.security.user;
 
 import cz.incad.nkp.inprove.entities.user.User;
-import cz.incad.nkp.inprove.entities.user.UserRepository;
-import cz.incad.nkp.inprove.security.user.UserDelegate;
+import cz.incad.nkp.inprove.entities.user.UserRepo;
+import cz.incad.nkp.inprove.security.permission.Authorities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,17 +11,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 @Service
 @Primary
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private UserRepo userRepository;
+
+    private Authorities authorities;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -36,12 +37,32 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new UserDelegate(user, authorities, false);
     }
 
-    public static Set<GrantedAuthority> getGrantedAuthorities(User user) {
-        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase()));
+    public Set<GrantedAuthority> getGrantedAuthorities(User user) {
+        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+
+        String role = "ROLE_" + user.getRole().toUpperCase();
+        grantedAuthorities.add(new SimpleGrantedAuthority(role));
+
+        grantedAuthorities.addAll(getAuthoritiesForRole(role));
+
+        return grantedAuthorities;
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthoritiesForRole(String role) {
+        switch (role) {
+            case "ROLE_ADMIN": return authorities.getAdminAuthorities();
+            case "ROLE_USER": return authorities.getUserAuthorities();
+            default: throw new ForbiddenException("user does not have allowed ");
+        }
     }
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
+    public void setUserRepository(UserRepo userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setAuthorities(Authorities authorities) {
+        this.authorities = authorities;
     }
 }

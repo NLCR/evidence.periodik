@@ -1,21 +1,20 @@
 
 package cz.incad.nkp.inprove.entities.calendar;
 
-import cz.incad.nkp.inprove.entities.DomainObject;
+import cz.incad.nkp.inprove.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
-import static cz.incad.nkp.inprove.entities.calendar.Calendar.CORE_NAME;
+import static cz.incad.nkp.inprove.entities.calendar.Calendar.COLLECTION;
 
 @Getter
 @Setter
-@SolrDocument(collection = CORE_NAME)
-public class Calendar extends DomainObject {
+@SolrDocument(collection = COLLECTION)
+public class Calendar extends BaseEntity {
 
-    public static final String CORE_NAME = "calendar";
+    public static final String COLLECTION = "calendar";
 
     @Indexed(name = "type", type = "string")
     private String type;

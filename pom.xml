@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <context.name>/</context.name>
-        <skipNg>false</skipNg>
+        <skipNg>true</skipNg>
 
         <!-- VERSIONS -->
         <mockito.version>4.11.0</mockito.version>
@@ -215,7 +215,7 @@
 
                 <executions>
                     <execution>
-                        <id>generation-of-types</id>
+                        <id>generation-of-api-service</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -225,11 +225,9 @@
                             <generateSpringApplicationClient>true</generateSpringApplicationClient>
                             <generateSpringApplicationInterface>true</generateSpringApplicationInterface>
                             <jsonLibrary>jackson2</jsonLibrary>
-                            <classPatterns>
-                                <pattern>
-                                    cz.incad.nkp.inprove.**.*Api
-                                </pattern>
-                            </classPatterns>
+                            <classesWithAnnotations>
+                                org.springframework.web.bind.annotation.RestController
+                            </classesWithAnnotations>
                             <outputKind>module</outputKind>
                             <outputFileType>implementationFile</outputFileType>
                             <outputFile>apiService.ts</outputFile>
@@ -237,7 +235,7 @@
                     </execution>
 
                     <execution>
-                        <id>generation-of-api-service</id>
+                        <id>generation-of-types</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>

@@ -2,7 +2,7 @@
 package cz.incad.nkp.inprove.auth;
 
 import cz.incad.nkp.inprove.entities.user.User;
-import cz.incad.nkp.inprove.entities.user.UserRepository;
+import cz.incad.nkp.inprove.entities.user.UserRepo;
 import cz.incad.nkp.inprove.security.user.UserDelegate;
 import cz.incad.nkp.inprove.security.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -18,26 +18,38 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.NotFoundException;
+import javax.ws.rs.ForbiddenException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.List;
 import java.util.Set;
 
-import static cz.incad.nkp.inprove.security.user.UserDetailsServiceImpl.getGrantedAuthorities;
+import static java.util.Arrays.asList;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final UserRepo userRepository;
+
+    private final UserDetailsServiceImpl userDetailsService;
+
+    private final List<String> allowedIdentityProviders = asList(
+            "https://shibboleth.mzk.cz/simplesaml/metadata.xml",
+            "https://shibboleth.nkp.cz/idp/shibboleth",
+            "https://svkul.cz/idp/shibboleth",
+            "https://shibo.vkol.cz/idp/shibboleth");
 
     private UserDelegate userDelegate;
 
     public void shibbolethLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String idp = (String) request.getAttribute("Shib-Identity-Provider");
+        if (!allowedIdentityProviders.contains(idp)) {
+            throw new ForbiddenException("This IDP is not allowed");
+        }
+
         String eppn = (String) request.getAttribute("eduPersonPrincipalName");
 
         User user = userRepository.findByUsernameIgnoreCase(eppn);
@@ -51,7 +63,7 @@ public class AuthService {
     }
 
     private void loadUserIntoSecurityContext(User user) {
-        Set<GrantedAuthority> authorities = getGrantedAuthorities(user);
+        Set<GrantedAuthority> authorities = userDetailsService.getGrantedAuthorities(user);
         UserDelegate shibUserDelegate = new UserDelegate(user, authorities, true);
         PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(
                 shibUserDelegate, "", authorities);
@@ -66,8 +78,9 @@ public class AuthService {
         String lastName = decodeAndRepairCaseForName((String) request.getAttribute("lastName"));
         String owner = eppn.split("@")[1].split("\\.")[0].toUpperCase();
         String email = (String) request.getAttribute("email");
+        String eduPersonScopedAffiliation = (String) request.getAttribute("eduPersonScopedAffiliation");
 
-        // String eduPersonScopedAffiliation = (String) request.getAttribute("eduPersonScopedAffiliation");
+        String a = (String) request.getAttribute("authorized_by_idp");
 
         User user = User.builder()
                 .email(email)

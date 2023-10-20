@@ -1,24 +1,23 @@
 
 package cz.incad.nkp.inprove.entities.volume;
 
-import cz.incad.nkp.inprove.entities.DomainObject;
+import cz.incad.nkp.inprove.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import java.util.Date;
 import java.util.List;
 
-import static cz.incad.nkp.inprove.entities.volume.Volume.CORE_NAME;
+import static cz.incad.nkp.inprove.entities.volume.Volume.COLLECTION;
 
 @Getter
 @Setter
-@SolrDocument(collection = CORE_NAME)
-public class Volume extends DomainObject {
+@SolrDocument(collection = COLLECTION)
+public class Volume extends BaseEntity {
 
-    public static final String CORE_NAME = "svazek";
+    public static final String COLLECTION = "svazek";
 
     @Indexed(name = "id_titul", type = "string")
     private String id_titul;

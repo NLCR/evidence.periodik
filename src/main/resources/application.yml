@@ -22,3 +22,5 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /api/swagger-ui # do not change -> now it is correctly on /api/swagger-ui/index.html
+    tags-sorter: alpha
+    operations-sorter: method

@@ -1,26 +1,21 @@
 
 package cz.incad.nkp.inprove.entities.metatitle;
 
-import com.alibaba.fastjson.JSON;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import cz.incad.nkp.inprove.entities.DomainObject;
-import cz.incad.nkp.inprove.utils.MD5;
+import cz.incad.nkp.inprove.base.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
-import org.json.JSONObject;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
-import static cz.incad.nkp.inprove.entities.metatitle.MetaTitle.CORE_NAME;
+import static cz.incad.nkp.inprove.entities.metatitle.MetaTitle.COLLECTION;
 
 @Getter
 @Setter
-@SolrDocument(collection = CORE_NAME)
-public class MetaTitle extends DomainObject {
+@SolrDocument(collection = COLLECTION)
+public class MetaTitle extends BaseEntity {
 
-    public static final String CORE_NAME = "titul";
+    public static final String COLLECTION = "titul";
 
     @Indexed(name = "meta_nazev", type = "text_general")
     private String meta_nazev;
@@ -45,13 +40,4 @@ public class MetaTitle extends DomainObject {
 
     @Indexed(name = "pocet_stran", type = "plong")
     private Long pocet_stran;
-
-    public static MetaTitle fromJSON(JSONObject json) {
-        MetaTitle obj = JSON.parseObject(json.toString(), MetaTitle.class);
-        if (obj.id == null || obj.id.trim().isEmpty()) {
-            obj.id = MD5.generate(new String[]{obj.meta_nazev});
-        }
-        return obj;
-    }
-
 }

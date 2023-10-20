@@ -23,7 +23,7 @@ public class UserProducer {
 
     @Bean
     @RequestScope
-    public User person(UserDelegate delegate) {
+    public User user(UserDelegate delegate) {
         return delegate != null ? delegate.getUser() : null;
     }
 }

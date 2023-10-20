@@ -3,7 +3,7 @@ package cz.incad.nkp.inprove.old;
 import com.alibaba.fastjson.JSON;
 import java.util.logging.Logger;
 
-import cz.incad.nkp.inprove.utils.MD5;
+import cz.incad.nkp.inprove.old.utils.MD5;
 import org.apache.solr.client.solrj.beans.Field;
 import org.json.JSONObject;
 
