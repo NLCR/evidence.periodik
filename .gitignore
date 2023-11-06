@@ -22,6 +22,8 @@ buildNumber.properties
 /src/main/webapp/index.html
 /src/main/webapp/*.bundle.js
 /src/main/webapp/*.bundle.css
+/src/main/webapp/*.js.map
+/src/main/webapp/*.css.map
 /src/main/webapp/assets/*
 /src/main/ng14-client/nbproject/private/
 /src/main/webapp/Roboto-Light.3c37aa69cd77e6a53a06.woff2

@@ -832,9 +832,10 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
   duplicateExemplars(){
     // this.vlastnik_idx = -1
     this.state.currentVolume.vlastnik = this.state.user.owner
+    this.state.currentVolume.id = ""
     this.state.currentVolume.carovy_kod =""
-    this.state.currentVolume.signatura =""
-    this.state.currentVolume.znak_oznaceni_vydani =""
+    this.state.currentVolume.signatura = ""
+    this.state.currentVolume.znak_oznaceni_vydani = ""
     this.location.replaceState("/svazek")
     this.isOwner = true
 
