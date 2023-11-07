@@ -1,7 +1,7 @@
 package cz.incad.nkp.inprove.base.service;
 
 import cz.incad.nkp.inprove.base.BaseEntity;
-import cz.incad.nkp.inprove.parsing.QueryParser;
+import cz.incad.nkp.inprove.parser.QueryParser;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.solr.core.SolrTemplate;

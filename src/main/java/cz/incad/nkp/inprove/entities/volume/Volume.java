@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
-import java.util.Date;
+
 import java.util.List;
 
 import static cz.incad.nkp.inprove.entities.volume.Volume.COLLECTION;
@@ -38,10 +38,10 @@ public class Volume extends BaseEntity {
     private String vlastnik;
 
     @Indexed(name = "datum_od", type = "rdate")
-    private Date datum_od;
+    private String datum_od;
 
     @Indexed(name = "datum_do", type = "rdate")
-    private Date datum_do;
+    private String datum_do;
 
     @Indexed(name = "prvni_cislo", type = "string")
     private String prvni_cislo;

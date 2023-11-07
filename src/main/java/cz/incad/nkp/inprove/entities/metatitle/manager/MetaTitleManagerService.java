@@ -47,6 +47,8 @@ public class MetaTitleManagerService implements ManagerService<MetaTitle> {
 
     @Override
     public void deleteAllById(List<String> entities) {
+        entities.forEach(this::deleteById);
+
         ManagerService.super.deleteAllById(entities);
     }
 }

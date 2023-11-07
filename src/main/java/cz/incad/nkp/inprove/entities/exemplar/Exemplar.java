@@ -2,17 +2,22 @@ package cz.incad.nkp.inprove.entities.exemplar;
 
 import cz.incad.nkp.inprove.base.BaseEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static cz.incad.nkp.inprove.entities.exemplar.Exemplar.COLLECTION;
 
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 @SolrDocument(collection = COLLECTION)
 public class Exemplar extends BaseEntity {
 
@@ -70,7 +75,7 @@ public class Exemplar extends BaseEntity {
     private String znak_oznaceni_vydani;
 
     @Indexed(name = "datum_vydani", type = "rdate")
-    private Date datum_vydani;
+    private String datum_vydani;
 
     @Indexed(name = "datum_vydani_str", type = "string")
     private String datum_vydani_str;

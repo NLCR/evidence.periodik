@@ -1,4 +1,4 @@
-package cz.incad.nkp.inprove.parsing.criteriadto;
+package cz.incad.nkp.inprove.parser.dto.criteria.base;
 
 import org.springframework.data.solr.core.query.Criteria;
 

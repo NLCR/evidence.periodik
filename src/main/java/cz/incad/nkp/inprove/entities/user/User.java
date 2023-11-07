@@ -3,6 +3,7 @@ package cz.incad.nkp.inprove.entities.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.incad.nkp.inprove.base.BaseEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
@@ -13,7 +14,7 @@ import static cz.incad.nkp.inprove.entities.user.User.COLLECTION;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @SolrDocument(collection = COLLECTION)

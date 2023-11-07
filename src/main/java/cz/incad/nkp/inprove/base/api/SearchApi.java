@@ -3,10 +3,13 @@ package cz.incad.nkp.inprove.base.api;
 
 import cz.incad.nkp.inprove.base.BaseEntity;
 import cz.incad.nkp.inprove.base.service.QuerySearchService;
+import cz.incad.nkp.inprove.parser.dto.QueryDto;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.solr.core.query.SolrPageRequest;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,22 +51,29 @@ public interface SearchApi<T extends BaseEntity> extends SecureApi  {
     @Operation(summary = "Finds all entities by Pageable",
             description = "example of pageable query parameters: ?page=0&size=5&sort=email,desc&sort=owner,asc")
     @PreAuthorize("hasAuthority(this.makeAuthority('READ'))")
-    @PutMapping("/pageable")
-    default Page<T> findAllByPageable(@RequestBody Pageable pageable) {
+    @GetMapping("/pageable")
+    default Page<T> findAllByPageable(@PageableDefault Pageable pageable) {
         return getService().findAll(pageable);
     }
 
     @Operation(summary = "Finds all entities by ids")
     @PreAuthorize("hasAuthority(this.makeAuthority('READ'))")
-    @PutMapping("/ids")
+    @PostMapping("/ids")
     default List<T> findAllById(@RequestBody List<String> ids) {
         return getService().findAllById(ids);
     }
 
-    @Operation(summary = "Finds all entities by query")
+    @Operation(summary = "Finds all entities by string query")
     @PreAuthorize("hasAuthority(this.makeAuthority('READ'))")
-    @PutMapping("/query")
-    default Page<T> findAllByQuery(@RequestBody String queryString, Pageable pageable) {
+    @PostMapping(value = "/string-query", consumes = MediaType.TEXT_PLAIN_VALUE)
+    default Page<T> findAllByStringQuery(@RequestBody String queryString, @PageableDefault Pageable pageable) {
         return getService().findAllByStringQuery(queryString, pageable);
+    }
+
+    @Operation(summary = "Finds all entities by criteria dto query")
+    @PreAuthorize("hasAuthority(this.makeAuthority('READ'))")
+    @PostMapping("/criteria-query")
+    default Page<T> findAllByCriteriaDtoQuery(@RequestBody QueryDto queryDto, @PageableDefault Pageable pageable) {
+        return getService().findAllByCriteriaDtoQuery(queryDto, pageable);
     }
 }
