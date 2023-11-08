@@ -33,9 +33,10 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, BasicAuthenticationFilter basicAuthenticationFilter) throws Exception {
-        if (!isDev(activeProfile)) {
-            http.authorizeRequests().antMatchers("/api/swagger-ui/**").hasAnyRole("ADMIN");
-        }
+        //TODO: zjistit, zda funguje
+//        if (!isDev(activeProfile)) {
+//            http.authorizeRequests().antMatchers("/api/swagger-ui/**").hasAnyRole("ADMIN");
+//        }
 
         return http
                 .requestMatchers().antMatchers("/api/**").and()

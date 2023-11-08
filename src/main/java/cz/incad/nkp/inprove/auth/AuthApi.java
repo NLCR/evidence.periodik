@@ -34,7 +34,7 @@ public class AuthApi {
         /* For unified basic login endpoint and openApi documentation reasons */
     }
 
-    @Operation(summary = "USE 'permonik(-test).nkp.cz/login/shibboleth' FOR SHIBBOLETH AUTH. This is for " +
+    @Operation(summary = "USE 'permonik(-test).nkp.cz/permonik/login/shibboleth' FOR SHIBBOLETH AUTH. This is for " +
             "internal handling shibboleth authentication")
     @GetMapping("/login/shibboleth")
     public void shibbolethLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {

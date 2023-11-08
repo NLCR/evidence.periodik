@@ -25,6 +25,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
+import static cz.incad.nkp.inprove.security.user.UserProducer.getCurrentUserDelegate;
 import static java.util.Arrays.asList;
 
 @Service
@@ -42,8 +43,6 @@ public class AuthService {
             "https://svkul.cz/idp/shibboleth",
             "https://shibo.vkol.cz/idp/shibboleth");
 
-    private UserDelegate userDelegate;
-
     public void shibbolethLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idp = (String) request.getAttribute("Shib-Identity-Provider");
         if (!allowedIdentityProviders.contains(idp)) {
@@ -59,7 +58,7 @@ public class AuthService {
 
         loadUserIntoSecurityContext(user);
 
-        response.sendRedirect(response.encodeRedirectURL("/"));
+        response.sendRedirect(response.encodeRedirectURL("/permonik/?shibbolethAuth=true"));
     }
 
     private void loadUserIntoSecurityContext(User user) {
@@ -102,6 +101,7 @@ public class AuthService {
     }
 
     public void shibbolethLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        UserDelegate userDelegate = getCurrentUserDelegate();
         String redirectUrl = userDelegate != null && userDelegate.getIsShibbolethAuth() ?
                 "/Shibboleth.sso/Logout?return=/" : "/";
 
@@ -127,11 +127,6 @@ public class AuthService {
                 }
             }
         }
-    }
-
-    @Autowired
-    public void setUserDelegate(UserDelegate userDelegate) {
-        this.userDelegate = userDelegate;
     }
 }
 

@@ -20,7 +20,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
-        <context.name>/</context.name>
+        <context.name>permonik</context.name>
         <skipNg>true</skipNg>
 
         <!-- VERSIONS -->
@@ -203,7 +203,7 @@
 
 
     <build>
-        <finalName>ROOT</finalName>
+        <finalName>permonik</finalName>
 
         <plugins>
             <plugin>
@@ -365,7 +365,7 @@
                                 </replacement>
                                 <replacement>
                                     <token>base href="/"</token>
-                                    <value>base href="/"</value>
+                                    <value>base href="/${context.name}/"</value>
                                 </replacement>
                             </replacements>
                         </configuration>
@@ -385,8 +385,8 @@
                                     <value>&lt;%@page contentType="text/html" pageEncoding="UTF-8"%&gt;&lt;!doctype html&gt;</value>
                                 </replacement>
                                 <replacement>
-                                    <token>"context": "",</token>
-                                    <value>"context": "",</value>
+                                    <token>"context": ""</token>
+                                    <value>"context": "/${context.name}"</value>
                                 </replacement>
                             </replacements>
                         </configuration>

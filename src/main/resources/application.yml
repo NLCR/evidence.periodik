@@ -5,6 +5,8 @@ server:
       enabled: true
     include-exception: true
     include-message: always
+  servlet:
+    context-path: /permonik
 
 spring:
   profiles:

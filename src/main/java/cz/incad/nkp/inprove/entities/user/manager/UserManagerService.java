@@ -18,6 +18,8 @@ import javax.ws.rs.NotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cz.incad.nkp.inprove.security.user.UserProducer.getCurrentUser;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -26,9 +28,9 @@ public class UserManagerService implements ManagerService<User> {
     @Getter
     private final UserRepo repo;
 
-    private User currentUser;
-
     public void resetPassword(ResetPasswordDto resetPasswordDto) {
+        User currentUser = getCurrentUser();
+
         if (!DigestUtils.md5Hex(resetPasswordDto.getOldheslo()).equals(currentUser.getHeslo())) {
             throw new ForbiddenException("Old password does not correspond to actual password of user");
         }
@@ -61,10 +63,5 @@ public class UserManagerService implements ManagerService<User> {
                 .forEach(e -> e.setHeslo(s.getHeslo())));
 
         ManagerService.super.saveAll(entities);
-    }
-
-    @Autowired
-    public void setCurrentUser(User user) {
-        this.currentUser = user;
     }
 }
