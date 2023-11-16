@@ -289,7 +289,7 @@
     "on_special_days": "Ve speciální dny",
     "start_year": "Startovací ročník",
     "start_number": "Startovací číslo",
-    "generate_svazek.caption": "Podtvrdit vygenerování svazku",
+    "generate_svazek.caption": "Potvrdit vygenerování svazku",
     "generate_svazek.text": "Chtete opravdu generovat čísla pro svazek? Všechny změny budou odstraněny. Generování neuloží data.",
     "read_svazek.caption": "Potvrdit načíst celý svazek",
     "read_svazek.text": "Chtete opravdu načíst celý svazek? Všechny změny budou odstraněny.",

@@ -205,7 +205,7 @@
               <th mat-header-cell *matHeaderCellDef>{{ 'desc.edition' | translate }}</th>
               <td mat-cell *matCellDef="let element">
                 <mat-form-field *ngIf="element.active">
-                  <mat-select [(ngModel)]="element.vydani" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                  <mat-select [(ngModel)]="element.vydani" [matTooltip]="'record.publication.' + element.vydani | translate" matTooltipPosition="above" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
                     <mat-option *ngFor="let v of state.vydani" [value]="v.id.toString()">{{'record.publication.' + v.id | translate }}
                     </mat-option>
                   </mat-select>
@@ -234,7 +234,7 @@
               </th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <mat-form-field *ngIf="element.active">
-                  <input type="text" matInput [(ngModel)]="element.nazev" (ngModelChange)="setExemplarsAutocomplete(); setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                  <input type="text" matInput [(ngModel)]="element.nazev" [matTooltip]="element.nazev" matTooltipPosition="above" (ngModelChange)="setExemplarsAutocomplete(); setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
                   <mat-autocomplete #name="matAutocomplete">
                     <mat-option *ngFor="let name of periodicalsAutocomplete.name" [value]="name">
                       {{name}}
@@ -253,7 +253,7 @@
               </th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <mat-form-field *ngIf="element.active">
-                  <input type="text" matInput [(ngModel)]="element.podnazev" (ngModelChange)="setExemplarsAutocomplete(); setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                  <input type="text" matInput [(ngModel)]="element.podnazev" [matTooltip]="element.podnazev" matTooltipPosition="above" (ngModelChange)="setExemplarsAutocomplete(); setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
                   <mat-autocomplete #subName="matAutocomplete">
                     <mat-option *ngFor="let subName of periodicalsAutocomplete.subName" [value]="subName">
                       {{subName}}
@@ -383,7 +383,7 @@
               <th mat-header-cell *matHeaderCellDef>{{ 'record.mutation' | translate }}</th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <ng-container *ngIf="element.numExists">
-                  <mat-select [(ngModel)]="element.mutace" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                  <mat-select [(ngModel)]="element.mutace" [matTooltip]="'record.publication.' + element.mutace | translate" matTooltipPosition="above" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
                     <mat-option *ngFor="let mut of state.mutations" [value]="mut.id.toString()">{{ 'record.mutations.' + mut.id | translate }}</mat-option>
                   </mat-select>
                 </ng-container>
@@ -395,7 +395,7 @@
               <th mat-header-cell *matHeaderCellDef class="app-cell-edition">{{ 'desc.edition' | translate }}</th>
               <td mat-cell *matCellDef="let element" class="app-cell-edition">
                 <mat-form-field *ngIf="element.numExists">
-                  <mat-select [(ngModel)]="element.vydani" (ngModelChange)="attachmentSelected($event, element)" [disabled]="!state.logged || !isOwner">
+                  <mat-select [(ngModel)]="element.vydani" [matTooltip]="'record.publication.' + element.vydani | translate" matTooltipPosition="above" (ngModelChange)="attachmentSelected($event, element)" [disabled]="!state.logged || !isOwner">
                     <mat-option *ngFor="let v of state.vydani" [value]="v.id.toString()">{{'record.publication.' + v.id | translate }}
                     </mat-option>
                   </mat-select>
@@ -411,7 +411,7 @@
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <ng-container *ngIf="element.numExists">
                   <mat-form-field *ngIf="element.isPriloha">
-                    <input type="text" matInput [(ngModel)]="element.nazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                    <input type="text" matInput [(ngModel)]="element.nazev" [matTooltip]="element.nazev" matTooltipPosition="above" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
                     <mat-autocomplete #name="matAutocomplete">
                       <mat-option *ngFor="let name of attachmentsAutocomplete.name" [value]="name">
                         {{name}}
@@ -420,7 +420,7 @@
                     <mat-icon>{{ config.icons.pencil }}</mat-icon>
                   </mat-form-field>
                   <mat-form-field *ngIf="!element.isPriloha">
-                    <input type="text" matInput [(ngModel)]="element.nazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
+                    <input type="text" matInput [(ngModel)]="element.nazev" [matTooltip]="element.nazev" matTooltipPosition="above" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="name">
                     <mat-autocomplete #name="matAutocomplete">
                       <mat-option *ngFor="let name of exemplarsAutocomplete.name" [value]="name">
                         {{name}}
@@ -440,7 +440,7 @@
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <ng-container *ngIf="element.numExists">
                   <mat-form-field *ngIf="element.isPriloha">
-                    <input type="text" matInput [(ngModel)]="element.podnazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                    <input type="text" matInput [(ngModel)]="element.podnazev" [matTooltip]="element.podnazev" matTooltipPosition="above" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
                     <mat-autocomplete #subName="matAutocomplete">
                       <mat-option *ngFor="let subName of attachmentsAutocomplete.subName" [value]="subName">
                         {{subName}}
@@ -449,7 +449,7 @@
                     <mat-icon>{{ config.icons.pencil }}</mat-icon>
                   </mat-form-field>
                   <mat-form-field *ngIf="!element.isPriloha">
-                    <input type="text" matInput [(ngModel)]="element.podnazev" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
+                    <input type="text" matInput [(ngModel)]="element.podnazev" [matTooltip]="element.podnazev" matTooltipPosition="above" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner" [matAutocomplete]="subName">
                     <mat-autocomplete #subName="matAutocomplete">
                       <mat-option *ngFor="let subName of exemplarsAutocomplete.subName" [value]="subName">
                         {{subName}}
@@ -480,7 +480,7 @@
               </th>
               <td mat-cell *matCellDef="let element" class="app-edit-text">
                 <mat-form-field *ngIf="element.numExists" class="app-short-text" (click)="preventDropdownTableClose(); openDropdownTable(element.id)">
-                  <input type="text" matInput [(ngModel)]="element.znak_oznaceni_vydani" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
+                  <input type="text" matInput [(ngModel)]="element.znak_oznaceni_vydani" [matTooltip]="element.znak_oznaceni_vydani" matTooltipPosition="above" (ngModelChange)="setDataChanged()" [disabled]="!state.logged || !isOwner">
                   <div *ngIf="znak_oznaceni_vydani_select_open.open && znak_oznaceni_vydani_select_open.id === element.id" class="znak_oznaceni_vydani_select">
                     <div class="options">
                           <span *ngFor="let option of volume_znak_oznaceni_vydani_defaults" (click)="selectZnakOznaceniVydani(option.value, element)">
