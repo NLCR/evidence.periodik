@@ -243,6 +243,7 @@
     },
     "meta_nazev": "Title",
     "nazev": "Title on the title page",
+    "podnazev": "Subname",
     "date": "Date",
     "vlastnik": "Owner",
     "stav": "State",

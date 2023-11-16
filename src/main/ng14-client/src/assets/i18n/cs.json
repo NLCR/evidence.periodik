@@ -250,6 +250,7 @@
     },
     "meta_nazev": "Metatitul",
     "nazev": "Název na titulní straně",
+    "podnazev": "Podnázev",
     "date": "Datum",
     "vlastnik": "Vlastník",
     "stav": "Stav",
