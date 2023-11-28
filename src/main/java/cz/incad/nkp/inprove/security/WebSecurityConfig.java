@@ -39,6 +39,7 @@ public class WebSecurityConfig {
 //        }
 
         return http
+                .authorizeRequests().antMatchers("/api/swagger-ui/**").permitAll().and()
                 .requestMatchers().antMatchers("/api/**").and()
                 .authorizeRequests().anyRequest().permitAll().and()
                 .csrf().disable()
