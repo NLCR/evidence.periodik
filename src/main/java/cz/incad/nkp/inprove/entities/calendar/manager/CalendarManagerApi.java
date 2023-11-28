@@ -15,7 +15,7 @@ import static cz.incad.nkp.inprove.security.permission.ResourcesConstants.EXEMPL
 
 @ApiResource(CALENDAR)
 @RestController
-@RequestMapping("/api/calendar")
+@RequestMapping("/api/v2/calendar")
 @Tag(name = "Calendar Manager API", description = "API for managing calendar")
 @RequiredArgsConstructor
 public class CalendarManagerApi implements ManagerApi<Calendar> {

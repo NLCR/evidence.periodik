@@ -17,7 +17,7 @@ import static cz.incad.nkp.inprove.security.permission.ResourcesConstants.USER;
 
 @ApiResource(USER)
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v2/user")
 @Tag(name = "User Manager API", description = "API for managing users")
 @RequiredArgsConstructor
 public class UserManagerApi implements ManagerApi<User> {

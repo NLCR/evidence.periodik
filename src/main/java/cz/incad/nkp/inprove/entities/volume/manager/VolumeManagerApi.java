@@ -15,7 +15,7 @@ import static cz.incad.nkp.inprove.security.permission.ResourcesConstants.VOLUME
 
 @ApiResource(VOLUME)
 @RestController
-@RequestMapping("/api/volume")
+@RequestMapping("/api/v2/volume")
 @Tag(name = "Volume Manager API", description = "API for managing volumes")
 @RequiredArgsConstructor
 public class VolumeManagerApi implements ManagerApi<Volume> {

@@ -18,7 +18,7 @@ import java.io.IOException;
 
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v2/auth")
 @Tag(name = "Auth API", description = "API for login of users")
 public class AuthApi {
 

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/search")
+@RequestMapping("/api/v2/search")
 @Tag(name = "Search API", description = "API for flexible searching in Solr")
 public class SearchApi {
 

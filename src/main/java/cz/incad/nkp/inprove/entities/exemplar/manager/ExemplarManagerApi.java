@@ -13,7 +13,7 @@ import static cz.incad.nkp.inprove.security.permission.ResourcesConstants.EXEMPL
 
 @ApiResource(EXEMPLAR)
 @RestController
-@RequestMapping("/api/exemplar")
+@RequestMapping("/api/v2/exemplar")
 @Tag(name = "Exemplar Manager API", description = "API for managing exemplars")
 @RequiredArgsConstructor
 public class ExemplarManagerApi implements ManagerApi<Exemplar> {

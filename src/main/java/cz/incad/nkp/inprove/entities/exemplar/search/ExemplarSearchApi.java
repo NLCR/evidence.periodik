@@ -15,7 +15,7 @@ import static cz.incad.nkp.inprove.security.permission.ResourcesConstants.META_T
 
 @ApiResource(EXEMPLAR)
 @RestController
-@RequestMapping("/api/exemplar")
+@RequestMapping("/api/v2/exemplar")
 @Tag(name = "Exemplar Search API", description = "API for retrieving exemplars")
 @RequiredArgsConstructor
 public class ExemplarSearchApi implements SearchApi<Exemplar> {

@@ -41,7 +41,7 @@ export class AuthenticationService {
     }
 
     login(username: string, password: string) {
-        return this.http.post<any>(`/api/users/login`, { username, password })
+        return this.http.post<any>(`/api/v2/users/login`, { username, password })
             .pipe(map(resp => {
                 // console.log(resp);
                 if (resp.logged) {

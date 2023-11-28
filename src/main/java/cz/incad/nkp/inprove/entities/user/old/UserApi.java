@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v2/users")
 @Tag(name = "Old User API", description = "Old user api")
 public class UserApi {
 

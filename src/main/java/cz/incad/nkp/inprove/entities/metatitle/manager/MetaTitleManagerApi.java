@@ -13,7 +13,7 @@ import static cz.incad.nkp.inprove.security.permission.ResourcesConstants.META_T
 
 @ApiResource(META_TITLE)
 @RestController
-@RequestMapping("/api/meta-title")
+@RequestMapping("/api/v2/meta-title")
 @Tag(name = "Meta Title Manager API", description = "API for managing meta titles")
 @RequiredArgsConstructor
 public class MetaTitleManagerApi implements ManagerApi<MetaTitle> {
