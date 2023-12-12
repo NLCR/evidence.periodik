@@ -60,15 +60,7 @@ public class IndexServlet extends HttpServlet {
         }
 
         Actions actionToDo = Actions.valueOf(actionNameParam.toUpperCase());
-        if (actionToDo.equals(Actions.SPECIAL_DAYS) || isLocalhost) {
-            actionToDo.doPerform(req, resp);
-        } else {
-            resp.setContentType("application/json;charset=UTF-8");
-
-            JSONObject json = new JSONObject();
-            json.put("error", "not logged");
-            resp.getWriter().print(json.toString());
-        }
+        actionToDo.doPerform(req, resp);
     }
 
 
