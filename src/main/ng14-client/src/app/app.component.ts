@@ -11,6 +11,7 @@ import { AppConfiguration } from 'src/app/app-configuration';
 import { AuthenticationService } from './shared/authentication.service';
 
 import packageJson from '../../package.json';
+import {first} from "rxjs/operators";
 
 
 @Component({
@@ -41,23 +42,28 @@ export class AppComponent implements OnInit, OnDestroy {
     console.info('App version:', this.VERSION);
 
     this.processUrl();
-    this.authService.currentUser.subscribe(x => {
-      const hasUser = x !== null;
-      if (hasUser) {
-        const expiredTime = this.config.expiredTime * 1000 * 60;
-        if ((new Date().getTime() - x.date.getTime()) > expiredTime) {
-          console.log('EXPIRED');
-          this.state.logged = false;
-          this.authService.logout();
-        } else {
-          this.authService.renewDate();
-          this.state.logged = true;
-          this.state.user = x;
-          this.state.isAdmin = this.state.user.role === 'admin';
+    this.authService.doInitialLogin().pipe(first()).subscribe(() => {
+      this.authService.currentUser.subscribe(x => {
+        const hasUser = x !== null;
+        if (hasUser) {
+          const expiredTime = this.config.expiredTime * 1000 * 60;
+          if ((new Date().getTime() - x.date.getTime()) > expiredTime) {
+            console.log('EXPIRED');
+            this.state.logged = false;
+            this.authService.logout();
+          } else {
+            this.authService.renewDate();
+            this.state.logged = true;
+            this.state.user = x;
+            this.state.isAdmin = this.state.user.role === 'admin';
+          }
         }
-      }
 
-    });
+      });
+    }, error => {
+      console.log(error);
+    })
+
     this.state.activePage = this.route.snapshot.url.toString();
     this.service.getSpecialDays();
 

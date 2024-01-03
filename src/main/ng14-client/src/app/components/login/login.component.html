@@ -4,28 +4,29 @@
     <mat-card-header>
       <mat-card-title>{{ 'login.desc' | translate }}</mat-card-title>
     </mat-card-header>
-    <mat-card-content>
-      <p>
-        <mat-form-field >
-          <mat-label>{{ 'login.user' | translate }}</mat-label>
-          <input type="text" matInput cdkFocusInitial [placeholder]="'login.user' | translate" name="user" #loginuser (keyup.enter)="focusp($event, loginpwd)" [(ngModel)]="username">
-          <mat-icon matSuffix>{{ config.icons.person }}</mat-icon>
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>{{ 'login.password' | translate }}</mat-label>
-          <input matInput type="password" [placeholder]="'login.password' | translate" name="pwd" #loginpwd (keyup.enter)="login()" [(ngModel)]="pwd">
-          <mat-icon matSuffix>{{ config.icons.lock_outline }}</mat-icon>
-        </mat-form-field>
-      </p>
-      <div class="app-alert-warning" *ngIf="error" color="primary">
-        {{ 'Špatné přihlašovací údaje' | translate }}.
-      </div>
-      <div class="app-alert-warning" *ngIf="loginHttpError" color="primary">
-        {{ state.loginHttpErrorMsg }}.
-      </div>
-    </mat-card-content>
+<!--    <mat-card-content>-->
+<!--      <p>-->
+<!--        <mat-form-field >-->
+<!--          <mat-label>{{ 'login.user' | translate }}</mat-label>-->
+<!--          <input type="text" matInput cdkFocusInitial [placeholder]="'login.user' | translate" name="user" #loginuser (keyup.enter)="focusp($event, loginpwd)" [(ngModel)]="username">-->
+<!--          <mat-icon matSuffix>{{ config.icons.person }}</mat-icon>-->
+<!--        </mat-form-field>-->
+<!--        <mat-form-field>-->
+<!--          <mat-label>{{ 'login.password' | translate }}</mat-label>-->
+<!--          <input matInput type="password" [placeholder]="'login.password' | translate" name="pwd" #loginpwd (keyup.enter)="login()" [(ngModel)]="pwd">-->
+<!--          <mat-icon matSuffix>{{ config.icons.lock_outline }}</mat-icon>-->
+<!--        </mat-form-field>-->
+<!--      </p>-->
+<!--      <div class="app-alert-warning" *ngIf="error" color="primary">-->
+<!--        {{ 'Špatné přihlašovací údaje' | translate }}.-->
+<!--      </div>-->
+<!--      <div class="app-alert-warning" *ngIf="loginHttpError" color="primary">-->
+<!--        {{ state.loginHttpErrorMsg }}.-->
+<!--      </div>-->
+<!--    </mat-card-content>-->
     <mat-card-actions>
-      <button mat-flat-button color="primary" (click)="login()">{{ 'button.login' | translate }}</button>
+<!--      <button mat-flat-button color="primary" (click)="login()">{{ 'button.login' | translate }}</button>-->
+      <a mat-flat-button color="primary" href="/permonik/login/shibboleth">{{ 'button.login' | translate }}</a>
     </mat-card-actions>
   </mat-card>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { AppState } from '../../app.state';
 import { first } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { AppConfiguration } from 'src/app/app-configuration';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
   @ViewChild('loginuser', { static: true }) loginuser: any;
   error = false;
@@ -28,11 +28,11 @@ export class LoginComponent implements OnInit {
     private auth: AuthenticationService,
     public config: AppConfiguration) { }
 
-  ngOnInit() {
-    setTimeout(() => {
-      this.loginuser.nativeElement.focus();
-    }, 100);
-  }
+  // ngOnInit() {
+  //   setTimeout(() => {
+  //     this.loginuser.nativeElement.focus();
+  //   }, 100);
+  // }
 
   focusu() {
     setTimeout(() => {

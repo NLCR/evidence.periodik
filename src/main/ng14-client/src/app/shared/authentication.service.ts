@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { User } from 'src/app/models/user';
 import { AppState } from '../app.state';
-import { Md5 } from 'ts-md5';
 import { AppConfiguration } from '../app-configuration';
 
 @Injectable({ providedIn: 'root' })
@@ -17,17 +16,39 @@ export class AuthenticationService {
         private http: HttpClient,
         private state: AppState,
         private config: AppConfiguration) {
-        const user: User = JSON.parse(localStorage.getItem('currentUser'));
+        const user: User = JSON.parse(sessionStorage.getItem('currentUser'));
         if (user) {
             if (!user.date) {
                 user.date = new Date();
-                localStorage.setItem('currentUser', JSON.stringify(user));
+              sessionStorage.setItem('currentUser', JSON.stringify(user));
             } else {
                 user.date = new Date(user.date);
             }
         }
         this.currentUserSubject = new BehaviorSubject<User>(user);
         this.currentUser = this.currentUserSubject.asObservable();
+    }
+
+    doInitialLogin(){
+      return this.http.get<User>(`/api/v2/user/current`)
+        .pipe(map(resp => {
+          if (resp) {
+            const user = resp;
+            user.authdata = window.btoa(user.username);
+            user.date = new Date();
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            this.currentUserSubject = new BehaviorSubject<User>(user);
+            this.currentUser = this.currentUserSubject.asObservable();
+            this.currentUserSubject.next(user);
+            this.state.logged = true;
+            this.state.user = user;
+
+            return user;
+          } else {
+            this.state.logged = false;
+            return resp;
+          }
+        }));
     }
 
     public get currentUserValue(): User {
@@ -37,7 +58,7 @@ export class AuthenticationService {
     renewDate() {
         const user: User = this.currentUserSubject.value;
         user.date = new Date();
-        localStorage.setItem('currentUser', JSON.stringify(user));
+      sessionStorage.setItem('currentUser', JSON.stringify(user));
     }
 
     login(username: string, password: string) {
@@ -47,11 +68,10 @@ export class AuthenticationService {
                 if (resp.logged) {
                     // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
                     // password hashed
-                    const md5 = new Md5();
                     const user = resp.user;
                     user.authdata = window.btoa(username + ':' + password);
                     user.date = new Date();
-                    localStorage.setItem('currentUser', JSON.stringify(user));
+                  sessionStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
                     this.state.logged = true;
                     this.state.user = user;
@@ -66,7 +86,7 @@ export class AuthenticationService {
 
     logout() {
         // remove user from local storage to log user out
-        localStorage.removeItem('currentUser');
+      sessionStorage.removeItem('currentUser');
         this.state.user = null;
         this.state.logged = false;
         this.state.isAdmin = false;
