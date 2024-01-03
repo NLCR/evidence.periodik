@@ -643,6 +643,10 @@ export class SvazekComponent extends ComponentCanDeactivate implements OnInit, O
     // console.log(this.dsIssues.data);
     this.loading = true;
 
+    this.exemplars.forEach(e => (
+      Object.keys(e).forEach(k => e[k] = typeof e[k] == 'string' ? e[k].trim() : e[k])
+    ))
+
     this.service.saveExemplars(this.state.currentVolume, this.exemplars).subscribe(res => {
       this.loading = false;
       if (res.error) {

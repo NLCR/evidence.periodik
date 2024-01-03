@@ -685,6 +685,7 @@ export class AppService {
       .set('stats.field', 'datum_vydani_den')
       .set('facet.field', 'meta_nazev')
       .set('facet.field', 'nazev')
+      .append('facet.field', 'podnazev')
       .append('facet.field', 'mutace')
       .append('facet.field', 'vydani')
       .append('facet.field', 'znak_oznaceni_vydani')

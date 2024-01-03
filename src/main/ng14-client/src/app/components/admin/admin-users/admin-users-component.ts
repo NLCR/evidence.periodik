@@ -76,7 +76,7 @@ export class AdminUsersComponent implements OnInit {
         const user = new User();
         user.username = result;
         user.nazev = result;
-        user.heslo = '' + Md5.hashStr('test');
+        user.heslo = Md5.hashStr('test');
         user.role = 'user';
         this.users.push(user);
         this.loadUser(user);
