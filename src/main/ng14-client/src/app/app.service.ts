@@ -45,7 +45,7 @@ export class AppService {
 
   getSpecialDays() {
 
-    const url = '/api/search/calendar/select';
+    const url = '/api/v2/search/calendar/select';
     let params: HttpParams = new HttpParams();
     params = params.set('q', '*');
     params = params.set('rows', '100');
@@ -55,7 +55,7 @@ export class AppService {
   }
 
   getSpecialDaysOfMonth(d: Date): Observable<any[]> {
-    const url = '/api/search/calendar/select';
+    const url = '/api/v2/search/calendar/select';
     let params: HttpParams = new HttpParams();
     const month = this.datePipe.transform(d, 'M');
     const year = this.datePipe.transform(d, 'yyyy');
@@ -70,7 +70,7 @@ export class AppService {
   }
 
   isSpecial(d: Date): Observable<any[]> {
-    const url = '/api/search/calendar/select';
+    const url = '/api/v2/search/calendar/select';
     let params: HttpParams = new HttpParams();
 
     const day = this.datePipe.transform(d, 'd');
@@ -88,7 +88,7 @@ export class AppService {
 
   // getIssuesOfTitul(uuid: string, month: string): Observable<any[]> {
   //   const params: HttpParams = new HttpParams();
-  //   const url = '/api/search/issue/select';
+  //   const url = '/api/v2/search/issue/select';
   //
   //   params
   //     .set('q', '*')
@@ -131,7 +131,7 @@ export class AppService {
       .set('stats.field', 'cislo')
       .append('stats.field', 'datum_vydani_den')
       .append('stats.field', 'pocet_stran')
-    const url = '/api/search/exemplar/select';
+    const url = '/api/v2/search/exemplar/select';
 
     // params.set('fl', 'start:datum_vydani,title:nazev,*')
     return this.http.get(url, { params });
@@ -148,7 +148,7 @@ export class AppService {
   //     .set('sort', 'datum_vydani_den asc, vydani desc')
   //     .set('stats', 'true')
   //     .set('stats.field', 'datum_vydani_den');
-  //   const url = '/api/search/issue/select';
+  //   const url = '/api/v2/search/issue/select';
   //
   //   // params.set('fl', 'start:datum_vydani,title:nazev,*')
   //   return this.http.get(url, { params });
@@ -165,7 +165,7 @@ export class AppService {
   //     .set('sort', 'datum_vydani_den asc, vydani desc')
   //     .set('fq', 'id_titul:"' + volume.id_titul + '"')
   //     .append('fq', 'datum_vydani:[' + volume.datum_od + ' TO ' + volume.datum_do + ']');
-  //   const url = '/api/search/issue/select';
+  //   const url = '/api/v2/search/issue/select';
   //
   //   // params.set('fl', 'start:datum_vydani,title:nazev,*')
   //   return this.http.get(url, { params }).pipe(
@@ -185,7 +185,7 @@ export class AppService {
   //     .set('sort', 'datum_vydani_den asc, vydani desc')
   //     .set('fq', 'id_titul:"' + id_titul + '"')
   //     .append('fq', 'datum_vydani_den:"' + datum + '"');
-  //   const url = '/api/search/issue/select';
+  //   const url = '/api/v2/search/issue/select';
   //
   //   // params.set('fl', 'start:datum_vydani,title:nazev,*')
   //   return this.http.get(url, { params }).pipe(
@@ -195,7 +195,7 @@ export class AppService {
   // }
 
   getTitul(id: string): Observable<Titul> {
-    const url = '/api/search/titul/select';
+    const url = '/api/v2/search/titul/select';
     let params: HttpParams = new HttpParams();
     params = params.set('q', '*')
       .set('fq', 'id:"' + id + '"');
@@ -212,7 +212,7 @@ export class AppService {
 
 
   // getTitul_(id: string): Observable<Titul> {
-  //   const url = '/api/search/issue/select';
+  //   const url = '/api/v2/search/issue/select';
   //   let params: HttpParams = new HttpParams();
   //
   //   params = params.set('q', '*').set('rows', '1').set('fq', 'id_titul:"' + id + '"');
@@ -231,7 +231,7 @@ export class AppService {
 
 
   getTituly(): Observable<any> {
-    const url = '/api/search/titul/select';
+    const url = '/api/v2/search/titul/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('sort', 'meta_nazev_sort asc')
@@ -257,7 +257,7 @@ export class AppService {
   }
 
   getVolumeFacets(id_titul: string): Observable<any> {
-    const url = '/api/search/exemplar/select';
+    const url = '/api/v2/search/exemplar/select';
     const params: HttpParams = new HttpParams()
       .set('q', 'id_titul:"' + id_titul + '"')
       .set('facet', 'true')
@@ -533,7 +533,7 @@ export class AppService {
 
   getIssue(id: string): Observable<any[]> {
     // console.log("get issue api")
-    const url = '/api/search/exemplar/select';
+    const url = '/api/v2/search/exemplar/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
@@ -548,7 +548,7 @@ export class AppService {
   }
 
   getVolume(id: string): Observable<any[]> {
-    const url = '/api/search/svazek/select';
+    const url = '/api/v2/search/svazek/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
@@ -561,7 +561,7 @@ export class AppService {
   }
 
   getPeriodicals(id: string): Observable<any[]> {
-    const url = '/api/search/svazek/select';
+    const url = '/api/v2/search/svazek/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
@@ -574,7 +574,7 @@ export class AppService {
   }
 
   getMetaTitlePeriodicals(id: string): Observable<any[]> {
-    const url = '/api/search/svazek/select'
+    const url = '/api/v2/search/svazek/select'
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
@@ -588,7 +588,7 @@ export class AppService {
   }
 
   getDistinctValuesOfMetaTitleForAttachments(id: string): Observable<any[]> {
-    const url = '/api/search/exemplar/select'
+    const url = '/api/v2/search/exemplar/select'
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
@@ -607,7 +607,7 @@ export class AppService {
   }
 
   getExemplarsByCarKod(carKod: string, dateRange: string): Observable<any> {
-    const url = '/api/search/exemplar/select';
+    const url = '/api/v2/search/exemplar/select';
     const params: HttpParams = new HttpParams()
       .set('q', dateRange)
       .set('wt', 'json')
@@ -621,7 +621,7 @@ export class AppService {
   }
 
   // getExemplarsByCarKodVlastnik(carKodVlastnik: string): Observable<any> {
-  //   const url = '/api/search/exemplar/select';
+  //   const url = '/api/v2/search/exemplar/select';
   //   const params: HttpParams = new HttpParams()
   //     .set('q', '*')
   //     .set('wt', 'json')
@@ -634,7 +634,7 @@ export class AppService {
   // }
 
   getTitulTotals(id: string) {
-    const url = '/api/search/exemplar/select';
+    const url = '/api/v2/search/exemplar/select';
     const params: HttpParams = new HttpParams()
       .set('q', '*')
       .set('wt', 'json')
@@ -654,8 +654,8 @@ export class AppService {
   }
   //
   // deleteVolume(barCode: string, dateRange: string): Observable<any> {
-  //   const volumeUrl = '/api/update/exemplar/delete';
-  //   const exemplarsUrl = '/api/update/exemplar/delete';
+  //   const volumeUrl = '/api/v2/update/exemplar/delete';
+  //   const exemplarsUrl = '/api/v2/update/exemplar/delete';
   //   const params: HttpParams = new HttpParams()
   //     .set('q', '*')
   //     .set('wt', 'json')
@@ -726,19 +726,19 @@ export class AppService {
 
   search() {
     // console.log("Search api")
-    const url = '/api/search/issue/permonik';
+    const url = '/api/v2/search/issue/permonik';
     const params = this.doSearchParams();
     return this.http.get(url, { params });
   }
 
   searchIssuesOfTitul(id: string) {
-    // const url = '/api/search/issue/permonik';
+    // const url = '/api/v2/search/issue/permonik';
     // const params = this.doSearchParams()
     //  .append('fq', 'id_titul:"' + id + '"');
     // console.log("Search issue of titul")
 
 
-    const url = '/api/search/exemplar/select';
+    const url = '/api/v2/search/exemplar/select';
     const params = this.doSearchParams(true)
       .append('fq', 'id_titul:"' + id + '"')
       .append('fq', '(numExists:"true")')
@@ -752,14 +752,14 @@ export class AppService {
   }
 
   // searchCalendar(month: string) {  //probably bad endpoint because of data migration
-  //   const url = '/api/search/issue/permonik';
+  //   const url = '/api/v2/search/issue/permonik';
   //   let params = this.doSearchParams();
   //   params = params.append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']');
   //   return this.http.get(url, { params });
   // }
 
   searchCalendar(month: string) {
-    const url = '/api/search/exemplar/select';
+    const url = '/api/v2/search/exemplar/select';
     let params = this.doSearchParams()
     .append('fq', 'datum_vydani:[' + month + ' TO ' + month + ']')
     .append('fq', '(numExists:"true" OR missing_number:"true")')
@@ -782,7 +782,7 @@ export class AppService {
 
 
   getUsers(): Observable<any> {
-    const url = '/api/users/all';
+    const url = '/api/v2/users/all';
     return this.http.get<any>(url)
       .pipe(map(resp => {
         return resp.docs;
@@ -790,11 +790,11 @@ export class AppService {
   }
 
   saveUser(u: User): Observable<any> {
-    return this.http.post(`/api/users/save`, u);
+    return this.http.post(`/api/v2/users/save`, u);
   }
 
   resetHeslo(json: { id: string, oldheslo: string, newheslo: string }) {
-    return this.http.post<any>(`/api/users/resetpwd`, json);
+    return this.http.post<any>(`/api/v2/users/resetpwd`, json);
   }
 
 
