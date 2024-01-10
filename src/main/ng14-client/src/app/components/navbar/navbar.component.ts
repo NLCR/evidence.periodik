@@ -58,6 +58,7 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.authservice.logout();
     this.service.logout().subscribe();
+    this.service.logoutShibboleth().subscribe();
     if (this.router.url === '/home') {
       location.reload();
     } else{
