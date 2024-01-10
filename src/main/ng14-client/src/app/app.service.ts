@@ -573,6 +573,20 @@ export class AppService {
       }));
   }
 
+  logout(): Observable<any[]> {
+    const url = '/api/v2/auth/logout';
+    return this.http.post(url, {}).pipe(map((res: any) => {
+      return res.response;
+    }));
+  }
+
+  logoutShibboleth(): Observable<any[]> {
+    const url = '/Shibboleth.sso/Logout';
+    return this.http.get(url, {}).pipe(map((res: any) => {
+      return res.response;
+    }));
+  }
+
   getMetaTitlePeriodicals(id: string): Observable<any[]> {
     const url = '/api/v2/search/svazek/select'
     const params: HttpParams = new HttpParams()
