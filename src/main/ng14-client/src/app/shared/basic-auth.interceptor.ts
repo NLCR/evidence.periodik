@@ -24,12 +24,12 @@ export class BasicAuthInterceptor implements HttpInterceptor {
                 this.service.showSnackBar('Session expired', '', true);
                 this.authenticationService.logout();
             } else {
-                this.authenticationService.renewDate();
-                request = request.clone({
-                    setHeaders: {
-                        Authorization: `Basic ${currentUser.authdata}`
-                    }
-                });
+                // this.authenticationService.renewDate();
+                // request = request.clone({
+                //     setHeaders: {
+                //         Authorization: `Basic ${currentUser.authdata}`
+                //     }
+                // });
             }
         }
 

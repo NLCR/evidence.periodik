@@ -21,7 +21,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <context.name>permonik</context.name>
-        <skipNg>true</skipNg>
+        <skipNg>false</skipNg>
 
         <!-- VERSIONS -->
         <mockito.version>4.11.0</mockito.version>

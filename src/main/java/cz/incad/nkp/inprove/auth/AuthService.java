@@ -1,13 +1,13 @@
 
 package cz.incad.nkp.inprove.auth;
 
+import cz.incad.nkp.inprove.entities.user.Owner;
 import cz.incad.nkp.inprove.entities.user.User;
 import cz.incad.nkp.inprove.entities.user.UserRepo;
 import cz.incad.nkp.inprove.security.user.UserDelegate;
 import cz.incad.nkp.inprove.security.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,11 +22,12 @@ import javax.ws.rs.ForbiddenException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.UUID;
 
 import static cz.incad.nkp.inprove.security.user.UserProducer.getCurrentUserDelegate;
-import static java.util.Arrays.asList;
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 @Service
 @Slf4j
@@ -37,31 +38,29 @@ public class AuthService {
 
     private final UserDetailsServiceImpl userDetailsService;
 
-    private final List<String> allowedIdentityProviders = asList(
-            "https://shibboleth.mzk.cz/simplesaml/metadata.xml",
-            "https://shibboleth.nkp.cz/idp/shibboleth",
-            "https://svkul.cz/idp/shibboleth",
-            "https://shibo.vkol.cz/idp/shibboleth");
-
     public void shibbolethLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String idp = (String) request.getAttribute("Shib-Identity-Provider");
-        if (!allowedIdentityProviders.contains(idp)) {
+
+        Owner owner = Arrays.stream(Owner.values())
+                .filter(o -> o.getUrl().equals(idp))
+                .findAny().orElse(null);
+
+        if (owner == null) {
             throw new ForbiddenException("This IDP is not allowed");
         }
 
         String eppn = (String) request.getAttribute("eduPersonPrincipalName");
-
         User user = userRepository.findByUsernameIgnoreCase(eppn);
         if (user == null) {
-            user = createNewShibbolethUser(request, eppn);
+            user = createNewShibbolethUser(request, eppn, owner);
         }
 
-        loadUserIntoSecurityContext(user);
+        loadUserIntoSecurityContext(user, request);
 
         response.sendRedirect(response.encodeRedirectURL("/permonik/?shibbolethAuth=true"));
     }
 
-    private void loadUserIntoSecurityContext(User user) {
+    private void loadUserIntoSecurityContext(User user, HttpServletRequest request) {
         Set<GrantedAuthority> authorities = userDetailsService.getGrantedAuthorities(user);
         UserDelegate shibUserDelegate = new UserDelegate(user, authorities, true);
         PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(
@@ -70,24 +69,26 @@ public class AuthService {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(token);
         SecurityContextHolder.setContext(context);
+        HttpSession session = request.getSession(true);
+        session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, context);
     }
 
-    private User createNewShibbolethUser(HttpServletRequest request, String eppn) {
+    private User createNewShibbolethUser(HttpServletRequest request, String eppn, Owner owner) {
         String firstName = decodeAndRepairCaseForName((String) request.getAttribute("firstName"));
         String lastName = decodeAndRepairCaseForName((String) request.getAttribute("lastName"));
-        String owner = eppn.split("@")[1].split("\\.")[0].toUpperCase();
         String email = (String) request.getAttribute("email");
-        String eduPersonScopedAffiliation = (String) request.getAttribute("eduPersonScopedAffiliation");
 
-        String a = (String) request.getAttribute("authorized_by_idp");
+//        String eduPersonScopedAffiliation = (String) request.getAttribute("eduPersonScopedAffiliation");
+//        String a = (String) request.getAttribute("authorized_by_idp");
 
         User user = User.builder()
+                .id(UUID.randomUUID().toString())
                 .email(email)
                 .username(eppn)
                 .nazev(firstName + " " + lastName)
                 .role("user")
                 .active(true)
-                .owner(owner)
+                .owner(owner.getId())
                 .build();
 
         return userRepository.save(user, Duration.ZERO);
@@ -122,7 +123,8 @@ public class AuthService {
                 if (cookie.getName().equals("JSESSIONID")) {
                     cookie.setMaxAge(0);
                     cookie.setValue(null);
-                    cookie.setPath("/");
+                    cookie.setPath("/permonik");
+                    cookie.setHttpOnly(true);
                     response.addCookie(cookie);
                 }
             }
