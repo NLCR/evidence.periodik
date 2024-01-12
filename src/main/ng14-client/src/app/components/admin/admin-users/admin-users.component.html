@@ -46,9 +46,10 @@
 
         <mat-form-field fxFlex>
           <mat-label>{{ 'desc.user_owners' | translate }}</mat-label>
-          <mat-select [(ngModel)]="user.owner && state.owners[user.owner].id" (ngModelChange)="user.owner=$event" id="owner" name="owner">
+          <mat-select [(ngModel)]="user.owner" (ngModelChange)="user.owner=$event" id="owner" name="owner">
 
-            <mat-option *ngFor="let owner of owners" [value]="owner.id">{{ owner.name }}</mat-option>
+            <mat-option [value]="null"></mat-option>
+            <mat-option *ngFor="let owner of owners" [value]="owner.id.toString()">{{ owner.name }}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
