@@ -275,7 +275,7 @@
                         <id>exec-npm-install</id>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <skip>${skipNg}</skip>
+<!--                            <skip>${skipNg}</skip>-->
                             <executable>npm</executable>
                             <workingDirectory>${project.basedir}/src/main/ng14-client</workingDirectory>
                             <arguments>
