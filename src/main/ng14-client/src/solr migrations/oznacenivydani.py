@@ -3,6 +3,8 @@ import requests
 oznaceni = [
     {"old_value": "*", "value": "★"},
     {"old_value": "**", "value": "★★"},
+    {"old_value": " **", "value": "★★"},
+    {"old_value": " ★★ ", "value": "★★"},
     {"old_value": "***", "value": "★★★"},
     {"old_value": "****", "value": "★★★★"},
     {"old_value": "*****", "value": "★★★★★"},
