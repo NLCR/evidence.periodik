@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 8
+  version: 6
   cacheKey: 10
 
 "@adobe/css-tools@npm:^4.0.1":
@@ -4328,13 +4328,13 @@ __metadata:
   linkType: hard
 
 "cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
-  version: 7.0.3
-  resolution: "cross-spawn@npm:7.0.3"
+  version: 7.0.6
+  resolution: "cross-spawn@npm:7.0.6"
   dependencies:
-    path-key: "npm:^3.1.0"
-    shebang-command: "npm:^2.0.0"
-    which: "npm:^2.0.1"
-  checksum: e1a13869d2f57d974de0d9ef7acbf69dc6937db20b918525a01dacb5032129bd552d290d886d981e99f1b624cb03657084cc87bd40f115c07ecf376821c729ce
+    path-key: ^3.1.0
+    shebang-command: ^2.0.0
+    which: ^2.0.1
+  checksum: 8/8d306efacaf6f3f60e0224c287664093fa9185680b2d195852ba9a863f85d02dcc737094c6e512175f8ee0161f9b87c73c6826034c2422e39de7d6569cf4503b
   languageName: node
   linkType: hard
 
@@ -5682,9 +5682,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fsevents@patch:fsevents@npm%3A~2.3.2#optional!builtin<compat/fsevents>":
+"fsevents@patch:fsevents@npm%3A~2.3.2#~builtin<compat/fsevents>":
   version: 2.3.2
-  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#optional!builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
+  resolution: "fsevents@patch:fsevents@npm%3A2.3.2#~builtin<compat/fsevents>::version=2.3.2&hash=df0bf1"
   dependencies:
     node-gyp: "npm:latest"
   conditions: os=darwin
@@ -7747,54 +7747,54 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ng-client@workspace:."
   dependencies:
-    "@angular-devkit/build-angular": "npm:^14.2.4"
-    "@angular-eslint/builder": "npm:^14.1.2"
-    "@angular-eslint/eslint-plugin": "npm:^14.1.2"
-    "@angular-eslint/eslint-plugin-template": "npm:^14.1.2"
-    "@angular-eslint/schematics": "npm:^14.1.2"
-    "@angular-eslint/template-parser": "npm:^14.1.2"
-    "@angular/animations": "npm:^14.2.4"
-    "@angular/cdk": "npm:^14.2.3"
-    "@angular/cli": "npm:^14.2.4"
-    "@angular/common": "npm:^14.2.4"
-    "@angular/compiler": "npm:^14.2.4"
-    "@angular/compiler-cli": "npm:^14.2.4"
-    "@angular/core": "npm:^14.2.4"
-    "@angular/flex-layout": "npm:^14.0.0-beta.40"
-    "@angular/forms": "npm:^14.2.4"
-    "@angular/language-service": "npm:^14.2.4"
-    "@angular/localize": "npm:^14.2.4"
-    "@angular/material": "npm:^14.2.3"
-    "@angular/material-moment-adapter": "npm:^14.2.3"
-    "@angular/platform-browser": "npm:^14.2.4"
-    "@angular/platform-browser-dynamic": "npm:^14.2.4"
-    "@angular/router": "npm:^14.2.4"
-    "@ngx-translate/core": "npm:^14.0.0"
-    "@ngx-translate/http-loader": "npm:^7.0.0"
-    "@types/jasmine": "npm:4.3.0"
-    "@types/jasminewd2": "npm:~2.0.3"
-    "@types/materialize-css": "npm:^1.0.11"
-    "@types/node": "npm:18.7.23"
-    "@typescript-eslint/eslint-plugin": "npm:5.38.1"
-    "@typescript-eslint/parser": "npm:5.38.1"
-    angular-split: "npm:^14.1.0"
-    eslint: "npm:8.24.0"
-    jasmine-core: "npm:^4.4.0"
-    jasmine-spec-reporter: "npm:~7.0.0"
-    karma: "npm:^6.4.1"
-    karma-chrome-launcher: "npm:~3.1.0"
-    karma-coverage-istanbul-reporter: "npm:~3.0.2"
-    karma-firefox-launcher: "npm:^2.1.2"
-    karma-jasmine: "npm:^5.1.0"
-    karma-jasmine-html-reporter: "npm:^2.0.0"
-    moment: "npm:^2.29.4"
-    protractor: "npm:7.0.0"
-    rxjs: "npm:~7.5.7"
-    ts-md5: "npm:^1.3.1"
-    ts-node: "npm:10.9.1"
-    tslib: "npm:^2.0.0"
-    typescript: "npm:4.8.4"
-    zone.js: "npm:~0.11.8"
+    "@angular-devkit/build-angular": ^14.2.4
+    "@angular-eslint/builder": ^14.1.2
+    "@angular-eslint/eslint-plugin": ^14.1.2
+    "@angular-eslint/eslint-plugin-template": ^14.1.2
+    "@angular-eslint/schematics": ^14.1.2
+    "@angular-eslint/template-parser": ^14.1.2
+    "@angular/animations": ^14.2.4
+    "@angular/cdk": ^14.2.3
+    "@angular/cli": ^14.2.4
+    "@angular/common": ^14.2.4
+    "@angular/compiler": ^14.2.4
+    "@angular/compiler-cli": ^14.2.4
+    "@angular/core": ^14.2.4
+    "@angular/flex-layout": ^14.0.0-beta.40
+    "@angular/forms": ^14.2.4
+    "@angular/language-service": ^14.2.4
+    "@angular/localize": ^14.2.4
+    "@angular/material": ^14.2.3
+    "@angular/material-moment-adapter": ^14.2.3
+    "@angular/platform-browser": ^14.2.4
+    "@angular/platform-browser-dynamic": ^14.2.4
+    "@angular/router": ^14.2.4
+    "@ngx-translate/core": ^14.0.0
+    "@ngx-translate/http-loader": ^7.0.0
+    "@types/jasmine": 4.3.0
+    "@types/jasminewd2": ~2.0.3
+    "@types/materialize-css": ^1.0.11
+    "@types/node": 18.7.23
+    "@typescript-eslint/eslint-plugin": 5.38.1
+    "@typescript-eslint/parser": 5.38.1
+    angular-split: ^14.1.0
+    eslint: 8.24.0
+    jasmine-core: ^4.4.0
+    jasmine-spec-reporter: ~7.0.0
+    karma: ^6.4.1
+    karma-chrome-launcher: ~3.1.0
+    karma-coverage-istanbul-reporter: ~3.0.2
+    karma-firefox-launcher: ^2.1.2
+    karma-jasmine: ^5.1.0
+    karma-jasmine-html-reporter: ^2.0.0
+    moment: ^2.29.4
+    protractor: 7.0.0
+    rxjs: ~7.5.7
+    ts-md5: ^1.3.1
+    ts-node: 10.9.1
+    tslib: ^2.0.0
+    typescript: 4.8.4
+    zone.js: ~0.11.8
   languageName: unknown
   linkType: soft
 
@@ -9417,16 +9417,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@npm%3A1.22.1#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.1.7#optional!builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.14.2#optional!builtin<compat/resolve>":
+"resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.1.7#~builtin<compat/resolve>, resolve@patch:resolve@npm%3A^1.14.2#~builtin<compat/resolve>":
   version: 1.22.1
-  resolution: "resolve@patch:resolve@npm%3A1.22.1#optional!builtin<compat/resolve>::version=1.22.1&hash=c3c19d"
+  resolution: "resolve@patch:resolve@npm%3A1.22.1#~builtin<compat/resolve>::version=1.22.1&hash=c3c19d"
   dependencies:
     is-core-module: "npm:^2.9.0"
     path-parse: "npm:^1.0.7"
     supports-preserve-symlinks-flag: "npm:^1.0.0"
   bin:
     resolve: bin/resolve
-  checksum: 551dd500765cce767c583747f5f21ceb51d437f539b01aee96d6ec39eb2c68a8ff5d646b083d690fe428a81329856bc1bbdb094379b8df4b3f10e7e1f6aa3839
+  checksum: 8/5656f4d0bedcf8eb52685c1abdf8fbe73a1603bb1160a24d716e27a57f6cecbe2432ff9c89c2bd57542c3a7b9d14b1882b73bfe2e9d7849c9a4c0b8b39f02b8b
   languageName: node
   linkType: hard
 
@@ -10576,13 +10576,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A4.8.4#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@4.8.4#~builtin<compat/typescript>":
   version: 4.8.4
-  resolution: "typescript@patch:typescript@npm%3A4.8.4#optional!builtin<compat/typescript>::version=4.8.4&hash=1a91c8"
+  resolution: "typescript@patch:typescript@npm%3A4.8.4#~builtin<compat/typescript>::version=4.8.4&hash=1a91c8"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 5d81fd8cf5152091a0c0b84ebc868de8433583072a340c4899e0fc7ad6a80314b880a1466868c9a6a1f640c3d1f2fe7f41f8c541b99d78c8b414263dfa27eba3
+  checksum: 8/c981e82b77a5acdcc4e69af9c56cdecf5b934a87a08e7b52120596701e389a878b8e3f860e73ffb287bf649cc47a8c741262ce058148f71de4cdd88bb9c75153
   languageName: node
   linkType: hard
 
