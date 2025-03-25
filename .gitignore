@@ -6,3 +6,9 @@
 
 ### Mac OS ###
 .DS_Store
+
+### Env ###
+.env.local
+
+### Development ###
+solr-data/*

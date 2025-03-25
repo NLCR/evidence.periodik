@@ -16,6 +16,12 @@ public interface CreatableMetaTitleMapper {
         return UUID.randomUUID().toString();
     }
 
+    @Mapping(target = "created", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updated", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "deletedBy", ignore = true)
     @Mapping(target = "id", expression = "java(generateUUID())")
     void createMetaTitle(CreatableMetaTitleDTO creatableMetaTitleDTO, @MappingTarget MetaTitle target);
 }

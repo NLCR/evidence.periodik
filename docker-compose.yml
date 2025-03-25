@@ -1,0 +1,65 @@
+services:
+  permonik-api:
+#    depends_on:
+#      - database
+    build:
+      context: .
+      dockerfile: permonik-api/docker/Dockerfile
+    networks:
+      - permonik
+    ports:
+      - "8080:8080"
+    environment:
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xverify:none -Xms1024m -Xmx1500m"
+      TZ: "Europe/Prague"
+      SERVER_PORT: "8080"
+
+  permonik-web-admin:
+    build:
+      context: .
+      dockerfile: permonik-web/docker/admin.Dockerfile
+    networks:
+      - permonik
+    ports:
+      - "8080:8080"
+
+  permonik-web-public:
+    build:
+      context: .
+      dockerfile: permonik-web/docker/public.Dockerfile
+    networks:
+      - permonik
+    ports:
+      - "8080:8080"
+
+  permonik-gateway:
+#    image: eu.gcr.io/inqool-1301/permonik-gateway:${PERMONIK_TAG}
+    build:
+      context: .
+      dockerfile: permonik-gateway/Dockerfile
+    networks:
+      - permonik
+    ports:
+      - "443:443"
+    volumes:
+      - /etc/ssl/certs:/etc/ssl/certs:ro
+      - /etc/ssl/private:/etc/ssl/private:ro
+
+  permonik-database:
+    image: solr:9.7.0
+    networks:
+      - permonik
+    ports:
+      - "8983:8983"
+    environment:
+      SOLR_JAVA_MEM: "-Xms1g -Xmx1g"
+    volumes:
+      - solr-data:/var/solr
+      - ./permonik-database/cores:/opt/solr/server/solr/mycores:ro
+      - ./permonik-database/init-cores.sh:/docker-entrypoint-initdb.d/init-cores.sh:ro
+
+networks:
+  permonik:
+
+volumes:
+  solr-data:

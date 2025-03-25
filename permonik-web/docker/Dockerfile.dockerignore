@@ -1,0 +1,10 @@
+.htaccess
+!cashless-web/docker
+!cashless-web/apps
+!cashless-web/packages
+!cashless-web/.eslintrc.js
+!cashless-web/.npmrc
+!cashless-web/.prettierrc.js
+!cashless-web/package.json
+!cashless-web/pnpm-lock.yaml
+!cashless-web/pnpm-workspace.yaml

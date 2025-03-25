@@ -6,7 +6,6 @@ plugins {
 
 group = 'cz.incad.nkp.inprove'
 version = '0.0.1'
-description = 'Permonik API for periodics app'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -33,6 +32,25 @@ ext {
 
 repositories {
 	mavenCentral()
+}
+
+bootJar {
+    archiveFileName.set("permonik-api.jar")
+    layered {
+        enabled = true
+    }
+    manifest {
+        attributes(
+                'Implementation-Title': 'Permonik BE',
+                'Implementation-Version': archiveVersion
+        )
+    }
+}
+
+jar {
+    // disabled generating *-plain.jar version during build
+    // https://stackoverflow.com/questions/67663728/spring-boot-2-5-0-generates-plain-jar-file-can-i-remove-it
+    enabled = false
 }
 
 dependencies {

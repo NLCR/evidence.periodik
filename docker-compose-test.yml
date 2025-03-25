@@ -1,0 +1,102 @@
+services:
+  permonik-api:
+#    image: eu.gcr.io/inqool-1301/permonik-api:${PERMONIK_TAG}
+#    depends_on:
+#      - database
+    build:
+      context: .
+      dockerfile: permonik-api/docker/Dockerfile
+    networks:
+      - permonik
+    ports:
+      - "8081:8080"
+    deploy:
+      resources:
+        reservations:
+          memory: '1024M'
+        limits:
+          memory: '2048M'
+    environment:
+      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xverify:none -Xms1024m -Xmx1500m"
+      TZ: "Europe/Prague"
+      SERVER_PORT: "8080"
+
+  permonik-web-admin:
+#    image: eu.gcr.io/inqool-1301/permonik-web-admin:${PERMONIK_TAG}
+    build:
+      context: .
+      dockerfile: permonik-web/docker/admin.Dockerfile
+    networks:
+      - permonik
+    ports:
+      - "8082:8080"
+    deploy:
+      resources:
+        reservations:
+          memory: '12M'
+        limits:
+          memory: '24M'
+
+
+  permonik-web-public:
+    #    image: eu.gcr.io/inqool-1301/permonik-web-public:${PERMONIK_TAG}
+    build:
+      context: .
+      dockerfile: permonik-web/docker/public.Dockerfile
+    networks:
+      - permonik
+    ports:
+      - "8083:8080"
+    deploy:
+      resources:
+        reservations:
+          memory: '12M'
+        limits:
+          memory: '24M'
+
+  permonik-gateway:
+#    image: eu.gcr.io/inqool-1301/permonik-gateway:${PERMONIK_TAG}
+    build:
+      context: .
+      dockerfile: permonik-gateway/Dockerfile
+    networks:
+      - permonik
+    ports:
+      - "443:443"
+    deploy:
+      resources:
+        reservations:
+          memory: '12M'
+        limits:
+          memory: '24M'
+
+  permonik-database:
+    image: solr:9.7.0
+    networks:
+      - permonik
+    ports:
+      - "8983:8983"
+    environment:
+      SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
+    volumes:
+      - solr-data:/var/solr
+      - ./permonik-database/cores:/opt/solr/server/solr/mycores:ro
+      - ./permonik-database/init-cores.sh:/docker-entrypoint-initdb.d/init-cores.sh:ro
+
+  permonik-shibboleth:
+    build:
+      context: .
+      dockerfile: permonik-shibboleth/Dockerfile
+    expose:
+      - "8084:8080"
+    volumes:
+      - /opt/shibboleth-sp/secrets:/secrets:ro
+      - /opt/shibboleth-sp/config/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml:ro
+    networks:
+      - permonik
+
+volumes:
+  solr-data:
+
+networks:
+  permonik:

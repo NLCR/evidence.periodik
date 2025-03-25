@@ -16,6 +16,12 @@ public interface CreatableEditionMapper {
         return UUID.randomUUID().toString();
     }
 
+    @Mapping(target = "created", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "updated", ignore = true)
+    @Mapping(target = "updatedBy", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "deletedBy", ignore = true)
     @Mapping(target = "id", expression = "java(generateUUID())")
     @Mapping(target = "isDefault", defaultValue = "false")
     @Mapping(target = "isAttachment", defaultValue = "false")
