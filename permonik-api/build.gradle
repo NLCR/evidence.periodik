@@ -1,0 +1,79 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.4'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'cz.incad.nkp.inprove'
+version = '0.0.1'
+description = 'Permonik API for periodics app'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+ext {
+    lombokVersion = '1.18.36'
+    swaggerVersion = '3.0.0'
+    jacksonVersion = '2.18.2'
+    solrjVersion = '9.7.0'
+    mapstructVersion = '1.6.3'
+    slf4jVersion = '2.0.16'
+    logbackVersion = '1.5.16'
+    typescriptGeneratorVersion = '3.2.1263'
+    hibernateVersion = '6.6.4.Final'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+    // SPRING BOOT
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'jakarta.ws.rs:jakarta.ws.rs-api:4.0.0'
+
+    // HIBERNATE (preCreate, preUpdate, preRemove)
+    implementation "org.hibernate.orm:hibernate-envers:${hibernateVersion}"
+
+    // SOLR
+    implementation "org.apache.solr:solr-solrj:${solrjVersion}"
+
+    // JACKSON
+    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+
+    // LOMBOK
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // MAPSTRUCT
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+    // SWAGGER / OpenAPI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
+
+    // LOGGING
+    implementation "ch.qos.logback:logback-classic:${logbackVersion}"
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
+
+    // TESTING
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
