@@ -47,7 +47,13 @@
     {"id": 0, "name": ""},
     {"id": 1, "name": "Brno"},
     {"id": 2, "name": "Praha"},
-    {"id": 3, "name": "Ostrava"}
+    {"id": 3, "name": "Ostrava"},
+    {"id": 4, "name": "Rudé právo moravskoslezské (redakce Praha II)"},
+    {"id": 5, "name": "Rudé právo jihozápadní Moravy (krajská redakce Jihlava)"},
+    {"id": 6, "name": "Rudé právo našeho kraje (krajská redakce Kladno)"},
+    {"id": 7, "name": "Rudé právo moravskoslezské (krajská redakce Brno)"},
+    {"id": 8, "name": "Rudé právo ústeckého kraje a pohraničí (redakce Ústí nad Labem)"},
+    {"id": 9, "name": "Rudé právo českého severozápadu  (redakce Most)"}
   ],
   "znak_oznaceni_vydani": ["*", "-"],
   "test": false,
