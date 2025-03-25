@@ -88,6 +88,7 @@ public class AuthService {
                 .nazev(firstName + " " + lastName)
                 .role("user")
                 .active(true)
+                .owner(owner.getId())
                 .build();
 
         return userRepository.save(user, Duration.ZERO);
