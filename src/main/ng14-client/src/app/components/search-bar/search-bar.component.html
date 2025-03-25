@@ -1,9 +1,0 @@
-<div fxFlex class="app-search-bar-container">
-	<a (click)="search()" [matTooltip]="'searchbox.search' | translate">
-		<mat-icon>{{ config.icons.search }}</mat-icon>
-	</a>
-	<input type="text" [(ngModel)]="state.q" [placeholder]="'searchbox.placeholder' | translate" (keyup.enter)="search()" />
-	<a (click)="clearQuery()" [matTooltip]="'searchbox.delete_query' | translate">
-		<mat-icon>{{ config.icons.clear }}</mat-icon>
-	</a>
-</div>

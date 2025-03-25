@@ -1,0 +1,37 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+solr:
+  host: http://localhost:8983/solr
+
+server:
+  port: 8080
+  forward-headers-strategy: FRAMEWORK
+  error:
+    path: /error
+    whitelabel:
+      enabled: true
+    include-exception: true
+    include-message: always
+  servlet:
+    context-path: /
+    session:
+      cookie:
+        path: /
+        name: "SESSION"
+        secure: true
+        http-only: true
+        same-site: strict
+
+logging:
+  file:
+    name: "permonik-api.log"
+
+#sentry:
+#  dsn: https://9f91a75be26765d75c01ff9930b2f38f@newsentry.inqool.cz/17
+#  logging:
+#    minimum-event-level: info
+#    minimum-breadcrumb-level: info
+#    enabled: true
