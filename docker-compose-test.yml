@@ -1,8 +1,8 @@
 services:
   permonik-api:
-#    image: eu.gcr.io/inqool-1301/permonik-api:${PERMONIK_TAG}
-#    depends_on:
-#      - database
+    image: eu.gcr.io/inqool-1301/permonik-api:${PERMONIK_TAG}
+    depends_on:
+      - permonik-database
     build:
       context: .
       dockerfile: permonik-api/docker/Dockerfile
@@ -22,7 +22,7 @@ services:
       SERVER_PORT: "8080"
 
   permonik-web-admin:
-#    image: eu.gcr.io/inqool-1301/permonik-web-admin:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik-web-admin:${PERMONIK_TAG}
     build:
       context: .
       dockerfile: permonik-web/docker/admin.Dockerfile
@@ -39,7 +39,7 @@ services:
 
 
   permonik-web-public:
-    #    image: eu.gcr.io/inqool-1301/permonik-web-public:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik-web-public:${PERMONIK_TAG}
     build:
       context: .
       dockerfile: permonik-web/docker/public.Dockerfile
@@ -55,14 +55,16 @@ services:
           memory: '24M'
 
   permonik-gateway:
-#    image: eu.gcr.io/inqool-1301/permonik-gateway:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik-gateway:${PERMONIK_TAG}
+    depends_on:
+      - permonik-shibboleth-sp
     build:
       context: .
       dockerfile: permonik-gateway/Dockerfile
     networks:
       - permonik
     ports:
-      - "443:443"
+      - "80:80"
     deploy:
       resources:
         reservations:
@@ -83,15 +85,20 @@ services:
       - ./permonik-database/cores:/opt/solr/server/solr/mycores:ro
       - ./permonik-database/init-cores.sh:/docker-entrypoint-initdb.d/init-cores.sh:ro
 
-  permonik-shibboleth:
+  permonik-shibboleth-sp:
+    image: eu.gcr.io/inqool-1301/permonik-shibboleth-sp:${PERMONIK_TAG}
     build:
       context: .
-      dockerfile: permonik-shibboleth/Dockerfile
-    expose:
-      - "8084:8080"
+      dockerfile: permonik-shibboleth-sp/Dockerfile
+    ports:
+      - "8084:80"
     volumes:
-      - /opt/shibboleth-sp/secrets:/secrets:ro
-      - /opt/shibboleth-sp/config/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml:ro
+      - /opt/shibboleth-sp-config/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml:ro
+      - /opt/shibboleth-sp-config/attribute-map.xml:/etc/shibboleth/attribute-map.xml:ro
+      - /opt/shibboleth-sp-config/metadata-template.xml:/etc/shibboleth/metadata-template.xml:ro
+      - /opt/shibboleth-sp-config/sp-cert.pem:/etc/shibboleth/sp-cert.pem:ro
+      - /opt/shibboleth-sp-config/sp-key.pem:/etc/shibboleth/sp-key.pem:ro
+      - /var/log/shibboleth:/var/log/shibboleth
     networks:
       - permonik
 

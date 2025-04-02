@@ -22,7 +22,7 @@ public class ShibbolethController {
     private final ShibbolethService shibbolethService;
 
     @Operation(summary = "USE 'permonik(-test).nkp.cz/login/shibboleth' FOR SHIBBOLETH AUTH. This is for " +
-            "internal handling shibboleth authentication")
+            "internal handling shibboleth authentication (redirect from shibboleth IdP)")
     @GetMapping("/login/shibboleth")
     public void shibbolethLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, SolrServerException {
         shibbolethService.shibbolethLogin(request, response);

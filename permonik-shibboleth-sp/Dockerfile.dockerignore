@@ -1,0 +1,4 @@
+*
+!permonik-shibboleth-sp/apache-conf
+!permonik-shibboleth-sp/docker-entrypoint.sh
+!permonik-shibboleth-sp/Dockerfile
