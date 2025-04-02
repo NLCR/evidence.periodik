@@ -12,3 +12,7 @@
 
 ### Development ###
 solr-data/*
+
+.gradle/*
+
+build
