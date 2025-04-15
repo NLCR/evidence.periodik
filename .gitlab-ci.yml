@@ -17,6 +17,19 @@ stages:
   variables:
     DOCKERFILE: Dockerfile
 
+.buildProd:
+  stage: build
+  when: manual
+  allow_failure: false
+  tags:
+    - docker
+  script:
+    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT:latest .'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT:$CI_COMMIT_SHORT_SHA'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT:latest'
+  variables:
+    DOCKERFILE: Dockerfile
+
 
 build_permonik_api:
   extends: .build
@@ -49,7 +62,7 @@ build_permonik_web_admin:
       when: manual
   variables:
     COMPONENT: permonik-web
-    DOCKERFILE: admin.Dockerfile
+    DOCKERFILE: admin/Dockerfile
 
 build_permonik_web_public:
   extends: .build
@@ -58,5 +71,48 @@ build_permonik_web_public:
       when: manual
   variables:
     COMPONENT: permonik-web
-    DOCKERFILE: public.Dockerfile
+    DOCKERFILE: public/Dockerfile
 
+### PROD SECTION
+
+build_permonik_api_prod:
+  extends: .buildProd
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "migration"'
+      when: manual
+  variables:
+    COMPONENT: permonik-api
+
+build_permonik_gateway_prod:
+  extends: .buildProd
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "migration"'
+      when: manual
+  variables:
+    COMPONENT: permonik-gateway
+
+build_permonik_shibboleth_prod:
+  extends: .buildProd
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "migration"'
+      when: manual
+  variables:
+    COMPONENT: permonik-shibboleth-sp
+
+build_permonik_web_admin_prod:
+  extends: .buildProd
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "migration"'
+      when: manual
+  variables:
+    COMPONENT: permonik-web
+    DOCKERFILE: admin/Dockerfile
+
+build_permonik_web_public_prod:
+  extends: .buildProd
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "migration"'
+      when: manual
+  variables:
+    COMPONENT: permonik-web
+    DOCKERFILE: public/Dockerfile
