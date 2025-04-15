@@ -11,7 +11,7 @@ stages:
   tags:
     - docker
   script:
-    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/$COMPONENT:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/$COMPONENT:latest .'
+    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
     - 'docker push eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:latest'
   variables:
@@ -24,7 +24,7 @@ stages:
   tags:
     - docker
   script:
-    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT:latest .'
+    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest'
   variables:
