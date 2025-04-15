@@ -17,7 +17,7 @@ services:
   permonik-web-admin:
     build:
       context: .
-      dockerfile: permonik-web/docker/admin.Dockerfile
+      dockerfile: permonik-web/docker/public/admin.Dockerfile
     networks:
       - permonik
     ports:
@@ -26,7 +26,7 @@ services:
   permonik-web-public:
     build:
       context: .
-      dockerfile: permonik-web/docker/public.Dockerfile
+      dockerfile: permonik-web/docker/public/public.Dockerfile
     networks:
       - permonik
     ports:

@@ -1,6 +1,6 @@
 services:
   permonik-api:
-    image: eu.gcr.io/inqool-1301/permonik-api:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/permonik-api:${PERMONIK_TAG}
     depends_on:
       - permonik-database
     build:
@@ -22,10 +22,10 @@ services:
       SERVER_PORT: "8080"
 
   permonik-web-admin:
-    image: eu.gcr.io/inqool-1301/permonik-web-admin:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/permonik-web-admin:${PERMONIK_TAG}
     build:
       context: .
-      dockerfile: permonik-web/docker/admin.Dockerfile
+      dockerfile: permonik-web/docker/public/admin.Dockerfile
     networks:
       - permonik
     ports:
@@ -38,10 +38,10 @@ services:
           memory: '24M'
 
   permonik-web-public:
-    image: eu.gcr.io/inqool-1301/permonik-web-public:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/permonik-web-public:${PERMONIK_TAG}
     build:
       context: .
-      dockerfile: permonik-web/docker/public.Dockerfile
+      dockerfile: permonik-web/docker/public/public.Dockerfile
     networks:
       - permonik
     ports:
@@ -54,7 +54,7 @@ services:
           memory: '24M'
 
   permonik-gateway:
-    image: eu.gcr.io/inqool-1301/permonik-gateway:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/permonik-gateway:${PERMONIK_TAG}
     depends_on:
       - permonik-shibboleth-sp
     build:
@@ -85,7 +85,7 @@ services:
       - ./permonik-database/init-cores.sh:/docker-entrypoint-initdb.d/init-cores.sh:ro
 
   permonik-shibboleth-sp:
-    image: eu.gcr.io/inqool-1301/permonik-shibboleth-sp:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/permonik-shibboleth-sp:${PERMONIK_TAG}
     build:
       context: .
       dockerfile: permonik-shibboleth-sp/Dockerfile
