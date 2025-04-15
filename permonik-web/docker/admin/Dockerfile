@@ -12,6 +12,6 @@ RUN yarn build
 
 ## RUN Image ##
 FROM httpd:alpine
-COPY ./permonik-web/docker/httpd.conf /usr/local/apache2/conf/httpd.conf
+COPY ./permonik-web/docker/admin/httpd.conf /usr/local/apache2/conf/httpd.conf
 COPY --from=builder /usr/src/app/dist/ /usr/local/apache2/htdocs/
-COPY ./permonik-web/docker/.htaccess /usr/local/apache2/htdocs/
+COPY ./permonik-web/docker/admin/.htaccess /usr/local/apache2/htdocs/
