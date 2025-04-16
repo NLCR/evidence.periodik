@@ -91,25 +91,6 @@ services:
       - ./permonik-database/cores:/opt/solr/server/solr/mycores:ro
       - ./permonik-database/init-cores.sh:/docker-entrypoint-initdb.d/init-cores.sh:ro
 
-#  permonik-shibboleth-sp:
-#    image: eu.gcr.io/inqool-1301/permonik/permonik-shibboleth-sp:${PERMONIK_TAG}
-#    build:
-#      context: .
-#      dockerfile: permonik-shibboleth-sp/docker/Dockerfile
-#    expose:
-#      - 8080
-#    deploy:
-#      resources:
-#        reservations:
-#          memory: '96M'
-#        limits:
-#          memory: '192M'
-#    volumes:
-#      - /opt/shibboleth-sp-config:/etc/shibboleth:ro
-#      - /var/log/shibboleth:/var/log/shibboleth
-#    networks:
-#      - permonik
-
 volumes:
   solr-data:
 

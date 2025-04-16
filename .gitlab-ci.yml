@@ -49,15 +49,6 @@ build_permonik_gateway:
     COMPONENT: permonik-gateway
     COMPONENT_NAME: permonik-gateway
 
-#build_permonik_shibboleth:
-#  extends: .build
-#  rules:
-#    - if: '$CI_COMMIT_BRANCH == "migration"'
-#      when: manual
-#  variables:
-#    COMPONENT: permonik-shibboleth-sp
-#    COMPONENT_NAME: permonik-shibboleth-sp
-
 build_permonik_web_admin:
   extends: .build
   rules:
@@ -97,15 +88,6 @@ build_permonik_gateway_prod:
   variables:
     COMPONENT: permonik-gateway
     COMPONENT_NAME: permonik-gateway
-
-#build_permonik_shibboleth_prod:
-#  extends: .buildProd
-#  rules:
-#    - if: '$CI_COMMIT_BRANCH == "migration"'
-#      when: manual
-#  variables:
-#    COMPONENT: permonik-shibboleth-sp
-#    COMPONENT_NAME: permonik-shibboleth-sp
 
 build_permonik_web_admin_prod:
   extends: .buildProd
