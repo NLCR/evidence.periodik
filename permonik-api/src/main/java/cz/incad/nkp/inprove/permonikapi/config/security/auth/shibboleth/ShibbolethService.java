@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -75,6 +76,10 @@ public class ShibbolethService {
     }
 
     private User createNewShibbolethUser(HttpServletRequest request, String eppn) throws SolrServerException, IOException {
+        Collections.list(request.getHeaderNames()).forEach(name ->
+                System.out.println("HEADER " + name + ": " + request.getHeader(name)));
+
+
         String firstName = decodeAndRepairCaseForName(request.getHeader("firstName"));
         String lastName = decodeAndRepairCaseForName(request.getHeader("lastName"));
         String owner = eppn.split("@")[1].split("\\.")[0].toUpperCase();
