@@ -17,7 +17,7 @@ services:
         limits:
           memory: '2048M'
     environment:
-      JAVA_TOOL_OPTIONS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Xverify:none -Xms1024m -Xmx1500m"
+      SPRING_PROFILES_ACTIVE: test
       TZ: "Europe/Prague"
       SERVER_PORT: "8080"
 
