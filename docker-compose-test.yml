@@ -8,8 +8,8 @@ services:
       dockerfile: permonik-api/docker/Dockerfile
     networks:
       - permonik
-    ports:
-      - "8081:8080"
+    expose:
+      - 8080
     deploy:
       resources:
         reservations:
@@ -28,8 +28,8 @@ services:
       dockerfile: permonik-web/docker/public/admin.Dockerfile
     networks:
       - permonik
-    ports:
-      - "8082:8080"
+    expose:
+      - 8080
     deploy:
       resources:
         reservations:
@@ -44,8 +44,8 @@ services:
       dockerfile: permonik-web/docker/public/public.Dockerfile
     networks:
       - permonik
-    ports:
-      - "8083:8080"
+    expose:
+      - 8080
     deploy:
       resources:
         reservations:
@@ -63,7 +63,7 @@ services:
     networks:
       - permonik
     ports:
-      - "80:80"
+      - "8080:8080"
     deploy:
       resources:
         reservations:
@@ -89,8 +89,8 @@ services:
     build:
       context: .
       dockerfile: permonik-shibboleth-sp/Dockerfile
-    ports:
-      - "8084:80"
+    expose:
+      - 8080
     volumes:
       - /opt/shibboleth-sp-config/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml:ro
       - /opt/shibboleth-sp-config/attribute-map.xml:/etc/shibboleth/attribute-map.xml:ro

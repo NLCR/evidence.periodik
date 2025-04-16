@@ -6,6 +6,8 @@ RUN apt-get update && \
 RUN a2enmod shib
 
 COPY ./permonik-shibboleth-sp/docker/apache-conf/shib-site.conf /etc/apache2/sites-available/shib-site.conf
+COPY ./permonik-shibboleth-sp/docker/apache-conf/httpd.conf /usr/local/apache2/conf/httpd.conf
+
 RUN a2dissite 000-default.conf && \
     a2ensite shib-site.conf
 
