@@ -77,6 +77,12 @@ services:
       - permonik
     ports:
       - "8983:8983"
+    deploy:
+      resources:
+        reservations:
+          memory: '3072M'
+        limits:
+          memory: '4096M'
     environment:
       SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
     volumes:
@@ -91,6 +97,12 @@ services:
       dockerfile: permonik-shibboleth-sp/Dockerfile
     expose:
       - 8080
+    deploy:
+      resources:
+        reservations:
+          memory: '96M'
+        limits:
+          memory: '192M'
     volumes:
       - /opt/shibboleth-sp-config/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml:ro
       - /opt/shibboleth-sp-config/attribute-map.xml:/etc/shibboleth/attribute-map.xml:ro
