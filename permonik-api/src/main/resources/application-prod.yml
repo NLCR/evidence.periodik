@@ -4,7 +4,7 @@ spring:
       on-profile: prod
 
 solr:
-  host: http://localhost:8983/solr
+  host: http://permonik-database:8983/solr
 
 server:
   port: 8080
