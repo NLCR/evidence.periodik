@@ -94,7 +94,7 @@ services:
     image: eu.gcr.io/inqool-1301/permonik/permonik-shibboleth-sp:${PERMONIK_TAG}
     build:
       context: .
-      dockerfile: permonik-shibboleth-sp/Dockerfile
+      dockerfile: permonik-shibboleth-sp/docker/Dockerfile
     expose:
       - 8080
     deploy:
