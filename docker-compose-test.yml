@@ -104,11 +104,7 @@ services:
         limits:
           memory: '192M'
     volumes:
-      - /opt/shibboleth-sp-config/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml:ro
-      - /opt/shibboleth-sp-config/attribute-map.xml:/etc/shibboleth/attribute-map.xml:ro
-      - /opt/shibboleth-sp-config/metadata-template.xml:/etc/shibboleth/metadata-template.xml:ro
-      - /opt/shibboleth-sp-config/sp-cert.pem:/etc/shibboleth/sp-cert.pem:ro
-      - /opt/shibboleth-sp-config/sp-key.pem:/etc/shibboleth/sp-key.pem:ro
+      - /opt/shibboleth-sp-config:/etc/shibboleth:ro
       - /var/log/shibboleth:/var/log/shibboleth
     networks:
       - permonik

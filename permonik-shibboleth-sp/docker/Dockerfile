@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim
 
 RUN apt-get update && \
-    apt-get install -y apache2 libapache2-mod-shib ntp nano --no-install-recommends
+    apt-get install -y apache2 libapache2-mod-shib ntp nano iproute2 --no-install-recommends
 
 RUN a2enmod shib
 
