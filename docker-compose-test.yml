@@ -70,6 +70,7 @@ services:
           memory: '192M'
     volumes:
       - /opt/shibboleth-sp-config:/etc/shibboleth:ro
+      - /var/log/apache2:/var/log/apache2
       - /var/log/shibboleth:/var/log/shibboleth
 
   permonik-database:
