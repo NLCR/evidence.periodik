@@ -15,6 +15,9 @@ COPY ./permonik-gateway/docker/apache-conf/ports.conf /etc/apache2/ports.conf
 RUN a2dissite 000-default.conf && \
     a2ensite permonik-site.conf
 
+RUN mkdir -p /run/shibboleth && \
+    chown shibd:shibd /run/shibboleth
+
 COPY ./permonik-gateway/docker/supervisord.conf /supervisord.conf
 
 ENTRYPOINT ["/usr/bin/supervisord", "-c", "/supervisord.conf"]
