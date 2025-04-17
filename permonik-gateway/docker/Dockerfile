@@ -16,7 +16,7 @@ RUN a2dissite 000-default.conf && \
     a2ensite permonik-site.conf
 
 RUN mkdir -p /run/shibboleth && \
-    chown shibd:shibd /run/shibboleth
+    chown _shibd:_shibd /run/shibboleth
 
 COPY ./permonik-gateway/docker/supervisord.conf /supervisord.conf
 
