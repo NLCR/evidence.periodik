@@ -100,7 +100,7 @@ build_permonik_web_admin_prod:
     COMPONENT_NAME: permonik-web-admin
   script:
     - cp "$ENV_FILE" permonik-web/.env
-    - docker build -t $COMPONENT_NAME .
+    - docker build -f $DOCKERFILE -t $COMPONENT_NAME .
 
 build_permonik_web_public_prod:
   extends: .buildProd

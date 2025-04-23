@@ -25,7 +25,7 @@ services:
     image: eu.gcr.io/inqool-1301/permonik/prod/permonik-web-admin:${PERMONIK_TAG}
     build:
       context: .
-      dockerfile: permonik-web/docker/public/Dockerfile
+      dockerfile: permonik-web/docker/admin/Dockerfile
     networks:
       - permonik
     expose:
