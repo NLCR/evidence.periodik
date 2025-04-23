@@ -7,9 +7,7 @@ RUN yarn set version latest
 
 COPY ./permonik-web/ /usr/src/app
 WORKDIR /usr/src/app
-RUN ls -la
-RUN cat .env
-RUN --mount=type=cache,id=yarn,target=/yarn/store yarn install --frozen-lockfile
+RUN --mount=type=cache,id=yarn-cache,target=.yarn/cache yarn install --immutable
 RUN yarn build
 
 ## RUN Image ##
