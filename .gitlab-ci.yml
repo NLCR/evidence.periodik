@@ -102,7 +102,7 @@ build_permonik_web_public_test:
 build_permonik_api_prod:
   extends: .buildProd
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
   variables:
     COMPONENT: permonik-api
@@ -111,7 +111,7 @@ build_permonik_api_prod:
 build_permonik_gateway_prod:
   extends: .buildProd
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
   variables:
     COMPONENT: permonik-gateway
@@ -120,7 +120,7 @@ build_permonik_gateway_prod:
 build_permonik_web_admin_prod:
   extends: .buildWebProd
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
   variables:
     COMPONENT: permonik-web
@@ -130,7 +130,7 @@ build_permonik_web_admin_prod:
 build_permonik_web_public_prod:
   extends: .buildWebProd
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
+    - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
   variables:
     COMPONENT: permonik-web
