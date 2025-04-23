@@ -79,6 +79,9 @@ build_permonik_api_prod:
   variables:
     COMPONENT: permonik-api
     COMPONENT_NAME: permonik-api
+  script:
+    - cp "$ENV_FILE" permonik-web/.env
+    - docker build -t $COMPONENT_NAME .
 
 build_permonik_gateway_prod:
   extends: .buildProd
