@@ -1,6 +1,6 @@
 services:
   permonik-api:
-    image: eu.gcr.io/inqool-1301/permonik/permonik-api:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/test/permonik-api:${PERMONIK_TAG}
     depends_on:
       - permonik-database
     build:
@@ -22,10 +22,10 @@ services:
       SERVER_PORT: "8080"
 
   permonik-web-admin:
-    image: eu.gcr.io/inqool-1301/permonik/permonik-web-admin:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/test/permonik-web-admin:${PERMONIK_TAG}
     build:
       context: .
-      dockerfile: permonik-web/docker/public/admin.Dockerfile
+      dockerfile: permonik-web/docker/admin/Dockerfile
     networks:
       - permonik
     expose:
@@ -38,10 +38,10 @@ services:
           memory: '24M'
 
   permonik-web-public:
-    image: eu.gcr.io/inqool-1301/permonik/permonik-web-public:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/test/permonik-web-public:${PERMONIK_TAG}
     build:
       context: .
-      dockerfile: permonik-web/docker/public/public.Dockerfile
+      dockerfile: permonik-web/docker/public/Dockerfile
     networks:
       - permonik
     expose:
@@ -54,7 +54,7 @@ services:
           memory: '24M'
 
   permonik-gateway:
-    image: eu.gcr.io/inqool-1301/permonik/permonik-gateway:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/test/permonik-gateway:${PERMONIK_TAG}
     build:
       context: .
       dockerfile: permonik-gateway/Dockerfile
@@ -89,9 +89,7 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
     volumes:
-      - solr-data:/var/solr
-      - ./permonik-database/cores:/opt/solr/server/solr/mycores:ro
-      - ./permonik-database/init-cores.sh:/docker-entrypoint-initdb.d/init-cores.sh:ro
+      - ./solr-data:/var/solr
 
 volumes:
   solr-data:

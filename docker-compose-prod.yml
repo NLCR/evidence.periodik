@@ -89,9 +89,7 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
     volumes:
-      - solr-data:/var/solr
-      - ./permonik-database/cores:/opt/solr/server/solr/mycores:ro
-      - ./permonik-database/init-cores.sh:/docker-entrypoint-initdb.d/init-cores.sh:ro
+      - ./solr-data:/var/solr
 
 volumes:
   solr-data:
