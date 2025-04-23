@@ -1,0 +1,10 @@
+.htaccess
+!permonik-web/docker
+!permonik-web/apps
+!permonik-web/packages
+!permonik-web/.eslintrc.js
+!permonik-web/.npmrc
+!permonik-web/.prettierrc.js
+!permonik-web/package.json
+!permonik-web/pnpm-lock.yaml
+!permonik-web/pnpm-workspace.yaml

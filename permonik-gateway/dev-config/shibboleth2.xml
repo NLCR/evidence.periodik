@@ -1,0 +1,18 @@
+<ApplicationDefaults entityID="http://permonik-shibboleth-sp/login/shibboleth"
+                     REMOTE_USER="eduPersonPrincipalName eppn">
+
+    <Sessions lifetime="28800" timeout="1800">
+        <SSO entityID="https://localhost:8443/idp/shibboleth">
+            SAML2
+        </SSO>
+        <Logout>SAML2 Local</Logout>
+        <Handler type="Status" Location="/Status"/>
+        <Handler type="Session" Location="/Session" showAttributeValues="true"/>
+    </Sessions>
+
+    <MetadataProvider type="XML" file="/etc/shibboleth/idp-metadata.xml" reloadInterval="7200"/>
+
+<!--    <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="/etc/shibboleth/attribute-map.xml"/>-->
+
+    <CredentialResolver type="File" key="/etc/shibboleth/sp-key.pem" certificate="/etc/shibboleth/sp-cert.pem"/>
+</ApplicationDefaults>

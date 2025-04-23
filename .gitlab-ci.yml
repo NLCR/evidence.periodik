@@ -1,0 +1,138 @@
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+stages:
+  - build
+
+.build:
+  stage: build
+  when: manual
+  allow_failure: false
+  tags:
+    - docker
+  script:
+    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:latest'
+  variables:
+    DOCKERFILE: Dockerfile
+
+.buildWeb:
+  stage: build
+  when: manual
+  allow_failure: false
+  tags:
+    - docker
+  script:
+    - cp "$ENV_FILE" permonik-web/.env
+    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:latest'
+  variables:
+    DOCKERFILE: Dockerfile
+
+.buildProd:
+  stage: build
+  when: manual
+  allow_failure: false
+  tags:
+    - docker
+  script:
+    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest'
+  variables:
+    DOCKERFILE: Dockerfile
+
+.buildWebProd:
+  stage: build
+  when: manual
+  allow_failure: false
+  tags:
+    - docker
+  script:
+    - cp "$ENV_FILE" permonik-web/.env
+    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest'
+  variables:
+    DOCKERFILE: Dockerfile
+
+
+build_permonik_api_test:
+  extends: .build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "test"'
+      when: manual
+  variables:
+    COMPONENT: permonik-api
+    COMPONENT_NAME: permonik-api
+
+build_permonik_gateway_test:
+  extends: .build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "test"'
+      when: manual
+  variables:
+    COMPONENT: permonik-gateway
+    COMPONENT_NAME: permonik-gateway
+
+build_permonik_web_admin_test:
+  extends: .buildWeb
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "test"'
+      when: manual
+  variables:
+    COMPONENT: permonik-web
+    DOCKERFILE: admin/Dockerfile
+    COMPONENT_NAME: permonik-web-admin
+
+build_permonik_web_public_test:
+  extends: .buildWeb
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "test"'
+      when: manual
+  variables:
+    COMPONENT: permonik-web
+    DOCKERFILE: public/Dockerfile
+    COMPONENT_NAME: permonik-web-public
+
+### PROD SECTION
+
+build_permonik_api_prod:
+  extends: .buildProd
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "prod"'
+      when: manual
+  variables:
+    COMPONENT: permonik-api
+    COMPONENT_NAME: permonik-api
+
+build_permonik_gateway_prod:
+  extends: .buildProd
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "prod"'
+      when: manual
+  variables:
+    COMPONENT: permonik-gateway
+    COMPONENT_NAME: permonik-gateway
+
+build_permonik_web_admin_prod:
+  extends: .buildWebProd
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "prod"'
+      when: manual
+  variables:
+    COMPONENT: permonik-web
+    DOCKERFILE: admin/Dockerfile
+    COMPONENT_NAME: permonik-web-admin
+
+build_permonik_web_public_prod:
+  extends: .buildWebProd
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "prod"'
+      when: manual
+  variables:
+    COMPONENT: permonik-web
+    DOCKERFILE: public/Dockerfile
+    COMPONENT_NAME: permonik-web-public

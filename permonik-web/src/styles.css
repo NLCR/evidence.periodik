@@ -1,0 +1,19 @@
+body {
+  background-color: #f5f5f5 !important;
+}
+
+/*.MuiInputBase-input {*/
+/*    font-size: 12px !important;*/
+/*}*/
+
+@media (min-width: 1536px) {
+  .MuiContainer-maxWidthXl {
+    max-width: 1800px !important;
+  }
+}
+
+@media (min-width: 2000px) {
+  .MuiContainer-maxWidthXl {
+    max-width: 2000px !important;
+  }
+}
