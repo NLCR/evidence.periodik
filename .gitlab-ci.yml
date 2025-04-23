@@ -17,6 +17,20 @@ stages:
   variables:
     DOCKERFILE: Dockerfile
 
+.buildWeb:
+  stage: build
+  when: manual
+  allow_failure: false
+  tags:
+    - docker
+  script:
+    - cp "$ENV_FILE" permonik-web/.env
+    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:latest .'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/$COMPONENT_NAME:latest'
+  variables:
+    DOCKERFILE: Dockerfile
+
 .buildProd:
   stage: build
   when: manual
@@ -24,6 +38,20 @@ stages:
   tags:
     - docker
   script:
+    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
+    - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest'
+  variables:
+    DOCKERFILE: Dockerfile
+
+.buildWebProd:
+  stage: build
+  when: manual
+  allow_failure: false
+  tags:
+    - docker
+  script:
+    - cp "$ENV_FILE" permonik-web/.env
     - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest'
@@ -50,7 +78,7 @@ build_permonik_gateway:
     COMPONENT_NAME: permonik-gateway
 
 build_permonik_web_admin:
-  extends: .build
+  extends: .buildWeb
   rules:
     - if: '$CI_COMMIT_BRANCH == "migration"'
       when: manual
@@ -60,7 +88,7 @@ build_permonik_web_admin:
     COMPONENT_NAME: permonik-web-admin
 
 build_permonik_web_public:
-  extends: .build
+  extends: .buildWeb
   rules:
     - if: '$CI_COMMIT_BRANCH == "migration"'
       when: manual
@@ -90,20 +118,17 @@ build_permonik_gateway_prod:
     COMPONENT_NAME: permonik-gateway
 
 build_permonik_web_admin_prod:
-  extends: .buildProd
+  extends: .buildWebProd
   rules:
     - if: '$CI_COMMIT_BRANCH == "migration"'
       when: manual
   variables:
     COMPONENT: permonik-web
-    DOCKERFILE: permonik-web/docker/admin/Dockerfile
+    DOCKERFILE: admin/Dockerfile
     COMPONENT_NAME: permonik-web-admin
-  script:
-    - cp "$ENV_FILE" permonik-web/.env
-    - docker build -f $DOCKERFILE -t $COMPONENT_NAME .
 
 build_permonik_web_public_prod:
-  extends: .buildProd
+  extends: .buildWebProd
   rules:
     - if: '$CI_COMMIT_BRANCH == "migration"'
       when: manual
