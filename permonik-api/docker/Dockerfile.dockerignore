@@ -1,0 +1,12 @@
+*
+!settings.gradle
+!gradle.properties
+!lombok.config
+
+!permonik-api/docker
+!permonik-api/src
+!permonik-api/build.gradle
+!permonik-api/settings.gradle
+!permonik-api/gradle.properties
+!permonik-api/lombok.config
+

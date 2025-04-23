@@ -1,0 +1,98 @@
+services:
+  permonik-api:
+    image: eu.gcr.io/inqool-1301/permonik/prod/permonik-api:${PERMONIK_TAG}
+    depends_on:
+      - permonik-database
+    build:
+      context: .
+      dockerfile: permonik-api/docker/Dockerfile
+    networks:
+      - permonik
+    expose:
+      - 8080
+    deploy:
+      resources:
+        reservations:
+          memory: '1024M'
+        limits:
+          memory: '2048M'
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      TZ: "Europe/Prague"
+      SERVER_PORT: "8080"
+
+  permonik-web-admin:
+    image: eu.gcr.io/inqool-1301/permonik/prod/permonik-web-admin:${PERMONIK_TAG}
+    build:
+      context: .
+      dockerfile: permonik-web/docker/admin/Dockerfile
+    networks:
+      - permonik
+    expose:
+      - 8080
+    deploy:
+      resources:
+        reservations:
+          memory: '12M'
+        limits:
+          memory: '24M'
+
+  permonik-web-public:
+    image: eu.gcr.io/inqool-1301/permonik/prod/permonik-web-public:${PERMONIK_TAG}
+    build:
+      context: .
+      dockerfile: permonik-web/docker/public/Dockerfile
+    networks:
+      - permonik
+    expose:
+      - 8080
+    deploy:
+      resources:
+        reservations:
+          memory: '12M'
+        limits:
+          memory: '24M'
+
+  permonik-gateway:
+    image: eu.gcr.io/inqool-1301/permonik/prod/permonik-gateway:${PERMONIK_TAG}
+    build:
+      context: .
+      dockerfile: permonik-gateway/Dockerfile
+    networks:
+      - permonik
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        reservations:
+          memory: '96M'
+        limits:
+          memory: '192M'
+    volumes:
+      - /opt/shibboleth-sp-config:/etc/shibboleth:ro
+      - /var/log/supervisor:/var/log/supervisor
+      - /var/log/apache2:/var/log/apache2
+      - /var/log/shibboleth:/var/log/shibboleth
+
+  permonik-database:
+    image: solr:9.7.0
+    networks:
+      - permonik
+    ports:
+      - "8983:8983"
+    deploy:
+      resources:
+        reservations:
+          memory: '3072M'
+        limits:
+          memory: '4096M'
+    environment:
+      SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
+    volumes:
+      - ./solr-data:/var/solr
+
+volumes:
+  solr-data:
+
+networks:
+  permonik:

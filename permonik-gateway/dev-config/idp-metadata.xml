@@ -1,0 +1,104 @@
+<!--
+ This is example metadata only. Do *NOT* supply it as is without review,
+and do *NOT* provide it in real time to your partners.
+This metadata is not dynamic - it will not change as your configuration changes.
+On Demand Metadata Generation available from the metadatagen plugin.
+-->
+<md:EntityDescriptor entityID="http://permonik-shibboleth-idp:8080/idp/shibboleth" xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+        <md:Extensions>
+            <shibmd:Scope regexp="false">localhost</shibmd:Scope>
+            <mdui:UIInfo>
+                <mdui:DisplayName xml:lang="en">Local Shibboleth IdP</mdui:DisplayName>
+                <mdui:Description xml:lang="en">Local development IdP on localhost</mdui:Description>
+                <!--        <mdui:Logo xml:lang="en" width="80" height="80">https://idp.example.org/path/to/logo.png</mdui:Logo>-->
+            </mdui:UIInfo>
+        </md:Extensions>
+        <md:KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIIEJzCCAo+gAwIBAgIUf/QEcI/8IK90e4yf6Kk26AZhzsAwDQYJKoZIhvcNAQELBQAwGjEYMBYG
+                        A1UEAwwPaWRwLmV4YW1wbGUub3JnMB4XDTI0MTAyNTExNDE0M1oXDTQ0MTAyNTExNDE0M1owGjEY
+                        MBYGA1UEAwwPaWRwLmV4YW1wbGUub3JnMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA
+                        vnMSojoCPiJ2D+MeQCtfhZAf1GaG5KWf6yRB7V+kBwLE4swZhWlKbjgT6rIF/jP249S6HwME/bnh
+                        KqiYbL3wMyIKoE33k9mFwx4VyXZriR93b0JrmgWKEb/X3WVPevNLe1rH4zPscAlgKtRIv4RIJZdQ
+                        ePWRk8Gl+egvdFCTzCvRQWHN+NU7In1rjSn7lZKpe0QEiNhyOli5JYjzrExwVS2+AKqBWC3igOcy
+                        gWQb1KeJ7/7vw4Hoi6CpYeHEMcYclbjGEcVibbsNtm6a9OC6tRwoU9MsC7YiztljcvxFX3N+Ej/y
+                        XTTc8nP9Ok8Gh4FTFfNMeYafNb03Kq+ndhqSNkRFg3SHoKUI4iqRyXMWddLDGFAoWb6NHZjfeR/h
+                        45ZhpH407kWh+aIooQK+VRMSozJ/FBOY35tYE4iycIqkuHrOJVCSltrVb33efFkwwz/JIUEKqPqp
+                        Rup5BIaPKR8ozb+MNNkWeBIIEiHUun8fLFaKTyilfIUtZ8C8AiiDfLRfAgMBAAGjZTBjMB0GA1Ud
+                        DgQWBBSJwvWuie9EZMVeGcZlVHC1PeceSjBCBgNVHREEOzA5gg9pZHAuZXhhbXBsZS5vcmeGJmh0
+                        dHBzOi8vaWRwLmV4YW1wbGUub3JnL2lkcC9zaGliYm9sZXRoMA0GCSqGSIb3DQEBCwUAA4IBgQCw
+                        i5ZeNrZE7JHwSxQnzf6u8zM98SwiDlsuwce5g7+/rvbtz+pxmuqlRN16nk7chyqavN08ZfT9FBSM
+                        LfroCAu2BRxtF7cocL0WjSHwCbUzA4Jjr00/pOBVJlAiAv07e8omXYvfYjy1tmaTMERNZMf3jIGC
+                        jWLmX7bE0iDLjPsELDelpCPRhNmAKMfzjjqNsczgPKeOag0B1vkZ8qzvV45q9JAiG+hbt1LvspsD
+                        ws7+MXhWRxc4zVQbbNHk2JvWcryJFabBtx0b/84QpR17RyrEkOYy2L5XzDsUg5U8UHM3nvMWxK0B
+                        RFotdkOCR+wFm2OtkAx4bEnn1Snk4fTvri1xsPJoee/SAZY45E6qxCquz0maLOIuVvqvBBLaYpk7
+                        SDK/ocV/zXcT570MFKEyq4Jw6ZLe2HpZ8bEBMI06WiGegCMNm8wkOpxOy3PRZ93nMFj1CNvGFG2Z
+                        o3IHrHI5gtYyy8IhxAAFd6b5YJaVz7yYDy/6Rosfjg5pWZ/6RYP3OhA=
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </md:KeyDescriptor>
+        <md:KeyDescriptor use="signing">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIIEJzCCAo+gAwIBAgIUNP6CD+eL+b59eSfg4u2OGKBFx5QwDQYJKoZIhvcNAQELBQAwGjEYMBYG
+                        A1UEAwwPaWRwLmV4YW1wbGUub3JnMB4XDTI0MTAyNTExNDEzOFoXDTQ0MTAyNTExNDEzOFowGjEY
+                        MBYGA1UEAwwPaWRwLmV4YW1wbGUub3JnMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA
+                        3RYsrQh3m4MEL8VfAxIG/s7f5oUQM5Q3gqjfJJfciq2Ect60YWegcR3MFZI1OhQuZYluZvWhmgNg
+                        6D5n/CNavBMESpSAbrFLeR6zBogaPC7U/FJSgUlFH1QqXzQC3ybFlmV9hMsRd3UDS5Vn4N5AO/hL
+                        Yam+sxl0F3OM76hPPQow9AAElOpgqYWygOLwmnJADBmo9HWgorhwJ68V6H0O3YDOcLgO2+reHckD
+                        4kieOtd8eIfGi2GBHA9bQzZ9Q3HquCE5HIat0ffBh2/OsXKnKkpYlRIDlSdxmoF/C2TtjZknwx5R
+                        b5tfX82UIOL1M+zILfRwuv+eT28xYNM9tvqz0FnJaZTNX5y9e90FnQ/GbIOpVz1g0a6cG8bq2SGg
+                        tXn03mLAp1pp1e6hk4SGXRd0+8/of5iIePkQ6Az3e/QFzQjv2SdxlPboJEBs3YABDwS/FnAxrqSI
+                        nGMaDWazjpFOUspCl+0u2aBNpYtVGb/k0Oh9wkHom7PYNthIY/MRUvlRAgMBAAGjZTBjMB0GA1Ud
+                        DgQWBBQJm5aOTUK/JMMFXQd2YiWwu92DvTBCBgNVHREEOzA5gg9pZHAuZXhhbXBsZS5vcmeGJmh0
+                        dHBzOi8vaWRwLmV4YW1wbGUub3JnL2lkcC9zaGliYm9sZXRoMA0GCSqGSIb3DQEBCwUAA4IBgQCH
+                        anrHmrL5jL1Lym0k3n7oZVuFyckm1O0E8Hq3SnxbWvx8lDF68kv8RL52uqFBoXBguevbpGGToXr3
+                        gpYrTfaHX9zSWs1puWegKpzG5J0nRaD1xy86wk8O2Ls5EwxeDssmyTvEumwRSwpDo0NAp+XE22pq
+                        82G0PxLveaqLLpPRcfZ9PQux1ra7icTpEixAzavTQqLcW0rr280G9/uyJ03KW+VBb1o9YH2z49OV
+                        /FGaYPi7oyBj9cI2A8M99yPSV3k7YjPT2ibt3WT+y8/zK3ChU1eH7DPIkm99+dTLlMZKftmjspR8
+                        QqQcv+ZR3BIdjbzgBEjH87MIerYwWBWPZS0fMEek2JBtbizbQE321qnN0D49pcF/KW47rYBCLKRW
+                        HQlYSYvd0o+SpUjHz9JCrhhap5AUw+k4Y+3rZgYNjBlF0ySwvxKHrVbPqS5t6gFc46TDET0PQaY0
+                        WXgeu5kyUjTGqP7gfrpz57GijNg04LxOTnSEd4J47rNmNATtPNeiVsc=
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </md:KeyDescriptor>
+        <md:KeyDescriptor use="encryption">
+            <ds:KeyInfo>
+                <ds:X509Data>
+                    <ds:X509Certificate>
+                        MIIEJzCCAo+gAwIBAgIUUN6rZYCsnOFzqSHZCdW/4KvXP+owDQYJKoZIhvcNAQELBQAwGjEYMBYG
+                        A1UEAwwPaWRwLmV4YW1wbGUub3JnMB4XDTI0MTAyNTExNDE0MFoXDTQ0MTAyNTExNDE0MFowGjEY
+                        MBYGA1UEAwwPaWRwLmV4YW1wbGUub3JnMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA
+                        gtEmr5KectPlZbE87hFZQ6UVSJ4J/sBam0LxGzLLsFX5ON+kUSPQGBMorLr4ZEwd7H5hQ5IBUoca
+                        EJ/gJ9Sc3pabFaieNs8hE3YZC/F/uJgg7KnD0FT2l0VPHIAr8gDL4uunrrfk7Gkd/73aQT/TXqRn
+                        le9gqE1pK9z+T36+PNv1rK8ckDrH3xtE0Ab3lcWRek0bOtYVlIxkUBss+6nWe15gxHboE8zSIOqZ
+                        PVLmqSt5V0ZxEUOMhmYb9/xlbJKhyKY9K4wK82tJoEa32E/5qU0JNHkYgfHUGR1SUmEgXo4KEGk7
+                        +V9KztXiOuwza1nhvXayrnqeVJLufUyYYkSxov1Hk4oCuqqBiQW0SQIkcfc9ItGXbVOJOvVzv5a3
+                        ToHNQsTKuK9OihPZyp331NdjClSs/2OwtEkB8/L0yWoz1zbeqgw5BLa2pT6A+cjn7O9qAvIdHgWF
+                        4I09daHKRpXW3ReXF1vWWRp9qT2o+wh3oM7Z8wI7bBnTIhTJCP0/Qu/FAgMBAAGjZTBjMB0GA1Ud
+                        DgQWBBRSNwpXfDVIEzvWgUX4dayG3TV58zBCBgNVHREEOzA5gg9pZHAuZXhhbXBsZS5vcmeGJmh0
+                        dHBzOi8vaWRwLmV4YW1wbGUub3JnL2lkcC9zaGliYm9sZXRoMA0GCSqGSIb3DQEBCwUAA4IBgQAf
+                        wilUz1fEsDqyYR0/wK4eWrtGmXJsiNz4Ianz8d8CKP3ohba8Qm67bomtEwYE3Bi36xzAUhL5L454
+                        ap09dlssDG3tj72OCyhFuGQCpfbeMwK8lYbqy7ZAckGjWFtaaoR8CDgJ3SYrmgeskpPZJGV5YTNv
+                        atJOp4FJQiCicYWlW6E3v6qMTcx6RHJj8zWnlpfUgG7kuI7acrMBY+JDN4seTQcWz5KFMw4Uwn4G
+                        rWzZlnovEODs8Ydm6SYzQfd/Hf5dahPfOAcXBKSCFXiBFTIiLdQ+cA1pgvYP6BAUTZ1e8zMRn18d
+                        QKcDWQVxS6urlwRmitpBY1297gmGDLv0r+KIwOS3TQNjhEOXo3/Ok0jd5B5Pf5O9S4tuoE6w1ckI
+                        7vh1apLOuQrpScUc+7Glbjq0doUjN9K8n8BeFKTOvyXx2RNndwav01uuBB+4UimzxnaidEBrJcfB
+                        KAyONBIApuqSLx7t+U2+er19uVy97s4t8Tnj721wEoRk4WnB1r2Xkbw=
+                    </ds:X509Certificate>
+                </ds:X509Data>
+            </ds:KeyInfo>
+        </md:KeyDescriptor>
+        <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="http://permonik-shibboleth-idp:8080/idp/profile/SAML2/SOAP/ArtifactResolution" />
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="http://permonik-shibboleth-idp:8080/idp/profile/SAML2/POST-SimpleSign/SSO" />
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="http://permonik-shibboleth-idp:8080/idp/profile/SAML2/Redirect/SSO" />
+        <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://permonik-shibboleth-idp:8080/idp/profile/SAML2/POST/SSO" />
+    </md:IDPSSODescriptor>
+
+</md:EntityDescriptor>
