@@ -52,6 +52,7 @@ SentryInit({
   },
 })
 
+console.log('Runtime licence key:', VITE_MUI_LICENCE_KEY)
 LicenseInfo.setLicenseKey(VITE_MUI_LICENCE_KEY)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
