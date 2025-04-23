@@ -96,7 +96,7 @@ build_permonik_web_admin_prod:
       when: manual
   variables:
     COMPONENT: permonik-web
-    DOCKERFILE: admin/Dockerfile
+    DOCKERFILE: permonik-web/docker/admin/Dockerfile
     COMPONENT_NAME: permonik-web-admin
   script:
     - cp "$ENV_FILE" permonik-web/.env
