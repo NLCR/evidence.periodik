@@ -35,16 +35,16 @@ public class VolumeController {
         volumeService.updateVolumeWithSpecimens(id, editableVolumeWithSpecimensDTO);
     }
 
-    @Operation(summary = "Deletes existing volume with specimens")
-    @DeleteMapping("/{id}")
-    public void deleteVolumeWithSpecimens(@PathVariable String id) throws SolrServerException, IOException {
-        volumeService.deleteVolumeWithSpecimens(id);
-    }
-
     @Operation(summary = "Updates existing volume with overgenerated specimens")
     @PutMapping("/{id}/overgenerated")
     public void updateOvergeneratedVolumeWithSpecimens(@PathVariable String id, @RequestBody EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
         volumeService.updateOvergeneratedVolumeWithSpecimens(id, editableVolumeWithSpecimensDTO);
+    }
+
+    @Operation(summary = "Deletes existing volume with specimens")
+    @DeleteMapping("/{id}")
+    public void deleteVolumeWithSpecimens(@PathVariable String id) throws SolrServerException, IOException {
+        volumeService.deleteVolumeWithSpecimens(id);
     }
 
 

@@ -2,7 +2,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import React, { FC, useEffect, useMemo, useState } from 'react'
+import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react'
 import SaveIcon from '@mui/icons-material/Save'
 import SaveAsIcon from '@mui/icons-material/SaveAs'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
@@ -141,7 +141,7 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
 
   const actions = useMemo(() => {
     const actionsArray: {
-      icon: JSX.Element
+      icon: ReactNode
       name: string
       color: 'primary' | 'secondary' | 'error'
       onClick: () => void

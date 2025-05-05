@@ -7,7 +7,7 @@ import { captureException, withScope } from '@sentry/react'
 // Setup queryClient
 export const queryClient = new QueryClient({
   mutationCache: new MutationCache({
-    onError: (err, _variables, _context, mutation) => {
+    onError: (err: unknown, _variables, _context, mutation) => {
       if (err instanceof HTTPError && err.response.status === 403) {
         return
       }
@@ -27,7 +27,7 @@ export const queryClient = new QueryClient({
     },
   }),
   queryCache: new QueryCache({
-    onError: (err, query) => {
+    onError: (err: unknown, query) => {
       if (err instanceof HTTPError && err.response.status === 403) {
         return
       }

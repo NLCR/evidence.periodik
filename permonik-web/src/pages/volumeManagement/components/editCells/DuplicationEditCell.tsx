@@ -21,13 +21,17 @@ const DuplicationEditCell: FC<DuplicationCellProps> = ({ row, canEdit }) => {
   const duplicateRow = () => {
     const specimensState = useVolumeManagementStore.getState().specimensState
     const specimensStateClone = clone(specimensState)
-    const copiedSpecimen = duplicatePartialSpecimen(row)
+    const duplicatedSpecimen = duplicatePartialSpecimen(row)
     const originalSpecimenIndex = specimensState.findIndex(
       (s) => s.id === row.id
     )
 
     if (originalSpecimenIndex >= 0) {
-      specimensStateClone.splice(originalSpecimenIndex + 1, 0, copiedSpecimen)
+      specimensStateClone.splice(
+        originalSpecimenIndex + 1,
+        0,
+        duplicatedSpecimen
+      )
       specimensActions.setSpecimensState(specimensStateClone, true)
     }
   }

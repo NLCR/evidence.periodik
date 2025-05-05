@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 import clone from 'lodash/clone'
 import { useTranslation } from 'react-i18next'
 import { useVolumeManagementStore } from '../slices/useVolumeManagementStore'
-import { VolumeSchema } from '../schema/volume'
+import { TEditableVolume, VolumeSchema } from '../schema/volume'
 import { SpecimenSchema, TEditableSpecimen } from '../schema/specimen'
 import {
   useCreateVolumeWithSpecimensMutation,
@@ -14,10 +14,11 @@ import {
 import { TEdition } from '../schema/edition'
 import { BACK_META_TITLE_ID } from '../utils/constants'
 import { generateVolumeUrlWithParams } from '../utils/generateVolumeUrlWithParams'
-import { copySpecimen, repairOrCreateSpecimen } from '../utils/specimen'
-import { duplicateVolume, repairVolume } from '../utils/volume'
+import { repairOrCreateSpecimen } from '../utils/specimen'
+import { repairVolume } from '../utils/volume'
 import { waitFor } from '../utils/waitFor'
 import i18next from '../i18next'
+import { v4 as uuid } from 'uuid'
 
 const useVolumeManagementActions = (editions: TEdition[]) => {
   const { t, i18n } = useTranslation()
@@ -201,16 +202,57 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
 
   const doDuplicate = async () => {
     try {
-      const data = doValidation(false)
+      const { repairedVolume, repairedSpecimens } = doValidation(false)
       setStateHasUnsavedData(false)
 
       await waitFor(
         () => !useVolumeManagementStore.getState().stateHasUnsavedData
       )
 
-      const duplicatedVolume = duplicateVolume(data.repairedVolume)
-      const duplicatedSpecimens = data.repairedSpecimens.map((s) =>
-        copySpecimen(s, data.repairedVolume)
+      const duplicatedVolume: TEditableVolume = {
+        id: uuid(),
+        barCode: '',
+        dateFrom: repairedVolume.dateFrom,
+        dateTo: repairedVolume.dateTo,
+        metaTitleId: repairedVolume.metaTitleId,
+        subName: repairedVolume.subName,
+        mutationId: repairedVolume.mutationId,
+        periodicity: repairedVolume.periodicity,
+        firstNumber: repairedVolume.firstNumber,
+        lastNumber: repairedVolume.lastNumber,
+        note: '',
+        showAttachmentsAtTheEnd: repairedVolume.showAttachmentsAtTheEnd,
+        signature: repairedVolume.signature,
+        ownerId: repairedVolume.ownerId,
+        year: repairedVolume.year,
+        mutationMark: '',
+      }
+      const duplicatedSpecimens: TEditableSpecimen[] = repairedSpecimens.map(
+        (specimen) => ({
+          id: uuid(),
+          metaTitleId: specimen.metaTitleId,
+          volumeId: duplicatedVolume.id,
+          barCode: '',
+          numExists: specimen.numExists,
+          numMissing: specimen.numMissing,
+          ownerId: duplicatedVolume.ownerId,
+          damageTypes: [],
+          damagedPages: [],
+          missingPages: [],
+          note: '',
+          name: specimen.name,
+          subName: specimen.subName,
+          editionId: specimen.editionId,
+          mutationId: specimen.mutationId,
+          mutationMark: specimen.mutationMark,
+          publicationDate: specimen.publicationDate,
+          publicationDateString: specimen.publicationDateString,
+          number: specimen.number,
+          attachmentNumber: specimen.attachmentNumber,
+          pagesCount: specimen.pagesCount,
+          isAttachment: specimen.isAttachment,
+          duplicated: true,
+        })
       )
 
       navigate(
