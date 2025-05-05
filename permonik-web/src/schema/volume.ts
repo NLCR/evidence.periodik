@@ -76,12 +76,6 @@ export const EditableVolumeSchema = AuditableSchema.extend({
   mutationMark: z.string(),
 })
 
-// export const EditableVolumeSchema = VolumeSchema.extend({
-//   firstNumber: z.string().or(z.number()),
-//   lastNumber: z.string().or(z.number()),
-//   year: z.string().or(z.number()),
-// }).partial({ id: true, metaTitleId: true, mutationId: true, ownerId: true })
-
 // for final check before sending request to BE
 export const CreatableVolumeSchema = VolumeSchema.partial({ id: true })
 

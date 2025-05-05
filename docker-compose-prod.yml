@@ -89,7 +89,7 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
     volumes:
-      - ./solr-data:/var/solr
+      - /data/solr:/var/solr
 
 
 networks:
