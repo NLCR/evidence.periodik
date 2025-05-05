@@ -70,6 +70,19 @@ public class VolumeService implements VolumeDefinition {
         return volumeList.isEmpty() ? Optional.empty() : Optional.of(volumeList.getFirst());
     }
 
+    private Optional<Volume> getVolumeByBarCode(String barCode) throws SolrServerException, IOException {
+        SolrQuery solrQuery = new SolrQuery("*:*");
+        solrQuery.addFilterQuery(BAR_CODE_FIELD + ":\"" + barCode + "\"");
+        solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery.setRows(1);
+
+        QueryResponse response = solrClient.query(VOLUME_CORE_NAME, solrQuery);
+
+        List<Volume> volumeList = response.getBeans(Volume.class);
+
+        return volumeList.isEmpty() ? Optional.empty() : Optional.of(volumeList.getFirst());
+    }
+
 
     public VolumeDetailDTO getVolumeDetailById(String volumeId, Boolean onlyPublic) throws SolrServerException, IOException {
         //TODO: check isPublic when not logged in
@@ -144,7 +157,15 @@ public class VolumeService implements VolumeDefinition {
         }
     }
 
-    private void updateVolume(Volume volume) {
+    private void updateVolume(Volume volume) throws SolrServerException, IOException {
+        Optional<Volume> checkOtherVolumes = getVolumeByBarCode(volume.getBarCode());
+
+        if (checkOtherVolumes.isPresent()) {
+            if(!checkOtherVolumes.get().getId().equals(volume.getId())){
+                throw new RuntimeException("Volume with barcode " + volume.getBarCode() +  " already exists");
+            }
+        }
+
         try {
             volume.preUpdate();
 
@@ -202,6 +223,21 @@ public class VolumeService implements VolumeDefinition {
 
     }
 
+    public void updateOvergeneratedVolumeWithSpecimens(String volumeId, EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
+        if (getVolumeDTOById(volumeId).isEmpty()) {
+            throw new RuntimeException("Volume " + volumeId + " not found");
+        }
+
+        // delete old specimens
+        List<Specimen> oldSpecimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
+        specimenService.deleteSpecimens(oldSpecimens);
+
+        updateVolume(editableVolumeWithSpecimensDTO.volume());
+
+        specimenService.createSpecimens(editableVolumeWithSpecimensDTO.specimens());
+
+    }
+
     public void deleteVolumeWithSpecimens(String volumeId) throws SolrServerException, IOException {
         Optional<Volume> volumeOpt = getVolumeById(volumeId);
 
@@ -215,21 +251,6 @@ public class VolumeService implements VolumeDefinition {
         specimenService.deleteSpecimens(specimens);
 
         deleteVolume(volume);
-
-    }
-
-    public void updateOvergeneratedVolumeWithSpecimens(String volumeId, EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
-        if (getVolumeDTOById(volumeId).isEmpty()) {
-            throw new RuntimeException("Volume " + volumeId + " not found");
-        }
-
-        // delete old specimens
-        List<Specimen> oldSpecimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
-        specimenService.deleteSpecimens(oldSpecimens);
-
-        updateVolume(editableVolumeWithSpecimensDTO.volume());
-
-        specimenService.createSpecimens(editableVolumeWithSpecimensDTO.specimens());
 
     }
 }
