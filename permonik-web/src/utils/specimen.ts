@@ -36,6 +36,7 @@ export const filterSpecimen = (
     duplicated: specimen.duplicated,
   }
 }
+
 export const repairOrCreateSpecimen = (
   specimen: Partial<TEditableSpecimen>,
   volume: TVolume
@@ -66,6 +67,7 @@ export const repairOrCreateSpecimen = (
     isAttachment: specimen.isAttachment ?? false,
   }
 }
+
 export const duplicatePartialSpecimen = (
   specimen: Partial<TEditableSpecimen>
 ): TEditableSpecimen => {
@@ -95,36 +97,7 @@ export const duplicatePartialSpecimen = (
     duplicated: true,
   }
 }
-export const copySpecimen = (
-  specimen: TSpecimen,
-  volume: TVolume
-): TEditableSpecimen => {
-  return {
-    id: uuid(),
-    metaTitleId: specimen.metaTitleId,
-    volumeId: volume.id,
-    barCode: '',
-    numExists: specimen.numExists,
-    numMissing: specimen.numMissing,
-    ownerId: volume.ownerId,
-    damageTypes: [],
-    damagedPages: [],
-    missingPages: [],
-    note: '',
-    name: specimen.name,
-    subName: specimen.subName,
-    editionId: specimen.editionId,
-    mutationId: specimen.mutationId,
-    mutationMark: specimen.mutationMark,
-    publicationDate: specimen.publicationDate,
-    publicationDateString: specimen.publicationDateString,
-    number: specimen.number,
-    attachmentNumber: specimen.attachmentNumber,
-    pagesCount: specimen.pagesCount,
-    isAttachment: specimen.isAttachment,
-    duplicated: true,
-  }
-}
+
 export const checkAttachmentChange = (
   editions: TEdition[],
   specimen: TEditableSpecimen

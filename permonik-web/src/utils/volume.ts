@@ -37,23 +37,3 @@ export const repairVolume = (
     mutationMark: volume.mutationMark.trim() ?? '',
   }
 }
-export const duplicateVolume = (volume: TVolume): TEditableVolume => {
-  return {
-    id: uuid(),
-    barCode: '',
-    dateFrom: volume.dateFrom,
-    dateTo: volume.dateTo,
-    metaTitleId: volume.metaTitleId,
-    subName: volume.subName,
-    mutationId: volume.mutationId,
-    periodicity: volume.periodicity,
-    firstNumber: volume.firstNumber,
-    lastNumber: volume.lastNumber,
-    note: '',
-    showAttachmentsAtTheEnd: volume.showAttachmentsAtTheEnd,
-    signature: volume.signature,
-    ownerId: volume.ownerId,
-    year: volume.year,
-    mutationMark: '',
-  }
-}
