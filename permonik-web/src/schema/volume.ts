@@ -76,9 +76,6 @@ export const EditableVolumeSchema = AuditableSchema.extend({
   mutationMark: z.string(),
 })
 
-// for final check before sending request to BE
-export const CreatableVolumeSchema = VolumeSchema.partial({ id: true })
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const VolumeDetailSchema = z.object({
   volume: VolumeSchema,
@@ -109,6 +106,5 @@ export type TEditableVolumePeriodicity = z.infer<
 >
 export type TVolume = z.infer<typeof VolumeSchema>
 export type TEditableVolume = z.infer<typeof EditableVolumeSchema>
-export type TCreatableVolume = z.infer<typeof CreatableVolumeSchema>
 export type TVolumeDetail = z.infer<typeof VolumeDetailSchema>
 export type TVolumeOverviewStats = z.infer<typeof VolumeOverviewStatsSchema>
