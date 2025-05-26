@@ -8,6 +8,7 @@ import { useMetaTitleOverviewListQuery } from '../api/metaTitle'
 import Loader from '../components/Loader'
 import ShowError from '../components/ShowError'
 import ShowInfoMessage from '../components/ShowInfoMessage'
+import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
 
 const Home = () => {
   const { t, i18n } = useTranslation()
@@ -21,10 +22,12 @@ const Home = () => {
           color: blue['900'],
         }}
       >
-        {t('home.title')}
+        {APP_WITH_EDITING_ENABLED ? t('home.title_admin') : t('home.title')}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        {t('home.description')}
+        {APP_WITH_EDITING_ENABLED
+          ? t('home.description_admin')
+          : t('home.description')}
       </Typography>
       {isLoading ? <Loader /> : null}
       {isError && !isLoading ? <ShowError onRetry={refetch} /> : null}
