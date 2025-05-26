@@ -255,12 +255,12 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
               setParams: setParams,
             }}
           >
+            <OwnerFacetGroup />
+            <MutationFacetGroup />
+            <MutationMarkFacetGroup />
+            <EditionFacetGroup />
             <NameFacetGroup />
             <SubnameFacetGroup />
-            <MutationFacetGroup />
-            <EditionFacetGroup />
-            <MutationMarkFacetGroup />
-            <OwnerFacetGroup />
             <DamageTypeFacetGroup />
           </FacetsContext.Provider>
         </Box>
