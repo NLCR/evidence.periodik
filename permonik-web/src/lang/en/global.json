@@ -24,7 +24,8 @@
     "accept": "Accept"
   },
   "helmet": {
-    "title": "Periodicals Register – Research Application"
+    "title": "Periodicals Register – Research Application",
+    "title_admin": "Periodicals Register – Admin Application"
   },
   "home": {
     "header": "Home Page",

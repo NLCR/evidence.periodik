@@ -24,7 +24,8 @@
     "accept": "Potvrdiť"
   },
   "helmet": {
-    "title": "Evidencia periodík – výskumná aplikácia"
+    "title": "Evidencia periodík – výskumná aplikácia",
+    "title_admin": "Evidencia periodík – administrátorská aplikácia"
   },
   "home": {
     "header": "Domovská stránka",

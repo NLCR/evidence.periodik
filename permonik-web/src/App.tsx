@@ -12,6 +12,7 @@ import RoutesManager from './components/RoutesManager'
 import 'dayjs/locale/cs'
 import 'dayjs/locale/sk'
 import 'dayjs/locale/en'
+import { APP_WITH_EDITING_ENABLED } from './utils/constants'
 // import Footer from './components/Footer'
 
 const App = () => {
@@ -32,7 +33,11 @@ const App = () => {
     >
       <HelmetProvider>
         <Helmet>
-          <title>{t('helmet.title')}</title>
+          <title>
+            {APP_WITH_EDITING_ENABLED
+              ? t('helmet.title_admin')
+              : t('helmet.title')}
+          </title>
         </Helmet>
         <RoutesManager />
       </HelmetProvider>

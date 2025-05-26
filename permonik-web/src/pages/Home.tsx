@@ -32,6 +32,7 @@ const Home = () => {
         <Box
           sx={{
             marginTop: 10,
+            paddingBottom: 4,
             justifyContent: 'center',
             display: 'grid',
             gridTemplateColumns: 'repeat(4, minmax(0px, 1fr))',

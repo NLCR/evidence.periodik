@@ -315,6 +315,7 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
             marginTop: '16px',
             display: 'flex',
             justifyContent: 'space-between',
+            gap: '8px',
             alignItems: 'center',
           }}
         >
