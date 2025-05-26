@@ -17,11 +17,10 @@ import { TMetaTitle } from '../../../schema/metaTitle'
 import { useTranslation } from 'react-i18next'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import { TVolumeDetail } from '../../../schema/volume'
-import IconButton from '@mui/material/IconButton'
-import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import { Link, useSearchParams } from 'react-router-dom'
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
+import CollapsableSidebar from '../../../components/CollapsableSidebar'
 
 interface InputDataProps {
   volume: TVolumeDetail
@@ -52,60 +51,50 @@ const InputData: FC<InputDataProps> = ({
   )
 
   const [modalOpened, setModalOpened] = useState(false)
-  const [inputDataSidebarOpened, setInputDataSidebarOpened] = useState(true)
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: inputDataSidebarOpened ? '380px' : '70px',
-        padding: '16px',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        // boxShadow: theme.shadows[1],
-        flexShrink: 0,
-      }}
-    >
+    <CollapsableSidebar>
       <Box
         sx={{
           display: 'flex',
+          flexDirection: 'column',
+          // boxShadow: theme.shadows[1],
           justifyContent: 'space-between',
-          alignItems: 'center',
+          flexShrink: 0,
+          height: '100%',
         }}
       >
-        {inputDataSidebarOpened ? (
-          <Typography
-            sx={{
-              marginBottom: '8px',
-              color: blue['900'],
-              fontWeight: 'bold',
-              fontSize: '24px',
-            }}
-          >
-            {t('volume_overview.volume_information')}
-          </Typography>
-        ) : null}
-        <IconButton
-          onClick={() => setInputDataSidebarOpened((prevState) => !prevState)}
+        <Typography
+          sx={{
+            marginBottom: '8px',
+            color: blue['900'],
+            fontWeight: 'bold',
+            fontSize: '24px',
+          }}
         >
-          <MenuOpenIcon
-            sx={{
-              transition: 'all 0.3s',
-              transform: `rotate(${inputDataSidebarOpened ? '0deg' : '180deg'})`,
-              color: blue['900'],
-              fontSize: '24px',
-            }}
-          />
-        </IconButton>
-      </Box>
-      {inputDataSidebarOpened ? (
-        <>
-          <Table size="small">
+          {t('volume_overview.volume_information')}
+        </Typography>
+
+        <Box
+          sx={{
+            flexGrow: 1,
+            flexShrink: 1,
+            overflowY: 'auto',
+            marginTop: '8px',
+          }}
+        >
+          <Table
+            size="small"
+            sx={{ overflowY: 'auto', flexShrink: 1, flexGrow: 1 }}
+          >
             <TableHead>
               <TableRow>
-                <TableCell>{t('volume_overview.name')}</TableCell>
-                <TableCell>{t('volume_overview.value')}</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>
+                  {t('volume_overview.name')}
+                </TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>
+                  {t('volume_overview.value')}
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -182,38 +171,41 @@ const InputData: FC<InputDataProps> = ({
               </TableRow>
             </TableBody>
           </Table>
-          <ModalContainer
-            onClose={() => setModalOpened(false)}
-            header={t('specimens_overview.volume_overview_modal_link')}
-            opened={modalOpened}
-            closeButton={{
-              callback: () => setModalOpened(false),
-            }}
-          >
-            <VolumeStatsModalContent volumeId={volumeId} />
-          </ModalContainer>
+        </Box>
+        <Button
+          sx={{
+            marginTop: '10px',
+            marginBottom: '10px',
+            flexShrink: 0,
+            flexGrow: 0,
+          }}
+          variant="contained"
+          onClick={() => setModalOpened(true)}
+        >
+          {t('specimens_overview.volume_overview_modal_link')}
+        </Button>
+        {backMetaTitle && (
           <Button
-            sx={{
-              marginTop: '10px',
-              marginBottom: '10px',
-            }}
-            variant="contained"
-            onClick={() => setModalOpened(true)}
+            component={Link}
+            sx={{ flexShrink: 0, flexGrow: 0 }}
+            variant="outlined"
+            to={`/${i18n.resolvedLanguage}/${t('urls.specimens_overview')}/${backMetaTitle}`}
           >
-            {t('specimens_overview.volume_overview_modal_link')}
+            {t('volume_overview.back_to_specimens_overview')}
           </Button>
-          {backMetaTitle?.length ? (
-            <Button
-              component={Link}
-              variant="outlined"
-              to={`/${i18n.resolvedLanguage}/${t('urls.specimens_overview')}/${backMetaTitle}`}
-            >
-              {t('volume_overview.back_to_specimens_overview')}
-            </Button>
-          ) : null}
-        </>
-      ) : null}
-    </Box>
+        )}
+        <ModalContainer
+          onClose={() => setModalOpened(false)}
+          header={t('specimens_overview.volume_overview_modal_link')}
+          opened={modalOpened}
+          closeButton={{
+            callback: () => setModalOpened(false),
+          }}
+        >
+          <VolumeStatsModalContent volumeId={volumeId} />
+        </ModalContainer>
+      </Box>
+    </CollapsableSidebar>
   )
 }
 

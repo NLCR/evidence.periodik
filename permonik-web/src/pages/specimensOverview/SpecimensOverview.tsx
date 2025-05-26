@@ -21,6 +21,7 @@ import Calendar from './components/Calendar'
 import CalendarToolbar from './components/CalendarToolbar'
 import ModalContainer from '../../components/ModalContainer'
 import SynchronizeYearsSwitch from './components/SynchronizeYearsSwitch'
+import CollapsableSidebar from '../../components/CollapsableSidebar'
 
 const Table = React.lazy(() => import('./components/Table'))
 
@@ -89,23 +90,21 @@ const SpecimensOverview = () => {
           style={{ marginBottom: '20px' }}
         />
       </ModalContainer>
-      <Box
-        sx={{
-          // width: '20%',
-          width: '350px',
-          // color: theme.colors.dark[9],
-          padding: '16px',
-          backgroundColor: 'white',
-          textAlign: 'left',
-          borderRadius: '8px',
-          boxShadow: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          flexShrink: 0,
-        }}
-      >
-        <Facets metaTitle={metaTitle} />
-      </Box>
+      <CollapsableSidebar>
+        <Box
+          sx={{
+            textAlign: 'left',
+            padding: '8px',
+            boxShadow: '8px',
+            display: 'flex',
+            flexDirection: 'column',
+            flexShrink: 0,
+            height: '100%',
+          }}
+        >
+          <Facets metaTitle={metaTitle} />
+        </Box>
+      </CollapsableSidebar>
       <Box
         sx={{
           display: 'flex',
