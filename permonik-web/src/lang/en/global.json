@@ -24,12 +24,15 @@
     "accept": "Accept"
   },
   "helmet": {
-    "title": "Periodicals Register – Research Application"
+    "title": "Periodicals Register – Research Application",
+    "title_admin": "Administration of Periodicals Register"
   },
   "home": {
     "header": "Home Page",
     "title": "Periodicals Register",
-    "description": "system for managing and registering periodicals",
+    "title_admin": "Administration of Periodicals Register",
+    "description": "research application",
+    "description_admin": "system for managing and registering periodicals",
     "records": "Records",
     "specimens": "Specimens",
     "mutations": "Mutations",
