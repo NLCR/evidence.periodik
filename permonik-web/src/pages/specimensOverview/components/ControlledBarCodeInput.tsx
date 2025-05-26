@@ -30,6 +30,7 @@ const ControlledBarCodeInput = () => {
 
   return (
     <TextField
+      fullWidth
       size="small"
       value={localInputState}
       onChange={(event) => setLocalInputState(event.target.value)}

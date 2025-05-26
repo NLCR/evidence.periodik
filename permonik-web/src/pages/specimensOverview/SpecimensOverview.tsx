@@ -16,7 +16,7 @@ import ShowError from '../../components/ShowError'
 import ShowInfoMessage from '../../components/ShowInfoMessage'
 import { useSpecimensOverviewStore } from '../../slices/useSpecimensOverviewStore'
 import SpecimenDayDetailExampleImage from '../../assets/images/specimen-day-detail-example.png'
-import Facets from './components/Facets'
+import Facets from './components/facets/Facets'
 import Calendar from './components/Calendar'
 import CalendarToolbar from './components/CalendarToolbar'
 import ModalContainer from '../../components/ModalContainer'
@@ -101,7 +101,9 @@ const SpecimensOverview = () => {
           boxShadow: '8px',
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'space-between',
           flexShrink: 0,
+          height: '100%',
         }}
       >
         <Facets metaTitle={metaTitle} />
