@@ -24,12 +24,15 @@
     "accept": "Potvrdit"
   },
   "helmet": {
-    "title": "Evidence periodik – badatelská aplikace"
+    "title": "Evidence periodik – badatelská aplikace",
+    "title_admin": "Administrace evidence periodik"
   },
   "home": {
     "header": "Domovská stránka",
     "title": "Evidence periodik",
-    "description": "systém pro správu a evidenci periodik",
+    "title_admin": "Administrace evidence periodik",
+    "description": "badatelská aplikace",
+    "description_admin": "systém pro správu a evidenci periodik",
     "records": "Záznamy",
     "specimens": "Exempláře",
     "mutations": "Mutace",
