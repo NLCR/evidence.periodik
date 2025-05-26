@@ -2,7 +2,6 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import Button from '@mui/material/Button'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import React, { Suspense, useState } from 'react'
@@ -22,6 +21,7 @@ import CalendarToolbar from './components/CalendarToolbar'
 import ModalContainer from '../../components/ModalContainer'
 import SynchronizeYearsSwitch from './components/SynchronizeYearsSwitch'
 import CollapsableSidebar from '../../components/CollapsableSidebar'
+import { IconButton } from '@mui/material'
 
 const Table = React.lazy(() => import('./components/Table'))
 
@@ -116,7 +116,7 @@ const SpecimensOverview = () => {
           borderRadius: '8px',
           boxShadow: '8px',
           flexDirection: 'column',
-          // overflow: 'hidden',
+          overflow: 'auto',
         }}
       >
         <Box
@@ -170,17 +170,13 @@ const SpecimensOverview = () => {
                 <CalendarToolbar metaTitle={metaTitle} />
               ) : null}
             </Box>
-            {view === 'calendar' ? (
-              <Button
-                variant="contained"
-                startIcon={<HelpOutlineIcon />}
-                onClick={() => setModalOpened(true)}
-              >
-                {t('specimens_overview.help')}
-              </Button>
-            ) : null}
+            <SynchronizeYearsSwitch />
           </Box>
-          <SynchronizeYearsSwitch />
+          {view === 'calendar' && (
+            <IconButton onClick={() => setModalOpened(true)}>
+              <HelpOutlineIcon />
+            </IconButton>
+          )}
         </Box>
         {view === 'calendar' ? (
           <Calendar metaTitle={metaTitle} />

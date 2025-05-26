@@ -67,6 +67,7 @@ const SynchronizeYearsSwitch = () => {
 
   return (
     <FormControlLabel
+      sx={{ paddingLeft: '8px' }}
       control={
         <Switch
           checked={synchronizeYearsBetweenViews}
