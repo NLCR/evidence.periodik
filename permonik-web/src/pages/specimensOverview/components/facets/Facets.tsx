@@ -8,7 +8,6 @@ import Button from '@mui/material/Button'
 import { DateCalendar } from '@mui/x-date-pickers-pro'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import { blue } from '@mui/material/colors'
-import FacetGroup from './FacetGroup'
 import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
 import { useMutationListQuery } from '../../../../api/mutation'
 import { useEditionListQuery } from '../../../../api/edition'
@@ -20,7 +19,6 @@ import {
 } from '../../../../api/specimen'
 import { TMetaTitle } from '../../../../schema/metaTitle'
 import ShowError from '../../../../components/ShowError'
-import { TSpecimenDamageTypes } from '../../../../schema/specimen'
 import Loader from '../../../../components/Loader'
 import ControlledSlider from '../ControlledSlider'
 import ControlledBarCodeInput from '../ControlledBarCodeInput'
@@ -33,6 +31,7 @@ import MutationMarkFacetGroup from './MutationMarkFacetGroup'
 import OwnerFacetGroup from './OwnerFacetGroup'
 import DamageTypeFacetGroup from './DamageTypeFacetGroup'
 import { FacetsContext } from './FacetsContext'
+import { damageTypes } from '../../../../utils/constants'
 
 type TProps = {
   metaTitle: TMetaTitle
@@ -243,7 +242,19 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
             overflowY: 'scroll',
           })}
         >
-          <FacetsContext.Provider value={}>
+          <FacetsContext.Provider
+            value={{
+              damageTypes: damageTypes,
+              disabled: fetching,
+              editions: editions,
+              facets: facets,
+              languageCode: languageCode,
+              mutations: mutations,
+              owners: owners,
+              params: params,
+              setParams: setParams,
+            }}
+          >
             <NameFacetGroup />
             <SubnameFacetGroup />
             <MutationFacetGroup />
