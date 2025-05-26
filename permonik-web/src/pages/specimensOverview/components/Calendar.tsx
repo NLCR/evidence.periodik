@@ -155,7 +155,7 @@ const Calendar: FC<TProps> = ({ metaTitle }) => {
         marginBottom: '16px',
         height: '100%',
         minWidth: '720px',
-        // overflowY: 'auto',
+        overflowY: 'auto',
       }}
     >
       <ModalContainer
