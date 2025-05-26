@@ -25,6 +25,14 @@ import Loader from '../../../../components/Loader'
 import ControlledSlider from '../ControlledSlider'
 import ControlledBarCodeInput from '../ControlledBarCodeInput'
 import { useLanguageCode } from '../../../../hooks/useLanguageCode'
+import NameFacetGroup from './NameFacetGroup'
+import SubnameFacetGroup from './SubnameFacetGroup'
+import MutationFacetGroup from './MutationFacetGroup'
+import EditionFacetGroup from './EditionFacetGroup'
+import MutationMarkFacetGroup from './MutationMarkFacetGroup'
+import OwnerFacetGroup from './OwnerFacetGroup'
+import DamageTypeFacetGroup from './DamageTypeFacetGroup'
+import { FacetsContext } from './FacetsContext'
 
 type TProps = {
   metaTitle: TMetaTitle
@@ -235,144 +243,15 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
             overflowY: 'scroll',
           })}
         >
-          <FacetGroup
-            disabled={fetching}
-            facets={
-              facets?.names.length
-                ? facets.names
-                : params.names.map((p) => ({ name: p, count: 0 }))
-            }
-            header={t('specimens_overview.name')}
-            onChange={(value) => setParams({ ...params, names: value })}
-            values={params.names}
-          />
-          <FacetGroup
-            disabled={fetching}
-            facets={
-              facets?.subNames.length
-                ? facets.subNames
-                : params.subNames.map((p) => ({ name: p, count: 0 }))
-            }
-            header={t('specimens_overview.sub_name')}
-            onChange={(value) => setParams({ ...params, subNames: value })}
-            values={params.subNames}
-          />
-          <FacetGroup
-            disabled={fetching}
-            facets={
-              facets?.mutationIds.length
-                ? facets.mutationIds.map((m) => ({
-                    name: m.name,
-                    count: m.count,
-                    displayedName: mutations?.find((mc) => mc.id === m.name)
-                      ?.name[languageCode],
-                  }))
-                : params.mutationIds.map((p) => ({
-                    name: p,
-                    count: 0,
-                    displayedName: mutations?.find((mc) => mc.id === p)?.name[
-                      languageCode
-                    ],
-                  }))
-            }
-            header={t('specimens_overview.mutation')}
-            onChange={(value) => setParams({ ...params, mutationIds: value })}
-            values={params.mutationIds}
-          />
-          <FacetGroup
-            disabled={fetching}
-            facets={
-              facets?.editionIds.length
-                ? facets.editionIds.map((m) => ({
-                    name: m.name,
-                    count: m.count,
-                    displayedName: editions?.find((mc) => mc.id === m.name)
-                      ?.name[languageCode],
-                  }))
-                : params.editionIds.map((p) => ({
-                    name: p,
-                    count: 0,
-                    displayedName: editions?.find((mc) => mc.id === p)?.name[
-                      languageCode
-                    ],
-                  }))
-            }
-            header={t('specimens_overview.edition')}
-            onChange={(value) =>
-              setParams({
-                ...params,
-                editionIds: value,
-              })
-            }
-            values={params.editionIds}
-          />
-          <FacetGroup
-            disabled={fetching}
-            facets={
-              facets?.mutationMarks.length
-                ? facets.mutationMarks
-                : params.mutationMarks.map((p) => ({ name: p, count: 0 }))
-            }
-            header={t('specimens_overview.mutation_mark')}
-            onChange={(value) =>
-              setParams({
-                ...params,
-                mutationMarks: value,
-              })
-            }
-            values={params.mutationMarks}
-          />
-          <FacetGroup
-            disabled={fetching}
-            facets={
-              facets?.ownerIds.length
-                ? facets.ownerIds.map((m) => ({
-                    name: m.name,
-                    count: m.count,
-                    displayedName: owners?.find((mc) => mc.id === m.name)
-                      ?.shorthand,
-                  }))
-                : params.ownerIds.map((p) => ({
-                    name: p,
-                    count: 0,
-                    displayedName: owners?.find((mc) => mc.id === p)?.shorthand,
-                  }))
-            }
-            header={t('specimens_overview.owner')}
-            onChange={(value) =>
-              setParams({
-                ...params,
-                ownerIds: value,
-              })
-            }
-            values={params.ownerIds}
-          />
-          <FacetGroup
-            disabled={fetching}
-            facets={
-              facets?.damageTypes.length
-                ? facets.damageTypes.map((m) => ({
-                    name: m.name,
-                    count: m.count,
-                    displayedName: t(`facet_states.${m.name}`),
-                  }))
-                : params.damageTypes.map((p) => ({
-                    name: p,
-                    count: 0,
-                    displayedName: t(
-                      `facet_states.${p as TSpecimenDamageTypes}`
-                    ),
-                  }))
-            }
-            header={t('specimens_overview.damage_types')}
-            onChange={(value) =>
-              setParams({
-                ...params,
-                damageTypes: value,
-              })
-            }
-            values={params.damageTypes}
-          />
+          <FacetsContext.Provider value={}>
+            <NameFacetGroup />
+            <SubnameFacetGroup />
+            <MutationFacetGroup />
+            <EditionFacetGroup />
+            <MutationMarkFacetGroup />
+            <OwnerFacetGroup />
+            <DamageTypeFacetGroup />
+          </FacetsContext.Provider>
         </Box>
         <Divider
           sx={{
