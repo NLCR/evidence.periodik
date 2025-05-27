@@ -1,10 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs, { Dayjs } from 'dayjs'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
-import Button from '@mui/material/Button'
+import { Box, Typography, Divider, Button } from '@mui/material'
 import { DateCalendar } from '@mui/x-date-pickers-pro'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import { blue } from '@mui/material/colors'
@@ -13,16 +10,8 @@ import ShowError from '../../../../components/ShowError'
 import Loader from '../../../../components/Loader'
 import ControlledSlider from '../ControlledSlider'
 import ControlledBarCodeInput from '../ControlledBarCodeInput'
-import NameFacetGroup from './NameFacetGroup'
-import SubnameFacetGroup from './SubnameFacetGroup'
-import MutationFacetGroup from './MutationFacetGroup'
-import EditionFacetGroup from './EditionFacetGroup'
-import MutationMarkFacetGroup from './MutationMarkFacetGroup'
-import OwnerFacetGroup from './OwnerFacetGroup'
-import DamageTypeFacetGroup from './DamageTypeFacetGroup'
-import { FacetsContext } from './FacetsContext'
-import { damageTypes } from '../../../../utils/constants'
-import { useFacetsData } from './api'
+import * as FacetGroups from './facet-groups'
+import { useFacetsContext } from './FacetsContext'
 import { useFacetsStoreData } from './store'
 
 type TProps = {
@@ -31,25 +20,14 @@ type TProps = {
 
 const Facets: FC<TProps> = ({ metaTitle }) => {
   const { t } = useTranslation()
-  const {
-    editions,
-    facets,
-    mutations,
-    owners,
-    specimens,
-    calendarDateFromQuery,
-    languageCode,
-    isError,
-    isFetching,
-  } = useFacetsData(metaTitle)
+  const { specimens, calendarDateFromQuery, isError, isFetching } =
+    useFacetsContext()
   const {
     view,
     calendarDate,
     setCalendarDate,
     lastViewedMetaTitleId,
     setLastViewedMetaTitleId,
-    params,
-    setParams,
     resetAll,
     setSliderRange,
   } = useFacetsStoreData()
@@ -214,27 +192,13 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
             overflowY: 'scroll',
           })}
         >
-          <FacetsContext.Provider
-            value={{
-              damageTypes: damageTypes,
-              disabled: isFetching,
-              editions: editions,
-              facets: facets,
-              languageCode: languageCode,
-              mutations: mutations,
-              owners: owners,
-              params: params,
-              setParams: setParams,
-            }}
-          >
-            <OwnerFacetGroup />
-            <MutationFacetGroup />
-            <MutationMarkFacetGroup />
-            <EditionFacetGroup />
-            <NameFacetGroup />
-            <SubnameFacetGroup />
-            <DamageTypeFacetGroup />
-          </FacetsContext.Provider>
+          <FacetGroups.OwnerFacetGroup />
+          <FacetGroups.MutationFacetGroup />
+          <FacetGroups.MutationMarkFacetGroup />
+          <FacetGroups.EditionFacetGroup />
+          <FacetGroups.NameFacetGroup />
+          <FacetGroups.SubnameFacetGroup />
+          <FacetGroups.DamageTypeFacetGroup />
         </Box>
         <Divider
           sx={{

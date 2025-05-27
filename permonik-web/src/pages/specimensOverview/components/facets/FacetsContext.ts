@@ -3,7 +3,7 @@ import { TSpecimenDamageTypes } from '../../../../schema/specimen'
 import { TOwner } from '../../../../schema/owner'
 import { TMutation } from '../../../../schema/mutation'
 import { TParams } from '../../../../slices/useSpecimensOverviewStore'
-import { TSpecimensFacets } from '../../../../api/specimen'
+import { TSpecimenList, TSpecimensFacets } from '../../../../api/specimen'
 import { TEdition } from '../../../../schema/edition'
 import { TSupportedLanguages } from '../../../../i18next'
 
@@ -17,6 +17,10 @@ type TFacetsContext = {
   owners: TOwner[] | undefined
   damageTypes: TSpecimenDamageTypes[]
   editions: TEdition[] | undefined
+  isError: boolean
+  isFetching: boolean
+  specimens: TSpecimenList | undefined
+  calendarDateFromQuery: number | undefined
 }
 
 export const FacetsContext = createContext<TFacetsContext | undefined>(

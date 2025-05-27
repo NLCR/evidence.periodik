@@ -21,6 +21,7 @@ import Calendar from './components/Calendar'
 import CalendarToolbar from './components/CalendarToolbar'
 import ModalContainer from '../../components/ModalContainer'
 import SynchronizeYearsSwitch from './components/SynchronizeYearsSwitch'
+import FacetsContextProvider from './components/facets/FacetsContextProvider'
 
 const Table = React.lazy(() => import('./components/Table'))
 
@@ -106,7 +107,9 @@ const SpecimensOverview = () => {
           height: '100%',
         }}
       >
-        <Facets metaTitle={metaTitle} />
+        <FacetsContextProvider metaTitle={metaTitle}>
+          <Facets metaTitle={metaTitle} />
+        </FacetsContextProvider>
       </Box>
       <Box
         sx={{

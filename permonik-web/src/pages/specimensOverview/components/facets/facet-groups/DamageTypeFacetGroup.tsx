@@ -1,7 +1,7 @@
-import FacetGroup from './FacetGroup'
+import FacetGroup from '../FacetGroup'
 import { t } from 'i18next'
-import { useFacetsContext } from './FacetsContext'
-import { TSpecimenDamageTypes } from '../../../../schema/specimen'
+import { useFacetsContext } from '../FacetsContext'
+import { TSpecimenDamageTypes } from '../../../../../schema/specimen'
 
 const DamageTypeFacetGroup = () => {
   const { facets, disabled, params, setParams } = useFacetsContext()

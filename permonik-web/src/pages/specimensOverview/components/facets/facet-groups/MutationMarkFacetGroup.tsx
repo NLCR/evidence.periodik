@@ -1,6 +1,6 @@
-import FacetGroup from './FacetGroup'
+import FacetGroup from '../FacetGroup'
 import { t } from 'i18next'
-import { useFacetsContext } from './FacetsContext'
+import { useFacetsContext } from '../FacetsContext'
 
 const MutationMarkFacetGroup = () => {
   const { facets, disabled, params, setParams } = useFacetsContext()
