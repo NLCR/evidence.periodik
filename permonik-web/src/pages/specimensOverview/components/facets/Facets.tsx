@@ -8,21 +8,11 @@ import Button from '@mui/material/Button'
 import { DateCalendar } from '@mui/x-date-pickers-pro'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import { blue } from '@mui/material/colors'
-import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
-import { useMutationListQuery } from '../../../../api/mutation'
-import { useEditionListQuery } from '../../../../api/edition'
-import { useOwnerListQuery } from '../../../../api/owner'
-import {
-  useSpecimenFacetsQuery,
-  useSpecimenListQuery,
-  useSpecimensStartDateForCalendar,
-} from '../../../../api/specimen'
 import { TMetaTitle } from '../../../../schema/metaTitle'
 import ShowError from '../../../../components/ShowError'
 import Loader from '../../../../components/Loader'
 import ControlledSlider from '../ControlledSlider'
 import ControlledBarCodeInput from '../ControlledBarCodeInput'
-import { useLanguageCode } from '../../../../hooks/useLanguageCode'
 import NameFacetGroup from './NameFacetGroup'
 import SubnameFacetGroup from './SubnameFacetGroup'
 import MutationFacetGroup from './MutationFacetGroup'
@@ -32,6 +22,8 @@ import OwnerFacetGroup from './OwnerFacetGroup'
 import DamageTypeFacetGroup from './DamageTypeFacetGroup'
 import { FacetsContext } from './FacetsContext'
 import { damageTypes } from '../../../../utils/constants'
+import { useFacetsData } from './api'
+import { useFacetsStoreData } from './store'
 
 type TProps = {
   metaTitle: TMetaTitle
@@ -39,49 +31,32 @@ type TProps = {
 
 const Facets: FC<TProps> = ({ metaTitle }) => {
   const { t } = useTranslation()
-  const { data: mutations } = useMutationListQuery()
-  const { data: editions } = useEditionListQuery()
-  const { data: owners } = useOwnerListQuery()
-  const { languageCode } = useLanguageCode()
+  const {
+    editions,
+    facets,
+    mutations,
+    owners,
+    specimens,
+    calendarDateFromQuery,
+    languageCode,
+    isError,
+    isFetching,
+  } = useFacetsData(metaTitle)
+  const {
+    view,
+    calendarDate,
+    setCalendarDate,
+    lastViewedMetaTitleId,
+    setLastViewedMetaTitleId,
+    params,
+    setParams,
+    resetAll,
+    setSliderRange,
+  } = useFacetsStoreData()
+
   const [metaTitleIdChanged, setMetaTitleIdChanged] = useState(false)
   const [calendarDateInitialized, setCalendarDateInitialized] = useState(false)
   const [sliderRangeInitialized, setSliderRangeInitialized] = useState(false)
-
-  const params = useSpecimensOverviewStore((state) => state.params)
-  const view = useSpecimensOverviewStore((state) => state.view)
-  const calendarDate = useSpecimensOverviewStore((state) => state.calendarDate)
-  const setParams = useSpecimensOverviewStore((state) => state.setParams)
-  const setCalendarDate = useSpecimensOverviewStore(
-    (state) => state.setCalendarDate
-  )
-  const resetAll = useSpecimensOverviewStore((state) => state.resetAll)
-  const setSliderRange = useSpecimensOverviewStore(
-    (state) => state.setSliderRange
-  )
-  const setLastViewedMetaTitleId = useSpecimensOverviewStore(
-    (state) => state.setLastViewedMetaTitleId
-  )
-  const lastViewedMetaTitleId = useSpecimensOverviewStore(
-    (state) => state.lastViewedMetaTitleId
-  )
-
-  const {
-    data: facets,
-    isError: facetsError,
-    isFetching: facetsFetching,
-  } = useSpecimenFacetsQuery(metaTitle.id)
-
-  const {
-    data: specimens,
-    isError: specimensError,
-    isFetching: specimensFetching,
-  } = useSpecimenListQuery(metaTitle.id)
-
-  const {
-    data: calendarDateFromQuery,
-    isFetching: calendarStartDateFetching,
-    isError: calendarStartDateError,
-  } = useSpecimensStartDateForCalendar(metaTitle.id)
 
   // track if metaTitle changed
   useEffect(() => {
@@ -136,12 +111,9 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
   const publicationYearMin =
     Number(specimens?.publicationDayMin?.substring(0, 4)) || 1900
   const publicationYearMax =
-    Number(specimens?.publicationDayMax?.substring(0, 4)) || 2023
+    Number(specimens?.publicationDayMax?.substring(0, 4)) || dayjs().year()
 
-  const fetching =
-    facetsFetching || specimensFetching || calendarStartDateFetching
-
-  if (facetsError || specimensError || calendarStartDateError) {
+  if (isError) {
     return (
       <>
         <Typography
@@ -207,7 +179,7 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
                 onChange={(value: Dayjs) => {
                   setCalendarDate(value)
                 }}
-                disabled={fetching}
+                disabled={isFetching}
               />
             ) : (
               <Loader />
@@ -215,7 +187,7 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
           </Box>
         ) : (
           <ControlledSlider
-            fetching={fetching}
+            fetching={isFetching}
             pubDaysMin={publicationYearMin}
             pubDaysMax={publicationYearMax}
           />
@@ -245,7 +217,7 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
           <FacetsContext.Provider
             value={{
               damageTypes: damageTypes,
-              disabled: fetching,
+              disabled: isFetching,
               editions: editions,
               facets: facets,
               languageCode: languageCode,
