@@ -35,8 +35,8 @@ const ControlledSlider: FC<TProps> = ({ fetching, pubDaysMin, pubDaysMax }) => {
       disableSwap
       step={1}
       sx={{
-        width: '95%',
-        margin: '40px auto 30px auto',
+        width: '90%',
+        margin: '40px 15px 30px 15px',
       }}
       valueLabelDisplay="on"
       marks={[

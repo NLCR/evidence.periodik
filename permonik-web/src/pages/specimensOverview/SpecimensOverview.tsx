@@ -9,19 +9,20 @@ import React, { Suspense, useState } from 'react'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import TableRowsIcon from '@mui/icons-material/TableRows'
-import { blue } from '@mui/material/colors'
+import blue from '@mui/material/colors/blue'
 import { useMetaTitleQuery } from '../../api/metaTitle'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
 import ShowInfoMessage from '../../components/ShowInfoMessage'
 import { useSpecimensOverviewStore } from '../../slices/useSpecimensOverviewStore'
 import SpecimenDayDetailExampleImage from '../../assets/images/specimen-day-detail-example.png'
-import Facets from './components/Facets'
+import Facets from './components/facets/Facets'
 import Calendar from './components/Calendar'
 import CalendarToolbar from './components/CalendarToolbar'
 import ModalContainer from '../../components/ModalContainer'
 import SynchronizeYearsSwitch from './components/SynchronizeYearsSwitch'
 import CollapsableSidebar from '../../components/CollapsableSidebar'
+import FacetsContextProvider from './components/facets/FacetsContextProvider'
 
 const Table = React.lazy(() => import('./components/Table'))
 
@@ -102,7 +103,9 @@ const SpecimensOverview = () => {
             height: '100%',
           }}
         >
-          <Facets metaTitle={metaTitle} />
+          <FacetsContextProvider metaTitle={metaTitle}>
+            <Facets metaTitle={metaTitle} />
+          </FacetsContextProvider>
         </Box>
       </CollapsableSidebar>
       <Box
