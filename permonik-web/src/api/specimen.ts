@@ -9,7 +9,7 @@ import {
 } from '../schema/specimen'
 import { useSpecimensOverviewStore } from '../slices/useSpecimensOverviewStore'
 
-interface TSpecimensFacets {
+export interface TSpecimensFacets {
   names: TSpecimenFacet[]
   subNames: TSpecimenFacet[]
   mutationIds: TSpecimenFacet[]
