@@ -1,4 +1,6 @@
-import { Box, IconButton, SxProps, Theme } from '@mui/material'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import { SxProps, Theme } from '@mui/material'
 import React, { PropsWithChildren, useState } from 'react'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import blue from '@mui/material/colors/blue'

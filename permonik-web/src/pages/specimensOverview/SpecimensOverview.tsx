@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
@@ -21,7 +22,6 @@ import CalendarToolbar from './components/CalendarToolbar'
 import ModalContainer from '../../components/ModalContainer'
 import SynchronizeYearsSwitch from './components/SynchronizeYearsSwitch'
 import CollapsableSidebar from '../../components/CollapsableSidebar'
-import { IconButton } from '@mui/material'
 
 const Table = React.lazy(() => import('./components/Table'))
 
