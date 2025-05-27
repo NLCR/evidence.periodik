@@ -23,13 +23,10 @@ const DuplicationEditCell: FC<DuplicationCellProps> = ({ row, canEdit }) => {
     (state) => state.specimensActions
   )
 
-  const specimen = useVolumeManagementStore((state) =>
-    state.specimensState.find((s) => s.id === row.id)
-  )
   const volumeState = useVolumeManagementStore((state) => state.volumeState)
 
   const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false)
-  const [date, setDate] = useState<Dayjs>(dayjs(specimen?.publicationDate))
+  const [date, setDate] = useState<Dayjs>(dayjs(row.publicationDate))
   const { t } = useTranslation()
 
   const duplicateRow = (date: Dayjs) => {
@@ -97,7 +94,7 @@ const DuplicationEditCell: FC<DuplicationCellProps> = ({ row, canEdit }) => {
         onClose={() => {
           setIsDuplicateModalOpen(false)
           // reset date picker
-          setDate(dayjs(specimen?.publicationDate))
+          setDate(dayjs(row.publicationDate))
         }}
         closeButton={{ callback: () => setIsDuplicateModalOpen(false) }}
         opened={isDuplicateModalOpen}
@@ -108,7 +105,7 @@ const DuplicationEditCell: FC<DuplicationCellProps> = ({ row, canEdit }) => {
             duplicateRow(date)
             setIsDuplicateModalOpen(false)
             // reset date picker
-            setDate(dayjs(specimen?.publicationDate))
+            setDate(dayjs(row.publicationDate))
           },
         }}
       >
