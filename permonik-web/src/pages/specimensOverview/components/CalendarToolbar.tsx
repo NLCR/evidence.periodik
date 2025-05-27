@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import React, { FC } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useSpecimensOverviewStore } from '../../../slices/useSpecimensOverviewStore'
 import { useSpecimenListQuery } from '../../../api/specimen'
 import { TMetaTitle } from '../../../schema/metaTitle'
@@ -15,7 +14,6 @@ type TProps = {
 }
 
 const CalendarToolbar: FC<TProps> = ({ metaTitle }) => {
-  const { t } = useTranslation()
   const setCalendarDate = useSpecimensOverviewStore(
     (state) => state.setCalendarDate
   )
@@ -25,14 +23,14 @@ const CalendarToolbar: FC<TProps> = ({ metaTitle }) => {
 
   return (
     <>
-      <Typography
+      {/* <Typography
         sx={{
           fontWeight: '600',
           marginRight: '20px',
         }}
       >
         {t('specimens_overview.showed_month')}:{' '}
-      </Typography>
+      </Typography> */}
       <Box
         sx={{
           display: 'flex',
