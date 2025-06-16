@@ -192,7 +192,7 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
         <Box
           sx={() => ({
             paddingRight: '8px',
-            overflowY: 'scroll',
+            overflowY: 'auto',
           })}
         >
           <FacetGroups.OwnerFacetGroup />
