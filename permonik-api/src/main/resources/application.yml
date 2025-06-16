@@ -1,5 +1,5 @@
 solr:
-  host: http://localhost:8983/solr
+  host: ${SOLR_URL:http://localhost:8983/solr}
 
 spring:
   profiles:
