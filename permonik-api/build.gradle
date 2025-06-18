@@ -1,7 +1,7 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.4'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.4.6'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'cz.incad.nkp.inprove'
@@ -13,9 +13,9 @@ java {
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 ext {
@@ -31,7 +31,7 @@ ext {
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 bootJar {
@@ -93,5 +93,5 @@ dependencies {
 
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
