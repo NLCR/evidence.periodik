@@ -24,6 +24,7 @@ server:
         secure: true
         http-only: true
         same-site: strict
+      timeout: 480m
 
 logging:
   file:
