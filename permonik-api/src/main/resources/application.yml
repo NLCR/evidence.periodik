@@ -1,6 +1,9 @@
 spring:
   profiles:
     active: dev
+  threads:
+    virtual:
+      enabled: true
 
 solr:
   host: ${SOLR_URL:http://localhost:8983/solr}
