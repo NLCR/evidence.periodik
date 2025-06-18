@@ -29,22 +29,22 @@ public class SpecimenFacets implements SpecimenDefinition {
 
     private String doUUIDListCollection(List<String> facetList, String field) {
         return facetList.stream()
-                .map(facet -> field + ":\"" + facet + "\"")
-                .collect(Collectors.joining(" AND "));
+            .map(facet -> field + ":\"" + facet + "\"")
+            .collect(Collectors.joining(" AND "));
     }
 
-    private String doTextListCollection(List<String> namesList, String field) {
+    private String doTextListCollection(List<String> namesList, String field, Boolean valueCanBeNull) {
         return namesList.stream()
-                .map(text -> text.isEmpty() ? field + ":\"\"" : field + ":\"" + text + "\"")
-                .collect(Collectors.joining(" AND "));
+            .map(text -> text.isEmpty() ? valueCanBeNull ? "-" + field + ":[* TO *]" : field + ":\"\"" : field + ":\"" + text + "\"")
+            .collect(Collectors.joining(" AND "));
     }
 
     String getNamesQueryString() {
-        return doTextListCollection(names, NAME_FIELD);
+        return doTextListCollection(names, NAME_FIELD, false);
     }
 
     String getSubNamesQueryString() {
-        return doTextListCollection(subNames, SUB_NAME_FIELD);
+        return doTextListCollection(subNames, SUB_NAME_FIELD, false);
     }
 
     String getMutationsQueryString() {
@@ -56,7 +56,7 @@ public class SpecimenFacets implements SpecimenDefinition {
     }
 
     String getMutationMarkQueryString() {
-        return doTextListCollection(mutationMarks, MUTATION_MARK_FIELD);
+        return doTextListCollection(mutationMarks, MUTATION_MARK_FIELD, true);
     }
 
     String getOwnersQueryString() {
@@ -77,9 +77,9 @@ public class SpecimenFacets implements SpecimenDefinition {
         for (char c : s.toCharArray()) {
             // List of special characters that need to be escaped
             if (c == '\\' || c == '+' || c == '-' || c == '!' || c == '(' || c == ')' ||
-                    c == ':' || c == '^' || c == '[' || c == ']' || c == '\"' || c == '{' ||
-                    c == '}' || c == '~' || c == '*' || c == '?' || c == '|' || c == '&' ||
-                    c == ';' || c == '/' || Character.isWhitespace(c)) {
+                c == ':' || c == '^' || c == '[' || c == ']' || c == '\"' || c == '{' ||
+                c == '}' || c == '~' || c == '*' || c == '?' || c == '|' || c == '&' ||
+                c == ';' || c == '/' || Character.isWhitespace(c)) {
                 sb.append('\\');
             }
             sb.append(c);
