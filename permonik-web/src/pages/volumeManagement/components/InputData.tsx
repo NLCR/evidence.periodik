@@ -58,6 +58,7 @@ const InputData: FC<InputDataProps> = ({
           flexDirection: 'column',
           // boxShadow: theme.shadows[1],
           flexShrink: 0,
+          height: '100%',
         }}
       >
         <Typography
@@ -74,6 +75,7 @@ const InputData: FC<InputDataProps> = ({
         <Box
           sx={{
             overflowY: 'auto',
+            height: '100%',
           }}
         >
           <Table
