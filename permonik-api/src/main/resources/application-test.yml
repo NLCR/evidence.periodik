@@ -2,6 +2,9 @@ spring:
   config:
     activate:
       on-profile: test
+  threads:
+    virtual:
+      enabled: true
 
 solr:
   host: http://permonik-database:8983/solr
@@ -24,6 +27,7 @@ server:
         secure: true
         http-only: true
         same-site: strict
+      timeout: 480m
 
 logging:
   file:
