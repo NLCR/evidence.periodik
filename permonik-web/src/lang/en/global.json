@@ -69,7 +69,9 @@
     "help_desc_2": "issue number - mutation - mutation edition marks - number of specimens",
     "help_desc_3": "The line may be colored green (all specimens are fine) or orange (some of the specimens have a defect)",
     "synchronize_years_between_views": "Synchronize calendar<br />and table dates",
-    "detailed_volume_overview": "Detailed volume overview"
+    "detailed_volume_overview": "Detailed volume overview",
+    "duplicate_dialog_title": "Duplicate entry",
+    "duplicate_dialog_description": "Select the date for which a new record will be entered"
   },
   "volume_overview": {
     "not_found": "This volume was not found",
