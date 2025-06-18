@@ -147,8 +147,8 @@ public class SpecimenService implements SpecimenDefinition {
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
         List<Specimen> specimenList = response.getBeans(Specimen.class);
         List<String> ownerList = specimenList.stream()
-                .map(Specimen::getOwnerId)
-                .collect(Collectors.toSet()).stream().toList();
+            .map(Specimen::getOwnerId)
+            .collect(Collectors.toSet()).stream().toList();
 
         SolrQuery statsQuery = new SolrQuery("*:*");
         statsQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"", NUM_EXISTS_FIELD + ":true");
@@ -178,11 +178,11 @@ public class SpecimenService implements SpecimenDefinition {
         Integer groupedSpecimens = groupCommand.getMatches();
 
         return new SearchedSpecimensDTO(
-                specimenList,
-                publicationDayMax,
-                publicationDayMin,
-                groupedSpecimens,
-                ownerList
+            specimenList,
+            publicationDayMax,
+            publicationDayMin,
+            groupedSpecimens,
+            ownerList
         );
 
     }
@@ -202,6 +202,7 @@ public class SpecimenService implements SpecimenDefinition {
         solrQuery.addSort(EDITION_ID_FIELD, SolrQuery.ORDER.desc);
 //        solrQuery.addSort(MUTATION_ID_FIELD, SolrQuery.ORDER.asc);
         solrQuery.setFacet(true);
+        solrQuery.setParam("f." + MUTATION_MARK_FIELD + ".facet.missing", "true"); // query MUTATION_MARK_FIELD also for empty value
         solrQuery.addFacetField(NAME_FIELD, SUB_NAME_FIELD, MUTATION_ID_FIELD, EDITION_ID_FIELD, MUTATION_MARK_FIELD, OWNER_ID_FIELD, DAMAGE_TYPES_FIELD);
         solrQuery.setFacetMinCount(1);
 
@@ -244,16 +245,32 @@ public class SpecimenService implements SpecimenDefinition {
             solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd() + "-12-31]");
         }
 
+        logger.info("SOLR QUERY: {}", solrQuery.toQueryString());
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
 
         return new FacetsDTO(
-                response.getFacetField(NAME_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(SUB_NAME_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(MUTATION_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(EDITION_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(OWNER_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(DAMAGE_TYPES_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList()
+            response.getFacetField(NAME_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(SUB_NAME_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(MUTATION_ID_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(EDITION_ID_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName() != null ? facetFieldEntry.getName() : "", facetFieldEntry.getCount())
+            ).sorted(Comparator.comparingLong(FacetFieldDTO::count).reversed()// sort null facet, because solr returns null facets as last
+            ).toList(),
+            response.getFacetField(OWNER_ID_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(DAMAGE_TYPES_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList()
         );
 
     }
@@ -358,26 +375,26 @@ public class SpecimenService implements SpecimenDefinition {
         List<Specimen> specimens = response2.getBeans(Specimen.class);
 
         List<FacetFieldDTO> publicationDateList = response.getFacetRanges().stream()
-                .filter(rangeFacet -> PUBLICATION_DATE_FIELD.equals(rangeFacet.getName()))
-                .findFirst()
-                .map(rangeFacet -> (List<RangeFacet.Count>) rangeFacet.getCounts())
-                .stream()
-                .flatMap(counts -> counts.stream()
-                        .map(count -> new FacetFieldDTO(
-                                count.getValue(),
-                                (long) count.getCount())))
-                .toList();
+            .filter(rangeFacet -> PUBLICATION_DATE_FIELD.equals(rangeFacet.getName()))
+            .findFirst()
+            .map(rangeFacet -> (List<RangeFacet.Count>) rangeFacet.getCounts())
+            .stream()
+            .flatMap(counts -> counts.stream()
+                .map(count -> new FacetFieldDTO(
+                    count.getValue(),
+                    (long) count.getCount())))
+            .toList();
 
         return new SpecimensForVolumeOverviewStatsDTO(
-                publicationDayMin,
-                publicationDayMax,
-                pagesCount,
-                response.getFacetField(MUTATION_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(EDITION_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(DAMAGE_TYPES_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                publicationDateList,
-                specimens
+            publicationDayMin,
+            publicationDayMax,
+            pagesCount,
+            response.getFacetField(MUTATION_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
+            response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
+            response.getFacetField(EDITION_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
+            response.getFacetField(DAMAGE_TYPES_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
+            publicationDateList,
+            specimens
         );
 
     }
@@ -395,8 +412,8 @@ public class SpecimenService implements SpecimenDefinition {
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
 
         return new NamesDTO(
-                response.getFacetField(NAME_FIELD).getValues().stream().map(FacetField.Count::getName).toList(),
-                response.getFacetField(SUB_NAME_FIELD).getValues().stream().map(FacetField.Count::getName).toList()
+            response.getFacetField(NAME_FIELD).getValues().stream().map(FacetField.Count::getName).toList(),
+            response.getFacetField(SUB_NAME_FIELD).getValues().stream().map(FacetField.Count::getName).toList()
         );
     }
 
@@ -416,15 +433,15 @@ public class SpecimenService implements SpecimenDefinition {
     public void updateSpecimens(List<Specimen> specimens) {
         try {
             List<Specimen> specimenList = specimens.stream()
-                    .peek(specimen -> {
-                        // If the specimen was duplicated on FE, we will call only prePersist and skip preUpdate
-                        if (specimen.getCreated() == null) {
-                            specimen.prePersist();
-                        } else {
-                            specimen.preUpdate();
-                        }
-                    })
-                    .toList();
+                .peek(specimen -> {
+                    // If the specimen was duplicated on FE, we will call only prePersist and skip preUpdate
+                    if (specimen.getCreated() == null) {
+                        specimen.prePersist();
+                    } else {
+                        specimen.preUpdate();
+                    }
+                })
+                .toList();
 
             solrClient.addBeans(SPECIMEN_CORE_NAME, specimenList);
             solrClient.commit(SPECIMEN_CORE_NAME);
