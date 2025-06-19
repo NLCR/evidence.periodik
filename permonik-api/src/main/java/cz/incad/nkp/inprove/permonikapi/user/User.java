@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.solr.client.solrj.beans.Field;
 
+import java.io.Serializable;
 import java.util.List;
 
 @NoArgsConstructor
@@ -13,7 +14,7 @@ import java.util.List;
 @Setter
 @Getter
 @SuperBuilder
-public class User {
+public class User implements Serializable {
 
     @Field()
     private String id;

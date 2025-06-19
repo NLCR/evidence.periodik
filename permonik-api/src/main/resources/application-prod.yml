@@ -5,6 +5,10 @@ spring:
   threads:
     virtual:
       enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
 
 solr:
   host: http://permonik-database:8983/solr
@@ -19,7 +23,6 @@ server:
     include-exception: true
     include-message: always
   servlet:
-    context-path: /
     session:
       cookie:
         path: /

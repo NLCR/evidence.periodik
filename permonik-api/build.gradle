@@ -28,6 +28,8 @@ ext {
     slf4j = '2.0.17'
     logback = '1.5.18'
     hibernate = '6.6.4.Final'
+    redisSession = "3.5.1"
+    redisStarter = "3.5.0"
 }
 
 repositories {
@@ -65,6 +67,10 @@ dependencies {
 
     // SOLR
     implementation "org.apache.solr:solr-solrj:${solrj}"
+
+    // REDIS
+    implementation "org.springframework.session:spring-session-data-redis:${redisSession}"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis:${redisStarter}"
 
     // JACKSON
     implementation "com.fasterxml.jackson.core:jackson-core:${jackson}"
