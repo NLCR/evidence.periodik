@@ -148,6 +148,7 @@
     "volume_create_error": "Nastala chyba při vytváření svazku",
     "volume_deleted_successfully": "Svazek byl úspěšně smazán",
     "specimen_deleted_successfully": "Exemplář byl úspěšně smazán",
+    "specimen_delete_error": "Nastala chyba při mazání exempláře",
     "volume_deletion_error": "Nastala chyba při mazání svazku",
     "account_required": "Stránka je dostupná po přihlášení",
     "new_row": "Duplikovat řádek",

@@ -148,6 +148,7 @@
     "volume_create_error": "An error occurred while creating the volume",
     "volume_deleted_successfully": "Volume deleted successfully",
     "specimen_deleted_successfully": "Specimen deleted successfully",
+    "specimen_delete_error": "An error occurred while deleting the specimen",
     "volume_deletion_error": "An error occurred while deleting the volume",
     "account_required": "Page is accessible after login",
     "new_row": "Duplicate row",

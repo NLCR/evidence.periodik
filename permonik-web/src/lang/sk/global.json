@@ -148,6 +148,7 @@
     "volume_create_error": "Nastala chyba pri vytváraní zväzku",
     "volume_deleted_successfully": "Zväzok bol úspešne zmazaný",
     "specimen_deleted_successfully": "Exemplár bol úspešne zmazaný",
+    "specimen_delete_error": "Nastala chyba pri mazaní exemplára",
     "volume_deletion_error": "Nastala chyba pri mazaní zväzku",
     "account_required": "Stránka je dostupná po prihlásení",
     "new_row": "Duplikovať riadok",
