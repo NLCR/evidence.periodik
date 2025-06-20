@@ -5,6 +5,7 @@ import { Dayjs } from 'dayjs'
 export type TParams = {
   dateStart: number
   dateEnd: number
+  numberOptions: string[] // číslo chybí / číslo existuje
   names: string[]
   subNames: string[]
   mutationIds: string[]
@@ -17,6 +18,7 @@ export type TParams = {
 export const initialParams: TParams = {
   dateStart: 0,
   dateEnd: 0,
+  numberOptions: [],
   names: [],
   subNames: [],
   mutationIds: [],

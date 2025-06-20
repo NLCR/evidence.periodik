@@ -16,6 +16,7 @@ import ControlledBarCodeInput from '../ControlledBarCodeInput'
 import * as FacetGroups from './facet-groups'
 import { useFacetsContext } from './FacetsContext'
 import { useFacetsStoreData } from './store'
+import NumberOptionsTabMultiSelect from './NumberOptionsTabMultiSelect'
 
 type TProps = {
   metaTitle: TMetaTitle
@@ -189,6 +190,14 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
             marginTop: '10px',
           }}
         />
+
+        <NumberOptionsTabMultiSelect />
+        <Divider
+          sx={{
+            marginTop: '10px',
+          }}
+        />
+
         <Box
           sx={() => ({
             paddingRight: '8px',
