@@ -32,6 +32,11 @@ import ModalContainer from '../../../components/ModalContainer'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import { repairOrCreateSpecimen } from '../../../utils/specimen'
 import { repairVolume } from '../../../utils/volume'
+import InputDataCheckbox from './inputData/InputDataCheckbox'
+import InputDataSelect from './inputData/InputDataSelect'
+import InputDataTextField from './inputData/InputDataTextField'
+import IconButton from '@mui/material/IconButton'
+import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 
 const getDaysArray = (start: string, end: string): string[] => {
   const arr: string[] = []
@@ -52,13 +57,14 @@ const getDayName = (date: string): string => {
 
 interface PeriodicityProps {
   editions: TEdition[]
-  canEdit: boolean
 }
 
-const Periodicity: FC<PeriodicityProps> = ({ canEdit, editions }) => {
+const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
   const [periodicityModalVisible, setPeriodicityModalVisible] = useState(false)
   const { t, i18n } = useTranslation()
   const { languageCode } = useLanguageCode()
+
+  const { disabled, locked } = useInputDataEditabilityContext()
 
   const setShowAttachmentsAtTheEnd = useVolumeManagementStore(
     (state) => state.volumeActions.setShowAttachmentsAtTheEnd
@@ -197,7 +203,7 @@ const Periodicity: FC<PeriodicityProps> = ({ canEdit, editions }) => {
   return (
     <>
       <Button
-        disabled={!canEdit}
+        // disabled={!canEdit}
         variant="contained"
         onClick={() => setPeriodicityModalVisible(true)}
       >
@@ -213,6 +219,7 @@ const Periodicity: FC<PeriodicityProps> = ({ canEdit, editions }) => {
         acceptButton={{
           callback: () => generateVolume(),
           text: t('volume_overview.generate_volume'),
+          disabled: disabled || locked,
         }}
       >
         <Table size="small">
@@ -233,8 +240,7 @@ const Periodicity: FC<PeriodicityProps> = ({ canEdit, editions }) => {
                 <TableRow key={`volume-periodicity-${p.day}`}>
                   <TableCell>{t(`volume_overview.days.${p.day}`)}</TableCell>
                   <TableCell>
-                    <Checkbox
-                      size="small"
+                    <InputDataCheckbox
                       checked={p.numExists}
                       onChange={(event) =>
                         volumePeriodicityActions.setNumExists(
@@ -242,43 +248,26 @@ const Periodicity: FC<PeriodicityProps> = ({ canEdit, editions }) => {
                           index
                         )
                       }
-                      disabled={!canEdit}
-                      sx={{
-                        // marginTop: 1,
-                        // marginBottom: 1,
-                        cursor: 'pointer',
-                        // width: '100%',
-                      }}
                     />
                   </TableCell>
                   <TableCell>
-                    <Select
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        minWidth: '200px',
-                      }}
-                      value={p.editionId}
-                      disabled={!canEdit}
+                    <InputDataSelect
+                      value={p.editionId ?? undefined}
                       onChange={(event) =>
                         volumePeriodicityActions.setEditionId(
                           event.target.value,
                           index
                         )
                       }
-                    >
-                      {editions.map((o) => (
-                        <MenuItem key={o.id} value={o.id}>
-                          {o.name[languageCode]}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                      options={editions.map((o) => ({
+                        key: o.id,
+                        value: o.name[languageCode],
+                      }))}
+                    />
                   </TableCell>
                   <TableCell>
-                    <TextField
-                      size="small"
+                    <InputDataTextField
                       value={p.pagesCount}
-                      disabled={!canEdit}
                       onChange={(event) =>
                         volumePeriodicityActions.setPagesCount(
                           event.target.value,
@@ -307,7 +296,7 @@ const Periodicity: FC<PeriodicityProps> = ({ canEdit, editions }) => {
                       }}
                       size="small"
                       value={p.name}
-                      disabled={!canEdit}
+                      disabled={disabled || locked}
                       onChange={(event, value) =>
                         volumePeriodicityActions.setName(
                           value ? value : '',
@@ -337,7 +326,7 @@ const Periodicity: FC<PeriodicityProps> = ({ canEdit, editions }) => {
                       }}
                       size="small"
                       value={p.subName}
-                      disabled={!canEdit}
+                      disabled={disabled || locked}
                       onChange={(event, value) =>
                         volumePeriodicityActions.setSubName(
                           value ? value : '',
@@ -357,19 +346,23 @@ const Periodicity: FC<PeriodicityProps> = ({ canEdit, editions }) => {
                       }}
                     >
                       {p.duplicated ? (
-                        <DeleteOutlineIcon
-                          onClick={() => removeRow(p)}
-                          sx={{
-                            cursor: 'pointer',
-                          }}
-                        />
+                        <IconButton disabled={disabled || locked}>
+                          <DeleteOutlineIcon
+                            onClick={() => removeRow(p)}
+                            sx={{
+                              cursor: 'pointer',
+                            }}
+                          />
+                        </IconButton>
                       ) : (
-                        <AddCircleOutlineIcon
-                          onClick={() => duplicateRow(p)}
-                          sx={{
-                            cursor: 'pointer',
-                          }}
-                        />
+                        <IconButton disabled={disabled || locked}>
+                          <AddCircleOutlineIcon
+                            onClick={() => duplicateRow(p)}
+                            sx={{
+                              cursor: 'pointer',
+                            }}
+                          />
+                        </IconButton>
                       )}
                     </Box>
                   </TableCell>
@@ -392,7 +385,7 @@ const Periodicity: FC<PeriodicityProps> = ({ canEdit, editions }) => {
               onChange={(event) =>
                 setShowAttachmentsAtTheEnd(event.target.checked)
               }
-              disabled={!canEdit}
+              disabled={disabled || locked}
               sx={{
                 // marginTop: 1,
                 // marginBottom: 1,
