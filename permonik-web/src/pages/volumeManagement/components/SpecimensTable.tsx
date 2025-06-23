@@ -204,7 +204,8 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
   const { MuiTableLocale } = useMuiTableLang()
   const { t } = useTranslation()
   const apiRef = useGridApiRef()
-  const { disabled } = useInputDataEditabilityContext()
+  const { disabled, locked: isInputDataLocked } =
+    useInputDataEditabilityContext()
 
   const [searchParams] = useSearchParams()
 
@@ -907,6 +908,7 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
     <>
       <TableHeader apiRef={apiRef} />
       <StripedDataGrid
+        sx={isInputDataLocked ? {} : { opacity: 0.5, pointerEvents: 'none' }}
         columnHeaderHeight={65}
         apiRef={apiRef}
         localeText={MuiTableLocale}

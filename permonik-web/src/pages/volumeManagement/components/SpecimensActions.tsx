@@ -2,7 +2,6 @@ import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { TMe } from '../../../schema/user'
 import { TEdition } from '../../../schema/edition'
 import { TUpdatableVolume } from '../../../api/volume'
 import Box from '@mui/material/Box'
@@ -18,10 +17,10 @@ import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent
 import UnsavedChangesModal from './UnsavedChangesModal'
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
+import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 
 type Props = {
   duplicated: boolean
-  me: TMe | undefined
   volume: TUpdatableVolume | null | undefined
   editions: TEdition[] | undefined
   doDuplicate: () => Promise<void>
@@ -33,7 +32,6 @@ type Props = {
 
 const SpecimensActions = ({
   duplicated,
-  me,
   volume,
   editions,
   doDuplicate,
@@ -47,6 +45,9 @@ const SpecimensActions = ({
   const { t, i18n } = useTranslation()
 
   const [searchParams] = useSearchParams()
+
+  const { locked: isInputDataLocked, disabled } =
+    useInputDataEditabilityContext()
 
   const [volumeStatsModalOpened, setVolumeStatsModalOpened] = useState(false)
   const [confirmDeletionModalStage, setConfirmDeletionModalStage] = useState({
@@ -102,14 +103,6 @@ const SpecimensActions = ({
   const handleDeletion = () => {
     doDelete()
   }
-
-  const canEdit = useMemo(
-    () =>
-      me?.owners?.some((o) => o === volume?.volume?.ownerId) ||
-      !volumeId?.length ||
-      me?.role === 'super_admin',
-    [me, volume?.volume, volumeId?.length]
-  )
 
   const actions = useMemo(() => {
     const actionsArray: {
@@ -230,6 +223,7 @@ const SpecimensActions = ({
           {volumeId ? (
             <Button
               variant="outlined"
+              disabled={!isInputDataLocked}
               onClick={() => setVolumeStatsModalOpened(true)}
             >
               {t('specimens_overview.volume_overview_modal_link')}
@@ -244,10 +238,11 @@ const SpecimensActions = ({
             alignItems: 'center',
           }}
         >
-          {canEdit ? (
+          {!disabled ? (
             <>
               {actions.map((action) => (
                 <Button
+                  disabled={!isInputDataLocked}
                   variant="contained"
                   color={action.color}
                   key={action.name}

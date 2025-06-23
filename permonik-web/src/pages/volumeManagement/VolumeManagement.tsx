@@ -135,7 +135,7 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
       me={me}
       volume={volume}
       volumeId={volumeId}
-      locked={false}
+      locked={!!volumeId}
     >
       <Box
         sx={{
@@ -185,7 +185,6 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
           <SpecimensTable mutations={mutations} editions={editions} />
           <SpecimensActions
             duplicated={duplicated}
-            me={me}
             volume={volume}
             editions={editions}
             doDuplicate={doDuplicate}

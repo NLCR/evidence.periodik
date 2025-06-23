@@ -62,7 +62,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
   const { t, i18n } = useTranslation()
   const { languageCode } = useLanguageCode()
 
-  const { disabled, locked } = useInputDataEditabilityContext()
+  const { disabled, locked, setLocked } = useInputDataEditabilityContext()
 
   const setShowAttachmentsAtTheEnd = useVolumeManagementStore(
     (state) => state.volumeActions.setShowAttachmentsAtTheEnd
@@ -216,7 +216,10 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
           callback: () => setPeriodicityModalVisible(false),
         }}
         acceptButton={{
-          callback: () => generateVolume(),
+          callback: () => {
+            generateVolume()
+            setLocked(true)
+          },
           text: t('volume_overview.generate_volume'),
           disabled: disabled || locked,
         }}

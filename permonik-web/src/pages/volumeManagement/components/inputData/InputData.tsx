@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import dayjs, { Dayjs } from 'dayjs'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -12,8 +12,6 @@ import { TMe } from '../../../../schema/user'
 import { TMutation } from '../../../../schema/mutation'
 import { TOwner } from '../../../../schema/owner'
 import { TMetaTitle } from '../../../../schema/metaTitle'
-import MutationMarkSelectorModal from '../editCells/MutationMarkSelectorModal'
-import { useLanguageCode } from '../../../../hooks/useLanguageCode'
 import Periodicity from '../Periodicity'
 import { TEdition } from '../../../../schema/edition'
 import Typography from '@mui/material/Typography'
@@ -25,6 +23,9 @@ import InputDataDatePicker from './InputDataDatePicker'
 import Button from '@mui/material/Button'
 import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
+import InputDataMutationMark from './InputDataMutationMark'
+import InputDataSubName from './InputDataSubName'
+import InputDataMutation from './InputDataMutation'
 
 interface InputDataProps {
   me: TMe
@@ -42,10 +43,6 @@ const InputData: FC<InputDataProps> = ({
   editions,
 }) => {
   const { t } = useTranslation()
-  const { languageCode } = useLanguageCode()
-
-  const [mutationMarksModalOpened, setMutationMarksModalOpened] =
-    useState(false)
 
   const volumeState = useVolumeManagementStore((state) => state.volumeState)
   const volumeActions = useVolumeManagementStore((state) => state.volumeActions)
@@ -111,49 +108,11 @@ const InputData: FC<InputDataProps> = ({
                   />
                 </TableCell>
               </TableRow>
-              <TableRow>
-                <TableCell>{t('volume_overview.sub_name')}</TableCell>
-                <TableCell>
-                  <InputDataTextField
-                    value={volumeState.subName}
-                    onChange={(event) =>
-                      volumeActions.setSubName(event.target.value)
-                    }
-                  />
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>{t('volume_overview.mutation')}</TableCell>
-                <TableCell>
-                  <InputDataSelect
-                    value={volumeState.mutationId}
-                    onChange={(event) =>
-                      volumeActions.setMutationId(event.target.value)
-                    }
-                    options={mutations.map((mutation) => ({
-                      key: mutation.id,
-                      value: mutation.name[languageCode],
-                    }))}
-                  />
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>{t('specimens_overview.mutation_mark')}</TableCell>
-                <TableCell>
-                  <InputDataTextField
-                    value={volumeState.mutationMark}
-                    onClick={() => setMutationMarksModalOpened(true)}
-                  />
-                  <MutationMarkSelectorModal
-                    row={volumeState}
-                    open={mutationMarksModalOpened}
-                    onClose={() => setMutationMarksModalOpened(false)}
-                    onSave={(data) =>
-                      volumeActions.setMutationMark(data.mutationMark)
-                    }
-                  />
-                </TableCell>
-              </TableRow>
+
+              <InputDataSubName />
+              <InputDataMutation mutations={mutations} />
+              <InputDataMutationMark />
+
               <TableRow>
                 <TableCell>{t('volume_overview.bar_code')}</TableCell>
                 <TableCell>
