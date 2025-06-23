@@ -3,19 +3,21 @@ import { FormTabMultiSelect } from '../FormTabMultiSelect'
 
 const NumberOptionsTabMultiSelect = () => {
   const view = useSpecimensOverviewStore((state) => state.view)
-  const params = useSpecimensOverviewStore((state) => state.params)
-  const setParams = useSpecimensOverviewStore((state) => state.setParams)
+  const stateButtons = useSpecimensOverviewStore((state) => state.stateButtons)
+  const setStateButtons = useSpecimensOverviewStore(
+    (state) => state.setStateButtons
+  )
 
   return view === 'table' ? (
     <FormTabMultiSelect
-      selectedItems={params.numberOptions}
-      setSelectedItems={(value: string[]) =>
-        setParams({ ...params, numberOptions: value })
-      }
+      selectedItems={stateButtons}
+      setSelectedItems={(values) => {
+        setStateButtons(values)
+      }}
       label="Číslo"
       options={[
-        { label: 'Číslo existuje', value: 'numExists' },
-        { label: 'Číslo chybí', value: 'numMissing' },
+        { label: 'Číslo existuje', value: 'NUM_EXISTS' },
+        { label: 'Číslo chybí', value: 'NUM_MISSING' },
       ]}
     />
   ) : null

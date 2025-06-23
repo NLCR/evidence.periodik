@@ -9,7 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,7 +27,7 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ShibbolethService {
 
     private final UserService userService;
@@ -38,6 +38,22 @@ public class ShibbolethService {
 //            "https://shibboleth.nkp.cz/idp/shibboleth",
 //            "https://svkul.cz/idp/shibboleth",
 //            "https://shibo.vkol.cz/idp/shibboleth");
+
+    private static void removeSessionCookie(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("SESSION")) {
+                    cookie.setMaxAge(0);
+                    cookie.setValue(null);
+                    cookie.setPath("/");
+                    cookie.setSecure(true);
+                    cookie.setHttpOnly(true);
+                    response.addCookie(cookie);
+                }
+            }
+        }
+    }
 
     public void shibbolethLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, SolrServerException {
         String idp = request.getHeader("Shib-Identity-Provider");
@@ -65,7 +81,7 @@ public class ShibbolethService {
         Set<GrantedAuthority> authorities = userDetailsService.getGrantedAuthorities(user);
         UserDelegate shibUserDelegate = new UserDelegate(user, authorities, true);
         PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(
-                shibUserDelegate, "", authorities);
+            shibUserDelegate, "", authorities);
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(token);
@@ -85,15 +101,15 @@ public class ShibbolethService {
 
         // TODO: handle owner id from owners core
         User user = User.builder()
-                .id(UUID.randomUUID().toString())
-                .email(email)
-                .userName(eppn)
-                .firstName(firstName)
-                .lastName(lastName)
-                .role("user")
-                .active(true)
+            .id(UUID.randomUUID().toString())
+            .email(email)
+            .userName(eppn)
+            .firstName(firstName)
+            .lastName(lastName)
+            .role("user")
+            .active(true)
 //                .owners(List.of(owner))
-                .build();
+            .build();
 
 
         return userService.createUser(user);
@@ -113,10 +129,10 @@ public class ShibbolethService {
         String redirectUrl;
         if (userDelegate != null && userDelegate.getIsShibbolethAuth()) {
             redirectUrl = String.format("%s://%s%s/Shibboleth.sso/Logout?return=%s",
-                    "https", request.getServerName(), request.getContextPath(), "/");
+                "https", request.getServerName(), request.getContextPath(), "/");
         } else {
             redirectUrl = String.format("%s://%s%s/",
-                    "https", request.getServerName(), request.getContextPath());
+                "https", request.getServerName(), request.getContextPath());
         }
 
         // Invalidate session
@@ -129,21 +145,5 @@ public class ShibbolethService {
 
         // Redirect
         response.sendRedirect(redirectUrl);
-    }
-
-    private static void removeSessionCookie(HttpServletRequest request, HttpServletResponse response) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("SESSION")) {
-                    cookie.setMaxAge(0);
-                    cookie.setValue(null);
-                    cookie.setPath("/");
-                    cookie.setSecure(true);
-                    cookie.setHttpOnly(true);
-                    response.addCookie(cookie);
-                }
-            }
-        }
     }
 }

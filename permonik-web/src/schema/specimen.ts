@@ -62,10 +62,18 @@ export const SpecimenFacetSchema = z.object({
   count: z.number(),
 })
 
+const SpecimenStateEnumSchema = z.enum(['NUM_EXISTS', 'NUM_MISSING'])
+
+export const SpecimenStateButtonSchema = z.object({
+  id: SpecimenStateEnumSchema,
+  active: z.boolean(),
+})
+
 export type TSpecimenDamageTypes = z.infer<typeof SpecimenDamageTypesSchema>
 export type TSpecimen = z.infer<typeof SpecimenSchema>
 export type TEditableSpecimen = z.infer<typeof EditableSpecimenSchema>
 export type TSpecimenFacet = z.infer<typeof SpecimenFacetSchema>
+export type TSpecimenStateButton = z.infer<typeof SpecimenStateButtonSchema>
 export type TSpecimenDamageTypesFacet = z.infer<typeof SpecimenDamageTypesFacet>
 export type TSpecimensPublicationDays = z.infer<
   typeof SpecimensPublicationDaysSchema

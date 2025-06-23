@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { Dayjs } from 'dayjs'
+import { TSpecimenStateButton } from '../schema/specimen'
 
 export type TParams = {
   dateStart: number
   dateEnd: number
-  numberOptions: string[] // číslo chybí / číslo existuje
   names: string[]
   subNames: string[]
   mutationIds: string[]
@@ -18,7 +18,6 @@ export type TParams = {
 export const initialParams: TParams = {
   dateStart: 0,
   dateEnd: 0,
-  numberOptions: [],
   names: [],
   subNames: [],
   mutationIds: [],
@@ -32,6 +31,7 @@ interface TVariablesState {
   params: typeof initialParams
   pagination: { pageIndex: number; pageSize: number }
   barCodeInput: string
+  stateButtons: TSpecimenStateButton[]
   view: 'calendar' | 'table'
   synchronizeYearsBetweenViews: boolean
   calendarDate: Dayjs | null
@@ -43,6 +43,7 @@ interface TVariablesState {
 interface TState extends TVariablesState {
   setParams: (values: typeof initialParams) => void
   setBarCodeInput: (value: string) => void
+  setStateButtons: (value: TSpecimenStateButton[]) => void
   setPagination: (value: { pageIndex: number; pageSize: number }) => void
   resetAll: () => void
   setView: (value: 'calendar' | 'table') => void
@@ -58,6 +59,10 @@ export const useSpecimensOverviewStore = create<TState>()(
     params: initialParams,
     pagination: { pageIndex: 0, pageSize: 100 },
     barCodeInput: '',
+    stateButtons: [
+      { id: 'NUM_EXISTS', active: true },
+      { id: 'NUM_MISSING', active: false },
+    ],
     view: 'calendar',
     synchronizeYearsBetweenViews: true,
     calendarDate: null,
@@ -72,6 +77,11 @@ export const useSpecimensOverviewStore = create<TState>()(
     setBarCodeInput: (value) =>
       set((state) => ({
         barCodeInput: value,
+        pagination: { ...state.pagination, pageIndex: 0 },
+      })),
+    setStateButtons: (value) =>
+      set((state) => ({
+        stateButtons: value,
         pagination: { ...state.pagination, pageIndex: 0 },
       })),
     setPagination: (value) => set(() => ({ pagination: value })),
