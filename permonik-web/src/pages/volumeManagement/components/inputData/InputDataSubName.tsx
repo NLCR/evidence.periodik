@@ -16,12 +16,17 @@ const InputDataSubName = () => {
       <TableCell>{t('volume_overview.sub_name')}</TableCell>
       <TableCell>
         <InputDataTextField
-          editable
-          writeChangesThrough={() => {
-            console.log('TODO: propsat zadanou zmenu do vsech exemplaru')
+          editableData={{
+            fieldName: t('volume_overview.sub_name'),
+            saveChange: (value: string) => {
+              console.log(
+                `TODO: propsat zadanou zmenu ${value} do vsech exemplaru`
+              )
+            },
           }}
           value={subName}
           onChange={(event) => setSubName(event.target.value)}
+          fullWidth
         />
       </TableCell>
     </TableRow>

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import dayjs, { Dayjs } from 'dayjs'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -26,6 +26,7 @@ import { useInputDataEditabilityContext } from './InputDataEditabilityContextPro
 import InputDataMutationMark from './InputDataMutationMark'
 import InputDataSubName from './InputDataSubName'
 import InputDataMutation from './InputDataMutation'
+import { useParams } from 'react-router-dom'
 
 interface InputDataProps {
   me: TMe
@@ -47,6 +48,13 @@ const InputData: FC<InputDataProps> = ({
   const volumeState = useVolumeManagementStore((state) => state.volumeState)
   const volumeActions = useVolumeManagementStore((state) => state.volumeActions)
   const { locked, setLocked } = useInputDataEditabilityContext()
+
+  const { volumeId } = useParams()
+
+  useEffect(() => {
+    setLocked(!!volumeId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [volumeId])
 
   return (
     <CollapsableSidebar>
@@ -226,26 +234,28 @@ const InputData: FC<InputDataProps> = ({
             </TableBody>
           </Table>
           <Periodicity editions={editions} />
-          <ConfirmDialog
-            TriggerButton={
-              <Button sx={{ marginTop: 1 }} fullWidth variant="outlined">
-                {locked
-                  ? t('volume_overview.unlock_edit')
-                  : t('volume_overview.revert_edit')}
-              </Button>
-            }
-            onConfirm={() => setLocked(!locked)}
-            title={
-              locked
-                ? t('volume_overview.unlock_edit_dialog_title')
-                : t('volume_overview.revert_edit_dialog_title')
-            }
-            description={
-              locked
-                ? t('volume_overview.unlock_edit_dialog_description')
-                : t('volume_overview.revert_edit_dialog_description')
-            }
-          />
+          {(volumeId || locked) && (
+            <ConfirmDialog
+              TriggerButton={
+                <Button sx={{ marginTop: 1 }} fullWidth variant="outlined">
+                  {locked
+                    ? t('volume_overview.unlock_edit')
+                    : t('volume_overview.revert_edit')}
+                </Button>
+              }
+              onConfirm={() => setLocked(!locked)}
+              title={
+                locked
+                  ? t('volume_overview.unlock_edit_dialog_title')
+                  : t('volume_overview.revert_edit_dialog_title')
+              }
+              description={
+                locked
+                  ? t('volume_overview.unlock_edit_dialog_description')
+                  : t('volume_overview.revert_edit_dialog_description')
+              }
+            />
+          )}
         </Box>
       </Box>
     </CollapsableSidebar>

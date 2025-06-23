@@ -24,9 +24,14 @@ const InputDataMutation = ({ mutations }: Props) => {
       <TableCell>{t('volume_overview.mutation')}</TableCell>
       <TableCell>
         <InputDataSelect
-          editable
-          writeChangesThrough={() => {
-            console.log('TODO: propsat zadanou zmenu do vsech exemplaru')
+          editableData={{
+            saveChange: (value: string) => {
+              console.log(
+                'TODO: propsat zadanou zmenu do vsech exemplaru',
+                value
+              )
+            },
+            fieldName: t('volume_overview.mutation'),
           }}
           value={mutationId}
           onChange={(event) => setMutationId(event.target.value)}

@@ -3,47 +3,54 @@ import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import { useTranslation } from 'react-i18next'
+import { ReactElement } from 'react'
 
 type Props = {
   value: string | undefined
-  editable?: boolean
-  saveChange?: () => void
+  editableData?: {
+    DialogContent: ReactElement
+    fieldName: string
+    saveChange: () => void
+  }
 }
 
-const LockedInputDataItem = ({
-  value,
-  editable = false,
-  saveChange = undefined,
-}: Props) => {
-  if (editable && !saveChange) {
-    throw new Error(
-      'saveChange must be filled if the LockedInputDataItem is marked as editable'
-    )
-  }
-
+const LockedInputDataItem = ({ value, editableData = undefined }: Props) => {
   const { t } = useTranslation()
 
   return (
     <Box sx={{ marginY: 1, display: 'flex', justifyContent: 'space-between' }}>
       {value ?? '-'}
-      {editable && (
+      {editableData && (
         <>
           <ConfirmDialog
-            title={t('volume_overview.')}
+            title={
+              t('volume_overview.editing_dialog_title') +
+              ': ' +
+              editableData.fieldName
+            }
             description={
-              <Box>
-                <Box>tady bude ta editacni vec</Box>
-                {t('volume_overview.')}
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'start',
+                  flexDirection: 'column',
+                  gap: 1,
+                }}
+              >
+                {editableData.DialogContent}
+                {t('volume_overview.editing_dialog_description')}
               </Box>
             }
             onConfirm={() => {
-              //TODO
+              editableData.saveChange()
             }}
             TriggerButton={
-              <IconButton>
+              <IconButton sx={{ marginY: -1 }}>
                 <EditIcon />
               </IconButton>
             }
+            confirmLabel={t('volume_overview.editing_dialog_yes')}
+            refuseLabel={t('volume_overview.editing_dialog_no')}
           />
         </>
       )}

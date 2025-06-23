@@ -104,7 +104,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
     }
   }
 
-  const generateVolume = () => {
+  const generateVolume: () => boolean = () => {
     // This ensures that `getDayName` will return english name of day
     dayjs.locale('en')
     const volumeClone = clone(volumeState)
@@ -115,7 +115,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
     if (!validation.success) {
       validation.error.errors.map((e) => toast.error(e.message))
       // toast.error(t('volume_overview.volume_input_data_validation_error'))
-      return
+      return false
     }
 
     const dates = getDaysArray(repairedVolume.dateFrom, repairedVolume.dateTo)
@@ -196,6 +196,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
     volumePeriodicityActions.setPeriodicityGenerationUsed(true)
     toast.success(t('volume_overview.specimens_generated_successfully'))
     setPeriodicityModalVisible(false)
+    return true
   }
 
   return (
@@ -217,8 +218,9 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
         }}
         acceptButton={{
           callback: () => {
-            generateVolume()
-            setLocked(true)
+            if (generateVolume()) {
+              setLocked(true)
+            }
           },
           text: t('volume_overview.generate_volume'),
           disabled: disabled || locked,
