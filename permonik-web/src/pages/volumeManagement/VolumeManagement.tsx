@@ -1,13 +1,7 @@
-import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react'
-import SaveIcon from '@mui/icons-material/Save'
-import SaveAsIcon from '@mui/icons-material/SaveAs'
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import { FC, useEffect } from 'react'
 import { useManagedVolumeDetailQuery } from '../../api/volume'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
@@ -16,17 +10,13 @@ import { useMutationListQuery } from '../../api/mutation'
 import { useOwnerListQuery } from '../../api/owner'
 import { useEditionListQuery } from '../../api/edition'
 import { useMeQuery } from '../../api/user'
-import SpecimensTable from './components/Table'
+import SpecimensTable from './components/SpecimensTable'
 import { useMetaTitleListQuery } from '../../api/metaTitle'
 import { useVolumeManagementStore } from '../../slices/useVolumeManagementStore'
 import InputData from './components/inputData/InputData'
+import { InputDataEditabilityContextProvider } from './components/inputData/InputDataEditabilityContextProvider'
+import SpecimensActions from './components/SpecimensActions'
 import useVolumeManagementActions from '../../hooks/useVolumeManagementActions'
-import Button from '@mui/material/Button'
-import { BACK_META_TITLE_ID } from '../../utils/constants'
-import ModalContainer from '../../components/ModalContainer'
-import VolumeStatsModalContent from '../../components/VolumeStatsModalContent'
-import { validate as uuidValidate } from 'uuid'
-import UnsavedChangesModal from './components/UnsavedChangesModal'
 
 type TVolumeManagementProps = {
   duplicated?: boolean
@@ -37,15 +27,7 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
 }) => {
   const { volumeId } = useParams()
   const { data: me, isLoading: meLoading, isError: meError } = useMeQuery()
-  const { t, i18n } = useTranslation()
-
-  const [searchParams] = useSearchParams()
-
-  const [volumeStatsModalOpened, setVolumeStatsModalOpened] = useState(false)
-  const [confirmDeletionModalStage, setConfirmDeletionModalStage] = useState({
-    opened: false,
-    stage: 1,
-  })
+  const { t } = useTranslation()
 
   const setInitialState = useVolumeManagementStore(
     (state) => state.setInitialState
@@ -56,9 +38,6 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
   )
   const specimensActions = useVolumeManagementStore(
     (state) => state.specimensActions
-  )
-  const volumeOvergenerated = useVolumeManagementStore(
-    (state) => state.periodicityGenerationUsed
   )
 
   const {
@@ -87,23 +66,6 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
     isError: metaTitlesError,
   } = useMetaTitleListQuery()
 
-  const backMetaTitle = useMemo(
-    () =>
-      uuidValidate(searchParams.get(BACK_META_TITLE_ID) || '')
-        ? searchParams.get(BACK_META_TITLE_ID)
-        : volume?.volume.metaTitleId,
-    [searchParams, volume?.volume.metaTitleId]
-  )
-
-  const {
-    doDuplicate,
-    doUpdate,
-    doOvergeneratedUpdate,
-    doCreate,
-    doDelete,
-    pendingActions,
-  } = useVolumeManagementActions(editions || [])
-
   useEffect(() => {
     if (volume?.volume) {
       volumeActions.setVolumeState(volume.volume, false)
@@ -127,105 +89,14 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
     duplicated,
   ])
 
-  const handleDeletion = () => {
-    doDelete()
-  }
-
-  const canEdit = useMemo(
-    () =>
-      me?.owners?.some((o) => o === volume?.volume?.ownerId) ||
-      !volumeId?.length ||
-      me?.role === 'super_admin',
-    [me, volume?.volume, volumeId?.length]
-  )
-
-  const actions = useMemo(() => {
-    const actionsArray: {
-      icon: ReactNode
-      name: string
-      color: 'primary' | 'secondary' | 'error'
-      onClick: () => void
-    }[] = []
-
-    if (volumeId && volumeOvergenerated) {
-      actionsArray.push(
-        {
-          icon: <ContentCopyIcon />,
-          name: t('administration.duplicate_volume'),
-          color: 'primary',
-          onClick: () => doDuplicate(),
-        },
-        {
-          icon: <CheckCircleIcon />,
-          name: t('administration.verified'),
-          color: 'primary',
-          onClick: () => doOvergeneratedUpdate(true),
-        },
-        {
-          icon: <SaveAsIcon />,
-          name: t('administration.save'),
-          color: 'primary',
-          onClick: () => doOvergeneratedUpdate(),
-        }
-      )
-    }
-    if (volumeId && !volumeOvergenerated) {
-      actionsArray.push(
-        {
-          icon: <ContentCopyIcon />,
-          name: t('administration.duplicate_volume'),
-          color: 'primary',
-          onClick: () => doDuplicate(),
-        },
-        {
-          icon: <CheckCircleIcon />,
-          name: t('administration.verified'),
-          color: 'primary',
-          onClick: () => doUpdate(true),
-        },
-        {
-          icon: <SaveAsIcon />,
-          name: t('administration.save'),
-          color: 'primary',
-          onClick: () => doUpdate(),
-        }
-      )
-    }
-    if (volumeId) {
-      actionsArray.push({
-        icon: <DeleteForeverIcon />,
-        name: t('administration.delete'),
-        color: 'error',
-        onClick: () => setConfirmDeletionModalStage({ opened: true, stage: 1 }),
-      })
-    }
-    if (!volumeId) {
-      actionsArray.push(
-        {
-          icon: <CheckCircleIcon />,
-          name: t('administration.verified'),
-          color: 'primary',
-          onClick: () => doCreate(true),
-        },
-        {
-          icon: <SaveIcon />,
-          name: t('administration.save'),
-          color: 'primary',
-          onClick: () => doCreate(),
-        }
-      )
-    }
-
-    return actionsArray
-  }, [
+  const {
     doDuplicate,
-    doCreate,
-    doOvergeneratedUpdate,
     doUpdate,
-    t,
-    volumeId,
-    volumeOvergenerated,
-  ])
+    doOvergeneratedUpdate,
+    doCreate,
+    doDelete,
+    pendingActions,
+  } = useVolumeManagementActions(editions || [])
 
   if (
     volumeLoading ||
@@ -260,194 +131,72 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        gap: '16px',
-        width: '100%',
-      }}
+    <InputDataEditabilityContextProvider
+      me={me}
+      volume={volume}
+      volumeId={volumeId}
+      locked={false}
     >
-      {pendingActions ? (
-        <Box
-          sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 100,
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Loader />
-        </Box>
-      ) : null}
-      <InputData
-        canEdit={canEdit}
-        me={me}
-        mutations={mutations}
-        owners={owners}
-        metaTitles={metaTitles}
-        editions={editions}
-      />
       <Box
         sx={{
           display: 'flex',
-          flexDirection: 'column',
-          padding: '16px',
-          backgroundColor: 'white',
-          borderRadius: '8px',
+          gap: '16px',
           width: '100%',
-          overflow: 'auto',
-          // boxShadow: theme.shadows[1],
         }}
       >
-        <SpecimensTable
-          canEdit={canEdit}
+        {pendingActions ? (
+          <Box
+            sx={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 100,
+              backgroundColor: 'rgba(0, 0, 0, 0.2)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Loader />
+          </Box>
+        ) : null}
+        <InputData
+          me={me}
           mutations={mutations}
+          owners={owners}
+          metaTitles={metaTitles}
           editions={editions}
         />
         <Box
           sx={{
-            marginTop: '16px',
             display: 'flex',
-            justifyContent: 'space-between',
-            gap: '8px',
-            alignItems: 'center',
+            flexDirection: 'column',
+            padding: '16px',
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            width: '100%',
+            overflow: 'auto',
+            // ...(locked ? {} : {}),
+            // boxShadow: theme.shadows[1],
           }}
         >
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              gap: '8px',
-              alignItems: 'center',
-            }}
-          >
-            {backMetaTitle?.length ? (
-              <Button
-                component={Link}
-                variant="outlined"
-                to={`/${i18n.resolvedLanguage}/${t('urls.specimens_overview')}/${backMetaTitle}`}
-              >
-                {t('volume_overview.back_to_specimens_overview')}
-              </Button>
-            ) : null}
-            {volumeId ? (
-              <Button
-                variant="outlined"
-                onClick={() => setVolumeStatsModalOpened(true)}
-              >
-                {t('specimens_overview.volume_overview_modal_link')}
-              </Button>
-            ) : null}
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              gap: '8px',
-              alignItems: 'center',
-            }}
-          >
-            {canEdit ? (
-              <>
-                {actions.map((action) => (
-                  <Button
-                    variant="contained"
-                    color={action.color}
-                    key={action.name}
-                    startIcon={action.icon}
-                    onClick={action.onClick}
-                  >
-                    {action.name}
-                  </Button>
-                ))}
-              </>
-            ) : null}
-          </Box>
+          <SpecimensTable mutations={mutations} editions={editions} />
+          <SpecimensActions
+            duplicated={duplicated}
+            me={me}
+            volume={volume}
+            editions={editions}
+            doDuplicate={doDuplicate}
+            doUpdate={doUpdate}
+            doOvergeneratedUpdate={doOvergeneratedUpdate}
+            doCreate={doCreate}
+            doDelete={doDelete}
+          />
         </Box>
       </Box>
-      <ModalContainer
-        onClose={() =>
-          setConfirmDeletionModalStage((prevState) => ({
-            ...prevState,
-            opened: false,
-          }))
-        }
-        header={
-          confirmDeletionModalStage.stage === 1
-            ? t('volume_overview.delete_volume_text')
-            : t('volume_overview.delete_volume_text2')
-        }
-        opened={!!volumeId?.length && confirmDeletionModalStage.opened}
-        acceptButton={{
-          callback: () => {
-            if (confirmDeletionModalStage.stage === 1) {
-              setConfirmDeletionModalStage((prevState) => ({
-                ...prevState,
-                opened: false,
-              }))
-            }
-            if (confirmDeletionModalStage.stage === 2) {
-              setConfirmDeletionModalStage((prevState) => ({
-                ...prevState,
-                opened: false,
-              }))
-            }
-          },
-          text:
-            confirmDeletionModalStage.stage === 1
-              ? t('common.no')
-              : t('common.yes'),
-        }}
-        closeButton={{
-          callback: () => {
-            if (confirmDeletionModalStage.stage === 1) {
-              setConfirmDeletionModalStage((prevState) => ({
-                ...prevState,
-                stage: 2,
-              }))
-            }
-            if (confirmDeletionModalStage.stage === 2) {
-              setConfirmDeletionModalStage((prevState) => ({
-                ...prevState,
-                opened: false,
-              }))
-              handleDeletion()
-            }
-          },
-          text:
-            confirmDeletionModalStage.stage === 1
-              ? t('common.yes')
-              : t('common.no'),
-        }}
-        style="fitted"
-        switchButtons={confirmDeletionModalStage.stage === 2}
-      >
-        <Typography
-          sx={{
-            marginBottom: '16px',
-          }}
-        >
-          {confirmDeletionModalStage.stage === 1
-            ? t('volume_overview.delete_volume_text')
-            : t('volume_overview.delete_volume_text2')}
-        </Typography>
-      </ModalContainer>
-      <ModalContainer
-        header={t('specimens_overview.volume_overview_modal_link')}
-        opened={volumeStatsModalOpened}
-        onClose={() => setVolumeStatsModalOpened(false)}
-        closeButton={{ callback: () => setVolumeStatsModalOpened(false) }}
-      >
-        <VolumeStatsModalContent volumeId={volumeId} />
-      </ModalContainer>
-      <UnsavedChangesModal />
-    </Box>
+    </InputDataEditabilityContextProvider>
   )
 }
 

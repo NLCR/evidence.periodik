@@ -42,6 +42,7 @@ import Tooltip from '@mui/material/Tooltip'
 import DuplicationEditCell from './editCells/DuplicationEditCell'
 import DeletionEditCell from './editCells/DeletionEditCell'
 import { useShallow } from 'zustand/shallow'
+import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 
 const ODD_OPACITY = 0.2
 
@@ -194,16 +195,16 @@ const renderDeletionEditCell = (row: TEditableSpecimen, canEdit: boolean) => {
 }
 
 interface TableProps {
-  canEdit: boolean
   mutations: TMutation[]
   editions: TEdition[]
 }
 
-const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
+const Table: FC<TableProps> = ({ mutations, editions }) => {
   const { languageCode } = useLanguageCode()
   const { MuiTableLocale } = useMuiTableLang()
   const { t } = useTranslation()
   const apiRef = useGridApiRef()
+  const { disabled } = useInputDataEditabilityContext()
 
   const [searchParams] = useSearchParams()
 
@@ -252,7 +253,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderValue(
           dayjs(row.publicationDate).format('dd DD.MM.YYYY'),
           true,
-          canEdit
+          !disabled
         )
       },
     },
@@ -280,7 +281,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
-        return renderDuplicationEditCell(row, canEdit)
+        return renderDuplicationEditCell(row, !disabled)
       },
     },
     ...(!stateHasUnsavedData && specimensState.length
@@ -307,7 +308,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
             headerAlign: 'center' as GridAlignment,
             renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
               const { row } = params
-              return renderDeletionEditCell(row, canEdit)
+              return renderDeletionEditCell(row, !disabled)
             },
           },
         ]
@@ -326,11 +327,11 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       ),
       width: 50,
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
-        return renderCheckBox(row.numExists, true, canEdit)
+        return renderCheckBox(row.numExists, true, !disabled)
       },
     },
     {
@@ -347,11 +348,11 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       ),
       width: 50,
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
-        return renderCheckBox(row.numMissing, true, canEdit)
+        return renderCheckBox(row.numMissing, true, !disabled)
       },
     },
     {
@@ -367,7 +368,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         </Tooltip>
       ),
       width: 50,
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
@@ -376,7 +377,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderRenumberableValue(
           row,
           (row.numExists || row.numMissing) && !row.isAttachment,
-          canEdit,
+          !disabled,
           'number',
           apiRef
         )
@@ -395,7 +396,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         </Tooltip>
       ),
       width: 60,
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
@@ -404,7 +405,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderRenumberableValue(
           row,
           (row.numExists || row.numMissing) && row.isAttachment,
-          canEdit,
+          !disabled,
           'attachmentNumber',
           apiRef
         )
@@ -424,14 +425,14 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         </Tooltip>
       ),
       width: 60,
-      editable: canEdit,
+      editable: !disabled,
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
         return renderValue(
           mutations.find((m) => m.id === row.mutationId)?.name[languageCode],
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       valueOptions: mutations.map((v) => ({
@@ -453,14 +454,14 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         </Tooltip>
       ),
       width: 50,
-      editable: canEdit,
+      editable: !disabled,
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
         return renderValue(
           editions.find((m) => m.id === row.editionId)?.name[languageCode],
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       valueOptions: editions.map((v) => ({
@@ -482,11 +483,11 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         </Tooltip>
       ),
       type: 'string',
-      editable: canEdit,
+      editable: !disabled,
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
-        return renderValue(row.name, row.numExists, canEdit)
+        return renderValue(row.name, row.numExists, !disabled)
       },
       // width: 1,
     },
@@ -503,11 +504,11 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         </Tooltip>
       ),
       type: 'string',
-      editable: canEdit,
+      editable: !disabled,
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
-        return renderValue(row.subName, row.numExists, canEdit)
+        return renderValue(row.subName, row.numExists, !disabled)
       },
       // width: 1,
     },
@@ -524,13 +525,13 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         </Tooltip>
       ),
       width: 50,
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
-        return renderValue(row.pagesCount, row.numExists, canEdit)
+        return renderValue(row.pagesCount, row.numExists, !disabled)
       },
     },
     {
@@ -548,11 +549,11 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       ),
       type: 'string',
       width: 60,
-      editable: canEdit,
+      editable: !disabled,
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
-        return renderValue(row.mutationMark, row.numExists, canEdit)
+        return renderValue(row.mutationMark, row.numExists, !disabled)
       },
       renderEditCell: renderMutationMarkEditCell,
     },
@@ -563,7 +564,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         const { field } = params
         return renderHeaderWithColumnAction(
           field as TSpecimenDamageTypes,
-          canEdit,
+          !disabled,
           apiRef,
           t('facet_states_short.OK'),
           t('facet_states_short.OK_tooltip')
@@ -571,7 +572,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       },
       width: 52,
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
@@ -580,7 +581,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderCheckBox(
           !!row.damageTypes?.includes('OK'),
           row.numExists,
-          canEdit,
+          !disabled,
           'success'
         )
       },
@@ -600,7 +601,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       ),
       width: 52,
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
@@ -609,7 +610,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderCheckBox(
           !!row.damageTypes?.includes('PP'),
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       renderEditCell: renderDamagedAndMissingPagesEditCell,
@@ -621,14 +622,14 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         const { field } = params
         return renderHeaderWithColumnAction(
           field as TSpecimenDamageTypes,
-          canEdit,
+          !disabled,
           apiRef,
           t('facet_states_short.Deg'),
           t('facet_states_short.Deg_tooltip')
         )
       },
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       width: 52,
@@ -638,7 +639,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderCheckBox(
           !!row.damageTypes?.includes('Deg'),
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       renderEditCell: renderDamageTypesEditCell,
@@ -657,7 +658,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       ),
       width: 52,
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
@@ -666,7 +667,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderCheckBox(
           !!row.damageTypes?.includes('ChS'),
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       renderEditCell: renderDamagedAndMissingPagesEditCell,
@@ -685,7 +686,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       ),
       width: 52,
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
@@ -694,7 +695,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderCheckBox(
           !!row.damageTypes?.includes('ChPag'),
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       renderEditCell: renderDamageTypesEditCell,
@@ -713,7 +714,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       ),
       width: 52,
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
@@ -722,7 +723,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderCheckBox(
           !!row.damageTypes?.includes('ChDatum'),
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       renderEditCell: renderDamageTypesEditCell,
@@ -741,7 +742,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       ),
       width: 52,
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
@@ -750,7 +751,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderCheckBox(
           !!row.damageTypes?.includes('ChCis'),
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       renderEditCell: renderDamageTypesEditCell,
@@ -769,7 +770,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       ),
       width: 52,
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
@@ -778,7 +779,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderCheckBox(
           !!row.damageTypes?.includes('ChSv'),
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       renderEditCell: renderDamageTypesEditCell,
@@ -790,14 +791,14 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         const { field } = params
         return renderHeaderWithColumnAction(
           field as TSpecimenDamageTypes,
-          canEdit,
+          !disabled,
           apiRef,
           t('facet_states_short.NS'),
           t('facet_states_short.NS_tooltip')
         )
       },
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       width: 52,
@@ -807,7 +808,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderCheckBox(
           !!row.damageTypes?.includes('NS'),
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       renderEditCell: renderDamageTypesEditCell,
@@ -826,7 +827,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       ),
       width: 52,
       type: 'boolean',
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
       headerAlign: 'center',
@@ -835,7 +836,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
         return renderCheckBox(
           !!row.damageTypes?.includes('Cz'),
           row.numExists,
-          canEdit
+          !disabled
         )
       },
       renderEditCell: renderDamageTypesEditCell,
@@ -847,10 +848,10 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
-        return renderValue(row.note, row.numExists, canEdit)
+        return renderValue(row.note, row.numExists, !disabled)
       },
       headerName: t('volume_overview.note'),
-      editable: canEdit,
+      editable: !disabled,
       filterable: false,
       disableColumnMenu: true,
     },
@@ -866,7 +867,7 @@ const Table: FC<TableProps> = ({ canEdit, mutations, editions }) => {
   const isCellEditable = (params: GridCellParams<TEditableSpecimen>) => {
     const { row, field } = params
 
-    if (!canEdit) return false
+    if (disabled) return false
     if (field === 'publicationDate') return false
 
     const hasNumValue = row.numExists || row.numMissing

@@ -27,7 +27,7 @@ export const useVolumeOverviewStatsQuery = (id?: string) =>
     enabled: !!id,
   })
 
-type TUpdatableVolume = {
+export type TUpdatableVolume = {
   volume: TVolume
   specimens: TSpecimen[]
 }

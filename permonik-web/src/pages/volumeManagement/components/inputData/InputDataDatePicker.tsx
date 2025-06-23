@@ -1,4 +1,4 @@
-import DatePicker, { DatePickerProps } from '@mui/lab/DatePicker'
+import { DatePicker, DatePickerProps } from '@mui/x-date-pickers-pro'
 import LockedInputDataItem from './LockedInputDataItem'
 import dayjs, { Dayjs } from 'dayjs'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'

@@ -6,8 +6,6 @@ import TableCell from '@mui/material/TableCell'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Box from '@mui/material/Box'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
@@ -205,6 +203,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
       <Button
         // disabled={!canEdit}
         variant="contained"
+        fullWidth
         onClick={() => setPeriodicityModalVisible(true)}
       >
         {t('volume_overview.edit_periodicity')}
