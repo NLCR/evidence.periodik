@@ -19,6 +19,13 @@ const InputDataMutation = ({ mutations }: Props) => {
   const { t } = useTranslation()
   const { languageCode } = useLanguageCode()
 
+  const specimensState = useVolumeManagementStore(
+    (state) => state.specimensState
+  )
+  const setSpecimensState = useVolumeManagementStore(
+    (state) => state.specimensActions.setSpecimensState
+  )
+
   return (
     <TableRow>
       <TableCell>{t('volume_overview.mutation')}</TableCell>
@@ -26,9 +33,13 @@ const InputDataMutation = ({ mutations }: Props) => {
         <InputDataSelect
           editableData={{
             saveChange: (value: string) => {
-              console.log(
-                'TODO: propsat zadanou zmenu do vsech exemplaru',
-                value
+              setMutationId(value)
+              setSpecimensState(
+                specimensState.map((specimen) => ({
+                  ...specimen,
+                  mutationId: value,
+                })),
+                true
               )
             },
             fieldName: t('volume_overview.mutation'),

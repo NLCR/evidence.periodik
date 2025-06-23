@@ -5,9 +5,20 @@ import TableCell from '@mui/material/TableCell'
 import { useTranslation } from 'react-i18next'
 
 const InputDataMutationMark = () => {
-  const volumeState = useVolumeManagementStore((state) => state.volumeState)
-  const volumeActions = useVolumeManagementStore((state) => state.volumeActions)
+  const mutationMark = useVolumeManagementStore(
+    (state) => state.volumeState.mutationMark
+  )
+  const setMutationMark = useVolumeManagementStore(
+    (state) => state.volumeActions.setMutationMark
+  )
   const { t } = useTranslation()
+
+  const specimensState = useVolumeManagementStore(
+    (state) => state.specimensState
+  )
+  const setSpecimensState = useVolumeManagementStore(
+    (state) => state.specimensActions.setSpecimensState
+  )
 
   return (
     <TableRow>
@@ -17,12 +28,19 @@ const InputDataMutationMark = () => {
           editableData={{
             fieldName: t('specimens_overview.mutation_mark'),
             saveChange: (value: string) => {
-              console.log('TODO: propsat zmenu', value)
+              setMutationMark(value)
+              setSpecimensState(
+                specimensState.map((specimen) => ({
+                  ...specimen,
+                  mutationMark: value,
+                })),
+                true
+              )
             },
           }}
-          value={volumeState.mutationMark}
+          value={mutationMark}
           isMutationMarkInputTextField
-          onChange={(e) => volumeActions.setMutationMark(e.target.value)}
+          onChange={(e) => setMutationMark(e.target.value)}
         />
       </TableCell>
     </TableRow>

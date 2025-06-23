@@ -11,6 +11,13 @@ const InputDataSubName = () => {
   )
   const { t } = useTranslation()
 
+  const specimensState = useVolumeManagementStore(
+    (state) => state.specimensState
+  )
+  const setSpecimensState = useVolumeManagementStore(
+    (state) => state.specimensActions.setSpecimensState
+  )
+
   return (
     <TableRow>
       <TableCell>{t('volume_overview.sub_name')}</TableCell>
@@ -19,8 +26,13 @@ const InputDataSubName = () => {
           editableData={{
             fieldName: t('volume_overview.sub_name'),
             saveChange: (value: string) => {
-              console.log(
-                `TODO: propsat zadanou zmenu ${value} do vsech exemplaru`
+              setSubName(value)
+              setSpecimensState(
+                specimensState.map((specimen) => ({
+                  ...specimen,
+                  subName: value,
+                })),
+                true
               )
             },
           }}
