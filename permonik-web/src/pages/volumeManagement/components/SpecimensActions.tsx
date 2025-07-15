@@ -58,13 +58,13 @@ const SpecimensActions = ({
   const setInitialState = useVolumeManagementStore(
     (state) => state.setInitialState
   )
-  const volumeActions = useVolumeManagementStore((state) => state.volumeActions)
+  // const volumeActions = useVolumeManagementStore((state) => state.volumeActions)
   const volumePeriodicityActions = useVolumeManagementStore(
     (state) => state.volumePeriodicityActions
   )
-  const specimensActions = useVolumeManagementStore(
-    (state) => state.specimensActions
-  )
+  // const specimensActions = useVolumeManagementStore(
+  //   (state) => state.specimensActions
+  // )
   const volumeOvergenerated = useVolumeManagementStore(
     (state) => state.periodicityGenerationUsed
   )
@@ -77,13 +77,13 @@ const SpecimensActions = ({
     [searchParams, volume?.volume.metaTitleId]
   )
 
-  useEffect(() => {
-    if (volume?.volume) {
-      volumeActions.setVolumeState(volume.volume, false)
-      specimensActions.setSpecimensState(volume.specimens, false)
-      volumePeriodicityActions.setPeriodicityGenerationUsed(false)
-    }
-  }, [specimensActions, volume, volumeActions, volumePeriodicityActions])
+  // useEffect(() => {
+  //   if (volume?.volume) {
+  //     volumeActions.setVolumeState(volume.volume, false)
+  //     specimensActions.setSpecimensState(volume.specimens, false)
+  //     volumePeriodicityActions.setPeriodicityGenerationUsed(false)
+  //   }
+  // }, [specimensActions, volume, volumeActions, volumePeriodicityActions])
 
   useEffect(() => {
     if (!volumeId && !duplicated) {

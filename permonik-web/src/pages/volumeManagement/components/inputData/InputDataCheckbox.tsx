@@ -1,8 +1,13 @@
+import { useFormContext } from 'react-hook-form'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import Checkbox, { CheckboxProps } from '@mui/material/Checkbox'
 
-const InputDataCheckbox = (props: CheckboxProps) => {
+type Props = { name: string }
+
+const InputDataCheckbox = ({ name, ...props }: Props & CheckboxProps) => {
   const { locked, disabled } = useInputDataEditabilityContext()
+  const { register, watch } = useFormContext()
+  const checked = watch(name)
 
   return (
     <Checkbox
@@ -15,6 +20,8 @@ const InputDataCheckbox = (props: CheckboxProps) => {
       }}
       disabled={disabled || locked}
       {...props}
+      checked={checked}
+      {...register(name)}
     />
   )
 }

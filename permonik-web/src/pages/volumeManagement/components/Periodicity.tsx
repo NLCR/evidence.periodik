@@ -6,8 +6,6 @@ import TableCell from '@mui/material/TableCell'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
-import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
@@ -17,6 +15,7 @@ import dayjs from 'dayjs'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
 import { TEdition } from '../../../schema/edition'
 import {
+  TEditableVolume,
   TEditableVolumePeriodicity,
   VolumeSchema,
 } from '../../../schema/volume'
@@ -25,7 +24,6 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import useSortedSpecimensNamesAndSubNames from '../../../hooks/useSortedSpecimensNamesAndSubNames'
-import Autocomplete from '@mui/material/Autocomplete'
 import ModalContainer from '../../../components/ModalContainer'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import { repairOrCreateSpecimen } from '../../../utils/specimen'
@@ -35,6 +33,8 @@ import InputDataSelect from './inputData/InputDataSelect'
 import InputDataTextField from './inputData/InputDataTextField'
 import IconButton from '@mui/material/IconButton'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
+import { useFormContext } from 'react-hook-form'
+import InputDataAutocomplete from './inputData/InputDataAutocomplete'
 
 const getDaysArray = (start: string, end: string): string[] => {
   const arr: string[] = []
@@ -63,25 +63,25 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
   const { languageCode } = useLanguageCode()
 
   const { disabled, locked, setLocked } = useInputDataEditabilityContext()
+  const { getValues, watch } = useFormContext()
 
-  const setShowAttachmentsAtTheEnd = useVolumeManagementStore(
-    (state) => state.volumeActions.setShowAttachmentsAtTheEnd
-  )
+  const periodicityData = watch('periodicity') as TEditableVolumePeriodicity[]
+
   const volumePeriodicityActions = useVolumeManagementStore(
     (state) => state.volumePeriodicityActions
   )
   const specimensActions = useVolumeManagementStore(
     (state) => state.specimensActions
   )
-  const volumeState = useVolumeManagementStore((state) => state.volumeState)
 
   const { names, subNames } = useSortedSpecimensNamesAndSubNames()
 
   const duplicateRow = (row: TEditableVolumePeriodicity) => {
-    const periodicityClone = clone(volumeState.periodicity)
-    const periodicityIndex = volumeState.periodicity.findIndex((p) =>
-      isEqual(p, row)
-    )
+    const periodicityData = getValues(
+      'periodicity'
+    ) as TEditableVolumePeriodicity[]
+    const periodicityClone = clone(periodicityData)
+    const periodicityIndex = periodicityData.findIndex((p) => isEqual(p, row))
 
     if (periodicityIndex >= 0) {
       periodicityClone.splice(periodicityIndex + 1, 0, {
@@ -93,10 +93,11 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
   }
 
   const removeRow = (row: TEditableVolumePeriodicity) => {
-    const periodicityClone = clone(volumeState.periodicity)
-    const periodicityIndex = volumeState.periodicity.findIndex((p) =>
-      isEqual(p, row)
-    )
+    const periodicityData = getValues(
+      'periodicity'
+    ) as TEditableVolumePeriodicity[]
+    const periodicityClone = clone(periodicityData)
+    const periodicityIndex = periodicityData.findIndex((p) => isEqual(p, row))
 
     if (periodicityIndex >= 0) {
       periodicityClone.splice(periodicityIndex, 1)
@@ -107,8 +108,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
   const generateVolume: () => boolean = () => {
     // This ensures that `getDayName` will return english name of day
     dayjs.locale('en')
-    const volumeClone = clone(volumeState)
-
+    const volumeClone = clone(getValues() as TEditableVolume)
     const repairedVolume = repairVolume(volumeClone, editions)
     const validation = VolumeSchema.safeParse(repairedVolume)
 
@@ -194,6 +194,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
     dayjs.locale(i18n.resolvedLanguage)
     specimensActions.setSpecimensState(specimens, true)
     volumePeriodicityActions.setPeriodicityGenerationUsed(true)
+    setVolumeState(volumeClone)
     toast.success(t('volume_overview.specimens_generated_successfully'))
     setPeriodicityModalVisible(false)
     return true
@@ -239,30 +240,18 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {volumeState.periodicity.map((p, index) => {
+            {periodicityData.map((p, index) => {
               return (
                 <TableRow key={`volume-periodicity-${p.day}`}>
                   <TableCell>{t(`volume_overview.days.${p.day}`)}</TableCell>
                   <TableCell>
                     <InputDataCheckbox
-                      checked={p.numExists}
-                      onChange={(event) =>
-                        volumePeriodicityActions.setNumExists(
-                          event.target.checked,
-                          index
-                        )
-                      }
+                      name={`periodicity[${index}].numExists`}
                     />
                   </TableCell>
                   <TableCell>
                     <InputDataSelect
-                      value={p.editionId ?? undefined}
-                      onChange={(event) =>
-                        volumePeriodicityActions.setEditionId(
-                          event.target.value,
-                          index
-                        )
-                      }
+                      name={`periodicity[${index}].editionId`}
                       options={editions.map((o) => ({
                         key: o.id,
                         value: o.name[languageCode],
@@ -271,72 +260,18 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
                   </TableCell>
                   <TableCell>
                     <InputDataTextField
-                      value={p.pagesCount}
-                      onChange={(event) =>
-                        volumePeriodicityActions.setPagesCount(
-                          event.target.value,
-                          index
-                        )
-                      }
+                      name={`periodicity[${index}].pageCount`}
                     />
                   </TableCell>
                   <TableCell>
-                    <Autocomplete
-                      freeSolo
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label=""
-                          onBlur={(event) =>
-                            volumePeriodicityActions.setName(
-                              event.target.value,
-                              index
-                            )
-                          }
-                        />
-                      )}
-                      sx={{
-                        minWidth: '200px',
-                      }}
-                      size="small"
-                      value={p.name}
-                      disabled={disabled || locked}
-                      onChange={(event, value) =>
-                        volumePeriodicityActions.setName(
-                          value ? value : '',
-                          index
-                        )
-                      }
+                    <InputDataAutocomplete
+                      name={`periodicity[${index}].name`}
                       options={names}
                     />
                   </TableCell>
                   <TableCell>
-                    <Autocomplete
-                      freeSolo
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label=""
-                          onBlur={(event) =>
-                            volumePeriodicityActions.setSubName(
-                              event.target.value,
-                              index
-                            )
-                          }
-                        />
-                      )}
-                      sx={{
-                        minWidth: '200px',
-                      }}
-                      size="small"
-                      value={p.subName}
-                      disabled={disabled || locked}
-                      onChange={(event, value) =>
-                        volumePeriodicityActions.setSubName(
-                          value ? value : '',
-                          index
-                        )
-                      }
+                    <InputDataAutocomplete
+                      name={`periodicity[${index}].subName`}
                       options={subNames}
                     />
                   </TableCell>
@@ -383,21 +318,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
             // alignItems: 'start',
             // fontSize: '12px',
           }}
-          control={
-            <Checkbox
-              checked={volumeState.showAttachmentsAtTheEnd}
-              onChange={(event) =>
-                setShowAttachmentsAtTheEnd(event.target.checked)
-              }
-              disabled={disabled || locked}
-              sx={{
-                // marginTop: 1,
-                // marginBottom: 1,
-                cursor: 'pointer',
-                // width: '100%',
-              }}
-            />
-          }
+          control={<InputDataCheckbox name={`showAttachmentsAtTheEnd`} />}
           label={t('volume_overview.show_attachments_at_the_end')}
         />
       </ModalContainer>

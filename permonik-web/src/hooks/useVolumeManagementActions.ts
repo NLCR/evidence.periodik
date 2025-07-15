@@ -211,6 +211,7 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
 
       const duplicatedVolume: TEditableVolume = {
         id: uuid(),
+        isLoading: false,
         barCode: '',
         dateFrom: repairedVolume.dateFrom,
         dateTo: repairedVolume.dateTo,

@@ -4,22 +4,43 @@ import IconButton from '@mui/material/IconButton'
 import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import { useTranslation } from 'react-i18next'
 import { ReactElement } from 'react'
+import { useFormContext } from 'react-hook-form'
+import dayjs from 'dayjs'
 
 type Props = {
-  value: string | undefined
+  name: string
   editableData?: {
     DialogContent: ReactElement
     fieldName: string
-    saveChange: () => void
+    saveChange: (value: string) => void
   }
+  type?: 'TEXT' | 'DATE' | 'NUMBER' | 'SELECT'
+  selectOptions?: { key: string; value: string }[]
 }
 
-const LockedInputDataItem = ({ value, editableData = undefined }: Props) => {
+const LockedInputDataItem = ({
+  name,
+  editableData = undefined,
+  type = 'TEXT',
+  selectOptions = undefined,
+}: Props) => {
   const { t } = useTranslation()
+  const { getValues, watch } = useFormContext()
+  const value = watch(name)
+
+  if (type === 'SELECT' && !selectOptions) {
+    throw new Error('Type SELECT must have selectOptions filled')
+  }
 
   return (
     <Box sx={{ marginY: 1, display: 'flex', justifyContent: 'space-between' }}>
-      {value ?? '-'}
+      {value
+        ? type === 'DATE'
+          ? dayjs(value).format('DD. MM. YYYY')
+          : type === 'SELECT'
+            ? selectOptions?.find((option) => option.key === value)?.value
+            : value
+        : '-'}
       {editableData && (
         <>
           <ConfirmDialog
@@ -42,7 +63,7 @@ const LockedInputDataItem = ({ value, editableData = undefined }: Props) => {
               </Box>
             }
             onConfirm={() => {
-              editableData.saveChange()
+              editableData.saveChange(getValues(name))
             }}
             TriggerButton={
               <IconButton sx={{ marginY: -1 }}>

@@ -1,28 +1,26 @@
 import LockedInputDataItem from './LockedInputDataItem'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
-import { ChangeEventHandler, useEffect, useState } from 'react'
+import { useState } from 'react'
 import MutationMarkSelectorModal from '../editCells/MutationMarkSelectorModal'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
+import { useFormContext } from 'react-hook-form'
 
 type FieldProps = {
   isMutationMarkInputTextField?: boolean
   disabled?: boolean
-  value: string | unknown
-  onChange:
-    | ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>
-    | undefined
+  name: string
 }
 
 const Field = ({
   isMutationMarkInputTextField = false,
-  value,
-  onChange,
+  name,
   disabled = false,
   ...props
 }: FieldProps & TextFieldProps) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
   const volumeState = useVolumeManagementStore((state) => state.volumeState)
+  const { register, setValue } = useFormContext()
 
   return (
     <>
@@ -35,10 +33,19 @@ const Field = ({
         }}
         disabled={disabled}
         {...props}
-        value={value}
-        onChange={onChange}
+        {...register(name)}
         onClick={() =>
           isMutationMarkInputTextField ? setIsModalOpened(true) : {}
+        }
+        // custom key validation - TBC as app develops
+        onBeforeInput={
+          props.inputMode === 'decimal'
+            ? (e) => {
+                if (!/\d/.test((e.nativeEvent as InputEvent).data || '')) {
+                  e.preventDefault()
+                }
+              }
+            : undefined
         }
       />
       {isMutationMarkInputTextField && (
@@ -46,12 +53,7 @@ const Field = ({
           row={volumeState}
           open={isModalOpened}
           onClose={() => setIsModalOpened(false)}
-          onSave={(data) =>
-            onChange &&
-            onChange({
-              target: { value: data.mutationMark },
-            } as React.ChangeEvent<HTMLInputElement>)
-          }
+          onSave={(data) => setValue(name, data.mutationMark)}
         />
       )}
     </>
@@ -59,40 +61,35 @@ const Field = ({
 }
 
 type Props = {
+  name: string
   isMutationMarkInputTextField?: boolean
   editableData?: { fieldName: string; saveChange: (value: string) => void }
 }
 
 const InputDataTextField = ({
+  name,
   isMutationMarkInputTextField = false,
   editableData = undefined,
   ...props
 }: TextFieldProps & Props) => {
   const { locked, disabled } = useInputDataEditabilityContext()
-  const [input, setInput] = useState<string>(props.value as string)
-
-  useEffect(() => {
-    setInput(props.value as string)
-  }, [props.value])
+  const { getValues } = useFormContext()
 
   return locked ? (
     <LockedInputDataItem
-      value={props.value ? props.value.toString() : '-'}
+      name={name}
       editableData={
         editableData
           ? {
               DialogContent: (
                 <Field
                   isMutationMarkInputTextField={isMutationMarkInputTextField}
+                  name={name}
                   {...props}
-                  value={input}
-                  onChange={(e) => {
-                    setInput(e.target.value)
-                  }}
                 />
               ),
               fieldName: editableData.fieldName,
-              saveChange: () => editableData.saveChange(input),
+              saveChange: () => editableData.saveChange(getValues(name)),
             }
           : undefined
       }
@@ -101,8 +98,7 @@ const InputDataTextField = ({
     <Field
       isMutationMarkInputTextField={isMutationMarkInputTextField}
       disabled={disabled}
-      onChange={props.onChange}
-      value={props.value}
+      name={name}
       {...props}
     />
   )

@@ -5,7 +5,6 @@ import { useVolumeManagementStore } from '../../../../slices/useVolumeManagement
 import { useTranslation } from 'react-i18next'
 
 const InputDataSubName = () => {
-  const subName = useVolumeManagementStore((state) => state.volumeState.subName)
   const setSubName = useVolumeManagementStore(
     (state) => state.volumeActions.setSubName
   )
@@ -36,8 +35,7 @@ const InputDataSubName = () => {
               )
             },
           }}
-          value={subName}
-          onChange={(event) => setSubName(event.target.value)}
+          name={'subName'}
           fullWidth
         />
       </TableCell>

@@ -32,12 +32,8 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
   const setInitialState = useVolumeManagementStore(
     (state) => state.setInitialState
   )
-  const volumeActions = useVolumeManagementStore((state) => state.volumeActions)
   const volumePeriodicityActions = useVolumeManagementStore(
     (state) => state.volumePeriodicityActions
-  )
-  const specimensActions = useVolumeManagementStore(
-    (state) => state.specimensActions
   )
 
   const {
@@ -65,14 +61,6 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
     isLoading: metaTitlesLoading,
     isError: metaTitlesError,
   } = useMetaTitleListQuery()
-
-  useEffect(() => {
-    if (volume?.volume) {
-      volumeActions.setVolumeState(volume.volume, false)
-      specimensActions.setSpecimensState(volume.specimens, false)
-      volumePeriodicityActions.setPeriodicityGenerationUsed(false)
-    }
-  }, [specimensActions, volume, volumeActions, volumePeriodicityActions])
 
   useEffect(() => {
     if (!volumeId && !duplicated) {
@@ -164,6 +152,15 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
         ) : null}
         <InputData
           me={me}
+          volume={volume?.volume}
+          isVolumeLoading={
+            meLoading ||
+            ownersLoading ||
+            editionsLoading ||
+            mutationsLoading ||
+            metaTitlesLoading ||
+            volumeLoading
+          }
           mutations={mutations}
           owners={owners}
           metaTitles={metaTitles}

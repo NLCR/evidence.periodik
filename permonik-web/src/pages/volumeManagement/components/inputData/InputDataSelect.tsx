@@ -1,25 +1,24 @@
 import LockedInputDataItem from './LockedInputDataItem'
-import Select, { SelectChangeEvent, SelectProps } from '@mui/material/Select'
+import Select, { SelectProps } from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
-import { ReactNode, useEffect, useState } from 'react'
+import { useFormContext } from 'react-hook-form'
 
 type FieldProps = {
+  name: string
   options: { key: string; value: string }[]
   disabled?: boolean
-  value: string | unknown
-  onChange:
-    | ((event: SelectChangeEvent<string>, child: ReactNode) => void)
-    | undefined
 }
 
 const Field = ({
+  name,
   options,
-  value,
-  onChange,
   disabled = false,
   ...props
 }: FieldProps & SelectProps<string>) => {
+  const { register, watch, setValue } = useFormContext()
+  const value = watch(name)
+
   return (
     <>
       <Select
@@ -31,8 +30,9 @@ const Field = ({
         }}
         disabled={disabled}
         {...props}
-        value={value}
-        onChange={onChange}
+        {...register(name)}
+        value={value ?? ''}
+        onChange={(event) => setValue(name, event.target.value)}
       >
         {options.map((o) => (
           <MenuItem key={o.key} value={o.key}>
@@ -45,40 +45,36 @@ const Field = ({
 }
 
 type Props = {
+  name: string
   options: { key: string; value: string }[]
   editableData?: { fieldName: string; saveChange: (value: string) => void }
 }
 
 const InputDataSelect = ({
+  name,
   options,
   editableData = undefined,
   ...props
 }: Props & SelectProps<string>) => {
   const { locked, disabled } = useInputDataEditabilityContext()
-
-  const [input, setInput] = useState<string>(props.value as string)
-
-  useEffect(() => {
-    setInput(props.value as string)
-  }, [props.value])
+  const { getValues } = useFormContext()
 
   return locked ? (
     <LockedInputDataItem
-      value={options.find((option) => option.key === props.value)?.value}
+      name={name}
+      type="SELECT"
+      selectOptions={options}
       editableData={
         editableData
           ? {
               fieldName: editableData.fieldName,
-              saveChange: () => editableData.saveChange(input),
+              saveChange: () => editableData.saveChange(getValues(name)),
               DialogContent: (
                 <Field
                   disabled={disabled}
                   options={options}
                   {...props}
-                  value={input as string}
-                  onChange={(e) => {
-                    setInput(e.target.value as string)
-                  }}
+                  name={name}
                 />
               ),
             }
@@ -86,13 +82,7 @@ const InputDataSelect = ({
       }
     />
   ) : (
-    <Field
-      disabled={disabled}
-      options={options}
-      value={props.value}
-      onChange={props.onChange}
-      {...props}
-    />
+    <Field disabled={disabled} options={options} {...props} name={name} />
   )
 }
 

@@ -38,6 +38,7 @@ const initialPeriodicity: TEditableVolumePeriodicity[] = [
 export const initialState: TVariablesState = {
   volumeState: {
     id: '',
+    isLoading: false,
     barCode: '',
     dateFrom: dayjs()
       .subtract(1, 'month')
@@ -77,6 +78,7 @@ interface TState extends TVariablesState {
       stateHasUnsavedData: boolean
     ) => void
     setMetaTitle: (id: string, name: string) => void
+    setLoading: (value: boolean) => void
     setSubName: (value: string) => void
     setMutationId: (value: string) => void
     setMutationMark: (value: string) => void

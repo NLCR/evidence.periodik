@@ -5,9 +5,6 @@ import TableCell from '@mui/material/TableCell'
 import { useTranslation } from 'react-i18next'
 
 const InputDataMutationMark = () => {
-  const mutationMark = useVolumeManagementStore(
-    (state) => state.volumeState.mutationMark
-  )
   const setMutationMark = useVolumeManagementStore(
     (state) => state.volumeActions.setMutationMark
   )
@@ -38,9 +35,8 @@ const InputDataMutationMark = () => {
               )
             },
           }}
-          value={mutationMark}
           isMutationMarkInputTextField
-          onChange={(e) => setMutationMark(e.target.value)}
+          name={'mutationMark'}
         />
       </TableCell>
     </TableRow>

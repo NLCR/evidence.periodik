@@ -1,6 +1,5 @@
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
-import React from 'react'
 import { useTranslation } from 'react-i18next'
 import InputDataSelect from './InputDataSelect'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
@@ -10,9 +9,6 @@ import { useLanguageCode } from '../../../../hooks/useLanguageCode'
 type Props = { mutations: TMutation[] }
 
 const InputDataMutation = ({ mutations }: Props) => {
-  const mutationId = useVolumeManagementStore(
-    (state) => state.volumeState.mutationId
-  )
   const setMutationId = useVolumeManagementStore(
     (state) => state.volumeActions.setMutationId
   )
@@ -44,8 +40,7 @@ const InputDataMutation = ({ mutations }: Props) => {
             },
             fieldName: t('volume_overview.mutation'),
           }}
-          value={mutationId}
-          onChange={(event) => setMutationId(event.target.value)}
+          name={'mutationId'}
           options={mutations.map((mutation) => ({
             key: mutation.id,
             value: mutation.name[languageCode],
