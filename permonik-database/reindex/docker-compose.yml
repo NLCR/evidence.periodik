@@ -4,6 +4,12 @@ services:
     image: solr:9.9.0
     ports:
       - "8991:8983"
+    deploy:
+      resources:
+        limits:
+          memory: '2048M'
+    environment:
+      SOLR_JAVA_MEM: "-Xms1g -Xmx1g"
     command:
       - solr-precreate
       - gettingstarted
@@ -13,8 +19,13 @@ services:
     image: solr:9.9.0
     ports:
       - "8990:8983"
+    deploy:
+      resources:
+        limits:
+          memory: '2048M'
     environment:
-      - SOLR_MODULES=analysis-extras
+      SOLR_JAVA_MEM: "-Xms1g -Xmx1g"
+      SOLR_MODULES: analysis-extras
     volumes:
       - ./new-solr-data:/var/solr
 
