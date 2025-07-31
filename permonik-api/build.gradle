@@ -23,7 +23,7 @@ ext {
     lombok = '1.18.38'
     openapi = "2.8.8"
     jackson = '2.19.0'
-    solrj = '9.7.0'
+    solrj = '9.9.0'
     mapstruct = '1.6.3'
     slf4j = '2.0.17'
     logback = '1.5.18'

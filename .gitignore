@@ -12,6 +12,7 @@
 
 ### Development ###
 solr-data/*
+permonik-database/reindex/new-solr-data/*
 
 .gradle/*
 

@@ -61,6 +61,7 @@ public class MetaTitleService implements MetaTitleDefinition {
     public List<MetaTitle> getMetaTitles() throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery.setSort(NAME_SORT_FIELD, SolrQuery.ORDER.asc);
         solrQuery.setRows(100000);
 
         QueryResponse response = solrClient.query(META_TITLE_CORE_NAME, solrQuery);
@@ -72,6 +73,7 @@ public class MetaTitleService implements MetaTitleDefinition {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(IS_PUBLIC_FIELD + ":true");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery.setSort(NAME_SORT_FIELD, SolrQuery.ORDER.asc);
         solrQuery.setRows(100000);
 
         QueryResponse response = solrClient.query(META_TITLE_CORE_NAME, solrQuery);

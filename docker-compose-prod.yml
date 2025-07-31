@@ -90,6 +90,7 @@ services:
           memory: '4096M'
     environment:
       SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
+      SOLR_MODULES: analysis-extras
     volumes:
       - /data/solr:/var/solr
 
