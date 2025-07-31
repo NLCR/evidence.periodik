@@ -22,8 +22,7 @@ import Periodicity from './Periodicity'
 import { TEdition } from '../../../schema/edition'
 import Typography from '@mui/material/Typography'
 import { blue } from '@mui/material/colors'
-import IconButton from '@mui/material/IconButton'
-import MenuOpenIcon from '@mui/icons-material/MenuOpen'
+import CollapsableSidebar from '../../../components/CollapsableSidebar'
 
 interface InputDataProps {
   canEdit: boolean
@@ -47,60 +46,36 @@ const InputData: FC<InputDataProps> = ({
 
   const [mutationMarksModalOpened, setMutationMarksModalOpened] =
     useState(false)
-  const [inputDataSidebarOpened, setInputDataSidebarOpened] = useState(true)
 
   const volumeState = useVolumeManagementStore((state) => state.volumeState)
   const volumeActions = useVolumeManagementStore((state) => state.volumeActions)
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: inputDataSidebarOpened ? '380px' : '70px',
-        padding: '16px',
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        // boxShadow: theme.shadows[1],
-        flexShrink: 0,
-      }}
-    >
+    <CollapsableSidebar>
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          flexDirection: 'column',
+          // boxShadow: theme.shadows[1],
+          flexShrink: 0,
+          height: '100%',
         }}
       >
-        {inputDataSidebarOpened ? (
-          <Typography
-            sx={{
-              marginBottom: '8px',
-              color: blue['900'],
-              fontWeight: 'bold',
-              fontSize: '24px',
-            }}
-          >
-            {t('volume_overview.volume_information')}
-          </Typography>
-        ) : null}
-        <IconButton
-          onClick={() => setInputDataSidebarOpened((prevState) => !prevState)}
+        <Typography
+          sx={{
+            marginBottom: '8px',
+            color: blue['900'],
+            fontWeight: 'bold',
+            fontSize: '24px',
+          }}
         >
-          <MenuOpenIcon
-            sx={{
-              transition: 'all 0.3s',
-              transform: `rotate(${inputDataSidebarOpened ? '0deg' : '180deg'})`,
-              color: blue['900'],
-              fontSize: '24px',
-            }}
-          />
-        </IconButton>
-      </Box>
-      {inputDataSidebarOpened ? (
+          {t('volume_overview.volume_information')}
+        </Typography>
+
         <Box
           sx={{
             overflowY: 'auto',
+            height: '100%',
           }}
         >
           <Table
@@ -379,8 +354,8 @@ const InputData: FC<InputDataProps> = ({
           </Table>
           <Periodicity canEdit={canEdit} editions={editions} />
         </Box>
-      ) : null}
-    </Box>
+      </Box>
+    </CollapsableSidebar>
   )
 }
 

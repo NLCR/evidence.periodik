@@ -13,9 +13,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-      react(),
-      // We will enable this after wdyr support React 19
-      // react({ jsxImportSource: '@welldone-software/why-did-you-render' }),
+      react({ jsxImportSource: '@welldone-software/why-did-you-render' }),
       eslintPlugin(),
       sentryVitePlugin({
         url: process.env.SENTRY_URL,

@@ -1,9 +1,17 @@
-solr:
-  host: http://localhost:8983/solr
-
 spring:
   profiles:
     active: dev
+  threads:
+    virtual:
+      enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
+
+solr:
+  host: ${SOLR_URL:http://localhost:8983/solr}
+
 server:
   port: 8080
   forward-headers-strategy: FRAMEWORK
@@ -13,9 +21,18 @@ server:
       enabled: true
     include-exception: true
     include-message: always
+  servlet:
+    session:
+      cookie:
+        path: /
+        name: "SESSION"
+        secure: false
+        http-only: true
+        same-site: strict
+      timeout: 480m
 
-logging:
-  level:
-    org:
-      springframework:
-        security: "DEBUG"
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: "DEBUG"

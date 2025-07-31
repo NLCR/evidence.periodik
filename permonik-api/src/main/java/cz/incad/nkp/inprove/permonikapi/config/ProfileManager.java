@@ -12,8 +12,8 @@ public class ProfileManager {
 
 
     private Environment environment;
-
-    public Boolean isDevelopment() {
+    
+    public Boolean isDevelopmentEnvironment() {
         return Objects.equals(environment.getProperty("spring.profiles.active", String.class), "dev");
     }
 

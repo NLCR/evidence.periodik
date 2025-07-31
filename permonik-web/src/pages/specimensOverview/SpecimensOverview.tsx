@@ -1,26 +1,28 @@
 import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import Button from '@mui/material/Button'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import React, { Suspense, useState } from 'react'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import TableRowsIcon from '@mui/icons-material/TableRows'
-import { blue } from '@mui/material/colors'
+import blue from '@mui/material/colors/blue'
 import { useMetaTitleQuery } from '../../api/metaTitle'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
 import ShowInfoMessage from '../../components/ShowInfoMessage'
 import { useSpecimensOverviewStore } from '../../slices/useSpecimensOverviewStore'
 import SpecimenDayDetailExampleImage from '../../assets/images/specimen-day-detail-example.png'
-import Facets from './components/Facets'
+import Facets from './components/facets/Facets'
 import Calendar from './components/Calendar'
 import CalendarToolbar from './components/CalendarToolbar'
 import ModalContainer from '../../components/ModalContainer'
 import SynchronizeYearsSwitch from './components/SynchronizeYearsSwitch'
+import CollapsableSidebar from '../../components/CollapsableSidebar'
+import FacetsContextProvider from './components/facets/FacetsContextProvider'
 
 const Table = React.lazy(() => import('./components/Table'))
 
@@ -89,23 +91,23 @@ const SpecimensOverview = () => {
           style={{ marginBottom: '20px' }}
         />
       </ModalContainer>
-      <Box
-        sx={{
-          // width: '20%',
-          width: '350px',
-          // color: theme.colors.dark[9],
-          padding: '16px',
-          backgroundColor: 'white',
-          textAlign: 'left',
-          borderRadius: '8px',
-          boxShadow: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          flexShrink: 0,
-        }}
-      >
-        <Facets metaTitle={metaTitle} />
-      </Box>
+      <CollapsableSidebar>
+        <Box
+          sx={{
+            textAlign: 'left',
+            padding: '8px',
+            boxShadow: '8px',
+            display: 'flex',
+            flexDirection: 'column',
+            flexShrink: 0,
+            height: '100%',
+          }}
+        >
+          <FacetsContextProvider metaTitle={metaTitle}>
+            <Facets metaTitle={metaTitle} />
+          </FacetsContextProvider>
+        </Box>
+      </CollapsableSidebar>
       <Box
         sx={{
           display: 'flex',
@@ -117,7 +119,7 @@ const SpecimensOverview = () => {
           borderRadius: '8px',
           boxShadow: '8px',
           flexDirection: 'column',
-          // overflow: 'hidden',
+          overflow: 'auto',
         }}
       >
         <Box
@@ -171,17 +173,13 @@ const SpecimensOverview = () => {
                 <CalendarToolbar metaTitle={metaTitle} />
               ) : null}
             </Box>
-            {view === 'calendar' ? (
-              <Button
-                variant="contained"
-                startIcon={<HelpOutlineIcon />}
-                onClick={() => setModalOpened(true)}
-              >
-                {t('specimens_overview.help')}
-              </Button>
-            ) : null}
+            <SynchronizeYearsSwitch />
           </Box>
-          <SynchronizeYearsSwitch />
+          {view === 'calendar' && (
+            <IconButton onClick={() => setModalOpened(true)}>
+              <HelpOutlineIcon />
+            </IconButton>
+          )}
         </Box>
         {view === 'calendar' ? (
           <Calendar metaTitle={metaTitle} />

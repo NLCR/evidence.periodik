@@ -5,15 +5,16 @@ import cz.incad.nkp.inprove.permonikapi.config.security.permission.Authorities;
 import cz.incad.nkp.inprove.permonikapi.user.User;
 import cz.incad.nkp.inprove.permonikapi.user.UserService;
 import jakarta.ws.rs.ForbiddenException;
-import jakarta.ws.rs.NotFoundException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -43,7 +44,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
         if (user == null) {
-            throw new NotFoundException("User not found by username");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         Set<GrantedAuthority> authorities = getGrantedAuthorities(user);

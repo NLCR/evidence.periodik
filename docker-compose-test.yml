@@ -3,6 +3,7 @@ services:
     image: eu.gcr.io/inqool-1301/permonik/test/permonik-api:${PERMONIK_TAG}
     depends_on:
       - permonik-database
+      - permonik-redis
     build:
       context: .
       dockerfile: permonik-api/docker/Dockerfile
@@ -18,6 +19,7 @@ services:
           memory: '2048M'
     environment:
       SPRING_PROFILES_ACTIVE: test
+      REDIS_HOST: permonik-redis
       TZ: "Europe/Prague"
       SERVER_PORT: "8080"
 
@@ -91,6 +93,23 @@ services:
     volumes:
       - /data/solr:/var/solr
 
+  permonik-redis:
+    image: redis:8-alpine
+    networks:
+      - permonik
+    ports:
+      - "6379:6379"
+    deploy:
+      resources:
+        limits:
+          memory: 100m
+    volumes:
+      - redis-volume:/data
+    command: [ "redis-server", "--appendonly", "yes" ]
+
 
 networks:
   permonik:
+
+volumes:
+  redis-volume:

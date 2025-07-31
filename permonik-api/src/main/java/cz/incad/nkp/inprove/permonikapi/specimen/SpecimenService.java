@@ -11,7 +11,9 @@ import org.apache.solr.common.params.StatsParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.*;
@@ -147,8 +149,8 @@ public class SpecimenService implements SpecimenDefinition {
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
         List<Specimen> specimenList = response.getBeans(Specimen.class);
         List<String> ownerList = specimenList.stream()
-                .map(Specimen::getOwnerId)
-                .collect(Collectors.toSet()).stream().toList();
+            .map(Specimen::getOwnerId)
+            .collect(Collectors.toSet()).stream().toList();
 
         SolrQuery statsQuery = new SolrQuery("*:*");
         statsQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"", NUM_EXISTS_FIELD + ":true");
@@ -178,11 +180,11 @@ public class SpecimenService implements SpecimenDefinition {
         Integer groupedSpecimens = groupCommand.getMatches();
 
         return new SearchedSpecimensDTO(
-                specimenList,
-                publicationDayMax,
-                publicationDayMin,
-                groupedSpecimens,
-                ownerList
+            specimenList,
+            publicationDayMax,
+            publicationDayMin,
+            groupedSpecimens,
+            ownerList
         );
 
     }
@@ -202,6 +204,7 @@ public class SpecimenService implements SpecimenDefinition {
         solrQuery.addSort(EDITION_ID_FIELD, SolrQuery.ORDER.desc);
 //        solrQuery.addSort(MUTATION_ID_FIELD, SolrQuery.ORDER.asc);
         solrQuery.setFacet(true);
+        solrQuery.setParam("f." + MUTATION_MARK_FIELD + ".facet.missing", "true"); // query MUTATION_MARK_FIELD also for empty value
         solrQuery.addFacetField(NAME_FIELD, SUB_NAME_FIELD, MUTATION_ID_FIELD, EDITION_ID_FIELD, MUTATION_MARK_FIELD, OWNER_ID_FIELD, DAMAGE_TYPES_FIELD);
         solrQuery.setFacetMinCount(1);
 
@@ -244,16 +247,32 @@ public class SpecimenService implements SpecimenDefinition {
             solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd() + "-12-31]");
         }
 
+        logger.info("SOLR QUERY: {}", solrQuery.toQueryString());
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
 
         return new FacetsDTO(
-                response.getFacetField(NAME_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(SUB_NAME_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(MUTATION_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(EDITION_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(OWNER_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(DAMAGE_TYPES_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList()
+            response.getFacetField(NAME_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(SUB_NAME_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(MUTATION_ID_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(EDITION_ID_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName() != null ? facetFieldEntry.getName() : "", facetFieldEntry.getCount())
+            ).sorted(Comparator.comparingLong(FacetFieldDTO::count).reversed()// sort null facet, because solr returns null facets as last
+            ).toList(),
+            response.getFacetField(OWNER_ID_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(DAMAGE_TYPES_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList()
         );
 
     }
@@ -262,7 +281,6 @@ public class SpecimenService implements SpecimenDefinition {
         return getSpecimensForVolumeDetail(volumeId, onlyPublic, false);
     }
 
-    //    public List<Specimen> getSpecimensForVolumeDetail(String volumeId, String dateFrom, String dateTo) throws SolrServerException, IOException {
     public List<Specimen> getSpecimensForVolumeDetail(String volumeId, Boolean onlyPublic, Boolean showAttachmentsAtTheEnd) throws SolrServerException, IOException {
 
         SolrQuery solrQuery = new SolrQuery("*:*");
@@ -271,31 +289,15 @@ public class SpecimenService implements SpecimenDefinition {
             solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true OR " + NUM_MISSING_FIELD + ":true");
         }
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
-//        solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + dateFrom + " TO " + dateTo + "]");
         solrQuery.setSort(PUBLICATION_DATE_STRING_FIELD, SolrQuery.ORDER.asc);
         if (showAttachmentsAtTheEnd) {
             solrQuery.setSort(IS_ATTACHMENT_FIELD, SolrQuery.ORDER.asc);
         }
-//        solrQuery.setParam(StatsParams.STATS, true);
-//        solrQuery.setParam(StatsParams.STATS_FIELD, PUBLICATION_DATE_STRING_FIELD);
         solrQuery.setRows(100000);
 
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
 
         return response.getBeans(Specimen.class);
-
-//        Map<String, FieldStatsInfo> statsInfo = response.getFieldStatsInfo();
-
-//        Object publicationDayMin = statsInfo.get(PUBLICATION_DATE_STRING_FIELD).getMin();
-//        Object publicationDayMax = statsInfo.get(PUBLICATION_DATE_STRING_FIELD).getMax();
-
-//        return new SpecimensForVolumeDetailDTO(
-//                response.getBeans(Specimen.class),
-//                new SpecimensPublicationRangeDTO(
-//                        publicationDayMin,
-//                        publicationDayMax
-//                )
-//        );
 
     }
 
@@ -336,6 +338,7 @@ public class SpecimenService implements SpecimenDefinition {
         solrQuery.setParam(StatsParams.STATS_FIELD, PUBLICATION_DATE_STRING_FIELD, PAGES_COUNT_FIELD);
         solrQuery.setRows(0);
         solrQuery.setFacet(true);
+        solrQuery.setParam("f." + MUTATION_MARK_FIELD + ".facet.missing", "true"); // query MUTATION_MARK_FIELD also for empty value
         solrQuery.addFacetField(MUTATION_ID_FIELD, MUTATION_MARK_FIELD, EDITION_ID_FIELD, DAMAGE_TYPES_FIELD);
         solrQuery.addDateRangeFacet(PUBLICATION_DATE_FIELD, startDate, endDate, "+1YEAR");
         solrQuery.setFacetMinCount(1);
@@ -358,26 +361,35 @@ public class SpecimenService implements SpecimenDefinition {
         List<Specimen> specimens = response2.getBeans(Specimen.class);
 
         List<FacetFieldDTO> publicationDateList = response.getFacetRanges().stream()
-                .filter(rangeFacet -> PUBLICATION_DATE_FIELD.equals(rangeFacet.getName()))
-                .findFirst()
-                .map(rangeFacet -> (List<RangeFacet.Count>) rangeFacet.getCounts())
-                .stream()
-                .flatMap(counts -> counts.stream()
-                        .map(count -> new FacetFieldDTO(
-                                count.getValue(),
-                                (long) count.getCount())))
-                .toList();
+            .filter(rangeFacet -> PUBLICATION_DATE_FIELD.equals(rangeFacet.getName()))
+            .findFirst()
+            .map(rangeFacet -> (List<RangeFacet.Count>) rangeFacet.getCounts())
+            .stream()
+            .flatMap(counts -> counts.stream()
+                .map(count -> new FacetFieldDTO(
+                    count.getValue(),
+                    (long) count.getCount())))
+            .toList();
 
         return new SpecimensForVolumeOverviewStatsDTO(
-                publicationDayMin,
-                publicationDayMax,
-                pagesCount,
-                response.getFacetField(MUTATION_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(EDITION_ID_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                response.getFacetField(DAMAGE_TYPES_FIELD).getValues().stream().map(facetFieldEntry -> new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())).toList(),
-                publicationDateList,
-                specimens
+            publicationDayMin,
+            publicationDayMax,
+            pagesCount,
+            response.getFacetField(MUTATION_ID_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName() != null ? facetFieldEntry.getName() : "", facetFieldEntry.getCount())
+            ).sorted(Comparator.comparingLong(FacetFieldDTO::count).reversed()// sort null facet, because solr returns null facets as last
+            ).toList(),
+            response.getFacetField(EDITION_ID_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            response.getFacetField(DAMAGE_TYPES_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
+            ).toList(),
+            publicationDateList,
+            specimens
         );
 
     }
@@ -395,8 +407,8 @@ public class SpecimenService implements SpecimenDefinition {
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
 
         return new NamesDTO(
-                response.getFacetField(NAME_FIELD).getValues().stream().map(FacetField.Count::getName).toList(),
-                response.getFacetField(SUB_NAME_FIELD).getValues().stream().map(FacetField.Count::getName).toList()
+            response.getFacetField(NAME_FIELD).getValues().stream().map(FacetField.Count::getName).toList(),
+            response.getFacetField(SUB_NAME_FIELD).getValues().stream().map(FacetField.Count::getName).toList()
         );
     }
 
@@ -416,15 +428,15 @@ public class SpecimenService implements SpecimenDefinition {
     public void updateSpecimens(List<Specimen> specimens) {
         try {
             List<Specimen> specimenList = specimens.stream()
-                    .peek(specimen -> {
-                        // If the specimen was duplicated on FE, we will call only prePersist and skip preUpdate
-                        if (specimen.getCreated() == null) {
-                            specimen.prePersist();
-                        } else {
-                            specimen.preUpdate();
-                        }
-                    })
-                    .toList();
+                .peek(specimen -> {
+                    // If the specimen was duplicated on FE, we will call only prePersist and skip preUpdate
+                    if (specimen.getCreated() == null) {
+                        specimen.prePersist();
+                    } else {
+                        specimen.preUpdate();
+                    }
+                })
+                .toList();
 
             solrClient.addBeans(SPECIMEN_CORE_NAME, specimenList);
             solrClient.commit(SPECIMEN_CORE_NAME);
@@ -446,7 +458,7 @@ public class SpecimenService implements SpecimenDefinition {
         }
     }
 
-    public Optional<Specimen> getSpecimenById(String specimenId) throws SolrServerException, IOException {
+    public Specimen getSpecimenById(String specimenId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(ID_FIELD + ":\"" + specimenId + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
@@ -456,19 +468,15 @@ public class SpecimenService implements SpecimenDefinition {
 
         List<Specimen> specimenList = response.getBeans(Specimen.class);
 
-        return specimenList.isEmpty() ? Optional.empty() : Optional.of(specimenList.getFirst());
+        if (specimenList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        return specimenList.getFirst();
     }
 
     public void deleteSpecimenById(String id) throws SolrServerException, IOException {
-
-        Optional<Specimen> specimenOpt = getSpecimenById(id);
-
-        if (specimenOpt.isEmpty()) {
-            throw new RuntimeException("Specimen " + id + " not found");
-        }
-
-        Specimen specimen = specimenOpt.get();
-
+        Specimen specimen = getSpecimenById(id);
 
         try {
             specimen.preRemove();

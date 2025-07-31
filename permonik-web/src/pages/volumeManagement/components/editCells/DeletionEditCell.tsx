@@ -35,8 +35,9 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({ row, canEdit }) => {
       await doDelete({ volumeId: row.volumeId, specimenId: row.id })
 
       toast.success(t('volume_overview.specimen_deleted_successfully'))
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
-      console.error(e)
+      toast.error(t('volume_overview.specimen_delete_error'))
     }
   }
 

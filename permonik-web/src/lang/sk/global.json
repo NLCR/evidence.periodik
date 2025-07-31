@@ -24,12 +24,15 @@
     "accept": "Potvrdiť"
   },
   "helmet": {
-    "title": "Evidencia periodík – výskumná aplikácia"
+    "title": "Evidencia periodík – výskumná aplikácia",
+    "title_admin": "Evidencia periodík – administrátorská aplikácia"
   },
   "home": {
     "header": "Domovská stránka",
     "title": "Evidencia periodík",
-    "description": "systém na správu a evidenciu periodík",
+    "title_admin": "Administrácia evidencie periodík",
+    "description": "výskumná aplikácia",
+    "description_admin": "systém na správu a evidenciu periodík",
     "records": "Záznamy",
     "specimens": "Exempláre",
     "mutations": "Mutácie",
@@ -66,7 +69,9 @@
     "help_desc_2": "číslo vydania - mutácia - značky mutačných vydaní - počet exemplárov",
     "help_desc_3": "Riadok môže byť zafarbený na zeleno (všetky exempláre sú v poriadku) alebo oranžovo (niektorý z exemplárov má vadu)",
     "synchronize_years_between_views": "Synchronizovať dátum<br />kalendára a tabuľky",
-    "detailed_volume_overview": "Podrobný popis zväzku"
+    "detailed_volume_overview": "Podrobný popis zväzku",
+    "duplicate_dialog_title": "Duplikovať záznam",
+    "duplicate_dialog_description": "Vyberte dátum, ku ktorému bude zadaný nový záznam"
   },
   "volume_overview": {
     "not_found": "Tento zväzok nebol nájdený",
@@ -143,6 +148,7 @@
     "volume_create_error": "Nastala chyba pri vytváraní zväzku",
     "volume_deleted_successfully": "Zväzok bol úspešne zmazaný",
     "specimen_deleted_successfully": "Exemplár bol úspešne zmazaný",
+    "specimen_delete_error": "Nastala chyba pri mazaní exemplára",
     "volume_deletion_error": "Nastala chyba pri mazaní zväzku",
     "account_required": "Stránka je dostupná po prihlásení",
     "new_row": "Duplikovať riadok",

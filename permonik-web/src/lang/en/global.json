@@ -24,12 +24,15 @@
     "accept": "Accept"
   },
   "helmet": {
-    "title": "Periodicals Register – Research Application"
+    "title": "Periodicals Register – Research Application",
+    "title_admin": "Administration of Periodicals Register"
   },
   "home": {
     "header": "Home Page",
     "title": "Periodicals Register",
-    "description": "system for managing and registering periodicals",
+    "title_admin": "Administration of Periodicals Register",
+    "description": "research application",
+    "description_admin": "system for managing and registering periodicals",
     "records": "Records",
     "specimens": "Specimens",
     "mutations": "Mutations",
@@ -66,7 +69,9 @@
     "help_desc_2": "issue number - mutation - mutation edition marks - number of specimens",
     "help_desc_3": "The line may be colored green (all specimens are fine) or orange (some of the specimens have a defect)",
     "synchronize_years_between_views": "Synchronize calendar<br />and table dates",
-    "detailed_volume_overview": "Detailed volume overview"
+    "detailed_volume_overview": "Detailed volume overview",
+    "duplicate_dialog_title": "Duplicate entry",
+    "duplicate_dialog_description": "Select the date for which a new record will be entered"
   },
   "volume_overview": {
     "not_found": "This volume was not found",
@@ -143,6 +148,7 @@
     "volume_create_error": "An error occurred while creating the volume",
     "volume_deleted_successfully": "Volume deleted successfully",
     "specimen_deleted_successfully": "Specimen deleted successfully",
+    "specimen_delete_error": "An error occurred while deleting the specimen",
     "volume_deletion_error": "An error occurred while deleting the volume",
     "account_required": "Page is accessible after login",
     "new_row": "Duplicate row",
