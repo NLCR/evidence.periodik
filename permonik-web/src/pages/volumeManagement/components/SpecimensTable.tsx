@@ -21,6 +21,7 @@ import {
 import { blue } from '@mui/material/colors'
 import {
   TEditableSpecimen,
+  TSpecimen,
   TSpecimenDamageTypes,
 } from '../../../schema/specimen'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
@@ -211,14 +212,14 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
 
   const scrolledToRow = useRef<boolean>(false)
 
-  const specimensState = useVolumeManagementStore(
-    (state) => state.specimensState
-  )
   const stateHasUnsavedData = useVolumeManagementStore(
     useShallow((state) => state.stateHasUnsavedData)
   )
   const specimenActions = useVolumeManagementStore(
     (state) => state.specimensActions
+  )
+  const specimensState = useVolumeManagementStore(
+    (state) => state.specimensState
   )
 
   useEffect(() => {

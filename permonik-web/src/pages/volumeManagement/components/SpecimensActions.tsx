@@ -14,7 +14,6 @@ import Button from '@mui/material/Button'
 import ModalContainer from '../../../components/ModalContainer'
 import Typography from '@mui/material/Typography'
 import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
-import UnsavedChangesModal from './UnsavedChangesModal'
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
@@ -331,7 +330,6 @@ const SpecimensActions = ({
       >
         <VolumeStatsModalContent volumeId={volumeId} />
       </ModalContainer>
-      <UnsavedChangesModal />
     </>
   )
 }

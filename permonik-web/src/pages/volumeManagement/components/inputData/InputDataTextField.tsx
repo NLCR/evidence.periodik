@@ -53,7 +53,9 @@ const Field = ({
           row={volumeState}
           open={isModalOpened}
           onClose={() => setIsModalOpened(false)}
-          onSave={(data) => setValue(name, data.mutationMark)}
+          onSave={(data) =>
+            setValue(name, data.mutationMark, { shouldDirty: true })
+          }
         />
       )}
     </>
@@ -73,7 +75,7 @@ const InputDataTextField = ({
   ...props
 }: TextFieldProps & Props) => {
   const { locked, disabled } = useInputDataEditabilityContext()
-  const { getValues } = useFormContext()
+  const { getValues, setValue } = useFormContext()
 
   return locked ? (
     <LockedInputDataItem
@@ -84,12 +86,16 @@ const InputDataTextField = ({
               DialogContent: (
                 <Field
                   isMutationMarkInputTextField={isMutationMarkInputTextField}
-                  name={name}
+                  name={name + '_internal'}
+                  defaultValue={getValues(name)}
                   {...props}
                 />
               ),
               fieldName: editableData.fieldName,
-              saveChange: () => editableData.saveChange(getValues(name)),
+              saveChange: () => {
+                setValue(name, getValues(name + '_internal'))
+                editableData.saveChange(getValues(name))
+              },
             }
           : undefined
       }

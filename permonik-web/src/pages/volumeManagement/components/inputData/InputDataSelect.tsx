@@ -32,7 +32,9 @@ const Field = ({
         {...props}
         {...register(name)}
         value={value ?? ''}
-        onChange={(event) => setValue(name, event.target.value)}
+        onChange={(event) =>
+          setValue(name, event.target.value, { shouldDirty: true })
+        }
       >
         {options.map((o) => (
           <MenuItem key={o.key} value={o.key}>
@@ -57,7 +59,7 @@ const InputDataSelect = ({
   ...props
 }: Props & SelectProps<string>) => {
   const { locked, disabled } = useInputDataEditabilityContext()
-  const { getValues } = useFormContext()
+  const { getValues, setValue } = useFormContext()
 
   return locked ? (
     <LockedInputDataItem
@@ -68,13 +70,17 @@ const InputDataSelect = ({
         editableData
           ? {
               fieldName: editableData.fieldName,
-              saveChange: () => editableData.saveChange(getValues(name)),
+              saveChange: () => {
+                setValue(name, getValues(name + '_internal'))
+                editableData.saveChange(getValues(name))
+              },
               DialogContent: (
                 <Field
                   disabled={disabled}
                   options={options}
+                  defaultValue={getValues(name)}
                   {...props}
-                  name={name}
+                  name={name + '_internal'}
                 />
               ),
             }

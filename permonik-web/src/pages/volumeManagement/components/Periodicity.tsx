@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -10,19 +10,18 @@ import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import clone from 'lodash/clone'
-import isEqual from 'lodash/isEqual'
 import dayjs from 'dayjs'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
 import { TEdition } from '../../../schema/edition'
 import {
   TEditableVolume,
   TEditableVolumePeriodicity,
+  TVolumePeriodicityDays,
   VolumeSchema,
 } from '../../../schema/volume'
 import { TEditableSpecimen } from '../../../schema/specimen'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import useSortedSpecimensNamesAndSubNames from '../../../hooks/useSortedSpecimensNamesAndSubNames'
 import ModalContainer from '../../../components/ModalContainer'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
@@ -33,7 +32,7 @@ import InputDataSelect from './inputData/InputDataSelect'
 import InputDataTextField from './inputData/InputDataTextField'
 import IconButton from '@mui/material/IconButton'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
-import { useFormContext } from 'react-hook-form'
+import { useFieldArray, useFormContext } from 'react-hook-form'
 import InputDataAutocomplete from './inputData/InputDataAutocomplete'
 
 const getDaysArray = (start: string, end: string): string[] => {
@@ -63,9 +62,13 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
   const { languageCode } = useLanguageCode()
 
   const { disabled, locked, setLocked } = useInputDataEditabilityContext()
-  const { getValues, watch } = useFormContext()
+  const { getValues, control, reset } = useFormContext()
+  const { replace } = useFieldArray({ control, name: 'periodicity' })
 
-  const periodicityData = watch('periodicity') as TEditableVolumePeriodicity[]
+  const { fields, remove, insert } = useFieldArray({
+    control,
+    name: 'periodicity',
+  })
 
   const volumePeriodicityActions = useVolumeManagementStore(
     (state) => state.volumePeriodicityActions
@@ -73,42 +76,20 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
   const specimensActions = useVolumeManagementStore(
     (state) => state.specimensActions
   )
+  const setVolumeState = useVolumeManagementStore(
+    (state) => state.volumeActions.setVolumeState
+  )
+  const setHasUnsavedData = useVolumeManagementStore(
+    (state) => state.setStateHasUnsavedData
+  )
 
   const { names, subNames } = useSortedSpecimensNamesAndSubNames()
-
-  const duplicateRow = (row: TEditableVolumePeriodicity) => {
-    const periodicityData = getValues(
-      'periodicity'
-    ) as TEditableVolumePeriodicity[]
-    const periodicityClone = clone(periodicityData)
-    const periodicityIndex = periodicityData.findIndex((p) => isEqual(p, row))
-
-    if (periodicityIndex >= 0) {
-      periodicityClone.splice(periodicityIndex + 1, 0, {
-        ...row,
-        duplicated: true,
-      })
-      volumePeriodicityActions.setPeriodicityState(periodicityClone)
-    }
-  }
-
-  const removeRow = (row: TEditableVolumePeriodicity) => {
-    const periodicityData = getValues(
-      'periodicity'
-    ) as TEditableVolumePeriodicity[]
-    const periodicityClone = clone(periodicityData)
-    const periodicityIndex = periodicityData.findIndex((p) => isEqual(p, row))
-
-    if (periodicityIndex >= 0) {
-      periodicityClone.splice(periodicityIndex, 1)
-      volumePeriodicityActions.setPeriodicityState(periodicityClone)
-    }
-  }
 
   const generateVolume: () => boolean = () => {
     // This ensures that `getDayName` will return english name of day
     dayjs.locale('en')
-    const volumeClone = clone(getValues() as TEditableVolume)
+    const volumeData = getValues() as TEditableVolume
+    const volumeClone = clone(volumeData)
     const repairedVolume = repairVolume(volumeClone, editions)
     const validation = VolumeSchema.safeParse(repairedVolume)
 
@@ -194,8 +175,11 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
     dayjs.locale(i18n.resolvedLanguage)
     specimensActions.setSpecimensState(specimens, true)
     volumePeriodicityActions.setPeriodicityGenerationUsed(true)
-    setVolumeState(volumeClone)
     toast.success(t('volume_overview.specimens_generated_successfully'))
+    setVolumeState(volumeClone, false)
+    setHasUnsavedData(true)
+    // replace(volumeClone.periodicity)
+    reset(volumeClone) // reset isDirty flag
     setPeriodicityModalVisible(false)
     return true
   }
@@ -240,18 +224,22 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {periodicityData.map((p, index) => {
+            {fields.map((p, index) => {
               return (
-                <TableRow key={`volume-periodicity-${p.day}`}>
-                  <TableCell>{t(`volume_overview.days.${p.day}`)}</TableCell>
+                <TableRow key={p.id}>
+                  <TableCell>
+                    {t(
+                      `volume_overview.days.${getValues(`periodicity.${index}.day`) as TVolumePeriodicityDays}`
+                    )}
+                  </TableCell>
                   <TableCell>
                     <InputDataCheckbox
-                      name={`periodicity[${index}].numExists`}
+                      name={`periodicity.${index}.numExists`}
                     />
                   </TableCell>
                   <TableCell>
                     <InputDataSelect
-                      name={`periodicity[${index}].editionId`}
+                      name={`periodicity.${index}.editionId`}
                       options={editions.map((o) => ({
                         key: o.id,
                         value: o.name[languageCode],
@@ -260,18 +248,19 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
                   </TableCell>
                   <TableCell>
                     <InputDataTextField
-                      name={`periodicity[${index}].pageCount`}
+                      name={`periodicity.${index}.pagesCount`}
+                      type="number"
                     />
                   </TableCell>
                   <TableCell>
                     <InputDataAutocomplete
-                      name={`periodicity[${index}].name`}
+                      name={`periodicity.${index}.name`}
                       options={names}
                     />
                   </TableCell>
                   <TableCell>
                     <InputDataAutocomplete
-                      name={`periodicity[${index}].subName`}
+                      name={`periodicity.${index}.subName`}
                       options={subNames}
                     />
                   </TableCell>
@@ -284,10 +273,10 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
                         height: '100%',
                       }}
                     >
-                      {p.duplicated ? (
+                      {getValues(`periodicity.${index}.duplicated`) ? (
                         <IconButton disabled={disabled || locked}>
                           <DeleteOutlineIcon
-                            onClick={() => removeRow(p)}
+                            onClick={() => remove(index)}
                             sx={{
                               cursor: 'pointer',
                             }}
@@ -296,7 +285,9 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
                       ) : (
                         <IconButton disabled={disabled || locked}>
                           <AddCircleOutlineIcon
-                            onClick={() => duplicateRow(p)}
+                            onClick={() =>
+                              insert(index + 1, { ...p, duplicated: true }, {})
+                            }
                             sx={{
                               cursor: 'pointer',
                             }}
@@ -310,17 +301,16 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
             })}
           </TableBody>
         </Table>
-        <FormControlLabel
+        <Box
           sx={{
-            // display: 'flex',
             marginTop: '10px',
-            // justifyContent: 'space-between',
-            // alignItems: 'start',
-            // fontSize: '12px',
           }}
-          control={<InputDataCheckbox name={`showAttachmentsAtTheEnd`} />}
-          label={t('volume_overview.show_attachments_at_the_end')}
-        />
+        >
+          <InputDataCheckbox
+            name={`showAttachmentsAtTheEnd`}
+            label={t('volume_overview.show_attachments_at_the_end')}
+          />
+        </Box>
       </ModalContainer>
     </>
   )

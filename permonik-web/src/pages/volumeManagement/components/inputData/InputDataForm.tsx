@@ -1,5 +1,4 @@
 import { InputDataProps } from './InputData'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import { FormProvider, useForm } from 'react-hook-form'
 import TableHead from '@mui/material/TableHead'
@@ -20,21 +19,23 @@ import Periodicity from '../Periodicity'
 import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import Button from '@mui/material/Button'
 import { useParams } from 'react-router-dom'
+import UnsavedChangesModal from '../UnsavedChangesModal'
+import { initialState } from '../../../../slices/useVolumeManagementStore'
 
 const InputDataForm = ({
   editions,
+  volume,
   me,
   metaTitles,
   mutations,
   owners,
 }: Omit<InputDataProps, 'isVolumeLoading'>) => {
   const { volumeId } = useParams()
-  const volumeState = useVolumeManagementStore((state) => state.volumeState)
   const { locked, setLocked } = useInputDataEditabilityContext()
   const { t } = useTranslation('global')
 
   const methods = useForm<TInputData>({
-    defaultValues: volumeState,
+    defaultValues: volume ?? initialState.volumeState,
     resolver: zodResolver(inputDataSchema),
   })
 
@@ -161,6 +162,7 @@ const InputDataForm = ({
           }
         />
       )}
+      <UnsavedChangesModal />
     </FormProvider>
   )
 }

@@ -37,7 +37,7 @@ const InputDataDatePicker = ({
       disabled={disabled}
       {...props}
       value={dayjs(value)}
-      onChange={(value) => setValue(name, value)}
+      onChange={(value) => setValue(name, value, { shouldDirty: true })}
       minDate={minValue ? dayjs(minValue) : undefined}
       maxDate={maxValue ? dayjs(maxValue) : undefined}
     />

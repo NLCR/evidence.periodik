@@ -1,6 +1,15 @@
-import { createContext, useContext, useState, ReactNode, useMemo } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useMemo,
+  useEffect,
+} from 'react'
 import { TMe } from '../../../../schema/user'
 import { TUpdatableVolume } from '../../../../api/volume'
+import useVolumeManagementActions from '../../../../hooks/useVolumeManagementActions'
+import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 
 type InputDataEditabilityContextType = {
   disabled: boolean
@@ -33,6 +42,21 @@ export function InputDataEditabilityContextProvider({
     [me, volume?.volume, volumeId?.length]
   )
   const [locked, setLocked] = useState(lockedInitial)
+
+  const setVolumeState = useVolumeManagementStore(
+    (state) => state.volumeActions.setVolumeState
+  )
+  const setSpeciemnsState = useVolumeManagementStore(
+    (state) => state.specimensActions.setSpecimensState
+  )
+
+  useEffect(() => {
+    if (volume) {
+      setVolumeState({ ...volume.volume, isLoading: false }, false)
+      setSpeciemnsState(volume.specimens, false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <InputDataEditabilityContext.Provider
