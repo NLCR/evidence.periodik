@@ -15,7 +15,6 @@ import { useVolumeManagementStore } from '../../../slices/useVolumeManagementSto
 import { TEdition } from '../../../schema/edition'
 import {
   TEditableVolume,
-  TEditableVolumePeriodicity,
   TVolumePeriodicityDays,
   VolumeSchema,
 } from '../../../schema/volume'
@@ -63,7 +62,6 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
 
   const { disabled, locked, setLocked } = useInputDataEditabilityContext()
   const { getValues, control, reset } = useFormContext()
-  const { replace } = useFieldArray({ control, name: 'periodicity' })
 
   const { fields, remove, insert } = useFieldArray({
     control,
@@ -178,8 +176,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
     toast.success(t('volume_overview.specimens_generated_successfully'))
     setVolumeState(volumeClone, false)
     setHasUnsavedData(true)
-    // replace(volumeClone.periodicity)
-    reset(volumeClone) // reset isDirty flag
+    reset({ ...volumeClone, periodicity: undefined }) // reset isDirty flag
     setPeriodicityModalVisible(false)
     return true
   }

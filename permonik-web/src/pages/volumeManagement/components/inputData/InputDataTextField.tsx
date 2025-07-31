@@ -4,7 +4,7 @@ import { useInputDataEditabilityContext } from './InputDataEditabilityContextPro
 import { useState } from 'react'
 import MutationMarkSelectorModal from '../editCells/MutationMarkSelectorModal'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
-import { useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 
 type FieldProps = {
   isMutationMarkInputTextField?: boolean
@@ -20,33 +20,42 @@ const Field = ({
 }: FieldProps & TextFieldProps) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
   const volumeState = useVolumeManagementStore((state) => state.volumeState)
-  const { register, setValue } = useFormContext()
+  const { control, setValue } = useFormContext()
 
   return (
     <>
-      <TextField
-        variant="outlined"
-        size="small"
-        sx={{
-          maxWidth: '200px',
-          width: '100%',
-        }}
-        disabled={disabled}
-        {...props}
-        {...register(name)}
-        onClick={() =>
-          isMutationMarkInputTextField ? setIsModalOpened(true) : {}
-        }
-        // custom key validation - TBC as app develops
-        onBeforeInput={
-          props.inputMode === 'decimal'
-            ? (e) => {
-                if (!/\d/.test((e.nativeEvent as InputEvent).data || '')) {
-                  e.preventDefault()
-                }
-              }
-            : undefined
-        }
+      <Controller
+        control={control}
+        name={name}
+        defaultValue={props.defaultValue}
+        render={({ field }) => (
+          <TextField
+            variant="outlined"
+            size="small"
+            sx={{
+              maxWidth: '200px',
+              width: '100%',
+            }}
+            disabled={disabled}
+            {...props}
+            value={field.value ?? ''}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
+            inputRef={field.ref}
+            onClick={() =>
+              isMutationMarkInputTextField ? setIsModalOpened(true) : undefined
+            }
+            onBeforeInput={
+              props.inputMode === 'decimal'
+                ? (e) => {
+                    if (!/\d/.test((e.nativeEvent as InputEvent).data || '')) {
+                      e.preventDefault()
+                    }
+                  }
+                : undefined
+            }
+          />
+        )}
       />
       {isMutationMarkInputTextField && (
         <MutationMarkSelectorModal

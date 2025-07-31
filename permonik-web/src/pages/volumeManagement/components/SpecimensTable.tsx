@@ -21,7 +21,6 @@ import {
 import { blue } from '@mui/material/colors'
 import {
   TEditableSpecimen,
-  TSpecimen,
   TSpecimenDamageTypes,
 } from '../../../schema/specimen'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'

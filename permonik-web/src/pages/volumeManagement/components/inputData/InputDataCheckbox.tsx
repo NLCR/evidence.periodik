@@ -1,4 +1,4 @@
-import { useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import Checkbox, { CheckboxProps } from '@mui/material/Checkbox'
 import Box from '@mui/material/Box'
@@ -11,9 +11,7 @@ const InputDataCheckbox = ({
   ...props
 }: Props & CheckboxProps) => {
   const { locked, disabled } = useInputDataEditabilityContext()
-  const { watch, setValue } = useFormContext()
-
-  const value = watch(name)
+  const { control } = useFormContext()
 
   return (
     <Box
@@ -23,20 +21,22 @@ const InputDataCheckbox = ({
         alignItems: 'center',
       }}
     >
-      <Checkbox
-        size="small"
-        sx={{
-          // marginTop: 1,
-          // marginBottom: 1,
-          cursor: disabled || locked ? 'not-allowed' : 'pointer',
-          // width: '100%',
-        }}
-        disabled={disabled || locked}
-        checked={value}
-        onChange={(e) =>
-          setValue(name, e.target.checked, { shouldDirty: true })
-        }
-        {...props}
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <Checkbox
+            size="small"
+            sx={{
+              cursor: disabled || locked ? 'not-allowed' : 'pointer',
+            }}
+            disabled={disabled || locked}
+            checked={!!field.value}
+            onChange={(e) => field.onChange(e.target.checked)}
+            inputRef={field.ref}
+            {...props}
+          />
+        )}
       />
       {label && <div>{label}</div>}
     </Box>
