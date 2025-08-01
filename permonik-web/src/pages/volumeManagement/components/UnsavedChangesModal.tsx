@@ -23,9 +23,6 @@ const UnsavedChangesModal = () => {
 
   const hasUnsavedData = stateHasUnsavedData || isDirty
 
-  console.log('stateHasUnsavedData', stateHasUnsavedData)
-  console.log('isDirty', isDirty)
-
   useBeforeUnload((event) => {
     if (hasUnsavedData) {
       event.preventDefault()
