@@ -2,7 +2,7 @@ import { DatePicker, DatePickerProps } from '@mui/x-date-pickers-pro'
 import LockedInputDataItem from './LockedInputDataItem'
 import dayjs, { Dayjs } from 'dayjs'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
-import { useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 
 type Props = {
   name: string
@@ -19,27 +19,34 @@ const InputDataDatePicker = ({
   ...props
 }: Props & DatePickerProps<Dayjs>) => {
   const { locked, disabled } = useInputDataEditabilityContext()
-  const { setValue, watch } = useFormContext()
+  const { control, watch } = useFormContext()
 
-  const minValue = minDateName ? watch(minDateName) : props.minDate
-  const maxValue = maxDateName ? watch(maxDateName) : props.maxDate
-
-  const value = watch(name)
+  const minDate = minDateName ? watch(minDateName) : props.minDate
+  const maxDate = maxDateName ? watch(maxDateName) : props.maxDate
 
   return locked ? (
     <LockedInputDataItem name={name} type="DATE" />
   ) : (
-    <DatePicker<Dayjs>
-      sx={{
-        maxWidth: '200px',
-        width: '100%',
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => {
+        return (
+          <DatePicker
+            sx={{
+              maxWidth: '200px',
+              width: '100%',
+            }}
+            disabled={disabled || props.disabled}
+            {...props}
+            defaultValue={props.defaultValue ? dayjs(props.defaultValue) : null}
+            value={field.value ? dayjs(field.value) : null}
+            onChange={(date) => field.onChange(date?.toISOString())}
+            minDate={minDate ? dayjs(minDate) : undefined}
+            maxDate={maxDate ? dayjs(maxDate) : undefined}
+          />
+        )
       }}
-      disabled={disabled}
-      {...props}
-      value={dayjs(value)}
-      onChange={(value) => setValue(name, value, { shouldDirty: true })}
-      minDate={minValue ? dayjs(minValue) : undefined}
-      maxDate={maxValue ? dayjs(maxValue) : undefined}
     />
   )
 }

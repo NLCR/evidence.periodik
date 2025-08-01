@@ -9,7 +9,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
-import clone from 'lodash/clone'
+import cloneDeep from 'lodash/cloneDeep'
 import dayjs from 'dayjs'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
 import { TEdition } from '../../../schema/edition'
@@ -87,7 +87,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
     // This ensures that `getDayName` will return english name of day
     dayjs.locale('en')
     const volumeData = getValues() as TEditableVolume
-    const volumeClone = clone(volumeData)
+    const volumeClone = cloneDeep(volumeData)
     const repairedVolume = repairVolume(volumeClone, editions)
     const validation = VolumeSchema.safeParse(repairedVolume)
 
@@ -176,7 +176,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
     toast.success(t('volume_overview.specimens_generated_successfully'))
     setVolumeState(volumeClone, false)
     setHasUnsavedData(true)
-    reset({ ...volumeClone, periodicity: undefined }) // reset isDirty flag
+    reset(volumeClone) // reset isDirty flag
     setPeriodicityModalVisible(false)
     return true
   }
@@ -222,6 +222,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
           </TableHead>
           <TableBody>
             {fields.map((p, index) => {
+              const disabledRow = !getValues(`periodicity.${index}.numExists`)
               return (
                 <TableRow key={p.id}>
                   <TableCell>
@@ -237,6 +238,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
                   <TableCell>
                     <InputDataSelect
                       name={`periodicity.${index}.editionId`}
+                      disabled={disabledRow}
                       options={editions.map((o) => ({
                         key: o.id,
                         value: o.name[languageCode],
@@ -246,18 +248,21 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
                   <TableCell>
                     <InputDataTextField
                       name={`periodicity.${index}.pagesCount`}
+                      disabled={disabledRow}
                       type="number"
                     />
                   </TableCell>
                   <TableCell>
                     <InputDataAutocomplete
                       name={`periodicity.${index}.name`}
+                      disabled={disabledRow}
                       options={names}
                     />
                   </TableCell>
                   <TableCell>
                     <InputDataAutocomplete
                       name={`periodicity.${index}.subName`}
+                      disabled={disabledRow}
                       options={subNames}
                     />
                   </TableCell>
@@ -271,7 +276,9 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
                       }}
                     >
                       {getValues(`periodicity.${index}.duplicated`) ? (
-                        <IconButton disabled={disabled || locked}>
+                        <IconButton
+                          disabled={disabled || locked || disabledRow}
+                        >
                           <DeleteOutlineIcon
                             onClick={() => remove(index)}
                             sx={{
@@ -280,7 +287,9 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
                           />
                         </IconButton>
                       ) : (
-                        <IconButton disabled={disabled || locked}>
+                        <IconButton
+                          disabled={disabled || locked || disabledRow}
+                        >
                           <AddCircleOutlineIcon
                             onClick={() =>
                               insert(index + 1, { ...p, duplicated: true }, {})

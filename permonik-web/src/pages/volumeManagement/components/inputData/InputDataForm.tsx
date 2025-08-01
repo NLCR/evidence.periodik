@@ -20,7 +20,10 @@ import ConfirmDialog from '../../../specimensOverview/components/dialogs/Confirm
 import Button from '@mui/material/Button'
 import { useParams } from 'react-router-dom'
 import UnsavedChangesModal from '../UnsavedChangesModal'
-import { initialState } from '../../../../slices/useVolumeManagementStore'
+import {
+  initialState,
+  useVolumeManagementStore,
+} from '../../../../slices/useVolumeManagementStore'
 
 const InputDataForm = ({
   editions,
@@ -33,6 +36,10 @@ const InputDataForm = ({
   const { volumeId } = useParams()
   const { locked, setLocked } = useInputDataEditabilityContext()
   const { t } = useTranslation('global')
+
+  const setHasUnsavedData = useVolumeManagementStore(
+    (state) => state.setStateHasUnsavedData
+  )
 
   const methods = useForm<TInputData>({
     defaultValues: volume ?? initialState.volumeState,
@@ -149,7 +156,14 @@ const InputDataForm = ({
                 : t('volume_overview.revert_edit')}
             </Button>
           }
-          onConfirm={() => setLocked(!locked)}
+          onConfirm={() => {
+            // cancel editing
+            if (!locked) {
+              methods.reset()
+              setHasUnsavedData(false)
+            }
+            setLocked(!locked)
+          }}
           title={
             locked
               ? t('volume_overview.unlock_edit_dialog_title')

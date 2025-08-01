@@ -107,6 +107,7 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
             : data.repairedSpecimens,
         })
         toast.success(t('volume_overview.volume_updated_successfully'))
+        setStateHasUnsavedData(false)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         // toast.error(t('volume_overview.volume_update_error'))
@@ -129,6 +130,7 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
             : data.repairedSpecimens,
         })
         toast.success(t('volume_overview.volume_updated_successfully'))
+        setStateHasUnsavedData(false)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         // toast.error(t('volume_overview.volume_update_error'))

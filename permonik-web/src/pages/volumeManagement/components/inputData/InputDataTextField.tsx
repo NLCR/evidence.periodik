@@ -112,7 +112,7 @@ const InputDataTextField = ({
   ) : (
     <Field
       isMutationMarkInputTextField={isMutationMarkInputTextField}
-      disabled={disabled}
+      disabled={disabled || props.disabled}
       name={name}
       {...props}
     />
