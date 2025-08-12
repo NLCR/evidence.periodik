@@ -5,7 +5,6 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import Table from '@mui/material/Table'
-import { inputDataSchema, TInputData } from './schemas'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import TableBody from '@mui/material/TableBody'
@@ -25,6 +24,10 @@ import {
   useVolumeManagementStore,
 } from '../../../../slices/useVolumeManagementStore'
 import { useEffect } from 'react'
+import {
+  EditableVolumeSchema,
+  TEditableVolume,
+} from '../../../../schema/volume'
 
 const InputDataForm = ({
   editions,
@@ -43,14 +46,18 @@ const InputDataForm = ({
     (state) => state.setStateHasUnsavedData
   )
 
-  const methods = useForm<TInputData>({
+  const methods = useForm<TEditableVolume>({
     defaultValues: volume ?? initialState.volumeState,
-    resolver: zodResolver(inputDataSchema),
+    resolver: zodResolver(EditableVolumeSchema),
   })
 
   useEffect(() => {
     if (!duplicated && !volumeId) {
       methods.reset(initialState.volumeState)
+    }
+    if (duplicated) {
+      methods.setValue('barCode', '')
+      methods.setValue('mutationMark', '')
     }
   }, [duplicated, volumeId, methods])
 

@@ -249,7 +249,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
                     <InputDataTextField
                       name={`periodicity.${index}.pagesCount`}
                       disabled={disabledRow}
-                      type="number"
+                      inputMode="decimal"
                     />
                   </TableCell>
                   <TableCell>
