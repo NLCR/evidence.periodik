@@ -24,6 +24,7 @@ import {
   initialState,
   useVolumeManagementStore,
 } from '../../../../slices/useVolumeManagementStore'
+import { useEffect } from 'react'
 
 const InputDataForm = ({
   editions,
@@ -32,6 +33,7 @@ const InputDataForm = ({
   metaTitles,
   mutations,
   owners,
+  duplicated,
 }: Omit<InputDataProps, 'isVolumeLoading'>) => {
   const { volumeId } = useParams()
   const { locked, setLocked } = useInputDataEditabilityContext()
@@ -45,6 +47,12 @@ const InputDataForm = ({
     defaultValues: volume ?? initialState.volumeState,
     resolver: zodResolver(inputDataSchema),
   })
+
+  useEffect(() => {
+    if (!duplicated && !volumeId) {
+      methods.reset(initialState.volumeState)
+    }
+  }, [duplicated, volumeId, methods])
 
   return (
     <FormProvider {...methods}>

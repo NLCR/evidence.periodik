@@ -23,6 +23,7 @@ export interface InputDataProps {
   owners: TOwner[]
   metaTitles: TMetaTitle[]
   editions: TEdition[]
+  duplicated?: boolean
 }
 
 const InputData: FC<InputDataProps> = ({ isVolumeLoading, ...props }) => {

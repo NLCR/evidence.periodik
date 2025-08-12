@@ -165,6 +165,7 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
           owners={owners}
           metaTitles={metaTitles}
           editions={editions}
+          duplicated={duplicated}
         />
         <Box
           sx={{
