@@ -226,13 +226,13 @@
     "ChCis": "Chybné<br />čísl.",
     "ChCis_tooltip": "Vytlačené chybné číslo",
     "ChSv": "Chybně<br />sváz.",
-    "ChSv_tooltip": "Chybne zviazané, napr. prehádzané strany, zviazané príliš k chrbtu",
+    "ChSv_tooltip": "Chybne zviazané, napr. prehádzané strany",
     "ChDatum": "Chybné<br />dátum",
     "ChDatum_tooltip": "Chybný dátum",
     "Cz": "Cenzu<br />rované",
     "Cz_tooltip": "Cenzúrované",
     "NS": "Nečit.",
-    "NS_tooltip": "Nečitateľne zviazané"
+    "NS_tooltip": "Nečitateľne zviazané, napr. zviazané príliš k chrbtu"
   },
   "boolean_facet_states": {
     "numMissing": "Number exists",
