@@ -61,7 +61,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
   const { languageCode } = useLanguageCode()
 
   const { disabled, locked, setLocked } = useInputDataEditabilityContext()
-  const { getValues, control, reset } = useFormContext()
+  const { getValues, watch, control, reset } = useFormContext()
 
   const { fields, remove, insert } = useFieldArray({
     control,
@@ -222,7 +222,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
           </TableHead>
           <TableBody>
             {fields.map((p, index) => {
-              const disabledRow = !getValues(`periodicity.${index}.numExists`)
+              const disabledRow = !watch(`periodicity.${index}.numExists`)
               return (
                 <TableRow key={p.id}>
                   <TableCell>
