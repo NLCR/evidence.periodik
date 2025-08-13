@@ -1,14 +1,17 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { TSpecimenStateButton } from '../../../schema/specimen'
+import { useEffect, useState } from 'react'
 
-type TOption = { label: string; value: TSpecimenStateButton['id'] }
+type TOption = { label: string; value: string }
+type TMarkedOption = TOption & {
+  active: boolean
+}
 
 type Props = {
   label?: string
   options: TOption[]
-  selectedItems: TSpecimenStateButton[]
-  setSelectedItems: (value: TSpecimenStateButton[]) => void
+  selectedItems: string[]
+  setSelectedItems: (value: string[]) => void
 }
 
 export function FormTabMultiSelect({
@@ -17,6 +20,24 @@ export function FormTabMultiSelect({
   selectedItems,
   setSelectedItems,
 }: Props) {
+  const [markedOptions, setMarkedOptions] = useState<TMarkedOption[]>(
+    options.map((option) => ({
+      ...option,
+      active: selectedItems.includes(option.value),
+    }))
+  )
+
+  useEffect(() => {
+    if (markedOptions) {
+      setSelectedItems(
+        markedOptions
+          .filter((option) => option.active)
+          .map((option) => option.value)
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(markedOptions)])
+
   return (
     <>
       {label && (
@@ -40,63 +61,47 @@ export function FormTabMultiSelect({
           padding: 0,
         }}
       >
-        {options.map((option) => {
-          const active = !!selectedItems.find((i) => i.id === option.value)
-            ?.active
-
-          return (
-            <Button
-              key={option.value.toString()}
-              type="button"
-              sx={{
-                display: 'inline-flex',
-                width: '100%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                whiteSpace: 'nowrap',
-                borderRadius: '2px',
-                py: '6px',
-                fontSize: '1rem',
-                fontWeight: 400,
-                textTransform: 'none',
-                transition: 'all 0.2s ease',
-                color: active ? 'white' : 'primary.main',
-                backgroundColor: active ? 'primary.main' : 'white',
-                '&:disabled': {
-                  pointerEvents: 'none',
-                  opacity: 0.5,
-                },
-                '&:hover': {
-                  backgroundColor: active ? 'primary.dark' : 'grey.100',
-                },
-              }}
-              onClick={() => {
-                let newOptions
-
-                const exists = selectedItems.some(
-                  (item) => item.id === option.value
-                )
-                if (exists) {
-                  // Update an existing option
-                  newOptions = selectedItems.map((item) =>
-                    item.id === option.value
-                      ? { ...item, active: !item.active }
-                      : item
-                  )
-                } else {
-                  // Add a new option
-                  newOptions = [
-                    ...selectedItems,
-                    { id: option.value, active: true },
-                  ]
-                }
-                setSelectedItems(newOptions)
-              }}
-            >
-              {option.label}
-            </Button>
-          )
-        })}
+        {markedOptions.map((option) => (
+          <Button
+            key={option.value.toString()}
+            type="button"
+            sx={{
+              display: 'inline-flex',
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+              whiteSpace: 'nowrap',
+              borderRadius: '2px',
+              py: '8px',
+              fontSize: '0.8rem',
+              fontWeight: 400,
+              textTransform: 'none',
+              transition: 'all 0.2s ease',
+              color: option.active ? 'white' : 'primary.main',
+              backgroundColor: option.active ? 'primary.main' : 'white',
+              '&:disabled': {
+                pointerEvents: 'none',
+                opacity: 0.5,
+              },
+              '&:hover': {
+                backgroundColor: option.active ? 'primary.dark' : 'grey.100',
+              },
+            }}
+            onClick={() => {
+              setMarkedOptions(
+                markedOptions.map((markedOption) => ({
+                  ...markedOption,
+                  active:
+                    markedOption.value === option.value
+                      ? !markedOption.active
+                      : markedOption.active,
+                }))
+              )
+            }}
+          >
+            {option.label}
+          </Button>
+        ))}
       </Box>
     </>
   )

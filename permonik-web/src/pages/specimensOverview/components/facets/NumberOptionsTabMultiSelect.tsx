@@ -1,23 +1,26 @@
+import { SpecimenStateEnum, TSpecimenState } from '../../../../schema/specimen'
 import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
 import { FormTabMultiSelect } from '../FormTabMultiSelect'
 
 const NumberOptionsTabMultiSelect = () => {
   const view = useSpecimensOverviewStore((state) => state.view)
-  const stateButtons = useSpecimensOverviewStore((state) => state.stateButtons)
-  const setStateButtons = useSpecimensOverviewStore(
-    (state) => state.setStateButtons
+  const specimenStates = useSpecimensOverviewStore(
+    (state) => state.specimenStates
+  )
+  const setSpecimenStates = useSpecimensOverviewStore(
+    (state) => state.setSpecimenStates
   )
 
   return view === 'table' ? (
     <FormTabMultiSelect
-      selectedItems={stateButtons}
-      setSelectedItems={(values) => {
-        setStateButtons(values)
-      }}
+      selectedItems={specimenStates}
+      setSelectedItems={(values) =>
+        setSpecimenStates(values as TSpecimenState[])
+      }
       label="Číslo"
       options={[
-        { label: 'Číslo existuje', value: 'NUM_EXISTS' },
-        { label: 'Číslo chybí', value: 'NUM_MISSING' },
+        { label: 'Číslo existuje', value: SpecimenStateEnum.numExists },
+        { label: 'Číslo chybí', value: SpecimenStateEnum.numMissing },
       ]}
     />
   ) : null
