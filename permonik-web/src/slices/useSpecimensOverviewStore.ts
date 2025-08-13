@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { Dayjs } from 'dayjs'
-import { TSpecimenState } from '../schema/specimen'
+import { SpecimenStateEnum, TSpecimenState } from '../schema/specimen'
 
 export type TParams = {
   dateStart: number
@@ -59,7 +59,7 @@ export const useSpecimensOverviewStore = create<TState>()(
     params: initialParams,
     pagination: { pageIndex: 0, pageSize: 100 },
     barCodeInput: '',
-    specimenStates: ['NUM_EXISTS'],
+    specimenStates: [SpecimenStateEnum.numExists],
     view: 'calendar',
     synchronizeYearsBetweenViews: true,
     calendarDate: null,

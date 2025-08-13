@@ -46,7 +46,10 @@ export const useSpecimenFacetsQuery = (metaTitleId?: string) => {
         JSON.stringify({
           ...params,
           barCode: barCodeInput,
-          specimenStates: ['NUM_EXISTS', 'NUM_MISSING'].map((state) => ({
+          specimenStates: [
+            SpecimenStateEnum.numExists,
+            SpecimenStateEnum.numMissing,
+          ].map((state) => ({
             id: state,
             active: specimenStates.includes(state as TSpecimenState),
           })),
