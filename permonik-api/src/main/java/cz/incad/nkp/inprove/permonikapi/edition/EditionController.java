@@ -4,8 +4,8 @@ import cz.incad.nkp.inprove.permonikapi.edition.dto.CreatableEditionDTO;
 import cz.incad.nkp.inprove.permonikapi.edition.dto.EditionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -13,15 +13,12 @@ import java.util.List;
 
 @Tag(name = "Edition API", description = "API for managing editions")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/edition")
 public class EditionController {
 
     private final EditionService editionService;
 
-    @Autowired
-    public EditionController(EditionService editionService) {
-        this.editionService = editionService;
-    }
 
     @Operation(summary = "Lists all editions")
     @GetMapping("/list/all")

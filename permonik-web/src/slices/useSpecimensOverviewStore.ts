@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { Dayjs } from 'dayjs'
+import { SpecimenStateEnum, TSpecimenState } from '../schema/specimen'
 
 export type TParams = {
   dateStart: number
@@ -30,6 +31,7 @@ interface TVariablesState {
   params: typeof initialParams
   pagination: { pageIndex: number; pageSize: number }
   barCodeInput: string
+  specimenStates: TSpecimenState[] // číslo chybí / číslo existuje
   view: 'calendar' | 'table'
   synchronizeYearsBetweenViews: boolean
   calendarDate: Dayjs | null
@@ -41,6 +43,7 @@ interface TVariablesState {
 interface TState extends TVariablesState {
   setParams: (values: typeof initialParams) => void
   setBarCodeInput: (value: string) => void
+  setSpecimenStates: (value: TSpecimenState[]) => void
   setPagination: (value: { pageIndex: number; pageSize: number }) => void
   resetAll: () => void
   setView: (value: 'calendar' | 'table') => void
@@ -56,6 +59,7 @@ export const useSpecimensOverviewStore = create<TState>()(
     params: initialParams,
     pagination: { pageIndex: 0, pageSize: 100 },
     barCodeInput: '',
+    specimenStates: [SpecimenStateEnum.numExists],
     view: 'calendar',
     synchronizeYearsBetweenViews: true,
     calendarDate: null,
@@ -70,6 +74,11 @@ export const useSpecimensOverviewStore = create<TState>()(
     setBarCodeInput: (value) =>
       set((state) => ({
         barCodeInput: value,
+        pagination: { ...state.pagination, pageIndex: 0 },
+      })),
+    setSpecimenStates: (value) =>
+      set((state) => ({
+        specimenStates: value,
         pagination: { ...state.pagination, pageIndex: 0 },
       })),
     setPagination: (value) => set(() => ({ pagination: value })),

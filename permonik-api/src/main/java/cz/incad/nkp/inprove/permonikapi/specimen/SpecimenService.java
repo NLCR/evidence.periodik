@@ -2,6 +2,7 @@ package cz.incad.nkp.inprove.permonikapi.specimen;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -10,7 +11,6 @@ import org.apache.solr.common.params.GroupParams;
 import org.apache.solr.common.params.StatsParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,16 +23,12 @@ import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED
 import static cz.incad.nkp.inprove.permonikapi.utils.DateValidator.isValidDate;
 
 @Service
+@RequiredArgsConstructor
 public class SpecimenService implements SpecimenDefinition {
 
     private static final Logger logger = LoggerFactory.getLogger(SpecimenService.class);
 
     private final SolrClient solrClient;
-
-    @Autowired
-    public SpecimenService(SolrClient solrClient) {
-        this.solrClient = solrClient;
-    }
 
 
     public StatsForMetaTitleOverviewDTO getStatsForMetaTitleOverview(String metaTitleId) throws SolrServerException, IOException {
@@ -79,7 +75,7 @@ public class SpecimenService implements SpecimenDefinition {
         SpecimenFacets specimenFacets = objectMapper.readValue(facets, SpecimenFacets.class);
 
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"", NUM_EXISTS_FIELD + ":true");
+        solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
 
         if (!specimenFacets.getNames().isEmpty()) {
@@ -113,6 +109,12 @@ public class SpecimenService implements SpecimenDefinition {
 
         if (!specimenFacets.getBarCode().isEmpty()) {
             solrQuery.addFilterQuery(specimenFacets.getBarCodeQueryString());
+        }
+
+        if (Objects.equals(view, "table") && !specimenFacets.getSpecimenStates().isEmpty()) {
+            solrQuery.addFilterQuery(specimenFacets.getSpecimenStatesQueryString());
+        } else {
+            solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true");
         }
 
         // Add filtering based on year interval
@@ -195,7 +197,7 @@ public class SpecimenService implements SpecimenDefinition {
         SpecimenFacets specimenFacets = objectMapper.readValue(facets, SpecimenFacets.class);
 
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"", NUM_EXISTS_FIELD + ":true");
+        solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(0);
         solrQuery.setStart(0);
@@ -238,6 +240,12 @@ public class SpecimenService implements SpecimenDefinition {
 
         if (!specimenFacets.getBarCode().isEmpty()) {
             solrQuery.addFilterQuery(specimenFacets.getBarCodeQueryString());
+        }
+
+        if (Objects.equals(view, "table") && !specimenFacets.getSpecimenStates().isEmpty()) {
+            solrQuery.addFilterQuery(specimenFacets.getSpecimenStatesQueryString());
+        } else {
+            solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true");
         }
 
         // Add filtering based on year interval for table view

@@ -3,13 +3,13 @@ package cz.incad.nkp.inprove.permonikapi.owner;
 
 import cz.incad.nkp.inprove.permonikapi.owner.dto.CreatableOwnerDTO;
 import cz.incad.nkp.inprove.permonikapi.owner.mapper.CreatableOwnerMapper;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -18,18 +18,13 @@ import java.util.List;
 import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED_FIELD;
 
 @Service
+@RequiredArgsConstructor
 public class OwnerService implements OwnerDefinition {
 
     private static final Logger logger = LoggerFactory.getLogger(OwnerService.class);
 
     private final SolrClient solrClient;
     private final CreatableOwnerMapper creatableOwnerMapper;
-
-    @Autowired
-    public OwnerService(SolrClient solrClient, CreatableOwnerMapper creatableOwnerMapper) {
-        this.solrClient = solrClient;
-        this.creatableOwnerMapper = creatableOwnerMapper;
-    }
 
 
     public List<Owner> getOwners() throws SolrServerException, IOException {
