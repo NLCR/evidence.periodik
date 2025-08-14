@@ -3,8 +3,8 @@ package cz.incad.nkp.inprove.permonikapi.owner;
 import cz.incad.nkp.inprove.permonikapi.owner.dto.CreatableOwnerDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -12,15 +12,12 @@ import java.util.List;
 
 @Tag(name = "Owner API", description = "API for managing owners")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/owner")
 public class OwnerController {
 
     private final OwnerService ownerService;
 
-    @Autowired
-    public OwnerController(OwnerService ownerService) {
-        this.ownerService = ownerService;
-    }
 
     @Operation(summary = "Lists all owners")
     @GetMapping("/list/all")

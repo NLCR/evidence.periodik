@@ -5,13 +5,13 @@ import cz.incad.nkp.inprove.permonikapi.edition.dto.CreatableEditionDTO;
 import cz.incad.nkp.inprove.permonikapi.edition.dto.EditionDTO;
 import cz.incad.nkp.inprove.permonikapi.edition.mapper.CreatableEditionMapper;
 import cz.incad.nkp.inprove.permonikapi.edition.mapper.EditionDTOMapper;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,6 +20,7 @@ import java.util.List;
 import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED_FIELD;
 
 @Service
+@RequiredArgsConstructor
 public class EditionService implements EditionDefinition {
 
     private static final Logger logger = LoggerFactory.getLogger(EditionService.class);
@@ -27,13 +28,6 @@ public class EditionService implements EditionDefinition {
     private final EditionDTOMapper editionDTOMapper;
     private final SolrClient solrClient;
     private final CreatableEditionMapper creatableEditionMapper;
-
-    @Autowired
-    public EditionService(EditionDTOMapper editionDTOMapper, SolrClient solrClient, CreatableEditionMapper creatableEditionMapper) {
-        this.editionDTOMapper = editionDTOMapper;
-        this.solrClient = solrClient;
-        this.creatableEditionMapper = creatableEditionMapper;
-    }
 
 
     public List<EditionDTO> getEditions() throws SolrServerException, IOException {

@@ -4,7 +4,7 @@ package cz.incad.nkp.inprove.permonikapi.config.security.auth.form.login;
 import cz.incad.nkp.inprove.permonikapi.config.security.auth.form.PermFormAuthenticationProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,7 +16,7 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LoginService {
 
 
@@ -27,7 +27,7 @@ public class LoginService {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
         Authentication authentication = authenticationProvider.authenticate(token);
-        
+
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);

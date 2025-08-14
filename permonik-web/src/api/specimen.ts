@@ -1,11 +1,13 @@
-import { useQuery, keepPreviousData, useMutation } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { api, queryClient } from './index'
 import {
-  TSpecimensPublicationDays,
+  SpecimenStateEnum,
   TSpecimen,
   TSpecimenDamageTypesFacet,
   TSpecimenFacet,
+  TSpecimensPublicationDays,
+  TSpecimenState,
 } from '../schema/specimen'
 import { useSpecimensOverviewStore } from '../slices/useSpecimensOverviewStore'
 
@@ -22,10 +24,21 @@ export interface TSpecimensFacets {
 export const useSpecimenFacetsQuery = (metaTitleId?: string) => {
   const params = useSpecimensOverviewStore((state) => state.params)
   const barCodeInput = useSpecimensOverviewStore((state) => state.barCodeInput)
+  const specimenStates = useSpecimensOverviewStore(
+    (state) => state.specimenStates
+  )
   const view = useSpecimensOverviewStore((state) => state.view)
 
   return useQuery({
-    queryKey: ['specimen', 'facets', metaTitleId, params, barCodeInput, view],
+    queryKey: [
+      'specimen',
+      'facets',
+      metaTitleId,
+      params,
+      barCodeInput,
+      specimenStates,
+      view,
+    ],
     queryFn: () => {
       const formData = new FormData()
       formData.set(
@@ -33,6 +46,13 @@ export const useSpecimenFacetsQuery = (metaTitleId?: string) => {
         JSON.stringify({
           ...params,
           barCode: barCodeInput,
+          specimenStates: [
+            SpecimenStateEnum.numExists,
+            SpecimenStateEnum.numMissing,
+          ].map((state) => ({
+            id: state,
+            active: specimenStates.includes(state as TSpecimenState),
+          })),
         })
       )
       formData.set('view', view)
@@ -58,6 +78,10 @@ export const useSpecimenListQuery = (metaTitleId?: string) => {
   const params = useSpecimensOverviewStore((state) => state.params)
   const pagination = useSpecimensOverviewStore((state) => state.pagination)
   const barCodeInput = useSpecimensOverviewStore((state) => state.barCodeInput)
+  const specimenStates = useSpecimensOverviewStore(
+    (state) => state.specimenStates
+  )
+
   const calendarDate = useSpecimensOverviewStore((state) => state.calendarDate)
   const view = useSpecimensOverviewStore((state) => state.view)
 
@@ -80,6 +104,7 @@ export const useSpecimenListQuery = (metaTitleId?: string) => {
       params,
       calendarDate,
       barCodeInput,
+      specimenStates,
     ],
     queryFn: () => {
       const formData = new FormData()
@@ -101,6 +126,13 @@ export const useSpecimenListQuery = (metaTitleId?: string) => {
         JSON.stringify({
           ...params,
           barCode: barCodeInput,
+          specimenStates: [
+            SpecimenStateEnum.numExists,
+            SpecimenStateEnum.numMissing,
+          ].map((state) => ({
+            id: state,
+            active: specimenStates.includes(state as TSpecimenState),
+          })),
           calendarDateStart: startOfMonthUTC,
           calendarDateEnd: endOfMonthUTC,
         })

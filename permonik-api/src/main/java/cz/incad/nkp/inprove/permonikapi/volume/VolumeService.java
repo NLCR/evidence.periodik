@@ -10,13 +10,13 @@ import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDetailDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeOverviewStatsDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.mapper.VolumeDTOMapper;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,6 +27,7 @@ import java.util.List;
 import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED_FIELD;
 
 @Service
+@RequiredArgsConstructor
 public class VolumeService implements VolumeDefinition {
 
     private static final Logger logger = LoggerFactory.getLogger(VolumeService.class);
@@ -36,13 +37,6 @@ public class VolumeService implements VolumeDefinition {
     private final SolrClient solrClient;
     private final VolumeDTOMapper volumeDTOMapper;
 
-    @Autowired
-    public VolumeService(MetaTitleService metaTitleService, SpecimenService specimenService, SolrClient solrClient, VolumeDTOMapper volumeDTOMapper) {
-        this.metaTitleService = metaTitleService;
-        this.specimenService = specimenService;
-        this.solrClient = solrClient;
-        this.volumeDTOMapper = volumeDTOMapper;
-    }
 
     public VolumeDTO getVolumeDTOById(String volumeId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");

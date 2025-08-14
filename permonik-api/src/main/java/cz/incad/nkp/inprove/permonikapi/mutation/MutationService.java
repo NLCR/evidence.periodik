@@ -5,13 +5,13 @@ import cz.incad.nkp.inprove.permonikapi.mutation.dto.CreatableMutationDTO;
 import cz.incad.nkp.inprove.permonikapi.mutation.dto.MutationDTO;
 import cz.incad.nkp.inprove.permonikapi.mutation.mapper.CreatableMutationMapper;
 import cz.incad.nkp.inprove.permonikapi.mutation.mapper.MutationDTOMapper;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,6 +20,7 @@ import java.util.List;
 import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED_FIELD;
 
 @Service
+@RequiredArgsConstructor
 public class MutationService implements MutationDefinition {
 
     private static final Logger logger = LoggerFactory.getLogger(MutationService.class);
@@ -27,13 +28,6 @@ public class MutationService implements MutationDefinition {
     private final MutationDTOMapper mutationDTOMapper;
     private final SolrClient solrClient;
     private final CreatableMutationMapper creatableMutationMapper;
-
-    @Autowired
-    public MutationService(MutationDTOMapper mutationDTOMapper, SolrClient solrClient, CreatableMutationMapper creatableMutationMapper) {
-        this.mutationDTOMapper = mutationDTOMapper;
-        this.solrClient = solrClient;
-        this.creatableMutationMapper = creatableMutationMapper;
-    }
 
 
     public List<MutationDTO> getMutations() throws SolrServerException, IOException {
