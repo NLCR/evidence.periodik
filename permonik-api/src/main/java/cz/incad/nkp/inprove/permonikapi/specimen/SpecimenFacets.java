@@ -86,12 +86,12 @@ public class SpecimenFacets implements SpecimenDefinition {
             }
         }
 
-        if (clauses.isEmpty()) {
-            return NUM_EXISTS_FIELD + ":true";
-        }
+//        if (clauses.isEmpty()) {
+//            return NUM_EXISTS_FIELD + ":true";
+//        }
 
         return String.join(" OR ", clauses);
 
     }
-    
+
 }
