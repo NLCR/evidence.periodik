@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import { FC, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -8,24 +8,33 @@ import TableRow from '@mui/material/TableRow'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
-import { TEdition } from '../../../../schema/edition'
-import ModalContainer from '../../../../components/ModalContainer'
-import InputDataCheckbox from '../inputData/InputDataCheckbox'
-import { useInputDataEditabilityContext } from '../inputData/InputDataEditabilityContextProvider'
+import { TEdition } from '../../../../../schema/edition'
+import ModalContainer from '../../../../../components/ModalContainer'
+import InputDataCheckbox from '../InputDataCheckbox'
+import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useGenerateVolume } from './useGenerateVolume'
 import PeriodicityRow from './PeriodicityRow'
+import { TMetaTitle } from '../../../../../schema/metaTitle'
 
 interface PeriodicityProps {
   editions: TEdition[]
+  metaTitles: TMetaTitle[]
 }
 
-const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
+const Periodicity: FC<PeriodicityProps> = ({ editions, metaTitles }) => {
   const [periodicityModalVisible, setPeriodicityModalVisible] = useState(false)
   const { t } = useTranslation()
 
   const { disabled, locked, setLocked } = useInputDataEditabilityContext()
-  const { control } = useFormContext()
+  const { control, watch } = useFormContext()
+
+  const metatitleId = watch('metaTitleId')
+  const metaTitle = useMemo(
+    () => metaTitles.find((value) => value.id === metatitleId)?.name,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(metaTitles.map((metatitle) => metatitle.id)), metatitleId]
+  )
 
   const { fields, remove, insert } = useFieldArray({
     control,
@@ -79,9 +88,9 @@ const Periodicity: FC<PeriodicityProps> = ({ editions }) => {
                 key={p.id}
                 editions={editions}
                 index={index}
-                p={p}
                 insert={insert}
                 remove={remove}
+                metaTitle={metaTitle}
               />
             ))}
           </TableBody>

@@ -3,11 +3,16 @@ import { useInputDataEditabilityContext } from './InputDataEditabilityContextPro
 import Checkbox, { CheckboxProps } from '@mui/material/Checkbox'
 import Box from '@mui/material/Box'
 
-type Props = { name: string; label?: string }
+type Props = {
+  name: string
+  label?: string
+  onChangeCallback?: (value: boolean) => void
+}
 
 const InputDataCheckbox = ({
   name,
   label = undefined,
+  onChangeCallback = undefined,
   ...props
 }: Props & CheckboxProps) => {
   const { locked, disabled } = useInputDataEditabilityContext()
@@ -32,7 +37,10 @@ const InputDataCheckbox = ({
             }}
             disabled={disabled || locked}
             checked={!!field.value}
-            onChange={(e) => field.onChange(e.target.checked)}
+            onChange={(e) => {
+              field.onChange(e.target.checked)
+              if (onChangeCallback) onChangeCallback(e.target.checked)
+            }}
             inputRef={field.ref}
             {...props}
           />

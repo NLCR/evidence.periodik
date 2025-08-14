@@ -14,7 +14,7 @@ import InputDataSubName from './InputDataSubName'
 import InputDataMutationMark from './InputDataMutationMark'
 import InputDataTextField from './InputDataTextField'
 import InputDataDatePicker from './InputDataDatePicker'
-import Periodicity from '../periodicity/Periodicity'
+import Periodicity from './periodicity/Periodicity'
 import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import Button from '@mui/material/Button'
 import { useParams } from 'react-router-dom'
@@ -89,6 +89,22 @@ const InputDataForm = ({
                   key: metaTitle.id,
                   value: metaTitle.name,
                 }))}
+                onChangeCallback={(value: string) => {
+                  // update the names of all periodicity days
+                  const metaTitle = metaTitles.find(
+                    (metatitle) => metatitle.id === value
+                  )?.name
+
+                  const periodicity = methods.getValues('periodicity')
+                  periodicity.forEach((day, index) => {
+                    if (day.numExists) {
+                      methods.setValue(
+                        `periodicity.${index}.name`,
+                        metaTitle ?? ''
+                      )
+                    }
+                  })
+                }}
               />
             </TableCell>
           </TableRow>
@@ -161,7 +177,7 @@ const InputDataForm = ({
           </TableRow>
         </TableBody>
       </Table>
-      <Periodicity editions={editions} />
+      <Periodicity editions={editions} metaTitles={metaTitles} />
       {(volumeId || locked) && (
         <ConfirmDialog
           TriggerButton={

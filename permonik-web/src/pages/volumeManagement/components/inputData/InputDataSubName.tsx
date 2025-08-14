@@ -3,6 +3,8 @@ import TableRow from '@mui/material/TableRow'
 import InputDataTextField from './InputDataTextField'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { useTranslation } from 'react-i18next'
+import { useFormContext } from 'react-hook-form'
+import { TEditableVolume } from '../../../../schema/volume'
 
 const InputDataSubName = () => {
   const setSubName = useVolumeManagementStore(
@@ -16,6 +18,8 @@ const InputDataSubName = () => {
   const setSpecimensState = useVolumeManagementStore(
     (state) => state.specimensActions.setSpecimensState
   )
+
+  const { getValues, setValue } = useFormContext<TEditableVolume>()
 
   return (
     <TableRow>
@@ -37,6 +41,15 @@ const InputDataSubName = () => {
           }}
           name={'subName'}
           fullWidth
+          onChangeCallback={(value: string) => {
+            // update the subnames of all periodicity days
+            const periodicity = getValues('periodicity')
+            periodicity.forEach((day, index) => {
+              if (day.numExists) {
+                setValue(`periodicity.${index}.subName`, value)
+              }
+            })
+          }}
         />
       </TableCell>
     </TableRow>

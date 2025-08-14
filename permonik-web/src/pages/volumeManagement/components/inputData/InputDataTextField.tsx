@@ -10,12 +10,14 @@ type FieldProps = {
   isMutationMarkInputTextField?: boolean
   disabled?: boolean
   name: string
+  onChangeCallback?: (value: string) => void
 }
 
 const Field = ({
   isMutationMarkInputTextField = false,
   name,
   disabled = false,
+  onChangeCallback = undefined,
   ...props
 }: FieldProps & TextFieldProps) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
@@ -39,7 +41,10 @@ const Field = ({
             disabled={disabled}
             {...props}
             value={field.value ?? ''}
-            onChange={field.onChange}
+            onChange={(e) => {
+              field.onChange(e)
+              if (onChangeCallback) onChangeCallback(e.target.value)
+            }}
             onBlur={field.onBlur}
             inputRef={field.ref}
             onClick={() =>
@@ -75,12 +80,14 @@ type Props = {
   name: string
   isMutationMarkInputTextField?: boolean
   editableData?: { fieldName: string; saveChange: (value: string) => void }
+  onChangeCallback?: (value: string) => void
 }
 
 const InputDataTextField = ({
   name,
   isMutationMarkInputTextField = false,
   editableData = undefined,
+  onChangeCallback = undefined,
   ...props
 }: TextFieldProps & Props) => {
   const { locked, disabled } = useInputDataEditabilityContext()
@@ -97,6 +104,7 @@ const InputDataTextField = ({
                   isMutationMarkInputTextField={isMutationMarkInputTextField}
                   name={name + '_internal'}
                   defaultValue={getValues(name)}
+                  onChangeCallback={onChangeCallback}
                   {...props}
                 />
               ),
@@ -114,6 +122,7 @@ const InputDataTextField = ({
       isMutationMarkInputTextField={isMutationMarkInputTextField}
       disabled={disabled || props.disabled}
       name={name}
+      onChangeCallback={onChangeCallback}
       {...props}
     />
   )

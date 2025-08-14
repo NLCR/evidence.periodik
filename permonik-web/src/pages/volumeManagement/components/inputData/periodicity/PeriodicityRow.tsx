@@ -5,38 +5,44 @@ import TableRow from '@mui/material/TableRow'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { t } from 'i18next'
-import { TVolumePeriodicityDays } from '../../../../schema/volume'
-import InputDataAutocomplete from '../inputData/InputDataAutocomplete'
-import InputDataCheckbox from '../inputData/InputDataCheckbox'
-import InputDataSelect from '../inputData/InputDataSelect'
-import InputDataTextField from '../inputData/InputDataTextField'
+import { TVolumePeriodicityDays } from '../../../../../schema/volume'
+import InputDataAutocomplete from '../InputDataAutocomplete'
+import InputDataCheckbox from '../InputDataCheckbox'
+import InputDataSelect from '../InputDataSelect'
+import InputDataTextField from '../InputDataTextField'
 import {
   FieldValues,
   UseFieldArrayInsert,
   UseFieldArrayRemove,
   useFormContext,
 } from 'react-hook-form'
-import useSortedSpecimensNamesAndSubNames from '../../../../hooks/useSortedSpecimensNamesAndSubNames'
-import { useLanguageCode } from '../../../../hooks/useLanguageCode'
-import { useInputDataEditabilityContext } from '../inputData/InputDataEditabilityContextProvider'
-import { TEdition } from '../../../../schema/edition'
+import useSortedSpecimensNamesAndSubNames from '../../../../../hooks/useSortedSpecimensNamesAndSubNames'
+import { useLanguageCode } from '../../../../../hooks/useLanguageCode'
+import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
+import { TEdition } from '../../../../../schema/edition'
 
 type Props = {
-  p: { id: string }
   index: number
   insert: UseFieldArrayInsert<FieldValues, 'periodicity'>
   remove: UseFieldArrayRemove
   editions: TEdition[]
+  metaTitle: string | null | undefined
 }
 
-const PeriodicityRow = ({ p, index, insert, remove, editions }: Props) => {
-  const { watch, getValues } = useFormContext()
-
-  const disabledRow = !watch(`periodicity.${index}.numExists`)
+const PeriodicityRow = ({
+  index,
+  insert,
+  remove,
+  editions,
+  metaTitle,
+}: Props) => {
+  const { watch, getValues, resetField, setValue } = useFormContext()
   const { disabled, locked } = useInputDataEditabilityContext()
-
   const { names, subNames } = useSortedSpecimensNamesAndSubNames()
   const { languageCode } = useLanguageCode()
+
+  const disabledRow = !watch(`periodicity.${index}.numExists`)
+  const subname = watch('subName')
 
   return (
     <TableRow>
@@ -46,7 +52,20 @@ const PeriodicityRow = ({ p, index, insert, remove, editions }: Props) => {
         )}
       </TableCell>
       <TableCell>
-        <InputDataCheckbox name={`periodicity.${index}.numExists`} />
+        <InputDataCheckbox
+          name={`periodicity.${index}.numExists`}
+          onChangeCallback={(value: boolean) => {
+            if (value) {
+              setValue(`periodicity.${index}.name`, metaTitle)
+              setValue(`periodicity.${index}.subName`, subname)
+            } else {
+              resetField(`periodicity.${index}.editionId`)
+              resetField(`periodicity.${index}.pagesCount`)
+              resetField(`periodicity.${index}.name`)
+              resetField(`periodicity.${index}.subName`)
+            }
+          }}
+        />
       </TableCell>
       <TableCell>
         <InputDataSelect
@@ -89,7 +108,7 @@ const PeriodicityRow = ({ p, index, insert, remove, editions }: Props) => {
           }}
         >
           {getValues(`periodicity.${index}.duplicated`) ? (
-            <IconButton disabled={disabled || locked || disabledRow}>
+            <IconButton disabled={disabled || locked}>
               <DeleteOutlineIcon
                 onClick={() => remove(index)}
                 sx={{
@@ -101,7 +120,11 @@ const PeriodicityRow = ({ p, index, insert, remove, editions }: Props) => {
             <IconButton disabled={disabled || locked || disabledRow}>
               <AddCircleOutlineIcon
                 onClick={() =>
-                  insert(index + 1, { ...p, duplicated: true }, {})
+                  insert(
+                    index + 1,
+                    { ...getValues(`periodicity.${index}`), duplicated: true },
+                    {}
+                  )
                 }
                 sx={{
                   cursor: 'pointer',

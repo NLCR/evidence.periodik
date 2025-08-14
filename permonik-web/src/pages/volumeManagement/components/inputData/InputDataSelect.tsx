@@ -8,12 +8,15 @@ type FieldProps = {
   name: string
   options: { key: string; value: string }[]
   disabled?: boolean
+
+  onChangeCallback?: (value: string) => void
 }
 
 const Field = ({
   name,
   options,
   disabled = false,
+  onChangeCallback = undefined,
   ...props
 }: FieldProps & SelectProps<string>) => {
   const { control } = useFormContext()
@@ -35,7 +38,10 @@ const Field = ({
             disabled={disabled}
             {...props}
             value={field.value ?? ''}
-            onChange={(event) => field.onChange(event.target.value)}
+            onChange={(event) => {
+              field.onChange(event.target.value)
+              if (onChangeCallback) onChangeCallback(event.target.value)
+            }}
             onBlur={field.onBlur}
             inputRef={field.ref}
           >
@@ -55,12 +61,14 @@ type Props = {
   name: string
   options: { key: string; value: string }[]
   editableData?: { fieldName: string; saveChange: (value: string) => void }
+  onChangeCallback?: (value: string) => void
 }
 
 const InputDataSelect = ({
   name,
   options,
   editableData = undefined,
+  onChangeCallback = undefined,
   ...props
 }: Props & SelectProps<string>) => {
   const { locked, disabled } = useInputDataEditabilityContext()
@@ -93,7 +101,13 @@ const InputDataSelect = ({
       }
     />
   ) : (
-    <Field disabled={disabled} options={options} {...props} name={name} />
+    <Field
+      disabled={disabled}
+      options={options}
+      {...props}
+      name={name}
+      onChangeCallback={onChangeCallback}
+    />
   )
 }
 
