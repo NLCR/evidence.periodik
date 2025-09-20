@@ -28,6 +28,8 @@ import {
   EditableVolumeSchema,
   TEditableVolume,
 } from '../../../../schema/volume'
+import InputDataBarCode from './InputDataBarCode'
+import InputDataSignature from './InputDataSignature'
 
 const InputDataForm = ({
   editions,
@@ -112,19 +114,9 @@ const InputDataForm = ({
           <InputDataSubName />
           <InputDataMutation mutations={mutations} />
           <InputDataMutationMark />
+          <InputDataBarCode />
+          <InputDataSignature />
 
-          <TableRow>
-            <TableCell>{t('volume_overview.bar_code')}</TableCell>
-            <TableCell>
-              <InputDataTextField name="barCode" />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>{t('volume_overview.signature')}</TableCell>
-            <TableCell>
-              <InputDataTextField name="signature" />
-            </TableCell>
-          </TableRow>
           <TableRow>
             <TableCell>{t('volume_overview.year')}</TableCell>
             <TableCell>
