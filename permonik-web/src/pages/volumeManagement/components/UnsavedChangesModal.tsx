@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography'
 import ModalContainer from '../../../components/ModalContainer'
 import { useTranslation } from 'react-i18next'
 import { useShallow } from 'zustand/shallow'
+import { useFormContext } from 'react-hook-form'
 
 const UnsavedChangesModal = () => {
   const { t } = useTranslation()
@@ -16,8 +17,14 @@ const UnsavedChangesModal = () => {
     useShallow((state) => state.stateHasUnsavedData)
   )
 
+  const {
+    formState: { isDirty },
+  } = useFormContext()
+
+  const hasUnsavedData = stateHasUnsavedData || isDirty
+
   useBeforeUnload((event) => {
-    if (stateHasUnsavedData) {
+    if (hasUnsavedData) {
       event.preventDefault()
       event.returnValue = t('volume_overview.unsaved_changes')
     }
@@ -25,17 +32,17 @@ const UnsavedChangesModal = () => {
 
   const shouldBlockNavigationChange = useCallback<BlockerFunction>(
     ({ currentLocation, nextLocation }) =>
-      stateHasUnsavedData && currentLocation.pathname !== nextLocation.pathname,
-    [stateHasUnsavedData]
+      hasUnsavedData && currentLocation.pathname !== nextLocation.pathname,
+    [hasUnsavedData]
   )
 
   const blocker = useBlocker(shouldBlockNavigationChange)
 
   useEffect(() => {
-    if (blocker.state === 'blocked' && !stateHasUnsavedData) {
+    if (blocker.state === 'blocked' && !hasUnsavedData) {
       blocker.reset()
     }
-  }, [blocker, stateHasUnsavedData])
+  }, [blocker, hasUnsavedData])
 
   return (
     <ModalContainer
