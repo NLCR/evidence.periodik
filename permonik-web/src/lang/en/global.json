@@ -236,13 +236,13 @@
     "ChCis": "Wrong<br />numb.",
     "ChCis_tooltip": "Wrong number printed",
     "ChSv": "Wrong<br />bound",
-    "ChSv_tooltip": "Wrongly bound, e.g. shuffled pages",
+    "ChSv_tooltip": "Wrongly bound, e.g., shuffled pages",
     "ChDatum": "Wrong<br />date",
     "ChDatum_tooltip": "Wrong date",
     "Cz": "Censo<br />red",
     "Cz_tooltip": "Censored",
     "NS": "Ill.<br />bound",
-    "NS_tooltip": "Bound illegibly, e.g. tied too close to the spine"
+    "NS_tooltip": "Bound illegibly, e.g., tied too close to the spine"
   },
   "boolean_facet_states": {
     "numMissing": "Number exists",
