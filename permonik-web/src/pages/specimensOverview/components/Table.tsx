@@ -278,6 +278,8 @@ const Table: FC<Props> = ({ metaTitle }) => {
         disableRowSelectionOnClick
       />
       <ModalContainer
+        autoWidth
+        minWidth="30rem"
         onClose={() => {
           setModalData(null)
         }}
