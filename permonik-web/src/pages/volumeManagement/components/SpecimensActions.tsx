@@ -323,6 +323,8 @@ const SpecimensActions = ({
         </Typography>
       </ModalContainer>
       <ModalContainer
+        autoWidth
+        minWidth="30rem"
         header={t('specimens_overview.volume_overview_modal_link')}
         opened={volumeStatsModalOpened}
         onClose={() => setVolumeStatsModalOpened(false)}

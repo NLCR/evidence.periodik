@@ -195,6 +195,8 @@ const InputData: FC<InputDataProps> = ({
           </Button>
         )}
         <ModalContainer
+          autoWidth
+          minWidth="30rem"
           onClose={() => setModalOpened(false)}
           header={t('specimens_overview.volume_overview_modal_link')}
           opened={modalOpened}
