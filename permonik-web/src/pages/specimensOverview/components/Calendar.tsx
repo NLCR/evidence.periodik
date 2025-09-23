@@ -333,6 +333,8 @@ const Calendar: FC<TProps> = ({ metaTitle }) => {
         </Box>
       </ModalContainer>
       <ModalContainer
+        autoWidth
+        minWidth="30rem"
         onClose={() => {
           setSubModalData(null)
         }}

@@ -47,7 +47,7 @@ const DamagedPagesAndMissingPagesEditModal = ({
       setDamagedPages([])
     }
     if (field === 'ChS' && !isChecked) {
-      setDamagedPages([])
+      setMissingPages([])
     }
     setDamageTypes(newDamageTypes)
   }
@@ -107,11 +107,13 @@ const DamagedPagesAndMissingPagesEditModal = ({
                   <Typography key={`damaged-pages-${page}`}>
                     {page}
                     <Checkbox
-                      disabled={!damageTypes.some((dt) => dt === 'PP')}
+                      // disabled={!damageTypes.some((dt) => dt === 'PP')}
                       checked={damagedPages.some((dp) => dp === page)}
-                      onChange={(event) =>
+                      onChange={(event) => {
                         handlePagesChange(page, 'PP', event.target.checked)
-                      }
+                        if (event.target.checked)
+                          handleDamageTypeChange('PP', true)
+                      }}
                     />
                   </Typography>
                 )
@@ -136,11 +138,14 @@ const DamagedPagesAndMissingPagesEditModal = ({
                   <Typography key={`missing-pages-${page}`}>
                     {page}
                     <Checkbox
-                      disabled={!damageTypes.some((dt) => dt === 'ChS')}
+                      // disabled={!damageTypes.some((dt) => dt === 'ChS')}
                       checked={missingPages.some((dp) => dp === page)}
-                      onChange={(event) =>
+                      onChange={(event) => {
                         handlePagesChange(page, 'ChS', event.target.checked)
-                      }
+                        if (event.target.checked) {
+                          handleDamageTypeChange('ChS', true)
+                        }
+                      }}
                     />
                   </Typography>
                 )

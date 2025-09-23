@@ -59,6 +59,7 @@ export const VolumeSchema = AuditableSchema.extend({
 
 export const EditableVolumeSchema = AuditableSchema.extend({
   id: z.string(),
+  isLoading: z.boolean(),
   barCode: z.string(),
   dateFrom: z.string(),
   dateTo: z.string(),

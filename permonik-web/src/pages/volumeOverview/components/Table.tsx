@@ -12,7 +12,7 @@ import { useEditionListQuery } from '../../../api/edition'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
 import Tooltip from '@mui/material/Tooltip'
-import { StripedDataGrid } from '../../volumeManagement/components/Table'
+import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
 
 type TProps = {
   volume?: TVolumeDetail

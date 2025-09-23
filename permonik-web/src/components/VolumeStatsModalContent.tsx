@@ -276,7 +276,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.pages_count')}:
+          {t('volume_overview.pages_count_total')}:
         </Typography>
         <Typography variant="body2">{volumeStats.pagesCount}</Typography>
       </Box>
@@ -466,15 +466,17 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
               key={`damagedNumbers-${s.id}'`}
               sx={{
                 display: 'flex',
+                width: '9rem',
                 justifyContent: 'space-between',
-                width: '45%',
               }}
             >
+              <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
+                {t('volume_overview.number_super_short').toLowerCase()}{' '}
+                {s.number}
+              </Typography>
+              <Typography variant="body2">—</Typography>
               <Typography variant="body2">
                 {dayjs(s.publicationDate).format('dd DD.MM.YYYY')}
-              </Typography>
-              <Typography variant="body2">
-                {t('volume_overview.number').toLowerCase()} {s.number}
               </Typography>
             </Box>
           ))}
@@ -490,27 +492,26 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         {volumeStats.specimens
           .filter((s) => s.note.length && s.numExists)
           .map((s) => (
-            <Box
-              key={`notes-${s.id}`}
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
+            <Box key={`notes-${s.id}`}>
               <Box
                 sx={{
                   display: 'flex',
-                  gap: '45px',
+                  width: '9rem',
+                  justifyContent: 'space-between',
                 }}
               >
+                <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
+                  {t('volume_overview.number_super_short').toLowerCase()}{' '}
+                  {s.number}
+                </Typography>
+                <Typography variant="body2">—</Typography>
                 <Typography variant="body2">
                   {dayjs(s.publicationDate).format('dd DD.MM.YYYY')}
                 </Typography>
-                <Typography variant="body2">
-                  {t('volume_overview.number').toLowerCase()} {s.number}
-                </Typography>
               </Box>
-              <Typography variant="body2">{s.note}</Typography>
+              <Typography variant="body2" sx={{ marginLeft: 3 }}>
+                {s.note}
+              </Typography>
             </Box>
           ))}
       </Box>

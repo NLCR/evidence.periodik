@@ -31,13 +31,14 @@ const fittedStyle = {
   ...sharedStyle,
 }
 
-const scrollableStyle = {
+const scrollableStyle = (autoWidth: boolean, minWidth?: string) => ({
   maxHeight: '800px',
   height: '80vh',
   maxWidth: '1200px',
-  width: '90vw',
+  width: autoWidth ? 'auto' : '90vw',
+  minWidth: minWidth ?? '25vw',
   ...sharedStyle,
-}
+})
 
 type TModalContainerProps = {
   header: string
@@ -56,6 +57,8 @@ type TModalContainerProps = {
   switchButtons?: boolean
   showButtons?: boolean
   style?: 'fitted' | 'scrollable'
+  autoWidth?: boolean
+  minWidth?: string
 }
 
 const ModalContainer: FC<TModalContainerProps> = ({
@@ -68,6 +71,8 @@ const ModalContainer: FC<TModalContainerProps> = ({
   switchButtons = false,
   showButtons = true,
   style = 'scrollable',
+  autoWidth = false,
+  minWidth = undefined,
 }) => {
   const { t } = useTranslation()
 
@@ -83,7 +88,13 @@ const ModalContainer: FC<TModalContainerProps> = ({
         },
       }}
     >
-      <Box sx={style === 'scrollable' ? scrollableStyle : fittedStyle}>
+      <Box
+        sx={
+          style === 'scrollable'
+            ? scrollableStyle(autoWidth, minWidth)
+            : fittedStyle
+        }
+      >
         <Box
           sx={{
             display: 'flex',
