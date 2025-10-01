@@ -66,8 +66,6 @@ const InputDataForm = ({
       methods.setValue('updated', null)
       methods.setValue('updatedBy', null)
       methods.setValue('id', '')
-
-      console.log(methods.getValues())
     }
   }, [duplicated, volumeId, methods])
 
