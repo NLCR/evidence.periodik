@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 ## BUILD image ##
-FROM gradle:9.1-jdk25 AS builder
+FROM gradle:9.1.0-jdk25 AS builder
 WORKDIR /build
 
 # Run build
