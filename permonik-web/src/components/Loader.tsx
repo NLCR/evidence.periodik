@@ -10,18 +10,20 @@ const barsAnimation = keyframes`
   }
 `
 
-const Loader = () => {
+type Props = { size?: 'small' | 'normal' }
+
+const Loader = ({ size = 'normal' }: Props) => {
   const bars = Array.from({ length: 5 })
 
   return (
     <Box
       sx={{
-        margin: '50px auto',
+        margin: size === 'small' ? 'auto' : '50px auto',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: '50px',
-        height: '40px',
+        width: size === 'small' ? '1.5rem' : '50px',
+        height: size === 'small' ? '1rem' : '40px',
       }}
     >
       {bars.map((_, index) => (
