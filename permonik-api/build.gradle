@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.6'
+    id 'org.springframework.boot' version '3.5.6'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -9,7 +9,7 @@ version = '0.0.1'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
@@ -20,16 +20,14 @@ configurations {
 }
 
 ext {
-    lombok = '1.18.38'
-    openapi = "2.8.8"
-    jackson = '2.19.0'
+    lombok = '1.18.42'
+    openapi = "2.8.13"
     solrj = '9.9.0'
     mapstruct = '1.6.3'
     slf4j = '2.0.17'
     logback = '1.5.18'
-    hibernate = '6.6.4.Final'
-    redisSession = "3.5.1"
-    redisStarter = "3.5.0"
+    hibernate = '7.1.1.Final'
+    redisSession = "3.5.2"
 }
 
 repositories {
@@ -70,12 +68,12 @@ dependencies {
 
     // REDIS
     implementation "org.springframework.session:spring-session-data-redis:${redisSession}"
-    implementation "org.springframework.boot:spring-boot-starter-data-redis:${redisStarter}"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
 
     // JACKSON
-    implementation "com.fasterxml.jackson.core:jackson-core:${jackson}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jackson}"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:${jackson}"
+    implementation "com.fasterxml.jackson.core:jackson-core:2.20.0"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.20.0"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.20"
 
     // LOMBOK
     compileOnly "org.projectlombok:lombok:${lombok}"
