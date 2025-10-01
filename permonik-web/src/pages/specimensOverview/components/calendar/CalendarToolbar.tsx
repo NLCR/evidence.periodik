@@ -5,9 +5,9 @@ import dayjs from 'dayjs'
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import React, { FC } from 'react'
-import { useSpecimensOverviewStore } from '../../../slices/useSpecimensOverviewStore'
-import { useSpecimenListQuery } from '../../../api/specimen'
-import { TMetaTitle } from '../../../schema/metaTitle'
+import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
+import { useSpecimenListQuery } from '../../../../api/specimen'
+import { TMetaTitle } from '../../../../schema/metaTitle'
 
 type TProps = {
   metaTitle: TMetaTitle
