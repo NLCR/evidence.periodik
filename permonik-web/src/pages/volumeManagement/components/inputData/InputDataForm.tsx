@@ -58,8 +58,14 @@ const InputDataForm = ({
       methods.reset(initialState.volumeState)
     }
     if (duplicated) {
+      // reset all applicable fields
       methods.setValue('barCode', '')
       methods.setValue('mutationMark', '')
+      methods.setValue('created', null)
+      methods.setValue('createdBy', null)
+      methods.setValue('updated', null)
+      methods.setValue('updatedBy', null)
+      methods.setValue('id', '')
     }
   }, [duplicated, volumeId, methods])
 
