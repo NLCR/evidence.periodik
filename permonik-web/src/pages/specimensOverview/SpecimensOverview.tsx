@@ -23,6 +23,8 @@ import ModalContainer from '../../components/ModalContainer'
 import SynchronizeYearsSwitch from './components/SynchronizeYearsSwitch'
 import CollapsableSidebar from '../../components/CollapsableSidebar'
 import FacetsContextProvider from './components/facets/FacetsContextProvider'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import theme from '../../theme'
 
 const Table = React.lazy(() => import('./components/Table'))
 
@@ -38,6 +40,8 @@ const SpecimensOverview = () => {
     isLoading: metaTitleLoading,
     isError: metaTitleError,
   } = useMetaTitleQuery(metaTitleId)
+
+  const isMobile = !useMediaQuery(theme.breakpoints.up('sm'))
 
   if (metaTitleLoading) {
     return <Loader />
@@ -145,13 +149,13 @@ const SpecimensOverview = () => {
               }}
             >
               <Tab
-                label={t('specimens_overview.calendar')}
+                label={isMobile ? null : t('specimens_overview.calendar')}
                 value="calendar"
                 icon={<CalendarMonthIcon />}
                 iconPosition="start"
               />
               <Tab
-                label={t('specimens_overview.table')}
+                label={isMobile ? null : t('specimens_overview.table')}
                 // disabled
                 value="table"
                 icon={<TableRowsIcon />}

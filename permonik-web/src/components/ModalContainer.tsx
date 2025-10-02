@@ -34,9 +34,9 @@ const fittedStyle = {
 const scrollableStyle = (autoWidth: boolean, minWidth?: string) => ({
   maxHeight: '800px',
   height: '80vh',
-  maxWidth: '1200px',
+  maxWidth: { xs: '100%', sm: '1200px' },
   width: autoWidth ? 'auto' : '90vw',
-  minWidth: minWidth ?? '25vw',
+  minWidth: { xs: '95vw', sm: minWidth ?? '25vw' },
   ...sharedStyle,
 })
 

@@ -17,6 +17,7 @@ const Layout = () => {
           maxHeight: `1200px`,
           height: `calc(100vh - 80px)`,
           width: '100%',
+          paddingX: { xs: 0.25, sm: 2 },
           // maxHeight: `700px`,
           // overflow: 'hidden',
         }}
