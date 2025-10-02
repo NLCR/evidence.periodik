@@ -9,6 +9,7 @@ import Loader from '../components/Loader'
 import ShowError from '../components/ShowError'
 import ShowInfoMessage from '../components/ShowInfoMessage'
 import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
+import Grid2 from '@mui/material/Grid2'
 
 const Home = () => {
   const { t, i18n } = useTranslation()
@@ -32,18 +33,19 @@ const Home = () => {
       {isLoading ? <Loader /> : null}
       {isError && !isLoading ? <ShowError onRetry={refetch} /> : null}
       {data && !isLoading && !isError ? (
-        <Box
+        <Grid2
+          container
+          spacing={2}
+          justifyContent={'center'}
           sx={{
             marginTop: 10,
             paddingBottom: 4,
-            justifyContent: 'center',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, minmax(0px, 1fr))',
-            gap: '1rem',
           }}
         >
           {data.map((mt) => (
-            <Box
+            <Grid2
+              width={'100%'}
+              maxWidth={'22rem'}
               component={mt.specimens.matchedSpecimens > 0 ? ReactLink : Box}
               to={`/${i18n.resolvedLanguage}/${t('urls.specimens_overview')}/${
                 mt.id
@@ -109,9 +111,9 @@ const Home = () => {
                   {t('home.owners')}: {mt.specimens.ownersCount}
                 </Typography>
               </Box>
-            </Box>
+            </Grid2>
           ))}
-        </Box>
+        </Grid2>
       ) : null}
       {!isLoading && !isError && !data ? (
         <ShowInfoMessage message={t('home.no_meta_titles_found')} />
