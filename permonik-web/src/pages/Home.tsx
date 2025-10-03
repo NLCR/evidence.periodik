@@ -9,7 +9,7 @@ import Loader from '../components/Loader'
 import ShowError from '../components/ShowError'
 import ShowInfoMessage from '../components/ShowInfoMessage'
 import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
-import Grid2 from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 
 const Home = () => {
   const { t, i18n } = useTranslation()
@@ -33,7 +33,7 @@ const Home = () => {
       {isLoading ? <Loader /> : null}
       {isError && !isLoading ? <ShowError onRetry={refetch} /> : null}
       {data && !isLoading && !isError ? (
-        <Grid2
+        <Grid
           container
           spacing={2}
           justifyContent={'center'}
@@ -43,7 +43,7 @@ const Home = () => {
           }}
         >
           {data.map((mt) => (
-            <Grid2
+            <Grid
               width={'100%'}
               maxWidth={'22rem'}
               component={mt.specimens.matchedSpecimens > 0 ? ReactLink : Box}
@@ -111,9 +111,9 @@ const Home = () => {
                   {t('home.owners')}: {mt.specimens.ownersCount}
                 </Typography>
               </Box>
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       ) : null}
       {!isLoading && !isError && !data ? (
         <ShowInfoMessage message={t('home.no_meta_titles_found')} />

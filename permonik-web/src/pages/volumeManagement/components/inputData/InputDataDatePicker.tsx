@@ -1,6 +1,6 @@
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers-pro'
 import LockedInputDataItem from './LockedInputDataItem'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import { Controller, useFormContext } from 'react-hook-form'
 
@@ -17,7 +17,7 @@ const InputDataDatePicker = ({
   minDateName = undefined,
   maxDateName = undefined,
   ...props
-}: Props & DatePickerProps<Dayjs>) => {
+}: Props & DatePickerProps) => {
   const { locked, disabled } = useInputDataEditabilityContext()
   const { control, watch } = useFormContext()
 

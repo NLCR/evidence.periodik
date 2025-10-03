@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography'
 import { blue } from '@mui/material/colors'
 import Box from '@mui/material/Box'
-import React, { FC, MutableRefObject, useEffect, useState } from 'react'
+import React, { FC, RefObject, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useManagedVolumeDetailQuery } from '../../../api/volume'
 import { useParams } from 'react-router-dom'
@@ -9,7 +9,7 @@ import dayjs from 'dayjs'
 import { GridApiPro, GridEventListener, GridState } from '@mui/x-data-grid-pro'
 
 type TableHeaderProps = {
-  apiRef: MutableRefObject<GridApiPro>
+  apiRef: RefObject<GridApiPro | null>
 }
 
 const TableHeader: FC<TableHeaderProps> = ({ apiRef }) => {
@@ -29,7 +29,7 @@ const TableHeader: FC<TableHeaderProps> = ({ apiRef }) => {
         active: !!params.filter.filterModel.items.length,
       })
     }
-    return apiRef.current.subscribeEvent('stateChange', handleFilterChange)
+    return apiRef.current?.subscribeEvent('stateChange', handleFilterChange)
   }, [apiRef])
 
   return (
