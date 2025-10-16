@@ -1,4 +1,4 @@
-import { FC, MutableRefObject, useEffect, useRef } from 'react'
+import { FC, RefObject, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import {
@@ -134,7 +134,7 @@ const renderRenumberableValue = (
   show: boolean,
   canEdit: boolean,
   type: 'number' | 'attachmentNumber',
-  apiRef: MutableRefObject<GridApiPro>
+  apiRef: RefObject<GridApiPro | null>
 ) => {
   return (
     <RenumberableValueCell
@@ -150,7 +150,7 @@ const renderRenumberableValue = (
 const renderHeaderWithColumnAction = (
   field: TSpecimenDamageTypes,
   canEdit: boolean,
-  apiRef: MutableRefObject<GridApiPro>,
+  apiRef: RefObject<GridApiPro | null>,
   headerName: string,
   description: string
 ) => {
@@ -234,7 +234,7 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
 
       if (rowIndex >= 0) {
         setTimeout(() => {
-          apiRef.current.scrollToIndexes({ rowIndex: rowIndex })
+          apiRef.current?.scrollToIndexes({ rowIndex: rowIndex })
           scrolledToRow.current = true
         }, 250)
       }

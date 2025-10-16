@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import React, { FC, MutableRefObject, useState } from 'react'
+import React, { FC, RefObject, useState } from 'react'
 import clone from 'lodash/clone'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
@@ -19,7 +19,7 @@ type RenumberableValueCellProps = {
   show: boolean
   canEdit: boolean
   type: 'number' | 'attachmentNumber'
-  apiRef: MutableRefObject<GridApiPro>
+  apiRef: RefObject<GridApiPro | null>
 }
 
 const RenumberableValueCell: FC<RenumberableValueCellProps> = ({

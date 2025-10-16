@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import { DateCalendar } from '@mui/x-date-pickers-pro'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
-import blue from '@mui/material/colors/blue'
+import { blue } from '@mui/material/colors'
 import { TMetaTitle } from '../../../../schema/metaTitle'
 import ShowError from '../../../../components/ShowError'
 import Loader from '../../../../components/Loader'
@@ -158,8 +158,8 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
                 value={dayjs(calendarDate)}
                 minDate={dayjs(specimens?.publicationDayMin)}
                 maxDate={dayjs(specimens?.publicationDayMax)}
-                onChange={(value: Dayjs) => {
-                  setCalendarDate(value)
+                onChange={(value: Dayjs | null) => {
+                  if (value) setCalendarDate(value)
                 }}
                 disabled={isFetching}
               />

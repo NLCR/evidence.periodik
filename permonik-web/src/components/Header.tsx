@@ -73,11 +73,12 @@ const NavLinkStyled = styled(NavLink)(({ theme }) => ({
 
 const LanguageButton = styled(Button)(({ theme }) => ({
   marginLeft: theme.spacing(3.75),
-  width: theme.spacing(25),
+  // width: theme.spacing(25)
+  gap: 8,
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  padding: theme.spacing(0.75, 2),
+  padding: theme.spacing(0.75, 1),
   borderRadius: theme.shape.borderRadius,
   border: `1px solid ${theme.palette.divider}`,
   transition: theme.transitions.create('background-color', {
@@ -159,7 +160,11 @@ const Header = () => {
           </Link>
           <Box>
             <LinksContainer>
-              <NavLinkStyled to={`/${i18n.resolvedLanguage}/`} end>
+              <NavLinkStyled
+                sx={{ display: { xs: 'none', sm: 'block' } }}
+                to={`/${i18n.resolvedLanguage}/`}
+                end
+              >
                 {t('header.home')}
               </NavLinkStyled>
               {APP_WITH_EDITING_ENABLED && me?.role?.includes('admin') ? (
@@ -227,7 +232,10 @@ const Header = () => {
                   </Typography>
                 </>
               )}
-              <LanguageButton onClick={handleLangMenuOpen}>
+              <LanguageButton
+                onClick={handleLangMenuOpen}
+                sx={{ paddingX: { xs: 1, sm: 2 }, gap: { xs: 2, sm: 4 } }}
+              >
                 <Avatar
                   src={
                     data.find((l) => l.shorthand === i18n.resolvedLanguage)
@@ -239,7 +247,10 @@ const Header = () => {
                   }
                   sx={{ width: 24, height: 24 }}
                 />
-                <Typography variant="body2">
+                <Typography
+                  variant="body2"
+                  sx={{ display: { xs: 'none', sm: 'block' } }}
+                >
                   {
                     data.find((l) => l.shorthand === i18n.resolvedLanguage)
                       ?.label
