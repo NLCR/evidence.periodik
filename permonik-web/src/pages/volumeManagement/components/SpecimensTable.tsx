@@ -931,6 +931,23 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
         isCellEditable={isCellEditable}
         processRowUpdate={handleUpdate}
         hideFooter
+        // onCellClick={(params) => {
+        //   // do not attempt to enter edit mode where not applicable
+        //   if (params.cellMode === 'edit' || !params.isEditable) return
+
+        //   // stop editing all other rows
+        //   const rowIds = params.api.getAllRowIds()
+        //   rowIds.forEach((rowId) => {
+        //     try {
+        //       params.api.stopRowEditMode({ id: rowId })
+        //     } catch (e) {
+        //       // pass
+        //     }
+        //   })
+        //   // start editing this row
+        //   params.api.startRowEditMode({ id: params.row.id })
+        // }}
+        editMode="row"
       />
     </>
   )
