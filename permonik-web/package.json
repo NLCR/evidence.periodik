@@ -64,13 +64,13 @@
   "devDependencies": {
     "@sentry/vite-plugin": "^3.3.1",
     "@types/lodash": "^4.17.16",
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.18.10",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
-    "@vitejs/plugin-react-swc": "^3.9.0",
+    "@vitejs/plugin-react-swc": "^4.1.0",
     "@welldone-software/why-did-you-render": "^10.0.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.2",
@@ -85,7 +85,7 @@
     "rimraf": "^6.0.1",
     "rollup-plugin-visualizer": "^5.14.0",
     "typescript": "5.8.3",
-    "vite": "^6.3.3",
+    "vite": "^7.1.10",
     "vite-plugin-eslint": "^1.8.1"
   },
   "packageManager": "yarn@4.5.1"

@@ -90,6 +90,9 @@ dependencies {
     implementation "ch.qos.logback:logback-classic:${logback}"
     implementation "org.slf4j:slf4j-api:${slf4j}"
 
+    // DEVELOPMENT
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+
     // TESTING
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
