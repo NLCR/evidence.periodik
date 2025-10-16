@@ -363,6 +363,7 @@ public class SpecimenService implements SpecimenDefinition {
         solrQuery2.addFilterQuery(VOLUME_ID_FIELD + ":\"" + volumeId + "\"");
         solrQuery2.addFilterQuery(NUM_EXISTS_FIELD + ":true OR " + NUM_MISSING_FIELD + ":true");
         solrQuery2.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery2.setSort(PUBLICATION_DATE_STRING_FIELD, SolrQuery.ORDER.asc);
         solrQuery2.setRows(100000);
 
         QueryResponse response2 = solrClient.query(SPECIMEN_CORE_NAME, solrQuery2);
