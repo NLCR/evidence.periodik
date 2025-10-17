@@ -43,6 +43,8 @@ import DuplicationEditCell from './editCells/DuplicationEditCell'
 import DeletionEditCell from './editCells/DeletionEditCell'
 import { useShallow } from 'zustand/shallow'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
+import NumMissingEditCell from './editCells/NumMissingEditCell'
+import NumExistsEditCell from './editCells/NumExistsEditCell'
 
 const ODD_OPACITY = 0.2
 
@@ -175,6 +177,18 @@ const renderDamageTypesEditCell = (
   params: GridRenderEditCellParams<TEditableSpecimen>
 ) => {
   return <DamageTypesEditCell {...params} />
+}
+
+const renderNumMissingEditCell = (
+  params: GridRenderEditCellParams<TEditableSpecimen>
+) => {
+  return <NumMissingEditCell {...params} />
+}
+
+const renderNumExistsEditCell = (
+  params: GridRenderEditCellParams<TEditableSpecimen>
+) => {
+  return <NumExistsEditCell {...params} />
 }
 
 const renderMutationMarkEditCell = (
@@ -334,6 +348,7 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
         const { row } = params
         return renderCheckBox(row.numExists, true, !disabled)
       },
+      renderEditCell: renderNumExistsEditCell,
     },
     {
       field: 'numMissing',
@@ -355,6 +370,7 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
         const { row } = params
         return renderCheckBox(row.numMissing, true, !disabled)
       },
+      renderEditCell: renderNumMissingEditCell,
     },
     {
       field: 'number',
