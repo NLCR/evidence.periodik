@@ -45,6 +45,7 @@ import { useShallow } from 'zustand/shallow'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
+import { GridApiCommunity } from '@mui/x-data-grid/internals'
 
 const ODD_OPACITY = 0.2
 
@@ -204,8 +205,12 @@ const renderDuplicationEditCell = (
   return <DuplicationEditCell row={row} canEdit={canEdit} />
 }
 
-const renderDeletionEditCell = (row: TEditableSpecimen, canEdit: boolean) => {
-  return <DeletionEditCell row={row} canEdit={canEdit} />
+const renderDeletionEditCell = (
+  row: TEditableSpecimen,
+  api: GridApiCommunity,
+  canEdit: boolean
+) => {
+  return <DeletionEditCell row={row} api={api} canEdit={canEdit} />
 }
 
 interface TableProps {
@@ -299,7 +304,8 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
         return renderDuplicationEditCell(row, !disabled)
       },
     },
-    ...(!stateHasUnsavedData && specimensState.length
+    ...// !stateHasUnsavedData &&
+    (specimensState.length
       ? [
           {
             field: 'deleteRow',
@@ -322,8 +328,8 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
             filterable: false,
             headerAlign: 'center' as GridAlignment,
             renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-              const { row } = params
-              return renderDeletionEditCell(row, !disabled)
+              const { api, row } = params
+              return renderDeletionEditCell(row, api, !disabled)
             },
           },
         ]
@@ -876,7 +882,6 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
 
   const handleUpdate = (newRow: TEditableSpecimen) => {
     const row = checkAttachmentChange(editions, newRow)
-    // console.log(row)
     specimenActions.setSpecimen(row)
     return filterSpecimen(row)
   }
@@ -936,7 +941,7 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
           }
           return classes
         }}
-        rows={specimensState}
+        rows={specimensState.filter((specimen) => !specimen.deleted)}
         columns={columns}
         initialState={{
           density: 'compact',

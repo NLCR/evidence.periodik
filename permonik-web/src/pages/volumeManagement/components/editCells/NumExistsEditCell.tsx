@@ -11,6 +11,7 @@ const NumExistsEditCell = (
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked
     api.setEditCellValue({ id: id, field, value: isChecked }, event)
+    // trigger row update lifecycle hook
     api.setLoading(true)
     api.stopRowEditMode({ id: row.id })
     while (api.getRowMode(row.id) === 'edit') {
