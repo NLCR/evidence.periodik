@@ -17,6 +17,7 @@ import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
+import { useFormContext } from 'react-hook-form'
 
 type Props = {
   duplicated: boolean

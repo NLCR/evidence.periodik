@@ -5,6 +5,8 @@ import InputDataSelect from './InputDataSelect'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { TMutation } from '../../../../schema/mutation'
 import { useLanguageCode } from '../../../../hooks/useLanguageCode'
+import { useFormContext } from 'react-hook-form'
+import { mapTintToColor } from './utils/tint'
 
 type Props = { mutations: TMutation[] }
 
@@ -22,8 +24,18 @@ const InputDataMutation = ({ mutations }: Props) => {
     (state) => state.specimensActions.setSpecimensState
   )
 
+  const { watch } = useFormContext()
+  const isDuplicated = location.href.includes('duplicated')
+  const isEmpty = !watch('mutationId')
+
   return (
-    <TableRow>
+    <TableRow
+      sx={{
+        backgroundColor: mapTintToColor(
+          isDuplicated && isEmpty ? 'warning' : 'default'
+        ),
+      }}
+    >
       <TableCell>{t('volume_overview.mutation')}</TableCell>
       <TableCell>
         <InputDataSelect

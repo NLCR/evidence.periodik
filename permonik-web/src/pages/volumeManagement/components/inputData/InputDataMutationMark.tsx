@@ -3,6 +3,8 @@ import { useVolumeManagementStore } from '../../../../slices/useVolumeManagement
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import { useTranslation } from 'react-i18next'
+import { useFormContext } from 'react-hook-form'
+import { mapTintToColor } from './utils/tint'
 
 const InputDataMutationMark = () => {
   const setMutationMark = useVolumeManagementStore(
@@ -17,8 +19,18 @@ const InputDataMutationMark = () => {
     (state) => state.specimensActions.setSpecimensState
   )
 
+  const { watch } = useFormContext()
+  const isDuplicated = location.href.includes('duplicated')
+  const isEmpty = !watch('mutationMark')
+
   return (
-    <TableRow>
+    <TableRow
+      sx={{
+        backgroundColor: mapTintToColor(
+          isDuplicated && isEmpty ? 'warning' : 'default'
+        ),
+      }}
+    >
       <TableCell>{t('specimens_overview.mutation_mark')}</TableCell>
       <TableCell>
         <InputDataTextField

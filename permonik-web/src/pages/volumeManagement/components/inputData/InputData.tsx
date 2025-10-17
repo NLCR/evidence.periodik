@@ -32,9 +32,9 @@ const InputData: FC<InputDataProps> = ({ isVolumeLoading, ...props }) => {
   const { volumeId } = useParams()
 
   useEffect(() => {
-    setLocked(!!volumeId)
+    setLocked(!!volumeId || !!props.duplicated)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [volumeId])
+  }, [volumeId, props.duplicated])
 
   return (
     <CollapsableSidebar>
