@@ -43,6 +43,7 @@ const RenumberableValueCell: FC<RenumberableValueCellProps> = ({
     const specimenIndex = filteredSpecimens.findIndex((sp) => sp.id === row.id)
     const max = filteredSpecimens.length
     let willBeRenumbered = 0
+    const editionId = row.editionId
 
     for (let i = specimenIndex; i < max; i += 1) {
       if (filteredSpecimens[i]) {
@@ -52,7 +53,8 @@ const RenumberableValueCell: FC<RenumberableValueCellProps> = ({
           }
           if (
             renumberType === 'attachmentNumber' &&
-            filteredSpecimens[i].isAttachment
+            filteredSpecimens[i].isAttachment &&
+            filteredSpecimens[i].editionId === editionId // renumber only same editions
           ) {
             willBeRenumbered += 1
           }
@@ -75,6 +77,7 @@ const RenumberableValueCell: FC<RenumberableValueCellProps> = ({
         ? Number(filteredSpecimens[specimenIndex].number || 0)
         : Number(filteredSpecimens[specimenIndex].attachmentNumber || 0)
     const willBeRenumbered = getWillBeRenumbered(renumberType)
+    const editionId = row.editionId
 
     const specimensClone = clone(filteredSpecimens)
 
@@ -92,7 +95,8 @@ const RenumberableValueCell: FC<RenumberableValueCellProps> = ({
         }
         if (
           renumberType === 'attachmentNumber' &&
-          filteredSpecimens[i].isAttachment
+          filteredSpecimens[i].isAttachment &&
+          filteredSpecimens[i].editionId === editionId
         ) {
           specimensClone[i] = {
             ...specimensClone[i],
