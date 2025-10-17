@@ -7,7 +7,6 @@ import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import { DateCalendar } from '@mui/x-date-pickers-pro'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
-import { blue } from '@mui/material/colors'
 import { TMetaTitle } from '../../../../schema/metaTitle'
 import ShowError from '../../../../components/ShowError'
 import Loader from '../../../../components/Loader'
@@ -17,6 +16,7 @@ import * as FacetGroups from './facet-groups'
 import { useFacetsContext } from './FacetsContext'
 import { useFacetsStoreData } from './store'
 import NumberOptionsTabMultiSelect from './NumberOptionsTabMultiSelect'
+import theme from '../../../../theme'
 
 type TProps = {
   metaTitle: TMetaTitle
@@ -101,7 +101,7 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
         <Typography
           variant="h6"
           sx={{
-            color: blue['900'],
+            color: theme.palette.primary.main,
           }}
         >
           {metaTitle.name}
@@ -117,7 +117,7 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
         <Typography
           variant="h6"
           sx={{
-            color: blue['900'],
+            color: theme.palette.primary.main,
             fontWeight: '600',
           }}
         >

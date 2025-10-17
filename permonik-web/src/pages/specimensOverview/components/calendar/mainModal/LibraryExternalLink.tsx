@@ -1,10 +1,10 @@
-import { blue } from '@mui/material/colors'
 import Typography from '@mui/material/Typography'
 import React from 'react'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { TOwner } from '../../../../../schema/owner'
 import Loader from '../../../../../components/Loader'
 import WarningIcon from '@mui/icons-material/Warning'
+import theme from '../../../../../theme'
 
 type Props = {
   owners: TOwner[] | undefined
@@ -48,10 +48,10 @@ const LibraryExternalLink = ({
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        color: blue['700'],
+        color: theme.palette.primary.light,
         transition: 'color 0.1s',
         ':hover': {
-          color: blue['900'],
+          color: theme.palette.primary.main,
         },
       }}
     >

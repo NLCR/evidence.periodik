@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton'
 import { SxProps, Theme } from '@mui/material'
 import React, { PropsWithChildren, useState } from 'react'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
-import { blue } from '@mui/material/colors'
+import theme from '../theme'
 
 type Props = { sx?: SxProps<Theme> }
 
@@ -46,7 +46,7 @@ const CollapsableSidebar = ({
           sx={{
             transition: 'transform 0.3s',
             transform: `rotate(${open ? '0deg' : '180deg'})`,
-            color: blue[900],
+            color: theme.palette.primary.main,
             fontSize: 24,
           }}
         />

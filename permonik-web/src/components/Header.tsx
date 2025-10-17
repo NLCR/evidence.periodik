@@ -15,7 +15,7 @@ import Container from '@mui/material/Container'
 import { styled } from '@mui/material/styles'
 // import MenuIcon from '@mui/icons-material/Menu'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { blue } from '@mui/material/colors'
+import { blue, pink } from '@mui/material/colors'
 import Logo from '../assets/logo.png'
 import Czech from '../assets/images/czech-republic.png'
 import Slovakia from '../assets/images/slovakia.png'
@@ -86,7 +86,7 @@ const LanguageButton = styled(Button)(({ theme }) => ({
   }),
   backgroundColor: theme.palette.background.paper,
   '&:hover': {
-    backgroundColor: blue['50'],
+    backgroundColor: APP_WITH_EDITING_ENABLED ? pink['50'] : blue['50'],
   },
 }))
 

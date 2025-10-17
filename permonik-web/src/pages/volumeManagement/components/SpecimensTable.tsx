@@ -18,7 +18,7 @@ import {
   GridCellParams,
   GridRenderEditCellParams,
 } from '@mui/x-data-grid/models/params/gridCellParams'
-import { blue } from '@mui/material/colors'
+import { blue, pink } from '@mui/material/colors'
 import {
   TEditableSpecimen,
   TSpecimenDamageTypes,
@@ -32,7 +32,10 @@ import MutationMarkSelectorModalContainer from './editCells/MutationMarkSelector
 import RenumberableValueCell from './editCells/RenumberableValueCell'
 import HeaderWithColumnAction from './editCells/HeaderWithColumnAction'
 import { useSearchParams } from 'react-router-dom'
-import { JUMP_TO_SPECIMEN_WITH_ID } from '../../../utils/constants'
+import {
+  APP_WITH_EDITING_ENABLED,
+  JUMP_TO_SPECIMEN_WITH_ID,
+} from '../../../utils/constants'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
 import { checkAttachmentChange, filterSpecimen } from '../../../utils/specimen'
@@ -86,7 +89,7 @@ export const StripedDataGrid = styled(DataGridPro)(({ theme }) => ({
     },
   },
   [`& .${gridClasses.row}.attachment`]: {
-    backgroundColor: blue[100],
+    backgroundColor: APP_WITH_EDITING_ENABLED ? pink[100] : blue[100],
     '&:hover': {
       backgroundColor: alpha(theme.palette.primary.main, ODD_OPACITY),
       '@media (hover: none)': {

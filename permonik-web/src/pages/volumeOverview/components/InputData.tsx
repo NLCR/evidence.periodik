@@ -1,5 +1,4 @@
 import Typography from '@mui/material/Typography'
-import { blue } from '@mui/material/colors'
 import Table from '@mui/material/Table'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
@@ -21,6 +20,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import CollapsableSidebar from '../../../components/CollapsableSidebar'
+import theme from '../../../theme'
 
 interface InputDataProps {
   volume: TVolumeDetail
@@ -67,7 +67,7 @@ const InputData: FC<InputDataProps> = ({
         <Typography
           sx={{
             marginBottom: '8px',
-            color: blue['900'],
+            color: theme.palette.primary.main,
             fontWeight: 'bold',
             fontSize: '24px',
           }}

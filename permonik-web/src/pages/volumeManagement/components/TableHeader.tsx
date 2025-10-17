@@ -1,5 +1,4 @@
 import Typography from '@mui/material/Typography'
-import { blue } from '@mui/material/colors'
 import Box from '@mui/material/Box'
 import React, { FC, RefObject, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,6 +6,7 @@ import { useManagedVolumeDetailQuery } from '../../../api/volume'
 import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { GridApiPro, GridEventListener, GridState } from '@mui/x-data-grid-pro'
+import theme from '../../../theme'
 
 type TableHeaderProps = {
   apiRef: RefObject<GridApiPro | null>
@@ -43,7 +43,7 @@ const TableHeader: FC<TableHeaderProps> = ({ apiRef }) => {
     >
       <Typography
         sx={{
-          color: blue['900'],
+          color: theme.palette.primary.main,
           fontWeight: 'bold',
           fontSize: '24px',
         }}

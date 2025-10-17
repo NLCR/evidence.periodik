@@ -3,13 +3,13 @@ import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import { Link as ReactLink } from 'react-router-dom'
 import dayjs from 'dayjs'
-import { blue } from '@mui/material/colors'
 import { useMetaTitleOverviewListQuery } from '../api/metaTitle'
 import Loader from '../components/Loader'
 import ShowError from '../components/ShowError'
 import ShowInfoMessage from '../components/ShowInfoMessage'
 import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
 import Grid from '@mui/material/Grid'
+import theme from '../theme'
 
 const Home = () => {
   const { t, i18n } = useTranslation()
@@ -20,7 +20,7 @@ const Home = () => {
       <Typography
         variant="h3"
         sx={{
-          color: blue['900'],
+          color: theme.palette.primary.main,
         }}
       >
         {APP_WITH_EDITING_ENABLED ? t('home.title_admin') : t('home.title')}
@@ -99,7 +99,7 @@ const Home = () => {
               >
                 <Typography
                   sx={{
-                    color: blue['700'],
+                    color: theme.palette.primary.light,
                   }}
                 >
                   {t('home.specimens')}: {mt.specimens.matchedSpecimens}

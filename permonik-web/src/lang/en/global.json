@@ -24,15 +24,15 @@
     "accept": "Accept"
   },
   "helmet": {
-    "title": "Periodicals Register – Research Application",
-    "title_admin": "Administration of Periodicals Register"
+    "title": "PerMonik",
+    "title_admin": "PerMonik Editor"
   },
   "home": {
     "header": "Home Page",
-    "title": "Periodicals Register",
-    "title_admin": "Administration of Periodicals Register",
-    "description": "research application",
-    "description_admin": "system for managing and registering periodicals",
+    "title": "PerMonik",
+    "title_admin": "PerMonik Editor",
+    "description": "application for periodical research",
+    "description_admin": "editor for the periodical research application",
     "records": "Records",
     "specimens": "Specimens",
     "mutations": "Mutations",
@@ -144,7 +144,8 @@
     "physical_condition": "Physical condition",
     "damaged_numbers": "Damaged numbers",
     "notes": "Notes",
-    "volume_information": "Editing of input data",
+    "volume_information": "Input data",
+    "volume_information_edit": "Editing of input data",
     "periodicity": "Daily releases table",
     "edit_periodicity": "Daily releases table",
     "show_attachments_at_the_end": "Show attachments at the end of the volume",

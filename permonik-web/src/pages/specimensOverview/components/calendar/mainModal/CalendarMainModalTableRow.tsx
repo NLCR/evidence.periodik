@@ -1,4 +1,3 @@
-import { blue } from '@mui/material/colors'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
@@ -16,6 +15,7 @@ import { useQuery } from '@tanstack/react-query'
 import { TLibrarySpecimenIds } from '../models'
 import ky from 'ky'
 import LibraryExternalLink from './LibraryExternalLink'
+import theme from '../../../../../theme'
 
 type Props = {
   specimen: TSpecimen
@@ -87,10 +87,10 @@ const CalendarMainModalTableRow = ({
             display: 'flex',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            color: blue['700'],
+            color: theme.palette.primary.light,
             transition: 'color 0.1s',
             ':hover': {
-              color: blue['900'],
+              color: theme.palette.primary.main,
             },
           }}
           onClick={() => {
@@ -114,10 +114,10 @@ const CalendarMainModalTableRow = ({
             display: 'flex',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            color: blue['700'],
+            color: theme.palette.primary.light,
             transition: 'color 0.1s',
             ':hover': {
-              color: blue['900'],
+              color: theme.palette.primary.main,
             },
           }}
           to={generateVolumeUrlWithParams(
