@@ -244,7 +244,7 @@
     "Cz": "Censo<br />red",
     "Cz_tooltip": "Censored",
     "NS": "Ill.<br />bound",
-    "NS_tooltip": "Bound illegibly, e.g., tied too close to the spine"
+    "NS_tooltip": "Illegibly bound, e.g., tied too close to the spine"
   },
   "boolean_facet_states": {
     "numMissing": "Number exists",
