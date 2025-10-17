@@ -952,6 +952,7 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
         isCellEditable={isCellEditable}
         processRowUpdate={handleUpdate}
         hideFooter
+        // if one-click to enter edit is needed, finalize this
         // onCellClick={(params) => {
         //   // do not attempt to enter edit mode where not applicable
         //   if (params.cellMode === 'edit' || !params.isEditable) return
