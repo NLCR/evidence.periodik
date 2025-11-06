@@ -3,19 +3,18 @@ import TableRow from '@mui/material/TableRow'
 import { useTranslation } from 'react-i18next'
 import InputDataSelect from './InputDataSelect'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
-import { TMutation } from '../../../../schema/mutation'
-import { useLanguageCode } from '../../../../hooks/useLanguageCode'
 import { useFormContext } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
+import { TOwner } from '../../../../schema/owner'
+import { TMe } from '../../../../schema/user'
 
-type Props = { mutations: TMutation[] }
+type Props = { owners: TOwner[]; me: TMe }
 
-const InputDataMutation = ({ mutations }: Props) => {
-  const setMutationId = useVolumeManagementStore(
-    (state) => state.volumeActions.setMutationId
+const InputDataOwner = ({ owners, me }: Props) => {
+  const setOwnerId = useVolumeManagementStore(
+    (state) => state.volumeActions.setOwnerId
   )
   const { t } = useTranslation()
-  const { languageCode } = useLanguageCode()
 
   const specimensState = useVolumeManagementStore(
     (state) => state.specimensState
@@ -26,7 +25,7 @@ const InputDataMutation = ({ mutations }: Props) => {
 
   const { watch } = useFormContext()
   const isDuplicated = location.href.includes('duplicated')
-  const isEmpty = !watch('mutationId')
+  const isEmpty = !watch('ownerId')
 
   return (
     <TableRow
@@ -36,31 +35,32 @@ const InputDataMutation = ({ mutations }: Props) => {
         ),
       }}
     >
-      <TableCell>{t('volume_overview.mutation')}</TableCell>
+      <TableCell>{t('volume_overview.owner')}</TableCell>
       <TableCell>
         <InputDataSelect
           editableData={{
             saveChange: (value: string) => {
-              setMutationId(value)
+              setOwnerId(value)
               setSpecimensState(
                 specimensState.map((specimen) => ({
                   ...specimen,
-                  mutationId: value,
+                  ownerId: value,
                 })),
                 true
               )
             },
-            fieldName: t('volume_overview.mutation'),
+            fieldName: t('volume_overview.owner'),
           }}
-          name={'mutationId'}
-          options={mutations.map((mutation) => ({
-            key: mutation.id,
-            value: mutation.name[languageCode],
-          }))}
+          name="ownerId"
+          options={owners
+            .filter(
+              (o) => me.role === 'super_admin' || me.owners?.includes(o.id)
+            )
+            .map((o) => ({ key: o.id, value: o.shorthand }))}
         />
       </TableCell>
     </TableRow>
   )
 }
 
-export default InputDataMutation
+export default InputDataOwner

@@ -42,7 +42,6 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
   const setStateHasUnsavedData = useVolumeManagementStore(
     (state) => state.setStateHasUnsavedData
   )
-
   const doValidation = (useMinSpecimensCount = true) => {
     //get state when is necessary → this approach doesn't cause rerender of functions and whole hook
     const volumeState = useVolumeManagementStore.getState().volumeState

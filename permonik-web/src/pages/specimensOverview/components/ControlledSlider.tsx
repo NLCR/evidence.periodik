@@ -4,7 +4,7 @@ import { FC } from 'react'
 import { useSpecimensOverviewStore } from '../../../slices/useSpecimensOverviewStore'
 import Loader from '../../../components/Loader'
 import { styled } from '@mui/material/styles'
-import { blue } from '@mui/material/colors'
+import theme from '../../../theme'
 
 const StyledSlider = styled(Slider)(() => ({
   '& .MuiSlider-valueLabel': {
@@ -12,7 +12,7 @@ const StyledSlider = styled(Slider)(() => ({
     fontWeight: 'normal',
     top: -6,
     backgroundColor: 'unset',
-    color: blue['900'],
+    color: theme.palette.primary.main,
   },
 }))
 

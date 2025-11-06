@@ -33,7 +33,13 @@ const LockedInputDataItem = ({
   }
 
   return (
-    <Box sx={{ marginY: 1, display: 'flex', justifyContent: 'space-between' }}>
+    <Box
+      sx={{
+        marginY: 1,
+        display: 'flex',
+        justifyContent: 'space-between',
+      }}
+    >
       {value
         ? type === 'DATE'
           ? dayjs(value).format('DD. MM. YYYY')

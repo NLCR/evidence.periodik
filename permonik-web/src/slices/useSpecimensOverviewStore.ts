@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { Dayjs } from 'dayjs'
 import { SpecimenStateEnum, TSpecimenState } from '../schema/specimen'
+import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
 
 export type TParams = {
   dateStart: number
@@ -60,7 +61,7 @@ export const useSpecimensOverviewStore = create<TState>()(
     pagination: { pageIndex: 0, pageSize: 100 },
     barCodeInput: '',
     specimenStates: [SpecimenStateEnum.numExists],
-    view: 'calendar',
+    view: APP_WITH_EDITING_ENABLED ? 'table' : 'calendar',
     synchronizeYearsBetweenViews: true,
     calendarDate: null,
     calendarMinDate: null,

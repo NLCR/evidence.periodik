@@ -21,7 +21,11 @@ const UnsavedChangesModal = () => {
     formState: { isDirty },
   } = useFormContext()
 
-  const hasUnsavedData = stateHasUnsavedData || isDirty
+  const isDuplicated = location.href.includes('duplicated')
+
+  // for duplicated state, we override the dirty form state to allow navigation
+  // to the newly created duplicate. stateHasUnsavedData still covers the basic blocking
+  const hasUnsavedData = stateHasUnsavedData || (isDuplicated ? false : isDirty)
 
   useBeforeUnload((event) => {
     if (hasUnsavedData) {

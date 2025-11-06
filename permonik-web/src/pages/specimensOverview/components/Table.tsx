@@ -9,7 +9,7 @@ import dayjs from 'dayjs'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
-import { blue, green, grey, orange, red } from '@mui/material/colors'
+import { green, grey, orange, red } from '@mui/material/colors'
 import { TFunction } from 'i18next'
 import { TMetaTitle } from '../../../schema/metaTitle'
 import { useMutationListQuery } from '../../../api/mutation'
@@ -25,6 +25,8 @@ import ModalContainer from '../../../components/ModalContainer'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
 import { generateVolumeUrlWithParams } from '../../../utils/generateVolumeUrlWithParams'
+import Button from '@mui/material/Button'
+import theme from '../../../theme'
 
 const getSpecimenState = (sp: TSpecimen, t: TFunction) => {
   if (sp.damageTypes) {
@@ -126,10 +128,10 @@ const OwnersBarCodeCell: FC<{
       <Box
         sx={{
           textDecoration: 'none',
-          color: blue['700'],
+          color: theme.palette.primary.light,
           transition: 'color 0.1s',
           ':hover': {
-            color: blue['900'],
+            color: theme.palette.primary.main,
           },
           cursor: 'pointer',
         }}
@@ -140,10 +142,10 @@ const OwnersBarCodeCell: FC<{
       <Box
         sx={{
           textDecoration: 'none',
-          color: blue['700'],
+          color: theme.palette.primary.light,
           transition: 'color 0.1s',
           ':hover': {
-            color: blue['900'],
+            color: theme.palette.primary.main,
           },
           display: 'flex',
           alignItems: 'center',
@@ -308,6 +310,22 @@ const Table: FC<Props> = ({ metaTitle }) => {
         header={`${t('specimens_overview.volume_overview_modal_link')} ${modalData?.barCode}`}
       >
         <VolumeStatsModalContent volumeId={modalData?.volumeId} />
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={() => {
+            navigate(
+              generateVolumeUrlWithParams(
+                `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
+                metaTitle.id || '',
+                undefined,
+                modalData?.volumeId
+              )
+            )
+          }}
+        >
+          {t('administration.duplicate_volume')}
+        </Button>
       </ModalContainer>
     </>
   )

@@ -24,15 +24,15 @@
     "accept": "Potvrdit"
   },
   "helmet": {
-    "title": "Evidence periodik – badatelská aplikace",
-    "title_admin": "Administrace evidence periodik"
+    "title": "PerMonik",
+    "title_admin": "PerMonik Editor"
   },
   "home": {
     "header": "Domovská stránka",
-    "title": "Evidence periodik",
-    "title_admin": "Administrace evidence periodik",
-    "description": "badatelská aplikace",
-    "description_admin": "systém pro správu a evidenci periodik",
+    "title": "PerMonik",
+    "title_admin": "PerMonik Editor",
+    "description": "aplikace na výzkum periodik",
+    "description_admin": "editor aplikace na výzkum periodik",
     "records": "Záznamy",
     "specimens": "Exempláře",
     "mutations": "Mutace",
@@ -144,7 +144,8 @@
     "physical_condition": "Fyzický stav",
     "damaged_numbers": "Poškozená čísla",
     "notes": "Poznámky",
-    "volume_information": "Editace vstupních dat",
+    "volume_information": "Vstupní data",
+    "volume_information_edit": "Editace vstupních dat",
     "periodicity": "Tabulka denních vydání",
     "edit_periodicity": "Tabulka denních vydání",
     "show_attachments_at_the_end": "Zobrazit přílohy na konci svazku",

@@ -17,7 +17,7 @@ import InputDataDatePicker from './InputDataDatePicker'
 import Periodicity from './periodicity/Periodicity'
 import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import Button from '@mui/material/Button'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import UnsavedChangesModal from '../UnsavedChangesModal'
 import {
   initialState,
@@ -30,6 +30,10 @@ import {
 } from '../../../../schema/volume'
 import InputDataBarCode from './InputDataBarCode'
 import InputDataSignature from './InputDataSignature'
+import { api } from '../../../../api'
+import { TSpecimen } from '../../../../schema/specimen'
+import { mapTintToColor } from './utils/tint'
+import InputDataOwner from './InputDataOwner'
 
 const InputDataForm = ({
   editions,
@@ -52,6 +56,50 @@ const InputDataForm = ({
     defaultValues: volume ?? initialState.volumeState,
     resolver: zodResolver(EditableVolumeSchema),
   })
+
+  const [searchParams] = useSearchParams()
+
+  const setSpecimensState = useVolumeManagementStore(
+    (state) => state.specimensActions.setSpecimensState
+  )
+  const setVolumeState = useVolumeManagementStore(
+    (state) => state.volumeActions.setVolumeState
+  )
+
+  const isDuplicated = location.href.includes('duplicated')
+
+  useEffect(() => {
+    const preLoadDuplicateSource = async () => {
+      if (!volume && duplicated && !methods.getValues('metaTitleId')) {
+        const volumeDuplicateSourceId = searchParams.get(
+          'volumeDuplicateSourceId'
+        )
+        if (!volumeDuplicateSourceId) return
+        const volumeData = await api()
+          .get(`volume/${volumeDuplicateSourceId}/detail`)
+          .json<{ volume: TEditableVolume; specimens: TSpecimen[] } | null>()
+
+        if (volumeData) {
+          const newVolume = {
+            ...volumeData.volume,
+            barCode: '',
+            mutationMark: '',
+            mutationId: '',
+            ownerId: '',
+            created: null,
+            createdBy: null,
+            updated: null,
+            updatedBy: null,
+            id: '',
+          }
+          methods.reset(newVolume)
+          setVolumeState(newVolume, true)
+          setSpecimensState(volumeData.specimens, true)
+        }
+      }
+    }
+    preLoadDuplicateSource()
+  }, [])
 
   useEffect(() => {
     if (!duplicated && !volumeId) {
@@ -153,20 +201,9 @@ const InputDataForm = ({
               <InputDataTextField inputMode="decimal" name="lastNumber" />
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell>{t('volume_overview.owner')}</TableCell>
-            <TableCell>
-              <InputDataSelect
-                name="ownerId"
-                options={owners
-                  .filter(
-                    (o) =>
-                      me.role === 'super_admin' || me.owners?.includes(o.id)
-                  )
-                  .map((o) => ({ key: o.id, value: o.shorthand }))}
-              />
-            </TableCell>
-          </TableRow>
+
+          <InputDataOwner owners={owners} me={me} />
+
           <TableRow>
             <TableCell>{t('volume_overview.note')}</TableCell>
             <TableCell>

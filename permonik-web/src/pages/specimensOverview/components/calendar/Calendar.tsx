@@ -7,7 +7,6 @@ import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import { blue } from '@mui/material/colors'
 import { TSpecimen } from '../../../../schema/specimen'
 import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
 import { TMetaTitle } from '../../../../schema/metaTitle'
@@ -19,6 +18,7 @@ import ShowError from '../../../../components/ShowError'
 import { useLanguageCode } from '../../../../hooks/useLanguageCode'
 import { TMainModalData } from './models'
 import CalendarMainModal from './mainModal/CalendarMainModal'
+import theme from '../../../../theme'
 
 type TProps = {
   metaTitle: TMetaTitle
@@ -162,7 +162,7 @@ const Calendar: FC<TProps> = ({ metaTitle }) => {
         >
           <Typography
             sx={{
-              color: blue['900'],
+              color: theme.palette.primary.main,
               marginBottom: '4px',
             }}
           >

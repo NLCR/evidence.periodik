@@ -9,7 +9,6 @@ import React, { Suspense, useState } from 'react'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import TableRowsIcon from '@mui/icons-material/TableRows'
-import { blue } from '@mui/material/colors'
 import { useMetaTitleQuery } from '../../api/metaTitle'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
@@ -168,7 +167,7 @@ const SpecimensOverview = () => {
                 marginLeft: '20px',
                 marginRight: '20px',
                 fontSize: '14px',
-                color: blue['900'],
+                color: theme.palette.primary.main,
                 fontWeight: 'bolder',
                 alignItems: 'center',
               }}

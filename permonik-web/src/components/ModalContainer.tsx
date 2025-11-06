@@ -3,12 +3,12 @@ import Button from '@mui/material/Button'
 import React, { FC, ReactNode } from 'react'
 import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
-import { blue } from '@mui/material/colors'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 import { useTranslation } from 'react-i18next'
 import isFunction from 'lodash/isFunction'
+import theme from '../theme'
 
 const sharedStyle = {
   position: 'absolute',
@@ -106,7 +106,7 @@ const ModalContainer: FC<TModalContainerProps> = ({
         >
           <Typography
             sx={{
-              color: blue['900'],
+              color: theme.palette.primary.main,
               fontSize: '24px',
               fontWeight: 'bold',
             }}

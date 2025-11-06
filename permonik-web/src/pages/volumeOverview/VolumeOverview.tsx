@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { blue } from '@mui/material/colors'
 import { usePublicVolumeDetailQuery } from '../../api/volume'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
@@ -12,6 +11,7 @@ import { useOwnerListQuery } from '../../api/owner'
 import SpecimensTable from './components/Table'
 import { useMetaTitleListQuery } from '../../api/metaTitle'
 import InputData from './components/InputData'
+import theme from '../../theme'
 
 const VolumeOverview = () => {
   const { volumeId } = useParams()
@@ -76,7 +76,7 @@ const VolumeOverview = () => {
         <Typography
           sx={{
             marginBottom: '8px',
-            color: blue['900'],
+            color: theme.palette.primary.main,
             fontWeight: 'bold',
             fontSize: '24px',
           }}
