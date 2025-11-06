@@ -46,6 +46,9 @@ import DuplicationEditCell from './editCells/DuplicationEditCell'
 import DeletionEditCell from './editCells/DeletionEditCell'
 import { useShallow } from 'zustand/shallow'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
+import NumMissingEditCell from './editCells/NumMissingEditCell'
+import NumExistsEditCell from './editCells/NumExistsEditCell'
+import { GridApiCommunity } from '@mui/x-data-grid/internals'
 
 const ODD_OPACITY = 0.2
 
@@ -180,6 +183,18 @@ const renderDamageTypesEditCell = (
   return <DamageTypesEditCell {...params} />
 }
 
+const renderNumMissingEditCell = (
+  params: GridRenderEditCellParams<TEditableSpecimen>
+) => {
+  return <NumMissingEditCell {...params} />
+}
+
+const renderNumExistsEditCell = (
+  params: GridRenderEditCellParams<TEditableSpecimen>
+) => {
+  return <NumExistsEditCell {...params} />
+}
+
 const renderMutationMarkEditCell = (
   params: GridRenderEditCellParams<TEditableSpecimen>
 ) => {
@@ -193,8 +208,12 @@ const renderDuplicationEditCell = (
   return <DuplicationEditCell row={row} canEdit={canEdit} />
 }
 
-const renderDeletionEditCell = (row: TEditableSpecimen, canEdit: boolean) => {
-  return <DeletionEditCell row={row} canEdit={canEdit} />
+const renderDeletionEditCell = (
+  row: TEditableSpecimen,
+  api: GridApiCommunity,
+  canEdit: boolean
+) => {
+  return <DeletionEditCell row={row} api={api} canEdit={canEdit} />
 }
 
 interface TableProps {
@@ -288,7 +307,8 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
         return renderDuplicationEditCell(row, !disabled)
       },
     },
-    ...(!stateHasUnsavedData && specimensState.length
+    ...// !stateHasUnsavedData &&
+    (specimensState.length
       ? [
           {
             field: 'deleteRow',
@@ -311,8 +331,8 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
             filterable: false,
             headerAlign: 'center' as GridAlignment,
             renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-              const { row } = params
-              return renderDeletionEditCell(row, !disabled)
+              const { api, row } = params
+              return renderDeletionEditCell(row, api, !disabled)
             },
           },
         ]
@@ -337,6 +357,7 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
         const { row } = params
         return renderCheckBox(row.numExists, true, !disabled)
       },
+      renderEditCell: renderNumExistsEditCell,
     },
     {
       field: 'numMissing',
@@ -358,6 +379,7 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
         const { row } = params
         return renderCheckBox(row.numMissing, true, !disabled)
       },
+      renderEditCell: renderNumMissingEditCell,
     },
     {
       field: 'number',
@@ -863,7 +885,6 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
 
   const handleUpdate = (newRow: TEditableSpecimen) => {
     const row = checkAttachmentChange(editions, newRow)
-    // console.log(row)
     specimenActions.setSpecimen(row)
     return filterSpecimen(row)
   }
@@ -923,7 +944,7 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
           }
           return classes
         }}
-        rows={specimensState}
+        rows={specimensState.filter((specimen) => !specimen.deleted)}
         columns={columns}
         initialState={{
           density: 'compact',
@@ -934,6 +955,24 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
         isCellEditable={isCellEditable}
         processRowUpdate={handleUpdate}
         hideFooter
+        // if one-click to enter edit is needed, finalize this
+        // onCellClick={(params) => {
+        //   // do not attempt to enter edit mode where not applicable
+        //   if (params.cellMode === 'edit' || !params.isEditable) return
+
+        //   // stop editing all other rows
+        //   const rowIds = params.api.getAllRowIds()
+        //   rowIds.forEach((rowId) => {
+        //     try {
+        //       params.api.stopRowEditMode({ id: rowId })
+        //     } catch (e) {
+        //       // pass
+        //     }
+        //   })
+        //   // start editing this row
+        //   params.api.startRowEditMode({ id: params.row.id })
+        // }}
+        editMode="row"
       />
     </>
   )
