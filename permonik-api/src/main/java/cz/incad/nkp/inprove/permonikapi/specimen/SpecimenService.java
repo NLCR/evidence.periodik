@@ -2,6 +2,7 @@ package cz.incad.nkp.inprove.permonikapi.specimen;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.*;
+import cz.incad.nkp.inprove.permonikapi.specimen.enums.SpecimenTableViewEnum;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -67,7 +68,7 @@ public class SpecimenService implements SpecimenDefinition {
     }
 
 
-    public SearchedSpecimensDTO getSearchedSpecimens(String metaTitleId, Integer offset, Integer rows, String facets, String view) throws IOException, SolrServerException {
+    public SearchedSpecimensDTO getSearchedSpecimens(String metaTitleId, Integer offset, Integer rows, String facets, SpecimenTableViewEnum view) throws IOException, SolrServerException {
 
         Integer localRows = rows;
 
@@ -111,20 +112,20 @@ public class SpecimenService implements SpecimenDefinition {
             solrQuery.addFilterQuery(specimenFacets.getBarCodeQueryString());
         }
 
-        if (Objects.equals(view, "table") && !specimenFacets.getSpecimenStates().isEmpty()) {
+        if (Objects.equals(view, SpecimenTableViewEnum.TABLE) && !specimenFacets.getSpecimenStates().isEmpty()) {
             solrQuery.addFilterQuery(specimenFacets.getSpecimenStatesQueryString());
         } else {
             solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true");
         }
 
         // Add filtering based on year interval
-        if (specimenFacets.getDateStart() > 0 && specimenFacets.getDateEnd() > 0 && Objects.equals(view, "table")) {
+        if (specimenFacets.getDateStart() > 0 && specimenFacets.getDateEnd() > 0 && Objects.equals(view, SpecimenTableViewEnum.TABLE)) {
             // getDateStart -> format: 2024 -> [2024-01-01 TO *]
             solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getDateStart() + "-01-01 TO *]");
             solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd() + "-12-31]");
         }
 
-        if (Objects.equals(view, "calendar") && specimenFacets.getCalendarDateStart() != null && !specimenFacets.getCalendarDateStart().isEmpty()) {
+        if (Objects.equals(view, SpecimenTableViewEnum.CALENDAR) && specimenFacets.getCalendarDateStart() != null && !specimenFacets.getCalendarDateStart().isEmpty()) {
             if (isValidDate(specimenFacets.getCalendarDateStart())) {
                 // getCalendarDateStart -> format: 1953-01-01T00:00:00.000Z -> [1953-01-01T00:00:00.000Z TO *]
                 solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getCalendarDateStart() + " TO *]");
@@ -191,7 +192,7 @@ public class SpecimenService implements SpecimenDefinition {
 
     }
 
-    public FacetsDTO getSpecimensFacets(String metaTitleId, String facets, String view) throws IOException, SolrServerException {
+    public FacetsDTO getSpecimensFacets(String metaTitleId, String facets, SpecimenTableViewEnum view) throws IOException, SolrServerException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         SpecimenFacets specimenFacets = objectMapper.readValue(facets, SpecimenFacets.class);
@@ -242,20 +243,29 @@ public class SpecimenService implements SpecimenDefinition {
             solrQuery.addFilterQuery(specimenFacets.getBarCodeQueryString());
         }
 
-        if (Objects.equals(view, "table") && !specimenFacets.getSpecimenStates().isEmpty()) {
+        if (Objects.equals(view, SpecimenTableViewEnum.TABLE) && !specimenFacets.getSpecimenStates().isEmpty()) {
             solrQuery.addFilterQuery(specimenFacets.getSpecimenStatesQueryString());
         } else {
             solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true");
         }
 
         // Add filtering based on year interval for table view
-        if (specimenFacets.getDateStart() > 0 && specimenFacets.getDateEnd() > 0 && Objects.equals(view, "table")) {
+        if (specimenFacets.getDateStart() > 0 && specimenFacets.getDateEnd() > 0 && Objects.equals(view, SpecimenTableViewEnum.TABLE)) {
             // getDateStart -> format: 2024 -> [2024-01-01 TO *]
             solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getDateStart() + "-01-01 TO *]");
             solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd() + "-12-31]");
         }
 
-        logger.info("SOLR QUERY: {}", solrQuery.toQueryString());
+        // Add filtering based on year interval for calendar view
+        if (Objects.equals(view, SpecimenTableViewEnum.CALENDAR) && specimenFacets.getCalendarDateStart() != null && !specimenFacets.getCalendarDateStart().isEmpty()) {
+            if (isValidDate(specimenFacets.getCalendarDateStart())) {
+                // getCalendarDateStart -> format: 1953-01-01T00:00:00.000Z -> [1953-01-01T00:00:00.000Z TO *]
+                solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getCalendarDateStart() + " TO *]");
+                solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getCalendarDateEnd() + "]");
+            }
+        }
+
+//        logger.info("SOLR QUERY: {}", solrQuery.toQueryString());
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
 
         return new FacetsDTO(

@@ -33,7 +33,7 @@ interface TVariablesState {
   pagination: { pageIndex: number; pageSize: number }
   barCodeInput: string
   specimenStates: TSpecimenState[] // číslo chybí / číslo existuje
-  view: 'calendar' | 'table'
+  view: 'CALENDAR' | 'TABLE'
   synchronizeYearsBetweenViews: boolean
   calendarDate: Dayjs | null
   calendarMinDate: Dayjs | null
@@ -47,7 +47,7 @@ interface TState extends TVariablesState {
   setSpecimenStates: (value: TSpecimenState[]) => void
   setPagination: (value: { pageIndex: number; pageSize: number }) => void
   resetAll: () => void
-  setView: (value: 'calendar' | 'table') => void
+  setView: (value: 'CALENDAR' | 'TABLE') => void
   setSynchronizeYearsBetweenViews: (value: boolean) => void
   setCalendarDate: (value: Dayjs) => void
   setCalendarMinDate: (value: Dayjs) => void
@@ -61,7 +61,7 @@ export const useSpecimensOverviewStore = create<TState>()(
     pagination: { pageIndex: 0, pageSize: 100 },
     barCodeInput: '',
     specimenStates: [SpecimenStateEnum.numExists],
-    view: APP_WITH_EDITING_ENABLED ? 'table' : 'calendar',
+    view: APP_WITH_EDITING_ENABLED ? 'TABLE' : 'CALENDAR',
     synchronizeYearsBetweenViews: true,
     calendarDate: null,
     calendarMinDate: null,

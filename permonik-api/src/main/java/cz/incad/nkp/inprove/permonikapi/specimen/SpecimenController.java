@@ -3,6 +3,7 @@ package cz.incad.nkp.inprove.permonikapi.specimen;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.FacetsDTO;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.NamesDTO;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.SearchedSpecimensDTO;
+import cz.incad.nkp.inprove.permonikapi.specimen.enums.SpecimenTableViewEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class SpecimenController {
         @RequestParam Integer offset,
         @RequestParam Integer rows,
         @RequestParam String facets,
-        @RequestParam String view
+        @RequestParam SpecimenTableViewEnum view
     ) throws IOException, SolrServerException {
         return specimenService.getSearchedSpecimens(id, offset, rows, facets, view);
     }
@@ -37,7 +38,7 @@ public class SpecimenController {
     public FacetsDTO getSpecimensFacets(
         @PathVariable String id,
         @RequestParam String facets,
-        @RequestParam String view
+        @RequestParam SpecimenTableViewEnum view
     ) throws IOException, SolrServerException {
         return specimenService.getSpecimensFacets(id, facets, view);
     }
