@@ -45,6 +45,8 @@ export const SpecimenSchema = AuditableSchema.extend({
   editionId: z.string().length(36),
   mutationId: z.string().length(36),
   mutationMark: z.string(),
+  mutationMarkNumber: z.string(),
+  mutationMarkNumberDescription: z.string(),
   publicationDate: z.string().min(1),
   publicationDateString: z.string().min(1),
   number: z.string(),

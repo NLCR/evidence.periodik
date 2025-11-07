@@ -228,6 +228,8 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
         ownerId: repairedVolume.ownerId,
         year: repairedVolume.year,
         mutationMark: '',
+        mutationMarkNumber: '',
+        mutationMarkNumberDescription: '',
       }
       const duplicatedSpecimens: TEditableSpecimen[] = repairedSpecimens.map(
         (specimen) => ({
@@ -247,6 +249,8 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
           editionId: specimen.editionId,
           mutationId: specimen.mutationId,
           mutationMark: specimen.mutationMark,
+          mutationMarkNumber: specimen.mutationMark,
+          mutationMarkNumberDescription: specimen.mutationMark,
           publicationDate: specimen.publicationDate,
           publicationDateString: specimen.publicationDateString,
           number: specimen.number,

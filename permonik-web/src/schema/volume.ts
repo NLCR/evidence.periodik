@@ -55,6 +55,8 @@ export const VolumeSchema = AuditableSchema.extend({
   ownerId: z.string().length(36, i18next.t('schema.owner_empty')),
   year: z.number().min(0, i18next.t('schema.year_min')),
   mutationMark: z.string(),
+  mutationMarkNumber: z.string(),
+  mutationMarkNumberDescription: z.string(),
 })
 
 export const EditableVolumeSchema = AuditableSchema.extend({
@@ -75,6 +77,8 @@ export const EditableVolumeSchema = AuditableSchema.extend({
   ownerId: z.string(),
   year: z.string().or(z.number()).optional(),
   mutationMark: z.string(),
+  mutationMarkNumber: z.string(),
+  mutationMarkNumberDescription: z.string(),
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

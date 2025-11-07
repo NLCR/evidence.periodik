@@ -257,7 +257,10 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
         width: 60,
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          return renderValue(row.mutationMark, row.numExists)
+          return renderValue(
+            row.mutationMark ?? row.mutationMarkNumber,
+            row.numExists
+          )
         },
       },
       {

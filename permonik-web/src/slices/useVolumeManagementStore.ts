@@ -54,6 +54,8 @@ export const initialState: TVariablesState = {
     ownerId: '',
     periodicity: initialPeriodicity,
     mutationMark: '',
+    mutationMarkNumber: '',
+    mutationMarkNumberDescription: '',
     showAttachmentsAtTheEnd: false,
     signature: '',
     year: '',
@@ -82,6 +84,8 @@ interface TState extends TVariablesState {
     setSubName: (value: string) => void
     setMutationId: (value: string) => void
     setMutationMark: (value: string) => void
+    setMutationMarkNumber: (value: string) => void
+    setMutationMarkNumberDescription: (value: string) => void
     setBarCode: (value: string) => void
     setSignature: (value: string) => void
     setYear: (value: string) => void
@@ -166,6 +170,20 @@ export const useVolumeManagementStore = create<TState>()(
         set(
           produce((state: TState) => {
             state.volumeState.mutationMark = value
+            state.stateHasUnsavedData = true
+          })
+        ),
+      setMutationMarkNumber: (value) =>
+        set(
+          produce((state: TState) => {
+            state.volumeState.mutationMarkNumber = value
+            state.stateHasUnsavedData = true
+          })
+        ),
+      setMutationMarkNumberDescription: (value) =>
+        set(
+          produce((state: TState) => {
+            state.volumeState.mutationMarkNumberDescription = value
             state.stateHasUnsavedData = true
           })
         ),

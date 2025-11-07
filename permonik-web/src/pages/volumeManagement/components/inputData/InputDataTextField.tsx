@@ -7,22 +7,18 @@ import { useVolumeManagementStore } from '../../../../slices/useVolumeManagement
 import { Controller, useFormContext } from 'react-hook-form'
 
 type FieldProps = {
-  isMutationMarkInputTextField?: boolean
   disabled?: boolean
   name: string
   onChangeCallback?: (value: string) => void
 }
 
 const Field = ({
-  isMutationMarkInputTextField = false,
   name,
   disabled = false,
   onChangeCallback = undefined,
   ...props
 }: FieldProps & TextFieldProps) => {
-  const [isModalOpened, setIsModalOpened] = useState(false)
-  const volumeState = useVolumeManagementStore((state) => state.volumeState)
-  const { control, setValue } = useFormContext()
+  const { control } = useFormContext()
 
   return (
     <>
@@ -47,9 +43,6 @@ const Field = ({
             }}
             onBlur={field.onBlur}
             inputRef={field.ref}
-            onClick={() =>
-              isMutationMarkInputTextField ? setIsModalOpened(true) : undefined
-            }
             onBeforeInput={
               props.inputMode === 'decimal'
                 ? (e) => {
@@ -62,16 +55,6 @@ const Field = ({
           />
         )}
       />
-      {isMutationMarkInputTextField && (
-        <MutationMarkSelectorModal
-          row={volumeState}
-          open={isModalOpened}
-          onClose={() => setIsModalOpened(false)}
-          onSave={(data) =>
-            setValue(name, data.mutationMark, { shouldDirty: true })
-          }
-        />
-      )}
     </>
   )
 }
@@ -85,7 +68,6 @@ type Props = {
 
 const InputDataTextField = ({
   name,
-  isMutationMarkInputTextField = false,
   editableData = undefined,
   onChangeCallback = undefined,
   ...props
@@ -101,7 +83,6 @@ const InputDataTextField = ({
           ? {
               DialogContent: (
                 <Field
-                  isMutationMarkInputTextField={isMutationMarkInputTextField}
                   name={name + '_internal'}
                   defaultValue={getValues(name)}
                   onChangeCallback={onChangeCallback}
@@ -119,7 +100,6 @@ const InputDataTextField = ({
     />
   ) : (
     <Field
-      isMutationMarkInputTextField={isMutationMarkInputTextField}
       disabled={disabled || props.disabled}
       name={name}
       onChangeCallback={onChangeCallback}

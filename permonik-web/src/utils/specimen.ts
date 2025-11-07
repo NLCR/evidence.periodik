@@ -25,6 +25,9 @@ export const filterSpecimen = (
     editionId: specimen.editionId,
     mutationId: specimen.mutationId,
     mutationMark: specimen.mutationMark.trim(),
+    mutationMarkNumber: specimen.mutationMarkNumber.trim(),
+    mutationMarkNumberDescription:
+      specimen.mutationMarkNumberDescription.trim(),
     publicationDate: specimen.publicationDate,
     publicationDateString: specimen.publicationDateString,
     number: specimen.number.trim(),
@@ -59,6 +62,9 @@ export const repairOrCreateSpecimen = (
     editionId: specimen.editionId ?? '',
     mutationId: specimen.mutationId ?? '',
     mutationMark: specimen.mutationMark?.trim() ?? '',
+    mutationMarkNumber: specimen.mutationMarkNumber?.trim() ?? '',
+    mutationMarkNumberDescription:
+      specimen.mutationMarkNumberDescription?.trim() ?? '',
     publicationDate: specimen.publicationDate ?? '',
     publicationDateString: specimen.publicationDateString ?? '',
     number: specimen.number?.trim() ?? '',
@@ -88,6 +94,8 @@ export const duplicatePartialSpecimen = (
     editionId: specimen.editionId ?? '',
     mutationId: specimen.mutationId ?? '',
     mutationMark: specimen.mutationMark ?? '',
+    mutationMarkNumber: specimen.mutationMark ?? '',
+    mutationMarkNumberDescription: specimen.mutationMark ?? '',
     publicationDate: specimen.publicationDate ?? '',
     publicationDateString: specimen.publicationDateString ?? '',
     number: specimen.number ?? '',

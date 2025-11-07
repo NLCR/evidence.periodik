@@ -1,27 +1,15 @@
-import InputDataTextField from './InputDataTextField'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
+import InputDataMutationMarkField from './InputDataMutationMarkField'
 
 const InputDataMutationMark = () => {
-  const setMutationMark = useVolumeManagementStore(
-    (state) => state.volumeActions.setMutationMark
-  )
-  const { t } = useTranslation()
-
-  const specimensState = useVolumeManagementStore(
-    (state) => state.specimensState
-  )
-  const setSpecimensState = useVolumeManagementStore(
-    (state) => state.specimensActions.setSpecimensState
-  )
-
   const { watch } = useFormContext()
   const isDuplicated = location.href.includes('duplicated')
-  const isEmpty = !watch('mutationMark')
+  const isEmpty = !watch('mutationMark') && !watch('mutationMarkNumber')
+  const { t } = useTranslation()
 
   return (
     <TableRow
@@ -33,23 +21,7 @@ const InputDataMutationMark = () => {
     >
       <TableCell>{t('specimens_overview.mutation_mark')}</TableCell>
       <TableCell>
-        <InputDataTextField
-          editableData={{
-            fieldName: t('specimens_overview.mutation_mark'),
-            saveChange: (value: string) => {
-              setMutationMark(value)
-              setSpecimensState(
-                specimensState.map((specimen) => ({
-                  ...specimen,
-                  mutationMark: value,
-                })),
-                true
-              )
-            },
-          }}
-          isMutationMarkInputTextField
-          name={'mutationMark'}
-        />
+        <InputDataMutationMarkField />
       </TableCell>
     </TableRow>
   )

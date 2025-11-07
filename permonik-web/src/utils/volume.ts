@@ -35,5 +35,8 @@ export const repairVolume = (
     ownerId: volume.ownerId ?? '',
     year: Number(volume.year) ?? -1,
     mutationMark: volume.mutationMark?.trim() ?? '',
+    mutationMarkNumber: volume.mutationMarkNumber?.trim() ?? '',
+    mutationMarkNumberDescription:
+      volume.mutationMarkNumberDescription?.trim() ?? '',
   }
 }

@@ -122,7 +122,12 @@ const InputData: FC<InputDataProps> = ({
               </TableRow>
               <TableRow>
                 <TableCell>{t('specimens_overview.mutation_mark')}</TableCell>
-                <TableCell>{volume.volume.mutationMark}</TableCell>
+                <TableCell>
+                  {volume.volume.mutationMark ??
+                    (volume.volume.mutationMarkNumber
+                      ? `${volume.volume.mutationMarkNumber} (${volume.volume.mutationMarkNumberDescription})`
+                      : '-')}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>{t('volume_overview.bar_code')}</TableCell>

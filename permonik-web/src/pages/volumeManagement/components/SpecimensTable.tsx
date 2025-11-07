@@ -579,7 +579,17 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
-        return renderValue(row.mutationMark, row.numExists, !disabled)
+        return (
+          <Tooltip
+            title={row.mutationMark ?? row.mutationMarkNumberDescription}
+          >
+            {renderValue(
+              row.mutationMark ?? row.mutationMarkNumber,
+              row.numExists,
+              !disabled
+            ) ?? <div />}
+          </Tooltip>
+        )
       },
       renderEditCell: renderMutationMarkEditCell,
     },

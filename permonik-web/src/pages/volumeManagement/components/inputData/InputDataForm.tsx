@@ -83,6 +83,8 @@ const InputDataForm = ({
             ...volumeData.volume,
             barCode: '',
             mutationMark: '',
+            mutationMarkNumber: '',
+            mutationMarkNumberDescription: '',
             mutationId: '',
             ownerId: '',
             created: null,
@@ -109,6 +111,8 @@ const InputDataForm = ({
       // reset all applicable fields
       methods.setValue('barCode', '')
       methods.setValue('mutationMark', '')
+      methods.setValue('mutationMarkNumber', '')
+      methods.setValue('mutationMarkNumberDescription', '')
       methods.setValue('created', null)
       methods.setValue('createdBy', null)
       methods.setValue('updated', null)
