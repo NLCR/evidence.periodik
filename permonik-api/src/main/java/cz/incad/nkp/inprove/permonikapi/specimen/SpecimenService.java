@@ -99,6 +99,9 @@ public class SpecimenService implements SpecimenDefinition {
             solrQuery.addFilterQuery(specimenFacets.getMutationMarkQueryString());
         }
 
+        if (!specimenFacets.getMutationMarkNumbers().isEmpty()) {
+            solrQuery.addFilterQuery(specimenFacets.getMutationMarkNumberQueryString());
+        }
 
         if (!specimenFacets.getOwnerIds().isEmpty()) {
             solrQuery.addFilterQuery(specimenFacets.getOwnersQueryString());
@@ -208,7 +211,8 @@ public class SpecimenService implements SpecimenDefinition {
 //        solrQuery.addSort(MUTATION_ID_FIELD, SolrQuery.ORDER.asc);
         solrQuery.setFacet(true);
         solrQuery.setParam("f." + MUTATION_MARK_FIELD + ".facet.missing", "true"); // query MUTATION_MARK_FIELD also for empty value
-        solrQuery.addFacetField(NAME_FIELD, SUB_NAME_FIELD, MUTATION_ID_FIELD, EDITION_ID_FIELD, MUTATION_MARK_FIELD, OWNER_ID_FIELD, DAMAGE_TYPES_FIELD);
+        solrQuery.setParam("f." + MUTATION_MARK_NUMBER_FIELD + ".facet.missing", "true"); // query MUTATION_MARK_NUMBER_FIELD also for empty value
+        solrQuery.addFacetField(NAME_FIELD, SUB_NAME_FIELD, MUTATION_ID_FIELD, EDITION_ID_FIELD, MUTATION_MARK_FIELD, MUTATION_MARK_NUMBER_FIELD, OWNER_ID_FIELD, DAMAGE_TYPES_FIELD);
         solrQuery.setFacetMinCount(1);
 
         if (!specimenFacets.getNames().isEmpty()) {
@@ -229,6 +233,10 @@ public class SpecimenService implements SpecimenDefinition {
 
         if (!specimenFacets.getMutationMarks().isEmpty()) {
             solrQuery.addFilterQuery(specimenFacets.getMutationMarkQueryString());
+        }
+
+        if (!specimenFacets.getMutationMarkNumbers().isEmpty()) {
+            solrQuery.addFilterQuery(specimenFacets.getMutationMarkNumberQueryString());
         }
 
         if (!specimenFacets.getOwnerIds().isEmpty()) {
@@ -282,6 +290,10 @@ public class SpecimenService implements SpecimenDefinition {
                 new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
             ).toList(),
             response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().map(facetFieldEntry ->
+                new FacetFieldDTO(facetFieldEntry.getName() != null ? facetFieldEntry.getName() : "", facetFieldEntry.getCount())
+            ).sorted(Comparator.comparingLong(FacetFieldDTO::count).reversed()// sort null facet, because solr returns null facets as last
+            ).toList(),
+            response.getFacetField(MUTATION_MARK_NUMBER_FIELD).getValues().stream().map(facetFieldEntry ->
                 new FacetFieldDTO(facetFieldEntry.getName() != null ? facetFieldEntry.getName() : "", facetFieldEntry.getCount())
             ).sorted(Comparator.comparingLong(FacetFieldDTO::count).reversed()// sort null facet, because solr returns null facets as last
             ).toList(),

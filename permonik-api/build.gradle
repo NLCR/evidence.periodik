@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.6'
+    id 'org.springframework.boot' version '3.5.7'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -21,7 +21,7 @@ configurations {
 
 ext {
     lombok = '1.18.42'
-    openapi = "2.8.13"
+    openapi = "2.8.14"
     solrj = '9.9.0'
     mapstruct = '1.6.3'
     slf4j = '2.0.17'
@@ -57,8 +57,6 @@ dependencies {
     // SPRING BOOT
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-
-    implementation 'jakarta.ws.rs:jakarta.ws.rs-api:4.0.0'
 
     // HIBERNATE (preCreate, preUpdate, preRemove)
     implementation "org.hibernate.orm:hibernate-envers:${hibernate}"

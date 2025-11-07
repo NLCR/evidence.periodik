@@ -18,6 +18,8 @@ public interface SpecimenDefinition {
     String EDITION_ID_FIELD = "editionId";
     String MUTATION_ID_FIELD = "mutationId";
     String MUTATION_MARK_FIELD = "mutationMark";
+    String MUTATION_MARK_NUMBER_FIELD = "mutationMarkNumber";
+    String MUTATION_MARK_NUMBER_DESCRIPTION_FIELD = "mutationMarkNumberDescription";
     String PUBLICATION_DATE_FIELD = "publicationDate";
     String PUBLICATION_DATE_STRING_FIELD = "publicationDateString";
     String NUMBER_FIELD = "number";

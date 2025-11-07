@@ -4,7 +4,6 @@ package cz.incad.nkp.inprove.permonikapi.config.security.user;
 import cz.incad.nkp.inprove.permonikapi.config.security.permission.Authorities;
 import cz.incad.nkp.inprove.permonikapi.user.User;
 import cz.incad.nkp.inprove.permonikapi.user.UserService;
-import jakarta.ws.rs.ForbiddenException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -68,7 +67,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return switch (role) {
             case "ROLE_ADMIN" -> authorities.getAdminAuthorities();
             case "ROLE_USER" -> authorities.getUserAuthorities();
-            default -> throw new ForbiddenException("user does not have allowed ");
+            default -> throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         };
     }
 

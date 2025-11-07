@@ -32,6 +32,12 @@ server:
         same-site: strict
       timeout: 480m
 
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
 logging:
   file:
     name: "permonik-api.log"

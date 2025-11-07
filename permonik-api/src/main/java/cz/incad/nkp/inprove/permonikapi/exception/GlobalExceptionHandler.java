@@ -1,4 +1,4 @@
-package cz.incad.nkp.inprove.permonikapi.config;
+package cz.incad.nkp.inprove.permonikapi.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

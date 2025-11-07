@@ -31,6 +31,11 @@ server:
         same-site: strict
       timeout: 480m
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
 #logging:
 #  level:
 #    org:

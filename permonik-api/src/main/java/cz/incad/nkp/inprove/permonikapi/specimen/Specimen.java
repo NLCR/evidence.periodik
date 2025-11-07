@@ -60,6 +60,12 @@ public class Specimen extends Auditable {
     @Field
     private Boolean isAttachment;
 
+    // two related fields
+    @Field
+    private String mutationMarkNumber;
+    @Field
+    private String mutationMarkNumberDescription;
+
     // Custom getter for `note`
     public String getNote() {
         return note == null ? "" : note;
@@ -78,6 +84,16 @@ public class Specimen extends Auditable {
     // Custom getter for `mutationMark`
     public String getMutationMark() {
         return mutationMark == null ? "" : mutationMark;
+    }
+
+    // Custom getter for `mutationMarkNumber`
+    public String getMutationMarkNumber() {
+        return mutationMarkNumber == null ? "" : mutationMarkNumber;
+    }
+
+    // Custom getter for `mutationMarkNumber`
+    public String getMutationMarkNumberDescription() {
+        return mutationMarkNumberDescription == null ? "" : mutationMarkNumberDescription;
     }
 
     // Custom getter for `number`
