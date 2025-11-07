@@ -27,6 +27,7 @@ import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
 import { generateVolumeUrlWithParams } from '../../../utils/generateVolumeUrlWithParams'
 import Button from '@mui/material/Button'
 import theme from '../../../theme'
+import { useMeQuery } from '../../../api/user'
 
 const getSpecimenState = (sp: TSpecimen, t: TFunction) => {
   if (sp.damageTypes) {
@@ -188,6 +189,8 @@ const Table: FC<Props> = ({ metaTitle }) => {
   const { data: owners } = useOwnerListQuery()
   const { languageCode } = useLanguageCode()
 
+  const { data: me } = useMeQuery()
+
   const {
     data: specimens,
     isFetching: specimensFetching,
@@ -310,22 +313,24 @@ const Table: FC<Props> = ({ metaTitle }) => {
         header={`${t('specimens_overview.volume_overview_modal_link')} ${modalData?.barCode}`}
       >
         <VolumeStatsModalContent volumeId={modalData?.volumeId} />
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={() => {
-            navigate(
-              generateVolumeUrlWithParams(
-                `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
-                metaTitle.id || '',
-                undefined,
-                modalData?.volumeId
+        {me?.id && (
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={() => {
+              navigate(
+                generateVolumeUrlWithParams(
+                  `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
+                  metaTitle.id || '',
+                  undefined,
+                  modalData?.volumeId
+                )
               )
-            )
-          }}
-        >
-          {t('administration.duplicate_volume')}
-        </Button>
+            }}
+          >
+            {t('administration.duplicate_volume')}
+          </Button>
+        )}
       </ModalContainer>
     </>
   )
