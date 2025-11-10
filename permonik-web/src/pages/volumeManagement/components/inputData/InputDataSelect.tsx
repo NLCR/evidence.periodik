@@ -29,10 +29,11 @@ const Field = ({
         defaultValue={props.defaultValue}
         render={({ field }) => (
           <Select
+            fullWidth
             variant="outlined"
             size="small"
             sx={{
-              maxWidth: '200px',
+              maxWidth: 'auto',
               width: '100%',
             }}
             disabled={disabled}

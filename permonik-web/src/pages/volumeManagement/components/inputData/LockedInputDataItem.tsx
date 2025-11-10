@@ -64,6 +64,7 @@ const LockedInputDataItem = ({
                   justifyContent: 'start',
                   flexDirection: 'column',
                   gap: 1,
+                  width: '100%',
                 }}
               >
                 {editableData.DialogContent}

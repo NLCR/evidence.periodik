@@ -31,7 +31,6 @@ const Field = ({
             variant="outlined"
             size="small"
             sx={{
-              maxWidth: '200px',
               width: '100%',
             }}
             disabled={disabled}
@@ -83,6 +82,7 @@ const InputDataTextField = ({
           ? {
               DialogContent: (
                 <Field
+                  fullWidth
                   name={name + '_internal'}
                   defaultValue={getValues(name)}
                   onChangeCallback={onChangeCallback}

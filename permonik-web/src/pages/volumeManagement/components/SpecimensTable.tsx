@@ -581,10 +581,10 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
         const { row } = params
         return (
           <Tooltip
-            title={row.mutationMark ?? row.mutationMarkNumberDescription}
+            title={row.mutationMark || row.mutationMarkNumberDescription}
           >
             {renderValue(
-              row.mutationMark ?? row.mutationMarkNumber,
+              row.mutationMark || row.mutationMarkNumber,
               row.numExists,
               !disabled
             ) ?? <div />}

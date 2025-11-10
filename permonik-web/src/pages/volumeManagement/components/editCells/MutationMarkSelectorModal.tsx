@@ -39,7 +39,9 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
   const [inputNumberImpossible, setInputNumberImpossible] =
     useState<boolean>(false)
 
-  const [inputMode, setInputMode] = useState<TTab>('symbols')
+  const [inputMode, setInputMode] = useState<TTab>(
+    row.mutationMarkNumber ? 'number' : 'symbols'
+  )
 
   useEffect(() => {
     if (open) setInputMarks(row.mutationMark)

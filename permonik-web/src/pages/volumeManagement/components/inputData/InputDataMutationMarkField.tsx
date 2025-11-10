@@ -14,16 +14,16 @@ type FieldProps = {
 const Field = ({ disabled = false, ...props }: FieldProps & TextFieldProps) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
   const volumeState = useVolumeManagementStore((state) => state.volumeState)
-  const { setValue, getValues } = useFormContext()
+  const { setValue, watch } = useFormContext()
 
-  const mutationMark = getValues('mutationMark_internal')
-  const mutationMarkNumber = getValues('mutationMarkNumber_internal')
-  const mutationMarkNumberDescription = getValues(
+  const mutationMark = watch('mutationMark_internal')
+  const mutationMarkNumber = watch('mutationMarkNumber_internal')
+  const mutationMarkNumberDescription = watch(
     'mutationMarkNumberDescription_internal'
   )
 
   const value =
-    mutationMark ??
+    mutationMark ||
     (mutationMarkNumber
       ? `${mutationMarkNumber} (${mutationMarkNumberDescription})`
       : undefined)
@@ -34,7 +34,6 @@ const Field = ({ disabled = false, ...props }: FieldProps & TextFieldProps) => {
         variant="outlined"
         size="small"
         sx={{
-          maxWidth: '200px',
           width: '100%',
         }}
         disabled={disabled}
@@ -70,7 +69,7 @@ const Field = ({ disabled = false, ...props }: FieldProps & TextFieldProps) => {
 
 const InputDataMutationMarkField = (props: TextFieldProps) => {
   const { locked, disabled } = useInputDataEditabilityContext()
-  const { getValues, setValue } = useFormContext()
+  const { getValues, watch, setValue } = useFormContext()
 
   const setMutationMark = useVolumeManagementStore(
     (state) => state.volumeActions.setMutationMark
@@ -90,14 +89,12 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
     (state) => state.specimensActions.setSpecimensState
   )
 
-  const mutationMark = getValues('mutationMark')
-  const mutationMarkNumber = getValues('mutationMarkNumber')
-  const mutationMarkNumberDescription = getValues(
-    'mutationMarkNumberDescription'
-  )
+  const mutationMark = watch('mutationMark')
+  const mutationMarkNumber = watch('mutationMarkNumber')
+  const mutationMarkNumberDescription = watch('mutationMarkNumberDescription')
 
   const value =
-    mutationMark ??
+    mutationMark ||
     (mutationMarkNumber
       ? `${mutationMarkNumber} (${mutationMarkNumberDescription})`
       : undefined)
