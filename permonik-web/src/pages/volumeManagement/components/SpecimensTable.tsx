@@ -44,7 +44,7 @@ import TableHeader from './TableHeader'
 import Tooltip from '@mui/material/Tooltip'
 import DuplicationEditCell from './editCells/DuplicationEditCell'
 import DeletionEditCell from './editCells/DeletionEditCell'
-import { useShallow } from 'zustand/shallow'
+// import { useShallow } from 'zustand/shallow'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
@@ -233,9 +233,9 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
 
   const scrolledToRow = useRef<boolean>(false)
 
-  const stateHasUnsavedData = useVolumeManagementStore(
-    useShallow((state) => state.stateHasUnsavedData)
-  )
+  // const stateHasUnsavedData = useVolumeManagementStore(
+  //   useShallow((state) => state.stateHasUnsavedData)
+  // )
   const specimenActions = useVolumeManagementStore(
     (state) => state.specimensActions
   )

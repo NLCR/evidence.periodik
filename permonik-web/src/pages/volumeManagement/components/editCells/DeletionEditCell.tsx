@@ -2,17 +2,12 @@ import { SpecimenSchema, TEditableSpecimen } from '../../../../schema/specimen'
 import React, { FC, useState } from 'react'
 import Box from '@mui/material/Box'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import LoopIcon from '@mui/icons-material/Loop'
-import { useDeleteSpecimenById } from '../../../../api/specimen'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import ModalContainer from '../../../../components/ModalContainer'
 import theme from '../../../../theme'
 import { GridApiCommunity } from '@mui/x-data-grid/internals'
 import { useMeQuery } from '../../../../api/user'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
-import { repairOrCreateSpecimen } from '../../../../utils/specimen'
-import dayjs from 'dayjs'
 
 type DuplicationCellProps = {
   row: TEditableSpecimen

@@ -42,6 +42,7 @@
   "specimens_overview": {
     "meta_title_not_found": "This meta title was not found",
     "specimens_not_found": "No results can be displayed for the given search. Please adjust your search parameters",
+    "switch_to_table": "Switch to table",
     "date": "Date",
     "volume": "Volume",
     "name": "Title on the cover",

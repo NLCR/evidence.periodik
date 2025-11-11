@@ -35,10 +35,10 @@ const SynchronizeYearsSwitch = () => {
       state.synchronizeYearsBetweenViews &&
       specimens?.specimens.length
     ) {
-      if (state.view === 'calendar') {
+      if (state.view === 'CALENDAR') {
         setCalendarDate(dayjs(specimens.specimens[0].publicationDate))
       }
-      if (state.view === 'table') {
+      if (state.view === 'TABLE') {
         const publicationDateYear = Number(
           specimens.specimens[0].publicationDate.substring(0, 4)
         )
