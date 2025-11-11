@@ -32,7 +32,6 @@ import InputDataBarCode from './InputDataBarCode'
 import InputDataSignature from './InputDataSignature'
 import { api } from '../../../../api'
 import { TSpecimen } from '../../../../schema/specimen'
-import { mapTintToColor } from './utils/tint'
 import InputDataOwner from './InputDataOwner'
 
 const InputDataForm = ({
@@ -66,7 +65,7 @@ const InputDataForm = ({
     (state) => state.volumeActions.setVolumeState
   )
 
-  const isDuplicated = location.href.includes('duplicated')
+  // const isDuplicated = location.href.includes('duplicated')
 
   useEffect(() => {
     const preLoadDuplicateSource = async () => {
@@ -99,6 +98,7 @@ const InputDataForm = ({
       }
     }
     preLoadDuplicateSource()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

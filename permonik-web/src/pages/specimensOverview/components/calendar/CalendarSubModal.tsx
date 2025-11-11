@@ -1,9 +1,9 @@
 import { t } from 'i18next'
-import React, { Dispatch, SetStateAction, useContext } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import ModalContainer from '../../../../components/ModalContainer'
 import VolumeStatsModalContent from '../../../../components/VolumeStatsModalContent'
 import { generateVolumeUrlWithParams } from '../../../../utils/generateVolumeUrlWithParams'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { TSpecimen } from '../../../../schema/specimen'
 import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
@@ -16,7 +16,6 @@ type Props = {
 
 const CalendarSubModal = ({ setSubModalData, subModalData }: Props) => {
   const navigate = useNavigate()
-  const [searchParams, _] = useSearchParams()
   const { i18n } = useTranslation()
   const { metaTitleId } = useParams()
   const { data: me } = useMeQuery()

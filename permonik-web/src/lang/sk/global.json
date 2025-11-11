@@ -42,6 +42,7 @@
   "specimens_overview": {
     "meta_title_not_found": "Tento metatitul nebol nájdený",
     "specimens_not_found": "Pre zadané vyhľadávanie nie sú k dispozícii žiadne výsledky. Prosím, upravte parametre vyhľadávania",
+    "switch_to_table": "Prepnúť na tabuľku",
     "date": "Dátum",
     "volume": "Zväzok",
     "name": "Názov na titulnej strane",

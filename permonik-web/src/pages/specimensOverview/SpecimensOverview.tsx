@@ -185,7 +185,10 @@ const SpecimensOverview = () => {
           )}
         </Box>
         {view === 'CALENDAR' ? (
-          <Calendar metaTitle={metaTitle} />
+          <Calendar
+            metaTitle={metaTitle}
+            switchToTable={() => setView('TABLE')}
+          />
         ) : (
           <Suspense>
             <Table metaTitle={metaTitle} />
