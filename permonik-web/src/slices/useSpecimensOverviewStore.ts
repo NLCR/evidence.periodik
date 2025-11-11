@@ -1,12 +1,12 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { Dayjs } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import { SpecimenStateEnum, TSpecimenState } from '../schema/specimen'
 import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
 
 export type TParams = {
-  dateStart: number
-  dateEnd: number
+  dateStart: Dayjs
+  dateEnd: Dayjs
   names: string[]
   subNames: string[]
   mutationIds: string[]
@@ -17,8 +17,8 @@ export type TParams = {
 }
 
 export const initialParams: TParams = {
-  dateStart: 0,
-  dateEnd: 0,
+  dateStart: dayjs(Date.now()),
+  dateEnd: dayjs(Date.now()),
   names: [],
   subNames: [],
   mutationIds: [],
@@ -38,7 +38,7 @@ interface TVariablesState {
   calendarDate: Dayjs | null
   calendarMinDate: Dayjs | null
   lastViewedMetaTitleId: string
-  sliderRange: [number, number] | null
+  sliderRange: [Dayjs, Dayjs] | null
 }
 
 interface TState extends TVariablesState {
@@ -52,7 +52,7 @@ interface TState extends TVariablesState {
   setCalendarDate: (value: Dayjs) => void
   setCalendarMinDate: (value: Dayjs) => void
   setLastViewedMetaTitleId: (value: string) => void
-  setSliderRange: (value: [number, number]) => void
+  setSliderRange: (value: [Dayjs, Dayjs]) => void
 }
 
 export const useSpecimensOverviewStore = create<TState>()(
