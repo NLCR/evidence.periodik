@@ -31,6 +31,8 @@ public class SpecimenService implements SpecimenDefinition {
 
     private final SolrClient solrClient;
 
+    private final ObjectMapper objectMapper;
+
 
     public StatsForMetaTitleOverviewDTO getStatsForMetaTitleOverview(String metaTitleId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
@@ -72,7 +74,6 @@ public class SpecimenService implements SpecimenDefinition {
 
         Integer localRows = rows;
 
-        ObjectMapper objectMapper = new ObjectMapper();
         SpecimenFacets specimenFacets = objectMapper.readValue(facets, SpecimenFacets.class);
 
         SolrQuery solrQuery = new SolrQuery("*:*");
@@ -119,10 +120,9 @@ public class SpecimenService implements SpecimenDefinition {
         }
 
         // Add filtering based on year interval
-        if (specimenFacets.getDateStart() > 0 && specimenFacets.getDateEnd() > 0 && Objects.equals(view, SpecimenTableViewEnum.TABLE)) {
-            // getDateStart -> format: 2024 -> [2024-01-01 TO *]
-            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getDateStart() + "-01-01 TO *]");
-            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd() + "-12-31]");
+        if (Objects.equals(view, SpecimenTableViewEnum.TABLE) && specimenFacets.getDateStart() != null && specimenFacets.getDateEnd() != null) {
+            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getDateStart() + " TO *]");
+            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd() + "]");
         }
 
         if (Objects.equals(view, SpecimenTableViewEnum.CALENDAR) && specimenFacets.getCalendarDateStart() != null && !specimenFacets.getCalendarDateStart().isEmpty()) {
@@ -194,7 +194,6 @@ public class SpecimenService implements SpecimenDefinition {
 
     public FacetsDTO getSpecimensFacets(String metaTitleId, String facets, SpecimenTableViewEnum view) throws IOException, SolrServerException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
         SpecimenFacets specimenFacets = objectMapper.readValue(facets, SpecimenFacets.class);
 
         SolrQuery solrQuery = new SolrQuery("*:*");
@@ -250,10 +249,9 @@ public class SpecimenService implements SpecimenDefinition {
         }
 
         // Add filtering based on year interval for table view
-        if (specimenFacets.getDateStart() > 0 && specimenFacets.getDateEnd() > 0 && Objects.equals(view, SpecimenTableViewEnum.TABLE)) {
-            // getDateStart -> format: 2024 -> [2024-01-01 TO *]
-            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getDateStart() + "-01-01 TO *]");
-            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd() + "-12-31]");
+        if (Objects.equals(view, SpecimenTableViewEnum.TABLE) && specimenFacets.getDateStart() != null && specimenFacets.getDateEnd() != null) {
+            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getDateStart() + " TO *]");
+            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd() + "]");
         }
 
         // Add filtering based on year interval for calendar view

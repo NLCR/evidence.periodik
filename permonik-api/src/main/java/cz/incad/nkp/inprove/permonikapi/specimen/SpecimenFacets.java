@@ -3,6 +3,7 @@ package cz.incad.nkp.inprove.permonikapi.specimen;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.SpecimenStateDTO;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,8 +17,8 @@ import java.util.stream.Collectors;
 @Getter
 public class SpecimenFacets implements SpecimenDefinition {
 
-    private Integer dateStart;
-    private Integer dateEnd;
+    private Instant dateStart;
+    private Instant dateEnd;
     private String calendarDateStart;
     private String calendarDateEnd;
     private List<String> names;
