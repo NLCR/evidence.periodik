@@ -17,6 +17,7 @@ import InputData from './components/inputData/InputData'
 import { InputDataEditabilityContextProvider } from './components/inputData/InputDataEditabilityContextProvider'
 import SpecimensActions from './components/SpecimensActions'
 import useVolumeManagementActions from '../../hooks/useVolumeManagementActions'
+import { useGridApiRef } from '@mui/x-data-grid-pro'
 
 type TVolumeManagementProps = {
   duplicated?: boolean
@@ -28,6 +29,8 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
   const { volumeId } = useParams()
   const { data: me, isLoading: meLoading, isError: meError } = useMeQuery()
   const { t } = useTranslation()
+
+  const apiRef = useGridApiRef()
 
   const setInitialState = useVolumeManagementStore(
     (state) => state.setInitialState
@@ -84,7 +87,7 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
     doCreate,
     doDelete,
     pendingActions,
-  } = useVolumeManagementActions(editions || [])
+  } = useVolumeManagementActions(apiRef, editions || [])
 
   if (
     volumeLoading ||
@@ -180,7 +183,11 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
             // boxShadow: theme.shadows[1],
           }}
         >
-          <SpecimensTable mutations={mutations} editions={editions} />
+          <SpecimensTable
+            apiRef={apiRef}
+            mutations={mutations}
+            editions={editions}
+          />
           <SpecimensActions
             duplicated={duplicated}
             volume={volume}

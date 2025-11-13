@@ -19,8 +19,13 @@ import { repairVolume } from '../utils/volume'
 import { waitFor } from '../utils/waitFor'
 import i18next from '../i18next'
 import { v4 as uuid } from 'uuid'
+import { RefObject } from 'react'
+import { GridApiPro } from '@mui/x-data-grid-pro/models'
 
-const useVolumeManagementActions = (editions: TEdition[]) => {
+const useVolumeManagementActions = (
+  apiRef: RefObject<GridApiPro | null>,
+  editions: TEdition[]
+) => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -43,6 +48,13 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
     (state) => state.setStateHasUnsavedData
   )
   const doValidation = (useMinSpecimensCount = true) => {
+    // flush unflushed updates
+    apiRef.current?.getAllRowIds().forEach((rowId) => {
+      if (apiRef.current?.getRowMode(rowId) === 'edit') {
+        apiRef.current?.stopRowEditMode({ id: rowId })
+      }
+    })
+
     //get state when is necessary → this approach doesn't cause rerender of functions and whole hook
     const volumeState = useVolumeManagementStore.getState().volumeState
     const specimensState = useVolumeManagementStore.getState().specimensState

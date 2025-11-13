@@ -217,15 +217,15 @@ const renderDeletionEditCell = (
 }
 
 interface TableProps {
+  apiRef: RefObject<GridApiPro | null>
   mutations: TMutation[]
   editions: TEdition[]
 }
 
-const Table: FC<TableProps> = ({ mutations, editions }) => {
+const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
   const { languageCode } = useLanguageCode()
   const { MuiTableLocale } = useMuiTableLang()
   const { t } = useTranslation()
-  const apiRef = useGridApiRef()
   const { disabled, locked: isInputDataLocked } =
     useInputDataEditabilityContext()
 
