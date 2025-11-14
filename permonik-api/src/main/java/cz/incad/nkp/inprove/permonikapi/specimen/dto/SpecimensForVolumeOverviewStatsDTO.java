@@ -1,7 +1,7 @@
 package cz.incad.nkp.inprove.permonikapi.specimen.dto;
 
 
-import cz.incad.nkp.inprove.permonikapi.specimen.model.Specimen;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDTO;
 
 import java.util.List;
 
@@ -14,6 +14,6 @@ public record SpecimensForVolumeOverviewStatsDTO(
     List<FacetFieldDTO> editionIds,
     List<FacetFieldDTO> damageTypes,
     List<FacetFieldDTO> publicationDayRanges,
-    List<Specimen> specimens
+    List<SpecimenDTO> specimens
 ) {
 }

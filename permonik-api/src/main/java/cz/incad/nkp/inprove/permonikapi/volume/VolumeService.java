@@ -4,7 +4,7 @@ import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitle;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitleService;
 import cz.incad.nkp.inprove.permonikapi.specimen.SpecimenService;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.SpecimensForVolumeOverviewStatsDTO;
-import cz.incad.nkp.inprove.permonikapi.specimen.model.Specimen;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.EditableVolumeWithSpecimensDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDetailDTO;
@@ -83,7 +83,7 @@ public class VolumeService implements VolumeDefinition {
         VolumeDTO volumeDTO = getVolumeDTOById(volumeId);
 
         try {
-            List<Specimen> specimenList = specimenService.getSpecimensForVolumeDetail(volumeDTO.id(), onlyPublic, volumeDTO.showAttachmentsAtTheEnd());
+            List<SpecimenDTO> specimenList = specimenService.getSpecimensForVolumeDetail(volumeDTO.id(), onlyPublic, volumeDTO.showAttachmentsAtTheEnd());
 
             return new VolumeDetailDTO(
                 volumeDTO,
@@ -210,7 +210,7 @@ public class VolumeService implements VolumeDefinition {
         }
 
         // delete old specimens
-        List<Specimen> oldSpecimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
+        List<SpecimenDTO> oldSpecimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
         specimenService.deleteSpecimens(oldSpecimens);
 
         updateVolume(editableVolumeWithSpecimensDTO.volume());
@@ -222,7 +222,7 @@ public class VolumeService implements VolumeDefinition {
     public void deleteVolumeWithSpecimens(String volumeId) throws SolrServerException, IOException {
         Volume volume = checkVolumeExistsById(volumeId);
 
-        List<Specimen> specimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
+        List<SpecimenDTO> specimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
         specimenService.deleteSpecimens(specimens);
 
         deleteVolume(volume);
