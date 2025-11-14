@@ -8,7 +8,6 @@ public record FacetsDTO(
     List<FacetFieldDTO> mutationIds,
     List<FacetFieldDTO> editionIds,
     List<FacetFieldDTO> mutationMarks,
-    List<FacetFieldDTO> mutationMarkNumbers,
     List<FacetFieldDTO> ownerIds,
     List<FacetFieldDTO> damageTypes
 ) {

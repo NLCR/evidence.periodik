@@ -1,5 +1,6 @@
 import pysolr
 
+# edit array to reindex only required cores
 CORES = [
     ("metatitle", "metatitle"),
     ("volume", "volume"),
@@ -36,6 +37,7 @@ def reindex_core(core_name):
 
         for doc in docs:
             doc.pop('_version_', None)
+            doc["mutationMarkType"] = "MARK"  # TODO: remove after prod migration
 
         new_solr.add(docs)
         total += len(docs)

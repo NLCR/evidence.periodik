@@ -21,7 +21,7 @@ services:
       TZ: "Europe/Prague"
 
   permonik-database:
-    image: solr:9.9.0
+    image: solr:9.10.0
     networks:
       - permonik
     ports:
@@ -79,7 +79,7 @@ services:
       #        limits:
       #          memory: '24M'
       #    volumes:
-      #      - ./permonik-shibboleth-sp/dev-config/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml:ro
+    #      - ./permonik-shibboleth-sp/dev-config/shibboleth2.xml:/etc/shibboleth/shibboleth2.xml:ro
     #      - ./permonik-shibboleth-sp/dev-config/attribute-map.xml:/etc/shibboleth/attribute-map.xml:ro
     #      - ./permonik-shibboleth-sp/dev-config/idp-metadata.xml:/etc/shibboleth/idp-metadata.xml:ro
     ##      - ./permonik-shibboleth-sp/dev-config/sp-cert.pem:/etc/shibboleth/sp-cert.pem:ro

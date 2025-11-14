@@ -131,8 +131,8 @@
     <field name="editionId" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="mutationId" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="mutationMark" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
-    <field name="mutationMarkNumber" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
-    <field name="mutationMarkNumberDescription" type="string" indexed="true" stored="true" required="false"
+    <field name="mutationMarkType" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+    <field name="mutationMarkDescription" type="string" indexed="true" stored="true" required="false"
            multiValued="false"/>
     <field name="publicationDate" type="rdate" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="publicationDateString" type="string" indexed="true" stored="true" required="true" multiValued="false"/>

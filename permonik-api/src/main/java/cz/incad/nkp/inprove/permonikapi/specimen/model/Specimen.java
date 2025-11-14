@@ -1,4 +1,4 @@
-package cz.incad.nkp.inprove.permonikapi.specimen;
+package cz.incad.nkp.inprove.permonikapi.specimen.model;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
 import lombok.*;
@@ -48,6 +48,10 @@ public class Specimen extends Auditable {
     @Field
     private String mutationMark;
     @Field
+    private String mutationMarkType;
+    @Field
+    private String mutationMarkDescription;
+    @Field
     private String publicationDate;
     @Field
     private String publicationDateString;
@@ -59,12 +63,6 @@ public class Specimen extends Auditable {
     private Integer pagesCount;
     @Field
     private Boolean isAttachment;
-
-    // two related fields
-    @Field
-    private String mutationMarkNumber;
-    @Field
-    private String mutationMarkNumberDescription;
 
     // Custom getter for `note`
     public String getNote() {
@@ -86,14 +84,14 @@ public class Specimen extends Auditable {
         return mutationMark == null ? "" : mutationMark;
     }
 
-    // Custom getter for `mutationMarkNumber`
-    public String getMutationMarkNumber() {
-        return mutationMarkNumber == null ? "" : mutationMarkNumber;
+    // Custom getter for `mutationMarkType`
+    public String getMutationMarkType() {
+        return mutationMarkType == null ? "" : mutationMarkType;
     }
 
-    // Custom getter for `mutationMarkNumber`
-    public String getMutationMarkNumberDescription() {
-        return mutationMarkNumberDescription == null ? "" : mutationMarkNumberDescription;
+    // Custom getter for `mutationMarkDescription`
+    public String getMutationMarkDescription() {
+        return mutationMarkDescription == null ? "" : mutationMarkDescription;
     }
 
     // Custom getter for `number`

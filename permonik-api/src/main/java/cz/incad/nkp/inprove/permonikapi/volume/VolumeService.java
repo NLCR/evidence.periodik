@@ -2,9 +2,9 @@ package cz.incad.nkp.inprove.permonikapi.volume;
 
 import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitle;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitleService;
-import cz.incad.nkp.inprove.permonikapi.specimen.Specimen;
 import cz.incad.nkp.inprove.permonikapi.specimen.SpecimenService;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.SpecimensForVolumeOverviewStatsDTO;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.Specimen;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.EditableVolumeWithSpecimensDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDetailDTO;

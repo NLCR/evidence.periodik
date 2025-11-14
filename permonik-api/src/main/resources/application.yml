@@ -9,6 +9,11 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: 6379
 
+#sentry:
+#  dsn: ${SENTRY_DSN}
+#  send-default-pii: true
+#  exception-resolver-order: -2147483647
+
 solr:
   host: ${SOLR_URL:http://localhost:8983/solr}
 
