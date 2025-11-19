@@ -2,6 +2,7 @@ import { TEdition } from '../schema/edition'
 import { copyAuditable } from '../schema/common'
 import { v4 as uuid } from 'uuid'
 import { TEditableVolume, TVolume } from '../schema/volume'
+import { repairMutationMark } from './mutationMark'
 
 export const repairVolume = (
   volume: TEditableVolume,
@@ -34,9 +35,6 @@ export const repairVolume = (
     signature: volume.signature?.trim() ?? '',
     ownerId: volume.ownerId ?? '',
     year: Number(volume.year) ?? -1,
-    mutationMark: volume.mutationMark?.trim() ?? '',
-    mutationMarkNumber: volume.mutationMarkNumber?.trim() ?? '',
-    mutationMarkNumberDescription:
-      volume.mutationMarkNumberDescription?.trim() ?? '',
+    mutationMark: repairMutationMark(volume.mutationMark),
   }
 }

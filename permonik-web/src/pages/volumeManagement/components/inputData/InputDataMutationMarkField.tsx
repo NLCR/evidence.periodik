@@ -6,27 +6,29 @@ import MutationMarkSelectorModal from '../editCells/MutationMarkSelectorModal'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import {
+  getMutationMarkCompoundValue,
+  TMutationMark,
+} from '../../../../utils/mutationMark'
 
 type FieldProps = {
   disabled?: boolean
+  avoidInternal?: boolean
 }
 
-const Field = ({ disabled = false, ...props }: FieldProps & TextFieldProps) => {
+const Field = ({
+  disabled = false,
+  avoidInternal = false,
+  ...props
+}: FieldProps & TextFieldProps) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
   const volumeState = useVolumeManagementStore((state) => state.volumeState)
   const { setValue, watch } = useFormContext()
 
-  const mutationMark = watch('mutationMark_internal')
-  const mutationMarkNumber = watch('mutationMarkNumber_internal')
-  const mutationMarkNumberDescription = watch(
-    'mutationMarkNumberDescription_internal'
-  )
+  const fieldName = avoidInternal ? 'mutationMark' : 'mutationMark_internal'
 
-  const value =
-    mutationMark ||
-    (mutationMarkNumber
-      ? `${mutationMarkNumber} (${mutationMarkNumberDescription})`
-      : undefined)
+  const mutationMark = watch(fieldName)
+  const value = getMutationMarkCompoundValue(mutationMark)
 
   return (
     <>
@@ -44,23 +46,16 @@ const Field = ({ disabled = false, ...props }: FieldProps & TextFieldProps) => {
       />
 
       <MutationMarkSelectorModal
-        row={volumeState}
+        row={{
+          ...volumeState,
+          mutationMark: mutationMark ?? volumeState.mutationMark,
+        }}
         open={isModalOpened}
         onClose={() => setIsModalOpened(false)}
         onSave={(data) => {
-          setValue('mutationMark_internal', data.mutationMark, {
+          setValue(fieldName, data.mutationMark, {
             shouldDirty: true,
           })
-          setValue('mutationMarkNumber_internal', data.mutationMarkNumber, {
-            shouldDirty: true,
-          })
-          setValue(
-            'mutationMarkNumberDescription_internal',
-            data.mutationMarkNumberDescription,
-            {
-              shouldDirty: true,
-            }
-          )
         }}
       />
     </>
@@ -74,12 +69,6 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
   const setMutationMark = useVolumeManagementStore(
     (state) => state.volumeActions.setMutationMark
   )
-  const setMutationMarkNumber = useVolumeManagementStore(
-    (state) => state.volumeActions.setMutationMarkNumber
-  )
-  const setMutationMarkNumberDescription = useVolumeManagementStore(
-    (state) => state.volumeActions.setMutationMarkNumberDescription
-  )
   const { t } = useTranslation()
 
   const specimensState = useVolumeManagementStore(
@@ -89,51 +78,25 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
     (state) => state.specimensActions.setSpecimensState
   )
 
-  const mutationMark = watch('mutationMark')
-  const mutationMarkNumber = watch('mutationMarkNumber')
-  const mutationMarkNumberDescription = watch('mutationMarkNumberDescription')
-
-  const value =
-    mutationMark ||
-    (mutationMarkNumber
-      ? `${mutationMarkNumber} (${mutationMarkNumberDescription})`
-      : undefined)
+  const mutationMark = watch('mutationMark') as TMutationMark
+  const value = getMutationMarkCompoundValue(mutationMark)
 
   return locked ? (
     <LockedInputDataItem
       name={'mutationMark'}
-      value={value}
+      value={value ?? (props.defaultValue as string) ?? ''}
       editableData={{
-        DialogContent: (
-          <Field
-            defaultValue={value}
-            disabled={disabled || props.disabled}
-            {...props}
-          />
-        ),
+        DialogContent: <Field defaultValue={value} {...props} />,
         fieldName: t('specimens_overview.mutation_mark'),
         saveChange: () => {
           const mutationMark = getValues('mutationMark_internal')
-          const mutationMarkNumber = getValues('mutationMarkNumber_internal')
-          const mutationMarkNumberDescription = getValues(
-            'mutationMarkNumberDescription_internal'
-          )
-          setValue('mutationMark', mutationMark)
-          setValue('mutationMarkNumber', mutationMarkNumber)
-          setValue(
-            'mutationMarkNumberDescription',
-            mutationMarkNumberDescription
-          )
 
+          setValue('mutationMark', mutationMark)
           setMutationMark(mutationMark)
-          setMutationMarkNumber(mutationMarkNumber)
-          setMutationMarkNumberDescription(mutationMarkNumberDescription)
           setSpecimensState(
             specimensState.map((specimen) => ({
               ...specimen,
               mutationMark,
-              mutationMarkNumber,
-              mutationMarkNumberDescription,
             })),
             true
           )
@@ -143,6 +106,7 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
   ) : (
     <Field
       defaultValue={value}
+      avoidInternal
       disabled={disabled || props.disabled}
       {...props}
     />

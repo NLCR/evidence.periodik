@@ -1,9 +1,6 @@
 import LockedInputDataItem from './LockedInputDataItem'
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
-import { useState } from 'react'
-import MutationMarkSelectorModal from '../editCells/MutationMarkSelectorModal'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { Controller, useFormContext } from 'react-hook-form'
 
 type FieldProps = {
@@ -60,7 +57,6 @@ const Field = ({
 
 type Props = {
   name: string
-  isMutationMarkInputTextField?: boolean
   editableData?: { fieldName: string; saveChange: (value: string) => void }
   onChangeCallback?: (value: string) => void
 }

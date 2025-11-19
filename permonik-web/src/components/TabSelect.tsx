@@ -63,8 +63,10 @@ export function TabSelect<T>({
               },
             }}
             onClick={() => {
-              setSelectedItem(option.value)
-              onSelectCallback?.(option.value)
+              if (option.value !== selectedItem) {
+                setSelectedItem(option.value)
+                onSelectCallback?.(option.value)
+              }
             }}
           >
             {option.label}

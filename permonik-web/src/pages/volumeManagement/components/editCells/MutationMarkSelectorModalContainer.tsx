@@ -24,7 +24,7 @@ const MutationMarkSelectorModalContainer = (
           display: 'flex',
         }}
       >
-        {row.mutationMark || row.mutationMarkNumber}
+        {row.mutationMark.mark}
         <IconButton color="primary" onClick={() => setModalOpened(true)}>
           <EditIcon />
         </IconButton>

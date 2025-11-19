@@ -9,11 +9,14 @@ import ModalContainer from '../../../../components/ModalContainer'
 import { TabSelect } from '../../../../components/TabSelect'
 import Checkbox from '@mui/material/Checkbox'
 import { toast } from 'react-toastify'
+import {
+  emptyMutationMark,
+  TMutationMark,
+  TMutationMarkType,
+} from '../../../../utils/mutationMark'
 
 const marks = ['●', '○', '■', '□', '★', '☆', '△', '▲', '✶'] as const
 type TMarks = (typeof marks)[number]
-
-type TTab = 'symbols' | 'number'
 
 interface MutationMarkSelectorModalProps {
   row: TEditableSpecimen | TEditableVolume
@@ -29,22 +32,15 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
   onSave,
 }) => {
   const { t } = useTranslation()
-  const [inputMarks, setInputMarks] = useState(row.mutationMark ?? '')
-  const [inputNumber, setInputNumber] = useState<string>(
-    row.mutationMarkNumber ?? ''
+  const [inputMarkState, setInputMarkState] = useState<TMutationMark>(
+    row.mutationMark ?? emptyMutationMark
   )
-  const [inputNumberDescription, setInputNumberDescription] = useState<string>(
-    row.mutationMarkNumberDescription ?? ''
-  )
-  const [inputNumberImpossible, setInputNumberImpossible] =
-    useState<boolean>(false)
-
-  const [inputMode, setInputMode] = useState<TTab>(
-    row.mutationMarkNumber ? 'number' : 'symbols'
-  )
+  const [inputNumberImpossible, setInputNumberImpossible] = useState(false)
 
   useEffect(() => {
-    if (open) setInputMarks(row.mutationMark)
+    if (open) {
+      setInputMarkState(row.mutationMark ?? emptyMutationMark)
+    }
   }, [open, row.mutationMark])
 
   const doClose = () => {
@@ -55,16 +51,17 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
   const handleSave = () => {
     onSave({
       ...row,
-      mutationMark: inputMarks,
-      mutationMarkNumber: inputNumber,
-      mutationMarkNumberDescription: inputNumberDescription,
+      mutationMark: inputMarkState,
     })
     doClose()
   }
 
   const handleSymbolSelect = (symbol: TMarks) => {
     // if (inputMarks === '' || inputMarks.includes(symbol)) {
-    setInputMarks((prevState) => prevState + symbol)
+    setInputMarkState((prevState) => ({
+      ...prevState,
+      mark: prevState.mark + symbol,
+    }))
     // }
   }
 
@@ -74,16 +71,16 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
       // @ts-ignore
       marks.includes(value) ||
       value === '' ||
-      value.length < inputMarks.length
+      (inputMarkState.mark && value.length < inputMarkState.mark.length)
     )
-      setInputMarks(value.trim())
+      setInputMarkState((prev) => ({ ...prev, mark: value.trim() }))
   }
 
   const handleInputNumberChange = (value: string) => {
     console.log(value)
 
     if (/^\d*$/.test(value)) {
-      setInputNumber(value)
+      setInputMarkState((prev) => ({ ...prev, mark: value }))
     }
   }
 
@@ -98,8 +95,8 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
       acceptButton={{
         callback: () => {
           if (
-            inputMode === 'number' &&
-            !inputNumber &&
+            inputMarkState.type === 'NUMBER' &&
+            !inputMarkState.mark &&
             !inputNumberImpossible
           ) {
             toast(t('volume_overview.mutation_mark_number_error'), {
@@ -112,31 +109,31 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
       }}
       style="fitted"
     >
-      <TabSelect<TTab>
+      <TabSelect<TMutationMarkType>
         options={[
           {
             label: t('volume_overview.mutation_mark_tab_symbol'),
-            value: 'symbols',
+            value: 'MARK',
           },
           {
             label: t('volume_overview.mutation_mark_tab_number'),
-            value: 'number',
+            value: 'NUMBER',
           },
         ]}
-        selectedItem={inputMode}
-        setSelectedItem={(value) => setInputMode(value)}
+        selectedItem={inputMarkState.type ?? 'MARK'}
+        setSelectedItem={(value) =>
+          setInputMarkState((prev) => ({ ...prev, type: value }))
+        }
         onSelectCallback={(value) => {
-          // delete respective values
-          if (value === 'number') {
-            setInputMarks('')
-          } else {
-            setInputNumber('')
-            setInputNumberDescription('')
-          }
+          setInputMarkState({
+            type: value,
+            mark: '',
+            description: '',
+          })
         }}
       />
       <div style={{ height: 32 }} />
-      {inputMode === 'symbols' && (
+      {inputMarkState.type === 'MARK' && (
         <Box
           sx={{
             display: 'flex',
@@ -144,7 +141,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
           }}
         >
           <TextField
-            value={inputMarks}
+            value={inputMarkState.mark}
             onChange={(e) => handleInputChange(e.target.value)}
           />
           <Box sx={{ maxWidth: 400 }}>
@@ -163,7 +160,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
           </Box>
         </Box>
       )}
-      {inputMode === 'number' && (
+      {inputMarkState.type === 'NUMBER' && (
         <Box
           sx={{
             display: 'flex',
@@ -173,7 +170,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
         >
           <TextField
             label={t('volume_overview.mutation_mark_label_number_decription')}
-            value={inputNumber}
+            value={inputMarkState.mark}
             disabled={inputNumberImpossible}
             onChange={(e) => handleInputNumberChange(e.target.value)}
           />
@@ -187,12 +184,12 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
           >
             <Checkbox
               checked={inputNumberImpossible}
-              disabled={!!inputNumber && inputNumber !== '?'}
+              disabled={!!inputMarkState.mark && inputMarkState.mark !== '?'}
               onChange={(e) => {
                 if (e.target.checked) {
-                  setInputNumber('?')
+                  setInputMarkState((prev) => ({ ...prev, mark: '?' }))
                 } else {
-                  setInputNumber('')
+                  setInputMarkState((prev) => ({ ...prev, mark: '' }))
                 }
                 setInputNumberImpossible(e.target.checked)
               }}
@@ -205,8 +202,13 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
           </Box>
           <TextField
             label={t('volume_overview.mutation_mark_label_number')}
-            value={inputNumberDescription}
-            onChange={(e) => setInputNumberDescription(e.target.value)}
+            value={inputMarkState.description}
+            onChange={(e) =>
+              setInputMarkState((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
+            }
           />
         </Box>
       )}

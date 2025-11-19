@@ -8,7 +8,7 @@ import InputDataMutationMarkField from './InputDataMutationMarkField'
 const InputDataMutationMark = () => {
   const { watch } = useFormContext()
   const isDuplicated = location.href.includes('duplicated')
-  const isEmpty = !watch('mutationMark') && !watch('mutationMarkNumber')
+  const isEmpty = !watch('mutationMark.mark')
   const { t } = useTranslation()
 
   return (

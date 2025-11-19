@@ -21,6 +21,7 @@ import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import CollapsableSidebar from '../../../components/CollapsableSidebar'
 import theme from '../../../theme'
+import { getMutationMarkLabel } from '../../../utils/mutationMark'
 
 interface InputDataProps {
   volume: TVolumeDetail
@@ -123,10 +124,7 @@ const InputData: FC<InputDataProps> = ({
               <TableRow>
                 <TableCell>{t('specimens_overview.mutation_mark')}</TableCell>
                 <TableCell>
-                  {volume.volume.mutationMark ||
-                    (volume.volume.mutationMarkNumber
-                      ? `${volume.volume.mutationMarkNumber} (${volume.volume.mutationMarkNumberDescription})`
-                      : '-')}
+                  {getMutationMarkLabel(volume.volume.mutationMark)}
                 </TableCell>
               </TableRow>
               <TableRow>

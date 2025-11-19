@@ -92,13 +92,9 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
         sortBy(
           groupBy(
             found.specimens,
-            (obj) =>
-              `${obj.mutationId}_${obj.mutationMark || obj.mutationMarkNumber}_${obj.number}`
+            (obj) => `${obj.mutationId}_${obj.mutationMark.mark}_${obj.number}`
           ),
-          (obj) =>
-            obj.map(
-              (o) => `${o.mutationId}_${o.mutationMark || o.mutationMarkNumber}`
-            )
+          (obj) => obj.map((o) => `${o.mutationId}_${o.mutationMark.mark}`)
         )
       )
       specimensInDay.push({
@@ -213,9 +209,8 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
                       mutations?.find((m) => m.id === firstInRow.mutationId)
                         ?.name[languageCode]
                     }{' '}
-                    {(firstInRow.mutationMark || firstInRow.mutationMarkNumber)
-                      .length
-                      ? firstInRow.mutationMark || firstInRow.mutationMarkNumber
+                    {firstInRow.mutationMark.mark?.length
+                      ? firstInRow.mutationMark.mark
                       : t('specimens_overview.without_mark')}
                   </Typography>
                   <Box

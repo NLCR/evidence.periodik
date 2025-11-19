@@ -86,9 +86,6 @@ export const useGenerateVolume = (
               publicationDate: dt,
               publicationDateString: dayjs(dt).format('YYYYMMDD'),
               mutationMark: repairedVolume.mutationMark,
-              mutationMarkNumber: repairedVolume.mutationMarkNumber,
-              mutationMarkNumberDescription:
-                repairedVolume.mutationMarkNumberDescription,
               mutationId: repairedVolume.mutationId,
               numExists: true,
               pagesCount: p.pagesCount,
@@ -126,9 +123,6 @@ export const useGenerateVolume = (
             publicationDate: dt,
             publicationDateString: dayjs(dt).format('YYYYMMDD'),
             mutationMark: repairedVolume.mutationMark,
-            mutationMarkNumber: repairedVolume.mutationMarkNumber,
-            mutationMarkNumberDescription:
-              repairedVolume.mutationMarkNumberDescription,
             mutationId: repairedVolume.mutationId,
             numExists: false,
             editionId: defaultEdition?.id,

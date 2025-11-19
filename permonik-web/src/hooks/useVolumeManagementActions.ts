@@ -21,6 +21,7 @@ import i18next from '../i18next'
 import { v4 as uuid } from 'uuid'
 import { RefObject } from 'react'
 import { GridApiPro } from '@mui/x-data-grid-pro/models'
+import { emptyMutationMark } from '../utils/mutationMark'
 
 const useVolumeManagementActions = (
   apiRef: RefObject<GridApiPro | null>,
@@ -239,9 +240,7 @@ const useVolumeManagementActions = (
         signature: repairedVolume.signature,
         ownerId: repairedVolume.ownerId,
         year: repairedVolume.year,
-        mutationMark: '',
-        mutationMarkNumber: '',
-        mutationMarkNumberDescription: '',
+        mutationMark: emptyMutationMark,
       }
       const duplicatedSpecimens: TEditableSpecimen[] = repairedSpecimens.map(
         (specimen) => ({
@@ -261,8 +260,6 @@ const useVolumeManagementActions = (
           editionId: specimen.editionId,
           mutationId: specimen.mutationId,
           mutationMark: specimen.mutationMark,
-          mutationMarkNumber: specimen.mutationMark,
-          mutationMarkNumberDescription: specimen.mutationMark,
           publicationDate: specimen.publicationDate,
           publicationDateString: specimen.publicationDateString,
           number: specimen.number,

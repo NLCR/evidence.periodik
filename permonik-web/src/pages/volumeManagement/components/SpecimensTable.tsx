@@ -7,7 +7,6 @@ import {
   GridRenderCellParams,
   DataGridPro,
   GridColumnHeaderParams,
-  useGridApiRef,
   GridApiPro,
   GridAlignment,
 } from '@mui/x-data-grid-pro'
@@ -44,7 +43,6 @@ import TableHeader from './TableHeader'
 import Tooltip from '@mui/material/Tooltip'
 import DuplicationEditCell from './editCells/DuplicationEditCell'
 import DeletionEditCell from './editCells/DeletionEditCell'
-// import { useShallow } from 'zustand/shallow'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
@@ -581,13 +579,11 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         const { row } = params
         return (
           <Tooltip
-            title={row.mutationMark || row.mutationMarkNumberDescription}
+            title={row.mutationMark.description ?? row.mutationMark.mark}
           >
-            {renderValue(
-              row.mutationMark || row.mutationMarkNumber,
-              row.numExists,
-              !disabled
-            ) ?? <div />}
+            {renderValue(row.mutationMark.mark, row.numExists, !disabled) ?? (
+              <div />
+            )}
           </Tooltip>
         )
       },
