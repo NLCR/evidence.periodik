@@ -1,4 +1,4 @@
-package cz.incad.nkp.inprove.permonikapi.specimen.mutationMark;
+package cz.incad.nkp.inprove.permonikapi.common.mutationMark;
 
 import lombok.*;
 

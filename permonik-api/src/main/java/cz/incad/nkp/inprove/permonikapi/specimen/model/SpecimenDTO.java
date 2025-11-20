@@ -1,7 +1,7 @@
 package cz.incad.nkp.inprove.permonikapi.specimen.model;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
-import cz.incad.nkp.inprove.permonikapi.specimen.mutationMark.MutationMark;
+import cz.incad.nkp.inprove.permonikapi.common.mutationMark.MutationMark;
 import lombok.*;
 
 import java.util.List;

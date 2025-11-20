@@ -128,8 +128,8 @@
     <field name="ownerId" type="string" indexed="false" stored="true" required="true" multiValued="false"/>
     <field name="year" type="pint" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="mutationMark" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
-    <field name="mutationMarkNumber" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
-    <field name="mutationMarkNumberDescription" type="string" indexed="true" stored="true" required="false"
+    <field name="mutationMarkType" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+    <field name="mutationMarkDescription" type="string" indexed="true" stored="true" required="false"
            multiValued="false"/>
     <field name="created" type="rdate" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="createdBy" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
