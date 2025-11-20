@@ -146,7 +146,7 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
         >
           {t('specimens_overview.date')}
         </Typography>
-        {view === 'calendar' ? (
+        {view === 'CALENDAR' ? (
           <Box>
             {dayjs(calendarDate).isValid() ? (
               <DateCalendar

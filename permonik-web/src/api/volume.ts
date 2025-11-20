@@ -38,11 +38,7 @@ export const useCreateVolumeWithSpecimensMutation = () =>
       return api()
         .post(`volume`, {
           json: {
-            volume: {
-              ...data.volume,
-              // JSON.stringify periodicity, because solr stores periodicity as String
-              periodicity: JSON.stringify(data.volume.periodicity),
-            },
+            volume: data.volume,
             specimens: data.specimens,
           },
         })
@@ -56,11 +52,7 @@ export const useUpdateVolumeWithSpecimensMutation = () =>
       return api()
         .put(`volume/${data.volume.id}`, {
           json: {
-            volume: {
-              ...data.volume,
-              // JSON.stringify periodicity, because solr stores periodicity as String
-              periodicity: JSON.stringify(data.volume.periodicity),
-            },
+            volume: data.volume,
             specimens: data.specimens,
           },
         })
@@ -79,11 +71,7 @@ export const useUpdateOvergeneratedVolumeWithSpecimensMutation = () =>
       return api()
         .put(`volume/${data.volume.id}/overgenerated`, {
           json: {
-            volume: {
-              ...data.volume,
-              // JSON.stringify periodicity, because solr stores periodicity as String
-              periodicity: JSON.stringify(data.volume.periodicity),
-            },
+            volume: data.volume,
             specimens: data.specimens,
           },
         })

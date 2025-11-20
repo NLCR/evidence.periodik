@@ -11,7 +11,7 @@ const NumberOptionsTabMultiSelect = () => {
     (state) => state.setSpecimenStates
   )
 
-  return view === 'table' ? (
+  return view === 'TABLE' ? (
     <FormTabMultiSelect
       selectedItems={specimenStates}
       setSelectedItems={(values) =>

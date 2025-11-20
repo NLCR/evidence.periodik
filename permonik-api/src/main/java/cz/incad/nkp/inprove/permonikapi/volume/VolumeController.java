@@ -47,7 +47,7 @@ public class VolumeController {
 
     @Operation(summary = "Gets managed volume detail with specimens by given id")
     @GetMapping("/{id}/detail")
-    public VolumeDetailDTO getMangedVolumeDetailById(@PathVariable String id) throws SolrServerException, IOException {
+    public VolumeDetailDTO getManagedVolumeDetailById(@PathVariable String id) throws SolrServerException, IOException {
         return volumeService.getVolumeDetailById(id, false);
     }
 

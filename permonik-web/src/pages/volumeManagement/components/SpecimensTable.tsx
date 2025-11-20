@@ -7,7 +7,6 @@ import {
   GridRenderCellParams,
   DataGridPro,
   GridColumnHeaderParams,
-  useGridApiRef,
   GridApiPro,
   GridAlignment,
 } from '@mui/x-data-grid-pro'
@@ -44,7 +43,6 @@ import TableHeader from './TableHeader'
 import Tooltip from '@mui/material/Tooltip'
 import DuplicationEditCell from './editCells/DuplicationEditCell'
 import DeletionEditCell from './editCells/DeletionEditCell'
-import { useShallow } from 'zustand/shallow'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
@@ -217,15 +215,15 @@ const renderDeletionEditCell = (
 }
 
 interface TableProps {
+  apiRef: RefObject<GridApiPro | null>
   mutations: TMutation[]
   editions: TEdition[]
 }
 
-const Table: FC<TableProps> = ({ mutations, editions }) => {
+const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
   const { languageCode } = useLanguageCode()
   const { MuiTableLocale } = useMuiTableLang()
   const { t } = useTranslation()
-  const apiRef = useGridApiRef()
   const { disabled, locked: isInputDataLocked } =
     useInputDataEditabilityContext()
 
@@ -233,9 +231,9 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
 
   const scrolledToRow = useRef<boolean>(false)
 
-  const stateHasUnsavedData = useVolumeManagementStore(
-    useShallow((state) => state.stateHasUnsavedData)
-  )
+  // const stateHasUnsavedData = useVolumeManagementStore(
+  //   useShallow((state) => state.stateHasUnsavedData)
+  // )
   const specimenActions = useVolumeManagementStore(
     (state) => state.specimensActions
   )
@@ -579,7 +577,15 @@ const Table: FC<TableProps> = ({ mutations, editions }) => {
       headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
         const { row } = params
-        return renderValue(row.mutationMark, row.numExists, !disabled)
+        return (
+          <Tooltip
+            title={row.mutationMark.description ?? row.mutationMark.mark}
+          >
+            {renderValue(row.mutationMark.mark, row.numExists, !disabled) ?? (
+              <div />
+            )}
+          </Tooltip>
+        )
       },
       renderEditCell: renderMutationMarkEditCell,
     },

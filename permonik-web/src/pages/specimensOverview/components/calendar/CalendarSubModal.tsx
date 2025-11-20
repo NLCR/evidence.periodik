@@ -3,10 +3,11 @@ import React, { Dispatch, SetStateAction } from 'react'
 import ModalContainer from '../../../../components/ModalContainer'
 import VolumeStatsModalContent from '../../../../components/VolumeStatsModalContent'
 import { generateVolumeUrlWithParams } from '../../../../utils/generateVolumeUrlWithParams'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { TSpecimen } from '../../../../schema/specimen'
 import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
+import { useMeQuery } from '../../../../api/user'
 
 type Props = {
   subModalData: TSpecimen | null
@@ -15,9 +16,9 @@ type Props = {
 
 const CalendarSubModal = ({ setSubModalData, subModalData }: Props) => {
   const navigate = useNavigate()
-  const [searchParams, _] = useSearchParams()
   const { i18n } = useTranslation()
   const { metaTitleId } = useParams()
+  const { data: me } = useMeQuery()
 
   return (
     <ModalContainer
@@ -51,22 +52,24 @@ const CalendarSubModal = ({ setSubModalData, subModalData }: Props) => {
       header={`${t('specimens_overview.volume_overview_modal_link')} ${subModalData?.barCode}`}
     >
       <VolumeStatsModalContent volumeId={subModalData?.volumeId} />
-      <Button
-        variant="contained"
-        fullWidth
-        onClick={() => {
-          navigate(
-            generateVolumeUrlWithParams(
-              `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
-              metaTitleId || '',
-              undefined,
-              subModalData?.volumeId
+      {me?.id && (
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={() => {
+            navigate(
+              generateVolumeUrlWithParams(
+                `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
+                metaTitleId || '',
+                undefined,
+                subModalData?.volumeId
+              )
             )
-          )
-        }}
-      >
-        {t('administration.duplicate_volume')}
-      </Button>
+          }}
+        >
+          {t('administration.duplicate_volume')}
+        </Button>
+      )}
     </ModalContainer>
   )
 }

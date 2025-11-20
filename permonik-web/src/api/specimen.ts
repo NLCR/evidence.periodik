@@ -27,7 +27,16 @@ export const useSpecimenFacetsQuery = (metaTitleId?: string) => {
   const specimenStates = useSpecimensOverviewStore(
     (state) => state.specimenStates
   )
+  const calendarDate = useSpecimensOverviewStore((state) => state.calendarDate)
   const view = useSpecimensOverviewStore((state) => state.view)
+
+  const dayJsDate = dayjs(calendarDate)
+
+  const startOfMonth = dayJsDate.startOf('month')
+  const endOfMonth = dayJsDate.endOf('month')
+
+  const startOfMonthUTC = `${startOfMonth.year()}-${String(startOfMonth.month() + 1).padStart(2, '0')}-01T00:00:00.000Z`
+  const endOfMonthUTC = `${endOfMonth.year()}-${String(endOfMonth.month() + 1).padStart(2, '0')}-${String(endOfMonth.date()).padStart(2, '0')}T23:59:59.999Z`
 
   return useQuery({
     queryKey: [
@@ -35,6 +44,7 @@ export const useSpecimenFacetsQuery = (metaTitleId?: string) => {
       'facets',
       metaTitleId,
       params,
+      calendarDate,
       barCodeInput,
       specimenStates,
       view,
@@ -53,6 +63,8 @@ export const useSpecimenFacetsQuery = (metaTitleId?: string) => {
             id: state,
             active: specimenStates.includes(state as TSpecimenState),
           })),
+          calendarDateStart: startOfMonthUTC,
+          calendarDateEnd: endOfMonthUTC,
         })
       )
       formData.set('view', view)
@@ -108,7 +120,7 @@ export const useSpecimenListQuery = (metaTitleId?: string) => {
     ],
     queryFn: () => {
       const formData = new FormData()
-      if (view === 'table') {
+      if (view === 'TABLE') {
         formData.set(
           'offset',
           (pagination.pageIndex > 0

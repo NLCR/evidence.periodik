@@ -34,8 +34,8 @@ const InputDataDatePicker = ({
         return (
           <DatePicker
             sx={{
-              maxWidth: '200px',
               width: '100%',
+              marginRight: -1,
             }}
             disabled={disabled || props.disabled}
             {...props}

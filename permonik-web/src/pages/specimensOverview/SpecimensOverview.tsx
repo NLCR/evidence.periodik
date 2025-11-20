@@ -149,14 +149,14 @@ const SpecimensOverview = () => {
             >
               <Tab
                 label={isMobile ? null : t('specimens_overview.calendar')}
-                value="calendar"
+                value="CALENDAR"
                 icon={<CalendarMonthIcon />}
                 iconPosition="start"
               />
               <Tab
                 label={isMobile ? null : t('specimens_overview.table')}
                 // disabled
-                value="table"
+                value="TABLE"
                 icon={<TableRowsIcon />}
                 iconPosition="start"
               />
@@ -172,20 +172,23 @@ const SpecimensOverview = () => {
                 alignItems: 'center',
               }}
             >
-              {view === 'calendar' ? (
+              {view === 'CALENDAR' ? (
                 <CalendarToolbar metaTitle={metaTitle} />
               ) : null}
             </Box>
             <SynchronizeYearsSwitch />
           </Box>
-          {view === 'calendar' && (
+          {view === 'CALENDAR' && (
             <IconButton onClick={() => setModalOpened(true)}>
               <HelpOutlineIcon />
             </IconButton>
           )}
         </Box>
-        {view === 'calendar' ? (
-          <Calendar metaTitle={metaTitle} />
+        {view === 'CALENDAR' ? (
+          <Calendar
+            metaTitle={metaTitle}
+            switchToTable={() => setView('TABLE')}
+          />
         ) : (
           <Suspense>
             <Table metaTitle={metaTitle} />

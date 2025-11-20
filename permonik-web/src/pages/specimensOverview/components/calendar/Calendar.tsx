@@ -19,9 +19,11 @@ import { useLanguageCode } from '../../../../hooks/useLanguageCode'
 import { TMainModalData } from './models'
 import CalendarMainModal from './mainModal/CalendarMainModal'
 import theme from '../../../../theme'
+import Button from '@mui/material/Button'
 
 type TProps = {
   metaTitle: TMetaTitle
+  switchToTable: () => void
 }
 
 type TSpecimensDay = {
@@ -44,7 +46,7 @@ const getFirstMondayOfMonth = (date: Date | null) => {
   return firstMonday
 }
 
-const Calendar: FC<TProps> = ({ metaTitle }) => {
+const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
   const { t } = useTranslation()
   const calendarDate = useSpecimensOverviewStore((state) => state.calendarDate)
   const { data: mutations } = useMutationListQuery()
@@ -90,9 +92,9 @@ const Calendar: FC<TProps> = ({ metaTitle }) => {
         sortBy(
           groupBy(
             found.specimens,
-            (obj) => `${obj.mutationId}_${obj.mutationMark}_${obj.number}`
+            (obj) => `${obj.mutationId}_${obj.mutationMark.mark}_${obj.number}`
           ),
-          (obj) => obj.map((o) => `${o.mutationId}_${o.mutationMark}`)
+          (obj) => obj.map((o) => `${o.mutationId}_${o.mutationMark.mark}`)
         )
       )
       specimensInDay.push({
@@ -123,7 +125,16 @@ const Calendar: FC<TProps> = ({ metaTitle }) => {
 
   if (!specimensInDay.some((sid) => sid.specimens.length)) {
     return (
-      <ShowInfoMessage message={t('specimens_overview.specimens_not_found')} />
+      <>
+        <ShowInfoMessage
+          message={t('specimens_overview.specimens_not_found')}
+        />
+        <Box justifyContent="center" display="flex">
+          <Button onClick={switchToTable} variant="contained">
+            {t('specimens_overview.switch_to_table')}
+          </Button>
+        </Box>
+      </>
     )
   }
 
@@ -198,8 +209,8 @@ const Calendar: FC<TProps> = ({ metaTitle }) => {
                       mutations?.find((m) => m.id === firstInRow.mutationId)
                         ?.name[languageCode]
                     }{' '}
-                    {firstInRow.mutationMark.length
-                      ? firstInRow.mutationMark
+                    {firstInRow.mutationMark.mark?.length
+                      ? firstInRow.mutationMark.mark
                       : t('specimens_overview.without_mark')}
                   </Typography>
                   <Box

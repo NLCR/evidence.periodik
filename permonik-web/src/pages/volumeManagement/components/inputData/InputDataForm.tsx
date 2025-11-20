@@ -32,8 +32,8 @@ import InputDataBarCode from './InputDataBarCode'
 import InputDataSignature from './InputDataSignature'
 import { api } from '../../../../api'
 import { TSpecimen } from '../../../../schema/specimen'
-import { mapTintToColor } from './utils/tint'
 import InputDataOwner from './InputDataOwner'
+import { emptyMutationMark } from '../../../../utils/mutationMark'
 
 const InputDataForm = ({
   editions,
@@ -66,7 +66,7 @@ const InputDataForm = ({
     (state) => state.volumeActions.setVolumeState
   )
 
-  const isDuplicated = location.href.includes('duplicated')
+  // const isDuplicated = location.href.includes('duplicated')
 
   useEffect(() => {
     const preLoadDuplicateSource = async () => {
@@ -83,7 +83,7 @@ const InputDataForm = ({
           const newVolume = {
             ...volumeData.volume,
             barCode: '',
-            mutationMark: '',
+            mutationMark: emptyMutationMark,
             mutationId: '',
             ownerId: '',
             created: null,
@@ -99,6 +99,7 @@ const InputDataForm = ({
       }
     }
     preLoadDuplicateSource()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -108,7 +109,7 @@ const InputDataForm = ({
     if (duplicated) {
       // reset all applicable fields
       methods.setValue('barCode', '')
-      methods.setValue('mutationMark', '')
+      methods.setValue('mutationMark', emptyMutationMark)
       methods.setValue('created', null)
       methods.setValue('createdBy', null)
       methods.setValue('updated', null)
