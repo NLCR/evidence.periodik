@@ -39,6 +39,10 @@
     "owners": "Vlastníci",
     "no_meta_titles_found": "Neboli nájdené žiadne metatituly"
   },
+  "footer": {
+    "dedication": "Aplikácia PerMonik je vyvíjaná na základe inštitucionálnej podpory dlhodobého koncepčného rozvoja výskumnej organizácie Národná knižnica Českej republiky poskytovanej Ministerstvom kultúry",
+    "contact": "Kontakt: "
+  },
   "specimens_overview": {
     "meta_title_not_found": "Tento metatitul nebol nájdený",
     "specimens_not_found": "Pre zadané vyhľadávanie nie sú k dispozícii žiadne výsledky. Prosím, upravte parametre vyhľadávania",

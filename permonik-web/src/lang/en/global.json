@@ -39,6 +39,10 @@
     "owners": "Owners",
     "no_meta_titles_found": "No meta titles found"
   },
+  "footer": {
+    "dedication": "The PerMonik application is developed based on the institutional support for the long-term conceptual development of the research organization National Library of the Czech Republic provided by the Ministry of Culture",
+    "contact": "Contact: "
+  },
   "specimens_overview": {
     "meta_title_not_found": "This meta title was not found",
     "specimens_not_found": "No results can be displayed for the given search. Please adjust your search parameters",
