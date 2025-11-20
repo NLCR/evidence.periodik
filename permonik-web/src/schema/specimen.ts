@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { AuditableSchema } from './common'
+import { mutationMarkSchema } from '../utils/mutationMark'
 
 export const SpecimenDamageTypesSchema = z.enum([
   'OK',
@@ -44,7 +45,7 @@ export const SpecimenSchema = AuditableSchema.extend({
   subName: z.string(),
   editionId: z.string().length(36),
   mutationId: z.string().length(36),
-  mutationMark: z.string(),
+  mutationMark: mutationMarkSchema,
   publicationDate: z.string().min(1),
   publicationDateString: z.string().min(1),
   number: z.string(),

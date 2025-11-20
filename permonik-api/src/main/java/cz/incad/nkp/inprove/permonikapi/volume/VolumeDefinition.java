@@ -19,4 +19,6 @@ public interface VolumeDefinition {
     String OWNER_ID_FIELD = "ownerId";
     String YEAR_FIELD = "year";
     String MUTATION_MARK_FIELD = "mutationMark";
+    String MUTATION_MARK_TYPE_FIELD = "mutationMarkType";
+    String MUTATION_MARK_DESCRIPTION_FIELD = "mutationMarkDescription";
 }

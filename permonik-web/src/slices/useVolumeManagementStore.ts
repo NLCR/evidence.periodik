@@ -12,6 +12,7 @@ import { TEditableSpecimen } from '../schema/specimen'
 import { TEdition } from '../schema/edition'
 import { filterSpecimen } from '../utils/specimen'
 import clone from 'lodash/clone'
+import { emptyMutationMark, TMutationMark } from '../utils/mutationMark'
 
 const periodicityDays: TVolumePeriodicityDays[] = [
   'Monday',
@@ -53,7 +54,7 @@ export const initialState: TVariablesState = {
     note: '',
     ownerId: '',
     periodicity: initialPeriodicity,
-    mutationMark: '',
+    mutationMark: emptyMutationMark,
     showAttachmentsAtTheEnd: false,
     signature: '',
     year: '',
@@ -81,7 +82,7 @@ interface TState extends TVariablesState {
     setLoading: (value: boolean) => void
     setSubName: (value: string) => void
     setMutationId: (value: string) => void
-    setMutationMark: (value: string) => void
+    setMutationMark: (value: TMutationMark) => void
     setBarCode: (value: string) => void
     setSignature: (value: string) => void
     setYear: (value: string) => void

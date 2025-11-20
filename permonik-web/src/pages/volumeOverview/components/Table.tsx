@@ -13,6 +13,7 @@ import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
 import Tooltip from '@mui/material/Tooltip'
 import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
+import { getMutationMarkLabel } from '../../../utils/mutationMark'
 
 type TProps = {
   volume?: TVolumeDetail
@@ -257,7 +258,10 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
         width: 60,
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          return renderValue(row.mutationMark, row.numExists)
+          return renderValue(
+            getMutationMarkLabel(row.mutationMark),
+            row.numExists
+          )
         },
       },
       {

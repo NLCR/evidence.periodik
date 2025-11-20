@@ -9,6 +9,7 @@ import dayjs from 'dayjs'
 
 type Props = {
   name: string
+  value?: string
   editableData?: {
     DialogContent: ReactElement
     fieldName: string
@@ -23,10 +24,11 @@ const LockedInputDataItem = ({
   editableData = undefined,
   type = 'TEXT',
   selectOptions = undefined,
+  ...props
 }: Props) => {
   const { t } = useTranslation()
   const { getValues, watch } = useFormContext()
-  const value = watch(name)
+  const value = props.value ?? watch(name)
 
   if (type === 'SELECT' && !selectOptions) {
     throw new Error('Type SELECT must have selectOptions filled')
@@ -62,6 +64,7 @@ const LockedInputDataItem = ({
                   justifyContent: 'start',
                   flexDirection: 'column',
                   gap: 1,
+                  width: '100%',
                 }}
               >
                 {editableData.DialogContent}
