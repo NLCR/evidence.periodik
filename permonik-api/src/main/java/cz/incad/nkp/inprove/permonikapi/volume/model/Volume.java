@@ -1,4 +1,4 @@
-package cz.incad.nkp.inprove.permonikapi.volume;
+package cz.incad.nkp.inprove.permonikapi.volume.model;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
 import lombok.*;
@@ -57,6 +57,10 @@ public class Volume extends Auditable {
     private Integer year;
     @Field
     private String mutationMark;
+    @Field
+    private String mutationMarkType;
+    @Field
+    private String mutationMarkDescription;
 
     // Custom getter for `subName`
     public String getSubName() {
@@ -76,6 +80,16 @@ public class Volume extends Auditable {
     // Custom getter for `mutationMark`
     public String getMutationMark() {
         return mutationMark == null ? "" : mutationMark;
+    }
+
+    // Custom getter for `mutationMarkType`
+    public String getMutationMarkType() {
+        return mutationMarkType == null ? "" : mutationMarkType;
+    }
+
+    // Custom getter for `mutationMarkDescription`
+    public String getMutationMarkDescription() {
+        return mutationMarkDescription == null ? "" : mutationMarkDescription;
     }
 
 }

@@ -58,7 +58,7 @@ public class ShibbolethService {
     public void shibbolethLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, SolrServerException {
         String idp = request.getHeader("Shib-Identity-Provider");
 //        if (!allowedIdentityProviders.contains(idp)) {
-//            throw new ForbiddenException("This IDP is not allowed");
+//            throw new Exception("This IDP is not allowed");
 //        }
 
         String eppn = request.getHeader("eduPersonPrincipalName");

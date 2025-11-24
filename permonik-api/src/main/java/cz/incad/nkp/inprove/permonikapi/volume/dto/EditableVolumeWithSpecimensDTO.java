@@ -1,10 +1,10 @@
 package cz.incad.nkp.inprove.permonikapi.volume.dto;
 
-import cz.incad.nkp.inprove.permonikapi.specimen.Specimen;
-import cz.incad.nkp.inprove.permonikapi.volume.Volume;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDTO;
+import cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDTO;
 
 import java.util.List;
 
-public record EditableVolumeWithSpecimensDTO(Volume volume, List<Specimen> specimens) {
+public record EditableVolumeWithSpecimensDTO(VolumeDTO volume, List<SpecimenDTO> specimens) {
 }
 

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-public class ApplicationConfig {
+public class SolrConfig {
 
     @Bean
     public SolrClient solrClient(@Value("${solr.host}") String solrHost) {

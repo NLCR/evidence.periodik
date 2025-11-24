@@ -39,6 +39,10 @@
     "owners": "Vlastníci",
     "no_meta_titles_found": "Neboli nájdené žiadne metatituly"
   },
+  "footer": {
+    "dedication": "Aplikácia PerMonik je vyvíjaná na základe inštitucionálnej podpory dlhodobého koncepčného rozvoja výskumnej organizácie Národná knižnica Českej republiky poskytovanej Ministerstvom kultúry",
+    "contact": "Kontakt: "
+  },
   "specimens_overview": {
     "meta_title_not_found": "Tento metatitul nebol nájdený",
     "specimens_not_found": "Pre zadané vyhľadávanie nie sú k dispozícii žiadne výsledky. Prosím, upravte parametre vyhľadávania",
@@ -85,6 +89,12 @@
     "mutation_short": "Mutácia",
     "mutation_mark": "Označenie mutačného vydania čísla",
     "mutation_mark_short": "Mutačné<br />vydanie",
+    "mutation_mark_tab_symbol": "Symboly",
+    "mutation_mark_tab_number": "Číselné označenie",
+    "mutation_mark_label_number": "Reálny zápis",
+    "mutation_mark_label_number_decription": "Číselný zápis",
+    "mutation_mark_label_number_decription_impossible": "Nedá sa vyjadriť číselne",
+    "mutation_mark_number_error": "Číselný zápis je povinný",
     "bar_code": "Čiarový kód",
     "signature": "Signatúra",
     "year": "Ročník",

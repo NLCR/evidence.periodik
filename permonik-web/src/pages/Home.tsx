@@ -16,7 +16,15 @@ const Home = () => {
   const { data, isLoading, isError, refetch } = useMetaTitleOverviewListQuery()
 
   return (
-    <Box sx={{ textAlign: 'center', marginTop: '50px', width: '100%' }}>
+    <Box
+      sx={{
+        textAlign: 'center',
+        paddingTop: '50px',
+        marginY: '-1rem',
+        width: '100%',
+        overflow: 'auto',
+      }}
+    >
       <Typography
         variant="h3"
         sx={{

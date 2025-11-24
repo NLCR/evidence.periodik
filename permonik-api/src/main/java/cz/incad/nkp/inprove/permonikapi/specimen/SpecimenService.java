@@ -3,6 +3,9 @@ package cz.incad.nkp.inprove.permonikapi.specimen;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.*;
 import cz.incad.nkp.inprove.permonikapi.specimen.enums.SpecimenTableViewEnum;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.Specimen;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDTO;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -30,6 +33,7 @@ public class SpecimenService implements SpecimenDefinition {
     private static final Logger logger = LoggerFactory.getLogger(SpecimenService.class);
 
     private final SolrClient solrClient;
+    private final SpecimenMapper specimenMapper;
 
     private final ObjectMapper objectMapper;
 
@@ -100,7 +104,6 @@ public class SpecimenService implements SpecimenDefinition {
             solrQuery.addFilterQuery(specimenFacets.getMutationMarkQueryString());
         }
 
-
         if (!specimenFacets.getOwnerIds().isEmpty()) {
             solrQuery.addFilterQuery(specimenFacets.getOwnersQueryString());
         }
@@ -151,8 +154,10 @@ public class SpecimenService implements SpecimenDefinition {
 
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
         List<Specimen> specimenList = response.getBeans(Specimen.class);
-        List<String> ownerList = specimenList.stream()
-            .map(Specimen::getOwnerId)
+        List<SpecimenDTO> specimenDTOList = specimenList.stream().map(specimenMapper::toDTO).toList();
+
+        List<String> ownerList = specimenDTOList.stream()
+            .map(SpecimenDTO::getOwnerId)
             .collect(Collectors.toSet()).stream().toList();
 
         SolrQuery statsQuery = new SolrQuery("*:*");
@@ -183,7 +188,7 @@ public class SpecimenService implements SpecimenDefinition {
         Integer groupedSpecimens = groupCommand.getMatches();
 
         return new SearchedSpecimensDTO(
-            specimenList,
+            specimenDTOList,
             publicationDayMax,
             publicationDayMin,
             groupedSpecimens,
@@ -293,11 +298,11 @@ public class SpecimenService implements SpecimenDefinition {
 
     }
 
-    public List<Specimen> getSpecimensForVolumeDetail(String volumeId, Boolean onlyPublic) throws SolrServerException, IOException {
+    public List<SpecimenDTO> getSpecimensForVolumeDetail(String volumeId, Boolean onlyPublic) throws SolrServerException, IOException {
         return getSpecimensForVolumeDetail(volumeId, onlyPublic, false);
     }
 
-    public List<Specimen> getSpecimensForVolumeDetail(String volumeId, Boolean onlyPublic, Boolean showAttachmentsAtTheEnd) throws SolrServerException, IOException {
+    public List<SpecimenDTO> getSpecimensForVolumeDetail(String volumeId, Boolean onlyPublic, Boolean showAttachmentsAtTheEnd) throws SolrServerException, IOException {
 
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(VOLUME_ID_FIELD + ":\"" + volumeId + "\"");
@@ -313,7 +318,7 @@ public class SpecimenService implements SpecimenDefinition {
 
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
 
-        return response.getBeans(Specimen.class);
+        return response.getBeans(Specimen.class).stream().map(specimenMapper::toDTO).toList();
 
     }
 
@@ -406,7 +411,7 @@ public class SpecimenService implements SpecimenDefinition {
                 new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
             ).toList(),
             publicationDateList,
-            specimens
+            specimens.stream().map(specimenMapper::toDTO).toList()
         );
 
     }
@@ -430,9 +435,9 @@ public class SpecimenService implements SpecimenDefinition {
     }
 
 
-    public void createSpecimens(List<Specimen> specimens) {
+    public void createSpecimens(List<SpecimenDTO> specimens) {
         try {
-            List<Specimen> specimenList = specimens.stream().peek(Specimen::prePersist).toList();
+            List<Specimen> specimenList = specimens.stream().peek(SpecimenDTO::prePersist).map(specimenMapper::toModel).toList();
 
             solrClient.addBeans(SPECIMEN_CORE_NAME, specimenList);
             solrClient.commit(SPECIMEN_CORE_NAME);
@@ -442,7 +447,7 @@ public class SpecimenService implements SpecimenDefinition {
         }
     }
 
-    public void updateSpecimens(List<Specimen> specimens) {
+    public void updateSpecimens(List<SpecimenDTO> specimens) {
         try {
             List<Specimen> specimenList = specimens.stream()
                 .peek(specimen -> {
@@ -453,6 +458,7 @@ public class SpecimenService implements SpecimenDefinition {
                         specimen.preUpdate();
                     }
                 })
+                .map(specimenMapper::toModel)
                 .toList();
 
             solrClient.addBeans(SPECIMEN_CORE_NAME, specimenList);
@@ -463,9 +469,9 @@ public class SpecimenService implements SpecimenDefinition {
         }
     }
 
-    public void deleteSpecimens(List<Specimen> specimens) {
+    public void deleteSpecimens(List<SpecimenDTO> specimens) {
         try {
-            List<Specimen> specimenList = specimens.stream().peek(Specimen::preRemove).toList();
+            List<Specimen> specimenList = specimens.stream().peek(SpecimenDTO::preRemove).map(specimenMapper::toModel).toList();
 
             solrClient.addBeans(SPECIMEN_CORE_NAME, specimenList);
             solrClient.commit(SPECIMEN_CORE_NAME);
