@@ -286,9 +286,9 @@ public class SpecimenService implements SpecimenDefinition {
             response.getFacetField(EDITION_ID_FIELD).getValues().stream().map(facetFieldEntry ->
                 new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
             ).toList(),
-            response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().map(facetFieldEntry ->
+            response.getFacetField(MUTATION_MARK_FIELD).getValues().stream().filter(f -> f.getCount() > 0).map(facetFieldEntry ->
                 new FacetFieldDTO(facetFieldEntry.getName() != null ? facetFieldEntry.getName() : "", facetFieldEntry.getCount())
-            ).sorted(Comparator.comparingLong(FacetFieldDTO::count).reversed()// sort null facet, because solr returns null facets as last
+            ).sorted(Comparator.comparingLong(FacetFieldDTO::count).reversed() // sort null facet, because solr returns null facets as last
             ).toList(),
             response.getFacetField(OWNER_ID_FIELD).getValues().stream().map(facetFieldEntry ->
                 new FacetFieldDTO(facetFieldEntry.getName(), facetFieldEntry.getCount())
