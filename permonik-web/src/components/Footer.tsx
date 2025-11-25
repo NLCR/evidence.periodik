@@ -4,14 +4,15 @@ import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import MailIcon from '@mui/icons-material/Mail'
 
-import NkLogo from '../assets/images/nkcr_logo.png'
+import NkLogo from '../assets/images/nk-logo.svg'
 
 const Footer = () => {
   const { t } = useTranslation()
   return (
     <Box
       sx={{
-        height: '50px',
+        minHeight: '50px',
+        marginTop: '-1px',
         zIndex: 100,
         boxShadow: 4,
       }}
@@ -26,7 +27,12 @@ const Footer = () => {
           alignItems: 'flex-center',
         }}
       >
-        <img alt="Logo NKČR" src={NkLogo} style={{ paddingRight: 50 }} />
+        <img
+          alt="Logo NKČR"
+          src={NkLogo}
+          height={30}
+          style={{ padding: '0.1rem 0' }}
+        />
         <Typography
           sx={{
             fontSize: '12px',

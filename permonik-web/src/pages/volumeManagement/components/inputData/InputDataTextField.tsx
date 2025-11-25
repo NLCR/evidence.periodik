@@ -57,7 +57,11 @@ const Field = ({
 
 type Props = {
   name: string
-  editableData?: { fieldName: string; saveChange: (value: string) => void }
+  editableData?: {
+    fieldName: string
+    saveChange: (value: string) => void
+    changeShouldNotAffectSpecimen?: boolean
+  }
   onChangeCallback?: (value: string) => void
 }
 
@@ -90,6 +94,8 @@ const InputDataTextField = ({
                 setValue(name, getValues(name + '_internal'))
                 editableData.saveChange(getValues(name))
               },
+              changeShouldNotAffectSpecimen:
+                editableData.changeShouldNotAffectSpecimen,
             }
           : undefined
       }

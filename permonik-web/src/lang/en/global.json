@@ -112,6 +112,7 @@
     "revert_edit_dialog_description": "Any changes made will be discarded and values relevant to the current volume will be restored",
     "editing_dialog_title": "Edit attribute",
     "editing_dialog_description": "The change will be applied to all generated instances",
+    "editing_dialog_description_mutation_mark": "The change will be applied to all generated instances apart from attachments without a mutation mark",
     "editing_dialog_yes": "Confirm",
     "editing_dialog_no": "Cancel",
     "daily_releases": "Daily releases",

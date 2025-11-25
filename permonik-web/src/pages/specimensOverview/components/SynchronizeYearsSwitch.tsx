@@ -39,27 +39,22 @@ const SynchronizeYearsSwitch = () => {
         setCalendarDate(dayjs(specimens.specimens[0].publicationDate))
       }
       if (state.view === 'TABLE') {
-        const publicationDateYear = Number(
-          specimens.specimens[0].publicationDate.substring(0, 4)
-        )
-        const publicationYearMax = Number(
-          specimens.publicationDayMax?.substring(0, 4)
-        )
+        const publicationDate = dayjs(specimens.specimens[0].publicationDate)
+        const publicationDateMax = dayjs(specimens.publicationDayMax)
 
         setPagination({ ...state.pagination, pageIndex: 0 })
         setParams({
           ...state.params,
-          dateStart:
-            publicationDateYear < publicationYearMax
-              ? publicationDateYear
-              : publicationYearMax,
+          dateStart: publicationDate.isBefore(publicationDateMax)
+            ? publicationDate
+            : publicationDateMax,
           dateEnd: state.params.dateEnd
             ? state.params.dateEnd
-            : publicationYearMax,
+            : publicationDateMax,
         })
         setSliderRange([
-          publicationDateYear,
-          state.sliderRange ? state.sliderRange[1] : publicationYearMax,
+          publicationDate,
+          state.sliderRange ? state.sliderRange[1] : publicationDateMax,
         ])
       }
     }

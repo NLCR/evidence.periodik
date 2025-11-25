@@ -86,6 +86,7 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
       name={'mutationMark'}
       value={value ?? (props.defaultValue as string) ?? ''}
       editableData={{
+        isMutationMark: true,
         DialogContent: <Field defaultValue={value} {...props} />,
         fieldName: t('specimens_overview.mutation_mark'),
         saveChange: () => {
@@ -94,10 +95,15 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
           setValue('mutationMark', mutationMark)
           setMutationMark(mutationMark)
           setSpecimensState(
-            specimensState.map((specimen) => ({
-              ...specimen,
-              mutationMark,
-            })),
+            specimensState.map((specimen) =>
+              specimen.isAttachment && !specimen.mutationMark?.mark
+                ? // do not modify attachments w/o a mutation mark
+                  specimen
+                : {
+                    ...specimen,
+                    mutationMark,
+                  }
+            ),
             true
           )
         },
