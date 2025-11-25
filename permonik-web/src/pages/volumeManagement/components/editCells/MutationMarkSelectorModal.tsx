@@ -77,8 +77,6 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
   }
 
   const handleInputNumberChange = (value: string) => {
-    console.log(value)
-
     if (/^\d*$/.test(value)) {
       setInputMarkState((prev) => ({ ...prev, mark: value }))
     }

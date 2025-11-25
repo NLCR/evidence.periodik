@@ -36,7 +36,6 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({ row, api, canEdit }) => {
     // prepare row update trigger option
     api.setLoading(true)
     if (api.getRowMode(row.id) === 'view') {
-      console.log('startuju')
       api.startRowEditMode({ id: row.id })
     }
 
@@ -72,7 +71,6 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({ row, api, canEdit }) => {
 
     // trigger row update lifecycle hook - commit the edits to trigger processRowUpdate
     if (api.getRowMode(row.id) === 'edit') {
-      console.log('stopuju')
       api.stopRowEditMode({ id: row.id })
     }
     api.setLoading(false)

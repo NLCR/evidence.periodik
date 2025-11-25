@@ -81,8 +81,6 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
   const mutationMark = watch('mutationMark') as TMutationMark
   const value = getMutationMarkCompoundValue(mutationMark)
 
-  console.log(specimensState)
-
   return locked ? (
     <LockedInputDataItem
       name={'mutationMark'}
