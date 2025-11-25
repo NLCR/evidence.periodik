@@ -160,7 +160,7 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
           <Box>
             {dayjs(calendarDate).isValid() ? (
               <DateCalendar
-                views={['month', 'year']}
+                views={['year', 'month']}
                 openTo="month"
                 sx={{
                   height: 'auto',
