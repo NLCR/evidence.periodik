@@ -1,6 +1,6 @@
 import isArray from 'lodash/isArray'
 import Slider from '@mui/material/Slider'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { useSpecimensOverviewStore } from '../../../slices/useSpecimensOverviewStore'
 import Loader from '../../../components/Loader'
 import { styled } from '@mui/material/styles'
@@ -36,6 +36,17 @@ const ControlledSliderAndDateInput: FC<TProps> = ({
   const setParams = useSpecimensOverviewStore((state) => state.setParams)
   const params = useSpecimensOverviewStore((state) => state.params)
   const sliderRange = useSpecimensOverviewStore((state) => state.sliderRange)
+
+  // initialize the dateStart and dateEnd into params according to the slider
+  useEffect(() => {
+    if (sliderRange?.length === 2) {
+      setParams({
+        ...params,
+        dateStart: sliderRange[0],
+        dateEnd: sliderRange[1],
+      })
+    }
+  }, [!!sliderRange])
 
   return isArray(sliderRange) ? (
     <>
