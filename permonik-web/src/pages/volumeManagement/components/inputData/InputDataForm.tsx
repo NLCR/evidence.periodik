@@ -34,6 +34,7 @@ import { api } from '../../../../api'
 import { TSpecimen } from '../../../../schema/specimen'
 import InputDataOwner from './InputDataOwner'
 import { emptyMutationMark } from '../../../../utils/mutationMark'
+import InputDataNote from './InputDataNote'
 
 const InputDataForm = ({
   editions,
@@ -204,13 +205,7 @@ const InputDataForm = ({
           </TableRow>
 
           <InputDataOwner owners={owners} me={me} />
-
-          <TableRow>
-            <TableCell>{t('volume_overview.note')}</TableCell>
-            <TableCell>
-              <InputDataTextField name="note" />
-            </TableCell>
-          </TableRow>
+          <InputDataNote />
         </TableBody>
       </Table>
       <Periodicity editions={editions} metaTitles={metaTitles} />
