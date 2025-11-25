@@ -96,6 +96,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
         callback: () => {
           if (
             inputMarkState.type === 'NUMBER' &&
+            inputMarkState.description &&
             !inputMarkState.mark &&
             !inputNumberImpossible
           ) {
