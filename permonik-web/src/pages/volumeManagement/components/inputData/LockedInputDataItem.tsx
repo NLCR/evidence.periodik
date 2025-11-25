@@ -14,6 +14,7 @@ type Props = {
     DialogContent: ReactElement
     fieldName: string
     saveChange: (value: string) => void
+    isMutationMark?: boolean
   }
   type?: 'TEXT' | 'DATE' | 'NUMBER' | 'SELECT'
   selectOptions?: { key: string; value: string }[]
@@ -68,7 +69,11 @@ const LockedInputDataItem = ({
                 }}
               >
                 {editableData.DialogContent}
-                {t('volume_overview.editing_dialog_description')}
+                {editableData.isMutationMark
+                  ? t(
+                      'volume_overview.editing_dialog_description_mutation_mark'
+                    )
+                  : t('volume_overview.editing_dialog_description')}
               </Box>
             }
             onConfirm={() => {

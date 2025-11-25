@@ -112,6 +112,7 @@
     "revert_edit_dialog_description": "Vykonané zmeny budú zrušené a obnovia sa hodnoty relevantné pre aktuálny zväzok",
     "editing_dialog_title": "Úprava atribútu",
     "editing_dialog_description": "Zmena bude aplikovaná na všetky vygenerované inštancie",
+    "editing_dialog_description_mutation_mark": "Zmena bude aplikovaná na všetky vygenerované inštancie okrem príloh bez mutačného vydania",
     "editing_dialog_yes": "Potvrdiť",
     "editing_dialog_no": "Zrušiť",
     "daily_releases": "Denné vydania",
