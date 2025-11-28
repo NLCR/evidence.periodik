@@ -1,4 +1,4 @@
-import { FC, RefObject, useEffect, useRef } from 'react'
+import { FC, RefObject, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import {
@@ -262,632 +262,643 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
     return () => clearTimeout(timeout)
   }, [apiRef, searchParams, specimensState])
 
-  const columns: GridColDef<TEditableSpecimen>[] = [
-    {
-      field: 'publicationDate',
-      headerName: t('table.publication_date'),
-      width: 110,
-      filterable: false,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderValue(
-          dayjs(row.publicationDate).format('dd DD.MM.YYYY'),
-          true,
-          !disabled
-        )
+  const columns: GridColDef<TEditableSpecimen>[] = useMemo(
+    () => [
+      {
+        field: 'publicationDate',
+        headerName: t('table.publication_date'),
+        width: 110,
+        filterable: false,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderValue(
+            dayjs(row.publicationDate).format('dd DD.MM.YYYY'),
+            true,
+            !disabled
+          )
+        },
       },
-    },
-    {
-      field: 'newRow',
-      headerName: t('volume_overview.new_row'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.new_row')}>
-          <Box
-            sx={{
-              cursor: 'pointer',
-            }}
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.new_row_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 40,
-      hideable: false,
-      pinnable: false,
-      disableColumnMenu: true,
-      sortable: false,
-      filterable: false,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderDuplicationEditCell(row, !disabled)
-      },
-    },
-    ...// !stateHasUnsavedData &&
-    (specimensState.length
-      ? [
-          {
-            field: 'deleteRow',
-            headerName: t('volume_overview.delete_row'),
-            renderHeader: () => (
-              <Tooltip title={t('volume_overview.delete_row')}>
-                <Box
-                  sx={{
-                    cursor: 'pointer',
-                  }}
-                  dangerouslySetInnerHTML={{
-                    __html: t('volume_overview.delete_row_short'),
-                  }}
-                />
-              </Tooltip>
-            ),
-            width: 40,
-            pinnable: false,
-            sortable: false,
-            filterable: false,
-            headerAlign: 'center' as GridAlignment,
-            renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-              const { api, row } = params
-              return renderDeletionEditCell(row, api, !disabled)
-            },
-          },
-        ]
-      : []),
-    {
-      field: 'numExists',
-      headerName: t('volume_overview.is_in_volume'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.is_in_volume')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.is_in_volume_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 50,
-      type: 'boolean',
-      editable: !disabled,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(row.numExists, true, !disabled)
-      },
-      renderEditCell: renderNumExistsEditCell,
-    },
-    {
-      field: 'numMissing',
-      headerName: t('volume_overview.missing_number'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.missing_number')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.missing_number_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 50,
-      type: 'boolean',
-      editable: !disabled,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(row.numMissing, true, !disabled)
-      },
-      renderEditCell: renderNumMissingEditCell,
-    },
-    {
-      field: 'number',
-      headerName: t('volume_overview.number'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.number')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.number_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 50,
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderRenumberableValue(
-          row,
-          (row.numExists || row.numMissing) && !row.isAttachment,
-          !disabled,
-          'number',
-          apiRef
-        )
-      },
-    },
-    {
-      field: 'attachmentNumber',
-      headerName: t('volume_overview.attachment_number'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.attachment_number')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.attachment_number_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 60,
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderRenumberableValue(
-          row,
-          (row.numExists || row.numMissing) && row.isAttachment,
-          !disabled,
-          'attachmentNumber',
-          apiRef
-        )
-      },
-      // renderEditCell: renderAttachmentNumberEditCell,
-    },
-    {
-      field: 'mutationId',
-      headerName: t('volume_overview.mutation'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.mutation')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.mutation_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 60,
-      editable: !disabled,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderValue(
-          mutations.find((m) => m.id === row.mutationId)?.name[languageCode],
-          row.numExists,
-          !disabled
-        )
-      },
-      valueOptions: mutations.map((v) => ({
-        value: v.id,
-        label: v.name[languageCode],
-      })),
-      type: 'singleSelect',
-    },
-    {
-      field: 'editionId',
-      headerName: t('volume_overview.edition'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.edition')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.edition_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 50,
-      editable: !disabled,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderValue(
-          editions.find((m) => m.id === row.editionId)?.name[languageCode],
-          row.numExists,
-          !disabled
-        )
-      },
-      valueOptions: editions.map((v) => ({
-        value: v.id,
-        label: v.name[languageCode],
-      })),
-      type: 'singleSelect',
-    },
-    {
-      field: 'name',
-      headerName: t('volume_overview.name'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.name')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.name_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      type: 'string',
-      editable: !disabled,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderValue(row.name, row.numExists, !disabled)
-      },
-      // width: 1,
-    },
-    {
-      field: 'subName',
-      headerName: t('volume_overview.sub_name'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.sub_name')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.sub_name_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      type: 'string',
-      editable: !disabled,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderValue(row.subName, row.numExists, !disabled)
-      },
-      // width: 1,
-    },
-    {
-      field: 'pagesCount',
-      headerName: t('volume_overview.pages_count'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.pages_count')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.pages_count_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 50,
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderValue(row.pagesCount, row.numExists, !disabled)
-      },
-    },
-    {
-      /* bug fix, with the right name it hasn't updated value */
-      field: 'mutationMark2',
-      headerName: t('volume_overview.mutation_mark'),
-      renderHeader: () => (
-        <Tooltip title={t('volume_overview.mutation_mark')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('volume_overview.mutation_mark_short'),
-            }}
-          />
-        </Tooltip>
-      ),
-      type: 'string',
-      width: 60,
-      editable: !disabled,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return (
-          <Tooltip
-            title={row.mutationMark.description ?? row.mutationMark.mark}
-          >
-            {renderValue(row.mutationMark.mark, row.numExists, !disabled) ?? (
-              <div />
-            )}
+      {
+        field: 'newRow',
+        headerName: t('volume_overview.new_row'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.new_row')}>
+            <Box
+              sx={{
+                cursor: 'pointer',
+              }}
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.new_row_short'),
+              }}
+            />
           </Tooltip>
-        )
+        ),
+        width: 40,
+        hideable: false,
+        pinnable: false,
+        disableColumnMenu: true,
+        sortable: false,
+        filterable: false,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderDuplicationEditCell(row, !disabled)
+        },
       },
-      renderEditCell: renderMutationMarkEditCell,
-    },
-    {
-      field: 'OK',
-      headerName: t('facet_states_short.OK_tooltip'),
-      renderHeader: (params: GridColumnHeaderParams<TEditableSpecimen>) => {
-        const { field } = params
-        return renderHeaderWithColumnAction(
-          field as TSpecimenDamageTypes,
-          !disabled,
-          apiRef,
-          t('facet_states_short.OK'),
-          t('facet_states_short.OK_tooltip')
-        )
+      ...// !stateHasUnsavedData &&
+      (specimensState.length
+        ? [
+            {
+              field: 'deleteRow',
+              headerName: t('volume_overview.delete_row'),
+              renderHeader: () => (
+                <Tooltip title={t('volume_overview.delete_row')}>
+                  <Box
+                    sx={{
+                      cursor: 'pointer',
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: t('volume_overview.delete_row_short'),
+                    }}
+                  />
+                </Tooltip>
+              ),
+              width: 40,
+              pinnable: false,
+              sortable: false,
+              filterable: false,
+              headerAlign: 'center' as GridAlignment,
+              renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+                const { api, row } = params
+                return renderDeletionEditCell(row, api, !disabled)
+              },
+            },
+          ]
+        : []),
+      {
+        field: 'numExists',
+        headerName: t('volume_overview.is_in_volume'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.is_in_volume')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.is_in_volume_short'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 50,
+        type: 'boolean',
+        editable: !disabled,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(row.numExists, true, !disabled)
+        },
+        renderEditCell: renderNumExistsEditCell,
       },
-      width: 52,
-      type: 'boolean',
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(
-          !!row.damageTypes?.includes('OK'),
-          row.numExists,
-          !disabled,
-          'success'
-        )
+      {
+        field: 'numMissing',
+        headerName: t('volume_overview.missing_number'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.missing_number')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.missing_number_short'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 50,
+        type: 'boolean',
+        editable: !disabled,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(row.numMissing, true, !disabled)
+        },
+        renderEditCell: renderNumMissingEditCell,
       },
-      renderEditCell: renderDamageTypesEditCell,
-    },
-    {
-      field: 'PP',
-      headerName: t('facet_states_short.PP_tooltip'),
-      renderHeader: () => (
-        <Tooltip title={t('facet_states_short.PP_tooltip')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('facet_states_short.PP'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 52,
-      type: 'boolean',
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(
-          !!row.damageTypes?.includes('PP'),
-          row.numExists,
-          !disabled
-        )
+      {
+        field: 'number',
+        headerName: t('volume_overview.number'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.number')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.number_short'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 50,
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderRenumberableValue(
+            row,
+            (row.numExists || row.numMissing) && !row.isAttachment,
+            !disabled,
+            'number',
+            apiRef
+          )
+        },
       },
-      renderEditCell: renderDamagedAndMissingPagesEditCell,
-    },
-    {
-      field: 'Deg',
-      headerName: t('facet_states_short.Deg_tooltip'),
-      renderHeader: (params: GridColumnHeaderParams<TEditableSpecimen>) => {
-        const { field } = params
-        return renderHeaderWithColumnAction(
-          field as TSpecimenDamageTypes,
-          !disabled,
-          apiRef,
-          t('facet_states_short.Deg'),
-          t('facet_states_short.Deg_tooltip')
-        )
+      {
+        field: 'attachmentNumber',
+        headerName: t('volume_overview.attachment_number'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.attachment_number')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.attachment_number_short'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 60,
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderRenumberableValue(
+            row,
+            (row.numExists || row.numMissing) && row.isAttachment,
+            !disabled,
+            'attachmentNumber',
+            apiRef
+          )
+        },
+        // renderEditCell: renderAttachmentNumberEditCell,
       },
-      type: 'boolean',
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      width: 52,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(
-          !!row.damageTypes?.includes('Deg'),
-          row.numExists,
-          !disabled
-        )
+      {
+        field: 'mutationId',
+        headerName: t('volume_overview.mutation'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.mutation')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.mutation_short'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 60,
+        editable: !disabled,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderValue(
+            mutations.find((m) => m.id === row.mutationId)?.name[languageCode],
+            row.numExists,
+            !disabled
+          )
+        },
+        valueOptions: mutations.map((v) => ({
+          value: v.id,
+          label: v.name[languageCode],
+        })),
+        type: 'singleSelect',
       },
-      renderEditCell: renderDamageTypesEditCell,
-    },
-    {
-      field: 'ChS',
-      headerName: t('facet_states_short.ChS_tooltip'),
-      renderHeader: () => (
-        <Tooltip title={t('facet_states_short.ChS_tooltip')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('facet_states_short.ChS'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 52,
-      type: 'boolean',
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(
-          !!row.damageTypes?.includes('ChS'),
-          row.numExists,
-          !disabled
-        )
+      {
+        field: 'editionId',
+        headerName: t('volume_overview.edition'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.edition')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.edition_short'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 50,
+        editable: !disabled,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderValue(
+            editions.find((m) => m.id === row.editionId)?.name[languageCode],
+            row.numExists,
+            !disabled
+          )
+        },
+        valueOptions: editions.map((v) => ({
+          value: v.id,
+          label: v.name[languageCode],
+        })),
+        type: 'singleSelect',
       },
-      renderEditCell: renderDamagedAndMissingPagesEditCell,
-    },
-    {
-      field: 'ChPag',
-      headerName: t('facet_states_short.ChPag_tooltip'),
-      renderHeader: () => (
-        <Tooltip title={t('facet_states_short.ChPag_tooltip')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('facet_states_short.ChPag'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 52,
-      type: 'boolean',
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(
-          !!row.damageTypes?.includes('ChPag'),
-          row.numExists,
-          !disabled
-        )
+      {
+        field: 'name',
+        headerName: t('volume_overview.name'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.name')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.name_short'),
+              }}
+            />
+          </Tooltip>
+        ),
+        type: 'string',
+        editable: !disabled,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderValue(row.name, row.numExists, !disabled)
+        },
+        // width: 1,
       },
-      renderEditCell: renderDamageTypesEditCell,
-    },
-    {
-      field: 'ChDatum',
-      headerName: t('facet_states_short.ChDatum_tooltip'),
-      renderHeader: () => (
-        <Tooltip title={t('facet_states_short.ChDatum_tooltip')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('facet_states_short.ChDatum'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 52,
-      type: 'boolean',
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(
-          !!row.damageTypes?.includes('ChDatum'),
-          row.numExists,
-          !disabled
-        )
+      {
+        field: 'subName',
+        headerName: t('volume_overview.sub_name'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.sub_name')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.sub_name_short'),
+              }}
+            />
+          </Tooltip>
+        ),
+        type: 'string',
+        editable: !disabled,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderValue(row.subName, row.numExists, !disabled)
+        },
+        // width: 1,
       },
-      renderEditCell: renderDamageTypesEditCell,
-    },
-    {
-      field: 'ChCis',
-      headerName: t('facet_states_short.ChCis_tooltip'),
-      renderHeader: () => (
-        <Tooltip title={t('facet_states_short.ChCis_tooltip')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('facet_states_short.ChCis'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 52,
-      type: 'boolean',
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(
-          !!row.damageTypes?.includes('ChCis'),
-          row.numExists,
-          !disabled
-        )
+      {
+        field: 'pagesCount',
+        headerName: t('volume_overview.pages_count'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.pages_count')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.pages_count_short'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 50,
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderValue(row.pagesCount, row.numExists, !disabled)
+        },
       },
-      renderEditCell: renderDamageTypesEditCell,
-    },
-    {
-      field: 'ChSv',
-      headerName: t('facet_states_short.ChSv_tooltip'),
-      renderHeader: () => (
-        <Tooltip title={t('facet_states_short.ChSv_tooltip')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('facet_states_short.ChSv'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 52,
-      type: 'boolean',
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(
-          !!row.damageTypes?.includes('ChSv'),
-          row.numExists,
-          !disabled
-        )
+      {
+        /* bug fix, with the right name it hasn't updated value */
+        field: 'mutationMark2',
+        headerName: t('volume_overview.mutation_mark'),
+        renderHeader: () => (
+          <Tooltip title={t('volume_overview.mutation_mark')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('volume_overview.mutation_mark_short'),
+              }}
+            />
+          </Tooltip>
+        ),
+        type: 'string',
+        width: 60,
+        editable: !disabled,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return (
+            <Tooltip
+              title={row.mutationMark.description ?? row.mutationMark.mark}
+            >
+              {renderValue(row.mutationMark.mark, row.numExists, !disabled) ?? (
+                <div />
+              )}
+            </Tooltip>
+          )
+        },
+        renderEditCell: renderMutationMarkEditCell,
       },
-      renderEditCell: renderDamageTypesEditCell,
-    },
-    {
-      field: 'NS',
-      headerName: t('facet_states_short.NS_tooltip'),
-      renderHeader: (params: GridColumnHeaderParams<TEditableSpecimen>) => {
-        const { field } = params
-        return renderHeaderWithColumnAction(
-          field as TSpecimenDamageTypes,
-          !disabled,
-          apiRef,
-          t('facet_states_short.NS'),
-          t('facet_states_short.NS_tooltip')
-        )
+      {
+        field: 'OK',
+        headerName: t('facet_states_short.OK_tooltip'),
+        renderHeader: (params: GridColumnHeaderParams<TEditableSpecimen>) => {
+          const { field } = params
+          return renderHeaderWithColumnAction(
+            field as TSpecimenDamageTypes,
+            !disabled,
+            apiRef,
+            t('facet_states_short.OK'),
+            t('facet_states_short.OK_tooltip')
+          )
+        },
+        width: 52,
+        type: 'boolean',
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(
+            !!row.damageTypes?.includes('OK'),
+            row.numExists,
+            !disabled,
+            'success'
+          )
+        },
+        renderEditCell: renderDamageTypesEditCell,
       },
-      type: 'boolean',
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      width: 52,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(
-          !!row.damageTypes?.includes('NS'),
-          row.numExists,
-          !disabled
-        )
+      {
+        field: 'PP',
+        headerName: t('facet_states_short.PP_tooltip'),
+        renderHeader: () => (
+          <Tooltip title={t('facet_states_short.PP_tooltip')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('facet_states_short.PP'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 52,
+        type: 'boolean',
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(
+            !!row.damageTypes?.includes('PP'),
+            row.numExists,
+            !disabled
+          )
+        },
+        renderEditCell: renderDamagedAndMissingPagesEditCell,
       },
-      renderEditCell: renderDamageTypesEditCell,
-    },
-    {
-      field: 'Cz',
-      headerName: t('facet_states_short.Cz_tooltip'),
-      renderHeader: () => (
-        <Tooltip title={t('facet_states_short.Cz_tooltip')}>
-          <Box
-            dangerouslySetInnerHTML={{
-              __html: t('facet_states_short.Cz'),
-            }}
-          />
-        </Tooltip>
-      ),
-      width: 52,
-      type: 'boolean',
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderCheckBox(
-          !!row.damageTypes?.includes('Cz'),
-          row.numExists,
-          !disabled
-        )
+      {
+        field: 'Deg',
+        headerName: t('facet_states_short.Deg_tooltip'),
+        renderHeader: (params: GridColumnHeaderParams<TEditableSpecimen>) => {
+          const { field } = params
+          return renderHeaderWithColumnAction(
+            field as TSpecimenDamageTypes,
+            !disabled,
+            apiRef,
+            t('facet_states_short.Deg'),
+            t('facet_states_short.Deg_tooltip')
+          )
+        },
+        type: 'boolean',
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        width: 52,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(
+            !!row.damageTypes?.includes('Deg'),
+            row.numExists,
+            !disabled
+          )
+        },
+        renderEditCell: renderDamageTypesEditCell,
       },
-      renderEditCell: renderDamageTypesEditCell,
-    },
-    {
-      field: 'note',
-      type: 'string',
-      // width: 100,
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
-        const { row } = params
-        return renderValue(row.note, row.numExists, !disabled)
+      {
+        field: 'ChS',
+        headerName: t('facet_states_short.ChS_tooltip'),
+        renderHeader: () => (
+          <Tooltip title={t('facet_states_short.ChS_tooltip')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('facet_states_short.ChS'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 52,
+        type: 'boolean',
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(
+            !!row.damageTypes?.includes('ChS'),
+            row.numExists,
+            !disabled
+          )
+        },
+        renderEditCell: renderDamagedAndMissingPagesEditCell,
       },
-      headerName: t('volume_overview.note'),
-      editable: !disabled,
-      filterable: false,
-      disableColumnMenu: true,
-    },
-  ]
+      {
+        field: 'ChPag',
+        headerName: t('facet_states_short.ChPag_tooltip'),
+        renderHeader: () => (
+          <Tooltip title={t('facet_states_short.ChPag_tooltip')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('facet_states_short.ChPag'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 52,
+        type: 'boolean',
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(
+            !!row.damageTypes?.includes('ChPag'),
+            row.numExists,
+            !disabled
+          )
+        },
+        renderEditCell: renderDamageTypesEditCell,
+      },
+      {
+        field: 'ChDatum',
+        headerName: t('facet_states_short.ChDatum_tooltip'),
+        renderHeader: () => (
+          <Tooltip title={t('facet_states_short.ChDatum_tooltip')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('facet_states_short.ChDatum'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 52,
+        type: 'boolean',
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(
+            !!row.damageTypes?.includes('ChDatum'),
+            row.numExists,
+            !disabled
+          )
+        },
+        renderEditCell: renderDamageTypesEditCell,
+      },
+      {
+        field: 'ChCis',
+        headerName: t('facet_states_short.ChCis_tooltip'),
+        renderHeader: () => (
+          <Tooltip title={t('facet_states_short.ChCis_tooltip')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('facet_states_short.ChCis'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 52,
+        type: 'boolean',
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(
+            !!row.damageTypes?.includes('ChCis'),
+            row.numExists,
+            !disabled
+          )
+        },
+        renderEditCell: renderDamageTypesEditCell,
+      },
+      {
+        field: 'ChSv',
+        headerName: t('facet_states_short.ChSv_tooltip'),
+        renderHeader: () => (
+          <Tooltip title={t('facet_states_short.ChSv_tooltip')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('facet_states_short.ChSv'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 52,
+        type: 'boolean',
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(
+            !!row.damageTypes?.includes('ChSv'),
+            row.numExists,
+            !disabled
+          )
+        },
+        renderEditCell: renderDamageTypesEditCell,
+      },
+      {
+        field: 'NS',
+        headerName: t('facet_states_short.NS_tooltip'),
+        renderHeader: (params: GridColumnHeaderParams<TEditableSpecimen>) => {
+          const { field } = params
+          return renderHeaderWithColumnAction(
+            field as TSpecimenDamageTypes,
+            !disabled,
+            apiRef,
+            t('facet_states_short.NS'),
+            t('facet_states_short.NS_tooltip')
+          )
+        },
+        type: 'boolean',
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        width: 52,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(
+            !!row.damageTypes?.includes('NS'),
+            row.numExists,
+            !disabled
+          )
+        },
+        renderEditCell: renderDamageTypesEditCell,
+      },
+      {
+        field: 'Cz',
+        headerName: t('facet_states_short.Cz_tooltip'),
+        renderHeader: () => (
+          <Tooltip title={t('facet_states_short.Cz_tooltip')}>
+            <Box
+              dangerouslySetInnerHTML={{
+                __html: t('facet_states_short.Cz'),
+              }}
+            />
+          </Tooltip>
+        ),
+        width: 52,
+        type: 'boolean',
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderCheckBox(
+            !!row.damageTypes?.includes('Cz'),
+            row.numExists,
+            !disabled
+          )
+        },
+        renderEditCell: renderDamageTypesEditCell,
+      },
+      {
+        field: 'note',
+        type: 'string',
+        // width: 100,
+        headerAlign: 'center',
+        renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
+          const { row } = params
+          return renderValue(row.note, row.numExists, !disabled)
+        },
+        headerName: t('volume_overview.note'),
+        editable: !disabled,
+        filterable: false,
+        disableColumnMenu: true,
+      },
+    ],
+    [
+      apiRef,
+      disabled,
+      editions,
+      languageCode,
+      mutations,
+      specimensState.length,
+      t,
+    ]
+  )
 
   const handleUpdate = (newRow: TEditableSpecimen) => {
     const row = checkAttachmentChange(editions, newRow)
