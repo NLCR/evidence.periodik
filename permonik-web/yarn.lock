@@ -4386,6 +4386,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsbarcode@npm:^3.8.0":
+  version: 3.12.1
+  resolution: "jsbarcode@npm:3.12.1"
+  checksum: 10/3b6afa16ee4c49f98fde118d1410c2e4627ca7160407e7d36609a677093e62425c808ee263a09e6184e555641989cb13e6fbdb9ec2e2d77d32e0d1fc479b9c86
+  languageName: node
+  linkType: hard
+
 "jsbn@npm:1.1.0":
   version: 1.1.0
   resolution: "jsbn@npm:1.1.0"
@@ -5342,6 +5349,18 @@ __metadata:
   version: 1.2.3
   resolution: "queue-microtask@npm:1.2.3"
   checksum: 10/72900df0616e473e824202113c3df6abae59150dfb73ed13273503127235320e9c8ca4aaaaccfd58cf417c6ca92a6e68ee9a5c3182886ae949a768639b388a7b
+  languageName: node
+  linkType: hard
+
+"react-barcode@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "react-barcode@npm:1.6.1"
+  dependencies:
+    jsbarcode: "npm:^3.8.0"
+    prop-types: "npm:^15.6.2"
+  peerDependencies:
+    react: 16 - 19
+  checksum: 10/ff4fe9b9e43c81a0928a320f8a6948e0d003452faca6b242b6e222c66cd2513dd1b7506c046129cf8f1a85b110f96ffbf657085ad13dd5b2c379ff5b7a14fd49
   languageName: node
   linkType: hard
 
@@ -6916,6 +6935,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     prettier: "npm:^3.5.3"
     react: "npm:^19.1.0"
+    react-barcode: "npm:^1.6.1"
     react-dom: "npm:^19.1.0"
     react-helmet-async: "npm:^2.0.5"
     react-hook-form: "npm:^7.58.1"

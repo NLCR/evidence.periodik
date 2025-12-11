@@ -1,0 +1,175 @@
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { FC, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import dayjs from 'dayjs'
+import {
+  useManagedVolumeDetailQuery,
+  useVolumeOverviewStatsQuery,
+} from '../../api/volume'
+import Loader from '../Loader'
+import ShowError from '../ShowError'
+import { useOwnerListQuery } from '../../api/owner'
+import { useMutationListQuery } from '../../api/mutation'
+import { useEditionListQuery } from '../../api/edition'
+import isFinite from 'lodash/isFinite'
+import { useLanguageCode } from '../../hooks/useLanguageCode'
+import Barcode from 'react-barcode'
+import { useMetaTitleListQuery } from '../../api/metaTitle'
+import { StripedDataGrid } from '../../pages/volumeManagement/components/SpecimensTable'
+import { useColumns } from './columns'
+import SpecimenItem from './SpecimenItem'
+import { TabSelect } from '../TabSelect'
+
+const bolderTextStyle = {
+  fontWeight: '600',
+}
+
+type TProps = {
+  volumeId?: string
+}
+
+type TView = 'VIEW' | 'EDIT'
+
+const PrepareScanModalContent2: FC<TProps> = ({ volumeId = undefined }) => {
+  const [view, setView] = useState<TView>('EDIT')
+
+  const {
+    data: owners,
+    isLoading: ownersLoading,
+    isError: ownersError,
+  } = useOwnerListQuery()
+  const {
+    data: mutations,
+    isLoading: mutationsLoading,
+    isError: mutationsError,
+  } = useMutationListQuery()
+  const {
+    data: metatitles,
+    isLoading: metatitlesLoading,
+    isError: metatitlesError,
+  } = useMetaTitleListQuery()
+  const {
+    data: editions,
+    isLoading: editionsLoading,
+    isError: editionsError,
+  } = useEditionListQuery()
+
+  const {
+    data: volumeStats,
+    isLoading: volumeStatsLoading,
+    isError: volumeStatsError,
+  } = useVolumeOverviewStatsQuery(volumeId)
+
+  const {
+    data: volume,
+    isLoading: volumeLoading,
+    isError: volumeError,
+  } = useManagedVolumeDetailQuery(volumeId)
+
+  if (
+    volumeStatsLoading ||
+    ownersLoading ||
+    mutationsLoading ||
+    editionsLoading
+  )
+    return <Loader />
+  if (
+    volumeStatsError ||
+    !volumeStats ||
+    ownersError ||
+    !owners ||
+    mutationsError ||
+    !mutations ||
+    editionsError ||
+    !editions
+  )
+    return <ShowError />
+
+  return (
+    <Box>
+      <Box
+        sx={{
+          marginBottom: '10px',
+        }}
+      >
+        <Typography sx={{ fontWeight: 700, fontSize: 20 }}>
+          {metatitles?.find((m) => m.id === volume?.volume?.metaTitleId)?.name}{' '}
+          ({volume?.volume?.signature ?? 'neznámmá signatura'})
+        </Typography>
+        <Box display="grid" gridTemplateColumns="1fr 1fr 1fr">
+          <Box>
+            <Typography>Podnázev: {volume?.volume.subName}</Typography>
+            <Typography>
+              Vlastník:{' '}
+              {owners.find((o) => o.id === volumeStats.ownerId)?.shorthand}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography>
+              Mutace:{' '}
+              {
+                mutations.find((m) => m.id === volume?.volume.mutationId)?.name
+                  .cs
+              }
+            </Typography>
+            <Typography>
+              Mutační vydání: {volume?.volume.mutationMark.mark}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography>
+              Rozsah od:{' '}
+              {new Date(volume?.volume.dateFrom ?? '').toLocaleDateString()}
+            </Typography>
+
+            <Typography>
+              Rozsah do:{' '}
+              {new Date(volume?.volume.dateTo ?? '').toLocaleDateString()}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box display="flex" justifyContent="center">
+          <Barcode value={volumeStats.barCode} />
+        </Box>
+
+        <Box display="flex" justifyContent="center" alignItems="center" gap={2}>
+          Zobrazení:{' '}
+          <TabSelect<TView>
+            options={[
+              { label: 'Editace', value: 'EDIT' },
+              { label: 'Náhled', value: 'VIEW' },
+            ]}
+            selectedItem={view}
+            setSelectedItem={setView}
+          />
+        </Box>
+      </Box>
+
+      {volume?.specimens
+        .filter((item) => item.numExists || item.numMissing)
+        .map((item) => (
+          <SpecimenItem
+            viewOnly={view === 'VIEW'}
+            key={item.id}
+            specimen={item}
+          />
+        ))}
+
+      {/* 
+      TODO:
+       - dat jen data kde je numExists nebo numMissing
+       - zavest entitu
+       - vytahnout zakladni informace z volume.specimens
+       - pridat poznamku
+       - povoleni pridani sloupcu? Radku? Jak ukladat na BE?
+         - array?
+       
+       - nahled na predlohu ke skenovani do badatelske casti?
+       */}
+    </Box>
+  )
+}
+
+export default PrepareScanModalContent2

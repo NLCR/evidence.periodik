@@ -1,3 +1,4 @@
+import ScannerIcon from '@mui/icons-material/AdfScanner'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
@@ -13,10 +14,12 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import Button from '@mui/material/Button'
 import ModalContainer from '../../../components/ModalContainer'
 import Typography from '@mui/material/Typography'
-import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
+import PrepareScanModalContent from '../../../components/prepare-scan-modal/PrepareScanModalContent'
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
+import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
+import PrepareScanModalContent2 from '../../../components/prepare-scan-modal/PrepareScanModalContent2'
 
 type Props = {
   duplicated: boolean
@@ -53,6 +56,7 @@ const SpecimensActions = ({
     opened: false,
     stage: 1,
   })
+  const [prepareScanModalOpened, setPrepareScanModalOpened] = useState(false)
 
   const setInitialState = useVolumeManagementStore(
     (state) => state.setInitialState
@@ -135,6 +139,12 @@ const SpecimensActions = ({
     }
     if (volumeId && !volumeOvergenerated) {
       actionsArray.push(
+        {
+          icon: <ScannerIcon />,
+          name: 'Připravit na skenování',
+          color: 'primary',
+          onClick: () => setPrepareScanModalOpened(true),
+        },
         {
           icon: <ContentCopyIcon />,
           name: t('administration.duplicate_volume'),
@@ -331,6 +341,17 @@ const SpecimensActions = ({
         closeButton={{ callback: () => setVolumeStatsModalOpened(false) }}
       >
         <VolumeStatsModalContent volumeId={volumeId} />
+      </ModalContainer>
+      <ModalContainer
+        autoWidth
+        minWidth="40rem"
+        maxHeight="95vh"
+        header={'Příprava pro skenování'}
+        opened={prepareScanModalOpened}
+        onClose={() => setPrepareScanModalOpened(false)}
+        closeButton={{ callback: () => setPrepareScanModalOpened(false) }}
+      >
+        <PrepareScanModalContent2 volumeId={volumeId} />
       </ModalContainer>
     </>
   )
