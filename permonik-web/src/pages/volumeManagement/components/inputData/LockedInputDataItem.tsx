@@ -5,7 +5,7 @@ import ConfirmDialog from '../../../specimensOverview/components/dialogs/Confirm
 import { useTranslation } from 'react-i18next'
 import { ReactElement } from 'react'
 import { useFormContext } from 'react-hook-form'
-import dayjs from 'dayjs'
+import { useFormatDate } from '../../../../utils/date'
 
 type Props = {
   name: string
@@ -29,6 +29,7 @@ const LockedInputDataItem = ({
   ...props
 }: Props) => {
   const { t } = useTranslation()
+  const { formatDate } = useFormatDate()
   const { getValues, watch } = useFormContext()
   const value = props.value ?? watch(name)
 
@@ -46,7 +47,7 @@ const LockedInputDataItem = ({
     >
       {value
         ? type === 'DATE'
-          ? dayjs(value).format('DD. MM. YYYY')
+          ? formatDate(value)
           : type === 'SELECT'
             ? selectOptions?.find((option) => option.key === value)?.value
             : value

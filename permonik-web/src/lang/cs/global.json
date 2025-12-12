@@ -260,6 +260,7 @@
     "NS_tooltip": "Nečitelně svázáno, např. svázáno přiliš ke hřbetu"
   },
   "boolean_facet_states": {
+    "title": "Číslo",
     "numMissing": "Číslo chybí",
     "numExists": "Číslo existuje"
   },

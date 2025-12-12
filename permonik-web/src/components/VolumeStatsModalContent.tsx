@@ -11,6 +11,7 @@ import { useMutationListQuery } from '../api/mutation'
 import { useEditionListQuery } from '../api/edition'
 import isFinite from 'lodash/isFinite'
 import { useLanguageCode } from '../hooks/useLanguageCode'
+import { useFormatDate } from '../utils/date'
 
 const bolderTextStyle = {
   fontWeight: '600',
@@ -22,6 +23,7 @@ type TProps = {
 
 const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
   const { t } = useTranslation()
+  const { formatDate } = useFormatDate()
 
   const { languageCode } = useLanguageCode()
 
@@ -225,8 +227,8 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
           {t('volume_overview.dates')}:
         </Typography>
         <Typography variant="body2">
-          {dayjs(volumeStats.publicationDayMin).format('DD.MM.YYYY')} -{' '}
-          {dayjs(volumeStats.publicationDayMax).format('DD.MM.YYYY')}
+          {formatDate(volumeStats.publicationDayMin)} -{' '}
+          {formatDate(volumeStats.publicationDayMax)}
         </Typography>
       </Box>
       <Box
@@ -398,7 +400,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
             >
               <Typography variant="body2">{s.number}</Typography>
               <Typography variant="body2" key={`missingNumbers-child-${s.id}`}>
-                {dayjs(s.publicationDate).format('DD.MM.YYYY')}
+                {formatDate(s.publicationDate)}
               </Typography>
             </Box>
           ))}
@@ -427,7 +429,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
                 variant="body2"
                 key={`missingAttachmentNumbers-child-${s.id}`}
               >
-                {dayjs(s.publicationDate).format('DD.MM.YYYY')}
+                {formatDate(s.publicationDate)}
               </Typography>
             </Box>
           ))}
@@ -476,7 +478,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
               </Typography>
               <Typography variant="body2">—</Typography>
               <Typography variant="body2">
-                {dayjs(s.publicationDate).format('dd DD.MM.YYYY')}
+                {formatDate(s.publicationDate, { includeDayName: true })}
               </Typography>
             </Box>
           ))}
@@ -506,7 +508,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
                 </Typography>
                 <Typography variant="body2">—</Typography>
                 <Typography variant="body2">
-                  {dayjs(s.publicationDate).format('dd DD.MM.YYYY')}
+                  {formatDate(s.publicationDate, { includeDayName: true })}
                 </Typography>
               </Box>
               <Typography variant="body2" sx={{ marginLeft: 3 }}>

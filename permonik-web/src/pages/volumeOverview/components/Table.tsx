@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import dayjs from 'dayjs'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro'
 import CheckIcon from '@mui/icons-material/Check'
 import Box from '@mui/material/Box'
@@ -14,6 +13,7 @@ import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
 import Tooltip from '@mui/material/Tooltip'
 import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
 import { getMutationMarkLabel } from '../../../utils/mutationMark'
+import { useFormatDate } from '../../../utils/date'
 
 type TProps = {
   volume?: TVolumeDetail
@@ -48,6 +48,7 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
   const { data: editions } = useEditionListQuery()
   const { languageCode } = useLanguageCode()
   const { t } = useTranslation()
+  const { formatDate } = useFormatDate()
 
   const columns = useMemo<GridColDef<TSpecimen>[]>(() => {
     return [
@@ -58,7 +59,7 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
         filterable: false,
         headerAlign: 'center',
         valueFormatter: (value) => {
-          return dayjs(value).format('dd DD.MM.YYYY')
+          return formatDate(value, { includeDayName: true })
         },
       },
       {
@@ -496,7 +497,7 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
         },
       },
     ]
-  }, [languageCode, mutations, editions, t])
+  }, [languageCode, mutations, editions, t, formatDate])
 
   return (
     <StripedDataGrid
