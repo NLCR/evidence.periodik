@@ -5,7 +5,6 @@ import {
   GridRenderCellParams,
   DataGridPro,
 } from '@mui/x-data-grid-pro'
-import dayjs from 'dayjs'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
@@ -28,6 +27,7 @@ import { generateVolumeUrlWithParams } from '../../../utils/generateVolumeUrlWit
 import Button from '@mui/material/Button'
 import theme from '../../../theme'
 import { useMeQuery } from '../../../api/user'
+import { useFormatDate } from '../../../utils/date'
 
 const getSpecimenState = (sp: TSpecimen, t: TFunction) => {
   if (sp.damageTypes) {
@@ -174,6 +174,7 @@ type Props = {
 
 const Table: FC<Props> = ({ metaTitle }) => {
   const { t, i18n } = useTranslation()
+  const { formatDate } = useFormatDate()
   const { MuiTableLocale } = useMuiTableLang()
   const navigate = useNavigate()
 
@@ -211,7 +212,7 @@ const Table: FC<Props> = ({ metaTitle }) => {
         headerName: t('table.publication_date'),
         flex: 1,
         valueFormatter: (value) => {
-          return dayjs(value).format('dd DD.MM.YYYY')
+          return formatDate(value, { includeDayName: true })
         },
       },
       {
@@ -253,7 +254,15 @@ const Table: FC<Props> = ({ metaTitle }) => {
             }))
         : []),
     ]
-  }, [t, owners, mutations, languageCode, editions, specimens?.owners])
+  }, [
+    t,
+    owners,
+    mutations,
+    languageCode,
+    editions,
+    specimens?.owners,
+    formatDate,
+  ])
 
   return (
     <>

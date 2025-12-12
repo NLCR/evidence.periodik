@@ -260,8 +260,9 @@
     "NS_tooltip": "Nečitateľne zviazané, napr. zviazané príliš k chrbtu"
   },
   "boolean_facet_states": {
-    "numMissing": "Number exists",
-    "numExists": "Number missing"
+    "title": "Číslo",
+    "numMissing": "Číslo existuje",
+    "numExists": "Číslo chýba"
   },
   "header": {
     "home": "Domov",

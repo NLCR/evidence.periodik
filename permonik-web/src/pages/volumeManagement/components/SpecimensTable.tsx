@@ -1,6 +1,5 @@
 import { FC, RefObject, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import dayjs from 'dayjs'
 import {
   gridClasses,
   GridColDef,
@@ -47,6 +46,7 @@ import { useInputDataEditabilityContext } from './inputData/InputDataEditability
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
 import { GridApiCommunity } from '@mui/x-data-grid/internals'
+import { useFormatDate } from '../../../utils/date'
 
 const ODD_OPACITY = 0.2
 
@@ -224,6 +224,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
   const { languageCode } = useLanguageCode()
   const { MuiTableLocale } = useMuiTableLang()
   const { t } = useTranslation()
+  const { formatDate } = useFormatDate()
   const { disabled, locked: isInputDataLocked } =
     useInputDataEditabilityContext()
 
@@ -273,7 +274,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderValue(
-            dayjs(row.publicationDate).format('dd DD.MM.YYYY'),
+            formatDate(row.publicationDate, { includeDayName: true }),
             true,
             !disabled
           )
@@ -897,6 +898,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       mutations,
       specimensState.length,
       t,
+      formatDate,
     ]
   )
 
