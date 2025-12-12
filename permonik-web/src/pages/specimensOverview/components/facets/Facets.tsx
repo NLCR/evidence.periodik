@@ -229,12 +229,12 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
         />
       </Box>
       <Button
-        sx={{ flexShrink: 0, flexGrow: 0 }}
+        sx={{ flexShrink: 0, flexGrow: 0, marginTop: 1 }}
         startIcon={<DeleteOutlineOutlinedIcon />}
         variant="outlined"
         color="error"
         onClick={() => {
-          resetAll()
+          resetAll([publicationDateMin, publicationDateMax])
           setSliderRange([publicationDateMin, publicationDateMax])
           setCalendarDate(dayjs(specimens?.publicationDayMin))
         }}
