@@ -77,7 +77,7 @@ services:
       - /var/log/shibboleth:/var/log/shibboleth
 
   permonik-database:
-    image: solr:9.7.0
+    image: solr:9.10.0
     networks:
       - permonik
     ports:
