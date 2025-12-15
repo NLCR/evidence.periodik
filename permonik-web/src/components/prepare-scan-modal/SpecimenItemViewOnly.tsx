@@ -1,36 +1,18 @@
-import React, { useState } from 'react'
 import { TSpecimen } from '../../schema/specimen'
-import dayjs from 'dayjs'
 
 import CheckIcon from '@mui/icons-material/Check'
-import PlusIcon from '@mui/icons-material/Add'
-import DeleteIcon from '@mui/icons-material/Delete'
 import WarningIcon from '@mui/icons-material/PriorityHigh'
-import {
-  Card,
-  CardContent,
-  Stack,
-  Typography,
-  Box,
-  TextField,
-  Button,
-  IconButton,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  colors,
-} from '@mui/material'
+import { Card, CardContent, Stack, Typography, Box } from '@mui/material'
 import ReplacementInput from './ReplacementInput'
-import { getDateLabel, getNumberLabel, Replacement } from './SpecimenItem'
+import { getDateLabel, getNumberLabel } from './SpecimenItem'
 import { noop } from 'lodash'
 import theme from '../../theme'
+import { TReplacement } from './schemas'
 
 type Props = {
   specimen: TSpecimen
-  replacements: Replacement[]
-  mainReplacement: Replacement | null
+  replacements: TReplacement[]
+  mainReplacement: TReplacement | null
   note: string
 }
 

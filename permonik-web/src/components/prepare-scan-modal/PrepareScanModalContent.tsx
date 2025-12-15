@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { FC, useMemo } from 'react'
+import { FC, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import {
@@ -18,6 +18,10 @@ import Barcode from 'react-barcode'
 import { useMetaTitleListQuery } from '../../api/metaTitle'
 import { StripedDataGrid } from '../../pages/volumeManagement/components/SpecimensTable'
 import { useColumns } from './columns'
+import SpecimenItem from './SpecimenItem'
+import { TabSelect } from '../TabSelect'
+import { TScanTemplateSettings } from './schemas'
+import ScanTemplateSettings from './ScanTemplateSettings'
 
 const bolderTextStyle = {
   fontWeight: '600',
@@ -27,12 +31,19 @@ type TProps = {
   volumeId?: string
 }
 
-const PrepareScanModalContent: FC<TProps> = ({ volumeId = undefined }) => {
-  const { t } = useTranslation()
+type TView = 'VIEW' | 'EDIT'
 
-  const columns = useColumns()
-
-  const { languageCode } = useLanguageCode()
+const PrepareScanModalContent2: FC<TProps> = ({ volumeId = undefined }) => {
+  const [view, setView] = useState<TView>('EDIT')
+  const [stage, setStage] = useState(0)
+  const [settings, setSettings] = useState<TScanTemplateSettings>({
+    badBound: false,
+    damagedPages: false,
+    missingPages: true,
+    replacementSources: [
+      { barcode: '', mutation: '', owner: '', signature: '' },
+    ],
+  })
 
   const {
     data: owners,
@@ -67,64 +78,6 @@ const PrepareScanModalContent: FC<TProps> = ({ volumeId = undefined }) => {
     isError: volumeError,
   } = useManagedVolumeDetailQuery(volumeId)
 
-  const numbers = useMemo(
-    () =>
-      volumeStats?.specimens
-        .filter(
-          (s) =>
-            s.numExists &&
-            !s.isAttachment &&
-            s.number?.length &&
-            isFinite(Number(s.number))
-        )
-        .map((s) => Number(s.number)) || [],
-    [volumeStats?.specimens]
-  )
-
-  const atypicalNumbers = useMemo(
-    () =>
-      volumeStats?.specimens
-        .filter(
-          (s) =>
-            s.numExists &&
-            !s.isAttachment &&
-            s.number?.length &&
-            !isFinite(Number(s.number)) &&
-            /^[0-9]+[a-zA-Z]+$/.test(s.number)
-        )
-        .map((s) => s.number) || [],
-    [volumeStats?.specimens]
-  )
-
-  const attachmentNumbers = useMemo(
-    () =>
-      volumeStats?.specimens
-        .filter(
-          (s) =>
-            s.numExists &&
-            s.isAttachment &&
-            s.attachmentNumber?.length &&
-            isFinite(Number(s.attachmentNumber))
-        )
-        .map((s) => Number(s.attachmentNumber)) || [],
-    [volumeStats?.specimens]
-  )
-
-  const atypicalAttachmentNumbers = useMemo(
-    () =>
-      volumeStats?.specimens
-        .filter(
-          (s) =>
-            s.numExists &&
-            s.isAttachment &&
-            s.attachmentNumber?.length &&
-            !isFinite(Number(s.attachmentNumber)) &&
-            /^[0-9]+[a-zA-Z]+$/.test(s.attachmentNumber)
-        )
-        .map((s) => s.attachmentNumber) || [],
-    [volumeStats?.specimens]
-  )
-
   if (
     volumeStatsLoading ||
     ownersLoading ||
@@ -144,6 +97,16 @@ const PrepareScanModalContent: FC<TProps> = ({ volumeId = undefined }) => {
   )
     return <ShowError />
 
+  if (stage === 0) {
+    return (
+      <ScanTemplateSettings
+        templateSettings={settings}
+        setTemplateSettings={setSettings}
+        onConfirm={() => setStage(1)}
+      />
+    )
+  }
+
   return (
     <Box>
       <Box
@@ -153,46 +116,75 @@ const PrepareScanModalContent: FC<TProps> = ({ volumeId = undefined }) => {
       >
         <Typography sx={{ fontWeight: 700, fontSize: 20 }}>
           {metatitles?.find((m) => m.id === volume?.volume?.metaTitleId)?.name}{' '}
-          ({volume?.volume?.signature ?? 'neznámmá signatura'})
+          (signatura {volume?.volume?.signature ?? 'neznámmá signatura'})
         </Typography>
-        <Box display="grid" gridTemplateColumns="1fr 1fr">
-          <Typography>Podnázev: {volume?.volume.subName}</Typography>
-          <Typography>
-            Vlastník:{' '}
-            {owners.find((o) => o.id === volumeStats.ownerId)?.shorthand}
-          </Typography>
-          <Typography>
-            Mutace:{' '}
-            {mutations.find((m) => m.id === volume?.volume.mutationId)?.name.cs}
-          </Typography>
-          <Typography>
-            Mutační vydání: {volume?.volume.mutationMark.mark}
-          </Typography>
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={5}>
+          <Box>
+            <Typography>Podnázev: {volume?.volume.subName}</Typography>
+            <Typography>
+              Vlastník:{' '}
+              {owners.find((o) => o.id === volumeStats.ownerId)?.shorthand}
+            </Typography>
+            <Typography>
+              Mutace:{' '}
+              {
+                mutations.find((m) => m.id === volume?.volume.mutationId)?.name
+                  .cs
+              }
+            </Typography>
+            <Typography>
+              Mutační vydání: {volume?.volume.mutationMark.mark}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography>
+              Rozsah od:{' '}
+              {new Date(volume?.volume.dateFrom ?? '').toLocaleDateString()}
+            </Typography>
+
+            <Typography>
+              Rozsah do:{' '}
+              {new Date(volume?.volume.dateTo ?? '').toLocaleDateString()}
+            </Typography>
+            <Typography>
+              Počet čísel:{' '}
+              {volume?.specimens.filter((item) => !item.isAttachment).length}
+            </Typography>
+            <Typography>
+              Počet příloh:{' '}
+              {volume?.specimens.filter((item) => item.isAttachment).length}
+            </Typography>
+          </Box>
         </Box>
 
         <Box display="flex" justifyContent="center">
           <Barcode value={volumeStats.barCode} />
         </Box>
+
+        <Box display="flex" justifyContent="center" alignItems="center" gap={2}>
+          Zobrazení:{' '}
+          <TabSelect<TView>
+            options={[
+              { label: 'Editace', value: 'EDIT' },
+              { label: 'Náhled', value: 'VIEW' },
+            ]}
+            selectedItem={view}
+            setSelectedItem={setView}
+          />
+        </Box>
       </Box>
-      <StripedDataGrid
-        columns={columns}
-        rows={volume?.specimens.filter(
-          (item) => item.numExists || item.numMissing
-        )}
-      />
-      {/* 
-      TODO:
-       - dat jen data kde je numExists nebo numMissing
-       - zavest entitu
-       - vytahnout zakladni informace z volume.specimens
-       - pridat poznamku
-       - povoleni pridani sloupcu? Radku? Jak ukladat na BE?
-         - array?
-       
-       - nahled na predlohu ke skenovani do badatelske casti?
-       */}
+
+      {volume?.specimens
+        .filter((item) => item.numExists || item.numMissing)
+        .map((item) => (
+          <SpecimenItem
+            viewOnly={view === 'VIEW'}
+            key={item.id}
+            specimen={item}
+          />
+        ))}
     </Box>
   )
 }
 
-export default PrepareScanModalContent
+export default PrepareScanModalContent2

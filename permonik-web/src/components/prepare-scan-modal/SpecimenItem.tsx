@@ -15,9 +15,11 @@ import {
   TextField,
   Button,
   IconButton,
+  Checkbox,
 } from '@mui/material'
 import ReplacementInput from './ReplacementInput'
 import SpecimenItemViewOnly from './SpecimenItemViewOnly'
+import { defaultReplacement, TReplacement } from './schemas'
 
 type Props = { specimen: TSpecimen; viewOnly?: boolean }
 
@@ -30,22 +32,6 @@ export const getNumberLabel = (specimen: TSpecimen) => {
 
 export const getDateLabel = (date: string) => dayjs(date).format('DD. MM. YYYY')
 
-export type Replacement = {
-  pages: string
-  signature: string
-  barcode: string
-  owner: string
-  mutation: string
-}
-
-export const defaultReplacement: Replacement = {
-  pages: 'všechny',
-  barcode: '',
-  mutation: '',
-  owner: '',
-  signature: '',
-}
-
 const AddReplacementButton = ({ callback }: { callback: () => void }) => (
   <Button variant="outlined" startIcon={<PlusIcon />} onClick={callback}>
     Přidat náhradu
@@ -53,14 +39,14 @@ const AddReplacementButton = ({ callback }: { callback: () => void }) => (
 )
 
 const SpecimenItem = ({ specimen, viewOnly = false }: Props) => {
-  const [replacements, setReplacements] = useState<Replacement[]>([])
+  const [replacements, setReplacements] = useState<TReplacement[]>([])
   const addReplacement = () =>
     setReplacements((prev) => prev.concat([defaultReplacement]))
   const removeReplacement = (index: number) =>
     setReplacements((prev) => prev.filter((item, idx) => idx != index))
 
   const [note, setNote] = useState<string>('')
-  const [mainReplacement, setMainReplacement] = useState<Replacement | null>(
+  const [mainReplacement, setMainReplacement] = useState<TReplacement | null>(
     null
   )
 
@@ -94,16 +80,21 @@ const SpecimenItem = ({ specimen, viewOnly = false }: Props) => {
               <Typography>Skenovat ze svazku</Typography>
             </Stack>
           ) : (
-            <Stack direction="row" spacing={1} alignItems="center">
-              <WarningIcon color="error" fontSize="small" />
-              <Typography>Nahradit:</Typography>
-              <ReplacementInput
-                allPages
-                viewOnly={viewOnly}
-                onChange={setMainReplacement}
-                value={mainReplacement}
-              />
-            </Stack>
+            <>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <WarningIcon color="error" fontSize="small" />
+                <Typography>Nahradit:</Typography>
+                <ReplacementInput
+                  allPages
+                  viewOnly={viewOnly}
+                  onChange={setMainReplacement}
+                  value={mainReplacement}
+                />
+              </Stack>
+              <Box>
+                <Checkbox /> Náhrada není dostupná
+              </Box>
+            </>
           )}
         </Box>
 
@@ -125,21 +116,26 @@ const SpecimenItem = ({ specimen, viewOnly = false }: Props) => {
 
                 <Stack spacing={1}>
                   {replacements.map((item, index) => (
-                    <Stack key={index} direction="row" alignItems="center">
-                      <ReplacementInput
-                        viewOnly={viewOnly}
-                        value={replacements[index]}
-                        onChange={(value: Replacement) =>
-                          setReplacements((prev) => {
-                            prev[index] = value
-                            return prev
-                          })
-                        }
-                      />
-                      <IconButton onClick={() => removeReplacement(index)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Stack>
+                    <>
+                      <Stack key={index} direction="row" alignItems="center">
+                        <ReplacementInput
+                          viewOnly={viewOnly}
+                          value={replacements[index]}
+                          onChange={(value: TReplacement) =>
+                            setReplacements((prev) => {
+                              prev[index] = value
+                              return prev
+                            })
+                          }
+                        />
+                        <IconButton onClick={() => removeReplacement(index)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Stack>
+                      <Box>
+                        <Checkbox /> Náhrada není dostupná
+                      </Box>
+                    </>
                   ))}
                   <AddReplacementButton callback={addReplacement} />
                 </Stack>

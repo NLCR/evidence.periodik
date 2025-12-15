@@ -1,14 +1,14 @@
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
-import { defaultReplacement, Replacement } from './SpecimenItem'
 import { useState } from 'react'
 import Typography from '@mui/material/Typography'
+import { defaultReplacement, TReplacement } from './schemas'
 
 type Props = {
   allPages?: boolean
   viewOnly?: boolean
-  value: Replacement | null
-  onChange: (value: Replacement) => void
+  value: TReplacement | null
+  onChange: (value: TReplacement) => void
 }
 
 const ReplacementInputComponent = ({
@@ -52,11 +52,11 @@ const ReplacementInput = ({
   value,
   onChange,
 }: Props) => {
-  const [replacement, setReplacement] = useState<Replacement>(
+  const [replacement, setReplacement] = useState<TReplacement>(
     value ?? defaultReplacement
   )
 
-  const safeSetReplacement = (value: Partial<Replacement>) => {
+  const safeSetReplacement = (value: Partial<TReplacement>) => {
     setReplacement((prev) => {
       const newValue = { ...prev, ...value }
       onChange(newValue)

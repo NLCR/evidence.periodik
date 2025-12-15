@@ -19,7 +19,7 @@ import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
-import PrepareScanModalContent2 from '../../../components/prepare-scan-modal/PrepareScanModalContent2'
+import PrepareScanModalContent2 from '../../../components/prepare-scan-modal/PrepareScanModalContent'
 
 type Props = {
   duplicated: boolean
