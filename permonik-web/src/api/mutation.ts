@@ -22,11 +22,7 @@ export const useUpdateMutationMutation = () =>
 
       return api()
         .put(`mutation/${mutationClone.id}`, {
-          // JSON.stringify name, because solr stores name as String
-          json: {
-            ...mutationClone,
-            name: JSON.stringify(mutationClone.name),
-          },
+          json: mutationClone,
         })
         .json<void>()
     },
@@ -47,11 +43,7 @@ export const useCreateMutationMutation = () =>
 
       return api()
         .post(`mutation`, {
-          // JSON.stringify name, because solr stores name as String
-          json: {
-            ...mutationClone,
-            name: JSON.stringify(mutationClone.name),
-          },
+          json: mutationClone,
         })
         .json<void>()
     },
