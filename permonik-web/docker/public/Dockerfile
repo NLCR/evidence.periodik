@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:experimental
 
 ## BUILD Image ##
-FROM node:22.14-slim AS builder
+FROM node:24-slim AS builder
 RUN corepack enable
 RUN yarn set version latest
 

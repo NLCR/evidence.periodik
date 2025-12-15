@@ -7,15 +7,16 @@ import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import { DateCalendar } from '@mui/x-date-pickers-pro'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
-import blue from '@mui/material/colors/blue'
 import { TMetaTitle } from '../../../../schema/metaTitle'
 import ShowError from '../../../../components/ShowError'
 import Loader from '../../../../components/Loader'
-import ControlledSlider from '../ControlledSlider'
+import ControlledSliderAndDateInput from '../ControlledSliderAndDateInput'
 import ControlledBarCodeInput from '../ControlledBarCodeInput'
 import * as FacetGroups from './facet-groups'
 import { useFacetsContext } from './FacetsContext'
 import { useFacetsStoreData } from './store'
+import NumberOptionsTabMultiSelect from './NumberOptionsTabMultiSelect'
+import theme from '../../../../theme'
 
 type TProps = {
   metaTitle: TMetaTitle
@@ -69,8 +70,20 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
   useEffect(() => {
     if (specimens && metaTitleIdChanged && !sliderRangeInitialized) {
       setSliderRange([
-        Number(specimens.publicationDayMin?.substring(0, 4)),
-        Number(specimens.publicationDayMax?.substring(0, 4)),
+        dayjs(
+          new Date(
+            Number(specimens.publicationDayMin?.substring(0, 4)), // year
+            0, // month
+            1 // date
+          )
+        ),
+        dayjs(
+          new Date(
+            Number(specimens.publicationDayMax?.substring(0, 4)), // year
+            11, // month
+            31 // date
+          )
+        ),
       ])
       setSliderRangeInitialized(true)
     }
@@ -89,10 +102,8 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
     }
   }, [calendarDateInitialized, metaTitleIdChanged, sliderRangeInitialized])
 
-  const publicationYearMin =
-    Number(specimens?.publicationDayMin?.substring(0, 4)) || 1900
-  const publicationYearMax =
-    Number(specimens?.publicationDayMax?.substring(0, 4)) || dayjs().year()
+  const publicationDateMin = dayjs(specimens?.publicationDayMin)
+  const publicationDateMax = dayjs(specimens?.publicationDayMax)
 
   if (isError) {
     return (
@@ -100,7 +111,7 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
         <Typography
           variant="h6"
           sx={{
-            color: blue['900'],
+            color: theme.palette.primary.main,
           }}
         >
           {metaTitle.name}
@@ -116,7 +127,7 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
         <Typography
           variant="h6"
           sx={{
-            color: blue['900'],
+            color: theme.palette.primary.main,
             fontWeight: '600',
           }}
         >
@@ -145,11 +156,11 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
         >
           {t('specimens_overview.date')}
         </Typography>
-        {view === 'calendar' ? (
+        {view === 'CALENDAR' ? (
           <Box>
             {dayjs(calendarDate).isValid() ? (
               <DateCalendar
-                views={['month', 'year']}
+                views={['year', 'month']}
                 openTo="month"
                 sx={{
                   height: 'auto',
@@ -157,8 +168,8 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
                 value={dayjs(calendarDate)}
                 minDate={dayjs(specimens?.publicationDayMin)}
                 maxDate={dayjs(specimens?.publicationDayMax)}
-                onChange={(value: Dayjs) => {
-                  setCalendarDate(value)
+                onChange={(value: Dayjs | null) => {
+                  if (value) setCalendarDate(value)
                 }}
                 disabled={isFetching}
               />
@@ -167,10 +178,10 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
             )}
           </Box>
         ) : (
-          <ControlledSlider
+          <ControlledSliderAndDateInput
             fetching={isFetching}
-            pubDaysMin={publicationYearMin}
-            pubDaysMax={publicationYearMax}
+            pubDateMin={publicationDateMin}
+            pubDateMax={publicationDateMax}
           />
         )}
         <Typography
@@ -189,6 +200,14 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
             marginTop: '10px',
           }}
         />
+
+        <NumberOptionsTabMultiSelect />
+        <Divider
+          sx={{
+            marginTop: '10px',
+          }}
+        />
+
         <Box
           sx={() => ({
             paddingRight: '8px',
@@ -210,13 +229,13 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
         />
       </Box>
       <Button
-        sx={{ flexShrink: 0, flexGrow: 0 }}
+        sx={{ flexShrink: 0, flexGrow: 0, marginTop: 1 }}
         startIcon={<DeleteOutlineOutlinedIcon />}
         variant="outlined"
         color="error"
         onClick={() => {
-          resetAll()
-          setSliderRange([publicationYearMin, publicationYearMax])
+          resetAll([publicationDateMin, publicationDateMax])
+          setSliderRange([publicationDateMin, publicationDateMax])
           setCalendarDate(dayjs(specimens?.publicationDayMin))
         }}
       >

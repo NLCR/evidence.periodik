@@ -1,7 +1,10 @@
 package cz.incad.nkp.inprove.permonikapi.specimen;
 
+import cz.incad.nkp.inprove.permonikapi.specimen.dto.SpecimenStateDTO;
 import lombok.*;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +17,8 @@ import java.util.stream.Collectors;
 @Getter
 public class SpecimenFacets implements SpecimenDefinition {
 
-    private Integer dateStart;
-    private Integer dateEnd;
+    private Instant dateStart;
+    private Instant dateEnd;
     private String calendarDateStart;
     private String calendarDateEnd;
     private List<String> names;
@@ -26,6 +29,7 @@ public class SpecimenFacets implements SpecimenDefinition {
     private List<String> ownerIds;
     private List<String> damageTypes;
     private String barCode;
+    private List<SpecimenStateDTO> specimenStates;
 
     private String doUUIDListCollection(List<String> facetList, String field) {
         return facetList.stream()
@@ -71,19 +75,24 @@ public class SpecimenFacets implements SpecimenDefinition {
         return BAR_CODE_FIELD + ":*" + barCode + "*";
     }
 
-    // Utility method to escape special characters in query strings
-    private String escapeQueryChars(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (char c : s.toCharArray()) {
-            // List of special characters that need to be escaped
-            if (c == '\\' || c == '+' || c == '-' || c == '!' || c == '(' || c == ')' ||
-                c == ':' || c == '^' || c == '[' || c == ']' || c == '\"' || c == '{' ||
-                c == '}' || c == '~' || c == '*' || c == '?' || c == '|' || c == '&' ||
-                c == ';' || c == '/' || Character.isWhitespace(c)) {
-                sb.append('\\');
+    String getSpecimenStatesQueryString() {
+        List<String> clauses = new ArrayList<>();
+
+        for (SpecimenStateDTO state : specimenStates) {
+            if (Boolean.TRUE.equals(state.active())) {
+                switch (state.id()) {
+                    case NUM_EXISTS -> clauses.add(NUM_EXISTS_FIELD + ":true");
+                    case NUM_MISSING -> clauses.add(NUM_MISSING_FIELD + ":true");
+                }
             }
-            sb.append(c);
         }
-        return sb.toString();
+
+//        if (clauses.isEmpty()) {
+//            return NUM_EXISTS_FIELD + ":true";
+//        }
+
+        return String.join(" OR ", clauses);
+
     }
+
 }

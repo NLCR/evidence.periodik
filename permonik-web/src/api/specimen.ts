@@ -1,11 +1,13 @@
-import { useQuery, keepPreviousData, useMutation } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import { api, queryClient } from './index'
 import {
-  TSpecimensPublicationDays,
+  SpecimenStateEnum,
   TSpecimen,
   TSpecimenDamageTypesFacet,
   TSpecimenFacet,
+  TSpecimensPublicationDays,
+  TSpecimenState,
 } from '../schema/specimen'
 import { useSpecimensOverviewStore } from '../slices/useSpecimensOverviewStore'
 
@@ -22,10 +24,31 @@ export interface TSpecimensFacets {
 export const useSpecimenFacetsQuery = (metaTitleId?: string) => {
   const params = useSpecimensOverviewStore((state) => state.params)
   const barCodeInput = useSpecimensOverviewStore((state) => state.barCodeInput)
+  const specimenStates = useSpecimensOverviewStore(
+    (state) => state.specimenStates
+  )
+  const calendarDate = useSpecimensOverviewStore((state) => state.calendarDate)
   const view = useSpecimensOverviewStore((state) => state.view)
 
+  const dayJsDate = dayjs(calendarDate)
+
+  const startOfMonth = dayJsDate.startOf('month')
+  const endOfMonth = dayJsDate.endOf('month')
+
+  const startOfMonthUTC = `${startOfMonth.year()}-${String(startOfMonth.month() + 1).padStart(2, '0')}-01T00:00:00.000Z`
+  const endOfMonthUTC = `${endOfMonth.year()}-${String(endOfMonth.month() + 1).padStart(2, '0')}-${String(endOfMonth.date()).padStart(2, '0')}T23:59:59.999Z`
+
   return useQuery({
-    queryKey: ['specimen', 'facets', metaTitleId, params, barCodeInput, view],
+    queryKey: [
+      'specimen',
+      'facets',
+      metaTitleId,
+      params,
+      calendarDate,
+      barCodeInput,
+      specimenStates,
+      view,
+    ],
     queryFn: () => {
       const formData = new FormData()
       formData.set(
@@ -33,6 +56,15 @@ export const useSpecimenFacetsQuery = (metaTitleId?: string) => {
         JSON.stringify({
           ...params,
           barCode: barCodeInput,
+          specimenStates: [
+            SpecimenStateEnum.numExists,
+            SpecimenStateEnum.numMissing,
+          ].map((state) => ({
+            id: state,
+            active: specimenStates.includes(state as TSpecimenState),
+          })),
+          calendarDateStart: startOfMonthUTC,
+          calendarDateEnd: endOfMonthUTC,
         })
       )
       formData.set('view', view)
@@ -58,6 +90,10 @@ export const useSpecimenListQuery = (metaTitleId?: string) => {
   const params = useSpecimensOverviewStore((state) => state.params)
   const pagination = useSpecimensOverviewStore((state) => state.pagination)
   const barCodeInput = useSpecimensOverviewStore((state) => state.barCodeInput)
+  const specimenStates = useSpecimensOverviewStore(
+    (state) => state.specimenStates
+  )
+
   const calendarDate = useSpecimensOverviewStore((state) => state.calendarDate)
   const view = useSpecimensOverviewStore((state) => state.view)
 
@@ -80,10 +116,11 @@ export const useSpecimenListQuery = (metaTitleId?: string) => {
       params,
       calendarDate,
       barCodeInput,
+      specimenStates,
     ],
     queryFn: () => {
       const formData = new FormData()
-      if (view === 'table') {
+      if (view === 'TABLE') {
         formData.set(
           'offset',
           (pagination.pageIndex > 0
@@ -101,6 +138,13 @@ export const useSpecimenListQuery = (metaTitleId?: string) => {
         JSON.stringify({
           ...params,
           barCode: barCodeInput,
+          specimenStates: [
+            SpecimenStateEnum.numExists,
+            SpecimenStateEnum.numMissing,
+          ].map((state) => ({
+            id: state,
+            active: specimenStates.includes(state as TSpecimenState),
+          })),
           calendarDateStart: startOfMonthUTC,
           calendarDateEnd: endOfMonthUTC,
         })

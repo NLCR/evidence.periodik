@@ -3,23 +3,32 @@ import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import { Link as ReactLink } from 'react-router-dom'
 import dayjs from 'dayjs'
-import { blue } from '@mui/material/colors'
 import { useMetaTitleOverviewListQuery } from '../api/metaTitle'
 import Loader from '../components/Loader'
 import ShowError from '../components/ShowError'
 import ShowInfoMessage from '../components/ShowInfoMessage'
 import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
+import Grid from '@mui/material/Grid'
+import theme from '../theme'
 
 const Home = () => {
   const { t, i18n } = useTranslation()
   const { data, isLoading, isError, refetch } = useMetaTitleOverviewListQuery()
 
   return (
-    <Box sx={{ textAlign: 'center', marginTop: '50px', width: '100%' }}>
+    <Box
+      sx={{
+        textAlign: 'center',
+        paddingTop: '50px',
+        marginY: '-1rem',
+        width: '100%',
+        overflow: 'auto',
+      }}
+    >
       <Typography
         variant="h3"
         sx={{
-          color: blue['900'],
+          color: theme.palette.primary.main,
         }}
       >
         {APP_WITH_EDITING_ENABLED ? t('home.title_admin') : t('home.title')}
@@ -32,18 +41,19 @@ const Home = () => {
       {isLoading ? <Loader /> : null}
       {isError && !isLoading ? <ShowError onRetry={refetch} /> : null}
       {data && !isLoading && !isError ? (
-        <Box
+        <Grid
+          container
+          spacing={2}
+          justifyContent={'center'}
           sx={{
             marginTop: 10,
             paddingBottom: 4,
-            justifyContent: 'center',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, minmax(0px, 1fr))',
-            gap: '1rem',
           }}
         >
           {data.map((mt) => (
-            <Box
+            <Grid
+              width={'100%'}
+              maxWidth={'22rem'}
               component={mt.specimens.matchedSpecimens > 0 ? ReactLink : Box}
               to={`/${i18n.resolvedLanguage}/${t('urls.specimens_overview')}/${
                 mt.id
@@ -97,7 +107,7 @@ const Home = () => {
               >
                 <Typography
                   sx={{
-                    color: blue['700'],
+                    color: theme.palette.primary.light,
                   }}
                 >
                   {t('home.specimens')}: {mt.specimens.matchedSpecimens}
@@ -109,9 +119,9 @@ const Home = () => {
                   {t('home.owners')}: {mt.specimens.ownersCount}
                 </Typography>
               </Box>
-            </Box>
+            </Grid>
           ))}
-        </Box>
+        </Grid>
       ) : null}
       {!isLoading && !isError && !data ? (
         <ShowInfoMessage message={t('home.no_meta_titles_found')} />

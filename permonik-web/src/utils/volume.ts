@@ -2,6 +2,7 @@ import { TEdition } from '../schema/edition'
 import { copyAuditable } from '../schema/common'
 import { v4 as uuid } from 'uuid'
 import { TEditableVolume, TVolume } from '../schema/volume'
+import { repairMutationMark } from './mutationMark'
 
 export const repairVolume = (
   volume: TEditableVolume,
@@ -10,11 +11,11 @@ export const repairVolume = (
   return {
     ...copyAuditable(volume),
     id: volume.id.length ? volume.id : uuid(),
-    barCode: volume.barCode.trim() || '',
+    barCode: volume.barCode?.trim() || '',
     dateFrom: volume.dateFrom ?? '',
     dateTo: volume.dateTo ?? '',
     metaTitleId: volume.metaTitleId ?? '',
-    subName: volume.subName.trim() ?? '',
+    subName: volume.subName?.trim() ?? '',
     mutationId: volume.mutationId ?? '',
     periodicity:
       volume.periodicity.map((p) => ({
@@ -24,16 +25,16 @@ export const repairVolume = (
           p.editionId ?? editions.find((pub) => pub.isDefault)?.id ?? '',
         day: p.day,
         pagesCount: Number(p.pagesCount) ?? 0,
-        name: p.name.trim() ?? '',
-        subName: p.subName.trim() ?? '',
+        name: p.name?.trim() ?? '',
+        subName: p.subName?.trim() ?? '',
       })) ?? [],
     firstNumber: Number(volume.firstNumber) ?? -1,
     lastNumber: Number(volume.lastNumber),
-    note: volume.note.trim() ?? '',
+    note: volume.note?.trim() ?? '',
     showAttachmentsAtTheEnd: volume.showAttachmentsAtTheEnd ?? false,
-    signature: volume.signature.trim() ?? '',
+    signature: volume.signature?.trim() ?? '',
     ownerId: volume.ownerId ?? '',
     year: Number(volume.year) ?? -1,
-    mutationMark: volume.mutationMark.trim() ?? '',
+    mutationMark: repairMutationMark(volume.mutationMark),
   }
 }

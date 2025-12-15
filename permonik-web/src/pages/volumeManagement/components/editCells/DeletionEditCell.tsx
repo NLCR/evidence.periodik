@@ -2,21 +2,23 @@ import { SpecimenSchema, TEditableSpecimen } from '../../../../schema/specimen'
 import React, { FC, useState } from 'react'
 import Box from '@mui/material/Box'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import LoopIcon from '@mui/icons-material/Loop'
-import { useDeleteSpecimenById } from '../../../../api/specimen'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import ModalContainer from '../../../../components/ModalContainer'
 import theme from '../../../../theme'
+import { GridApiCommunity } from '@mui/x-data-grid/internals'
+import { useMeQuery } from '../../../../api/user'
 
 type DuplicationCellProps = {
   row: TEditableSpecimen
+  api: GridApiCommunity
   canEdit: boolean
 }
 
-const DeletionEditCell: FC<DuplicationCellProps> = ({ row, canEdit }) => {
-  const { mutateAsync: doDelete, status } = useDeleteSpecimenById()
+const DeletionEditCell: FC<DuplicationCellProps> = ({ row, api, canEdit }) => {
+  // const { mutateAsync: doDelete, status } = useDeleteSpecimenById()
   const { t } = useTranslation()
+  const me = useMeQuery()
 
   const [confirmDeletionModalOpened, setConfirmDeletionModalOpened] =
     useState(false)
@@ -31,14 +33,55 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({ row, canEdit }) => {
       throw new Error(specimenValidation.error.message)
     }
 
-    try {
-      await doDelete({ volumeId: row.volumeId, specimenId: row.id })
-
-      toast.success(t('volume_overview.specimen_deleted_successfully'))
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-      toast.error(t('volume_overview.specimen_delete_error'))
+    // prepare row update trigger option
+    api.setLoading(true)
+    if (api.getRowMode(row.id) === 'view') {
+      api.startRowEditMode({ id: row.id })
     }
+
+    while (api.getRowMode(row.id) !== 'edit') {
+      // actively wait for the lifecycle update to propagate
+      await new Promise((r) => setTimeout(r, 200))
+    }
+
+    // update fields that are not in the table
+    api.updateRows([
+      {
+        ...row,
+        deleted: new Date().toISOString(),
+        deletedBy: me.data?.id,
+      },
+    ])
+
+    // reset fields that are in the table
+    if (api.getCellMode(row.id, 'numMissing') === 'edit') {
+      await api.setEditCellValue({
+        id: row.id,
+        field: 'numMissing',
+        value: false,
+      })
+    }
+    if (api.getCellMode(row.id, 'numExists') === 'edit') {
+      await api.setEditCellValue({
+        id: row.id,
+        field: 'numExists',
+        value: false,
+      })
+    }
+
+    // trigger row update lifecycle hook - commit the edits to trigger processRowUpdate
+    if (api.getRowMode(row.id) === 'edit') {
+      api.stopRowEditMode({ id: row.id })
+    }
+    api.setLoading(false)
+
+    // delete also on BE
+    // try {
+    //   await doDelete({ volumeId: row.volumeId, specimenId: row.id })
+    // } catch (e) {
+    //   console.log(e)
+    // }
+    toast.success(t('volume_overview.specimen_deleted_successfully'))
   }
 
   // TODO: color grey when cannot edit
@@ -53,7 +96,7 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({ row, canEdit }) => {
     >
       {row.created ? (
         <>
-          {status === 'pending' ? (
+          {/* {status === 'pending' ? (
             <LoopIcon
               sx={{
                 animation: 'spin 0.5s linear infinite',
@@ -67,19 +110,19 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({ row, canEdit }) => {
                 },
               }}
             />
-          ) : (
-            <DeleteOutlineIcon
-              onClick={() =>
-                canEdit ? setConfirmDeletionModalOpened(true) : null
-              }
-              sx={{
-                cursor: 'pointer',
-                color: canEdit
-                  ? theme.palette.grey[900]
-                  : theme.palette.grey[600],
-              }}
-            />
-          )}
+          ) : ( */}
+          <DeleteOutlineIcon
+            onClick={() =>
+              canEdit ? setConfirmDeletionModalOpened(true) : null
+            }
+            sx={{
+              cursor: 'pointer',
+              color: canEdit
+                ? theme.palette.grey[900]
+                : theme.palette.grey[600],
+            }}
+          />
+          {/* )} */}
           <ModalContainer
             onClose={() => setConfirmDeletionModalOpened(false)}
             header={t('volume_overview.delete_specimen_text')}

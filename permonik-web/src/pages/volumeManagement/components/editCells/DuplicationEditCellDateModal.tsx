@@ -1,4 +1,4 @@
-import Typography from '@mui/material/Typography/Typography'
+import Typography from '@mui/material/Typography'
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import dayjs, { Dayjs } from 'dayjs'
@@ -24,7 +24,9 @@ const DuplicationEditCellDateModal = ({ date, setDate }: Props) => {
 
       <DateCalendar
         value={date}
-        onChange={(value) => setDate(value)}
+        onChange={(value) => {
+          if (value) setDate(value)
+        }}
         minDate={dayjs(volumeState.dateFrom)}
         maxDate={dayjs(volumeState.dateTo)}
       />

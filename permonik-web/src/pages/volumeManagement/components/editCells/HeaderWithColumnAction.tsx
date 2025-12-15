@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import React, { FC, MutableRefObject } from 'react'
+import React, { FC, RefObject } from 'react'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import IconButton from '@mui/material/IconButton'
 import clone from 'lodash/clone'
@@ -17,7 +17,7 @@ import Tooltip from '@mui/material/Tooltip'
 type HeaderWithColumnActionProps = {
   field: TSpecimenDamageTypes
   canEdit: boolean
-  apiRef: MutableRefObject<GridApiPro>
+  apiRef: RefObject<GridApiPro | null>
   headerName: string
   description: string
 }

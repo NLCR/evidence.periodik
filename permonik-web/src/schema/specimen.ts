@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { AuditableSchema } from './common'
+import { mutationMarkSchema } from '../utils/mutationMark'
 
 export const SpecimenDamageTypesSchema = z.enum([
   'OK',
@@ -44,7 +45,7 @@ export const SpecimenSchema = AuditableSchema.extend({
   subName: z.string(),
   editionId: z.string().length(36),
   mutationId: z.string().length(36),
-  mutationMark: z.string(),
+  mutationMark: mutationMarkSchema,
   publicationDate: z.string().min(1),
   publicationDateString: z.string().min(1),
   number: z.string(),
@@ -62,10 +63,21 @@ export const SpecimenFacetSchema = z.object({
   count: z.number(),
 })
 
+export enum SpecimenStateEnum {
+  numExists = 'NUM_EXISTS',
+  numMissing = 'NUM_MISSING',
+}
+
+export const SpecimenStateEnumSchema = z.enum([
+  SpecimenStateEnum.numExists,
+  SpecimenStateEnum.numMissing,
+])
+
 export type TSpecimenDamageTypes = z.infer<typeof SpecimenDamageTypesSchema>
 export type TSpecimen = z.infer<typeof SpecimenSchema>
 export type TEditableSpecimen = z.infer<typeof EditableSpecimenSchema>
 export type TSpecimenFacet = z.infer<typeof SpecimenFacetSchema>
+export type TSpecimenState = z.infer<typeof SpecimenStateEnumSchema>
 export type TSpecimenDamageTypesFacet = z.infer<typeof SpecimenDamageTypesFacet>
 export type TSpecimensPublicationDays = z.infer<
   typeof SpecimensPublicationDaysSchema

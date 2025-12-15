@@ -20,5 +20,6 @@ export const damageTypes: TSpecimenDamageTypes[] = [
 
 export const BACK_META_TITLE_ID = 'backMetaTitleId'
 export const JUMP_TO_SPECIMEN_WITH_ID = 'jumpToSpecimenWithId'
+export const VOLUME_DUPLICATE_SOURCE_ID = 'volumeDuplicateSourceId'
 
 export const LOGIN_URL = '/login/shibboleth'

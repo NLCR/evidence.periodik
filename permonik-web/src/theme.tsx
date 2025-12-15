@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles'
-import { blue, red } from '@mui/material/colors'
+import { blue, red, pink } from '@mui/material/colors'
+import { APP_WITH_EDITING_ENABLED } from './utils/constants'
 
 // A custom theme for this app
 const theme = createTheme({
@@ -33,7 +34,7 @@ const theme = createTheme({
   // },
   palette: {
     primary: {
-      main: blue['900'],
+      main: APP_WITH_EDITING_ENABLED ? pink[900] : blue['900'],
     },
     error: {
       main: red.A400,

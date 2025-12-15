@@ -1,17 +1,16 @@
 package cz.incad.nkp.inprove.permonikapi.edition;
 
 
-import cz.incad.nkp.inprove.permonikapi.edition.dto.CreatableEditionDTO;
-import cz.incad.nkp.inprove.permonikapi.edition.dto.EditionDTO;
-import cz.incad.nkp.inprove.permonikapi.edition.mapper.CreatableEditionMapper;
-import cz.incad.nkp.inprove.permonikapi.edition.mapper.EditionDTOMapper;
+import cz.incad.nkp.inprove.permonikapi.edition.model.Edition;
+import cz.incad.nkp.inprove.permonikapi.edition.model.EditionDTO;
+import cz.incad.nkp.inprove.permonikapi.edition.model.EditionMapper;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -20,20 +19,13 @@ import java.util.List;
 import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED_FIELD;
 
 @Service
+@RequiredArgsConstructor
 public class EditionService implements EditionDefinition {
 
     private static final Logger logger = LoggerFactory.getLogger(EditionService.class);
 
-    private final EditionDTOMapper editionDTOMapper;
+    private final EditionMapper editionMapper;
     private final SolrClient solrClient;
-    private final CreatableEditionMapper creatableEditionMapper;
-
-    @Autowired
-    public EditionService(EditionDTOMapper editionDTOMapper, SolrClient solrClient, CreatableEditionMapper creatableEditionMapper) {
-        this.editionDTOMapper = editionDTOMapper;
-        this.solrClient = solrClient;
-        this.creatableEditionMapper = creatableEditionMapper;
-    }
 
 
     public List<EditionDTO> getEditions() throws SolrServerException, IOException {
@@ -43,12 +35,10 @@ public class EditionService implements EditionDefinition {
 
         QueryResponse response = solrClient.query(EDITION_CORE_NAME, solrQuery);
 
-        List<Edition> editionList = response.getBeans(Edition.class);
-
-        return editionList.stream().map(editionDTOMapper).toList();
+        return response.getBeans(Edition.class).stream().map(editionMapper::toDTO).toList();
     }
 
-    public void updateEdition(String editionId, Edition edition) throws SolrServerException, IOException {
+    public void updateEdition(String editionId, EditionDTO edition) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(ID_FIELD + ":\"" + editionId + "\"");
         solrQuery.setRows(1);
@@ -64,7 +54,7 @@ public class EditionService implements EditionDefinition {
         edition.preUpdate();
 
         try {
-            solrClient.addBean(EDITION_CORE_NAME, edition);
+            solrClient.addBean(EDITION_CORE_NAME, editionMapper.toModel(edition));
             solrClient.commit(EDITION_CORE_NAME);
             logger.info("Edition {} successfully updated", edition.getId());
         } catch (Exception e) {
@@ -74,10 +64,10 @@ public class EditionService implements EditionDefinition {
 
     }
 
-    public void createEdition(CreatableEditionDTO edition) throws SolrServerException, IOException {
+    public void createEdition(EditionDTO edition) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         // TODO: this filter is not working
-        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + edition.name() + "\"");
+        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + edition.getName() + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(EDITION_CORE_NAME, solrQuery);
@@ -88,14 +78,10 @@ public class EditionService implements EditionDefinition {
             throw new RuntimeException("Edition with this name already exists");
         }
 
-        Edition newEdition = new Edition();
-        creatableEditionMapper.createEdition(edition, newEdition);
-
-        newEdition.prePersist();
-
+        edition.prePersist();
 
         try {
-            solrClient.addBean(EDITION_CORE_NAME, newEdition);
+            solrClient.addBean(EDITION_CORE_NAME, editionMapper.toModel(edition));
             solrClient.commit(EDITION_CORE_NAME);
             logger.info("Edition {} successfully created", edition);
         } catch (Exception e) {

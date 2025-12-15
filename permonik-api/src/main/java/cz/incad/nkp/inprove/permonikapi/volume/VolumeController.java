@@ -5,23 +5,20 @@ import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDetailDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeOverviewStatsDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 @Tag(name = "Volume API", description = "API for managing volumes")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/volume")
 public class VolumeController {
 
     private final VolumeService volumeService;
 
-    @Autowired
-    public VolumeController(VolumeService volumeService) {
-        this.volumeService = volumeService;
-    }
 
     @Operation(summary = "Creates new volume with specimens")
     @PostMapping()
@@ -50,7 +47,7 @@ public class VolumeController {
 
     @Operation(summary = "Gets managed volume detail with specimens by given id")
     @GetMapping("/{id}/detail")
-    public VolumeDetailDTO getMangedVolumeDetailById(@PathVariable String id) throws SolrServerException, IOException {
+    public VolumeDetailDTO getManagedVolumeDetailById(@PathVariable String id) throws SolrServerException, IOException {
         return volumeService.getVolumeDetailById(id, false);
     }
 

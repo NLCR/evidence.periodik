@@ -5,8 +5,8 @@ import cz.incad.nkp.inprove.permonikapi.metaTitle.dto.CreatableMetaTitleDTO;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.dto.MetaTitleOverviewDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -14,15 +14,11 @@ import java.util.List;
 
 @Tag(name = "MetaTitle API", description = "API for managing metaTitles")
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/metatitle")
 public class MetaTitleController {
 
     private final MetaTitleService metaTitleService;
-
-    @Autowired
-    public MetaTitleController(MetaTitleService metaTitleService) {
-        this.metaTitleService = metaTitleService;
-    }
 
 
     @Operation(summary = "Gets metaTitle with given id")

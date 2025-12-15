@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 ## BUILD image ##
-FROM gradle:8.14-jdk24 AS builder
+FROM gradle:9.1.0-jdk25 AS builder
 WORKDIR /build
 
 # Run build
@@ -21,7 +21,7 @@ RUN \
     java -Djarmode=layertools -jar ./permonik-api/build/libs/permonik-api.jar extract --destination /extracted
 
 ## RUN Image ##
-FROM eclipse-temurin:24-jre
+FROM eclipse-temurin:25-jre
 
 RUN apt update
 RUN apt install nano mc -y

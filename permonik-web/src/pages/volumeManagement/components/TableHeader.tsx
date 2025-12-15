@@ -1,20 +1,21 @@
 import Typography from '@mui/material/Typography'
-import { blue } from '@mui/material/colors'
 import Box from '@mui/material/Box'
-import React, { FC, MutableRefObject, useEffect, useState } from 'react'
+import React, { FC, RefObject, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useManagedVolumeDetailQuery } from '../../../api/volume'
 import { useParams } from 'react-router-dom'
-import dayjs from 'dayjs'
 import { GridApiPro, GridEventListener, GridState } from '@mui/x-data-grid-pro'
+import theme from '../../../theme'
+import { useFormatDate } from '../../../utils/date'
 
 type TableHeaderProps = {
-  apiRef: MutableRefObject<GridApiPro>
+  apiRef: RefObject<GridApiPro | null>
 }
 
 const TableHeader: FC<TableHeaderProps> = ({ apiRef }) => {
   const { volumeId } = useParams()
   const { t } = useTranslation()
+  const { formatDate } = useFormatDate()
 
   const { data } = useManagedVolumeDetailQuery(volumeId)
 
@@ -29,7 +30,7 @@ const TableHeader: FC<TableHeaderProps> = ({ apiRef }) => {
         active: !!params.filter.filterModel.items.length,
       })
     }
-    return apiRef.current.subscribeEvent('stateChange', handleFilterChange)
+    return apiRef.current?.subscribeEvent('stateChange', handleFilterChange)
   }, [apiRef])
 
   return (
@@ -43,7 +44,7 @@ const TableHeader: FC<TableHeaderProps> = ({ apiRef }) => {
     >
       <Typography
         sx={{
-          color: blue['900'],
+          color: theme.palette.primary.main,
           fontWeight: 'bold',
           fontSize: '24px',
         }}
@@ -83,10 +84,10 @@ const TableHeader: FC<TableHeaderProps> = ({ apiRef }) => {
           }}
         >
           <Typography>
-            {`${t('volume_overview.volume_created_at')}: ${data?.volume?.created?.length && dayjs(data.volume.created).isValid() ? dayjs(data.volume.created).format('DD.MM.YYYY HH:mm:ss') : '---'}`}
+            {`${t('volume_overview.volume_created_at')}: ${formatDate(data?.volume?.created, { includeTime: true })}`}
           </Typography>
           <Typography>
-            {`${t('volume_overview.volume_updated_at')}: ${data?.volume?.updated?.length && dayjs(data.volume.updated).isValid() ? dayjs(data.volume.updated).format('DD.MM.YYYY HH:mm:ss') : '---'}`}
+            {`${t('volume_overview.volume_updated_at')}: ${formatDate(data?.volume?.updated, { includeTime: true })}`}
           </Typography>
         </Box>
       </Box>

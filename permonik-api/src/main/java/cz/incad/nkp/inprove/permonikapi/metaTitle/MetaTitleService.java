@@ -4,13 +4,13 @@ import cz.incad.nkp.inprove.permonikapi.metaTitle.dto.CreatableMetaTitleDTO;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.dto.MetaTitleOverviewDTO;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.mapper.CreatableMetaTitleMapper;
 import cz.incad.nkp.inprove.permonikapi.specimen.SpecimenService;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,6 +22,7 @@ import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED
 import static cz.incad.nkp.inprove.permonikapi.config.security.user.UserProducer.getCurrentUser;
 
 @Service
+@RequiredArgsConstructor
 public class MetaTitleService implements MetaTitleDefinition {
 
     private static final Logger logger = LoggerFactory.getLogger(SpecimenService.class);
@@ -30,12 +31,6 @@ public class MetaTitleService implements MetaTitleDefinition {
     private final SolrClient solrClient;
     private final CreatableMetaTitleMapper creatableMetaTitleMapper;
 
-    @Autowired
-    public MetaTitleService(SpecimenService specimenService, SolrClient solrClient, CreatableMetaTitleMapper creatableMetaTitleMapper) {
-        this.specimenService = specimenService;
-        this.solrClient = solrClient;
-        this.creatableMetaTitleMapper = creatableMetaTitleMapper;
-    }
 
     public MetaTitle getMetaTitleById(String metaTitleId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
@@ -61,6 +56,7 @@ public class MetaTitleService implements MetaTitleDefinition {
     public List<MetaTitle> getMetaTitles() throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery.setSort(NAME_SORT_FIELD, SolrQuery.ORDER.asc);
         solrQuery.setRows(100000);
 
         QueryResponse response = solrClient.query(META_TITLE_CORE_NAME, solrQuery);
@@ -72,6 +68,7 @@ public class MetaTitleService implements MetaTitleDefinition {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(IS_PUBLIC_FIELD + ":true");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery.setSort(NAME_SORT_FIELD, SolrQuery.ORDER.asc);
         solrQuery.setRows(100000);
 
         QueryResponse response = solrClient.query(META_TITLE_CORE_NAME, solrQuery);

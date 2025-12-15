@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,14 +15,14 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Tag(name = "Auth API", description = "API for users login")
 public class ShibbolethController {
 
     private final ShibbolethService shibbolethService;
 
     @Operation(summary = "USE 'permonik(-test).nkp.cz/login/shibboleth' FOR SHIBBOLETH AUTH. This is for " +
-            "internal handling shibboleth authentication (redirect from shibboleth IdP)")
+        "internal handling shibboleth authentication (redirect from shibboleth IdP)")
     @GetMapping("/login/shibboleth")
     public void shibbolethLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, SolrServerException {
         shibbolethService.shibbolethLogin(request, response);

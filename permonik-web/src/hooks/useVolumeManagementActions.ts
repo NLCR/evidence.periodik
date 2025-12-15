@@ -19,8 +19,14 @@ import { repairVolume } from '../utils/volume'
 import { waitFor } from '../utils/waitFor'
 import i18next from '../i18next'
 import { v4 as uuid } from 'uuid'
+import { RefObject } from 'react'
+import { GridApiPro } from '@mui/x-data-grid-pro/models'
+import { emptyMutationMark } from '../utils/mutationMark'
 
-const useVolumeManagementActions = (editions: TEdition[]) => {
+const useVolumeManagementActions = (
+  apiRef: RefObject<GridApiPro | null>,
+  editions: TEdition[]
+) => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -42,8 +48,14 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
   const setStateHasUnsavedData = useVolumeManagementStore(
     (state) => state.setStateHasUnsavedData
   )
-
   const doValidation = (useMinSpecimensCount = true) => {
+    // flush unflushed updates
+    apiRef.current?.getAllRowIds().forEach((rowId) => {
+      if (apiRef.current?.getRowMode(rowId) === 'edit') {
+        apiRef.current?.stopRowEditMode({ id: rowId })
+      }
+    })
+
     //get state when is necessary → this approach doesn't cause rerender of functions and whole hook
     const volumeState = useVolumeManagementStore.getState().volumeState
     const specimensState = useVolumeManagementStore.getState().specimensState
@@ -107,6 +119,7 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
             : data.repairedSpecimens,
         })
         toast.success(t('volume_overview.volume_updated_successfully'))
+        setStateHasUnsavedData(false)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         // toast.error(t('volume_overview.volume_update_error'))
@@ -129,6 +142,7 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
             : data.repairedSpecimens,
         })
         toast.success(t('volume_overview.volume_updated_successfully'))
+        setStateHasUnsavedData(false)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         // toast.error(t('volume_overview.volume_update_error'))
@@ -211,6 +225,7 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
 
       const duplicatedVolume: TEditableVolume = {
         id: uuid(),
+        isLoading: false,
         barCode: '',
         dateFrom: repairedVolume.dateFrom,
         dateTo: repairedVolume.dateTo,
@@ -225,7 +240,7 @@ const useVolumeManagementActions = (editions: TEdition[]) => {
         signature: repairedVolume.signature,
         ownerId: repairedVolume.ownerId,
         year: repairedVolume.year,
-        mutationMark: '',
+        mutationMark: emptyMutationMark,
       }
       const duplicatedSpecimens: TEditableSpecimen[] = repairedSpecimens.map(
         (specimen) => ({

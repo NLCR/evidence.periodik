@@ -1,0 +1,75 @@
+import { useTranslation } from 'react-i18next'
+import { FC, useEffect } from 'react'
+import Box from '@mui/material/Box'
+import { TMe } from '../../../../schema/user'
+import { TMutation } from '../../../../schema/mutation'
+import { TOwner } from '../../../../schema/owner'
+import { TMetaTitle } from '../../../../schema/metaTitle'
+import { TEdition } from '../../../../schema/edition'
+import Typography from '@mui/material/Typography'
+import CollapsableSidebar from '../../../../components/CollapsableSidebar'
+import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
+import { useParams } from 'react-router-dom'
+import Loader from '../../../../components/Loader'
+import InputDataForm from './InputDataForm'
+import { TVolume } from '../../../../schema/volume'
+import theme from '../../../../theme'
+
+export interface InputDataProps {
+  me: TMe
+  volume: TVolume | undefined
+  isVolumeLoading: boolean
+  mutations: TMutation[]
+  owners: TOwner[]
+  metaTitles: TMetaTitle[]
+  editions: TEdition[]
+  duplicated?: boolean
+}
+
+const InputData: FC<InputDataProps> = ({ isVolumeLoading, ...props }) => {
+  const { t } = useTranslation()
+  const { setLocked } = useInputDataEditabilityContext()
+  const { volumeId } = useParams()
+
+  useEffect(() => {
+    setLocked(!!volumeId || !!props.duplicated)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [volumeId, props.duplicated])
+
+  return (
+    <CollapsableSidebar>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          // boxShadow: theme.shadows[1],
+          flexShrink: 0,
+          height: '100%',
+        }}
+      >
+        <Typography
+          sx={{
+            marginBottom: '8px',
+            color: theme.palette.primary.main,
+            fontWeight: 'bold',
+            fontSize: '24px',
+          }}
+        >
+          {t('volume_overview.volume_information_edit')}
+        </Typography>
+
+        <Box
+          sx={{
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            height: '100%',
+          }}
+        >
+          {isVolumeLoading ? <Loader /> : <InputDataForm {...props} />}
+        </Box>
+      </Box>
+    </CollapsableSidebar>
+  )
+}
+
+export default InputData

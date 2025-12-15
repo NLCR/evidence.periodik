@@ -9,7 +9,6 @@ import React, { Suspense, useState } from 'react'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import TableRowsIcon from '@mui/icons-material/TableRows'
-import blue from '@mui/material/colors/blue'
 import { useMetaTitleQuery } from '../../api/metaTitle'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
@@ -17,12 +16,14 @@ import ShowInfoMessage from '../../components/ShowInfoMessage'
 import { useSpecimensOverviewStore } from '../../slices/useSpecimensOverviewStore'
 import SpecimenDayDetailExampleImage from '../../assets/images/specimen-day-detail-example.png'
 import Facets from './components/facets/Facets'
-import Calendar from './components/Calendar'
-import CalendarToolbar from './components/CalendarToolbar'
+import Calendar from './components/calendar/Calendar'
+import CalendarToolbar from './components/calendar/CalendarToolbar'
 import ModalContainer from '../../components/ModalContainer'
 import SynchronizeYearsSwitch from './components/SynchronizeYearsSwitch'
 import CollapsableSidebar from '../../components/CollapsableSidebar'
 import FacetsContextProvider from './components/facets/FacetsContextProvider'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import theme from '../../theme'
 
 const Table = React.lazy(() => import('./components/Table'))
 
@@ -38,6 +39,8 @@ const SpecimensOverview = () => {
     isLoading: metaTitleLoading,
     isError: metaTitleError,
   } = useMetaTitleQuery(metaTitleId)
+
+  const isMobile = !useMediaQuery(theme.breakpoints.up('sm'))
 
   if (metaTitleLoading) {
     return <Loader />
@@ -145,15 +148,15 @@ const SpecimensOverview = () => {
               }}
             >
               <Tab
-                label={t('specimens_overview.calendar')}
-                value="calendar"
+                label={isMobile ? null : t('specimens_overview.calendar')}
+                value="CALENDAR"
                 icon={<CalendarMonthIcon />}
                 iconPosition="start"
               />
               <Tab
-                label={t('specimens_overview.table')}
+                label={isMobile ? null : t('specimens_overview.table')}
                 // disabled
-                value="table"
+                value="TABLE"
                 icon={<TableRowsIcon />}
                 iconPosition="start"
               />
@@ -164,25 +167,28 @@ const SpecimensOverview = () => {
                 marginLeft: '20px',
                 marginRight: '20px',
                 fontSize: '14px',
-                color: blue['900'],
+                color: theme.palette.primary.main,
                 fontWeight: 'bolder',
                 alignItems: 'center',
               }}
             >
-              {view === 'calendar' ? (
+              {view === 'CALENDAR' ? (
                 <CalendarToolbar metaTitle={metaTitle} />
               ) : null}
             </Box>
             <SynchronizeYearsSwitch />
           </Box>
-          {view === 'calendar' && (
+          {view === 'CALENDAR' && (
             <IconButton onClick={() => setModalOpened(true)}>
               <HelpOutlineIcon />
             </IconButton>
           )}
         </Box>
-        {view === 'calendar' ? (
-          <Calendar metaTitle={metaTitle} />
+        {view === 'CALENDAR' ? (
+          <Calendar
+            metaTitle={metaTitle}
+            switchToTable={() => setView('TABLE')}
+          />
         ) : (
           <Suspense>
             <Table metaTitle={metaTitle} />

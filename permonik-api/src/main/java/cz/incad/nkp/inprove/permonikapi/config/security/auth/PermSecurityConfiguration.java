@@ -2,7 +2,7 @@ package cz.incad.nkp.inprove.permonikapi.config.security.auth;
 
 import cz.incad.nkp.inprove.permonikapi.config.ProfileManager;
 import cz.incad.nkp.inprove.permonikapi.config.security.user.UserDetailsServiceImpl;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,13 +18,13 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableMethodSecurity
 public class PermSecurityConfiguration {
 
     private final ProfileManager profileManager;
-    private UserDetailsServiceImpl userDetailsService;
-    private PasswordEncoder passwordEncoder;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public HttpFirewall allowNonAsciiHeadersFirewall() {

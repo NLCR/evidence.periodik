@@ -1,11 +1,9 @@
 import Typography from '@mui/material/Typography'
-import { blue } from '@mui/material/colors'
 import Table from '@mui/material/Table'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
-import dayjs from 'dayjs'
 import ModalContainer from '../../../components/ModalContainer'
 import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
 import Button from '@mui/material/Button'
@@ -21,6 +19,9 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import CollapsableSidebar from '../../../components/CollapsableSidebar'
+import theme from '../../../theme'
+import { getMutationMarkLabel } from '../../../utils/mutationMark'
+import { useFormatDate } from '../../../utils/date'
 
 interface InputDataProps {
   volume: TVolumeDetail
@@ -38,6 +39,7 @@ const InputData: FC<InputDataProps> = ({
   metaTitles,
 }) => {
   const { t, i18n } = useTranslation()
+  const { formatDate } = useFormatDate()
   const { languageCode } = useLanguageCode()
 
   const [searchParams] = useSearchParams()
@@ -67,7 +69,7 @@ const InputData: FC<InputDataProps> = ({
         <Typography
           sx={{
             marginBottom: '8px',
-            color: blue['900'],
+            color: theme.palette.primary.main,
             fontWeight: 'bold',
             fontSize: '24px',
           }}
@@ -122,7 +124,9 @@ const InputData: FC<InputDataProps> = ({
               </TableRow>
               <TableRow>
                 <TableCell>{t('specimens_overview.mutation_mark')}</TableCell>
-                <TableCell>{volume.volume.mutationMark}</TableCell>
+                <TableCell>
+                  {getMutationMarkLabel(volume.volume.mutationMark)}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>{t('volume_overview.bar_code')}</TableCell>
@@ -138,9 +142,7 @@ const InputData: FC<InputDataProps> = ({
               </TableRow>
               <TableRow>
                 <TableCell>{t('volume_overview.date_from')}</TableCell>
-                <TableCell>
-                  {dayjs(volume.volume.dateFrom).format('DD. MMMM YYYY')}
-                </TableCell>
+                <TableCell>{formatDate(volume.volume.dateFrom)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>{t('volume_overview.first_number')}</TableCell>
@@ -148,9 +150,7 @@ const InputData: FC<InputDataProps> = ({
               </TableRow>
               <TableRow>
                 <TableCell>{t('volume_overview.date_to')}</TableCell>
-                <TableCell>
-                  {dayjs(volume.volume.dateTo).format('DD. MMMM YYYY')}
-                </TableCell>
+                <TableCell>{formatDate(volume.volume.dateTo)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>{t('volume_overview.last_number')}</TableCell>
@@ -195,6 +195,8 @@ const InputData: FC<InputDataProps> = ({
           </Button>
         )}
         <ModalContainer
+          autoWidth
+          minWidth="30rem"
           onClose={() => setModalOpened(false)}
           header={t('specimens_overview.volume_overview_modal_link')}
           opened={modalOpened}

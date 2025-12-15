@@ -11,6 +11,7 @@ import { useMutationListQuery } from '../api/mutation'
 import { useEditionListQuery } from '../api/edition'
 import isFinite from 'lodash/isFinite'
 import { useLanguageCode } from '../hooks/useLanguageCode'
+import { useFormatDate } from '../utils/date'
 
 const bolderTextStyle = {
   fontWeight: '600',
@@ -22,6 +23,7 @@ type TProps = {
 
 const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
   const { t } = useTranslation()
+  const { formatDate } = useFormatDate()
 
   const { languageCode } = useLanguageCode()
 
@@ -225,8 +227,8 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
           {t('volume_overview.dates')}:
         </Typography>
         <Typography variant="body2">
-          {dayjs(volumeStats.publicationDayMin).format('DD.MM.YYYY')} -{' '}
-          {dayjs(volumeStats.publicationDayMax).format('DD.MM.YYYY')}
+          {formatDate(volumeStats.publicationDayMin)} -{' '}
+          {formatDate(volumeStats.publicationDayMax)}
         </Typography>
       </Box>
       <Box
@@ -276,7 +278,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.pages_count')}:
+          {t('volume_overview.pages_count_total')}:
         </Typography>
         <Typography variant="body2">{volumeStats.pagesCount}</Typography>
       </Box>
@@ -398,7 +400,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
             >
               <Typography variant="body2">{s.number}</Typography>
               <Typography variant="body2" key={`missingNumbers-child-${s.id}`}>
-                {dayjs(s.publicationDate).format('DD.MM.YYYY')}
+                {formatDate(s.publicationDate)}
               </Typography>
             </Box>
           ))}
@@ -427,7 +429,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
                 variant="body2"
                 key={`missingAttachmentNumbers-child-${s.id}`}
               >
-                {dayjs(s.publicationDate).format('DD.MM.YYYY')}
+                {formatDate(s.publicationDate)}
               </Typography>
             </Box>
           ))}
@@ -466,15 +468,17 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
               key={`damagedNumbers-${s.id}'`}
               sx={{
                 display: 'flex',
+                width: '9rem',
                 justifyContent: 'space-between',
-                width: '45%',
               }}
             >
-              <Typography variant="body2">
-                {dayjs(s.publicationDate).format('dd DD.MM.YYYY')}
+              <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
+                {t('volume_overview.number_super_short').toLowerCase()}{' '}
+                {s.number}
               </Typography>
+              <Typography variant="body2">—</Typography>
               <Typography variant="body2">
-                {t('volume_overview.number').toLowerCase()} {s.number}
+                {formatDate(s.publicationDate, { includeDayName: true })}
               </Typography>
             </Box>
           ))}
@@ -490,27 +494,26 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         {volumeStats.specimens
           .filter((s) => s.note.length && s.numExists)
           .map((s) => (
-            <Box
-              key={`notes-${s.id}`}
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
+            <Box key={`notes-${s.id}`}>
               <Box
                 sx={{
                   display: 'flex',
-                  gap: '45px',
+                  width: '9rem',
+                  justifyContent: 'space-between',
                 }}
               >
-                <Typography variant="body2">
-                  {dayjs(s.publicationDate).format('dd DD.MM.YYYY')}
+                <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
+                  {t('volume_overview.number_super_short').toLowerCase()}{' '}
+                  {s.number}
                 </Typography>
+                <Typography variant="body2">—</Typography>
                 <Typography variant="body2">
-                  {t('volume_overview.number').toLowerCase()} {s.number}
+                  {formatDate(s.publicationDate, { includeDayName: true })}
                 </Typography>
               </Box>
-              <Typography variant="body2">{s.note}</Typography>
+              <Typography variant="body2" sx={{ marginLeft: 3 }}>
+                {s.note}
+              </Typography>
             </Box>
           ))}
       </Box>

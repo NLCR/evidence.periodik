@@ -2,21 +2,22 @@ package cz.incad.nkp.inprove.permonikapi.volume;
 
 import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitle;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitleService;
-import cz.incad.nkp.inprove.permonikapi.specimen.Specimen;
 import cz.incad.nkp.inprove.permonikapi.specimen.SpecimenService;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.SpecimensForVolumeOverviewStatsDTO;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.EditableVolumeWithSpecimensDTO;
-import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDetailDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeOverviewStatsDTO;
-import cz.incad.nkp.inprove.permonikapi.volume.mapper.VolumeDTOMapper;
+import cz.incad.nkp.inprove.permonikapi.volume.model.Volume;
+import cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDTO;
+import cz.incad.nkp.inprove.permonikapi.volume.model.VolumeMapper;
+import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,6 +28,7 @@ import java.util.List;
 import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED_FIELD;
 
 @Service
+@RequiredArgsConstructor
 public class VolumeService implements VolumeDefinition {
 
     private static final Logger logger = LoggerFactory.getLogger(VolumeService.class);
@@ -34,15 +36,8 @@ public class VolumeService implements VolumeDefinition {
     private final MetaTitleService metaTitleService;
     private final SpecimenService specimenService;
     private final SolrClient solrClient;
-    private final VolumeDTOMapper volumeDTOMapper;
+    private final VolumeMapper volumeMapper;
 
-    @Autowired
-    public VolumeService(MetaTitleService metaTitleService, SpecimenService specimenService, SolrClient solrClient, VolumeDTOMapper volumeDTOMapper) {
-        this.metaTitleService = metaTitleService;
-        this.specimenService = specimenService;
-        this.solrClient = solrClient;
-        this.volumeDTOMapper = volumeDTOMapper;
-    }
 
     public VolumeDTO getVolumeDTOById(String volumeId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
@@ -59,11 +54,11 @@ public class VolumeService implements VolumeDefinition {
 
         Volume volume = volumeList.getFirst();
 
-        // Check metaTitle for not logged-in user. If a user is not logged in and metaTitle isn't public, throw error
+        // Check metaTitle for not logged-in user. If a user is not logged in and metaTitle isn't public, throw an error
         metaTitleService.getMetaTitleById(volume.getMetaTitleId());
 
 
-        return volumeDTOMapper.apply(volumeList.getFirst());
+        return volumeMapper.toDTO(volumeList.getFirst());
     }
 
     public Volume checkVolumeExistsById(String volumeId) throws SolrServerException, IOException {
@@ -89,7 +84,7 @@ public class VolumeService implements VolumeDefinition {
         VolumeDTO volumeDTO = getVolumeDTOById(volumeId);
 
         try {
-            List<Specimen> specimenList = specimenService.getSpecimensForVolumeDetail(volumeDTO.id(), onlyPublic, volumeDTO.showAttachmentsAtTheEnd());
+            List<SpecimenDTO> specimenList = specimenService.getSpecimensForVolumeDetail(volumeDTO.getId(), onlyPublic, volumeDTO.getShowAttachmentsAtTheEnd());
 
             return new VolumeDetailDTO(
                 volumeDTO,
@@ -104,16 +99,16 @@ public class VolumeService implements VolumeDefinition {
 
         VolumeDTO volumeDTO = getVolumeDTOById(volumeId);
 
-        MetaTitle metaTitle = metaTitleService.getMetaTitleById(volumeDTO.metaTitleId());
+        MetaTitle metaTitle = metaTitleService.getMetaTitleById(volumeDTO.getMetaTitleId());
 
 
         SpecimensForVolumeOverviewStatsDTO specimensForVolumeOverview = specimenService.getSpecimensForVolumeOverviewStats(volumeId);
 
         return new VolumeOverviewStatsDTO(
             metaTitle.getName(),
-            volumeDTO.ownerId(),
-            volumeDTO.signature(),
-            volumeDTO.barCode(),
+            volumeDTO.getOwnerId(),
+            volumeDTO.getSignature(),
+            volumeDTO.getBarCode(),
             specimensForVolumeOverview.publicationDayMin(),
             specimensForVolumeOverview.publicationDayMax(),
             specimensForVolumeOverview.pagesCount(),
@@ -127,21 +122,22 @@ public class VolumeService implements VolumeDefinition {
 
     }
 
-    private void createVolume(Volume volume) {
+    private void createVolume(VolumeDTO volumeDTO) {
         try {
-            volume.prePersist();
+            volumeDTO.prePersist();
 
-            solrClient.addBean(VOLUME_CORE_NAME, volume);
+
+            solrClient.addBean(VOLUME_CORE_NAME, volumeMapper.toModel(volumeDTO));
             solrClient.commit(VOLUME_CORE_NAME);
-            logger.info("volume {} successfully created", volume.getId());
+            logger.info("volume {} successfully created", volumeDTO.getId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to create volume", e);
         }
     }
 
-    private void updateVolume(Volume volume) throws SolrServerException, IOException {
+    private void updateVolume(VolumeDTO volumeDTO) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(BAR_CODE_FIELD + ":\"" + volume.getBarCode() + "\"");
+        solrQuery.addFilterQuery(BAR_CODE_FIELD + ":\"" + volumeDTO.getBarCode() + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(1);
 
@@ -150,17 +146,17 @@ public class VolumeService implements VolumeDefinition {
         List<Volume> volumeList = response.getBeans(Volume.class);
 
         if (!volumeList.isEmpty()) {
-            if (!volumeList.getFirst().getId().equals(volume.getId())) {
-                throw new RuntimeException("Volume with barcode " + volume.getBarCode() + " already exists");
+            if (!volumeList.getFirst().getId().equals(volumeDTO.getId())) {
+                throw new RuntimeException("Volume with barcode " + volumeDTO.getBarCode() + " already exists");
             }
         }
 
         try {
-            volume.preUpdate();
+            volumeDTO.preUpdate();
 
-            solrClient.addBean(VOLUME_CORE_NAME, volume);
+            solrClient.addBean(VOLUME_CORE_NAME, volumeMapper.toModel(volumeDTO));
             solrClient.commit(VOLUME_CORE_NAME);
-            logger.info("volume {} successfully updated", volume.getId());
+            logger.info("volume {} successfully updated", volumeDTO.getId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to update volume", e);
         }
@@ -216,7 +212,7 @@ public class VolumeService implements VolumeDefinition {
         }
 
         // delete old specimens
-        List<Specimen> oldSpecimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
+        List<SpecimenDTO> oldSpecimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
         specimenService.deleteSpecimens(oldSpecimens);
 
         updateVolume(editableVolumeWithSpecimensDTO.volume());
@@ -228,7 +224,7 @@ public class VolumeService implements VolumeDefinition {
     public void deleteVolumeWithSpecimens(String volumeId) throws SolrServerException, IOException {
         Volume volume = checkVolumeExistsById(volumeId);
 
-        List<Specimen> specimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
+        List<SpecimenDTO> specimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
         specimenService.deleteSpecimens(specimens);
 
         deleteVolume(volume);
