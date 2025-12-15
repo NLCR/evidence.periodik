@@ -118,7 +118,7 @@
     "daily_releases": "Daily releases",
     "releasing": "Releasing",
     "is_in_volume": "Is in volume",
-    "is_in_volume_short": "Numb.<r />exists",
+    "is_in_volume_short": "Issue<r />exists",
     "edition": "Edition",
     "edition_short": "Edition",
     "pages_count": "Page count",
@@ -235,7 +235,7 @@
     "ZV": "Edition swap",
     "NeS": "Unbound",
     "notVerified": "Unchecked",
-    "empty": "Without mark"
+    "empty": "Not specified"
   },
   "facet_states_short": {
     "OK": "Verif.",
@@ -252,7 +252,7 @@
     "ChCis_tooltip": "Incorrect number printed",
     "ChSv": "Incorr.<br />bound",
     "ChSv_tooltip": "Incorrectly bound, e.g., shuffled pages",
-    "ChDatum": "Wrong<br />date",
+    "ChDatum": "Incorrect<br />date",
     "ChDatum_tooltip": "Incorrect date",
     "Cz": "Censo<br />red",
     "Cz_tooltip": "Censored",
