@@ -1,4 +1,4 @@
-package cz.incad.nkp.inprove.permonikapi.edition;
+package cz.incad.nkp.inprove.permonikapi.edition.model;
 
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
