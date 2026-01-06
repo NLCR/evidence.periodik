@@ -92,7 +92,8 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
         sortBy(
           groupBy(
             found.specimens,
-            (obj) => `${obj.mutationId}_${obj.mutationMark.mark}_${obj.number}`
+            (obj) =>
+              `${obj.mutationId}_${obj.mutationMark.mark}_${obj.number}_${obj.attachmentNumber}`
           ),
           (obj) => obj.map((o) => `${o.mutationId}_${o.mutationMark.mark}`)
         )
