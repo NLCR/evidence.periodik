@@ -28,6 +28,7 @@ import Button from '@mui/material/Button'
 import theme from '../../../theme'
 import { useMeQuery } from '../../../api/user'
 import { useFormatDate } from '../../../utils/date'
+import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
 
 const getSpecimenState = (sp: TSpecimen, t: TFunction) => {
   if (sp.damageTypes) {
@@ -266,7 +267,7 @@ const Table: FC<Props> = ({ metaTitle }) => {
 
   return (
     <>
-      <DataGridPro
+      <StripedDataGrid
         localeText={MuiTableLocale}
         initialState={{
           pagination: {
@@ -276,6 +277,10 @@ const Table: FC<Props> = ({ metaTitle }) => {
             },
           },
           density: 'compact',
+        }}
+        getRowClassName={(params) => {
+          if (params.row.isAttachment) return 'attachment'
+          return ''
         }}
         disableColumnFilter
         disableColumnSorting

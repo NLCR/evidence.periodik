@@ -92,7 +92,8 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
         sortBy(
           groupBy(
             found.specimens,
-            (obj) => `${obj.mutationId}_${obj.mutationMark.mark}_${obj.number}`
+            (obj) =>
+              `${obj.mutationId}_${obj.mutationMark.mark}_${obj.number}_${obj.attachmentNumber}`
           ),
           (obj) => obj.map((o) => `${o.mutationId}_${o.mutationMark.mark}`)
         )
@@ -191,7 +192,9 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
                     marginTop: '2px',
                     marginBottom: '2px',
                     padding: '2px 8px',
-                    backgroundColor: theme.palette.grey['800'],
+                    backgroundColor: firstInRow.isAttachment
+                      ? theme.palette.primary.dark
+                      : theme.palette.grey['800'],
                     borderRadius: '4px',
                     color: theme.palette.grey['100'],
                     alignItems: 'center',
@@ -204,7 +207,7 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
                   }}
                 >
                   <Typography variant="body2">
-                    {firstInRow.number}{' '}
+                    {firstInRow.attachmentNumber || firstInRow.number}{' '}
                     {
                       mutations?.find((m) => m.id === firstInRow.mutationId)
                         ?.name[languageCode]

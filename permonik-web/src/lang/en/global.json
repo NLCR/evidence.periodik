@@ -118,7 +118,7 @@
     "daily_releases": "Daily releases",
     "releasing": "Releasing",
     "is_in_volume": "Is in volume",
-    "is_in_volume_short": "Issue<r />exists",
+    "is_in_volume_short": "Issue<br/>exists",
     "edition": "Edition",
     "edition_short": "Edition",
     "pages_count": "Page count",
