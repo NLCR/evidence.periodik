@@ -1,10 +1,6 @@
 import React, { FC, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  GridColDef,
-  GridRenderCellParams,
-  DataGridPro,
-} from '@mui/x-data-grid-pro'
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
