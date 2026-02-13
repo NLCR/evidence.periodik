@@ -35,13 +35,20 @@ type TView = 'VIEW' | 'EDIT'
 
 const PrepareScanModalContent2: FC<TProps> = ({ volumeId = undefined }) => {
   const [view, setView] = useState<TView>('EDIT')
+  const [filter, setFilter] = useState<'1' | '2'>('1')
   const [stage, setStage] = useState(0)
   const [settings, setSettings] = useState<TScanTemplateSettings>({
     badBound: false,
     damagedPages: false,
     missingPages: true,
     replacementSources: [
-      { barcode: '', mutation: '', owner: '', signature: '' },
+      {
+        barcode: '',
+        mutation: '',
+        mutationEdition: '',
+        owner: '',
+        signature: '',
+      },
     ],
   })
 
@@ -170,6 +177,23 @@ const PrepareScanModalContent2: FC<TProps> = ({ volumeId = undefined }) => {
             ]}
             selectedItem={view}
             setSelectedItem={setView}
+          />
+        </Box>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          gap={4}
+          marginTop={2}
+        >
+          Pohled:{' '}
+          <TabSelect<'1' | '2'>
+            options={[
+              { label: 'Po číslech', value: '1' },
+              { label: 'Po svazcích', value: '2' },
+            ]}
+            selectedItem={filter}
+            setSelectedItem={setFilter}
           />
         </Box>
       </Box>

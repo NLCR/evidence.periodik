@@ -346,7 +346,7 @@ const SpecimensActions = ({
         autoWidth
         minWidth="40rem"
         maxHeight="95vh"
-        header={'Příprava pro skenování'}
+        header={'Příprava pro skenování - předloha'}
         opened={prepareScanModalOpened}
         onClose={() => setPrepareScanModalOpened(false)}
         closeButton={{ callback: () => setPrepareScanModalOpened(false) }}

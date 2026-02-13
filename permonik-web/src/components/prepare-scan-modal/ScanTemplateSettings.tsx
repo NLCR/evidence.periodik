@@ -23,20 +23,77 @@ const ScanTemplateSettings = ({
 }: Props) => {
   return (
     <Box gap={2} display={'flex'} flexDirection={'column'}>
+      <Typography>
+        Index vyplněnosti primárního svazku: 86 381{' '}
+        <div
+          style={{
+            borderRadius: 10,
+            backgroundColor: 'orange',
+            width: 10,
+            height: 10,
+            display: 'inline-block',
+          }}
+        />
+      </Typography>
+      <Typography>
+        Index vyplněnosti výsledného svazku: 98 633{' '}
+        <div
+          style={{
+            borderRadius: 10,
+            backgroundColor: 'green',
+            width: 10,
+            height: 10,
+            display: 'inline-block',
+          }}
+        />
+      </Typography>
       <Box>
+        <Typography variant="h6">
+          V náhradních svazcích je nutné zachovat:
+        </Typography>
+        <Box>
+          <Checkbox disabled checked={true} value={true} defaultChecked />{' '}
+          Metatitul
+        </Box>
+        <Box>
+          <Checkbox disabled checked={true} value={true} defaultChecked />{' '}
+          Překryv časového rozpětí
+        </Box>
+        <Box>
+          <Checkbox /> Mutace
+        </Box>
+        <Box>
+          <Checkbox /> Mutační vydání
+        </Box>
+        <Box>
+          <Checkbox /> Vlastník
+        </Box>
+      </Box>
+      {/* <Box>
         <Typography variant="h6">Doplnit náhradu za:</Typography>
         <Box>
-          <Checkbox /> Chybějící strany
+          <Checkbox disabled checked={true} value={true} defaultChecked />{' '}
+          Chybějící číslo
+        </Box>
+        <Box>
+          <Checkbox disabled checked={true} value={true} defaultChecked />{' '}
+          Chybějící strany
+        </Box>
+        <Box>
+          <Checkbox /> Cenzurování
+        </Box>
+        <Box>
+          <Checkbox /> Degradace papíru
+        </Box>
+        <Box>
+          <Checkbox /> Nečitelné svázání
         </Box>
         <Box>
           <Checkbox /> Poškozené strany
         </Box>
-        <Box>
-          <Checkbox /> Špatná vazba
-        </Box>
-      </Box>
+      </Box> */}
       <Box gap={1} display={'flex'} flexDirection={'column'}>
-        <Typography variant="h6">Zdroje náhrad:</Typography>
+        <Typography variant="h6">Zdroje náhrad</Typography>
         {templateSettings.replacementSources.map((item, index) => (
           <Box key={index} display={'flex'} gap={1} alignItems={'center'}>
             {index + 1}:{' '}

@@ -3,6 +3,7 @@ export type TReplacementSource = {
   barcode: string
   owner: string
   mutation: string
+  mutationEdition: string
 }
 
 export type TScanTemplateSettings = {
@@ -20,6 +21,7 @@ export const defaultReplacement: TReplacement = {
   pages: 'všechny',
   barcode: '',
   mutation: '',
+  mutationEdition: '',
   owner: '',
   signature: '',
 }
