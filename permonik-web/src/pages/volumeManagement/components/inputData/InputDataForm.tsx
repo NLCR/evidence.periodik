@@ -33,8 +33,9 @@ import InputDataSignature from './InputDataSignature'
 import { api } from '../../../../api'
 import { TSpecimen } from '../../../../schema/specimen'
 import InputDataOwner from './InputDataOwner'
-import { emptyMutationMark } from '../../../../utils/mutationMark'
 import InputDataNote from './InputDataNote'
+import { duplicateVolume } from '../../../../utils/duplicateVolume'
+import { emptyMutationMark } from '../../../../utils/mutationMark'
 
 const InputDataForm = ({
   editions,
@@ -59,10 +60,13 @@ const InputDataForm = ({
   })
 
   const [searchParams] = useSearchParams()
+  const fieldsToReset =
+    JSON.parse(searchParams.get('fieldsToReset') ?? '[]') || []
 
   const setSpecimensState = useVolumeManagementStore(
     (state) => state.specimensActions.setSpecimensState
   )
+  const volumeState = useVolumeManagementStore((state) => state.volumeState)
   const setVolumeState = useVolumeManagementStore(
     (state) => state.volumeActions.setVolumeState
   )
@@ -80,44 +84,47 @@ const InputDataForm = ({
           .get(`volume/${volumeDuplicateSourceId}/detail`)
           .json<{ volume: TEditableVolume; specimens: TSpecimen[] } | null>()
 
-        if (volumeData) {
-          const newVolume = {
-            ...volumeData.volume,
-            barCode: '',
-            mutationMark: emptyMutationMark,
-            mutationId: '',
-            ownerId: '',
-            created: null,
-            createdBy: null,
-            updated: null,
-            updatedBy: null,
-            id: '',
-          }
-          methods.reset(newVolume)
-          setVolumeState(newVolume, true)
-          setSpecimensState(volumeData.specimens, true)
-        }
+        if (!volumeData) return
+
+        const { volume: duplicatedVolume, specimens: duplicatedSpecimens } =
+          duplicateVolume(
+            { ...volumeData.volume, isLoading: false },
+            volumeData.specimens,
+            fieldsToReset
+          )
+        setVolumeState(duplicatedVolume, true)
+        setSpecimensState(duplicatedSpecimens, true)
       }
     }
+
     preLoadDuplicateSource()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    if (!duplicated && !volumeId) {
-      methods.reset(initialState.volumeState)
-    }
-    if (duplicated) {
+    if (!duplicated) {
+      methods.reset(
+        volumeId
+          ? (volume ?? initialState.volumeState)
+          : initialState.volumeState
+      )
+    } else {
       // reset all applicable fields
-      methods.setValue('barCode', '')
-      methods.setValue('mutationMark', emptyMutationMark)
+      for (const field of fieldsToReset) {
+        if (field === 'mutationMark') {
+          methods.setValue('mutationMark', emptyMutationMark)
+        } else {
+          methods.setValue(field as keyof TEditableVolume, '')
+        }
+      }
       methods.setValue('created', null)
       methods.setValue('createdBy', null)
       methods.setValue('updated', null)
       methods.setValue('updatedBy', null)
       methods.setValue('id', '')
     }
-  }, [duplicated, volumeId, methods])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duplicated, volumeId, methods, volumeState, fieldsToReset.toString()])
 
   return (
     <FormProvider {...methods}>

@@ -76,7 +76,20 @@
     "synchronize_years_between_views": "Synchronizovat datum<br />kalendáře a tabulky",
     "detailed_volume_overview": "Podrobný popis svazku",
     "duplicate_dialog_title": "Duplikovat záznam",
-    "duplicate_dialog_description": "Vyberte datum, ke kterému bude zadán nový záznam"
+    "duplicate_dialog_description": "Vyberte datum, ke kterému bude zadán nový záznam",
+    "field_names": {
+      "barcode": "Čárový kód",
+      "mutation": "Mutace",
+      "mutation_mark": "Mutační vydání",
+      "note": "Poznámka",
+      "damage_types": "Typy poškození",
+      "damaged_pages": "Poškozené stránky",
+      "missing_pages": "Chybějící stránky",
+      "owner": "Vlastník"
+    },
+    "duplicate_volume_modal_header": "Duplikovat svazek",
+    "duplicate_volume_modal_description1": "Označte atributy, které se mají při duplikaci resetovat.",
+    "duplicate_volume_modal_description2": "Pokud atribut zůstane nezaškrtnutý, jeho hodnota bude zkopírována z tohoto do duplikovaného svazku.\nAtributy, které budou zaškrtnuté, budou resetovány na výchozí hodnoty a bude je potřeba vyplnit pro nový svazek."
   },
   "volume_overview": {
     "not_found": "Tento svazek nebyl nalezen",

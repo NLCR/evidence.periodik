@@ -76,7 +76,20 @@
     "synchronize_years_between_views": "Synchronizovať dátum<br />kalendára a tabuľky",
     "detailed_volume_overview": "Podrobný popis zväzku",
     "duplicate_dialog_title": "Duplikovať záznam",
-    "duplicate_dialog_description": "Vyberte dátum, ku ktorému bude zadaný nový záznam"
+    "duplicate_dialog_description": "Vyberte dátum, ku ktorému bude zadaný nový záznam",
+    "field_names": {
+      "barcode": "Čiarový kód",
+      "mutation": "Mutácia",
+      "mutation_mark": "Mutačné vydanie",
+      "note": "Poznámka",
+      "damage_types": "Typy poškodenia",
+      "damaged_pages": "Poškodené strany",
+      "missing_pages": "Chýbajúce strany",
+      "owner": "Vlastník"
+    },
+    "duplicate_volume_modal_header": "Duplikovať zväzok",
+    "duplicate_volume_modal_description1": "Označte atribúty, ktoré sa majú pri duplikácii resetovať.",
+    "duplicate_volume_modal_description2": "Ak atribút zostane nezaškrtnutý, jeho hodnota bude skopírovaná z tohto do duplikovaného zväzku.\nAtribúty, ktoré budú zaškrtnuté, budú resetované na predvolené hodnoty a bude je potrebné vyplniť pre nový zväzok."
   },
   "volume_overview": {
     "not_found": "Tento zväzok nebol nájdený",

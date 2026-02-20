@@ -8,7 +8,8 @@ export const generateVolumeUrlWithParams = (
   url: string,
   metaTitleId: string,
   specimenId?: string,
-  volumeDuplicateSourceId?: string
+  volumeDuplicateSourceId?: string,
+  fieldsToReset?: string[]
 ) => {
   let volumeUrl = `${url}?${BACK_META_TITLE_ID}=${metaTitleId}`
 
@@ -18,6 +19,10 @@ export const generateVolumeUrlWithParams = (
 
   if (volumeDuplicateSourceId) {
     volumeUrl += `&${VOLUME_DUPLICATE_SOURCE_ID}=${volumeDuplicateSourceId}`
+  }
+
+  if (fieldsToReset && fieldsToReset.length > 0) {
+    volumeUrl += `&fieldsToReset=${encodeURIComponent(JSON.stringify(fieldsToReset))}`
   }
 
   return volumeUrl
