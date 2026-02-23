@@ -74,7 +74,7 @@
     "help_desc_2": "číslo vydání - mutace - značky mutačních vydání - počet exemplářů",
     "help_desc_3": "Řádek může být zbarvený zeleně (všechny exempláře jsou v pořádku) nebo oranžově (některý z exemplářů má vadu)",
     "synchronize_years_between_views": "Synchronizovat datum<br />kalendáře a tabulky",
-    "detailed_volume_overview": "Podrobný popis svazku",
+    "detailed_volume_overview": "Detailní popis svazku",
     "duplicate_dialog_title": "Duplikovat záznam",
     "duplicate_dialog_description": "Vyberte datum, ke kterému bude zadán nový záznam",
     "field_names": {

@@ -48,6 +48,10 @@ const useVolumeManagementActions = (
   const setStateHasUnsavedData = useVolumeManagementStore(
     (state) => state.setStateHasUnsavedData
   )
+
+  const setSpecimensState =
+    useVolumeManagementStore.getState().specimensActions.setSpecimensState
+
   const doValidation = (useMinSpecimensCount = true) => {
     // flush unflushed updates
     apiRef.current?.getAllRowIds().forEach((rowId) => {
@@ -111,15 +115,19 @@ const useVolumeManagementActions = (
     try {
       const data = doValidation()
 
+      const newSpecimens = setVerified
+        ? setSpecimensVerified(data.repairedSpecimens)
+        : data.repairedSpecimens
+
       try {
         await callUpdate({
           volume: data.repairedVolume,
-          specimens: setVerified
-            ? setSpecimensVerified(data.repairedSpecimens)
-            : data.repairedSpecimens,
+          specimens: newSpecimens,
         })
         toast.success(t('volume_overview.volume_updated_successfully'))
         setStateHasUnsavedData(false)
+
+        setSpecimensState(newSpecimens, false)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         // toast.error(t('volume_overview.volume_update_error'))
@@ -134,15 +142,20 @@ const useVolumeManagementActions = (
     try {
       const data = doValidation()
 
+      const newSpecimens = setVerified
+        ? setSpecimensVerified(data.repairedSpecimens)
+        : data.repairedSpecimens
+
       try {
         await callOvergeneratedUpdate({
           volume: data.repairedVolume,
-          specimens: setVerified
-            ? setSpecimensVerified(data.repairedSpecimens)
-            : data.repairedSpecimens,
+          specimens: newSpecimens,
         })
+
         toast.success(t('volume_overview.volume_updated_successfully'))
         setStateHasUnsavedData(false)
+
+        setSpecimensState(newSpecimens, false)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         // toast.error(t('volume_overview.volume_update_error'))

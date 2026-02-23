@@ -74,7 +74,7 @@
     "help_desc_2": "číslo vydania - mutácia - značky mutačných vydaní - počet exemplárov",
     "help_desc_3": "Riadok môže byť zafarbený na zeleno (všetky exempláre sú v poriadku) alebo oranžovo (niektorý z exemplárov má vadu)",
     "synchronize_years_between_views": "Synchronizovať dátum<br />kalendára a tabuľky",
-    "detailed_volume_overview": "Podrobný popis zväzku",
+    "detailed_volume_overview": "Detailný popis zväzku",
     "duplicate_dialog_title": "Duplikovať záznam",
     "duplicate_dialog_description": "Vyberte dátum, ku ktorému bude zadaný nový záznam",
     "field_names": {
