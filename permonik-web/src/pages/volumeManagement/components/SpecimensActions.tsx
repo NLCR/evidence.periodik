@@ -17,12 +17,14 @@ import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
+import DuplicateVolumeModal from '../../../components/DuplicateVolumeModal'
+import { FieldsToReset } from '../../../utils/duplicateVolume/types'
 
 type Props = {
   duplicated: boolean
   volume: TUpdatableVolume | null | undefined
   editions: TEdition[] | undefined
-  doDuplicate: () => Promise<void>
+  doDuplicate: (fieldsToReset: FieldsToReset[]) => Promise<void>
   doUpdate: (setVerified?: boolean) => Promise<void>
   doOvergeneratedUpdate: (setVerified?: boolean) => Promise<void>
   doCreate: (setVerified?: boolean) => Promise<void>
@@ -40,15 +42,14 @@ const SpecimensActions = ({
   doDelete,
 }: Props) => {
   const { volumeId } = useParams()
-
-  const { t, i18n } = useTranslation()
-
   const [searchParams] = useSearchParams()
+  const { t, i18n } = useTranslation()
 
   const { locked: isInputDataLocked, disabled } =
     useInputDataEditabilityContext()
 
   const [volumeStatsModalOpened, setVolumeStatsModalOpened] = useState(false)
+  const [duplicationModalOpened, setDuplicationModalOpened] = useState(false)
   const [confirmDeletionModalStage, setConfirmDeletionModalStage] = useState({
     opened: false,
     stage: 1,
@@ -117,7 +118,7 @@ const SpecimensActions = ({
           icon: <ContentCopyIcon />,
           name: t('administration.duplicate_volume'),
           color: 'primary',
-          onClick: () => doDuplicate(),
+          onClick: () => setDuplicationModalOpened(true),
         },
         {
           icon: <CheckCircleIcon />,
@@ -139,7 +140,7 @@ const SpecimensActions = ({
           icon: <ContentCopyIcon />,
           name: t('administration.duplicate_volume'),
           color: 'primary',
-          onClick: () => doDuplicate(),
+          onClick: () => setDuplicationModalOpened(true),
         },
         {
           icon: <CheckCircleIcon />,
@@ -182,7 +183,6 @@ const SpecimensActions = ({
 
     return actionsArray
   }, [
-    doDuplicate,
     doCreate,
     doOvergeneratedUpdate,
     doUpdate,
@@ -332,6 +332,12 @@ const SpecimensActions = ({
       >
         <VolumeStatsModalContent volumeId={volumeId} />
       </ModalContainer>
+
+      <DuplicateVolumeModal
+        doDuplicate={doDuplicate}
+        isOpen={duplicationModalOpened}
+        setIsOpen={setDuplicationModalOpened}
+      />
     </>
   )
 }

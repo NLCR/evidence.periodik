@@ -25,6 +25,7 @@ import theme from '../../../theme'
 import { useMeQuery } from '../../../api/user'
 import { useFormatDate } from '../../../utils/date'
 import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
+import DuplicateVolumeModal from '../../../components/DuplicateVolumeModal'
 
 const getSpecimenState = (sp: TSpecimen, t: TFunction) => {
   if (sp.damageTypes) {
@@ -176,6 +177,7 @@ const Table: FC<Props> = ({ metaTitle }) => {
   const navigate = useNavigate()
 
   const [modalData, setModalData] = useState<TSpecimen | null>(null)
+  const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false)
 
   const pagination = useSpecimensOverviewStore((state) => state.pagination)
   const setPagination = useSpecimensOverviewStore(
@@ -324,22 +326,33 @@ const Table: FC<Props> = ({ metaTitle }) => {
       >
         <VolumeStatsModalContent volumeId={modalData?.volumeId} />
         {me?.id && (
-          <Button
-            variant="contained"
-            fullWidth
-            onClick={() => {
-              navigate(
-                generateVolumeUrlWithParams(
-                  `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
-                  metaTitle.id || '',
-                  undefined,
-                  modalData?.volumeId
+          <>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => {
+                setIsDuplicateModalOpen(true)
+              }}
+            >
+              {t('administration.duplicate_volume')}
+            </Button>
+            <DuplicateVolumeModal
+              isOpen={isDuplicateModalOpen}
+              setIsOpen={setIsDuplicateModalOpen}
+              doDuplicate={async (fieldsToReset) => {
+                setIsDuplicateModalOpen(false)
+                navigate(
+                  generateVolumeUrlWithParams(
+                    `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
+                    metaTitle.id || '',
+                    undefined,
+                    modalData?.volumeId,
+                    fieldsToReset
+                  )
                 )
-              )
-            }}
-          >
-            {t('administration.duplicate_volume')}
-          </Button>
+              }}
+            />
+          </>
         )}
       </ModalContainer>
     </>

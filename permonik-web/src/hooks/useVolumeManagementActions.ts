@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 import clone from 'lodash/clone'
 import { useTranslation } from 'react-i18next'
 import { useVolumeManagementStore } from '../slices/useVolumeManagementStore'
-import { TEditableVolume, VolumeSchema } from '../schema/volume'
+import { VolumeSchema } from '../schema/volume'
 import { SpecimenSchema, TEditableSpecimen } from '../schema/specimen'
 import {
   useCreateVolumeWithSpecimensMutation,
@@ -18,10 +18,10 @@ import { repairOrCreateSpecimen } from '../utils/specimen'
 import { repairVolume } from '../utils/volume'
 import { waitFor } from '../utils/waitFor'
 import i18next from '../i18next'
-import { v4 as uuid } from 'uuid'
 import { RefObject } from 'react'
 import { GridApiPro } from '@mui/x-data-grid-pro/models'
-import { emptyMutationMark } from '../utils/mutationMark'
+import { duplicateVolume } from '../utils/duplicateVolume/duplicateVolume'
+import { FieldsToReset } from '../utils/duplicateVolume/types'
 
 const useVolumeManagementActions = (
   apiRef: RefObject<GridApiPro | null>,
@@ -214,7 +214,7 @@ const useVolumeManagementActions = (
     }
   }
 
-  const doDuplicate = async () => {
+  const doDuplicate = async (fieldsToReset: FieldsToReset[]) => {
     try {
       const { repairedVolume, repairedSpecimens } = doValidation(false)
       setStateHasUnsavedData(false)
@@ -223,57 +223,20 @@ const useVolumeManagementActions = (
         () => !useVolumeManagementStore.getState().stateHasUnsavedData
       )
 
-      const duplicatedVolume: TEditableVolume = {
-        id: uuid(),
-        isLoading: false,
-        barCode: '',
-        dateFrom: repairedVolume.dateFrom,
-        dateTo: repairedVolume.dateTo,
-        metaTitleId: repairedVolume.metaTitleId,
-        subName: repairedVolume.subName,
-        mutationId: repairedVolume.mutationId,
-        periodicity: repairedVolume.periodicity,
-        firstNumber: repairedVolume.firstNumber,
-        lastNumber: repairedVolume.lastNumber,
-        note: '',
-        showAttachmentsAtTheEnd: repairedVolume.showAttachmentsAtTheEnd,
-        signature: repairedVolume.signature,
-        ownerId: repairedVolume.ownerId,
-        year: repairedVolume.year,
-        mutationMark: emptyMutationMark,
-      }
-      const duplicatedSpecimens: TEditableSpecimen[] = repairedSpecimens.map(
-        (specimen) => ({
-          id: uuid(),
-          metaTitleId: specimen.metaTitleId,
-          volumeId: duplicatedVolume.id,
-          barCode: '',
-          numExists: specimen.numExists,
-          numMissing: specimen.numMissing,
-          ownerId: duplicatedVolume.ownerId,
-          damageTypes: [],
-          damagedPages: [],
-          missingPages: [],
-          note: '',
-          name: specimen.name,
-          subName: specimen.subName,
-          editionId: specimen.editionId,
-          mutationId: specimen.mutationId,
-          mutationMark: specimen.mutationMark,
-          publicationDate: specimen.publicationDate,
-          publicationDateString: specimen.publicationDateString,
-          number: specimen.number,
-          attachmentNumber: specimen.attachmentNumber,
-          pagesCount: specimen.pagesCount,
-          isAttachment: specimen.isAttachment,
-          duplicated: true,
-        })
-      )
+      const { volume: duplicatedVolume, specimens: duplicatedSpecimens } =
+        duplicateVolume(
+          { ...repairedVolume, isLoading: false },
+          repairedSpecimens,
+          fieldsToReset
+        )
 
       navigate(
         generateVolumeUrlWithParams(
           `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
-          searchParams.get(BACK_META_TITLE_ID) || ''
+          searchParams.get(BACK_META_TITLE_ID) || '',
+          undefined,
+          undefined,
+          fieldsToReset
         )
       )
       specimensActions.setSpecimensState(duplicatedSpecimens, true)
