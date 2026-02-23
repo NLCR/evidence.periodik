@@ -34,8 +34,12 @@ import { api } from '../../../../api'
 import { TSpecimen } from '../../../../schema/specimen'
 import InputDataOwner from './InputDataOwner'
 import InputDataNote from './InputDataNote'
-import { duplicateVolume } from '../../../../utils/duplicateVolume'
+import { duplicateVolume } from '../../../../utils/duplicateVolume/duplicateVolume'
 import { emptyMutationMark } from '../../../../utils/mutationMark'
+import {
+  basicFieldsToReset,
+  FieldsToReset,
+} from '../../../../utils/duplicateVolume/types'
 
 const InputDataForm = ({
   editions,
@@ -61,12 +65,13 @@ const InputDataForm = ({
 
   const [searchParams] = useSearchParams()
   const fieldsToReset =
-    JSON.parse(searchParams.get('fieldsToReset') ?? '[]') || []
+    (JSON.parse(
+      searchParams.get('fieldsToReset') ?? '[]'
+    ) as FieldsToReset[]) || []
 
   const setSpecimensState = useVolumeManagementStore(
     (state) => state.specimensActions.setSpecimensState
   )
-  const volumeState = useVolumeManagementStore((state) => state.volumeState)
   const setVolumeState = useVolumeManagementStore(
     (state) => state.volumeActions.setVolumeState
   )
@@ -92,6 +97,8 @@ const InputDataForm = ({
             volumeData.specimens,
             fieldsToReset
           )
+
+        methods.reset(duplicatedVolume)
         setVolumeState(duplicatedVolume, true)
         setSpecimensState(duplicatedSpecimens, true)
       }
@@ -108,13 +115,19 @@ const InputDataForm = ({
           ? (volume ?? initialState.volumeState)
           : initialState.volumeState
       )
+      setVolumeState(
+        { ...(volume ?? initialState.volumeState), isLoading: false },
+        false
+      )
     } else {
       // reset all applicable fields
-      for (const field of fieldsToReset) {
-        if (field === 'mutationMark') {
+      for (const field of fieldsToReset.filter((f) =>
+        basicFieldsToReset.includes(f)
+      )) {
+        if (field === FieldsToReset.mutationMark) {
           methods.setValue('mutationMark', emptyMutationMark)
         } else {
-          methods.setValue(field as keyof TEditableVolume, '')
+          methods.setValue(FieldsToReset[field] as keyof TEditableVolume, '')
         }
       }
       methods.setValue('created', null)
@@ -124,7 +137,7 @@ const InputDataForm = ({
       methods.setValue('id', '')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [duplicated, volumeId, methods, volumeState, fieldsToReset.toString()])
+  }, [duplicated, volumeId, fieldsToReset.toString()])
 
   return (
     <FormProvider {...methods}>

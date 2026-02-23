@@ -2,15 +2,13 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TEditableVolume } from '../schema/volume'
-import { TEditableSpecimen } from '../schema/specimen'
 import ModalContainer from './ModalContainer'
 import Checkbox from '@mui/material/Checkbox'
+import { FieldsToReset } from '../utils/duplicateVolume/types'
+import Grid from '@mui/material/Grid'
 
 type TProps = {
-  doDuplicate: (
-    fieldsToReset: (keyof TEditableVolume | keyof TEditableSpecimen)[]
-  ) => Promise<void>
+  doDuplicate: (fieldsToReset: FieldsToReset[]) => Promise<void>
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
 }
@@ -22,65 +20,113 @@ const DuplicateVolumeModal: FC<TProps> = ({
 }) => {
   const { t } = useTranslation()
 
-  const possibleFieldsToReset = [
+  const possibleFieldsToReset: {
+    value: FieldsToReset
+    label: string
+    defaultChecked: boolean
+    disabled: boolean
+  }[] = [
     {
-      value: 'barCode',
+      value: FieldsToReset.barCode,
       label: t('specimens_overview.field_names.barcode'),
       defaultChecked: true,
-      disabled: false,
+      disabled: true,
     },
     {
-      value: 'note',
+      value: FieldsToReset.note,
       label: t('specimens_overview.field_names.note'),
       defaultChecked: true,
       disabled: false,
     },
     {
-      value: 'mutationId',
+      value: FieldsToReset.mutationId,
       label: t('specimens_overview.field_names.mutation'),
       defaultChecked: false,
       disabled: false,
     },
     {
-      value: 'mutationMark',
+      value: FieldsToReset.mutationMark,
       label: t('specimens_overview.field_names.mutation_mark'),
       defaultChecked: true,
       disabled: false,
     },
     {
-      value: 'damageTypes',
-      label: t('specimens_overview.field_names.damage_types'),
-      defaultChecked: true,
+      value: FieldsToReset.ownerId,
+      label: t('specimens_overview.field_names.owner'),
+      defaultChecked: false,
       disabled: false,
     },
     {
-      value: 'damagedPages',
+      value: FieldsToReset.damagedPages,
       label: t('specimens_overview.field_names.damaged_pages'),
       defaultChecked: true,
       disabled: false,
     },
     {
-      value: 'missingPages',
+      value: FieldsToReset.missingPages,
       label: t('specimens_overview.field_names.missing_pages'),
       defaultChecked: true,
       disabled: false,
     },
     {
-      value: 'ownerId',
-      label: t('specimens_overview.field_names.owner'),
+      value: FieldsToReset.missingNumber,
+      label: t('specimens_overview.field_names.missing_number'),
       defaultChecked: false,
       disabled: false,
     },
-  ] as {
-    value: keyof TEditableVolume | keyof TEditableSpecimen
-    label: string
-    defaultChecked: boolean
-    disabled: boolean
-  }[]
+    {
+      value: FieldsToReset.degradation,
+      label: t('specimens_overview.field_names.degradation'),
+      defaultChecked: false,
+      disabled: false,
+    },
+    {
+      value: FieldsToReset.wrongPagination,
+      label: t('specimens_overview.field_names.wrong_pagination'),
+      defaultChecked: false,
+      disabled: false,
+    },
+    {
+      value: FieldsToReset.wrongNumbering,
+      label: t('specimens_overview.field_names.wrong_numbering'),
+      defaultChecked: false,
+      disabled: false,
+    },
+    {
+      value: FieldsToReset.wrongBinding,
+      label: t('specimens_overview.field_names.wrong_binding'),
+      defaultChecked: false,
+      disabled: false,
+    },
+    {
+      value: FieldsToReset.censored,
+      label: t('specimens_overview.field_names.censored'),
+      defaultChecked: false,
+      disabled: false,
+    },
+    {
+      value: FieldsToReset.unreadableBinding,
+      label: t('specimens_overview.field_names.unreadable_binding'),
+      defaultChecked: false,
+      disabled: false,
+    },
+    // {
+    //   value: FieldsToReset.censoredVersion,
+    //   label: t('specimens_overview.field_names.censored_version'),
+    //   defaultChecked: false,
+    //   disabled: false,
+    // },
+    {
+      value: FieldsToReset.wrongDate,
+      label: t('specimens_overview.field_names.wrong_date'),
+      defaultChecked: false,
+      disabled: false,
+    },
+  ]
 
-  const [fieldsToReset, setFieldsToReset] = useState<
-    (keyof TEditableVolume | keyof TEditableSpecimen)[]
-  >(possibleFieldsToReset.filter((f) => f.defaultChecked).map((f) => f.value))
+  const [fieldsToReset, setFieldsToReset] = useState<FieldsToReset[]>(
+    possibleFieldsToReset.filter((f) => f.defaultChecked).map((f) => f.value)
+  )
 
   return (
     <ModalContainer
@@ -108,27 +154,28 @@ const DuplicateVolumeModal: FC<TProps> = ({
         <Typography variant="body1" mb={2} style={{ whiteSpace: 'pre-wrap' }}>
           {t('specimens_overview.duplicate_volume_modal_description2')}
         </Typography>
-        {possibleFieldsToReset.map((field) => (
-          <Box
-            key={field.value}
-            sx={{ display: 'flex', gap: 1, alignItems: 'center' }}
-          >
-            <Checkbox
-              checked={fieldsToReset.includes(field.value)}
-              onChange={(event) => {
-                if (event.target.checked) {
-                  setFieldsToReset([...fieldsToReset, field.value])
-                } else {
-                  setFieldsToReset(
-                    fieldsToReset.filter((f) => f !== field.value)
-                  )
-                }
-              }}
-              disabled={field.disabled}
-            />
-            <Typography>{field.label}</Typography>
-          </Box>
-        ))}
+        <Grid container spacing={2} mb={2}>
+          {possibleFieldsToReset.map((field) => (
+            <Grid size={6} key={field.value}>
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Checkbox
+                  checked={fieldsToReset.includes(field.value)}
+                  onChange={(event) => {
+                    if (event.target.checked) {
+                      setFieldsToReset([...fieldsToReset, field.value])
+                    } else {
+                      setFieldsToReset(
+                        fieldsToReset.filter((f) => f !== field.value)
+                      )
+                    }
+                  }}
+                  disabled={field.disabled}
+                />
+                <Typography>{field.label}</Typography>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
       </Box>
     </ModalContainer>
   )

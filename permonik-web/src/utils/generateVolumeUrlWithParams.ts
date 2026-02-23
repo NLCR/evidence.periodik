@@ -3,13 +3,14 @@ import {
   JUMP_TO_SPECIMEN_WITH_ID,
   VOLUME_DUPLICATE_SOURCE_ID,
 } from './constants'
+import { FieldsToReset } from './duplicateVolume/types'
 
 export const generateVolumeUrlWithParams = (
   url: string,
   metaTitleId: string,
   specimenId?: string,
   volumeDuplicateSourceId?: string,
-  fieldsToReset?: string[]
+  fieldsToReset?: FieldsToReset[]
 ) => {
   let volumeUrl = `${url}?${BACK_META_TITLE_ID}=${metaTitleId}`
 

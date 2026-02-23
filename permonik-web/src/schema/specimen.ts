@@ -3,18 +3,18 @@ import { AuditableSchema } from './common'
 import { mutationMarkSchema } from '../utils/mutationMark'
 
 export const SpecimenDamageTypesSchema = z.enum([
-  'OK',
-  'ChCC',
-  'ChS',
-  'PP',
-  'Deg',
-  'ChPag',
-  'ChCis',
-  'ChSv',
-  'Cz',
-  'NS',
-  'CzV',
-  'ChDatum',
+  'OK', // overeno
+  'ChCC', // chybí číslo
+  'ChS', // chybí strany
+  'PP', // poškozený dokument
+  'Deg', // degradace
+  'ChPag', // chybna paginace
+  'ChCis', // chybné číslování
+  'ChSv', // chybně svázáno
+  'Cz', // cenzurováno
+  'NS', // nečitelně svázáno
+  'CzV', // cenzurní výtisk
+  'ChDatum', // chybné datum
 ])
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 import clone from 'lodash/clone'
 import { useTranslation } from 'react-i18next'
 import { useVolumeManagementStore } from '../slices/useVolumeManagementStore'
-import { TEditableVolume, VolumeSchema } from '../schema/volume'
+import { VolumeSchema } from '../schema/volume'
 import { SpecimenSchema, TEditableSpecimen } from '../schema/specimen'
 import {
   useCreateVolumeWithSpecimensMutation,
@@ -20,7 +20,8 @@ import { waitFor } from '../utils/waitFor'
 import i18next from '../i18next'
 import { RefObject } from 'react'
 import { GridApiPro } from '@mui/x-data-grid-pro/models'
-import { duplicateVolume } from '../utils/duplicateVolume'
+import { duplicateVolume } from '../utils/duplicateVolume/duplicateVolume'
+import { FieldsToReset } from '../utils/duplicateVolume/types'
 
 const useVolumeManagementActions = (
   apiRef: RefObject<GridApiPro | null>,
@@ -213,9 +214,7 @@ const useVolumeManagementActions = (
     }
   }
 
-  const doDuplicate = async (
-    fieldsToReset: (keyof TEditableVolume | keyof TEditableSpecimen)[]
-  ) => {
+  const doDuplicate = async (fieldsToReset: FieldsToReset[]) => {
     try {
       const { repairedVolume, repairedSpecimens } = doValidation(false)
       setStateHasUnsavedData(false)

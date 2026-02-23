@@ -17,17 +17,14 @@ import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
-import { TEditableSpecimen } from '../../../schema/specimen'
-import { TEditableVolume } from '../../../schema/volume'
 import DuplicateVolumeModal from '../../../components/DuplicateVolumeModal'
+import { FieldsToReset } from '../../../utils/duplicateVolume/types'
 
 type Props = {
   duplicated: boolean
   volume: TUpdatableVolume | null | undefined
   editions: TEdition[] | undefined
-  doDuplicate: (
-    fieldsToReset: (keyof TEditableVolume | keyof TEditableSpecimen)[]
-  ) => Promise<void>
+  doDuplicate: (fieldsToReset: FieldsToReset[]) => Promise<void>
   doUpdate: (setVerified?: boolean) => Promise<void>
   doOvergeneratedUpdate: (setVerified?: boolean) => Promise<void>
   doCreate: (setVerified?: boolean) => Promise<void>
