@@ -641,11 +641,18 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          return renderCheckBox(
-            !!row.damageTypes?.includes('PP'),
-            row.numExists,
-            !disabled
-          )
+          const damageExists =
+            !!row.damageTypes?.includes('PP') && row.numExists
+
+          const damagedPages = row.damagedPages
+          if (damagedPages.length > 0) {
+            return renderValue(
+              [...damagedPages].sort().toString(),
+              damageExists,
+              !disabled
+            )
+          }
+          return renderCheckBox(damageExists, row.numExists, !disabled)
         },
         renderEditCell: renderDamagedAndMissingPagesEditCell,
       },
@@ -698,11 +705,18 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          return renderCheckBox(
-            !!row.damageTypes?.includes('ChS'),
-            row.numExists,
-            !disabled
-          )
+          const damageExists =
+            !!row.damageTypes?.includes('ChS') && row.numExists
+
+          const missingPages = row.missingPages
+          if (missingPages.length > 0) {
+            return renderValue(
+              [...missingPages].sort().toString(),
+              damageExists,
+              !disabled
+            )
+          }
+          return renderCheckBox(damageExists, row.numExists, !disabled)
         },
         renderEditCell: renderDamagedAndMissingPagesEditCell,
       },

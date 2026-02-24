@@ -304,9 +304,17 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
         width: 52,
         renderCell: (params: GridRenderCellParams<TSpecimen>) => {
           const { row } = params
-          return CenteredIcon(
+          const damageExists =
             !!row.damageTypes?.includes('PP') && row.numExists
-          )
+
+          const damagedPages = row.damagedPages
+          if (damagedPages.length > 0) {
+            return renderValue(
+              [...damagedPages].sort().toString(),
+              damageExists
+            )
+          }
+          return CenteredIcon(damageExists)
         },
       },
       {
@@ -345,12 +353,20 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
             />
           </Tooltip>
         ),
-        width: 52,
+        width: 64,
         renderCell: (params: GridRenderCellParams<TSpecimen>) => {
           const { row } = params
-          return CenteredIcon(
+          const damageExists =
             !!row.damageTypes?.includes('ChS') && row.numExists
-          )
+
+          const missingPages = row.missingPages
+          if (missingPages.length > 0) {
+            return renderValue(
+              [...missingPages].sort().toString(),
+              damageExists
+            )
+          }
+          return CenteredIcon(damageExists)
         },
       },
       {

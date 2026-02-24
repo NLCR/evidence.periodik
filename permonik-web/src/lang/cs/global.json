@@ -74,9 +74,30 @@
     "help_desc_2": "číslo vydání - mutace - značky mutačních vydání - počet exemplářů",
     "help_desc_3": "Řádek může být zbarvený zeleně (všechny exempláře jsou v pořádku) nebo oranžově (některý z exemplářů má vadu)",
     "synchronize_years_between_views": "Synchronizovat datum<br />kalendáře a tabulky",
-    "detailed_volume_overview": "Podrobný popis svazku",
+    "detailed_volume_overview": "Detailní popis svazku",
     "duplicate_dialog_title": "Duplikovat záznam",
-    "duplicate_dialog_description": "Vyberte datum, ke kterému bude zadán nový záznam"
+    "duplicate_dialog_description": "Vyberte datum, ke kterému bude zadán nový záznam",
+    "field_names": {
+      "barcode": "Čárový kód",
+      "mutation": "Mutace",
+      "mutation_mark": "Mutační vydání",
+      "note": "Poznámka",
+      "damaged_pages": "Poškozené strany",
+      "missing_pages": "Chybějící strany",
+      "missing_number": "Chybějící číslo",
+      "degradation": "Degradace",
+      "wrong_pagination": "Chybné číslování stránek",
+      "wrong_numbering": "Chybné číslování čísel",
+      "wrong_binding": "Chybné svázání",
+      "censored": "Cenzurováno",
+      "unreadable_binding": "Nečitelně svázáno",
+      "censored_version": "Cenzurní výtisk",
+      "wrong_date": "Chybné datum",
+      "owner": "Vlastník"
+    },
+    "duplicate_volume_modal_header": "Duplikovat svazek",
+    "duplicate_volume_modal_description1": "Označte atributy, které se mají při duplikaci resetovat.",
+    "duplicate_volume_modal_description2": "Pokud atribut zůstane nezaškrtnutý, jeho hodnota bude zkopírována z tohoto do duplikovaného svazku.\nAtributy, které budou zaškrtnuté, budou resetovány na výchozí hodnoty a bude je potřeba vyplnit pro nový svazek."
   },
   "volume_overview": {
     "not_found": "Tento svazek nebyl nalezen",

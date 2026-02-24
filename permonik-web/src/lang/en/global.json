@@ -76,7 +76,28 @@
     "synchronize_years_between_views": "Synchronize calendar<br />and table dates",
     "detailed_volume_overview": "Detailed volume overview",
     "duplicate_dialog_title": "Duplicate entry",
-    "duplicate_dialog_description": "Select the date for which a new record will be entered"
+    "duplicate_dialog_description": "Select the date for which a new record will be entered",
+    "field_names": {
+      "barcode": "Barcode",
+      "mutation": "Mutation",
+      "mutation_mark": "Mutational edition",
+      "note": "Note",
+      "damaged_pages": "Damaged pages",
+      "missing_pages": "Missing pages",
+      "missing_number": "Missing number",
+      "degradation": "Degradation",
+      "wrong_pagination": "Wrong pagination",
+      "wrong_numbering": "Wrong numbering",
+      "wrong_binding": "Wrong binding",
+      "censored": "Censored",
+      "unreadable_binding": "Unreadable binding",
+      "censored_version": "Censored version",
+      "wrong_date": "Wrong date",
+      "owner": "Owner"
+    },
+    "duplicate_volume_modal_header": "Duplicate volume",
+    "duplicate_volume_modal_description1": "Mark the attributes that should be reset during duplication.",
+    "duplicate_volume_modal_description2": "If an attribute remains unchecked, its value will be copied from this to the duplicated volume.\nAttributes that will be checked will be reset to default values and will need to be filled in for the new volume."
   },
   "volume_overview": {
     "not_found": "This volume was not found",

@@ -74,9 +74,31 @@
     "help_desc_2": "číslo vydania - mutácia - značky mutačných vydaní - počet exemplárov",
     "help_desc_3": "Riadok môže byť zafarbený na zeleno (všetky exempláre sú v poriadku) alebo oranžovo (niektorý z exemplárov má vadu)",
     "synchronize_years_between_views": "Synchronizovať dátum<br />kalendára a tabuľky",
-    "detailed_volume_overview": "Podrobný popis zväzku",
+    "detailed_volume_overview": "Detailný popis zväzku",
     "duplicate_dialog_title": "Duplikovať záznam",
-    "duplicate_dialog_description": "Vyberte dátum, ku ktorému bude zadaný nový záznam"
+    "duplicate_dialog_description": "Vyberte dátum, ku ktorému bude zadaný nový záznam",
+    "field_names": {
+      "barcode": "Čiarový kód",
+      "mutation": "Mutácia",
+      "mutation_mark": "Mutačné vydanie",
+      "note": "Poznámka",
+      "damage_types": "Poškodenie (chybné dátumy, degradácia, väzba, atď.)",
+      "damaged_pages": "Poškodené strany",
+      "missing_pages": "Chýbajúce strany",
+      "owner": "Vlastník",
+      "missing_number": "Chýbajúce číslo",
+      "degradation": "Degradácia",
+      "wrong_pagination": "Chybné číslovanie strán",
+      "wrong_numbering": "Chybné číslovanie čísel",
+      "wrong_binding": "Chybne zviazané",
+      "censored": "Cenzurované",
+      "unreadable_binding": "Nečitateľne zviazané",
+      "censored_version": "Cenzúrny výtlačok",
+      "wrong_date": "Chybný dátum"
+    },
+    "duplicate_volume_modal_header": "Duplikovať zväzok",
+    "duplicate_volume_modal_description1": "Označte atribúty, ktoré sa majú pri duplikácii resetovať.",
+    "duplicate_volume_modal_description2": "Ak atribút zostane nezaškrtnutý, jeho hodnota bude skopírovaná z tohto do duplikovaného zväzku.\nAtribúty, ktoré budú zaškrtnuté, budú resetované na predvolené hodnoty a bude je potrebné vyplniť pre nový zväzok."
   },
   "volume_overview": {
     "not_found": "Tento zväzok nebol nájdený",
