@@ -6,22 +6,22 @@ import dayjs from 'dayjs'
 import {
   useManagedVolumeDetailQuery,
   useVolumeOverviewStatsQuery,
-} from '../../api/volume'
-import Loader from '../Loader'
-import ShowError from '../ShowError'
-import { useOwnerListQuery } from '../../api/owner'
-import { useMutationListQuery } from '../../api/mutation'
-import { useEditionListQuery } from '../../api/edition'
+} from '../../../api/volume'
+import Loader from '../../Loader'
+import ShowError from '../../ShowError'
+import { useOwnerListQuery } from '../../../api/owner'
+import { useMutationListQuery } from '../../../api/mutation'
+import { useEditionListQuery } from '../../../api/edition'
 import isFinite from 'lodash/isFinite'
-import { useLanguageCode } from '../../hooks/useLanguageCode'
+import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import Barcode from 'react-barcode'
-import { useMetaTitleListQuery } from '../../api/metaTitle'
-import { StripedDataGrid } from '../../pages/volumeManagement/components/SpecimensTable'
-import { useColumns } from './columns'
-import SpecimenItem from './SpecimenItem'
-import { TabSelect } from '../TabSelect'
-import { TScanTemplateSettings } from './schemas'
-import ScanTemplateSettings from './ScanTemplateSettings'
+import { useMetaTitleListQuery } from '../../../api/metaTitle'
+import { StripedDataGrid } from '../../../pages/volumeManagement/components/SpecimensTable'
+import { useColumns } from '../columns'
+import SpecimenItem from '../SpecimenItem'
+import { TabSelect } from '../../TabSelect'
+import { TScanTemplateSettings } from '../schemas'
+import PrepareScanModalContentVolumes from './PrepareScanModalContentVolumes'
 
 const bolderTextStyle = {
   fontWeight: '600',
@@ -33,10 +33,11 @@ type TProps = {
 
 type TView = 'VIEW' | 'EDIT'
 
-const PrepareScanModalContent2: FC<TProps> = ({ volumeId = undefined }) => {
+const PrepareScanModalContentTemplate: FC<TProps> = ({
+  volumeId = undefined,
+}) => {
   const [view, setView] = useState<TView>('EDIT')
   const [filter, setFilter] = useState<'1' | '2'>('1')
-  const [stage, setStage] = useState(0)
   const [settings, setSettings] = useState<TScanTemplateSettings>({
     badBound: false,
     damagedPages: false,
@@ -103,16 +104,6 @@ const PrepareScanModalContent2: FC<TProps> = ({ volumeId = undefined }) => {
     !editions
   )
     return <ShowError />
-
-  if (stage === 0) {
-    return (
-      <ScanTemplateSettings
-        templateSettings={settings}
-        setTemplateSettings={setSettings}
-        onConfirm={() => setStage(1)}
-      />
-    )
-  }
 
   return (
     <Box>
@@ -211,4 +202,4 @@ const PrepareScanModalContent2: FC<TProps> = ({ volumeId = undefined }) => {
   )
 }
 
-export default PrepareScanModalContent2
+export default PrepareScanModalContentTemplate

@@ -64,6 +64,7 @@ type TModalContainerProps = {
   autoWidth?: boolean
   minWidth?: string
   maxHeight?: string
+  customDialogActions?: ReactNode
 }
 
 const ModalContainer: FC<TModalContainerProps> = ({
@@ -79,6 +80,7 @@ const ModalContainer: FC<TModalContainerProps> = ({
   autoWidth = false,
   minWidth = undefined,
   maxHeight = undefined,
+  customDialogActions = null,
 }) => {
   const { t } = useTranslation()
 
@@ -131,38 +133,45 @@ const ModalContainer: FC<TModalContainerProps> = ({
         >
           {children}
         </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            gap: '12px',
-            marginTop: style === 'scrollable' ? 'auto' : '16px',
-            paddingTop: '8px',
-            backgroundColor: 'background.paper',
-          }}
-        >
-          {showButtons ? (
-            <>
-              <Button
-                onClick={() => closeButton.callback()}
-                variant="outlined"
-                sx={{ order: switchButtons ? '2' : '1' }}
-              >
-                {closeButton?.text ? closeButton.text : t('common.close')}
-              </Button>
-              {isFunction(acceptButton?.callback) ? (
+
+        {customDialogActions ? (
+          customDialogActions
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              gap: '12px',
+              marginTop: style === 'scrollable' ? 'auto' : '16px',
+              paddingTop: '8px',
+              backgroundColor: 'background.paper',
+            }}
+          >
+            {showButtons ? (
+              <>
                 <Button
-                  disabled={acceptButton.disabled}
-                  onClick={() => acceptButton.callback()}
-                  variant="contained"
+                  onClick={() => closeButton.callback()}
+                  variant="outlined"
+                  sx={{ order: switchButtons ? '2' : '1' }}
                 >
-                  {acceptButton?.text ? acceptButton.text : t('common.accept')}
+                  {closeButton?.text ? closeButton.text : t('common.close')}
                 </Button>
-              ) : null}
-            </>
-          ) : null}
-        </Box>
+                {isFunction(acceptButton?.callback) ? (
+                  <Button
+                    disabled={acceptButton.disabled}
+                    onClick={() => acceptButton.callback()}
+                    variant="contained"
+                  >
+                    {acceptButton?.text
+                      ? acceptButton.text
+                      : t('common.accept')}
+                  </Button>
+                ) : null}
+              </>
+            ) : null}
+          </Box>
+        )}
       </Box>
     </Modal>
   ) : null

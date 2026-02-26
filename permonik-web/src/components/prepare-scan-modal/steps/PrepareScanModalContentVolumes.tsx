@@ -3,10 +3,10 @@ import {
   defaultReplacement,
   TReplacementSource,
   TScanTemplateSettings,
-} from './schemas'
+} from '../schemas'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
-import ReplacementInput from './ReplacementInput'
+import ReplacementInput from '../ReplacementInput'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
@@ -16,7 +16,7 @@ type Props = {
   onConfirm: () => void
 }
 
-const ScanTemplateSettings = ({
+const PrepareScanModalContentVolumes = ({
   templateSettings,
   setTemplateSettings,
   onConfirm,
@@ -133,4 +133,4 @@ const ScanTemplateSettings = ({
   )
 }
 
-export default ScanTemplateSettings
+export default PrepareScanModalContentVolumes

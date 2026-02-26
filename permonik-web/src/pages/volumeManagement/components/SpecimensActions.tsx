@@ -14,12 +14,11 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import Button from '@mui/material/Button'
 import ModalContainer from '../../../components/ModalContainer'
 import Typography from '@mui/material/Typography'
-import PrepareScanModalContent from '../../../components/prepare-scan-modal/PrepareScanModalContent'
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
-import PrepareScanModalContent2 from '../../../components/prepare-scan-modal/PrepareScanModalContent'
+import PrepareScanModal from '../../../components/prepare-scan-modal/PrepareScanModal'
 
 type Props = {
   duplicated: boolean
@@ -342,17 +341,12 @@ const SpecimensActions = ({
       >
         <VolumeStatsModalContent volumeId={volumeId} />
       </ModalContainer>
-      <ModalContainer
-        autoWidth
-        minWidth="40rem"
-        maxHeight="95vh"
-        header={'Příprava pro skenování - předloha'}
-        opened={prepareScanModalOpened}
-        onClose={() => setPrepareScanModalOpened(false)}
-        closeButton={{ callback: () => setPrepareScanModalOpened(false) }}
-      >
-        <PrepareScanModalContent2 volumeId={volumeId} />
-      </ModalContainer>
+
+      <PrepareScanModal
+        volumeId={volumeId}
+        isOpen={prepareScanModalOpened}
+        setIsOpen={setPrepareScanModalOpened}
+      />
     </>
   )
 }
