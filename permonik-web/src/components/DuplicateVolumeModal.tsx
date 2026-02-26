@@ -33,6 +33,12 @@ const DuplicateVolumeModal: FC<TProps> = ({
       disabled: true,
     },
     {
+      value: FieldsToReset.signature,
+      label: t('specimens_overview.field_names.signature'),
+      defaultChecked: true,
+      disabled: false,
+    },
+    {
       value: FieldsToReset.note,
       label: t('specimens_overview.field_names.note'),
       defaultChecked: true,

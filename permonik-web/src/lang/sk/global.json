@@ -79,6 +79,7 @@
     "duplicate_dialog_description": "Vyberte dátum, ku ktorému bude zadaný nový záznam",
     "field_names": {
       "barcode": "Čiarový kód",
+      "signature": "Signatúra",
       "mutation": "Mutácia",
       "mutation_mark": "Mutačné vydanie",
       "note": "Poznámka",

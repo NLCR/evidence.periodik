@@ -79,6 +79,7 @@
     "duplicate_dialog_description": "Select the date for which a new record will be entered",
     "field_names": {
       "barcode": "Barcode",
+      "signature": "Signature",
       "mutation": "Mutation",
       "mutation_mark": "Mutational edition",
       "note": "Note",
