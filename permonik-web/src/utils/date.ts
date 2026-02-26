@@ -3,9 +3,9 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const DATE_FORMATS = {
-  cs: 'DD. MM. YYYY',
+  cs: 'DD.MM.YYYY',
   en: 'YYYY-MM-DD',
-  sk: 'DD. MM. YYYY',
+  sk: 'DD.MM.YYYY',
 }
 
 type Locale = keyof typeof DATE_FORMATS
