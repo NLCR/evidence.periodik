@@ -19,7 +19,7 @@ import {
 } from '@mui/material'
 import ReplacementInput from './ReplacementInput'
 import SpecimenItemViewOnly from './SpecimenItemViewOnly'
-import { defaultReplacement, TReplacement } from './schemas'
+import { emptyReplacement, TReplacement } from './schemas'
 
 type Props = { specimen: TSpecimen; viewOnly?: boolean }
 
@@ -41,7 +41,7 @@ const AddReplacementButton = ({ callback }: { callback: () => void }) => (
 const SpecimenItem = ({ specimen, viewOnly = false }: Props) => {
   const [replacements, setReplacements] = useState<TReplacement[]>([])
   const addReplacement = () =>
-    setReplacements((prev) => prev.concat([defaultReplacement]))
+    setReplacements((prev) => prev.concat([emptyReplacement]))
   const removeReplacement = (index: number) =>
     setReplacements((prev) => prev.filter((item, idx) => idx != index))
 

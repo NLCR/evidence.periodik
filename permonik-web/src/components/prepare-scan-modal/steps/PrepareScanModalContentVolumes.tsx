@@ -1,9 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react'
-import {
-  defaultReplacement,
-  TReplacementSource,
-  TScanTemplateSettings,
-} from '../schemas'
+import { emptyReplacement, TScanTemplateSettings } from '../schemas'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
 import ReplacementInput from '../ReplacementInput'
@@ -13,13 +9,11 @@ import Typography from '@mui/material/Typography'
 type Props = {
   templateSettings: TScanTemplateSettings
   setTemplateSettings: Dispatch<SetStateAction<TScanTemplateSettings>>
-  onConfirm: () => void
 }
 
 const PrepareScanModalContentVolumes = ({
   templateSettings,
   setTemplateSettings,
-  onConfirm,
 }: Props) => {
   return (
     <Box gap={2} display={'flex'} flexDirection={'column'}>
@@ -69,29 +63,7 @@ const PrepareScanModalContentVolumes = ({
           <Checkbox /> Vlastník
         </Box>
       </Box>
-      {/* <Box>
-        <Typography variant="h6">Doplnit náhradu za:</Typography>
-        <Box>
-          <Checkbox disabled checked={true} value={true} defaultChecked />{' '}
-          Chybějící číslo
-        </Box>
-        <Box>
-          <Checkbox disabled checked={true} value={true} defaultChecked />{' '}
-          Chybějící strany
-        </Box>
-        <Box>
-          <Checkbox /> Cenzurování
-        </Box>
-        <Box>
-          <Checkbox /> Degradace papíru
-        </Box>
-        <Box>
-          <Checkbox /> Nečitelné svázání
-        </Box>
-        <Box>
-          <Checkbox /> Poškozené strany
-        </Box>
-      </Box> */}
+
       <Box gap={1} display={'flex'} flexDirection={'column'}>
         <Typography variant="h6">Zdroje náhrad</Typography>
         {templateSettings.replacementSources.map((item, index) => (
@@ -118,7 +90,7 @@ const PrepareScanModalContentVolumes = ({
               ...prev,
               replacementSources: [
                 ...prev.replacementSources,
-                defaultReplacement,
+                emptyReplacement,
               ],
             }))
           }
@@ -126,9 +98,6 @@ const PrepareScanModalContentVolumes = ({
           Přidat zdroj náhrad
         </Button>
       </Box>
-      <Button variant="contained" onClick={onConfirm}>
-        Potvrdit
-      </Button>
     </Box>
   )
 }

@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import Typography from '@mui/material/Typography'
-import { defaultReplacement, TReplacement } from './schemas'
+import { emptyReplacement, TReplacement } from './schemas'
 import IconButton from '@mui/material/IconButton'
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows'
 import Select from '@mui/material/Select'
@@ -60,7 +60,7 @@ const ReplacementInput = ({
   onChange,
 }: Props) => {
   const [replacement, setReplacement] = useState<TReplacement>(
-    value ?? defaultReplacement
+    value ?? emptyReplacement
   )
 
   const [mode, setMode] = useState<'SELECT' | 'MANUAL'>('SELECT')

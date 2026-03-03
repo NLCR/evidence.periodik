@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { FC, useMemo, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import {
@@ -29,29 +29,19 @@ const bolderTextStyle = {
 
 type TProps = {
   volumeId?: string
+  templateSettings: TScanTemplateSettings
+  setTemplateSettings: Dispatch<SetStateAction<TScanTemplateSettings>>
 }
 
 type TView = 'VIEW' | 'EDIT'
 
 const PrepareScanModalContentTemplate: FC<TProps> = ({
   volumeId = undefined,
+  setTemplateSettings,
+  templateSettings,
 }) => {
   const [view, setView] = useState<TView>('EDIT')
   const [filter, setFilter] = useState<'1' | '2'>('1')
-  const [settings, setSettings] = useState<TScanTemplateSettings>({
-    badBound: false,
-    damagedPages: false,
-    missingPages: true,
-    replacementSources: [
-      {
-        barcode: '',
-        mutation: '',
-        mutationEdition: '',
-        owner: '',
-        signature: '',
-      },
-    ],
-  })
 
   const {
     data: owners,

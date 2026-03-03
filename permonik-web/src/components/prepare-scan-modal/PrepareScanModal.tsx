@@ -4,6 +4,9 @@ import PrepareScanModalContentTemplate from './steps/PrepareScanModalContentTemp
 import PrepareScanModalContentPreparation from './steps/PrepareScanModalContentPreparation'
 import PrepareScanModalContentVolumes from './steps/PrepareScanModalContentVolumes'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import { defaultScanSettings, TScanTemplateSettings } from './schemas'
+import Typography from '@mui/material/Typography'
 
 type Props = {
   isOpen: boolean
@@ -14,9 +17,21 @@ type Props = {
 const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
   // TODO default step needs to be fetched from BE
   const [step, setStep] = useState<number>(0)
-  // settings state
-  // volume state
-  // TODO doplnit do BE struktury
+  const [scanTemplateSettings, setScanTemplateSettings] =
+    // TODO scan settings need to be fetched from BE
+    useState<TScanTemplateSettings>(defaultScanSettings)
+
+  const nextStep = () => {
+    // TODO validace?
+    setStep((prev) => prev + 1)
+  }
+
+  const previousStep = () => {
+    // TODO validace?
+    setStep((prev) => prev - 1)
+  }
+
+  // TODO doplnit do BE struktury ty scan settings atd, abych to mel kde uloziti
 
   return (
     <ModalContainer
@@ -27,25 +42,63 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
       opened={isOpen}
       onClose={() => setIsOpen(false)}
       closeButton={{ callback: () => setIsOpen(false) }}
-      customDialogActions={<Box>TODO hehe</Box>}
+      customDialogActions={
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingTop: '16px',
+          }}
+        >
+          <Box
+            sx={{
+              width: '10rem',
+            }}
+          >
+            {step > 0 ? (
+              <Button fullWidth variant="outlined" onClick={previousStep}>
+                Předchozí krok
+              </Button>
+            ) : (
+              <Box />
+            )}
+          </Box>
+          <Typography>{step + 1} / 3</Typography>
+          <Box
+            sx={{
+              width: '10rem',
+            }}
+          >
+            {step < 2 ? (
+              <Button fullWidth variant="outlined" onClick={nextStep}>
+                Další krok
+              </Button>
+            ) : (
+              <div />
+            )}
+          </Box>
+        </Box>
+      }
     >
       {step === 0 && (
         <PrepareScanModalContentPreparation
-        //   nextStepCallback={() => setStep(1)}
+          setTemplateSettings={setScanTemplateSettings}
+          templateSettings={scanTemplateSettings}
         />
       )}
       {step === 1 && (
         <PrepareScanModalContentVolumes
-        //   previousStepCallback={() => setStep(0)}
-        //   nextStepCallback={() => setStep(2)}
+          setTemplateSettings={setScanTemplateSettings}
+          templateSettings={scanTemplateSettings}
         />
       )}
       {step === 2 && (
         <PrepareScanModalContentTemplate
-        //   previousStepCallback={() => setStep(1)}
+          setTemplateSettings={setScanTemplateSettings}
+          templateSettings={scanTemplateSettings}
         />
       )}
-      {/* <PrepareScanModalContent volumeId={volumeId} /> */}
     </ModalContainer>
   )
 }
