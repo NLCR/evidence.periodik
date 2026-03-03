@@ -35,7 +35,9 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
   const [inputMarkState, setInputMarkState] = useState<TMutationMark>(
     row.mutationMark ?? emptyMutationMark
   )
-  const [inputNumberImpossible, setInputNumberImpossible] = useState(false)
+  const [inputNumberImpossible, setInputNumberImpossible] = useState(
+    inputMarkState.mark === '?'
+  )
 
   useEffect(() => {
     if (open) {
