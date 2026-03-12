@@ -47,6 +47,10 @@ import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
 import { GridApiCommunity } from '@mui/x-data-grid/internals'
 import { useFormatDate } from '../../../utils/date'
+import {
+  getMutationMarkLabel,
+  isUnmarkedMutationMark,
+} from '../../../utils/mutationMark'
 
 const ODD_OPACITY = 0.2
 
@@ -579,13 +583,20 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
+          const isUnmarked = isUnmarkedMutationMark(row.mutationMark)
           return (
             <Tooltip
-              title={row.mutationMark.description ?? row.mutationMark.mark}
+              title={
+                isUnmarked
+                  ? t('volume_overview.mutation_mark_tab_unmarked')
+                  : (row.mutationMark.description ?? row.mutationMark.mark)
+              }
             >
-              {renderValue(row.mutationMark.mark, row.numExists, !disabled) ?? (
-                <div />
-              )}
+              {renderValue(
+                getMutationMarkLabel(row.mutationMark),
+                row.numExists,
+                !disabled
+              ) ?? <div />}
             </Tooltip>
           )
         },

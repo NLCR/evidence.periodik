@@ -51,9 +51,18 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
   }
 
   const handleSave = () => {
+    const normalizedMutationMark =
+      inputMarkState.type === 'UNMARKED'
+        ? {
+            ...inputMarkState,
+            mark: '',
+            description: '',
+          }
+        : inputMarkState
+
     onSave({
       ...row,
-      mutationMark: inputMarkState,
+      mutationMark: normalizedMutationMark,
     })
     doClose()
   }
@@ -109,9 +118,15 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
         },
       }}
       style="fitted"
+      minWidth="35rem"
+      maxWidth="35rem"
     >
       <TabSelect<TMutationMarkType>
         options={[
+          {
+            label: t('volume_overview.mutation_mark_tab_unmarked'),
+            value: 'UNMARKED',
+          },
           {
             label: t('volume_overview.mutation_mark_tab_symbol'),
             value: 'MARK',
@@ -122,18 +137,32 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
           },
         ]}
         selectedItem={inputMarkState.type ?? 'MARK'}
-        setSelectedItem={(value) =>
-          setInputMarkState((prev) => ({ ...prev, type: value }))
-        }
-        onSelectCallback={(value) => {
-          setInputMarkState({
-            type: value,
-            mark: '',
-            description: '',
-          })
+        setSelectedItem={(value) => {
+          setInputMarkState((prev) =>
+            value === 'UNMARKED'
+              ? {
+                  ...prev,
+                  type: value,
+                  mark: '',
+                  description: '',
+                }
+              : { ...prev, type: value }
+          )
         }}
       />
       <div style={{ height: 32 }} />
+      {inputMarkState.type === 'UNMARKED' && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          TODO: Zde bude doplnena nejaka varovna hlaska, ktera upozorni
+          uzivatele na to, co znamena tento tab, aby ho nekliknul nahodou kdyz
+          nema. Doda pani Jezkova
+        </Box>
+      )}
       {inputMarkState.type === 'MARK' && (
         <Box
           sx={{

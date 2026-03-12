@@ -113,6 +113,7 @@
     "mutation_mark_short": "Mutational<br /> edition",
     "mutation_mark_tab_symbol": "Symbols",
     "mutation_mark_tab_number": "Number",
+    "mutation_mark_tab_unmarked": "Unmarked mut. ed.",
     "mutation_mark_label_number": "Real entry",
     "mutation_mark_label_number_decription": "Numeric entry",
     "mutation_mark_label_number_decription_impossible": "Cannot be expressed numerically",

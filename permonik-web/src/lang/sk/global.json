@@ -114,6 +114,7 @@
     "mutation_mark_short": "Mutačné<br />vydanie",
     "mutation_mark_tab_symbol": "Symboly",
     "mutation_mark_tab_number": "Číselné označenie",
+    "mutation_mark_tab_unmarked": "Neoznačené mut. vyd.",
     "mutation_mark_label_number": "Reálny zápis",
     "mutation_mark_label_number_decription": "Číselný zápis",
     "mutation_mark_label_number_decription_impossible": "Nedá sa vyjadriť číselne",
