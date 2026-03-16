@@ -228,6 +228,10 @@ const Table: FC<Props> = ({ metaTitle }) => {
       {
         field: 'number',
         headerName: t('table.number'),
+        renderCell: (params: GridRenderCellParams<TSpecimen>) => {
+          const { row } = params
+          return row.isAttachment ? row.attachmentNumber : row.number
+        },
       },
       {
         field: 'pagesCount',

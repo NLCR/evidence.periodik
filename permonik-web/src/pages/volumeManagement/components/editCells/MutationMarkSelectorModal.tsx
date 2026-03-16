@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -158,7 +158,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
             flexDirection: 'column',
           }}
         >
-            {t('volume_overview.mutation_mark_unmarked_warning')}
+          {t('volume_overview.mutation_mark_unmarked_warning')}
         </Box>
       )}
       {inputMarkState.type === 'MARK' && (
