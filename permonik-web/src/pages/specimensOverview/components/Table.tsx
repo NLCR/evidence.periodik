@@ -25,7 +25,7 @@ import theme from '../../../theme'
 import { useMeQuery } from '../../../api/user'
 import { useFormatDate } from '../../../utils/date'
 import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
-import DuplicateVolumeModal from '../../../components/DuplicateVolumeModal'
+import DuplicateVolumeButton from '../../../components/DuplicateVolumeButton'
 
 const getSpecimenState = (sp: TSpecimen, t: TFunction) => {
   if (sp.damageTypes) {
@@ -326,33 +326,13 @@ const Table: FC<Props> = ({ metaTitle }) => {
       >
         <VolumeStatsModalContent volumeId={modalData?.volumeId} />
         {me?.id && (
-          <>
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={() => {
-                setIsDuplicateModalOpen(true)
-              }}
-            >
-              {t('administration.duplicate_volume')}
-            </Button>
-            <DuplicateVolumeModal
-              isOpen={isDuplicateModalOpen}
-              setIsOpen={setIsDuplicateModalOpen}
-              doDuplicate={async (fieldsToReset) => {
-                setIsDuplicateModalOpen(false)
-                navigate(
-                  generateVolumeUrlWithParams(
-                    `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
-                    metaTitle.id || '',
-                    undefined,
-                    modalData?.volumeId,
-                    fieldsToReset
-                  )
-                )
-              }}
-            />
-          </>
+          <DuplicateVolumeButton
+            volumeId={modalData?.volumeId}
+            metaTitleId={metaTitle.id || ''}
+            fullWidth
+            variant="contained"
+            buttonText={t('administration.duplicate_volume')}
+          />
         )}
       </ModalContainer>
     </>
