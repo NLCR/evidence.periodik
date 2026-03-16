@@ -115,6 +115,7 @@
     "mutation_mark_tab_symbol": "Symboly",
     "mutation_mark_tab_number": "Číselné označenie",
     "mutation_mark_tab_unmarked": "Neoznačené mut. vyd.",
+    "mutation_mark_unmarked_warning": "!!! Len pre výnimočné prípady zistených mutačných vydaní pri prieskume, ktoré nie sú rozlíšené špeciálnou značkou, ale líšia sa od štandardného vydania. Ak nejde o takýto výnimočný prípad, nevyberajte túto možnosť.",
     "mutation_mark_label_number": "Reálny zápis",
     "mutation_mark_label_number_decription": "Číselný zápis",
     "mutation_mark_label_number_decription_impossible": "Nedá sa vyjadriť číselne",

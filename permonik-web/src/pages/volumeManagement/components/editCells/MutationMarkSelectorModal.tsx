@@ -158,9 +158,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
             flexDirection: 'column',
           }}
         >
-          TODO: Zde bude doplnena nejaka varovna hlaska, ktera upozorni
-          uzivatele na to, co znamena tento tab, aby ho nekliknul nahodou kdyz
-          nema. Doda pani Jezkova
+            {t('volume_overview.mutation_mark_unmarked_warning')}
         </Box>
       )}
       {inputMarkState.type === 'MARK' && (
