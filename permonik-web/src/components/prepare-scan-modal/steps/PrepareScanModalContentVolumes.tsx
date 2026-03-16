@@ -19,6 +19,7 @@ const PrepareScanModalContentVolumes = ({
     <Box gap={2} display={'flex'} flexDirection={'column'}>
       <Typography>
         Index vyplněnosti primárního svazku: 86 381{' '}
+        {/* TODO dodat informacni tlacitko ktere vysvetluje index vyplnenosti - jak ho cist */}
         <div
           style={{
             borderRadius: 10,
@@ -31,6 +32,7 @@ const PrepareScanModalContentVolumes = ({
       </Typography>
       <Typography>
         Index vyplněnosti výsledného svazku: 98 633{' '}
+        {/* TODO dodat informacni tlacitko ktere vysvetluje index vyplnenosti - jak ho cist */}
         <div
           style={{
             borderRadius: 10,
