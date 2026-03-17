@@ -1,4 +1,5 @@
 export type TReplacementSource = {
+  id: string | undefined
   signature: string
   barcode: string
   owner: string
@@ -34,6 +35,7 @@ export type TReplacement = TReplacementSource & {
 }
 
 export const emptyReplacement: TReplacement = {
+  id: undefined,
   pages: 'všechny',
   barcode: '',
   mutation: '',

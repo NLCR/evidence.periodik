@@ -23,6 +23,17 @@
     "close": "Close",
     "accept": "Accept"
   },
+  "prepare_scan_modal": {
+    "content_preparation": {
+      "title": "Add replacement for:",
+      "missing_number": "Missing number",
+      "missing_pages": "Missing pages",
+      "censored": "Censorship",
+      "degradation": "Paper degradation",
+      "illegibly_bound": "Illegible binding",
+      "damaged_pages": "Damaged pages"
+    }
+  },
   "fill_index_hint": {
     "aria_label": "How to read fill index",
     "title": "How to read fill index",

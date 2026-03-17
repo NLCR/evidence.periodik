@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import { TScanTemplateSettings, TTemplateIssues } from '../schemas'
+import { useTranslation } from 'react-i18next'
 
 import {
   Box,
@@ -18,6 +19,8 @@ const PrepareScanModalContentPreparation = ({
   templateSettings,
   setTemplateSettings,
 }: Props) => {
+  const { t } = useTranslation()
+
   const safeSetTemplateSettings = (settingsPart: Partial<TTemplateIssues>) => {
     setTemplateSettings((prev) => ({
       ...prev,
@@ -30,7 +33,7 @@ const PrepareScanModalContentPreparation = ({
   return (
     <Box p={2}>
       <Typography variant="h6" paddingBottom={2}>
-        Doplnit náhradu za:
+        {t('prepare_scan_modal.content_preparation.title')}
       </Typography>
 
       <Stack>
@@ -46,7 +49,7 @@ const PrepareScanModalContentPreparation = ({
               }
             />
           }
-          label="Chybějící číslo"
+          label={t('prepare_scan_modal.content_preparation.missing_number')}
         />
 
         <FormControlLabel
@@ -61,7 +64,7 @@ const PrepareScanModalContentPreparation = ({
               }
             />
           }
-          label="Chybějící strany"
+          label={t('prepare_scan_modal.content_preparation.missing_pages')}
         />
 
         <FormControlLabel
@@ -75,7 +78,7 @@ const PrepareScanModalContentPreparation = ({
               }
             />
           }
-          label="Cenzurování"
+          label={t('prepare_scan_modal.content_preparation.censored')}
         />
 
         <FormControlLabel
@@ -89,7 +92,7 @@ const PrepareScanModalContentPreparation = ({
               }
             />
           }
-          label="Degradace papíru"
+          label={t('prepare_scan_modal.content_preparation.degradation')}
         />
 
         <FormControlLabel
@@ -103,7 +106,7 @@ const PrepareScanModalContentPreparation = ({
               }
             />
           }
-          label="Nečitelné svázání"
+          label={t('prepare_scan_modal.content_preparation.illegibly_bound')}
         />
 
         <FormControlLabel
@@ -117,7 +120,7 @@ const PrepareScanModalContentPreparation = ({
               }
             />
           }
-          label="Poškozené strany"
+          label={t('prepare_scan_modal.content_preparation.damaged_pages')}
         />
       </Stack>
     </Box>

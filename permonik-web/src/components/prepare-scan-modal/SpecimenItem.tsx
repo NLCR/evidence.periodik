@@ -19,13 +19,12 @@ import {
 } from '@mui/material'
 import ReplacementInput from './ReplacementInput'
 import SpecimenItemViewOnly from './SpecimenItemViewOnly'
-import { emptyReplacement, TReplacement } from './schemas'
-import { TReplacementSelectOption } from './utils/replacementInput'
+import { emptyReplacement, TReplacement, TReplacementSource } from './schemas'
 
 type Props = {
   specimen: TSpecimen
   viewOnly?: boolean
-  replacementSelectOptions: TReplacementSelectOption[]
+  replacementSourceCandidates: TReplacementSource[]
 }
 
 type TReplacementEntry = {
@@ -51,7 +50,7 @@ const AddReplacementButton = ({ callback }: { callback: () => void }) => (
 const SpecimenItem = ({
   specimen,
   viewOnly = false,
-  replacementSelectOptions,
+  replacementSourceCandidates,
 }: Props) => {
   const replacementId = useRef(0)
   const createEntry = (): TReplacementEntry => {
@@ -113,7 +112,7 @@ const SpecimenItem = ({
                   viewOnly={viewOnly}
                   onChange={setMainReplacement}
                   value={mainReplacement}
-                  selectOptions={replacementSelectOptions}
+                  candidates={replacementSourceCandidates}
                 />
               </Stack>
               <Stack direction={'row'} gap={8}>
@@ -151,7 +150,7 @@ const SpecimenItem = ({
                         <ReplacementInput
                           viewOnly={viewOnly}
                           value={item.replacement}
-                          selectOptions={replacementSelectOptions}
+                          candidates={replacementSourceCandidates}
                           onChange={(value: TReplacement) =>
                             setReplacements((prev) => {
                               return prev.map((replacementItem) =>

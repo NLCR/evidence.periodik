@@ -1,8 +1,6 @@
 import Stack from '@mui/material/Stack'
-import TextField from '@mui/material/TextField'
 import { useState } from 'react'
-import Typography from '@mui/material/Typography'
-import { TReplacement, TReplacementSource } from './schemas'
+import { emptyReplacement, TReplacement, TReplacementSource } from './schemas'
 import IconButton from '@mui/material/IconButton'
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows'
 import Select from '@mui/material/Select'
@@ -10,117 +8,47 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Box from '@mui/material/Box'
-import {
-  mapSelectOptionToReplacement,
-  normalizeReplacement,
-  TReplacementSelectOption,
-} from './utils/replacementInput'
+import ReplacementInputComponent from './ReplacementInputComponent'
+import { buildReplacementOptionLabel } from './utils/replacementInput'
 
-type TCommonProps = {
+type Props = {
   allPages?: boolean
   viewOnly?: boolean
-  selectOptions?: TReplacementSelectOption[]
-}
-
-type TReplacementValueProps = {
-  valueType?: 'replacement'
-  value: TReplacement | null
+  value?: TReplacement | null
   onChange: (value: TReplacement) => void
-}
-
-type TReplacementSourceValueProps = {
-  valueType: 'source'
-  value: TReplacementSource | null
-  onChange: (value: TReplacementSource) => void
-}
-
-type Props = TCommonProps &
-  (TReplacementValueProps | TReplacementSourceValueProps)
-
-const ReplacementInputComponent = ({
-  label,
-  value,
-  viewOnly = false,
-  onChange,
-}: {
-  label: string
-  value: string
-  viewOnly?: boolean
-  onChange: (value: string) => void
-}) => {
-  if (viewOnly)
-    return (
-      <Stack>
-        <Typography
-          sx={{
-            textTransform: 'uppercase',
-            fontSize: '0.65rem',
-            color: 'primary.main',
-          }}
-        >
-          {label}
-        </Typography>
-        <Typography>{value}</Typography>
-      </Stack>
-    )
-  return (
-    <TextField
-      label={label}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-    />
-  )
+  candidates?: TReplacementSource[]
 }
 
 const ReplacementInput = ({
   allPages = undefined,
   viewOnly = false,
-  value,
-  selectOptions = [],
-  ...props
+  value = null,
+  onChange,
+  candidates = [],
 }: Props) => {
-  const replacement = normalizeReplacement(value)
+  const replacement = value ?? emptyReplacement
 
   const [mode, setMode] = useState<'SELECT' | 'MANUAL'>('SELECT')
   const [selectedOptionId, setSelectedOptionId] = useState<string>('')
 
   const safeSetReplacement = (nextPartial: Partial<TReplacement>) => {
-    const nextReplacement = {
+    onChange({
       ...replacement,
       ...nextPartial,
-    }
-
-    if (props.valueType === 'source') {
-      const { pages, ...replacementSource } = nextReplacement
-      void pages
-      props.onChange(replacementSource)
-      return
-    }
-
-    props.onChange(nextReplacement)
+    })
   }
 
   const handleSelectChange = (selectedId: string) => {
     setSelectedOptionId(selectedId)
 
-    const selectedOption = selectOptions.find(
-      (option) => option.id === selectedId
-    )
+    const selectedOption = candidates.find((option) => option.id === selectedId)
     if (!selectedOption) return
 
-    const mappedReplacement = mapSelectOptionToReplacement(
-      selectedOption,
-      replacement
-    )
-
-    if (props.valueType === 'source') {
-      const { pages, ...replacementSource } = mappedReplacement
-      void pages
-      props.onChange(replacementSource)
-      return
-    }
-
-    props.onChange(mappedReplacement)
+    onChange({
+      ...replacement,
+      ...selectedOption,
+      pages: replacement.pages,
+    })
   }
 
   return (
@@ -188,7 +116,7 @@ const ReplacementInput = ({
                 handleSelectChange(String(event.target.value))
               }
             >
-              {selectOptions.map((option) => (
+              {candidates.map((option) => (
                 <MenuItem key={option.id} value={option.id}>
                   <Box
                     sx={{
@@ -197,7 +125,7 @@ const ReplacementInput = ({
                       width: '100%',
                     }}
                   >
-                    <Box>{option.label}</Box>
+                    <Box>{buildReplacementOptionLabel(option)}</Box>
                   </Box>
                 </MenuItem>
               ))}

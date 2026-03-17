@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { Dispatch, FC, SetStateAction, useMemo, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
 import {
   useManagedVolumeDetailQuery,
   useVolumeOverviewStatsQuery,
@@ -14,12 +14,7 @@ import Barcode from 'react-barcode'
 import { useMetaTitleListQuery } from '../../../api/metaTitle'
 import SpecimenItem from '../SpecimenItem'
 import { TabSelect } from '../../TabSelect'
-import { defaultScanSettings, TScanTemplateSettings } from '../schemas'
-import { createSelectOptionsFromReplacements } from './utils/prepareScanModalContentVolumes'
-
-const bolderTextStyle = {
-  fontWeight: '600',
-}
+import { TScanTemplateSettings } from '../schemas'
 
 type TProps = {
   volumeId?: string
@@ -32,7 +27,6 @@ type TView = 'VIEW' | 'EDIT'
 const PrepareScanModalContentTemplate: FC<TProps> = ({
   volumeId = undefined,
   templateSettings,
-  setTemplateSettings,
 }) => {
   const [view, setView] = useState<TView>('EDIT')
   const [filter, setFilter] = useState<'1' | '2'>('1')
@@ -69,12 +63,6 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
     isLoading: volumeLoading,
     isError: volumeError,
   } = useManagedVolumeDetailQuery(volumeId)
-
-  const replacementSelectOptions = useMemo(
-    () =>
-      createSelectOptionsFromReplacements(templateSettings.replacementSources),
-    [templateSettings.replacementSources]
-  )
 
   if (
     volumeStatsLoading ||
@@ -186,7 +174,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             viewOnly={view === 'VIEW'}
             key={item.id}
             specimen={item}
-            replacementSelectOptions={replacementSelectOptions}
+            replacementSourceCandidates={templateSettings.replacementSources}
           />
         ))}
     </Box>

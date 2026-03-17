@@ -6,13 +6,13 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import Loader from '../../Loader'
 import ShowError from '../../ShowError'
 import ReplacementInput from '../ReplacementInput'
-import { emptyReplacement, TScanTemplateSettings } from '../schemas'
-import { useReplacementSourceCandidatesQuery } from '../../../api/replacementSourceCandidates'
 import {
-  createSelectOptionsFromReplacementSourceCandidates,
-  filterReplacementSourceCandidates,
-  removeReplacementSourceAtIndex,
-} from './utils/prepareScanModalContentVolumes'
+  emptyReplacement,
+  TReplacement,
+  TScanTemplateSettings,
+} from '../schemas'
+import { useReplacementSourceCandidatesQuery } from '../../../api/replacementSourceCandidates'
+import { removeReplacementSourceAtIndex } from './utils/prepareScanModalContentVolumes'
 
 type Props = {
   templateSettings: TScanTemplateSettings
@@ -34,17 +34,6 @@ const ReplacementSourcesSelection = ({
     isError: replacementSourceCandidatesError,
   } = useReplacementSourceCandidatesQuery(replacementSourceCandidatesRequest)
 
-  const safeReplacementSourceCandidates = replacementSourceCandidates ?? []
-  const replacementSelectOptionsByIndex =
-    templateSettings.replacementSources.map((currentReplacementSource) =>
-      createSelectOptionsFromReplacementSourceCandidates(
-        filterReplacementSourceCandidates({
-          candidates: safeReplacementSourceCandidates,
-          replacementSources: templateSettings.replacementSources,
-          currentReplacementSource,
-        })
-      )
-    )
   if (replacementSourceCandidatesLoading) return <Loader size="small" />
   if (replacementSourceCandidatesError) return <ShowError />
 
@@ -55,17 +44,24 @@ const ReplacementSourcesSelection = ({
           {index + 1}:{' '}
           <ReplacementInput
             allPages
-            valueType="source"
-            value={item}
-            selectOptions={replacementSelectOptionsByIndex[index] ?? []}
-            onChange={(value) =>
+            value={{ ...item, pages: emptyReplacement.pages }}
+            candidates={replacementSourceCandidates?.filter(
+              (candidate) =>
+                !templateSettings.replacementSources.some(
+                  (src) => src.id === candidate.id
+                )
+            )}
+            onChange={(value: TReplacement) => {
+              const { pages, ...replacementSource } = value
+              void pages
+
               setTemplateSettings((prev) => ({
                 ...prev,
                 replacementSources: prev.replacementSources.map((x, i) =>
-                  i === index ? value : x
+                  i === index ? replacementSource : x
                 ),
               }))
-            }
+            }}
           />
           <IconButton
             aria-label="Smazat zdroj náhrady"

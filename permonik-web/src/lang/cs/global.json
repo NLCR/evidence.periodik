@@ -23,6 +23,17 @@
     "close": "Zavřít",
     "accept": "Potvrdit"
   },
+  "prepare_scan_modal": {
+    "content_preparation": {
+      "title": "Doplnit náhradu za:",
+      "missing_number": "Chybějící číslo",
+      "missing_pages": "Chybějící strany",
+      "censored": "Cenzurování",
+      "degradation": "Degradace papíru",
+      "illegibly_bound": "Nečitelné svázání",
+      "damaged_pages": "Poškozené strany"
+    }
+  },
   "fill_index_hint": {
     "aria_label": "Jak číst index vyplněnosti",
     "title": "Jak číst index vyplněnosti",
