@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import clone from 'lodash/clone'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -35,6 +35,11 @@ const DamagedPagesAndMissingPagesEditModal = ({
   const [damageTypes, setDamageTypes] = useState(row.damageTypes || [])
   const [damagedPages, setDamagedPages] = useState(row.damagedPages || [])
   const [missingPages, setMissingPages] = useState(row.missingPages || [])
+
+  useEffect(() => {
+    setDamageTypes(row.damageTypes || [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [row.damageTypes.toString()])
 
   const handleDamageTypeChange = (
     type: TSpecimenDamageTypes,

@@ -1,7 +1,6 @@
 package cz.incad.nkp.inprove.permonikapi.mutation;
 
-import cz.incad.nkp.inprove.permonikapi.mutation.dto.CreatableMutationDTO;
-import cz.incad.nkp.inprove.permonikapi.mutation.dto.MutationDTO;
+import cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +27,14 @@ public class MutationController {
 
     @Operation(summary = "Updates existing mutation")
     @PutMapping("/{id}")
-    public void updateMutation(@PathVariable String id, @RequestBody Mutation mutation) throws SolrServerException, IOException {
+    public void updateMutation(@PathVariable String id, @RequestBody MutationDTO mutation) throws SolrServerException, IOException {
         mutationService.updateMutation(id, mutation);
     }
 
 
     @Operation(summary = "Creates new mutation")
     @PostMapping()
-    public void createMutation(@RequestBody CreatableMutationDTO mutation) throws SolrServerException, IOException {
+    public void createMutation(@RequestBody MutationDTO mutation) throws SolrServerException, IOException {
         mutationService.createMutation(mutation);
     }
 

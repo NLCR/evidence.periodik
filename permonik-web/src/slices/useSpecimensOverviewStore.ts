@@ -1,12 +1,12 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import dayjs, { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 import { SpecimenStateEnum, TSpecimenState } from '../schema/specimen'
 import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
 
 export type TParams = {
-  dateStart: Dayjs
-  dateEnd: Dayjs
+  dateStart: Dayjs | null
+  dateEnd: Dayjs | null
   names: string[]
   subNames: string[]
   mutationIds: string[]
@@ -17,8 +17,8 @@ export type TParams = {
 }
 
 export const initialParams: TParams = {
-  dateStart: dayjs(Date.now()),
-  dateEnd: dayjs(Date.now()),
+  dateStart: null,
+  dateEnd: null,
   names: [],
   subNames: [],
   mutationIds: [],
@@ -46,7 +46,7 @@ interface TState extends TVariablesState {
   setBarCodeInput: (value: string) => void
   setSpecimenStates: (value: TSpecimenState[]) => void
   setPagination: (value: { pageIndex: number; pageSize: number }) => void
-  resetAll: () => void
+  resetAll: (calendarDates?: [Dayjs, Dayjs]) => void
   setView: (value: 'CALENDAR' | 'TABLE') => void
   setSynchronizeYearsBetweenViews: (value: boolean) => void
   setCalendarDate: (value: Dayjs) => void
@@ -83,10 +83,14 @@ export const useSpecimensOverviewStore = create<TState>()(
         pagination: { ...state.pagination, pageIndex: 0 },
       })),
     setPagination: (value) => set(() => ({ pagination: value })),
-    resetAll: () =>
+    resetAll: (calendarDates) =>
       set((state) => ({
         barCodeInput: '',
-        params: initialParams,
+        params: {
+          ...initialParams,
+          dateStart: calendarDates?.[0] ?? null,
+          dateEnd: calendarDates?.[1] ?? null,
+        },
         pagination: { ...state.pagination, pageIndex: 0 },
       })),
     setView: (value) => set(() => ({ view: value })),

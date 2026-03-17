@@ -1,10 +1,9 @@
 package cz.incad.nkp.inprove.permonikapi.mutation;
 
 
-import cz.incad.nkp.inprove.permonikapi.mutation.dto.CreatableMutationDTO;
-import cz.incad.nkp.inprove.permonikapi.mutation.dto.MutationDTO;
-import cz.incad.nkp.inprove.permonikapi.mutation.mapper.CreatableMutationMapper;
-import cz.incad.nkp.inprove.permonikapi.mutation.mapper.MutationDTOMapper;
+import cz.incad.nkp.inprove.permonikapi.mutation.model.Mutation;
+import cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDTO;
+import cz.incad.nkp.inprove.permonikapi.mutation.model.MutationMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -25,9 +24,8 @@ public class MutationService implements MutationDefinition {
 
     private static final Logger logger = LoggerFactory.getLogger(MutationService.class);
 
-    private final MutationDTOMapper mutationDTOMapper;
+    private final MutationMapper mutationMapper;
     private final SolrClient solrClient;
-    private final CreatableMutationMapper creatableMutationMapper;
 
 
     public List<MutationDTO> getMutations() throws SolrServerException, IOException {
@@ -37,12 +35,10 @@ public class MutationService implements MutationDefinition {
 
         QueryResponse response = solrClient.query(MUTATION_CORE_NAME, solrQuery);
 
-        List<Mutation> mutationList = response.getBeans(Mutation.class);
-
-        return mutationList.stream().map(mutationDTOMapper).toList();
+        return response.getBeans(Mutation.class).stream().map(mutationMapper::toDTO).toList();
     }
 
-    public void updateMutation(String mutationId, Mutation mutation) throws SolrServerException, IOException {
+    public void updateMutation(String mutationId, MutationDTO mutation) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(ID_FIELD + ":\"" + mutationId + "\"");
         solrQuery.setRows(1);
@@ -55,8 +51,10 @@ public class MutationService implements MutationDefinition {
             throw new RuntimeException("Mutation not found");
         }
 
+        mutation.preUpdate();
+
         try {
-            solrClient.addBean(MUTATION_CORE_NAME, mutation);
+            solrClient.addBean(MUTATION_CORE_NAME, mutationMapper.toModel(mutation));
             solrClient.commit(MUTATION_CORE_NAME);
             logger.info("Mutation {} successfully updated", mutation.getId());
         } catch (Exception e) {
@@ -66,10 +64,10 @@ public class MutationService implements MutationDefinition {
 
     }
 
-    public void createMutation(CreatableMutationDTO mutation) throws SolrServerException, IOException {
+    public void createMutation(MutationDTO mutation) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         // TODO: this filter is not working
-        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + mutation.name() + "\"");
+        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + mutation.getName() + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(MUTATION_CORE_NAME, solrQuery);
@@ -80,12 +78,10 @@ public class MutationService implements MutationDefinition {
             throw new RuntimeException("Mutation with this name already exists");
         }
 
-        Mutation newMutation = new Mutation();
-        creatableMutationMapper.createMutation(mutation, newMutation);
-
+        mutation.prePersist();
 
         try {
-            solrClient.addBean(MUTATION_CORE_NAME, newMutation);
+            solrClient.addBean(MUTATION_CORE_NAME, mutationMapper.toModel(mutation));
             solrClient.commit(MUTATION_CORE_NAME);
             logger.info("Mutation {} successfully created", mutation);
         } catch (Exception e) {

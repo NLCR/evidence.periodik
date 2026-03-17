@@ -4,11 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
 import InputDataMutationMarkField from './InputDataMutationMarkField'
+import { hasMutationMark } from '../../../../utils/mutationMark'
 
 const InputDataMutationMark = () => {
   const { watch } = useFormContext()
   const isDuplicated = location.href.includes('duplicated')
-  const isEmpty = !watch('mutationMark.mark')
+  const isEmpty = !hasMutationMark(watch('mutationMark'))
   const { t } = useTranslation()
 
   return (

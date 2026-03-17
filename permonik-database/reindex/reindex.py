@@ -37,8 +37,6 @@ def reindex_core(core_name):
 
         for doc in docs:
             doc.pop('_version_', None)
-            if core_name == "volume" or core_name == "specimen":  # TODO: remove after prod migration
-                doc["mutationMarkType"] = "MARK"
 
         new_solr.add(docs)
         total += len(docs)

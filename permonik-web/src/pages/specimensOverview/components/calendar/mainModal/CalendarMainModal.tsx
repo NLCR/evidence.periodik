@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import TableBody from '@mui/material/TableBody'
 import Typography from '@mui/material/Typography'
-import dayjs from 'dayjs'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import ModalContainer from '../../../../../components/ModalContainer'
 import Table from '@mui/material/Table'
@@ -15,6 +14,7 @@ import CalendarSubModal from '../CalendarSubModal'
 import { TMutation } from '../../../../../schema/mutation'
 import CalendarMainModalTableHead from './CalendarMainModalTableHead'
 import CalendarMainModalTableRow from './CalendarMainModalTableRow'
+import { useFormatDate } from '../../../../../utils/date'
 
 type Props = {
   mainModalData: TMainModalData
@@ -34,7 +34,7 @@ const CalendarMainModal = ({
   const { data: editions } = useEditionListQuery()
   const { data: owners } = useOwnerListQuery()
   const { t } = useTranslation()
-
+  const { formatDate } = useFormatDate()
   return (
     <>
       <ModalContainer
@@ -68,7 +68,10 @@ const CalendarMainModal = ({
               marginBottom: '20px',
             }}
           >
-            {dayjs(mainModalData?.day).format('dddd DD.MM.YYYY')}
+            {formatDate(mainModalData?.day, {
+              includeDayName: true,
+              fullDayName: true,
+            })}
           </Typography>
           <Typography
             variant="h6"

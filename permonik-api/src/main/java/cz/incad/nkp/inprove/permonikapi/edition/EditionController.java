@@ -1,7 +1,6 @@
 package cz.incad.nkp.inprove.permonikapi.edition;
 
-import cz.incad.nkp.inprove.permonikapi.edition.dto.CreatableEditionDTO;
-import cz.incad.nkp.inprove.permonikapi.edition.dto.EditionDTO;
+import cz.incad.nkp.inprove.permonikapi.edition.model.EditionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +27,14 @@ public class EditionController {
 
     @Operation(summary = "Updates existing edition")
     @PutMapping("/{id}")
-    public void updateEdition(@PathVariable String id, @RequestBody Edition edition) throws SolrServerException, IOException {
+    public void updateEdition(@PathVariable String id, @RequestBody EditionDTO edition) throws SolrServerException, IOException {
         editionService.updateEdition(id, edition);
     }
 
 
     @Operation(summary = "Creates new edition")
     @PostMapping()
-    public void createEdition(@RequestBody CreatableEditionDTO edition) throws SolrServerException, IOException {
+    public void createEdition(@RequestBody EditionDTO edition) throws SolrServerException, IOException {
         editionService.createEdition(edition);
     }
 

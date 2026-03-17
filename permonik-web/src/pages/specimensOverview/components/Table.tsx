@@ -1,11 +1,6 @@
 import React, { FC, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  GridColDef,
-  GridRenderCellParams,
-  DataGridPro,
-} from '@mui/x-data-grid-pro'
-import dayjs from 'dayjs'
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro'
 import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box'
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
@@ -28,6 +23,9 @@ import { generateVolumeUrlWithParams } from '../../../utils/generateVolumeUrlWit
 import Button from '@mui/material/Button'
 import theme from '../../../theme'
 import { useMeQuery } from '../../../api/user'
+import { useFormatDate } from '../../../utils/date'
+import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
+import DuplicateVolumeButton from '../../../components/DuplicateVolumeButton'
 
 const getSpecimenState = (sp: TSpecimen, t: TFunction) => {
   if (sp.damageTypes) {
@@ -174,10 +172,12 @@ type Props = {
 
 const Table: FC<Props> = ({ metaTitle }) => {
   const { t, i18n } = useTranslation()
+  const { formatDate } = useFormatDate()
   const { MuiTableLocale } = useMuiTableLang()
   const navigate = useNavigate()
 
   const [modalData, setModalData] = useState<TSpecimen | null>(null)
+  const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false)
 
   const pagination = useSpecimensOverviewStore((state) => state.pagination)
   const setPagination = useSpecimensOverviewStore(
@@ -211,7 +211,7 @@ const Table: FC<Props> = ({ metaTitle }) => {
         headerName: t('table.publication_date'),
         flex: 1,
         valueFormatter: (value) => {
-          return dayjs(value).format('dd DD.MM.YYYY')
+          return formatDate(value, { includeDayName: true })
         },
       },
       {
@@ -228,6 +228,10 @@ const Table: FC<Props> = ({ metaTitle }) => {
       {
         field: 'number',
         headerName: t('table.number'),
+        renderCell: (params: GridRenderCellParams<TSpecimen>) => {
+          const { row } = params
+          return row.isAttachment ? row.attachmentNumber : row.number
+        },
       },
       {
         field: 'pagesCount',
@@ -253,11 +257,19 @@ const Table: FC<Props> = ({ metaTitle }) => {
             }))
         : []),
     ]
-  }, [t, owners, mutations, languageCode, editions, specimens?.owners])
+  }, [
+    t,
+    owners,
+    mutations,
+    languageCode,
+    editions,
+    specimens?.owners,
+    formatDate,
+  ])
 
   return (
     <>
-      <DataGridPro
+      <StripedDataGrid
         localeText={MuiTableLocale}
         initialState={{
           pagination: {
@@ -267,6 +279,10 @@ const Table: FC<Props> = ({ metaTitle }) => {
             },
           },
           density: 'compact',
+        }}
+        getRowClassName={(params) => {
+          if (params.row.isAttachment) return 'attachment'
+          return ''
         }}
         disableColumnFilter
         disableColumnSorting
@@ -314,22 +330,13 @@ const Table: FC<Props> = ({ metaTitle }) => {
       >
         <VolumeStatsModalContent volumeId={modalData?.volumeId} />
         {me?.id && (
-          <Button
-            variant="contained"
+          <DuplicateVolumeButton
+            volumeId={modalData?.volumeId}
+            metaTitleId={metaTitle.id || ''}
             fullWidth
-            onClick={() => {
-              navigate(
-                generateVolumeUrlWithParams(
-                  `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
-                  metaTitle.id || '',
-                  undefined,
-                  modalData?.volumeId
-                )
-              )
-            }}
-          >
-            {t('administration.duplicate_volume')}
-          </Button>
+            variant="contained"
+            buttonText={t('administration.duplicate_volume')}
+          />
         )}
       </ModalContainer>
     </>

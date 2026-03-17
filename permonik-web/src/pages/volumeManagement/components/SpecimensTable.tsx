@@ -1,6 +1,5 @@
 import { FC, RefObject, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import dayjs from 'dayjs'
 import {
   gridClasses,
   GridColDef,
@@ -47,6 +46,11 @@ import { useInputDataEditabilityContext } from './inputData/InputDataEditability
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
 import { GridApiCommunity } from '@mui/x-data-grid/internals'
+import { useFormatDate } from '../../../utils/date'
+import {
+  getMutationMarkLabel,
+  isUnmarkedMutationMark,
+} from '../../../utils/mutationMark'
 
 const ODD_OPACITY = 0.2
 
@@ -224,6 +228,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
   const { languageCode } = useLanguageCode()
   const { MuiTableLocale } = useMuiTableLang()
   const { t } = useTranslation()
+  const { formatDate } = useFormatDate()
   const { disabled, locked: isInputDataLocked } =
     useInputDataEditabilityContext()
 
@@ -273,7 +278,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderValue(
-            dayjs(row.publicationDate).format('dd DD.MM.YYYY'),
+            formatDate(row.publicationDate, { includeDayName: true }),
             true,
             !disabled
           )
@@ -578,13 +583,20 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
+          const isUnmarked = isUnmarkedMutationMark(row.mutationMark)
           return (
             <Tooltip
-              title={row.mutationMark.description ?? row.mutationMark.mark}
+              title={
+                isUnmarked
+                  ? t('volume_overview.mutation_mark_tab_unmarked')
+                  : (row.mutationMark.description ?? row.mutationMark.mark)
+              }
             >
-              {renderValue(row.mutationMark.mark, row.numExists, !disabled) ?? (
-                <div />
-              )}
+              {renderValue(
+                getMutationMarkLabel(row.mutationMark),
+                row.numExists,
+                !disabled
+              ) ?? <div />}
             </Tooltip>
           )
         },
@@ -640,11 +652,18 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          return renderCheckBox(
-            !!row.damageTypes?.includes('PP'),
-            row.numExists,
-            !disabled
-          )
+          const damageExists =
+            !!row.damageTypes?.includes('PP') && row.numExists
+
+          const damagedPages = row.damagedPages
+          if (damagedPages.length > 0) {
+            return renderValue(
+              [...damagedPages].sort().toString(),
+              damageExists,
+              !disabled
+            )
+          }
+          return renderCheckBox(damageExists, row.numExists, !disabled)
         },
         renderEditCell: renderDamagedAndMissingPagesEditCell,
       },
@@ -697,11 +716,18 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          return renderCheckBox(
-            !!row.damageTypes?.includes('ChS'),
-            row.numExists,
-            !disabled
-          )
+          const damageExists =
+            !!row.damageTypes?.includes('ChS') && row.numExists
+
+          const missingPages = row.missingPages
+          if (missingPages.length > 0) {
+            return renderValue(
+              [...missingPages].sort().toString(),
+              damageExists,
+              !disabled
+            )
+          }
+          return renderCheckBox(damageExists, row.numExists, !disabled)
         },
         renderEditCell: renderDamagedAndMissingPagesEditCell,
       },
@@ -897,6 +923,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       mutations,
       specimensState.length,
       t,
+      formatDate,
     ]
   )
 

@@ -22,11 +22,7 @@ export const useUpdateEditionMutation = () =>
 
       return api()
         .put(`edition/${editionClone.id}`, {
-          // JSON.stringify name, because solr stores name as String
-          json: {
-            ...editionClone,
-            name: JSON.stringify(editionClone.name),
-          },
+          json: editionClone,
         })
         .json<void>()
     },
@@ -47,11 +43,7 @@ export const useCreateEditionMutation = () =>
 
       return api()
         .post(`edition`, {
-          // JSON.stringify name, because solr stores name as String
-          json: {
-            ...editionClone,
-            name: JSON.stringify(editionClone.name),
-          },
+          json: editionClone,
         })
         .json<void>()
     },

@@ -6,7 +6,7 @@ import { generateVolumeUrlWithParams } from '../../../../utils/generateVolumeUrl
 import { useNavigate, useParams } from 'react-router-dom'
 import { TSpecimen } from '../../../../schema/specimen'
 import { useTranslation } from 'react-i18next'
-import Button from '@mui/material/Button'
+import DuplicateVolumeButton from '../../../../components/DuplicateVolumeButton'
 import { useMeQuery } from '../../../../api/user'
 
 type Props = {
@@ -53,22 +53,13 @@ const CalendarSubModal = ({ setSubModalData, subModalData }: Props) => {
     >
       <VolumeStatsModalContent volumeId={subModalData?.volumeId} />
       {me?.id && (
-        <Button
-          variant="contained"
+        <DuplicateVolumeButton
+          volumeId={subModalData?.volumeId}
+          metaTitleId={metaTitleId || ''}
           fullWidth
-          onClick={() => {
-            navigate(
-              generateVolumeUrlWithParams(
-                `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/duplicated`,
-                metaTitleId || '',
-                undefined,
-                subModalData?.volumeId
-              )
-            )
-          }}
-        >
-          {t('administration.duplicate_volume')}
-        </Button>
+          variant="contained"
+          buttonText={t('administration.duplicate_volume')}
+        />
       )}
     </ModalContainer>
   )

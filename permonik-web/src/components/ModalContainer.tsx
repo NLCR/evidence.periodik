@@ -23,24 +23,30 @@ const sharedStyle = {
   flexDirection: 'column',
 }
 
-const fittedStyle = (maxHeight?: string) => ({
+const fittedStyle = (
+  minWidth?: string,
+  maxWidth?: string,
+  maxHeight?: string
+) => ({
   height: 'fit-content',
   maxHeight: maxHeight ?? '80vh',
   width: 'fit-content',
-  maxWidth: '90vw',
+  maxWidth: { xs: '100%', sm: maxWidth ?? '90vw' },
+  minWidth: { xs: '95vw', sm: minWidth ?? '25vw' },
   ...sharedStyle,
 })
 
 const scrollableStyle = (
   autoWidth: boolean,
   minWidth?: string,
-  maxHeight?: string
+  maxHeight?: string,
+  maxWidth?: string
 ) => ({
   height: 'fit-content',
   maxHeight: maxHeight ?? '80vh',
-  maxWidth: { xs: '100%', sm: '1200px' },
   width: autoWidth ? 'auto' : '90vw',
   minWidth: { xs: '95vw', sm: minWidth ?? '25vw' },
+  maxWidth: { xs: '100%', sm: maxWidth ?? '1200px' },
   ...sharedStyle,
 })
 
@@ -62,8 +68,9 @@ type TModalContainerProps = {
   showButtons?: boolean
   style?: 'fitted' | 'scrollable'
   autoWidth?: boolean
-  minWidth?: string
   maxHeight?: string
+  minWidth?: string
+  maxWidth?: string
   customDialogActions?: ReactNode
 }
 
@@ -81,6 +88,7 @@ const ModalContainer: FC<TModalContainerProps> = ({
   minWidth = undefined,
   maxHeight = undefined,
   customDialogActions = null,
+  maxWidth = undefined,
 }) => {
   const { t } = useTranslation()
 
@@ -99,8 +107,8 @@ const ModalContainer: FC<TModalContainerProps> = ({
       <Box
         sx={
           style === 'scrollable'
-            ? scrollableStyle(autoWidth, minWidth, maxHeight)
-            : fittedStyle(maxHeight)
+            ? scrollableStyle(autoWidth, minWidth, maxHeight, maxWidth)
+            : fittedStyle(minWidth, maxWidth)
         }
       >
         <Box
