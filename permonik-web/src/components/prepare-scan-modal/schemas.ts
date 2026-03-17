@@ -15,8 +15,17 @@ export type TTemplateIssues = {
   degradation: boolean // Degradace papíru
 }
 
+export type TReplacementSourceParameters = {
+  metatitle: boolean
+  mutation: boolean
+  mutationalEdition: boolean
+  owner: boolean
+  timeOverlap: boolean
+}
+
 export type TScanTemplateSettings = {
   issues: TTemplateIssues
+  replacementSourcesParameters: TReplacementSourceParameters
   replacementSources: TReplacementSource[]
 }
 
@@ -38,9 +47,16 @@ export const defaultScanSettings: TScanTemplateSettings = {
     missingPages: true,
     damagedPages: false,
     illegiblyBound: false,
-    missingSpecimen: false,
+    missingSpecimen: true,
     censored: false,
     degradation: false,
   },
-  replacementSources: [],
+  replacementSourcesParameters: {
+    metatitle: true,
+    mutation: false,
+    mutationalEdition: false,
+    owner: false,
+    timeOverlap: true,
+  },
+  replacementSources: [emptyReplacement],
 }
