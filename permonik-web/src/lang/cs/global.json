@@ -23,6 +23,22 @@
     "close": "Zavřít",
     "accept": "Potvrdit"
   },
+  "fill_index_hint": {
+    "aria_label": "Jak číst index vyplněnosti",
+    "title": "Jak číst index vyplněnosti",
+    "format": "Formát: XX–YYY.",
+    "xx": "XX = procentuální úplnost svazku (podíl dochovaných čísel vůči očekávanému počtu čísel).",
+    "yyy": "YYY = třímístný kód charakteristik dochovaných čísel; hodnotí se pouze čísla, která jsou ve svazku skutečně přítomná.",
+    "positions": "Význam jednotlivých pozic YYY:",
+    "position_1": "1. pozice: výskyt chybějících stran v číslech (stránková úplnost).",
+    "position_2": "2. pozice: obecná fyzická nebo strukturální poškození (např. degradace, nečitelná vazba).",
+    "position_3": "3. pozice: další, zpravidla méně významné atributy (např. chybná paginace, datum, číslování, svázání, cenzurní zásahy).",
+    "example": "Příklad 88–732: dochováno je přibližně 88 % čísel; v přítomných číslech chybí přibližně 30 % stran a existující strany jsou poměrně dost poškozeny.",
+    "color_scale": "Barva kolečka je škála indexu: ≤ 50 000 tmavě červená, střed oranžová, 100 000 výrazně zelená.",
+    "color_low": "≤ 50 000",
+    "color_mid": "střed",
+    "color_high": "100 000"
+  },
   "helmet": {
     "title": "PerMonik",
     "title_admin": "PerMonik Editor"

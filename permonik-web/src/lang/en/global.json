@@ -23,6 +23,22 @@
     "close": "Close",
     "accept": "Accept"
   },
+  "fill_index_hint": {
+    "aria_label": "How to read fill index",
+    "title": "How to read fill index",
+    "format": "Format: XX–YYY.",
+    "xx": "XX = percentage completeness of the volume (ratio of preserved issues to expected issues).",
+    "yyy": "YYY = a three-digit code describing preserved-issue characteristics; evaluated only for issues that are actually present in the volume.",
+    "positions": "Meaning of YYY positions:",
+    "position_1": "Position 1: occurrence of missing pages within issues (page completeness).",
+    "position_2": "Position 2: general physical or structural damage (e.g., degradation, unreadable binding).",
+    "position_3": "Position 3: other, usually less significant attributes (e.g., wrong pagination, date, numbering, binding, censorship interventions).",
+    "example": "Example 88–732: about 88% of expected issues are preserved; in present issues about 30% of pages are missing and the rest is quite damaged.",
+    "color_scale": "Dot color follows index scale: ≤ 50,000 dark red, midpoint orange, 100,000 bright green.",
+    "color_low": "≤ 50,000",
+    "color_mid": "midpoint",
+    "color_high": "100,000"
+  },
   "helmet": {
     "title": "PerMonik",
     "title_admin": "PerMonik Editor"
