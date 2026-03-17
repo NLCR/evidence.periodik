@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { TSpecimen } from '../../schema/specimen'
 import dayjs from 'dayjs'
 
@@ -20,8 +20,18 @@ import {
 import ReplacementInput from './ReplacementInput'
 import SpecimenItemViewOnly from './SpecimenItemViewOnly'
 import { emptyReplacement, TReplacement } from './schemas'
+import { TReplacementSelectOption } from './utils/replacementInput'
 
-type Props = { specimen: TSpecimen; viewOnly?: boolean }
+type Props = {
+  specimen: TSpecimen
+  viewOnly?: boolean
+  replacementSelectOptions: TReplacementSelectOption[]
+}
+
+type TReplacementEntry = {
+  id: string
+  replacement: TReplacement
+}
 
 export const getNumberLabel = (specimen: TSpecimen) => {
   if (specimen.number) return `č. ${specimen.number}`
@@ -38,12 +48,26 @@ const AddReplacementButton = ({ callback }: { callback: () => void }) => (
   </Button>
 )
 
-const SpecimenItem = ({ specimen, viewOnly = false }: Props) => {
-  const [replacements, setReplacements] = useState<TReplacement[]>([])
+const SpecimenItem = ({
+  specimen,
+  viewOnly = false,
+  replacementSelectOptions,
+}: Props) => {
+  const replacementId = useRef(0)
+  const createEntry = (): TReplacementEntry => {
+    replacementId.current += 1
+
+    return {
+      id: `replacement-${replacementId.current}`,
+      replacement: emptyReplacement,
+    }
+  }
+
+  const [replacements, setReplacements] = useState<TReplacementEntry[]>([])
   const addReplacement = () =>
-    setReplacements((prev) => prev.concat([emptyReplacement]))
-  const removeReplacement = (index: number) =>
-    setReplacements((prev) => prev.filter((item, idx) => idx != index))
+    setReplacements((prev) => prev.concat(createEntry()))
+  const removeReplacement = (id: string) =>
+    setReplacements((prev) => prev.filter((item) => item.id !== id))
 
   const [note, setNote] = useState<string>('')
   const [mainReplacement, setMainReplacement] = useState<TReplacement | null>(
@@ -55,7 +79,7 @@ const SpecimenItem = ({ specimen, viewOnly = false }: Props) => {
       <SpecimenItemViewOnly
         specimen={specimen}
         mainReplacement={mainReplacement}
-        replacements={replacements}
+        replacements={replacements.map((item) => item.replacement)}
         note={note}
       />
     )
@@ -89,11 +113,17 @@ const SpecimenItem = ({ specimen, viewOnly = false }: Props) => {
                   viewOnly={viewOnly}
                   onChange={setMainReplacement}
                   value={mainReplacement}
+                  selectOptions={replacementSelectOptions}
                 />
               </Stack>
-              <Box>
-                <Checkbox /> Náhrada není dostupná
-              </Box>
+              <Stack direction={'row'} gap={8}>
+                <Box>
+                  <Checkbox /> Náhrada není dostupná
+                </Box>
+                <Box>
+                  <Checkbox /> Čeká na dosken
+                </Box>
+              </Stack>
             </>
           )}
         </Box>
@@ -115,27 +145,39 @@ const SpecimenItem = ({ specimen, viewOnly = false }: Props) => {
                 </Typography>
 
                 <Stack spacing={1}>
-                  {replacements.map((item, index) => (
-                    <>
-                      <Stack key={index} direction="row" alignItems="center">
+                  {replacements.map((item) => (
+                    <React.Fragment key={item.id}>
+                      <Stack direction="row" alignItems="center">
                         <ReplacementInput
                           viewOnly={viewOnly}
-                          value={replacements[index]}
+                          value={item.replacement}
+                          selectOptions={replacementSelectOptions}
                           onChange={(value: TReplacement) =>
                             setReplacements((prev) => {
-                              prev[index] = value
-                              return prev
+                              return prev.map((replacementItem) =>
+                                replacementItem.id === item.id
+                                  ? {
+                                      ...replacementItem,
+                                      replacement: value,
+                                    }
+                                  : replacementItem
+                              )
                             })
                           }
                         />
-                        <IconButton onClick={() => removeReplacement(index)}>
+                        <IconButton onClick={() => removeReplacement(item.id)}>
                           <DeleteIcon />
                         </IconButton>
                       </Stack>
-                      <Box>
-                        <Checkbox /> Náhrada není dostupná
-                      </Box>
-                    </>
+                      <Stack direction={'row'} gap={8} paddingLeft={4}>
+                        <Box>
+                          <Checkbox /> Náhrada není dostupná
+                        </Box>
+                        <Box>
+                          <Checkbox /> Čeká na dosken
+                        </Box>
+                      </Stack>
+                    </React.Fragment>
                   ))}
                   <AddReplacementButton callback={addReplacement} />
                 </Stack>

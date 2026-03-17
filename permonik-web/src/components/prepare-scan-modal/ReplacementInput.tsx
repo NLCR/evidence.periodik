@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import Typography from '@mui/material/Typography'
-import { emptyReplacement, TReplacement } from './schemas'
+import { TReplacement, TReplacementSource } from './schemas'
 import IconButton from '@mui/material/IconButton'
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows'
 import Select from '@mui/material/Select'
@@ -10,13 +10,32 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Box from '@mui/material/Box'
+import {
+  mapSelectOptionToReplacement,
+  normalizeReplacement,
+  TReplacementSelectOption,
+} from './utils/replacementInput'
 
-type Props = {
+type TCommonProps = {
   allPages?: boolean
   viewOnly?: boolean
+  selectOptions?: TReplacementSelectOption[]
+}
+
+type TReplacementValueProps = {
+  valueType?: 'replacement'
   value: TReplacement | null
   onChange: (value: TReplacement) => void
 }
+
+type TReplacementSourceValueProps = {
+  valueType: 'source'
+  value: TReplacementSource | null
+  onChange: (value: TReplacementSource) => void
+}
+
+type Props = TCommonProps &
+  (TReplacementValueProps | TReplacementSourceValueProps)
 
 const ReplacementInputComponent = ({
   label,
@@ -57,20 +76,51 @@ const ReplacementInput = ({
   allPages = undefined,
   viewOnly = false,
   value,
-  onChange,
+  selectOptions = [],
+  ...props
 }: Props) => {
-  const [replacement, setReplacement] = useState<TReplacement>(
-    value ?? emptyReplacement
-  )
+  const replacement = normalizeReplacement(value)
 
   const [mode, setMode] = useState<'SELECT' | 'MANUAL'>('SELECT')
+  const [selectedOptionId, setSelectedOptionId] = useState<string>('')
 
-  const safeSetReplacement = (value: Partial<TReplacement>) => {
-    setReplacement((prev) => {
-      const newValue = { ...prev, ...value }
-      onChange(newValue)
-      return newValue
-    })
+  const safeSetReplacement = (nextPartial: Partial<TReplacement>) => {
+    const nextReplacement = {
+      ...replacement,
+      ...nextPartial,
+    }
+
+    if (props.valueType === 'source') {
+      const { pages, ...replacementSource } = nextReplacement
+      void pages
+      props.onChange(replacementSource)
+      return
+    }
+
+    props.onChange(nextReplacement)
+  }
+
+  const handleSelectChange = (selectedId: string) => {
+    setSelectedOptionId(selectedId)
+
+    const selectedOption = selectOptions.find(
+      (option) => option.id === selectedId
+    )
+    if (!selectedOption) return
+
+    const mappedReplacement = mapSelectOptionToReplacement(
+      selectedOption,
+      replacement
+    )
+
+    if (props.valueType === 'source') {
+      const { pages, ...replacementSource } = mappedReplacement
+      void pages
+      props.onChange(replacementSource)
+      return
+    }
+
+    props.onChange(mappedReplacement)
   }
 
   return (
@@ -79,8 +129,9 @@ const ReplacementInput = ({
       gap={1}
       width={'100%'}
       justifyContent={'space-evenly'}
+      alignItems={'center'}
     >
-      {mode === 'MANUAL' ? (
+      {viewOnly || mode === 'MANUAL' ? (
         <>
           <ReplacementInputComponent
             label="Signatura"
@@ -124,51 +175,32 @@ const ReplacementInput = ({
       ) : (
         <>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">
+            <InputLabel id="replacement-select-label">
               Vyberte náhradní svazek
             </InputLabel>
             <Select
               fullWidth
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Age"
+              labelId="replacement-select-label"
+              id="replacement-select"
+              value={selectedOptionId}
+              label="Vyberte náhradní svazek"
+              onChange={(event) =>
+                handleSelectChange(String(event.target.value))
+              }
             >
-              <MenuItem value={10}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                  }}
-                >
-                  <Box>Signatura 123 · MZK · Praha ★★ · 5/1988-8/1988</Box>
-                  {/* <Box sx={{ color: 'text.secondary' }}>3999</Box> */}
-                </Box>
-              </MenuItem>
-              <MenuItem value={20}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                  }}
-                >
-                  <Box>Signatura 113 · KUK · Praha ★ · 1/1988-3/1988</Box>
-                  {/* <Box sx={{ color: 'text.secondary' }}>3213</Box> */}
-                </Box>
-              </MenuItem>
-              <MenuItem value={30}>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                  }}
-                >
-                  <Box>Signatura 234 · MZK · Praha ★★ · 3/1988-4/1988</Box>
-                  {/* <Box sx={{ color: 'text.secondary' }}>1999</Box> */}
-                </Box>
-              </MenuItem>
+              {selectOptions.map((option) => (
+                <MenuItem key={option.id} value={option.id}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                    }}
+                  >
+                    <Box>{option.label}</Box>
+                  </Box>
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           {!allPages && (
@@ -181,11 +213,13 @@ const ReplacementInput = ({
           )}
         </>
       )}
-      <IconButton
-        onClick={() => setMode(mode === 'MANUAL' ? 'SELECT' : 'MANUAL')}
-      >
-        <CompareArrowsIcon />
-      </IconButton>
+      {!viewOnly && (
+        <IconButton
+          onClick={() => setMode(mode === 'MANUAL' ? 'SELECT' : 'MANUAL')}
+        >
+          <CompareArrowsIcon />
+        </IconButton>
+      )}
     </Stack>
   )
 }

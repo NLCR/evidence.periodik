@@ -1,8 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { Dispatch, FC, SetStateAction, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import dayjs from 'dayjs'
 import {
   useManagedVolumeDetailQuery,
   useVolumeOverviewStatsQuery,
@@ -12,16 +10,12 @@ import ShowError from '../../ShowError'
 import { useOwnerListQuery } from '../../../api/owner'
 import { useMutationListQuery } from '../../../api/mutation'
 import { useEditionListQuery } from '../../../api/edition'
-import isFinite from 'lodash/isFinite'
-import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import Barcode from 'react-barcode'
 import { useMetaTitleListQuery } from '../../../api/metaTitle'
-import { StripedDataGrid } from '../../../pages/volumeManagement/components/SpecimensTable'
-import { useColumns } from '../columns'
 import SpecimenItem from '../SpecimenItem'
 import { TabSelect } from '../../TabSelect'
-import { TScanTemplateSettings } from '../schemas'
-import PrepareScanModalContentVolumes from './PrepareScanModalContentVolumes'
+import { defaultScanSettings, TScanTemplateSettings } from '../schemas'
+import { createSelectOptionsFromReplacements } from './utils/prepareScanModalContentVolumes'
 
 const bolderTextStyle = {
   fontWeight: '600',
@@ -37,8 +31,8 @@ type TView = 'VIEW' | 'EDIT'
 
 const PrepareScanModalContentTemplate: FC<TProps> = ({
   volumeId = undefined,
-  setTemplateSettings,
   templateSettings,
+  setTemplateSettings,
 }) => {
   const [view, setView] = useState<TView>('EDIT')
   const [filter, setFilter] = useState<'1' | '2'>('1')
@@ -75,6 +69,12 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
     isLoading: volumeLoading,
     isError: volumeError,
   } = useManagedVolumeDetailQuery(volumeId)
+
+  const replacementSelectOptions = useMemo(
+    () =>
+      createSelectOptionsFromReplacements(templateSettings.replacementSources),
+    [templateSettings.replacementSources]
+  )
 
   if (
     volumeStatsLoading ||
@@ -186,6 +186,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             viewOnly={view === 'VIEW'}
             key={item.id}
             specimen={item}
+            replacementSelectOptions={replacementSelectOptions}
           />
         ))}
     </Box>

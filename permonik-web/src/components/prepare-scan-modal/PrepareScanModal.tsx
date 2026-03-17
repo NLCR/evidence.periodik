@@ -97,6 +97,7 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
         <PrepareScanModalContentTemplate
           setTemplateSettings={setScanTemplateSettings}
           templateSettings={scanTemplateSettings}
+          volumeId={volumeId}
         />
       )}
     </ModalContainer>

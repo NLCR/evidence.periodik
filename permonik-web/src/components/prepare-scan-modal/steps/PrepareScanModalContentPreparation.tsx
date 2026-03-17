@@ -4,11 +4,9 @@ import { TScanTemplateSettings, TTemplateIssues } from '../schemas'
 import {
   Box,
   Checkbox,
-  Button,
   Typography,
   Stack,
   FormControlLabel,
-  Divider,
 } from '@mui/material'
 
 type Props = {
@@ -31,7 +29,7 @@ const PrepareScanModalContentPreparation = ({
 
   return (
     <Box p={2}>
-      <Typography variant="h6" paddingBottom={3}>
+      <Typography variant="h6" paddingBottom={2}>
         Doplnit náhradu za:
       </Typography>
 

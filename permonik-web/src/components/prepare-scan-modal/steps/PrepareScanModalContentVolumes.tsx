@@ -1,10 +1,10 @@
 import React, { Dispatch, SetStateAction } from 'react'
-import { emptyReplacement, TScanTemplateSettings } from '../schemas'
+import { TScanTemplateSettings } from '../schemas'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
-import ReplacementInput from '../ReplacementInput'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
+import FillIndexIndicator from '../../FillIndexIndicator'
+import ReplacementSourcesSelection from './ReplacementSourcesSelection'
 
 type Props = {
   templateSettings: TScanTemplateSettings
@@ -15,90 +15,100 @@ const PrepareScanModalContentVolumes = ({
   templateSettings,
   setTemplateSettings,
 }: Props) => {
+  const safeSetReplacementSourcesParameters = (
+    settingsPart: Partial<TScanTemplateSettings['replacementSourcesParameters']>
+  ) => {
+    setTemplateSettings((prev) => ({
+      ...prev,
+      replacementSourcesParameters: {
+        ...prev.replacementSourcesParameters,
+        ...settingsPart,
+      },
+    }))
+  }
+
+  const replacementSourcesParameters =
+    templateSettings.replacementSourcesParameters
+
   return (
     <Box gap={2} display={'flex'} flexDirection={'column'}>
       <Typography>
-        Index vyplněnosti primárního svazku: 86 381{' '}
-        {/* TODO dodat informacni tlacitko ktere vysvetluje index vyplnenosti - jak ho cist */}
-        <div
-          style={{
-            borderRadius: 10,
-            backgroundColor: 'orange',
-            width: 10,
-            height: 10,
-            display: 'inline-block',
-          }}
-        />
+        Index vyplněnosti primárního svazku:{' '}
+        <FillIndexIndicator value={86381} displayHint />
       </Typography>
       <Typography>
-        Index vyplněnosti výsledného svazku: 98 633{' '}
-        {/* TODO dodat informacni tlacitko ktere vysvetluje index vyplnenosti - jak ho cist */}
-        <div
-          style={{
-            borderRadius: 10,
-            backgroundColor: 'green',
-            width: 10,
-            height: 10,
-            display: 'inline-block',
-          }}
-        />
+        Index vyplněnosti výsledného svazku:{' '}
+        <FillIndexIndicator value={98633} displayHint />
       </Typography>
       <Box>
         <Typography variant="h6">
           V náhradních svazcích je nutné zachovat:
         </Typography>
         <Box>
-          <Checkbox disabled checked={true} value={true} defaultChecked />{' '}
+          <Checkbox
+            disabled
+            checked={replacementSourcesParameters.metatitle}
+            onChange={(e) =>
+              safeSetReplacementSourcesParameters({
+                metatitle: e.target.checked,
+              })
+            }
+          />{' '}
           Metatitul
         </Box>
         <Box>
-          <Checkbox disabled checked={true} value={true} defaultChecked />{' '}
+          <Checkbox
+            disabled
+            checked={replacementSourcesParameters.timeOverlap}
+            onChange={(e) =>
+              safeSetReplacementSourcesParameters({
+                timeOverlap: e.target.checked,
+              })
+            }
+          />{' '}
           Překryv časového rozpětí
         </Box>
         <Box>
-          <Checkbox /> Mutace
+          <Checkbox
+            checked={replacementSourcesParameters.mutation}
+            onChange={(e) =>
+              safeSetReplacementSourcesParameters({
+                mutation: e.target.checked,
+              })
+            }
+          />{' '}
+          Mutace
         </Box>
         <Box>
-          <Checkbox /> Mutační vydání
+          <Checkbox
+            checked={replacementSourcesParameters.mutationalEdition}
+            onChange={(e) =>
+              safeSetReplacementSourcesParameters({
+                mutationalEdition: e.target.checked,
+              })
+            }
+          />{' '}
+          Mutační vydání
         </Box>
         <Box>
-          <Checkbox /> Vlastník
+          <Checkbox
+            checked={replacementSourcesParameters.owner}
+            onChange={(e) =>
+              safeSetReplacementSourcesParameters({
+                owner: e.target.checked,
+              })
+            }
+          />{' '}
+          Vlastník
         </Box>
       </Box>
 
       <Box gap={1} display={'flex'} flexDirection={'column'}>
         <Typography variant="h6">Zdroje náhrad</Typography>
-        {templateSettings.replacementSources.map((item, index) => (
-          <Box key={index} display={'flex'} gap={1} alignItems={'center'}>
-            {index + 1}:{' '}
-            <ReplacementInput
-              allPages
-              value={{ ...item, pages: '' }}
-              onChange={(value) =>
-                setTemplateSettings((prev) => ({
-                  ...prev,
-                  replacementSources: prev.replacementSources.map((x, i) =>
-                    i === index ? value : x
-                  ),
-                }))
-              }
-            />
-          </Box>
-        ))}
-        <Button
-          variant="outlined"
-          onClick={() =>
-            setTemplateSettings((prev) => ({
-              ...prev,
-              replacementSources: [
-                ...prev.replacementSources,
-                emptyReplacement,
-              ],
-            }))
-          }
-        >
-          Přidat zdroj náhrad
-        </Button>
+        <ReplacementSourcesSelection
+          templateSettings={templateSettings}
+          setTemplateSettings={setTemplateSettings}
+        />
       </Box>
     </Box>
   )
