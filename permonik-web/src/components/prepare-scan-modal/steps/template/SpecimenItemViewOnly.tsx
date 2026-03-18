@@ -1,13 +1,13 @@
-import { TSpecimen } from '../../schema/specimen'
+import { TSpecimen } from '../../../../schema/specimen'
 
 import CheckIcon from '@mui/icons-material/Check'
 import WarningIcon from '@mui/icons-material/PriorityHigh'
 import { Card, CardContent, Stack, Typography, Box } from '@mui/material'
-import ReplacementInput from './ReplacementInput'
+import ReplacementInput from '../common/ReplacementInput'
 import { getDateLabel, getNumberLabel } from './SpecimenItem'
 import { noop } from 'lodash'
-import theme from '../../theme'
-import { TReplacement } from './schemas'
+import theme from '../../../../theme'
+import { TReplacement } from '../../schemas'
 
 type Props = {
   specimen: TSpecimen

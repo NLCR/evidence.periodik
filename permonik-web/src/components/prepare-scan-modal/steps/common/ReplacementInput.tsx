@@ -1,6 +1,10 @@
 import Stack from '@mui/material/Stack'
-import { useState } from 'react'
-import { emptyReplacement, TReplacement, TReplacementSource } from './schemas'
+import { ReactNode, useState } from 'react'
+import {
+  emptyReplacement,
+  TReplacement,
+  TReplacementSource,
+} from '../../schemas'
 import IconButton from '@mui/material/IconButton'
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows'
 import Select from '@mui/material/Select'
@@ -9,7 +13,6 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import Box from '@mui/material/Box'
 import ReplacementInputComponent from './ReplacementInputComponent'
-import { buildReplacementOptionLabel } from './utils/replacementInput'
 
 type Props = {
   allPages?: boolean
@@ -49,6 +52,10 @@ const ReplacementInput = ({
       ...selectedOption,
       pages: replacement.pages,
     })
+  }
+
+  function buildReplacementOptionLabel(option: TReplacementSource): ReactNode {
+    return `${option.signature} - ${option.owner} (${option.barcode})`
   }
 
   return (

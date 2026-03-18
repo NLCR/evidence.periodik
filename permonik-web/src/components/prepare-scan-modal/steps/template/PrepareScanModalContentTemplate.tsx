@@ -1,35 +1,35 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { Dispatch, FC, SetStateAction, useState } from 'react'
+import { FC, useState } from 'react'
 import {
   useManagedVolumeDetailQuery,
   useVolumeOverviewStatsQuery,
-} from '../../../api/volume'
-import Loader from '../../Loader'
-import ShowError from '../../ShowError'
-import { useOwnerListQuery } from '../../../api/owner'
-import { useMutationListQuery } from '../../../api/mutation'
-import { useEditionListQuery } from '../../../api/edition'
+} from '../../../../api/volume'
+import Loader from '../../../Loader'
+import ShowError from '../../../ShowError'
+import { useOwnerListQuery } from '../../../../api/owner'
+import { useMutationListQuery } from '../../../../api/mutation'
+import { useEditionListQuery } from '../../../../api/edition'
 import Barcode from 'react-barcode'
-import { useMetaTitleListQuery } from '../../../api/metaTitle'
-import SpecimenItem from '../SpecimenItem'
-import { TabSelect } from '../../TabSelect'
-import { TScanTemplateSettings } from '../schemas'
+import { useMetaTitleListQuery } from '../../../../api/metaTitle'
+import SpecimenItem from './SpecimenItem'
+import { TabSelect } from '../../../TabSelect'
+import { TScanTemplateSettings } from '../../schemas'
+import { useFormContext } from 'react-hook-form'
 
 type TProps = {
   volumeId?: string
-  templateSettings: TScanTemplateSettings
-  setTemplateSettings: Dispatch<SetStateAction<TScanTemplateSettings>>
 }
 
 type TView = 'VIEW' | 'EDIT'
 
 const PrepareScanModalContentTemplate: FC<TProps> = ({
   volumeId = undefined,
-  templateSettings,
 }) => {
   const [view, setView] = useState<TView>('EDIT')
   const [filter, setFilter] = useState<'1' | '2'>('1')
+  const { watch } = useFormContext<TScanTemplateSettings>()
+  const replacementSources = watch('replacementSources')
 
   const {
     data: owners,
@@ -174,7 +174,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             viewOnly={view === 'VIEW'}
             key={item.id}
             specimen={item}
-            replacementSourceCandidates={templateSettings.replacementSources}
+            replacementSourceCandidates={replacementSources}
           />
         ))}
     </Box>

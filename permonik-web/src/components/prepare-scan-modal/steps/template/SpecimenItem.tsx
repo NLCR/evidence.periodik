@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react'
-import { TSpecimen } from '../../schema/specimen'
 import dayjs from 'dayjs'
 
 import CheckIcon from '@mui/icons-material/Check'
@@ -17,9 +16,14 @@ import {
   IconButton,
   Checkbox,
 } from '@mui/material'
-import ReplacementInput from './ReplacementInput'
+import ReplacementInput from '../common/ReplacementInput'
 import SpecimenItemViewOnly from './SpecimenItemViewOnly'
-import { emptyReplacement, TReplacement, TReplacementSource } from './schemas'
+import { TSpecimen } from '../../../../schema/specimen'
+import {
+  emptyReplacement,
+  TReplacement,
+  TReplacementSource,
+} from '../../schemas'
 
 type Props = {
   specimen: TSpecimen

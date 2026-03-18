@@ -1,7 +1,7 @@
 import { t } from 'i18next'
 import React, { Dispatch, SetStateAction } from 'react'
 import ModalContainer from '../../../../components/ModalContainer'
-import VolumeStatsModalContent from '../../../../components/prepare-scan-modal/steps/PrepareScanModalContentTemplate'
+import VolumeStatsModalContent from '../../../../components/prepare-scan-modal/steps/template/PrepareScanModalContentTemplate'
 import { generateVolumeUrlWithParams } from '../../../../utils/generateVolumeUrlWithParams'
 import { useNavigate, useParams } from 'react-router-dom'
 import { TSpecimen } from '../../../../schema/specimen'

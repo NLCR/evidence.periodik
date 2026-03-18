@@ -1,12 +1,16 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ModalContainer from '../ModalContainer'
-import PrepareScanModalContentTemplate from './steps/PrepareScanModalContentTemplate'
-import PrepareScanModalContentPreparation from './steps/PrepareScanModalContentPreparation'
-import PrepareScanModalContentVolumes from './steps/PrepareScanModalContentVolumes'
+import PrepareScanModalContentTemplate from './steps/template/PrepareScanModalContentTemplate'
+import PrepareScanModalContentPreparation from './steps/preparation/PrepareScanModalContentPreparation'
+import PrepareScanModalContentVolumes from './steps/volumes/PrepareScanModalContentVolumes'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { defaultScanSettings, TScanTemplateSettings } from './schemas'
 import Typography from '@mui/material/Typography'
+import { FormProvider, useForm } from 'react-hook-form'
+import { useVolumeTemplateSettingsQuery } from '../../api/volumeTemplateSettings'
+import Loader from '../Loader'
+import ShowError from '../ShowError'
 
 type Props = {
   isOpen: boolean
@@ -15,11 +19,23 @@ type Props = {
 }
 
 const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
+  // TODO doplnit do BE struktury ty scan settings atd, abych to mel kde uloziti
   // TODO default step needs to be fetched from BE
   const [step, setStep] = useState<number>(0)
-  const [scanTemplateSettings, setScanTemplateSettings] =
-    // TODO scan settings need to be fetched from BE
-    useState<TScanTemplateSettings>(defaultScanSettings)
+  const methods = useForm<TScanTemplateSettings>({
+    defaultValues: defaultScanSettings,
+  })
+  const { reset } = methods
+  const {
+    data: volumeTemplateSettings,
+    isLoading,
+    isError,
+  } = useVolumeTemplateSettingsQuery(volumeId)
+
+  useEffect(() => {
+    if (!volumeTemplateSettings) return
+    reset(volumeTemplateSettings)
+  }, [reset, volumeTemplateSettings])
 
   const nextStep = () => {
     // TODO validace?
@@ -31,7 +47,8 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
     setStep((prev) => prev - 1)
   }
 
-  // TODO doplnit do BE struktury ty scan settings atd, abych to mel kde uloziti
+  if (isLoading) return <Loader />
+  if (isError) return <ShowError />
 
   return (
     <ModalContainer
@@ -81,25 +98,11 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
         </Box>
       }
     >
-      {step === 0 && (
-        <PrepareScanModalContentPreparation
-          setTemplateSettings={setScanTemplateSettings}
-          templateSettings={scanTemplateSettings}
-        />
-      )}
-      {step === 1 && (
-        <PrepareScanModalContentVolumes
-          setTemplateSettings={setScanTemplateSettings}
-          templateSettings={scanTemplateSettings}
-        />
-      )}
-      {step === 2 && (
-        <PrepareScanModalContentTemplate
-          setTemplateSettings={setScanTemplateSettings}
-          templateSettings={scanTemplateSettings}
-          volumeId={volumeId}
-        />
-      )}
+      <FormProvider {...methods}>
+        {step === 0 && <PrepareScanModalContentPreparation />}
+        {step === 1 && <PrepareScanModalContentVolumes />}
+        {step === 2 && <PrepareScanModalContentTemplate volumeId={volumeId} />}
+      </FormProvider>
     </ModalContainer>
   )
 }
