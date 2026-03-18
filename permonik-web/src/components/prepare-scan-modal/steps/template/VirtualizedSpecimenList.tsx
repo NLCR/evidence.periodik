@@ -15,11 +15,17 @@ import { TSpecimen } from '../../../../schema/specimen'
 import { TReplacementSource } from '../../schemas'
 import SpecimenItem from './SpecimenItem'
 
-type Props = {
-  items: TSpecimen[]
-  viewOnly: boolean
-  replacementSourceCandidates: TReplacementSource[]
-}
+type Props =
+  | {
+      items: TSpecimen[]
+      viewOnly: true
+      replacementSourceCandidates?: never
+    }
+  | {
+      items: TSpecimen[]
+      viewOnly: false
+      replacementSourceCandidates: TReplacementSource[]
+    }
 
 type RowData = {
   items: TSpecimen[]
@@ -76,11 +82,13 @@ const Row = memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
 
 Row.displayName = 'VirtualizedSpecimenListRow'
 
-const VirtualizedSpecimenList = ({
-  items,
-  viewOnly,
-  replacementSourceCandidates,
-}: Props) => {
+const VirtualizedSpecimenList = (props: Props) => {
+  const { items, viewOnly } = props
+  const replacementSourceCandidates = useMemo(
+    () => (viewOnly ? [] : props.replacementSourceCandidates),
+    [props.replacementSourceCandidates, viewOnly]
+  )
+
   const { t } = useTranslation()
   const listRef = useRef<VariableSizeList<RowData> | null>(null)
   const rowHeightsRef = useRef<Record<number, number>>({})

@@ -52,9 +52,10 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
 
   return (
     <ModalContainer
-      autoWidth
       minWidth="40rem"
       maxHeight="95vh"
+      height={step === 0 ? 'fit-content' : '95vh'}
+      width={step === 0 ? 'fit-content' : '80vw'}
       header={`Příprava pro skenování - ${step === 0 ? 'příprava' : step === 1 ? 'výběr svazků' : 'předloha'}`}
       opened={isOpen}
       onClose={() => setIsOpen(false)}

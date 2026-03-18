@@ -26,11 +26,13 @@ const sharedStyle = {
 const fittedStyle = (
   minWidth?: string,
   maxWidth?: string,
-  maxHeight?: string
+  maxHeight?: string,
+  width?: string,
+  height?: string
 ) => ({
-  height: 'fit-content',
+  height: height ?? 'fit-content',
   maxHeight: maxHeight ?? '80vh',
-  width: 'fit-content',
+  width: width ?? 'fit-content',
   maxWidth: { xs: '100%', sm: maxWidth ?? '90vw' },
   minWidth: { xs: '95vw', sm: minWidth ?? '25vw' },
   ...sharedStyle,
@@ -40,37 +42,57 @@ const scrollableStyle = (
   autoWidth: boolean,
   minWidth?: string,
   maxHeight?: string,
-  maxWidth?: string
+  maxWidth?: string,
+  width?: string,
+  height?: string
 ) => ({
-  height: 'fit-content',
+  height: height ?? 'fit-content',
   maxHeight: maxHeight ?? '80vh',
-  width: autoWidth ? 'auto' : '90vw',
+  width: width ?? (autoWidth ? 'auto' : '90vw'),
   minWidth: { xs: '95vw', sm: minWidth ?? '25vw' },
   maxWidth: { xs: '100%', sm: maxWidth ?? '1200px' },
   ...sharedStyle,
 })
 
 type TModalContainerProps = {
+  // Titulek v hlavicce modalu.
   header: string
+  // Obsah tela modalu.
   children?: ReactNode
+  // Ovlada otevreni/zavreni modalu.
   opened: boolean
+  // Callback pro zavreni (klik mimo, ESC, close ikona).
   onClose: () => void
+  // Primarni close tlacitko ve footeru.
   closeButton: {
     callback: () => void
     text?: string
   }
+  // Volitelne potvrzovaci tlacitko ve footeru.
   acceptButton?: {
     disabled?: boolean
     callback: () => void
     text?: string
   }
+  // Prohodi poradi close/accept tlacitek.
   switchButtons?: boolean
+  // Zobrazi/skryje defaultni footer tlacitka.
   showButtons?: boolean
+  // Rezim layoutu kontejneru.
   style?: 'fitted' | 'scrollable'
+  // U scrollable rezimu prepina automatickou sirku.
   autoWidth?: boolean
+  // Maximalni vyska kontejneru (napr. 80vh).
   maxHeight?: string
+  // Minimalni sirka kontejneru pro >= sm breakpoint.
   minWidth?: string
+  // Maximalni sirka kontejneru pro >= sm breakpoint.
   maxWidth?: string
+  // Explicitni sirka kontejneru (prepise default vypocet sirky).
+  width?: string
+  // Explicitni vyska kontejneru (prepise default vypocet vysky).
+  height?: string
+  // Vlastni akce ve footeru misto defaultnich tlacitek.
   customDialogActions?: ReactNode
 }
 
@@ -87,6 +109,8 @@ const ModalContainer: FC<TModalContainerProps> = ({
   autoWidth = false,
   minWidth = undefined,
   maxHeight = undefined,
+  width = undefined,
+  height = undefined,
   customDialogActions = null,
   maxWidth = undefined,
 }) => {
@@ -107,8 +131,15 @@ const ModalContainer: FC<TModalContainerProps> = ({
       <Box
         sx={
           style === 'scrollable'
-            ? scrollableStyle(autoWidth, minWidth, maxHeight, maxWidth)
-            : fittedStyle(minWidth, maxWidth)
+            ? scrollableStyle(
+                autoWidth,
+                minWidth,
+                maxHeight,
+                maxWidth,
+                width,
+                height
+              )
+            : fittedStyle(minWidth, maxWidth, maxHeight, width, height)
         }
       >
         <Box
@@ -137,6 +168,7 @@ const ModalContainer: FC<TModalContainerProps> = ({
           sx={{
             overflowY: style === 'scrollable' ? 'auto' : 'hidden',
             paddingRight: style === 'scrollable' ? '16px' : '0px',
+            flexGrow: 1,
           }}
         >
           {children}
