@@ -43,6 +43,9 @@
       "mutational_edition": "Mutační vydání",
       "owner": "Vlastník",
       "replacement_sources_title": "Zdroje náhrad"
+    },
+    "content_template": {
+      "no_items": "Pro zvolený filtr nejsou dostupné žádné položky."
     }
   },
   "fill_index_hint": {

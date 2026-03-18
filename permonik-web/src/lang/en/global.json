@@ -43,6 +43,9 @@
       "mutational_edition": "Mutational edition",
       "owner": "Owner",
       "replacement_sources_title": "Replacement sources"
+    },
+    "content_template": {
+      "no_items": "No items are available for the selected filter."
     }
   },
   "fill_index_hint": {

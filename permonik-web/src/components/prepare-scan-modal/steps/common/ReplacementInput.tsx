@@ -150,7 +150,10 @@ const ReplacementInput = ({
       )}
       {!viewOnly && (
         <IconButton
-          onClick={() => setMode(mode === 'MANUAL' ? 'SELECT' : 'MANUAL')}
+          onClick={() => {
+            setMode(mode === 'MANUAL' ? 'SELECT' : 'MANUAL')
+            safeSetReplacement(emptyReplacement)
+          }}
         >
           <CompareArrowsIcon />
         </IconButton>

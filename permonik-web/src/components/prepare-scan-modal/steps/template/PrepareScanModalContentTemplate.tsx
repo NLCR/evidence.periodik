@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { FC, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import {
   useManagedVolumeDetailQuery,
   useVolumeOverviewStatsQuery,
@@ -12,10 +12,10 @@ import { useMutationListQuery } from '../../../../api/mutation'
 import { useEditionListQuery } from '../../../../api/edition'
 import Barcode from 'react-barcode'
 import { useMetaTitleListQuery } from '../../../../api/metaTitle'
-import SpecimenItem from './SpecimenItem'
 import { TabSelect } from '../../../TabSelect'
 import { TScanTemplateSettings } from '../../schemas'
 import { useFormContext } from 'react-hook-form'
+import VirtualizedSpecimenList from './VirtualizedSpecimenList'
 
 type TProps = {
   volumeId?: string
@@ -63,6 +63,13 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
     isLoading: volumeLoading,
     isError: volumeError,
   } = useManagedVolumeDetailQuery(volumeId)
+
+  const templateItems = useMemo(
+    () =>
+      volume?.specimens.filter((item) => item.numExists || item.numMissing) ??
+      [],
+    [volume?.specimens]
+  )
 
   if (
     volumeStatsLoading ||
@@ -167,16 +174,11 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         </Box>
       </Box>
 
-      {volume?.specimens
-        .filter((item) => item.numExists || item.numMissing)
-        .map((item) => (
-          <SpecimenItem
-            viewOnly={view === 'VIEW'}
-            key={item.id}
-            specimen={item}
-            replacementSourceCandidates={replacementSources}
-          />
-        ))}
+      <VirtualizedSpecimenList
+        items={templateItems}
+        viewOnly={view === 'VIEW'}
+        replacementSourceCandidates={replacementSources}
+      />
     </Box>
   )
 }
