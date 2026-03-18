@@ -32,6 +32,17 @@
       "degradation": "Paper degradation",
       "illegibly_bound": "Illegible binding",
       "damaged_pages": "Damaged pages"
+    },
+    "content_volumes": {
+      "primary_fill_index": "Primary volume fill index:",
+      "result_fill_index": "Resulting volume fill index:",
+      "keep_title": "In replacement volumes, keep:",
+      "metatitle": "Meta title",
+      "time_overlap": "Time range overlap",
+      "mutation": "Mutation",
+      "mutational_edition": "Mutational edition",
+      "owner": "Owner",
+      "replacement_sources_title": "Replacement sources"
     }
   },
   "fill_index_hint": {

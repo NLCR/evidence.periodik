@@ -28,6 +28,8 @@ export type TScanTemplateSettings = {
   issues: TTemplateIssues
   replacementSourcesParameters: TReplacementSourceParameters
   replacementSources: TReplacementSource[]
+  // read only fill index of primary volume
+  primaryVolumeFillIndex: number
 }
 
 export type TReplacement = TReplacementSource & {
@@ -61,4 +63,5 @@ export const defaultScanSettings: TScanTemplateSettings = {
     timeOverlap: true,
   },
   replacementSources: [emptyReplacement],
+  primaryVolumeFillIndex: 88732,
 }

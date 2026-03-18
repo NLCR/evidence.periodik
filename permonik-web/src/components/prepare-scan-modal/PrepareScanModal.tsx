@@ -100,7 +100,7 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
     >
       <FormProvider {...methods}>
         {step === 0 && <PrepareScanModalContentPreparation />}
-        {step === 1 && <PrepareScanModalContentVolumes />}
+        {step === 1 && <PrepareScanModalContentVolumes volumeId={volumeId} />}
         {step === 2 && <PrepareScanModalContentTemplate volumeId={volumeId} />}
       </FormProvider>
     </ModalContainer>

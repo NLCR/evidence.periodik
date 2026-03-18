@@ -32,6 +32,17 @@
       "degradation": "Degradácia papiera",
       "illegibly_bound": "Nečitateľné zviazanie",
       "damaged_pages": "Poškodené strany"
+    },
+    "content_volumes": {
+      "primary_fill_index": "Index vyplnenosti primárneho zväzku:",
+      "result_fill_index": "Index vyplnenosti výsledného zväzku:",
+      "keep_title": "V náhradných zväzkoch je nutné zachovať:",
+      "metatitle": "Metatitul",
+      "time_overlap": "Prekryv časového rozsahu",
+      "mutation": "Mutácia",
+      "mutational_edition": "Mutačné vydanie",
+      "owner": "Vlastník",
+      "replacement_sources_title": "Zdroje náhrad"
     }
   },
   "fill_index_hint": {
