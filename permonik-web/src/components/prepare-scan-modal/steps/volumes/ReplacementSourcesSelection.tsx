@@ -5,14 +5,14 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import Loader from '../../../Loader'
 import ShowError from '../../../ShowError'
 import ReplacementInput from '../common/ReplacementInput'
+import { useReplacementSourceCandidatesQuery } from '../../../../api/replacementSourceCandidates'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import {
   emptyReplacement,
   TReplacement,
   TReplacementSource,
   TScanTemplateSettings,
-} from '../../schemas'
-import { useReplacementSourceCandidatesQuery } from '../../../../api/replacementSourceCandidates'
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+} from '../../schemas/schemas'
 
 const createEmptyReplacementSource = (): TReplacementSource => {
   const { pages, ...replacementSource } = emptyReplacement
@@ -47,37 +47,41 @@ const ReplacementSourcesSelection = () => {
     <>
       {fields.map((field, index) => (
         <Box key={field.fieldId} display={'flex'} gap={1} alignItems={'center'}>
-          {index + 1}:{' '}
-          <Controller
-            control={control}
-            name={`replacementSources.${index}`}
-            render={({ field: fieldProps }) => (
-              <ReplacementInput
-                allPages
-                value={{ ...fieldProps.value, pages: emptyReplacement.pages }}
-                candidates={replacementSourceCandidates?.filter(
-                  (candidate) =>
-                    !fields.some(
-                      (src, srcIndex) =>
-                        src.id === candidate.id && srcIndex !== index
-                    )
-                )}
-                onChange={(value: TReplacement) => {
-                  const { pages, ...replacementSource } = value
-                  void pages
+          <Box flexGrow={0}>{index + 1}: </Box>
+          <Box flexGrow={1}>
+            <Controller
+              control={control}
+              name={`replacementSources.${index}`}
+              render={({ field: fieldProps }) => (
+                <ReplacementInput
+                  allPages
+                  value={{ ...fieldProps.value, pages: emptyReplacement.pages }}
+                  candidates={replacementSourceCandidates?.filter(
+                    (candidate) =>
+                      !fields.some(
+                        (src, srcIndex) =>
+                          src.id === candidate.id && srcIndex !== index
+                      )
+                  )}
+                  onChange={(value: TReplacement) => {
+                    const { pages, ...replacementSource } = value
+                    void pages
 
-                  fieldProps.onChange(replacementSource)
-                }}
-              />
-            )}
-          />
-          <IconButton
-            aria-label="Smazat zdroj náhrady"
-            disabled={index === 0}
-            onClick={() => remove(index)}
-          >
-            <DeleteIcon />
-          </IconButton>
+                    fieldProps.onChange(replacementSource)
+                  }}
+                />
+              )}
+            />
+          </Box>
+          <Box flexGrow={0}>
+            <IconButton
+              aria-label="Smazat zdroj náhrady"
+              disabled={index === 0}
+              onClick={() => remove(index)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
         </Box>
       ))}
 

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import {
   defaultScanSettings,
   TScanTemplateSettings,
-} from '../components/prepare-scan-modal/schemas'
+} from '../components/prepare-scan-modal/schemas/schemas'
 
 export const useVolumeTemplateSettingsQuery = (volumeId?: string) =>
   useQuery<TScanTemplateSettings | null>({

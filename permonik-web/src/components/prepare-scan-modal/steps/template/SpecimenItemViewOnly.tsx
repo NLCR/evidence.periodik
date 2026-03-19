@@ -7,7 +7,7 @@ import ReplacementInput from '../common/ReplacementInput'
 import { getDateLabel, getNumberLabel } from './SpecimenItem'
 import { noop } from 'lodash'
 import theme from '../../../../theme'
-import { TReplacement } from '../../schemas'
+import { TReplacement } from '../../schemas/schemas'
 
 type Props = {
   specimen: TSpecimen

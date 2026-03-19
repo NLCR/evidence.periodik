@@ -23,7 +23,7 @@ import {
   emptyReplacement,
   TReplacement,
   TReplacementSource,
-} from '../../schemas'
+} from '../../schemas/schemas'
 
 type Props = {
   specimen: TSpecimen

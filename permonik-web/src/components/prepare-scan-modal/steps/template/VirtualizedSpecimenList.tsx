@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { VariableSizeList, ListChildComponentProps } from 'react-window'
 import { TSpecimen } from '../../../../schema/specimen'
-import { TReplacementSource } from '../../schemas'
+import { TReplacementSource } from '../../schemas/schemas'
 import SpecimenItem from './SpecimenItem'
 
 type Props =

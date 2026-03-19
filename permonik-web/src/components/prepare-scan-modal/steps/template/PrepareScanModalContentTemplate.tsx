@@ -14,7 +14,7 @@ import { useOwnerListQuery } from '../../../../api/owner'
 import { useMutationListQuery } from '../../../../api/mutation'
 import { useEditionListQuery } from '../../../../api/edition'
 import { useMetaTitleListQuery } from '../../../../api/metaTitle'
-import { TScanTemplateSettings } from '../../schemas'
+import { TScanTemplateSettings } from '../../schemas/schemas'
 import { useFormContext } from 'react-hook-form'
 import PrepareScanTemplatePreviewDialog from './PrepareScanTemplatePreviewDialog'
 import TemplatePreviewHeader, {

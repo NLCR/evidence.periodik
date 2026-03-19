@@ -4,7 +4,7 @@ import {
   emptyReplacement,
   TReplacement,
   TReplacementSource,
-} from '../../schemas'
+} from '../../schemas/commonSchemas'
 import IconButton from '@mui/material/IconButton'
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows'
 import Select from '@mui/material/Select'
@@ -63,40 +63,53 @@ const ReplacementInput = ({
       direction="row"
       gap={1}
       width={'100%'}
-      justifyContent={'space-evenly'}
+      justifyContent={'space-between'}
       alignItems={'center'}
     >
       {viewOnly || mode === 'MANUAL' ? (
-        <>
+        <Box
+          display={'flex'}
+          flexDirection={'row'}
+          gap={1}
+          alignItems={'center'}
+          width={'100%'}
+          flexGrow={1}
+          justifyContent={'space-between'}
+        >
           <ReplacementInputComponent
             label="Signatura"
             viewOnly={viewOnly}
             value={replacement.signature}
             onChange={(value) => safeSetReplacement({ signature: value })}
+            fullWidth
           />
           <ReplacementInputComponent
             label="Vlastník"
             viewOnly={viewOnly}
             value={replacement.owner}
             onChange={(value) => safeSetReplacement({ owner: value })}
+            fullWidth
           />
           <ReplacementInputComponent
             label="Čárový kód"
             viewOnly={viewOnly}
             value={replacement.barcode}
             onChange={(value) => safeSetReplacement({ barcode: value })}
+            fullWidth
           />
           <ReplacementInputComponent
             label="Mutace"
             viewOnly={viewOnly}
             value={replacement.mutation}
             onChange={(value) => safeSetReplacement({ mutation: value })}
+            fullWidth
           />
           <ReplacementInputComponent
             label="Mutační vydání"
             viewOnly={viewOnly}
             value={replacement.mutationEdition}
             onChange={(value) => safeSetReplacement({ mutationEdition: value })}
+            fullWidth
           />
           {!allPages && (
             <ReplacementInputComponent
@@ -104,9 +117,10 @@ const ReplacementInput = ({
               viewOnly={viewOnly}
               value={replacement.pages}
               onChange={(value) => safeSetReplacement({ pages: value })}
+              fullWidth
             />
           )}
-        </>
+        </Box>
       ) : (
         <>
           <FormControl fullWidth>
@@ -149,14 +163,16 @@ const ReplacementInput = ({
         </>
       )}
       {!viewOnly && (
-        <IconButton
-          onClick={() => {
-            setMode(mode === 'MANUAL' ? 'SELECT' : 'MANUAL')
-            safeSetReplacement(emptyReplacement)
-          }}
-        >
-          <CompareArrowsIcon />
-        </IconButton>
+        <Box flexGrow={0}>
+          <IconButton
+            onClick={() => {
+              setMode(mode === 'MANUAL' ? 'SELECT' : 'MANUAL')
+              safeSetReplacement(emptyReplacement)
+            }}
+          >
+            <CompareArrowsIcon />
+          </IconButton>
+        </Box>
       )}
     </Stack>
   )

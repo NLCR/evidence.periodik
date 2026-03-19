@@ -5,7 +5,7 @@ import PrepareScanModalContentPreparation from './steps/preparation/PrepareScanM
 import PrepareScanModalContentVolumes from './steps/volumes/PrepareScanModalContentVolumes'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { defaultScanSettings, TScanTemplateSettings } from './schemas'
+import { defaultScanSettings, TScanTemplateSettings } from './schemas/schemas'
 import Typography from '@mui/material/Typography'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useVolumeTemplateSettingsQuery } from '../../api/volumeTemplateSettings'

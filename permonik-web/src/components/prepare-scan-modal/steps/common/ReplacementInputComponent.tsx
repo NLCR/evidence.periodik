@@ -8,6 +8,7 @@ type ReplacementInputComponentProps = {
   value: string
   viewOnly?: boolean
   onChange: (value: string) => void
+  fullWidth?: boolean
 }
 
 const ReplacementInputComponent: FC<ReplacementInputComponentProps> = ({
@@ -15,6 +16,7 @@ const ReplacementInputComponent: FC<ReplacementInputComponentProps> = ({
   value,
   viewOnly = false,
   onChange,
+  fullWidth = false,
 }) => {
   if (viewOnly)
     return (
@@ -34,6 +36,7 @@ const ReplacementInputComponent: FC<ReplacementInputComponentProps> = ({
 
   return (
     <TextField
+      fullWidth={fullWidth}
       label={label}
       value={value}
       onChange={(e) => onChange(e.target.value)}
