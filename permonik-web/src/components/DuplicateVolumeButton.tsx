@@ -16,6 +16,7 @@ type Props = {
   disabled?: boolean
   buttonText?: string
   onDuplicate?: (fieldsToReset: FieldsToReset[]) => Promise<void>
+  forceOwnerReset?: boolean
 }
 
 const DuplicateVolumeButton: React.FC<Props> = ({
@@ -28,6 +29,7 @@ const DuplicateVolumeButton: React.FC<Props> = ({
   disabled = false,
   buttonText = '',
   onDuplicate = undefined,
+  forceOwnerReset = false,
 }) => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
@@ -66,6 +68,7 @@ const DuplicateVolumeButton: React.FC<Props> = ({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         doDuplicate={handleDuplicate}
+        forceOwnerReset={forceOwnerReset}
       />
     </>
   )
