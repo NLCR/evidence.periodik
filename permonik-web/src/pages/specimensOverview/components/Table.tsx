@@ -177,8 +177,6 @@ const Table: FC<Props> = ({ metaTitle }) => {
   const navigate = useNavigate()
 
   const [modalData, setModalData] = useState<TSpecimen | null>(null)
-  const [isDuplicateModalOpen, setIsDuplicateModalOpen] = useState(false)
-
   const pagination = useSpecimensOverviewStore((state) => state.pagination)
   const setPagination = useSpecimensOverviewStore(
     (state) => state.setPagination
@@ -336,6 +334,11 @@ const Table: FC<Props> = ({ metaTitle }) => {
             fullWidth
             variant="contained"
             buttonText={t('administration.duplicate_volume')}
+            forceOwnerReset={
+              !!me.owners &&
+              !!modalData?.ownerId &&
+              !me.owners.includes(modalData.ownerId)
+            }
           />
         )}
       </ModalContainer>

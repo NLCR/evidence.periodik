@@ -11,12 +11,14 @@ type TProps = {
   doDuplicate: (fieldsToReset: FieldsToReset[]) => Promise<void>
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
+  forceOwnerReset?: boolean
 }
 
 const DuplicateVolumeModal: FC<TProps> = ({
   doDuplicate,
   isOpen,
   setIsOpen,
+  forceOwnerReset = false,
 }) => {
   const { t } = useTranslation()
 
@@ -59,8 +61,8 @@ const DuplicateVolumeModal: FC<TProps> = ({
     {
       value: FieldsToReset.ownerId,
       label: t('specimens_overview.field_names.owner'),
-      defaultChecked: false,
-      disabled: false,
+      defaultChecked: forceOwnerReset,
+      disabled: forceOwnerReset,
     },
     {
       value: FieldsToReset.damagedPages,
