@@ -1,8 +1,9 @@
 import {
   TReplacementSourceParameters,
   TTemplateIssues,
+  emptyReplacement,
+  TReplacementSource,
 } from './commonSchemas'
-import { emptyReplacement, TReplacementSource } from './templateSchema'
 
 export type TScanTemplateSettings = {
   issues: TTemplateIssues

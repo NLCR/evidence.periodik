@@ -32,22 +32,34 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
       minWidth="40rem"
       autoWidth
       maxHeight="95vh"
+      height="95vh"
     >
       <Box
         sx={{
-          marginBottom: '10px',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          minHeight: 0,
         }}
       >
-        <TemplatePreviewHeader {...header} />
+        <Box
+          sx={{
+            marginBottom: '10px',
+          }}
+        >
+          <TemplatePreviewHeader {...header} />
 
-        {barCode ? (
-          <Box display="flex" justifyContent="center" marginTop={1}>
-            <Barcode value={barCode} />
-          </Box>
-        ) : null}
+          {barCode ? (
+            <Box display="flex" justifyContent="center" marginTop={1}>
+              <Barcode value={barCode} />
+            </Box>
+          ) : null}
+        </Box>
+
+        <Box sx={{ flex: 1, minHeight: 0 }}>
+          <VirtualizedSpecimenList items={items} viewOnly />
+        </Box>
       </Box>
-
-      <VirtualizedSpecimenList items={items} viewOnly />
     </ModalContainer>
   )
 }

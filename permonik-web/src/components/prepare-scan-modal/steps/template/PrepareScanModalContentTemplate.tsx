@@ -125,7 +125,14 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
     return <ShowError />
 
   return (
-    <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        minHeight: 0,
+      }}
+    >
       <Box
         sx={{
           marginBottom: '10px',
@@ -178,11 +185,13 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         </Box>
       </Box>
 
-      <VirtualizedSpecimenList
-        items={templateItems}
-        viewOnly={false}
-        replacementSourceCandidates={replacementSources}
-      />
+      <Box sx={{ flex: 1, minHeight: 0 }}>
+        <VirtualizedSpecimenList
+          items={templateItems}
+          viewOnly={false}
+          replacementSourceCandidates={replacementSources}
+        />
+      </Box>
 
       <PrepareScanTemplatePreviewDialog
         opened={isPreviewOpen}

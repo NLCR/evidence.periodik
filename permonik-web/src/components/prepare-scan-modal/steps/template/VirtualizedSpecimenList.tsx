@@ -8,6 +8,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { VariableSizeList, ListChildComponentProps } from 'react-window'
@@ -34,7 +35,6 @@ type RowData = {
   setRowHeight: (index: number, height: number) => void
 }
 
-const LIST_HEIGHT = 560
 const ESTIMATED_ROW_HEIGHT = 280
 const OVERSCAN_COUNT = 3
 
@@ -91,7 +91,9 @@ const VirtualizedSpecimenList = (props: Props) => {
 
   const { t } = useTranslation()
   const listRef = useRef<VariableSizeList<RowData> | null>(null)
+  const containerRef = useRef<HTMLDivElement | null>(null)
   const rowHeightsRef = useRef<Record<number, number>>({})
+  const [listHeight, setListHeight] = useState(ESTIMATED_ROW_HEIGHT * 2)
 
   const setRowHeight = useCallback((index: number, height: number) => {
     const currentHeight = rowHeightsRef.current[index]
@@ -122,6 +124,28 @@ const VirtualizedSpecimenList = (props: Props) => {
     listRef.current?.resetAfterIndex(0, true)
   }, [items, viewOnly])
 
+  useLayoutEffect(() => {
+    const element = containerRef.current
+
+    if (!element) return
+
+    const updateHeight = () => {
+      const measuredHeight = Math.floor(element.getBoundingClientRect().height)
+
+      if (measuredHeight <= 0) return
+      setListHeight((currentHeight) =>
+        currentHeight === measuredHeight ? currentHeight : measuredHeight
+      )
+    }
+
+    updateHeight()
+
+    const observer = new ResizeObserver(updateHeight)
+    observer.observe(element)
+
+    return () => observer.disconnect()
+  }, [])
+
   if (items.length === 0) {
     return (
       <Typography>
@@ -131,19 +155,21 @@ const VirtualizedSpecimenList = (props: Props) => {
   }
 
   return (
-    <VariableSizeList
-      ref={listRef}
-      height={LIST_HEIGHT}
-      width="100%"
-      itemCount={items.length}
-      itemData={itemData}
-      itemSize={getItemSize}
-      estimatedItemSize={ESTIMATED_ROW_HEIGHT}
-      overscanCount={OVERSCAN_COUNT}
-      itemKey={(index, data) => data.items[index].id}
-    >
-      {Row}
-    </VariableSizeList>
+    <Box ref={containerRef} sx={{ height: '100%', minHeight: 0 }}>
+      <VariableSizeList
+        ref={listRef}
+        height={listHeight}
+        width="100%"
+        itemCount={items.length}
+        itemData={itemData}
+        itemSize={getItemSize}
+        estimatedItemSize={ESTIMATED_ROW_HEIGHT}
+        overscanCount={OVERSCAN_COUNT}
+        itemKey={(index, data) => data.items[index].id}
+      >
+        {Row}
+      </VariableSizeList>
+    </Box>
   )
 }
 
