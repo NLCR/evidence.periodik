@@ -14,8 +14,7 @@ import { useOwnerListQuery } from '../../../../api/owner'
 import { useMutationListQuery } from '../../../../api/mutation'
 import { useEditionListQuery } from '../../../../api/edition'
 import { useMetaTitleListQuery } from '../../../../api/metaTitle'
-import { TScanTemplateSettings } from '../../schemas/schemas'
-import { useFormContext } from 'react-hook-form'
+import { TReplacementSource } from '../../schemas/schemas'
 import PrepareScanTemplatePreviewDialog from './PrepareScanTemplatePreviewDialog'
 import TemplatePreviewHeader, {
   TTemplatePreviewHeaderProps,
@@ -24,16 +23,16 @@ import VirtualizedSpecimenList from './VirtualizedSpecimenList'
 
 type TProps = {
   volumeId?: string
+  replacementSources: TReplacementSource[]
 }
 
 const PrepareScanModalContentTemplate: FC<TProps> = ({
   volumeId = undefined,
+  replacementSources,
 }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [groupByVolumes, setGroupByVolumes] = useState(false)
   const [showOnlyDoskeny, setShowOnlyDoskeny] = useState(false)
-  const { watch } = useFormContext<TScanTemplateSettings>()
-  const replacementSources = watch('replacementSources')
 
   const {
     data: owners,

@@ -46,6 +46,21 @@
     },
     "content_template": {
       "no_items": "No items are available for the selected filter."
+    },
+    "back_warning": {
+      "title": "Warning",
+      "stay_button": "Stay in template step",
+      "proceed_button": "Go to previous step",
+      "message": "If you now move to the preparation steps and then return back, you will lose manually entered data in this template step. The template will be regenerated from settings in steps 1 and 2. Do you really want to continue?"
+    },
+    "wizard": {
+      "title": "Preparation for scanning",
+      "step_preparation": "preparation",
+      "step_volumes": "volume selection",
+      "step_template": "template",
+      "previous_step": "Previous step",
+      "next_step": "Next step",
+      "save_template": "Save template"
     }
   },
   "fill_index_hint": {

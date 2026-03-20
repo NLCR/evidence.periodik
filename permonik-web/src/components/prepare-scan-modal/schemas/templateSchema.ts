@@ -1,24 +1,29 @@
+import { z } from 'zod'
 import { TemplateState } from './templateStateSchema'
-import { TVolume } from '../../../schema/volume'
+import { VolumeSchema } from '../../../schema/volume'
 
-export type TTemplateReplacement = {
-  pages: string
-  sourceVolumeId?: string
-  isUnreplaceable: boolean
-  isWaitingForRescan: boolean
-}
+export const TemplateReplacementSchema = z.object({
+  pages: z.string(),
+  sourceVolumeId: z.string().optional(),
+  isUnreplaceable: z.boolean(),
+  isWaitingForRescan: z.boolean(),
+})
 
-export type TTemplateItem = {
-  specimenNumber: string
-  specimenId?: string
-  usePrimaryVolume: boolean
-  sourceVolumeId?: string
-  replacements: TTemplateReplacement[]
-  note?: string
-}
+export const TemplateItemSchema = z.object({
+  specimenNumber: z.string(),
+  specimenId: z.string().optional(),
+  usePrimaryVolume: z.boolean(),
+  sourceVolumeId: z.string().optional(),
+  replacements: z.array(TemplateReplacementSchema),
+  note: z.string().optional(),
+})
 
-export type TTemplate = {
-  state: TemplateState
-  primaryVolume: TVolume
-  items: TTemplateItem[]
-}
+export const TemplateSchema = z.object({
+  state: z.nativeEnum(TemplateState),
+  primaryVolume: VolumeSchema,
+  items: z.array(TemplateItemSchema),
+})
+
+export type TTemplateReplacement = z.infer<typeof TemplateReplacementSchema>
+export type TTemplateItem = z.infer<typeof TemplateItemSchema>
+export type TTemplate = z.infer<typeof TemplateSchema>

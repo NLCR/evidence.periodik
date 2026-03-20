@@ -46,6 +46,21 @@
     },
     "content_template": {
       "no_items": "Pro zvolený filtr nejsou dostupné žádné položky."
+    },
+    "back_warning": {
+      "title": "Upozornění",
+      "stay_button": "Zůstat v kroku předlohy",
+      "proceed_button": "Přejít na předchozí krok",
+      "message": "Pokud nyní přejdete do přípravných kroků a poté se vrátíte zpět, přijdete o ručně vyplněná data v tomto kroku předlohy. Předloha se znovu vygeneruje podle nastavení v krocích 1 a 2. Opravdu chcete pokračovat?"
+    },
+    "wizard": {
+      "title": "Příprava pro skenování",
+      "step_preparation": "příprava",
+      "step_volumes": "výběr svazků",
+      "step_template": "předloha",
+      "previous_step": "Předchozí krok",
+      "next_step": "Další krok",
+      "save_template": "Uložit předlohu"
     }
   },
   "fill_index_hint": {

@@ -3,7 +3,6 @@ import {
   TReplacementSource,
   TScanTemplateSettings,
 } from '../components/prepare-scan-modal/schemas/schemas'
-import { api } from './index'
 
 export type TReplacementSourceCandidatesRequest = Pick<
   TScanTemplateSettings,
