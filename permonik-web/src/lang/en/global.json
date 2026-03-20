@@ -52,6 +52,10 @@
       "waiting_for_rescan": "Waiting for rescan",
       "finalized": "Finalized"
     },
+    "validation": {
+      "waiting_for_rescan": "Before closing for rescan, each replacement must have a filled source, or be marked as unavailable, or marked as waiting for rescan.",
+      "finalized": "To finalize, each replacement must have a filled source or be marked as unavailable and must not be marked as waiting for rescan."
+    },
     "back_warning": {
       "title": "Warning",
       "stay_button": "Stay in template step",

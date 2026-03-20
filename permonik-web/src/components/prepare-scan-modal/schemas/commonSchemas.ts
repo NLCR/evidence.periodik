@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export type TTemplateIssues = {
   missingPages: boolean // Chybějící strany
   damagedPages: boolean // Poškozené strany
@@ -15,25 +17,38 @@ export type TReplacementSourceParameters = {
   timeOverlap: boolean
 }
 
-export type TReplacementSource = {
-  id?: string
-  signature: string
-  barcode: string
-  owner: string
-  mutation: string
-  mutationEdition: string
-}
+export const replacementSourceSchema = z.object({
+  id: z.string().nullish(),
+  signature: z.string().nullish(),
+  owner: z.string().nullish(),
+  barcode: z.string().nullish(),
+  mutation: z.string().nullish(),
+  mutationEdition: z.string().nullish(),
+})
 
-export type TReplacement = TReplacementSource & {
-  pages: string
-}
+export const replacementSchema = z.object({
+  volume: replacementSourceSchema,
+  pages: z.string(),
+  isUnreplaceable: z.boolean(),
+  isWaitingForRescan: z.boolean(),
+})
 
-export const emptyReplacement: TReplacement = {
+export type TReplacementSource = z.infer<typeof replacementSourceSchema>
+
+export type TReplacement = z.infer<typeof replacementSchema>
+
+export const EMPTY_REPLACEMENT_SOURCE: TReplacementSource = {
   id: undefined,
-  pages: 'všechny',
   barcode: '',
   mutation: '',
   mutationEdition: '',
   owner: '',
   signature: '',
+}
+
+export const EMPTY_REPLACEMENT: TReplacement = {
+  volume: EMPTY_REPLACEMENT_SOURCE,
+  pages: 'všechny',
+  isUnreplaceable: false,
+  isWaitingForRescan: false,
 }

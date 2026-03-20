@@ -88,3 +88,21 @@ export const useSaveVolumeTemplateMutation = (volumeId?: string) =>
       })
     },
   })
+
+export const useUpdateVolumeTemplateStateMutation = (volumeId?: string) =>
+  useMutation({
+    mutationFn: async (state: TemplateState) => {
+      if (!volumeId) return
+
+      // TODO: Zapojit realny endpoint `/template/${volumeId}/state` po finalizaci BE kontraktu.
+      // return api()
+      //   .post(`template/${volumeId}/state`, { json: { state } })
+      //   .json<void>()
+      await Promise.resolve({ status: 200, state })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`/volume/${volumeId}/template`],
+      })
+    },
+  })

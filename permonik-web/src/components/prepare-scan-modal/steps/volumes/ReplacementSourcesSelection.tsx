@@ -4,25 +4,17 @@ import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Loader from '../../../Loader'
 import ShowError from '../../../ShowError'
-import ReplacementInput from '../common/ReplacementInput'
 import { useReplacementSourceCandidatesQuery } from '../../../../api/replacementSourceCandidates'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import {
-  emptyReplacement,
-  TReplacement,
-  TReplacementSource,
+  EMPTY_REPLACEMENT_SOURCE,
   TScanTemplateSettings,
 } from '../../schemas/schemas'
-
-const createEmptyReplacementSource = (): TReplacementSource => {
-  const { pages, ...replacementSource } = emptyReplacement
-  void pages
-
-  return replacementSource
-}
+import ReplacementSourceInput from '../common/ReplacementSourceInput'
 
 const ReplacementSourcesSelection = () => {
   const { control, watch } = useFormContext<TScanTemplateSettings>()
+
   const issues = watch('issues')
   const replacementSourcesParameters = watch('replacementSourcesParameters')
   const { fields, append, remove } = useFieldArray({
@@ -53,9 +45,8 @@ const ReplacementSourcesSelection = () => {
               control={control}
               name={`replacementSources.${index}`}
               render={({ field: fieldProps }) => (
-                <ReplacementInput
-                  allPages
-                  value={{ ...fieldProps.value, pages: emptyReplacement.pages }}
+                <ReplacementSourceInput
+                  value={fieldProps.value}
                   candidates={replacementSourceCandidates?.filter(
                     (candidate) =>
                       !fields.some(
@@ -63,12 +54,7 @@ const ReplacementSourcesSelection = () => {
                           src.id === candidate.id && srcIndex !== index
                       )
                   )}
-                  onChange={(value: TReplacement) => {
-                    const { pages, ...replacementSource } = value
-                    void pages
-
-                    fieldProps.onChange(replacementSource)
-                  }}
+                  onChange={fieldProps.onChange}
                 />
               )}
             />
@@ -87,7 +73,7 @@ const ReplacementSourcesSelection = () => {
 
       <Button
         variant="outlined"
-        onClick={() => append(createEmptyReplacementSource())}
+        onClick={() => append(EMPTY_REPLACEMENT_SOURCE)}
       >
         Přidat zdroj náhrad
       </Button>

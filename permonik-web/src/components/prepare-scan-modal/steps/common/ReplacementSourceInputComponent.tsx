@@ -3,20 +3,24 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { FC } from 'react'
 
-type ReplacementInputComponentProps = {
+type ReplacementSourceInputComponentProps = {
   label: string
-  value: string
+  value: string | null | undefined
   viewOnly?: boolean
-  onChange: (value: string) => void
+  onChange: (value: string | null | undefined) => void
   fullWidth?: boolean
+  disabled?: boolean
 }
 
-const ReplacementInputComponent: FC<ReplacementInputComponentProps> = ({
+const ReplacementSourceInputComponent: FC<
+  ReplacementSourceInputComponentProps
+> = ({
   label,
   value,
   viewOnly = false,
   onChange,
   fullWidth = false,
+  disabled = false,
 }) => {
   if (viewOnly)
     return (
@@ -40,8 +44,9 @@ const ReplacementInputComponent: FC<ReplacementInputComponentProps> = ({
       label={label}
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      disabled={disabled}
     />
   )
 }
 
-export default ReplacementInputComponent
+export default ReplacementSourceInputComponent

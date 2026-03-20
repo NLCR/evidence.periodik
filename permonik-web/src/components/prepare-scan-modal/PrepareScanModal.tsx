@@ -42,7 +42,12 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
   })
   const templateMethods = useForm<TTemplate>()
   const { reset: resetSettings } = settingsMethods
-  const { reset: resetTemplate, getValues: getTemplateValues } = templateMethods
+  const {
+    watch: watchTemplate,
+    reset: resetTemplate,
+    getValues: getTemplateValues,
+  } = templateMethods
+  const state = watchTemplate('state')
 
   const {
     data: volumeTemplateSettings,
@@ -130,7 +135,7 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
                   <Button
                     fullWidth
                     variant="outlined"
-                    disabled={volumeTemplate?.state !== TemplateState.CREATED}
+                    disabled={state !== TemplateState.CREATED}
                   >
                     {t('prepare_scan_modal.wizard.previous_step')}
                   </Button>
@@ -189,6 +194,7 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
       {step === 2 && (
         <FormProvider {...templateMethods}>
           <PrepareScanModalContentTemplate
+            volumeId={volumeId}
             replacementSources={replacementSources}
           />
         </FormProvider>

@@ -52,6 +52,10 @@
       "waiting_for_rescan": "Čeká na doskeny",
       "finalized": "Finalizovaná"
     },
+    "validation": {
+      "waiting_for_rescan": "Před uzavřením k doskenování musí mít každá náhrada vyplněný zdroj, nebo být označená jako nedostupná, nebo čekající na dosken.",
+      "finalized": "Pro finalizaci musí mít každá náhrada vyplněný zdroj nebo být označená jako nedostupná a nesmí být čekající na dosken."
+    },
     "back_warning": {
       "title": "Upozornění",
       "stay_button": "Zůstat v kroku předlohy",

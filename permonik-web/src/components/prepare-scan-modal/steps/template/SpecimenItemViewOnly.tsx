@@ -1,19 +1,16 @@
 import CheckIcon from '@mui/icons-material/Check'
 import WarningIcon from '@mui/icons-material/PriorityHigh'
 import { Card, CardContent, Stack, Typography, Box } from '@mui/material'
-import TemplateReplacementInput from './TemplateReplacementInput'
 import { getDateLabel, getNumberLabel } from './SpecimenItem'
 import { noop } from 'lodash'
 import theme from '../../../../theme'
-import {
-  TTemplateReplacement,
-  TTemplateSpecimenRef,
-} from '../../schemas/schemas'
+import { TReplacement, TTemplateSpecimenRef } from '../../schemas/schemas'
+import ReplacementSourceInput from '../common/ReplacementSourceInput'
 
 type Props = {
   specimen: TTemplateSpecimenRef
-  replacements: TTemplateReplacement[]
-  mainReplacement: TTemplateReplacement | null
+  replacements: TReplacement[]
+  mainReplacement: TReplacement | null
   note: string
 }
 
@@ -43,7 +40,11 @@ const SpecimenItemViewOnly = ({
             </Typography>
 
             <Typography variant="body2" color="text.secondary">
-              ({getDateLabel(specimen.publicationDate)})
+              (
+              {specimen.publicationDate
+                ? getDateLabel(specimen.publicationDate)
+                : '-'}
+              )
             </Typography>
           </Stack>
           {specimen.numExists ? (
@@ -60,10 +61,9 @@ const SpecimenItemViewOnly = ({
         </Stack>
 
         {specimen.numMissing && (
-          <TemplateReplacementInput
-            allPages
+          <ReplacementSourceInput
             viewOnly
-            value={mainReplacement}
+            value={mainReplacement?.volume ?? {}}
             onChange={noop}
           />
         )}

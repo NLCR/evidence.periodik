@@ -1,20 +1,7 @@
 import { z } from 'zod'
 import { TemplateState } from './templateStateSchema'
 import { VolumeSchema } from '../../../schema/volume'
-
-export const TemplateReplacementSchema = z.object({
-  volume: z.object({
-    id: z.string().nullish(),
-    signature: z.string().nullish(),
-    owner: z.string().nullish(),
-    barcode: z.string().nullish(),
-    mutation: z.string().nullish(),
-    mutationEdition: z.string().nullish(),
-  }),
-  pages: z.string(),
-  isUnreplaceable: z.boolean(),
-  isWaitingForRescan: z.boolean(),
-})
+import { replacementSchema } from './commonSchemas'
 
 export const TemplateSpecimenRefSchema = z.object({
   id: z.string(),
@@ -28,8 +15,8 @@ export const TemplateSpecimenRefSchema = z.object({
 export const TemplateItemSchema = z.object({
   specimen: TemplateSpecimenRefSchema,
   usePrimaryVolume: z.boolean(),
-  replacement: TemplateReplacementSchema.nullish(),
-  pageReplacements: z.array(TemplateReplacementSchema),
+  replacement: replacementSchema.nullish(),
+  pageReplacements: z.array(replacementSchema),
   note: z.string().optional(),
 })
 
@@ -39,7 +26,6 @@ export const TemplateSchema = z.object({
   items: z.array(TemplateItemSchema),
 })
 
-export type TTemplateReplacement = z.infer<typeof TemplateReplacementSchema>
 export type TTemplateSpecimenRef = z.infer<typeof TemplateSpecimenRefSchema>
 export type TTemplateItem = z.infer<typeof TemplateItemSchema>
 export type TTemplate = z.infer<typeof TemplateSchema>

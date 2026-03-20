@@ -1,8 +1,8 @@
 import {
   TReplacementSourceParameters,
   TTemplateIssues,
-  emptyReplacement,
   TReplacementSource,
+  EMPTY_REPLACEMENT_SOURCE,
 } from './commonSchemas'
 
 export type TScanTemplateSettings = {
@@ -29,6 +29,6 @@ export const defaultScanSettings: TScanTemplateSettings = {
     owner: false,
     timeOverlap: true,
   },
-  replacementSources: [emptyReplacement],
-  primaryVolumeFillIndex: 88732,
+  replacementSources: [EMPTY_REPLACEMENT_SOURCE],
+  primaryVolumeFillIndex: 0,
 }
