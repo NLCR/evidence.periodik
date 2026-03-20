@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box'
 import { FC } from 'react'
 import Barcode from 'react-barcode'
-import { TSpecimen } from '../../../../schema/specimen'
 import ModalContainer from '../../../ModalContainer'
+import { TTemplateItem } from '../../schemas/schemas'
 import TemplatePreviewHeader, {
   TTemplatePreviewHeaderProps,
 } from './TemplatePreviewHeader'
@@ -13,7 +13,9 @@ type Props = {
   onClose: () => void
   header: TTemplatePreviewHeaderProps
   barCode?: string
-  items: TSpecimen[]
+  items: TTemplateItem[]
+  showOnlyRescans: boolean
+  groupByVolumes: boolean
 }
 
 const PrepareScanTemplatePreviewDialog: FC<Props> = ({
@@ -22,6 +24,8 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
   header,
   barCode = undefined,
   items,
+  showOnlyRescans,
+  groupByVolumes,
 }) => {
   return (
     <ModalContainer
@@ -57,7 +61,12 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
         </Box>
 
         <Box sx={{ flex: 1, minHeight: 0 }}>
-          <VirtualizedSpecimenList items={items} viewOnly />
+          <VirtualizedSpecimenList
+            items={items}
+            viewOnly
+            showOnlyRescans={showOnlyRescans}
+            groupByVolumes={groupByVolumes}
+          />
         </Box>
       </Box>
     </ModalContainer>

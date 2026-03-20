@@ -7,6 +7,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import {
   defaultScanSettings,
+  TemplateState,
   TScanTemplateSettings,
   TTemplate,
 } from './schemas/schemas'
@@ -126,7 +127,11 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
                 description={t('prepare_scan_modal.back_warning.message')}
                 onConfirm={previousStep}
                 TriggerButton={
-                  <Button fullWidth variant="outlined">
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    disabled={volumeTemplate?.state !== TemplateState.CREATED}
+                  >
                     {t('prepare_scan_modal.wizard.previous_step')}
                   </Button>
                 }
@@ -184,7 +189,6 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
       {step === 2 && (
         <FormProvider {...templateMethods}>
           <PrepareScanModalContentTemplate
-            volumeId={volumeId}
             replacementSources={replacementSources}
           />
         </FormProvider>

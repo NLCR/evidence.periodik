@@ -2,8 +2,12 @@ import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import { FC } from 'react'
+import {
+  getTemplateStateIcon,
+  getTemplateStateLabel,
+  TemplateState,
+} from '../../schemas/templateStateSchema'
 
 export type TTemplatePreviewHeaderProps = {
   title: string
@@ -17,7 +21,7 @@ export type TTemplatePreviewHeaderProps = {
   specimensCount: number
   attachmentsCount: number
   displayCurrentState?: boolean
-  currentStateLabel?: string
+  currentState?: TemplateState
 }
 
 const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
@@ -32,18 +36,26 @@ const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
   specimensCount,
   attachmentsCount,
   displayCurrentState = false,
-  currentStateLabel = undefined,
+  currentState = undefined,
 }) => {
+  const StateIconComponent = currentState
+    ? getTemplateStateIcon(currentState)
+    : undefined
+
   return (
     <>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography sx={{ fontWeight: 700, fontSize: 20 }}>
           {title} (signatura {signature ?? 'neznámá signatura'})
         </Typography>
-        {displayCurrentState && (
+        {displayCurrentState && currentState && (
           <Chip
-            icon={<CheckCircleRoundedIcon fontSize="small" />}
-            label={currentStateLabel ?? 'Aktuální stav'}
+            icon={
+              StateIconComponent ? (
+                <StateIconComponent fontSize="small" />
+              ) : undefined
+            }
+            label={getTemplateStateLabel(currentState)}
             color="primary"
             variant="outlined"
             sx={{

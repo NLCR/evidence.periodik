@@ -12,25 +12,28 @@ import {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import { VariableSizeList, ListChildComponentProps } from 'react-window'
-import { TSpecimen } from '../../../../schema/specimen'
-import { TReplacementSource } from '../../schemas/schemas'
+import { TReplacementSource, TTemplateItem } from '../../schemas/schemas'
 import SpecimenItem from './SpecimenItem'
 
-type Props =
+type Props = {
+  items: TTemplateItem[]
+  showOnlyRescans: boolean
+  groupByVolumes: boolean
+} & (
   | {
-      items: TSpecimen[]
       viewOnly: true
       replacementSourceCandidates?: never
     }
   | {
-      items: TSpecimen[]
       viewOnly: false
       replacementSourceCandidates: TReplacementSource[]
     }
+)
 
 type RowData = {
-  items: TSpecimen[]
+  items: Array<{ item: TTemplateItem; formIndex: number }>
   viewOnly: boolean
+  showOnlyRescans: boolean
   replacementSourceCandidates: TReplacementSource[]
   setRowHeight: (index: number, height: number) => void
 }
@@ -38,9 +41,22 @@ type RowData = {
 const ESTIMATED_ROW_HEIGHT = 280
 const OVERSCAN_COUNT = 3
 
+const hasListCompositionChanged = (
+  previousItemIds: string[],
+  nextItemIds: string[]
+) => {
+  if (previousItemIds.length !== nextItemIds.length) return true
+
+  for (let index = 0; index < previousItemIds.length; index += 1) {
+    if (previousItemIds[index] !== nextItemIds[index]) return true
+  }
+
+  return false
+}
+
 const Row = memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
   const rowRef = useRef<HTMLDivElement | null>(null)
-  const item = data.items[index]
+  const { item, formIndex } = data.items[index]
 
   const rowStyle = useMemo<CSSProperties>(
     () => ({ ...style, width: '100%' }),
@@ -71,8 +87,10 @@ const Row = memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
     <Box style={rowStyle}>
       <Box ref={rowRef} pb={1}>
         <SpecimenItem
-          specimen={item}
+          specimen={item.specimen}
+          itemPath={`items.${formIndex}`}
           viewOnly={data.viewOnly}
+          showOnlyRescans={data.showOnlyRescans}
           replacementSourceCandidates={data.replacementSourceCandidates}
         />
       </Box>
@@ -83,16 +101,35 @@ const Row = memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
 Row.displayName = 'VirtualizedSpecimenListRow'
 
 const VirtualizedSpecimenList = (props: Props) => {
-  const { items, viewOnly } = props
+  const { items, viewOnly, showOnlyRescans } = props
+
+  const visibleItems = useMemo(
+    () =>
+      items
+        .map((item, index) => ({ item, formIndex: index }))
+        .filter(({ item }) =>
+          showOnlyRescans
+            ? !!item.replacement?.isWaitingForRescan ||
+              item.pageReplacements.some((r) => r.isWaitingForRescan)
+            : true
+        ),
+    [items, showOnlyRescans]
+  )
+
   const replacementSourceCandidates = useMemo(
     () => (viewOnly ? [] : props.replacementSourceCandidates),
     [props.replacementSourceCandidates, viewOnly]
+  )
+  const visibleItemIds = useMemo(
+    () => visibleItems.map(({ item }) => item.specimen.id),
+    [visibleItems]
   )
 
   const { t } = useTranslation()
   const listRef = useRef<VariableSizeList<RowData> | null>(null)
   const containerRef = useRef<HTMLDivElement | null>(null)
   const rowHeightsRef = useRef<Record<number, number>>({})
+  const previousVisibleItemIdsRef = useRef<string[] | null>(null)
   const [listHeight, setListHeight] = useState(ESTIMATED_ROW_HEIGHT * 2)
 
   const setRowHeight = useCallback((index: number, height: number) => {
@@ -111,18 +148,34 @@ const VirtualizedSpecimenList = (props: Props) => {
 
   const itemData = useMemo<RowData>(
     () => ({
-      items,
+      items: visibleItems,
       viewOnly,
+      showOnlyRescans,
       replacementSourceCandidates,
       setRowHeight,
     }),
-    [items, replacementSourceCandidates, setRowHeight, viewOnly]
+    [
+      replacementSourceCandidates,
+      setRowHeight,
+      showOnlyRescans,
+      viewOnly,
+      visibleItems,
+    ]
   )
 
   useEffect(() => {
-    rowHeightsRef.current = {}
-    listRef.current?.resetAfterIndex(0, true)
-  }, [items, viewOnly])
+    const previousVisibleItemIds = previousVisibleItemIdsRef.current
+    const shouldResetCache =
+      previousVisibleItemIds === null ||
+      hasListCompositionChanged(previousVisibleItemIds, visibleItemIds)
+
+    if (shouldResetCache) {
+      rowHeightsRef.current = {}
+      listRef.current?.resetAfterIndex(0, true)
+    }
+
+    previousVisibleItemIdsRef.current = visibleItemIds
+  }, [visibleItemIds])
 
   useLayoutEffect(() => {
     const element = containerRef.current
@@ -146,7 +199,7 @@ const VirtualizedSpecimenList = (props: Props) => {
     return () => observer.disconnect()
   }, [])
 
-  if (items.length === 0) {
+  if (visibleItems.length === 0) {
     return (
       <Typography>
         {t('prepare_scan_modal.content_template.no_items')}
@@ -160,12 +213,12 @@ const VirtualizedSpecimenList = (props: Props) => {
         ref={listRef}
         height={listHeight}
         width="100%"
-        itemCount={items.length}
+        itemCount={visibleItems.length}
         itemData={itemData}
         itemSize={getItemSize}
         estimatedItemSize={ESTIMATED_ROW_HEIGHT}
         overscanCount={OVERSCAN_COUNT}
-        itemKey={(index, data) => data.items[index].id}
+        itemKey={(index, data) => data.items[index].item.specimen.id}
       >
         {Row}
       </VariableSizeList>

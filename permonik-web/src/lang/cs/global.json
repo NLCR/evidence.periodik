@@ -47,6 +47,11 @@
     "content_template": {
       "no_items": "Pro zvolený filtr nejsou dostupné žádné položky."
     },
+    "template_state": {
+      "created": "Vytvořená",
+      "waiting_for_rescan": "Čeká na doskeny",
+      "finalized": "Finalizovaná"
+    },
     "back_warning": {
       "title": "Upozornění",
       "stay_button": "Zůstat v kroku předlohy",

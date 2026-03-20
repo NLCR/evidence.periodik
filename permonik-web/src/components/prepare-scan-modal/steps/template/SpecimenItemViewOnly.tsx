@@ -1,18 +1,19 @@
-import { TSpecimen } from '../../../../schema/specimen'
-
 import CheckIcon from '@mui/icons-material/Check'
 import WarningIcon from '@mui/icons-material/PriorityHigh'
 import { Card, CardContent, Stack, Typography, Box } from '@mui/material'
-import ReplacementInput from '../common/ReplacementInput'
+import TemplateReplacementInput from './TemplateReplacementInput'
 import { getDateLabel, getNumberLabel } from './SpecimenItem'
 import { noop } from 'lodash'
 import theme from '../../../../theme'
-import { TReplacement } from '../../schemas/schemas'
+import {
+  TTemplateReplacement,
+  TTemplateSpecimenRef,
+} from '../../schemas/schemas'
 
 type Props = {
-  specimen: TSpecimen
-  replacements: TReplacement[]
-  mainReplacement: TReplacement | null
+  specimen: TTemplateSpecimenRef
+  replacements: TTemplateReplacement[]
+  mainReplacement: TTemplateReplacement | null
   note: string
 }
 
@@ -59,7 +60,7 @@ const SpecimenItemViewOnly = ({
         </Stack>
 
         {specimen.numMissing && (
-          <ReplacementInput
+          <TemplateReplacementInput
             allPages
             viewOnly
             value={mainReplacement}
@@ -118,10 +119,10 @@ const SpecimenItemViewOnly = ({
                   <tbody>
                     {replacements.map((item, index) => (
                       <tr key={index}>
-                        <td>{item.signature}</td>
-                        <td>{item.owner}</td>
-                        <td>{item.barcode}</td>
-                        <td>{item.mutation}</td>
+                        <td>{item.volume.signature}</td>
+                        <td>{item.volume.owner}</td>
+                        <td>{item.volume.barcode}</td>
+                        <td>{item.volume.mutation}</td>
                         <td>{item.pages}</td>
                       </tr>
                     ))}

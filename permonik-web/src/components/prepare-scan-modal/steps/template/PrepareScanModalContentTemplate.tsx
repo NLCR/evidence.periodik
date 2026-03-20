@@ -4,17 +4,8 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Stack from '@mui/material/Stack'
 import { FC, useMemo, useState } from 'react'
-import {
-  useManagedVolumeDetailQuery,
-  useVolumeOverviewStatsQuery,
-} from '../../../../api/volume'
-import Loader from '../../../Loader'
-import ShowError from '../../../ShowError'
-import { useOwnerListQuery } from '../../../../api/owner'
-import { useMutationListQuery } from '../../../../api/mutation'
-import { useEditionListQuery } from '../../../../api/edition'
-import { useMetaTitleListQuery } from '../../../../api/metaTitle'
-import { TReplacementSource } from '../../schemas/schemas'
+import { useFormContext, useWatch } from 'react-hook-form'
+import { TReplacementSource, TTemplate } from '../../schemas/schemas'
 import PrepareScanTemplatePreviewDialog from './PrepareScanTemplatePreviewDialog'
 import TemplatePreviewHeader, {
   TTemplatePreviewHeaderProps,
@@ -23,105 +14,42 @@ import VirtualizedSpecimenList from './VirtualizedSpecimenList'
 
 type TProps = {
   volumeId?: string
-  replacementSources: TReplacementSource[]
+  replacementSources?: TReplacementSource[]
 }
 
 const PrepareScanModalContentTemplate: FC<TProps> = ({
-  volumeId = undefined,
-  replacementSources,
+  replacementSources = [],
 }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [groupByVolumes, setGroupByVolumes] = useState(false)
-  const [showOnlyDoskeny, setShowOnlyDoskeny] = useState(false)
-
-  const {
-    data: owners,
-    isLoading: ownersLoading,
-    isError: ownersError,
-  } = useOwnerListQuery()
-  const {
-    data: mutations,
-    isLoading: mutationsLoading,
-    isError: mutationsError,
-  } = useMutationListQuery()
-  const { data: metatitles } = useMetaTitleListQuery()
-  const {
-    data: editions,
-    isLoading: editionsLoading,
-    isError: editionsError,
-  } = useEditionListQuery()
-
-  const {
-    data: volumeStats,
-    isLoading: volumeStatsLoading,
-    isError: volumeStatsError,
-  } = useVolumeOverviewStatsQuery(volumeId)
-
-  const { data: volume } = useManagedVolumeDetailQuery(volumeId)
-
-  const templateItems = useMemo(
-    () =>
-      volume?.specimens.filter((item) => item.numExists || item.numMissing) ??
-      [],
-    [volume?.specimens]
-  )
+  const [showOnlyRescans, setShowOnlyRescans] = useState(false)
+  const { control } = useFormContext<TTemplate>()
+  const primaryVolume = useWatch({ control, name: 'primaryVolume' })
+  const watchedItems = useWatch({ control, name: 'items' })
+  const watchedState = useWatch({ control, name: 'state' })
+  const items = useMemo(() => watchedItems ?? [], [watchedItems])
 
   const headerProps = useMemo<TTemplatePreviewHeaderProps>(
     () => ({
-      title:
-        metatitles?.find(
-          (metaTitle) => metaTitle.id === volume?.volume?.metaTitleId
-        )?.name ?? '-',
-      signature: volume?.volume?.signature,
-      subTitle: volume?.volume?.subName,
-      owner: owners?.find((ownerItem) => ownerItem.id === volumeStats?.ownerId)
-        ?.shorthand,
-      mutation:
-        mutations?.find(
-          (mutationItem) => mutationItem.id === volume?.volume?.mutationId
-        )?.name.cs ?? undefined,
-      mutationEdition: volume?.volume?.mutationMark.mark ?? undefined,
-      dateFrom: volume?.volume?.dateFrom
-        ? new Date(volume.volume.dateFrom).toLocaleDateString()
+      title: primaryVolume?.metaTitleId ?? '-',
+      signature: primaryVolume?.signature,
+      subTitle: primaryVolume?.subName,
+      owner: primaryVolume?.ownerId,
+      mutation: primaryVolume?.mutationId,
+      mutationEdition: primaryVolume?.mutationMark.mark ?? undefined,
+      dateFrom: primaryVolume?.dateFrom
+        ? new Date(primaryVolume.dateFrom).toLocaleDateString()
         : '-',
-      dateTo: volume?.volume?.dateTo
-        ? new Date(volume.volume.dateTo).toLocaleDateString()
+      dateTo: primaryVolume?.dateTo
+        ? new Date(primaryVolume.dateTo).toLocaleDateString()
         : '-',
-      specimensCount:
-        volume?.specimens.filter((item) => !item.isAttachment).length ?? 0,
-      attachmentsCount:
-        volume?.specimens.filter((item) => item.isAttachment).length ?? 0,
-      barCode: volumeStats?.barCode,
+      specimensCount: items.filter((item) => !item.specimen.attachmentNumber)
+        .length,
+      attachmentsCount: items.filter((item) => !!item.specimen.attachmentNumber)
+        .length,
     }),
-    [
-      metatitles,
-      mutations,
-      owners,
-      volume?.specimens,
-      volume?.volume,
-      volumeStats?.barCode,
-      volumeStats?.ownerId,
-    ]
+    [items, primaryVolume]
   )
-
-  if (
-    volumeStatsLoading ||
-    ownersLoading ||
-    mutationsLoading ||
-    editionsLoading
-  )
-    return <Loader />
-  if (
-    volumeStatsError ||
-    !volumeStats ||
-    ownersError ||
-    !owners ||
-    mutationsError ||
-    !mutations ||
-    editionsError ||
-    !editions
-  )
-    return <ShowError />
 
   return (
     <Box
@@ -140,7 +68,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         <TemplatePreviewHeader
           {...headerProps}
           displayCurrentState
-          currentStateLabel="Aktuální stav" // TODO toto bude specialni typ - stav predlohy
+          currentState={watchedState}
         />
 
         <Box display="flex" justifyContent="space-between" marginTop={0.25}>
@@ -157,8 +85,8 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={showOnlyDoskeny}
-                  onChange={(_, checked) => setShowOnlyDoskeny(checked)}
+                  checked={showOnlyRescans}
+                  onChange={(_, checked) => setShowOnlyRescans(checked)}
                 />
               }
               label="Zobrazit pouze doskeny"
@@ -178,7 +106,13 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
               variant="contained"
               onClick={() => alert('TODO zmeny stavu')}
             >
-              Finalizovat/dosken
+              {items.some(
+                (item) =>
+                  item.replacement?.isWaitingForRescan ||
+                  item.pageReplacements.some((r) => r.isWaitingForRescan)
+              )
+                ? 'Uzavřít k doskenování'
+                : 'Finalizovat'}
             </Button>
           </Stack>
         </Box>
@@ -186,9 +120,11 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
 
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <VirtualizedSpecimenList
-          items={templateItems}
+          items={items}
           viewOnly={false}
           replacementSourceCandidates={replacementSources}
+          showOnlyRescans={showOnlyRescans}
+          groupByVolumes={groupByVolumes}
         />
       </Box>
 
@@ -196,8 +132,10 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         opened={isPreviewOpen}
         onClose={() => setIsPreviewOpen(false)}
         header={headerProps}
-        barCode={volumeStats.barCode}
-        items={templateItems}
+        barCode={primaryVolume?.barCode}
+        items={items}
+        showOnlyRescans={showOnlyRescans}
+        groupByVolumes={groupByVolumes}
       />
     </Box>
   )

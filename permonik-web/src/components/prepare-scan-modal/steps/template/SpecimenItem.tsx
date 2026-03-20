@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 import dayjs from 'dayjs'
 
 import CheckIcon from '@mui/icons-material/Check'
@@ -14,29 +14,32 @@ import {
   TextField,
   Button,
   IconButton,
-  Checkbox,
 } from '@mui/material'
-import ReplacementInput from '../common/ReplacementInput'
-import SpecimenItemViewOnly from './SpecimenItemViewOnly'
-import { TSpecimen } from '../../../../schema/specimen'
 import {
-  emptyReplacement,
-  TReplacement,
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form'
+import SpecimenItemViewOnly from './SpecimenItemViewOnly'
+import FormCheckbox from '../../../form/FormCheckbox'
+import TemplateReplacementInput from './TemplateReplacementInput'
+import {
   TReplacementSource,
+  TTemplate,
+  TTemplateReplacement,
+  TTemplateSpecimenRef,
 } from '../../schemas/schemas'
 
 type Props = {
-  specimen: TSpecimen
+  specimen: TTemplateSpecimenRef
+  itemPath: `items.${number}`
   viewOnly?: boolean
+  showOnlyRescans?: boolean
   replacementSourceCandidates: TReplacementSource[]
 }
 
-type TReplacementEntry = {
-  id: string
-  replacement: TReplacement
-}
-
-export const getNumberLabel = (specimen: TSpecimen) => {
+export const getNumberLabel = (specimen: TTemplateSpecimenRef) => {
   if (specimen.number) return `č. ${specimen.number}`
   if (specimen.attachmentNumber)
     return `Příloha č. ${specimen.attachmentNumber}`
@@ -51,39 +54,70 @@ const AddReplacementButton = ({ callback }: { callback: () => void }) => (
   </Button>
 )
 
+const emptyTemplateReplacement: TTemplateReplacement = {
+  volume: {
+    id: undefined,
+    signature: '',
+    owner: '',
+    barcode: '',
+    mutation: '',
+    mutationEdition: '',
+  },
+  pages: 'všechny',
+  isUnreplaceable: false,
+  isWaitingForRescan: false,
+}
+
 const SpecimenItem = ({
   specimen,
+  itemPath,
   viewOnly = false,
+  showOnlyRescans = false,
   replacementSourceCandidates,
 }: Props) => {
-  const replacementId = useRef(0)
-  const createEntry = (): TReplacementEntry => {
-    replacementId.current += 1
+  const { control, setValue } = useFormContext<TTemplate>()
+  const {
+    fields: replacementFields,
+    append: appendReplacement,
+    remove,
+  } = useFieldArray({ control, name: `${itemPath}.pageReplacements` })
 
-    return {
-      id: `replacement-${replacementId.current}`,
-      replacement: emptyReplacement,
-    }
-  }
+  const mainReplacement = useWatch({
+    control,
+    name: `${itemPath}.replacement`,
+  })
+  const replacements = useWatch({
+    control,
+    name: `${itemPath}.pageReplacements`,
+  })
+  const note = useWatch({ control, name: `${itemPath}.note` })
 
-  const [replacements, setReplacements] = useState<TReplacementEntry[]>([])
-  const addReplacement = () =>
-    setReplacements((prev) => prev.concat(createEntry()))
-  const removeReplacement = (id: string) =>
-    setReplacements((prev) => prev.filter((item) => item.id !== id))
+  useEffect(() => {
+    if (viewOnly || !specimen.numMissing || mainReplacement) return
 
-  const [note, setNote] = useState<string>('')
-  const [mainReplacement, setMainReplacement] = useState<TReplacement | null>(
-    null
-  )
+    setValue(`${itemPath}.replacement`, emptyTemplateReplacement)
+  }, [itemPath, mainReplacement, setValue, specimen.numMissing, viewOnly])
+
+  const visibleReplacementIndexes =
+    showOnlyRescans && replacements
+      ? replacements.reduce<number[]>((acc, replacement, index) => {
+          if (replacement?.isWaitingForRescan) acc.push(index)
+          return acc
+        }, [])
+      : replacementFields.map((_, index) => index)
+
+  const visibleReplacements =
+    showOnlyRescans && replacements
+      ? replacements.filter((replacement) => replacement?.isWaitingForRescan)
+      : replacements
 
   if (viewOnly)
     return (
       <SpecimenItemViewOnly
         specimen={specimen}
-        mainReplacement={mainReplacement}
-        replacements={replacements.map((item) => item.replacement)}
-        note={note}
+        mainReplacement={mainReplacement ?? emptyTemplateReplacement}
+        replacements={visibleReplacements ?? []}
+        note={note ?? ''}
       />
     )
 
@@ -111,20 +145,32 @@ const SpecimenItem = ({
               <Stack direction="row" spacing={1} alignItems="center">
                 <WarningIcon color="error" fontSize="small" />
                 <Typography>Nahradit:</Typography>
-                <ReplacementInput
-                  allPages
-                  viewOnly={viewOnly}
-                  onChange={setMainReplacement}
-                  value={mainReplacement}
-                  candidates={replacementSourceCandidates}
+                <Controller
+                  control={control}
+                  name={`${itemPath}.replacement`}
+                  render={({ field }) => (
+                    <TemplateReplacementInput
+                      allPages
+                      viewOnly={viewOnly}
+                      value={field.value ?? emptyTemplateReplacement}
+                      candidates={replacementSourceCandidates}
+                      onChange={field.onChange}
+                    />
+                  )}
                 />
               </Stack>
               <Stack direction={'row'} gap={8}>
                 <Box>
-                  <Checkbox /> Náhrada není dostupná
+                  <FormCheckbox<TTemplate>
+                    name={`${itemPath}.replacement.isUnreplaceable` as const}
+                    label="Náhrada není dostupná"
+                  />
                 </Box>
                 <Box>
-                  <Checkbox /> Čeká na dosken
+                  <FormCheckbox<TTemplate>
+                    name={`${itemPath}.replacement.isWaitingForRescan` as const}
+                    label="Čeká na dosken"
+                  />
                 </Box>
               </Stack>
             </>
@@ -133,7 +179,7 @@ const SpecimenItem = ({
 
         <Box mt={1} paddingLeft={3}>
           <Stack spacing={1} alignItems="flex-start">
-            {replacements.length > 0 ? (
+            {visibleReplacementIndexes.length > 0 ? (
               <Box
                 sx={{
                   border: '1px solid #ddd',
@@ -148,45 +194,60 @@ const SpecimenItem = ({
                 </Typography>
 
                 <Stack spacing={1}>
-                  {replacements.map((item) => (
-                    <React.Fragment key={item.id}>
-                      <Stack direction="row" alignItems="center">
-                        <ReplacementInput
-                          viewOnly={viewOnly}
-                          value={item.replacement}
-                          candidates={replacementSourceCandidates}
-                          onChange={(value: TReplacement) =>
-                            setReplacements((prev) => {
-                              return prev.map((replacementItem) =>
-                                replacementItem.id === item.id
-                                  ? {
-                                      ...replacementItem,
-                                      replacement: value,
-                                    }
-                                  : replacementItem
-                              )
-                            })
-                          }
-                        />
-                        <IconButton onClick={() => removeReplacement(item.id)}>
-                          <DeleteIcon />
-                        </IconButton>
-                      </Stack>
-                      <Stack direction={'row'} gap={8} paddingLeft={4}>
-                        <Box>
-                          <Checkbox /> Náhrada není dostupná
-                        </Box>
-                        <Box>
-                          <Checkbox /> Čeká na dosken
-                        </Box>
-                      </Stack>
-                    </React.Fragment>
-                  ))}
-                  <AddReplacementButton callback={addReplacement} />
+                  {visibleReplacementIndexes.map((index) => {
+                    const item = replacementFields[index]
+
+                    if (!item) return null
+
+                    return (
+                      <React.Fragment key={item.id}>
+                        <Stack direction="row" alignItems="center">
+                          <Controller
+                            control={control}
+                            name={`${itemPath}.pageReplacements.${index}`}
+                            render={({ field }) => (
+                              <TemplateReplacementInput
+                                viewOnly={viewOnly}
+                                value={field.value}
+                                candidates={replacementSourceCandidates}
+                                onChange={field.onChange}
+                              />
+                            )}
+                          />
+                          <IconButton onClick={() => remove(index)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </Stack>
+                        <Stack direction={'row'} gap={8} paddingLeft={4}>
+                          <Box>
+                            <FormCheckbox<TTemplate>
+                              name={
+                                `${itemPath}.pageReplacements.${index}.isUnreplaceable` as const
+                              }
+                              label="Náhrada není dostupná"
+                            />
+                          </Box>
+                          <Box>
+                            <FormCheckbox<TTemplate>
+                              name={
+                                `${itemPath}.pageReplacements.${index}.isWaitingForRescan` as const
+                              }
+                              label="Čeká na dosken"
+                            />
+                          </Box>
+                        </Stack>
+                      </React.Fragment>
+                    )
+                  })}
+                  <AddReplacementButton
+                    callback={() => appendReplacement(emptyTemplateReplacement)}
+                  />
                 </Stack>
               </Box>
             ) : (
-              <AddReplacementButton callback={addReplacement} />
+              <AddReplacementButton
+                callback={() => appendReplacement(emptyTemplateReplacement)}
+              />
             )}
           </Stack>
         </Box>
@@ -194,11 +255,17 @@ const SpecimenItem = ({
         <Box mt={1}>
           <Stack direction="row" spacing={1} alignItems="center">
             <Typography>Poznámka: </Typography>
-            <TextField
-              variant="standard"
-              fullWidth
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
+            <Controller
+              control={control}
+              name={`${itemPath}.note`}
+              render={({ field }) => (
+                <TextField
+                  variant="standard"
+                  fullWidth
+                  value={field.value ?? ''}
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              )}
             />
           </Stack>
         </Box>

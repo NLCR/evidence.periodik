@@ -47,6 +47,11 @@
     "content_template": {
       "no_items": "No items are available for the selected filter."
     },
+    "template_state": {
+      "created": "Created",
+      "waiting_for_rescan": "Waiting for rescan",
+      "finalized": "Finalized"
+    },
     "back_warning": {
       "title": "Warning",
       "stay_button": "Stay in template step",

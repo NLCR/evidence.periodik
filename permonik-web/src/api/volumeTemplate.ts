@@ -1,6 +1,54 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { TTemplate } from '../components/prepare-scan-modal/schemas/schemas'
-import { queryClient } from './index'
+import {
+  TTemplate,
+  TTemplateItem,
+  TemplateState,
+} from '../components/prepare-scan-modal/schemas/schemas'
+import { TVolumeDetail } from '../schema/volume'
+import { api, queryClient } from './index'
+
+const MOCK_TEMPLATE_ITEMS: TTemplateItem[] = [
+  {
+    specimen: {
+      id: 'mock-specimen-1',
+      number: '1',
+      attachmentNumber: null,
+      publicationDate: '2024-01-01',
+      numExists: true,
+      numMissing: false,
+    },
+    usePrimaryVolume: true,
+    replacement: null,
+    pageReplacements: [],
+    note: undefined,
+  },
+  {
+    specimen: {
+      id: 'mock-specimen-2',
+      number: '2',
+      attachmentNumber: null,
+      publicationDate: '2024-01-02',
+      numExists: false,
+      numMissing: true,
+    },
+    usePrimaryVolume: false,
+    replacement: {
+      volume: {
+        id: null,
+        signature: null,
+        owner: null,
+        barcode: null,
+        mutation: null,
+        mutationEdition: null,
+      },
+      pages: 'vsechny',
+      isUnreplaceable: false,
+      isWaitingForRescan: true,
+    },
+    pageReplacements: [],
+    note: 'Mock replacement item',
+  },
+]
 
 export const useVolumeTemplateQuery = (
   volumeId?: string,
@@ -10,7 +58,15 @@ export const useVolumeTemplateQuery = (
     queryKey: [`/volume/${volumeId}/template`],
     queryFn: async () => {
       // TODO: Zapojit realny endpoint `/volume/id/template` po finalizaci BE kontraktu.
-      return null
+      const detail = await api()
+        .get(`volume/${volumeId}/detail`)
+        .json<TVolumeDetail>()
+
+      return {
+        state: TemplateState.CREATED,
+        primaryVolume: detail.volume,
+        items: MOCK_TEMPLATE_ITEMS,
+      }
     },
     enabled: (options.enabled ?? true) && !!volumeId,
   })

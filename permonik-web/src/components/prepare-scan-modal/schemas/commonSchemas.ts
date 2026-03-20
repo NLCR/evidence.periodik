@@ -16,7 +16,7 @@ export type TReplacementSourceParameters = {
 }
 
 export type TReplacementSource = {
-  id: string | undefined
+  id?: string
   signature: string
   barcode: string
   owner: string
