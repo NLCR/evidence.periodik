@@ -1,6 +1,7 @@
 package cz.incad.nkp.inprove.permonikapi.specimen;
 
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.SpecimenStateDTO;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDefinition;
 import lombok.*;
 
 import java.time.Instant;

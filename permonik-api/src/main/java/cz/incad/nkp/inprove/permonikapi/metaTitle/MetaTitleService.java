@@ -111,6 +111,9 @@ public class MetaTitleService implements MetaTitleDefinition {
         try {
             solrClient.addBean(META_TITLE_CORE_NAME, metaTitle);
             solrClient.commit(META_TITLE_CORE_NAME);
+
+            // TODO: update volumes and specimens with this metatitle
+
             logger.info("MetaTitle {} successfully updated", metaTitle.getId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to update metaTitle", e);

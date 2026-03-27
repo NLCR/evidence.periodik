@@ -3,11 +3,12 @@ package cz.incad.nkp.inprove.permonikapi.specimen.dto;
 
 import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDTO;
 
+import java.time.Instant;
 import java.util.List;
 
 public record SpecimensForVolumeOverviewStatsDTO(
-    Object publicationDayMin,
-    Object publicationDayMax,
+    Instant publicationDayMin,
+    Instant publicationDayMax,
     Object pagesCount,
     List<FacetFieldDTO> mutationIds,
     List<FacetFieldDTO> mutationMarks,

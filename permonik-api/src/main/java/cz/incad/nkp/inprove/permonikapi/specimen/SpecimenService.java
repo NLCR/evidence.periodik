@@ -5,7 +5,9 @@ import cz.incad.nkp.inprove.permonikapi.specimen.dto.*;
 import cz.incad.nkp.inprove.permonikapi.specimen.enums.SpecimenTableViewEnum;
 import cz.incad.nkp.inprove.permonikapi.specimen.model.Specimen;
 import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDTO;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDefinition;
 import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenMapper;
+import cz.incad.nkp.inprove.permonikapi.volume.enums.AttachmentsSortEnum;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,7 +46,7 @@ public class SpecimenService implements SpecimenDefinition {
         solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"", NUM_EXISTS_FIELD + ":true");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setParam(StatsParams.STATS, true);
-        solrQuery.setParam(StatsParams.STATS_FIELD, MUTATION_ID_FIELD, PUBLICATION_DATE_STRING_FIELD, OWNER_ID_FIELD);
+        solrQuery.setParam(StatsParams.STATS_FIELD, MUTATION_ID_FIELD, PUBLICATION_DATE_FIELD, OWNER_ID_FIELD);
         solrQuery.setParam(StatsParams.STATS_CALC_DISTINCT, true);
         solrQuery.setParam(GroupParams.GROUP, true);
         solrQuery.setParam(GroupParams.GROUP_FIELD, META_TITLE_ID_FIELD);
@@ -56,12 +59,12 @@ public class SpecimenService implements SpecimenDefinition {
         Map<String, FieldStatsInfo> statsInfo = response.getFieldStatsInfo();
 
         FieldStatsInfo mutationsStats = statsInfo.get(MUTATION_ID_FIELD);
-        FieldStatsInfo publicationDayStats = statsInfo.get(PUBLICATION_DATE_STRING_FIELD);
+        FieldStatsInfo publicationDayStats = statsInfo.get(PUBLICATION_DATE_FIELD);
         FieldStatsInfo ownersStats = statsInfo.get(OWNER_ID_FIELD);
 
         Long mutationsCount = mutationsStats.getCountDistinct();
-        Object publicationDayMin = publicationDayStats.getMin();
-        Object publicationDayMax = publicationDayStats.getMax();
+        Instant publicationDayMin = ((Date) publicationDayStats.getMin()).toInstant();
+        Instant publicationDayMax = ((Date) publicationDayStats.getMax()).toInstant();
         Long ownersCount = ownersStats.getCountDistinct();
 
         GroupResponse groupResponse = response.getGroupResponse();
@@ -145,9 +148,7 @@ public class SpecimenService implements SpecimenDefinition {
 
         solrQuery.setRows(localRows);
         solrQuery.setStart(offset);
-        solrQuery.setSort(PUBLICATION_DATE_STRING_FIELD, SolrQuery.ORDER.asc);
-        // TODO: join is not working, it always returns unknown field volumeId
-//        solrQuery.add("join", "{!join from=volumeId to=id fromIndex=volume}barCode:barCode");
+        solrQuery.setSort(PUBLICATION_DATE_FIELD, SolrQuery.ORDER.asc);
         // TODO: this will be sorting based on UUID, that's wrong
         solrQuery.addSort(EDITION_ID_FIELD, SolrQuery.ORDER.desc);
 //        solrQuery.addSort(MUTATION_ID_FIELD, SolrQuery.ORDER.asc);
@@ -165,15 +166,15 @@ public class SpecimenService implements SpecimenDefinition {
         statsQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         statsQuery.setRows(0);
         statsQuery.setParam(StatsParams.STATS, true);
-        statsQuery.setParam(StatsParams.STATS_FIELD, PUBLICATION_DATE_STRING_FIELD);
+        statsQuery.setParam(StatsParams.STATS_FIELD, PUBLICATION_DATE_FIELD);
 
         QueryResponse statsResponse = solrClient.query(SPECIMEN_CORE_NAME, statsQuery);
 
         Map<String, FieldStatsInfo> statsInfo = statsResponse.getFieldStatsInfo();
-        FieldStatsInfo publicationDayStats = statsInfo.get(PUBLICATION_DATE_STRING_FIELD);
+        FieldStatsInfo publicationDayStats = statsInfo.get(PUBLICATION_DATE_FIELD);
 
-        Object publicationDayMin = publicationDayStats.getMin();
-        Object publicationDayMax = publicationDayStats.getMax();
+        Instant publicationDayMin = ((Date) publicationDayStats.getMin()).toInstant();
+        Instant publicationDayMax = ((Date) publicationDayStats.getMax()).toInstant();
 
         groupQuery.setRows(rows);
         groupQuery.setStart(offset);
@@ -299,10 +300,10 @@ public class SpecimenService implements SpecimenDefinition {
     }
 
     public List<SpecimenDTO> getSpecimensForVolumeDetail(String volumeId, Boolean onlyPublic) throws SolrServerException, IOException {
-        return getSpecimensForVolumeDetail(volumeId, onlyPublic, false);
+        return getSpecimensForVolumeDetail(volumeId, onlyPublic, AttachmentsSortEnum.NONE);
     }
 
-    public List<SpecimenDTO> getSpecimensForVolumeDetail(String volumeId, Boolean onlyPublic, Boolean showAttachmentsAtTheEnd) throws SolrServerException, IOException {
+    public List<SpecimenDTO> getSpecimensForVolumeDetail(String volumeId, Boolean onlyPublic, AttachmentsSortEnum attachmentsSort) throws SolrServerException, IOException {
 
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(VOLUME_ID_FIELD + ":\"" + volumeId + "\"");
@@ -310,9 +311,12 @@ public class SpecimenService implements SpecimenDefinition {
             solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true OR " + NUM_MISSING_FIELD + ":true");
         }
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
-        solrQuery.setSort(PUBLICATION_DATE_STRING_FIELD, SolrQuery.ORDER.asc);
-        if (showAttachmentsAtTheEnd) {
+        solrQuery.setSort(PUBLICATION_DATE_FIELD, SolrQuery.ORDER.asc);
+        if (Objects.equals(attachmentsSort, AttachmentsSortEnum.ASC)) {
             solrQuery.setSort(IS_ATTACHMENT_FIELD, SolrQuery.ORDER.asc);
+        }
+        if (Objects.equals(attachmentsSort, AttachmentsSortEnum.DESC)) {
+            solrQuery.setSort(IS_ATTACHMENT_FIELD, SolrQuery.ORDER.desc);
         }
         solrQuery.setRows(100000);
 
@@ -329,14 +333,14 @@ public class SpecimenService implements SpecimenDefinition {
         solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setParam(StatsParams.STATS, true);
-        solrQuery.setParam(StatsParams.STATS_FIELD, PUBLICATION_DATE_STRING_FIELD);
+        solrQuery.setParam(StatsParams.STATS_FIELD, PUBLICATION_DATE_FIELD);
         solrQuery.setRows(0);
 
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
 
         Map<String, FieldStatsInfo> statsInfo = response.getFieldStatsInfo();
 
-        return statsInfo.get(PUBLICATION_DATE_STRING_FIELD).getMin();
+        return ((Date) statsInfo.get(PUBLICATION_DATE_FIELD).getMin()).toInstant();
 
     }
 
@@ -356,7 +360,7 @@ public class SpecimenService implements SpecimenDefinition {
         solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setParam(StatsParams.STATS, true);
-        solrQuery.setParam(StatsParams.STATS_FIELD, PUBLICATION_DATE_STRING_FIELD, PAGES_COUNT_FIELD);
+        solrQuery.setParam(StatsParams.STATS_FIELD, PUBLICATION_DATE_FIELD, PAGES_COUNT_FIELD);
         solrQuery.setRows(0);
         solrQuery.setFacet(true);
         solrQuery.setParam("f." + MUTATION_MARK_FIELD + ".facet.missing", "true"); // query MUTATION_MARK_FIELD also for empty value
@@ -368,15 +372,15 @@ public class SpecimenService implements SpecimenDefinition {
 
         Map<String, FieldStatsInfo> statsInfo = response.getFieldStatsInfo();
 
-        Object publicationDayMin = statsInfo.get(PUBLICATION_DATE_STRING_FIELD).getMin();
-        Object publicationDayMax = statsInfo.get(PUBLICATION_DATE_STRING_FIELD).getMax();
+        Instant publicationDayMin = ((Date) statsInfo.get(PUBLICATION_DATE_FIELD).getMin()).toInstant();
+        Instant publicationDayMax = ((Date) statsInfo.get(PUBLICATION_DATE_FIELD).getMax()).toInstant();
         Object pagesCount = statsInfo.get(PAGES_COUNT_FIELD).getSum();
 
         SolrQuery solrQuery2 = new SolrQuery("*:*");
         solrQuery2.addFilterQuery(VOLUME_ID_FIELD + ":\"" + volumeId + "\"");
         solrQuery2.addFilterQuery(NUM_EXISTS_FIELD + ":true OR " + NUM_MISSING_FIELD + ":true");
         solrQuery2.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
-        solrQuery2.setSort(PUBLICATION_DATE_STRING_FIELD, SolrQuery.ORDER.asc);
+        solrQuery2.setSort(PUBLICATION_DATE_FIELD, SolrQuery.ORDER.asc);
         solrQuery2.setRows(100000);
 
         QueryResponse response2 = solrClient.query(SPECIMEN_CORE_NAME, solrQuery2);
@@ -439,6 +443,9 @@ public class SpecimenService implements SpecimenDefinition {
         try {
             List<Specimen> specimenList = specimens.stream().peek(SpecimenDTO::prePersist).map(specimenMapper::toModel).toList();
 
+            // TODO: add volumeId, barcode, ownerId, metatitleId from volume
+            // TODO: then add owner, metatitle, mutation, edition info
+
             solrClient.addBeans(SPECIMEN_CORE_NAME, specimenList);
             solrClient.commit(SPECIMEN_CORE_NAME);
             logger.info("specimens successfully created");
@@ -460,6 +467,9 @@ public class SpecimenService implements SpecimenDefinition {
                 })
                 .map(specimenMapper::toModel)
                 .toList();
+
+            // TODO: add volumeId, barcode, ownerId, metatitleId from volume
+            // TODO: then add owner, metatitle, mutation, edition info
 
             solrClient.addBeans(SPECIMEN_CORE_NAME, specimenList);
             solrClient.commit(SPECIMEN_CORE_NAME);

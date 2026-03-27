@@ -10,6 +10,7 @@ import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDetailDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeOverviewStatsDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.model.Volume;
 import cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDTO;
+import cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition;
 import cz.incad.nkp.inprove.permonikapi.volume.model.VolumeMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
@@ -84,7 +85,7 @@ public class VolumeService implements VolumeDefinition {
         VolumeDTO volumeDTO = getVolumeDTOById(volumeId);
 
         try {
-            List<SpecimenDTO> specimenList = specimenService.getSpecimensForVolumeDetail(volumeDTO.getId(), onlyPublic, volumeDTO.getShowAttachmentsAtTheEnd());
+            List<SpecimenDTO> specimenList = specimenService.getSpecimensForVolumeDetail(volumeDTO.getId(), onlyPublic, volumeDTO.getAttachmentsSort());
 
             return new VolumeDetailDTO(
                 volumeDTO,
@@ -126,6 +127,7 @@ public class VolumeService implements VolumeDefinition {
         try {
             volumeDTO.prePersist();
 
+            // TODO: fill up fields from metaTitle, owner and mutation
 
             solrClient.addBean(VOLUME_CORE_NAME, volumeMapper.toModel(volumeDTO));
             solrClient.commit(VOLUME_CORE_NAME);
@@ -153,6 +155,8 @@ public class VolumeService implements VolumeDefinition {
 
         try {
             volumeDTO.preUpdate();
+
+            // TODO: fill up fields from metaTitle, owner and mutation
 
             solrClient.addBean(VOLUME_CORE_NAME, volumeMapper.toModel(volumeDTO));
             solrClient.commit(VOLUME_CORE_NAME);

@@ -5,6 +5,8 @@ import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
 
+import static cz.incad.nkp.inprove.permonikapi.owner.OwnerDefinition.*;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -13,15 +15,15 @@ import org.apache.solr.client.solrj.beans.Field;
 @Getter
 public class Owner extends Auditable {
 
-    @Field
+    @Field(ID_FIELD)
     private String id; // UUID
 
-    @Field
+    @Field(NAME_FIELD)
     private String name;
 
-    @Field
+    @Field(SHORTHAND_FIELD)
     private String shorthand;
 
-    @Field
+    @Field(SIGLA_FIELD)
     private String sigla;
 }

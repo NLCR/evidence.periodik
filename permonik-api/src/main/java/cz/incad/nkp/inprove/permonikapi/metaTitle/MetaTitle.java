@@ -4,6 +4,8 @@ import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
 
+import static cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitleDefinition.*;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -12,13 +14,13 @@ import org.apache.solr.client.solrj.beans.Field;
 @Getter
 public class MetaTitle extends Auditable {
 
-    @Field
+    @Field(ID_FIELD)
     private String id; // UUID
-    @Field
+    @Field(NAME_FIELD)
     private String name;
-    @Field
+    @Field(NOTE_FIELD)
     private String note;
-    @Field
+    @Field(IS_PUBLIC_FIELD)
     private Boolean isPublic;
 
     // Custom getter for `note`

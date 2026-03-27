@@ -3,6 +3,7 @@ package cz.incad.nkp.inprove.permonikapi.mutation;
 
 import cz.incad.nkp.inprove.permonikapi.mutation.model.Mutation;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDTO;
+import cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDefinition;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.MutationMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
@@ -56,6 +57,9 @@ public class MutationService implements MutationDefinition {
         try {
             solrClient.addBean(MUTATION_CORE_NAME, mutationMapper.toModel(mutation));
             solrClient.commit(MUTATION_CORE_NAME);
+
+            // TODO: update volumes and specimens with this mutation
+
             logger.info("Mutation {} successfully updated", mutation.getId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to update mutation", e);
@@ -66,8 +70,8 @@ public class MutationService implements MutationDefinition {
 
     public void createMutation(MutationDTO mutation) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        // TODO: this filter is not working
-        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + mutation.getName() + "\"");
+        solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery.addFilterQuery(NAME_CS_SEARCH_FIELD + ":\"" + mutation.getName().cs() + "\" OR " + NAME_SK_SEARCH_FIELD + ":\"" + mutation.getName().sk() + "\" OR " + NAME_EN_SEARCH_FIELD + ":\"" + mutation.getName().en() + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(MUTATION_CORE_NAME, solrQuery);

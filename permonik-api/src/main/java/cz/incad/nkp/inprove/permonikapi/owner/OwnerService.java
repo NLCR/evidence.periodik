@@ -57,6 +57,9 @@ public class OwnerService implements OwnerDefinition {
         try {
             solrClient.addBean(OWNER_CORE_NAME, owner);
             solrClient.commit(OWNER_CORE_NAME);
+
+            // TODO: update volumes and specimens with this owner
+
             logger.info("Owner {} successfully updated", owner.getId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to update owner", e);
@@ -67,7 +70,8 @@ public class OwnerService implements OwnerDefinition {
 
     public void createOwner(CreatableOwnerDTO owner) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(SHORTHAND_FIELD + ":\"" + owner.shorthand() + "\"");
+        solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery.addFilterQuery(SHORTHAND_SEARCH_FIELD + ":\"" + owner.shorthand() + "\" OR " + SIGLA_SEARCH_FIELD + ":\"" + owner.sigla() + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(OWNER_CORE_NAME, solrQuery);

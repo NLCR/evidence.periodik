@@ -54,7 +54,6 @@ ext {
     mapstruct = '1.6.3'
     slf4j = '2.0.17'
     logback = '1.5.18'
-    hibernate = '7.1.1.Final'
     redisSession = "3.5.2"
 }
 
@@ -86,8 +85,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    // HIBERNATE (preCreate, preUpdate, preRemove)
-    implementation "org.hibernate.orm:hibernate-envers:${hibernate}"
 
     // SOLR
     implementation "org.apache.solr:solr-solrj:${solrj}"

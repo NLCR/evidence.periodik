@@ -3,6 +3,7 @@ package cz.incad.nkp.inprove.permonikapi.edition;
 
 import cz.incad.nkp.inprove.permonikapi.edition.model.Edition;
 import cz.incad.nkp.inprove.permonikapi.edition.model.EditionDTO;
+import cz.incad.nkp.inprove.permonikapi.edition.model.EditionDefinition;
 import cz.incad.nkp.inprove.permonikapi.edition.model.EditionMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
@@ -42,7 +43,6 @@ public class EditionService implements EditionDefinition {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(ID_FIELD + ":\"" + editionId + "\"");
         solrQuery.setRows(1);
-        // TODO: handle is isAttachment changes -> volume and specimens data or make it not changeable
         QueryResponse response = solrClient.query(EDITION_CORE_NAME, solrQuery);
 
         List<Edition> editionList = response.getBeans(Edition.class);
@@ -51,11 +51,20 @@ public class EditionService implements EditionDefinition {
             throw new RuntimeException("Edition not found");
         }
 
+        Edition oldEdition = editionList.getFirst();
+
         edition.preUpdate();
+        // dont allow to change this fields
+        edition.setIsAttachment(oldEdition.getIsAttachment());
+        edition.setIsPeriodicAttachment(oldEdition.getIsPeriodicAttachment());
+        edition.setIsDefault(oldEdition.getIsDefault());
 
         try {
             solrClient.addBean(EDITION_CORE_NAME, editionMapper.toModel(edition));
             solrClient.commit(EDITION_CORE_NAME);
+
+            // TODO: update specimens with this edition
+
             logger.info("Edition {} successfully updated", edition.getId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to update edition", e);
@@ -66,8 +75,8 @@ public class EditionService implements EditionDefinition {
 
     public void createEdition(EditionDTO edition) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        // TODO: this filter is not working
-        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + edition.getName() + "\"");
+        solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery.addFilterQuery(NAME_CS_SEARCH_FIELD + ":\"" + edition.getName().cs() + "\" OR " + NAME_SK_SEARCH_FIELD + ":\"" + edition.getName().sk() + "\" OR " + NAME_EN_SEARCH_FIELD + ":\"" + edition.getName().en() + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(EDITION_CORE_NAME, solrQuery);

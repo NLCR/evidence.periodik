@@ -3,6 +3,7 @@ package cz.incad.nkp.inprove.permonikapi.volume.model;
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
 import cz.incad.nkp.inprove.permonikapi.common.mutationMark.MutationMark;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumePeriodicityDTO;
+import cz.incad.nkp.inprove.permonikapi.volume.enums.AttachmentsSortEnum;
 import lombok.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class VolumeDTO extends Auditable {
     private Integer firstNumber;
     private Integer lastNumber;
     private String note;
-    private Boolean showAttachmentsAtTheEnd;
+    private AttachmentsSortEnum attachmentsSort;
     private String signature;
     private String ownerId;
     private Integer year;

@@ -1,8 +1,13 @@
 package cz.incad.nkp.inprove.permonikapi.volume.model;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
+import cz.incad.nkp.inprove.permonikapi.volume.enums.AttachmentsSortEnum;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
+
+import java.time.Instant;
+
+import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.*;
 
 
 @NoArgsConstructor
@@ -13,20 +18,28 @@ import org.apache.solr.client.solrj.beans.Field;
 @Setter
 public class Volume extends Auditable {
 
-    @Field
+    @Field(ID_FIELD)
     private String id; // UUID
-    @Field
+    @Field(BAR_CODE_FIELD)
     private String barCode;
-    @Field
-    private String dateFrom;
-    @Field
-    private String dateTo;
-    @Field
+    @Field(DATE_FROM_FIELD)
+    private Instant dateFrom;
+    @Field(DATE_TO_FIELD)
+    private Instant dateTo;
+    @Field(META_TITLE_ID_FIELD)
     private String metaTitleId; // UUID of metaTitle
-    @Field
+    @Field(META_TITLE_NAME_FIELD)
+    private String metaTitleName;
+    @Field(SUB_NAME_FIELD)
     private String subName;
-    @Field
+    @Field(MUTATION_ID_FIELD)
     private String mutationId; // UUID of mutation
+    @Field(MUTATION_CS_NAME_FIELD)
+    private String mutationCsName;
+    @Field(MUTATION_SK_NAME_FIELD)
+    private String mutationSkName;
+    @Field(MUTATION_EN_NAME_FIELD)
+    private String mutationEnName;
     /*
     periodicity as string
     {
@@ -39,27 +52,29 @@ public class Volume extends Auditable {
       "isAttachment": false
     },
     */
-    @Field
+    @Field(PERIODICITY_FIELD)
     private String periodicity;
-    @Field
+    @Field(FIRST_NUMBER_FIELD)
     private Integer firstNumber;
-    @Field
+    @Field(LAST_NUMBER_FIELD)
     private Integer lastNumber;
-    @Field
+    @Field(NOTE_FIELD)
     private String note;
-    @Field
-    private Boolean showAttachmentsAtTheEnd;
-    @Field
+    @Field(ATTACHMENTS_SORT_FIELD)
+    private AttachmentsSortEnum attachmentsSort;
+    @Field(SIGNATURE_FIELD)
     private String signature;
-    @Field
-    private String ownerId; // UUID of owner
-    @Field
+    @Field(OWNER_ID_FIELD)
+    private String ownerId; // UUID of an owner
+    @Field(OWNER_NAME_FIELD)
+    private String ownerName;
+    @Field(YEAR_FIELD)
     private Integer year;
-    @Field
+    @Field(MUTATION_MARK_FIELD)
     private String mutationMark;
-    @Field
+    @Field(MUTATION_MARK_TYPE_FIELD)
     private String mutationMarkType;
-    @Field
+    @Field(MUTATION_MARK_DESCRIPTION_FIELD)
     private String mutationMarkDescription;
 
     // Custom getter for `subName`
