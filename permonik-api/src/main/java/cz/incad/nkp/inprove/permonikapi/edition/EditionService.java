@@ -1,6 +1,7 @@
 package cz.incad.nkp.inprove.permonikapi.edition;
 
 
+import cz.incad.nkp.inprove.permonikapi.common.DenormalizationService;
 import cz.incad.nkp.inprove.permonikapi.edition.model.Edition;
 import cz.incad.nkp.inprove.permonikapi.edition.model.EditionDTO;
 import cz.incad.nkp.inprove.permonikapi.edition.model.EditionDefinition;
@@ -27,6 +28,7 @@ public class EditionService implements EditionDefinition {
 
     private final EditionMapper editionMapper;
     private final SolrClient solrClient;
+    private final DenormalizationService denormalizationService;
 
 
     public List<EditionDTO> getEditions() throws SolrServerException, IOException {
@@ -63,7 +65,7 @@ public class EditionService implements EditionDefinition {
             solrClient.addBean(EDITION_CORE_NAME, editionMapper.toModel(edition));
             solrClient.commit(EDITION_CORE_NAME);
 
-            // TODO: update specimens with this edition
+            denormalizationService.updateEditionInSpecimens(editionId, edition.getName().cs(), edition.getName().sk(), edition.getName().en());
 
             logger.info("Edition {} successfully updated", edition.getId());
         } catch (Exception e) {

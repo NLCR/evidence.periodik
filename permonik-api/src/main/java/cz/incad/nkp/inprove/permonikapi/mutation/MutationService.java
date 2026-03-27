@@ -1,6 +1,7 @@
 package cz.incad.nkp.inprove.permonikapi.mutation;
 
 
+import cz.incad.nkp.inprove.permonikapi.common.DenormalizationService;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.Mutation;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDTO;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDefinition;
@@ -27,6 +28,7 @@ public class MutationService implements MutationDefinition {
 
     private final MutationMapper mutationMapper;
     private final SolrClient solrClient;
+    private final DenormalizationService denormalizationService;
 
 
     public List<MutationDTO> getMutations() throws SolrServerException, IOException {
@@ -58,7 +60,8 @@ public class MutationService implements MutationDefinition {
             solrClient.addBean(MUTATION_CORE_NAME, mutationMapper.toModel(mutation));
             solrClient.commit(MUTATION_CORE_NAME);
 
-            // TODO: update volumes and specimens with this mutation
+            denormalizationService.updateMutationInVolumes(mutationId, mutation.getName().cs(), mutation.getName().sk(), mutation.getName().en());
+            denormalizationService.updateMutationInSpecimens(mutationId, mutation.getName().cs(), mutation.getName().sk(), mutation.getName().en());
 
             logger.info("Mutation {} successfully updated", mutation.getId());
         } catch (Exception e) {

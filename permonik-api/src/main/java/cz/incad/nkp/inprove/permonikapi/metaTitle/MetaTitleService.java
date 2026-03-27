@@ -1,5 +1,6 @@
 package cz.incad.nkp.inprove.permonikapi.metaTitle;
 
+import cz.incad.nkp.inprove.permonikapi.common.DenormalizationService;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.dto.CreatableMetaTitleDTO;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.dto.MetaTitleOverviewDTO;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.mapper.CreatableMetaTitleMapper;
@@ -30,6 +31,7 @@ public class MetaTitleService implements MetaTitleDefinition {
     private final SpecimenService specimenService;
     private final SolrClient solrClient;
     private final CreatableMetaTitleMapper creatableMetaTitleMapper;
+    private final DenormalizationService denormalizationService;
 
 
     public MetaTitle getMetaTitleById(String metaTitleId) throws SolrServerException, IOException {
@@ -112,7 +114,8 @@ public class MetaTitleService implements MetaTitleDefinition {
             solrClient.addBean(META_TITLE_CORE_NAME, metaTitle);
             solrClient.commit(META_TITLE_CORE_NAME);
 
-            // TODO: update volumes and specimens with this metatitle
+            denormalizationService.updateMetaTitleInVolumes(metaTitleId, metaTitle.getName());
+            denormalizationService.updateMetaTitleInSpecimens(metaTitleId, metaTitle.getName());
 
             logger.info("MetaTitle {} successfully updated", metaTitle.getId());
         } catch (Exception e) {

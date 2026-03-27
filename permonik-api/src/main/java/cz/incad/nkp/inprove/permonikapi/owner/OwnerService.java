@@ -1,6 +1,7 @@
 package cz.incad.nkp.inprove.permonikapi.owner;
 
 
+import cz.incad.nkp.inprove.permonikapi.common.DenormalizationService;
 import cz.incad.nkp.inprove.permonikapi.owner.dto.CreatableOwnerDTO;
 import cz.incad.nkp.inprove.permonikapi.owner.mapper.CreatableOwnerMapper;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class OwnerService implements OwnerDefinition {
 
     private final SolrClient solrClient;
     private final CreatableOwnerMapper creatableOwnerMapper;
+    private final DenormalizationService denormalizationService;
 
 
     public List<Owner> getOwners() throws SolrServerException, IOException {
@@ -58,7 +60,8 @@ public class OwnerService implements OwnerDefinition {
             solrClient.addBean(OWNER_CORE_NAME, owner);
             solrClient.commit(OWNER_CORE_NAME);
 
-            // TODO: update volumes and specimens with this owner
+            denormalizationService.updateOwnerInVolumes(ownerId, owner.getName(), owner.getShorthand(), owner.getSigla());
+            denormalizationService.updateOwnerInSpecimens(ownerId, owner.getName(), owner.getShorthand(), owner.getSigla());
 
             logger.info("Owner {} successfully updated", owner.getId());
         } catch (Exception e) {
