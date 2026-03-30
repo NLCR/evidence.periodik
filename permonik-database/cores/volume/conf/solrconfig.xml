@@ -618,99 +618,10 @@
         </lst>
     </requestHandler>
 
-    <!-- Shared parameters for multiple Request Handlers -->
-    <initParams path="/update/**,/query,/select,/spell">
-        <lst name="defaults">
-            <str name="df">_text_</str>
-        </lst>
-    </initParams>
-
-    <!-- Spell Check
-
-         The spell check component can return a list of alternative spelling
-         suggestions.
-
-         https://solr.apache.org/guide/solr/latest/query-guide/spell-checking.html
-      -->
-    <searchComponent name="spellcheck" class="solr.SpellCheckComponent">
-
-        <str name="queryAnalyzerFieldType">text_general</str>
-
-        <!-- Multiple "Spell Checkers" can be declared and used by this
-             component
-          -->
-
-        <!-- a spellchecker built from a field of the main index -->
-        <lst name="spellchecker">
-            <str name="name">default</str>
-            <str name="field">_text_</str>
-            <str name="classname">solr.DirectSolrSpellChecker</str>
-            <!-- the spellcheck distance measure used, the default is the internal levenshtein -->
-            <str name="distanceMeasure">internal</str>
-            <!-- minimum accuracy needed to be considered a valid spellcheck suggestion -->
-            <float name="accuracy">0.5</float>
-            <!-- the maximum #edits we consider when enumerating terms: can be 1 or 2 -->
-            <int name="maxEdits">2</int>
-            <!-- the minimum shared prefix when enumerating terms -->
-            <int name="minPrefix">1</int>
-            <!-- maximum number of inspections per result. -->
-            <int name="maxInspections">5</int>
-            <!-- minimum length of a query term to be considered for correction -->
-            <int name="minQueryLength">4</int>
-            <!-- maximum threshold of documents a query term can appear to be considered for correction -->
-            <float name="maxQueryFrequency">0.01</float>
-            <!-- uncomment this to require suggestions to occur in 1% of the documents
-              <float name="thresholdTokenFrequency">.01</float>
-            -->
-        </lst>
-
-        <!-- a spellchecker that can break or combine words.  See "/spell" handler below for usage -->
-        <!--
-        <lst name="spellchecker">
-          <str name="name">wordbreak</str>
-          <str name="classname">solr.WordBreakSolrSpellChecker</str>
-          <str name="field">name</str>
-          <str name="combineWords">true</str>
-          <str name="breakWords">true</str>
-          <int name="maxChanges">10</int>
-        </lst>
-        -->
-    </searchComponent>
-
-    <!-- A request handler for demonstrating the spellcheck component.
-
-         NOTE: This is purely as an example.  The whole purpose of the
-         SpellCheckComponent is to hook it into the request handler that
-         handles your normal user queries so that a separate request is
-         not needed to get suggestions.
-
-         IN OTHER WORDS, THERE IS REALLY GOOD CHANCE THE SETUP BELOW IS
-         NOT WHAT YOU WANT FOR YOUR PRODUCTION SYSTEM!
-
-         See https://solr.apache.org/guide/solr/latest/query-guide/spell-checking.html for details
-         on the request parameters.
-      -->
-    <requestHandler name="/spell" class="solr.SearchHandler" startup="lazy">
-        <lst name="defaults">
-            <!-- Solr will use suggestions from both the 'default' spellchecker
-                 and from the 'wordbreak' spellchecker and combine them.
-                 collations (re-written queries) can include a combination of
-                 corrections from both spellcheckers -->
-            <str name="spellcheck.dictionary">default</str>
-            <str name="spellcheck">on</str>
-            <str name="spellcheck.extendedResults">true</str>
-            <str name="spellcheck.count">10</str>
-            <str name="spellcheck.alternativeTermCount">5</str>
-            <str name="spellcheck.maxResultsForSuggest">5</str>
-            <str name="spellcheck.collate">true</str>
-            <str name="spellcheck.collateExtendedResults">true</str>
-            <str name="spellcheck.maxCollationTries">10</str>
-            <str name="spellcheck.maxCollations">5</str>
-        </lst>
-        <arr name="last-components">
-            <str>spellcheck</str>
-        </arr>
-    </requestHandler>
+    <!--
+      Shared defaults for _text_/spellcheck were removed intentionally.
+      This core uses explicit schema fields only.
+    -->
 
     <!-- Highlighting Component
 
@@ -823,87 +734,9 @@
     <!-- Update Request Processors
          https://solr.apache.org/guide/solr/latest/configuration-guide/update-request-processors.html
 
-         Chains or individual Update Request Processor Factories can be declared and referenced
-         to preprocess documents sent to Update Request Handlers.
+         The schemaless auto-field-creation chain was removed intentionally.
+         This core uses explicit schema fields only.
       -->
-
-    <!-- Add unknown fields to the schema
-
-         Field type guessing update request processors that will
-         attempt to parse string-typed field values as Booleans, Longs,
-         Doubles, or Dates, and then add schema fields with the guessed
-         field types Text content will be indexed as "text_general" as
-         well as a copy to a plain string version in *_str.
-         See the updateRequestProcessorChain defined later for the order they are executed in.
-
-         These require that the schema is both managed and mutable, by
-         declaring schemaFactory as ManagedIndexSchemaFactory, with
-         mutable specified as true.
-
-         See https://solr.apache.org/guide/solr/latest/indexing-guide/schemaless-mode.html for further explanation.
-
-      -->
-    <updateProcessor class="solr.UUIDUpdateProcessorFactory" name="uuid"/>
-    <updateProcessor class="solr.RemoveBlankFieldUpdateProcessorFactory" name="remove-blank"/>
-    <updateProcessor class="solr.FieldNameMutatingUpdateProcessorFactory" name="field-name-mutating">
-        <str name="pattern">[^\w-\.]</str>
-        <str name="replacement">_</str>
-    </updateProcessor>
-    <updateProcessor class="solr.NumFieldLimitingUpdateRequestProcessorFactory" name="max-fields">
-        <int name="maxFields">1000</int>
-    </updateProcessor>
-    <updateProcessor class="solr.ParseBooleanFieldUpdateProcessorFactory" name="parse-boolean"/>
-    <updateProcessor class="solr.ParseLongFieldUpdateProcessorFactory" name="parse-long"/>
-    <updateProcessor class="solr.ParseDoubleFieldUpdateProcessorFactory" name="parse-double"/>
-    <updateProcessor class="solr.ParseDateFieldUpdateProcessorFactory" name="parse-date">
-        <arr name="format">
-            <str>yyyy-MM-dd['T'[HH:mm[:ss[.SSS]][z</str>
-            <str>yyyy-MM-dd['T'[HH:mm[:ss[,SSS]][z</str>
-            <str>yyyy-MM-dd HH:mm[:ss[.SSS]][z</str>
-            <str>yyyy-MM-dd HH:mm[:ss[,SSS]][z</str>
-            <str>[EEE, ]dd MMM yyyy HH:mm[:ss] z</str>
-            <str>EEEE, dd-MMM-yy HH:mm:ss z</str>
-            <str>EEE MMM ppd HH:mm:ss [z ]yyyy</str>
-        </arr>
-    </updateProcessor>
-    <updateProcessor class="solr.AddSchemaFieldsUpdateProcessorFactory" name="add-schema-fields">
-        <lst name="typeMapping">
-            <str name="valueClass">java.lang.String</str>
-            <str name="fieldType">text_general</str>
-            <lst name="copyField">
-                <str name="dest">*_str</str>
-                <int name="maxChars">256</int>
-            </lst>
-            <!-- Use as default mapping instead of defaultFieldType -->
-            <bool name="default">true</bool>
-        </lst>
-        <lst name="typeMapping">
-            <str name="valueClass">java.lang.Boolean</str>
-            <str name="fieldType">booleans</str>
-        </lst>
-        <lst name="typeMapping">
-            <str name="valueClass">java.util.Date</str>
-            <str name="fieldType">pdates</str>
-        </lst>
-        <lst name="typeMapping">
-            <str name="valueClass">java.lang.Long</str>
-            <str name="valueClass">java.lang.Integer</str>
-            <str name="fieldType">plongs</str>
-        </lst>
-        <lst name="typeMapping">
-            <str name="valueClass">java.lang.Number</str>
-            <str name="fieldType">pdoubles</str>
-        </lst>
-    </updateProcessor>
-
-
-    <!-- The update.autoCreateFields property can be turned to false to disable schemaless mode -->
-    <updateRequestProcessorChain name="add-unknown-fields-to-the-schema" default="${update.autoCreateFields:true}"
-                                 processor="uuid,remove-blank,field-name-mutating,max-fields,parse-boolean,parse-long,parse-double,parse-date,add-schema-fields">
-        <processor class="solr.LogUpdateProcessorFactory"/>
-        <processor class="solr.DistributedUpdateProcessorFactory"/>
-        <processor class="solr.RunUpdateProcessorFactory"/>
-    </updateRequestProcessorChain>
 
     <!-- Deduplication
 

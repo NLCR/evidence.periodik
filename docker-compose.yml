@@ -21,7 +21,7 @@ services:
       TZ: "Europe/Prague"
 
   permonik-database:
-    image: solr:9.10.0
+    image: solr:10.0.0
     networks:
       - permonik
     ports:
@@ -33,6 +33,9 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms1g -Xmx1g"
       SOLR_MODULES: analysis-extras
+    command:
+      - solr-fg
+      - --user-managed
     volumes:
       - ./solr-data:/var/solr
 

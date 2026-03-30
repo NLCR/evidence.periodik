@@ -7,8 +7,8 @@ import cz.incad.nkp.inprove.permonikapi.metaTitle.mapper.CreatableMetaTitleMappe
 import cz.incad.nkp.inprove.permonikapi.specimen.SpecimenService;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.request.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;

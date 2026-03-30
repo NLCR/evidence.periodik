@@ -2,8 +2,8 @@ package cz.incad.nkp.inprove.permonikapi.user;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.request.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
