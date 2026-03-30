@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.time.Instant;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -69,8 +69,8 @@ public class SpecimenService implements SpecimenDefinition {
         FieldStatsInfo ownersStats = statsInfo.get(OWNER_ID_FIELD);
 
         Long mutationsCount = mutationsStats.getCountDistinct();
-        Instant publicationDayMin = ((Date) publicationDayStats.getMin()).toInstant();
-        Instant publicationDayMax = ((Date) publicationDayStats.getMax()).toInstant();
+        Object publicationDayMin = publicationDayStats.getMin();
+        Object publicationDayMax = publicationDayStats.getMax();
         Long ownersCount = ownersStats.getCountDistinct();
 
         GroupResponse groupResponse = response.getGroupResponse();
@@ -133,8 +133,8 @@ public class SpecimenService implements SpecimenDefinition {
 
         // Add filtering based on year interval
         if (Objects.equals(view, SpecimenTableViewEnum.TABLE) && specimenFacets.getDateStart() != null && specimenFacets.getDateEnd() != null) {
-            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getDateStart() + " TO *]");
-            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd() + "]");
+            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getDateStart().toInstant() + " TO *]");
+            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd().toInstant() + "]");
         }
 
         if (Objects.equals(view, SpecimenTableViewEnum.CALENDAR) && specimenFacets.getCalendarDateStart() != null && !specimenFacets.getCalendarDateStart().isEmpty()) {
@@ -178,8 +178,8 @@ public class SpecimenService implements SpecimenDefinition {
         Map<String, FieldStatsInfo> statsInfo = statsResponse.getFieldStatsInfo();
         FieldStatsInfo publicationDayStats = statsInfo.get(PUBLICATION_DATE_FIELD);
 
-        Instant publicationDayMin = ((Date) publicationDayStats.getMin()).toInstant();
-        Instant publicationDayMax = ((Date) publicationDayStats.getMax()).toInstant();
+        Object publicationDayMin = publicationDayStats.getMin();
+        Object publicationDayMax = publicationDayStats.getMax();
 
         groupQuery.setRows(rows);
         groupQuery.setStart(offset);
@@ -257,8 +257,8 @@ public class SpecimenService implements SpecimenDefinition {
 
         // Add filtering based on year interval for table view
         if (Objects.equals(view, SpecimenTableViewEnum.TABLE) && specimenFacets.getDateStart() != null && specimenFacets.getDateEnd() != null) {
-            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getDateStart() + " TO *]");
-            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd() + "]");
+            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[" + specimenFacets.getDateStart().toInstant() + " TO *]");
+            solrQuery.addFilterQuery(PUBLICATION_DATE_FIELD + ":[* TO " + specimenFacets.getDateEnd().toInstant() + "]");
         }
 
         // Add filtering based on year interval for calendar view
@@ -341,7 +341,7 @@ public class SpecimenService implements SpecimenDefinition {
 
         Map<String, FieldStatsInfo> statsInfo = response.getFieldStatsInfo();
 
-        return ((Date) statsInfo.get(PUBLICATION_DATE_FIELD).getMin()).toInstant();
+        return statsInfo.get(PUBLICATION_DATE_FIELD).getMin();
 
     }
 
@@ -373,8 +373,8 @@ public class SpecimenService implements SpecimenDefinition {
 
         Map<String, FieldStatsInfo> statsInfo = response.getFieldStatsInfo();
 
-        Instant publicationDayMin = ((Date) statsInfo.get(PUBLICATION_DATE_FIELD).getMin()).toInstant();
-        Instant publicationDayMax = ((Date) statsInfo.get(PUBLICATION_DATE_FIELD).getMax()).toInstant();
+        Object publicationDayMin = statsInfo.get(PUBLICATION_DATE_FIELD).getMin();
+        Object publicationDayMax = statsInfo.get(PUBLICATION_DATE_FIELD).getMax();
         Object pagesCount = statsInfo.get(PAGES_COUNT_FIELD).getSum();
 
         SolrQuery solrQuery2 = new SolrQuery("*:*");

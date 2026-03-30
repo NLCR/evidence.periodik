@@ -4,8 +4,8 @@ import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
 
-import java.time.Instant;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDefinition.*;
@@ -71,7 +71,7 @@ public class Specimen extends Auditable {
     @Field(MUTATION_MARK_DESCRIPTION_FIELD)
     private String mutationMarkDescription;
     @Field(PUBLICATION_DATE_FIELD)
-    private Instant publicationDate;
+    private Date publicationDate;
     @Field(NUMBER_FIELD)
     private String number; // filled if specimen is not attachment
     @Field(ATTACHMENT_NUMBER_FIELD)

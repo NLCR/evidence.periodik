@@ -6,6 +6,7 @@ import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumePeriodicityDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.enums.AttachmentsSortEnum;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -17,8 +18,8 @@ import java.util.List;
 public class VolumeDTO extends Auditable {
     private String id;
     private String barCode;
-    private String dateFrom;
-    private String dateTo;
+    private Date dateFrom;
+    private Date dateTo;
     private String metaTitleId;
     private String subName;
     private String mutationId;

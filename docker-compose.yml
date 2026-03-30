@@ -40,7 +40,7 @@ services:
       - ./solr-data:/var/solr
 
   permonik-redis:
-    image: redis:8-alpine
+    image: redis:8.6-alpine
     networks:
       - permonik
     ports:

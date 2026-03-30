@@ -5,8 +5,9 @@ import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDefinition;
 import lombok.*;
 import org.apache.solr.client.solrj.util.ClientUtils;
 
-import java.time.Instant;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +20,8 @@ import java.util.stream.Collectors;
 @Getter
 public class SpecimenFacets implements SpecimenDefinition {
 
-    private Instant dateStart;
-    private Instant dateEnd;
+    private Date dateStart;
+    private Date dateEnd;
     private String calendarDateStart;
     private String calendarDateEnd;
     private List<String> names;

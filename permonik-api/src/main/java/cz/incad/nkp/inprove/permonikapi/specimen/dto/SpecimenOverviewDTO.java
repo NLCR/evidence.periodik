@@ -3,7 +3,7 @@ package cz.incad.nkp.inprove.permonikapi.specimen.dto;
 import cz.incad.nkp.inprove.permonikapi.common.mutationMark.MutationMark;
 import lombok.*;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
@@ -23,7 +23,7 @@ public class SpecimenOverviewDTO {
     private String editionId; // UUID of edition
     private String mutationId; // UUID of mutation
     private MutationMark mutationMark;
-    private Instant publicationDate;
+    private Date publicationDate;
     private String number; // filled if specimen is not attachment
     private String attachmentNumber; // filled if specimen is attachment
     private Integer pagesCount;

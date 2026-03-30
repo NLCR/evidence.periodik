@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.solr.client.solrj.beans.Field;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.Objects;
 
 import static cz.incad.nkp.inprove.permonikapi.config.security.user.UserProducer.getCurrentUser;
@@ -18,19 +18,19 @@ import static cz.incad.nkp.inprove.permonikapi.config.security.user.UserProducer
 public class Auditable implements AuditableDefinition {
 
     @Field(CREATED_FIELD)
-    private Instant created;
+    private Date created;
 
     @Field(CREATED_BY_FIELD)
     private String createdBy;
 
     @Field(UPDATED_FIELD)
-    private Instant updated;
+    private Date updated;
 
     @Field(UPDATED_BY_FIELD)
     private String updatedBy;
 
     @Field(DELETED_FIELD)
-    private Instant deleted;
+    private Date deleted;
 
     @Field(DELETED_BY_FIELD)
     private String deletedBy;
@@ -38,21 +38,21 @@ public class Auditable implements AuditableDefinition {
     public void prePersist() {
         User currentUser = Objects.requireNonNull(getCurrentUser(), "User must be logged in");
 
-        created = Instant.now();
+        created = new Date();
         createdBy = currentUser.getId();
     }
 
     public void preUpdate() {
         User currentUser = Objects.requireNonNull(getCurrentUser(), "User must be logged in");
 
-        updated = Instant.now();
+        updated = new Date();
         updatedBy = currentUser.getId();
     }
 
     public void preRemove() {
         User currentUser = Objects.requireNonNull(getCurrentUser(), "User must be logged in");
 
-        deleted = Instant.now();
+        deleted = new Date();
         deletedBy = currentUser.getId();
     }
 }

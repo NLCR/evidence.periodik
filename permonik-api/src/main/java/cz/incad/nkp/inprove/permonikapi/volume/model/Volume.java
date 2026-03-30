@@ -1,11 +1,11 @@
 package cz.incad.nkp.inprove.permonikapi.volume.model;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
-import cz.incad.nkp.inprove.permonikapi.volume.enums.AttachmentsSortEnum;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
 
-import java.time.Instant;
+
+import java.util.Date;
 
 import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.*;
 
@@ -23,9 +23,9 @@ public class Volume extends Auditable {
     @Field(BAR_CODE_FIELD)
     private String barCode;
     @Field(DATE_FROM_FIELD)
-    private Instant dateFrom;
+    private Date dateFrom;
     @Field(DATE_TO_FIELD)
-    private Instant dateTo;
+    private Date dateTo;
     @Field(META_TITLE_ID_FIELD)
     private String metaTitleId; // UUID of metaTitle
     @Field(META_TITLE_NAME_FIELD)
@@ -61,7 +61,7 @@ public class Volume extends Auditable {
     @Field(NOTE_FIELD)
     private String note;
     @Field(ATTACHMENTS_SORT_FIELD)
-    private AttachmentsSortEnum attachmentsSort;
+    private String attachmentsSort;
     @Field(SIGNATURE_FIELD)
     private String signature;
     @Field(OWNER_ID_FIELD)
