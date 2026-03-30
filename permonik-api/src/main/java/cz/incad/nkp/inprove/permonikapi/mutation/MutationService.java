@@ -11,6 +11,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class MutationService implements MutationDefinition {
 
     public void updateMutation(String mutationId, MutationDTO mutation) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + mutationId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(mutationId) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(MUTATION_CORE_NAME, solrQuery);
@@ -74,7 +75,7 @@ public class MutationService implements MutationDefinition {
     public void createMutation(MutationDTO mutation) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
-        solrQuery.addFilterQuery(NAME_CS_SEARCH_FIELD + ":\"" + mutation.getName().cs() + "\" OR " + NAME_SK_SEARCH_FIELD + ":\"" + mutation.getName().sk() + "\" OR " + NAME_EN_SEARCH_FIELD + ":\"" + mutation.getName().en() + "\"");
+        solrQuery.addFilterQuery(NAME_CS_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(mutation.getName().cs()) + "\" OR " + NAME_SK_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(mutation.getName().sk()) + "\" OR " + NAME_EN_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(mutation.getName().en()) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(MUTATION_CORE_NAME, solrQuery);

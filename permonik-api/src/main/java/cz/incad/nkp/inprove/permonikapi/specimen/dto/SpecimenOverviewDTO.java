@@ -1,6 +1,5 @@
-package cz.incad.nkp.inprove.permonikapi.specimen.model;
+package cz.incad.nkp.inprove.permonikapi.specimen.dto;
 
-import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
 import cz.incad.nkp.inprove.permonikapi.common.mutationMark.MutationMark;
 import lombok.*;
 
@@ -9,19 +8,16 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@EqualsAndHashCode
+@ToString
 @Setter
 @Getter
-public class SpecimenDTO extends Auditable {
+public class SpecimenOverviewDTO {
     private String id; // UUID
     private String volumeId;
-    private Boolean numExists;
-    private Boolean numMissing;
+    private String barCode;
+    private String ownerId; // UUID of owner
     private List<String> damageTypes;
-    private List<Integer> damagedPages; // stored by real pages, so first page = 1, second page = 2 etc. Starting from 1, not 0
-    private List<Integer> missingPages; // stored by real pages, so first page = 1, second page = 2 etc. Starting from 1, not 0
-    private String note;
     private String name;
     private String subName;
     private String editionId; // UUID of edition

@@ -11,7 +11,7 @@ import { useMutationListQuery } from '../../../api/mutation'
 import { useEditionListQuery } from '../../../api/edition'
 import { useOwnerListQuery } from '../../../api/owner'
 import { useSpecimenListQuery } from '../../../api/specimen'
-import { TSpecimen } from '../../../schema/specimen'
+import { TSpecimenOverview } from '../../../schema/specimen'
 import { damageTypes } from '../../../utils/constants'
 import { useSpecimensOverviewStore } from '../../../slices/useSpecimensOverviewStore'
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined'
@@ -20,14 +20,13 @@ import ModalContainer from '../../../components/ModalContainer'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
 import { generateVolumeUrlWithParams } from '../../../utils/generateVolumeUrlWithParams'
-import Button from '@mui/material/Button'
 import theme from '../../../theme'
 import { useMeQuery } from '../../../api/user'
 import { useFormatDate } from '../../../utils/date'
 import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
 import DuplicateVolumeButton from '../../../components/DuplicateVolumeButton'
 
-const getSpecimenState = (sp: TSpecimen, t: TFunction) => {
+const getSpecimenState = (sp: TSpecimenOverview, t: TFunction) => {
   if (sp.damageTypes) {
     if (!sp.damageTypes.length) {
       return (
@@ -106,9 +105,9 @@ const getSpecimenState = (sp: TSpecimen, t: TFunction) => {
 }
 
 const OwnersBarCodeCell: FC<{
-  row: TSpecimen
+  row: TSpecimenOverview
   ownerId: string
-  setModalData: (row: TSpecimen) => void
+  setModalData: (row: TSpecimenOverview) => void
 }> = ({ row, ownerId, setModalData }) => {
   const { t, i18n } = useTranslation()
 
@@ -176,7 +175,7 @@ const Table: FC<Props> = ({ metaTitle }) => {
   const { MuiTableLocale } = useMuiTableLang()
   const navigate = useNavigate()
 
-  const [modalData, setModalData] = useState<TSpecimen | null>(null)
+  const [modalData, setModalData] = useState<TSpecimenOverview | null>(null)
   const pagination = useSpecimensOverviewStore((state) => state.pagination)
   const setPagination = useSpecimensOverviewStore(
     (state) => state.setPagination
@@ -195,7 +194,7 @@ const Table: FC<Props> = ({ metaTitle }) => {
     // isError: specimensError,
   } = useSpecimenListQuery(metaTitle.id)
 
-  const columns = useMemo<GridColDef<TSpecimen>[]>(() => {
+  const columns = useMemo<GridColDef<TSpecimenOverview>[]>(() => {
     return [
       {
         field: 'mutationId',
@@ -226,7 +225,7 @@ const Table: FC<Props> = ({ metaTitle }) => {
       {
         field: 'number',
         headerName: t('table.number'),
-        renderCell: (params: GridRenderCellParams<TSpecimen>) => {
+        renderCell: (params: GridRenderCellParams<TSpecimenOverview>) => {
           const { row } = params
           return row.isAttachment ? row.attachmentNumber : row.number
         },
@@ -242,7 +241,7 @@ const Table: FC<Props> = ({ metaTitle }) => {
               field: `owner${o.id}`,
               flex: 1,
               headerName: o.shorthand,
-              renderCell: (params: GridRenderCellParams<TSpecimen>) => {
+              renderCell: (params: GridRenderCellParams<TSpecimenOverview>) => {
                 const { row } = params
                 return (
                   <OwnersBarCodeCell
@@ -315,7 +314,7 @@ const Table: FC<Props> = ({ metaTitle }) => {
                   `/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/${
                     modalData.volumeId
                   }`,
-                  modalData.metaTitleId || '',
+                  metaTitle.id || '',
                   modalData.id
                 )
               )

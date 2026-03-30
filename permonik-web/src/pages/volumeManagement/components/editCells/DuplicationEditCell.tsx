@@ -50,14 +50,12 @@ const DuplicationEditCell: FC<DuplicationCellProps> = ({
     const duplicatedSpecimen = duplicatePartialSpecimen(row)
     // adjust the date of the duplicated entry
     duplicatedSpecimen.publicationDate = date.toISOString()
-    duplicatedSpecimen.publicationDateString = date.format('YYYYMMDD')
 
     const canDuplicate =
       !isAttachmentSpecimen(duplicatedSpecimen, editions) ||
       canUseAttachmentOnDate({
         editions,
         specimens: specimensState,
-        publicationDateString: duplicatedSpecimen.publicationDateString,
         candidateRowId: duplicatedSpecimen.id,
       })
 

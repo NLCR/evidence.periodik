@@ -7,7 +7,7 @@ import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import { TSpecimen } from '../../../../schema/specimen'
+import { TSpecimenOverview } from '../../../../schema/specimen'
 import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
 import { TMetaTitle } from '../../../../schema/metaTitle'
 import ShowInfoMessage from '../../../../components/ShowInfoMessage'
@@ -33,7 +33,7 @@ type TProps = {
 type TSpecimensDay = {
   day: string
   isPreviousMonth: boolean
-  specimens: TSpecimen[][]
+  specimens: TSpecimenOverview[][]
 }[]
 
 const getFirstMondayOfMonth = (date: Date | null) => {
@@ -81,7 +81,7 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
   }
 
   const groupedSpecimensByDay = flow(
-    (rawSpecimens: TSpecimen[]) =>
+    (rawSpecimens: TSpecimenOverview[]) =>
       groupBy(rawSpecimens, (s) => s.publicationDate),
     (groupedSpecimens) =>
       map(groupedSpecimens, (value, key) => ({ day: key, specimens: value }))

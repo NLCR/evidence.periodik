@@ -10,7 +10,7 @@ import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import { TEdition } from '../../../../../schema/edition'
 import ModalContainer from '../../../../../components/ModalContainer'
-import InputDataCheckbox from '../InputDataCheckbox'
+import InputDataSelect from '../InputDataSelect'
 import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useGenerateVolume } from './useGenerateVolume'
@@ -98,11 +98,29 @@ const Periodicity: FC<PeriodicityProps> = ({ editions, metaTitles }) => {
         <Box
           sx={{
             marginTop: '10px',
+            display: 'grid',
+            gridTemplateColumns: '1fr 260px',
+            gap: '12px',
+            alignItems: 'center',
           }}
         >
-          <InputDataCheckbox
-            name={`showAttachmentsAtTheEnd`}
-            label={t('volume_overview.show_attachments_at_the_end')}
+          <Box>{t('volume_overview.attachments_sort')}</Box>
+          <InputDataSelect
+            name="attachmentsSort"
+            options={[
+              {
+                key: 'ASC',
+                value: t('volume_overview.attachments_sort_asc'),
+              },
+              {
+                key: 'DESC',
+                value: t('volume_overview.attachments_sort_desc'),
+              },
+              {
+                key: 'NONE',
+                value: t('volume_overview.attachments_sort_none'),
+              },
+            ]}
           />
         </Box>
       </ModalContainer>

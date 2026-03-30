@@ -17,8 +17,7 @@ export const SpecimenDamageTypesSchema = z.enum([
   'ChDatum', // chybné datum
 ])
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const SpecimensPublicationDaysSchema = z.object({
+export const SpecimensPublicationDaysSchema = z.object({
   publicationDayMin: z.string().nullable(),
   publicationDayMax: z.string().nullable(),
 })
@@ -31,12 +30,9 @@ export const SpecimenDamageTypesFacet = z.object({
 // TODO: kontrolovat, že když číslo chybí, tak že má vyplněné nějaké number, třeba 1, 2 ,3 atd, aby to nebylo prázdné
 export const SpecimenSchema = AuditableSchema.extend({
   id: z.string().length(36),
-  metaTitleId: z.string().length(36),
   volumeId: z.string().length(36),
-  barCode: z.string().min(1),
   numExists: z.boolean(),
   numMissing: z.boolean(),
-  ownerId: z.string().length(36),
   damageTypes: SpecimenDamageTypesSchema.array(),
   damagedPages: z.number().array(),
   missingPages: z.number().array(),
@@ -47,7 +43,24 @@ export const SpecimenSchema = AuditableSchema.extend({
   mutationId: z.string().length(36),
   mutationMark: mutationMarkSchema,
   publicationDate: z.string().min(1),
-  publicationDateString: z.string().min(1),
+  number: z.string(),
+  attachmentNumber: z.string(),
+  pagesCount: z.number(),
+  isAttachment: z.boolean(),
+})
+
+const SpecimenOverviewSchema = z.object({
+  id: z.string().length(36),
+  volumeId: z.string().length(36),
+  barCode: z.string(),
+  ownerId: z.string().length(36),
+  damageTypes: SpecimenDamageTypesSchema.array(),
+  name: z.string(),
+  subName: z.string(),
+  editionId: z.string().length(36),
+  mutationId: z.string().length(36),
+  mutationMark: mutationMarkSchema,
+  publicationDate: z.string().min(1),
   number: z.string(),
   attachmentNumber: z.string(),
   pagesCount: z.number(),
@@ -63,6 +76,14 @@ export const SpecimenFacetSchema = z.object({
   count: z.number(),
 })
 
+export const SpecimensOverviewSchema = z.object({
+  specimens: SpecimenOverviewSchema.array(),
+  publicationDayMin: z.string().nullable(),
+  publicationDayMax: z.string().nullable(),
+  count: z.number(),
+  owners: z.string().array(),
+})
+
 export enum SpecimenStateEnum {
   numExists = 'NUM_EXISTS',
   numMissing = 'NUM_MISSING',
@@ -75,6 +96,7 @@ export const SpecimenStateEnumSchema = z.enum([
 
 export type TSpecimenDamageTypes = z.infer<typeof SpecimenDamageTypesSchema>
 export type TSpecimen = z.infer<typeof SpecimenSchema>
+export type TSpecimenOverview = z.infer<typeof SpecimenOverviewSchema>
 export type TEditableSpecimen = z.infer<typeof EditableSpecimenSchema>
 export type TSpecimenFacet = z.infer<typeof SpecimenFacetSchema>
 export type TSpecimenState = z.infer<typeof SpecimenStateEnumSchema>
@@ -82,3 +104,4 @@ export type TSpecimenDamageTypesFacet = z.infer<typeof SpecimenDamageTypesFacet>
 export type TSpecimensPublicationDays = z.infer<
   typeof SpecimensPublicationDaysSchema
 >
+export type TSpecimensOverview = z.infer<typeof SpecimensOverviewSchema>

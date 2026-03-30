@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrInputDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +102,7 @@ public class DenormalizationService {
 
     private List<String> fetchIds(String coreName, String filterField, String filterId) throws SolrServerException, IOException {
         SolrQuery query = new SolrQuery("*:*");
-        query.addFilterQuery(filterField + ":\"" + filterId + "\"");
+        query.addFilterQuery(filterField + ":\"" + ClientUtils.escapeQueryChars(filterId) + "\"");
         query.setFields("id");
         query.setRows(100000);
 

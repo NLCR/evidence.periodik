@@ -1,9 +1,12 @@
 import { createContext, useContext } from 'react'
-import { TSpecimenDamageTypes } from '../../../../schema/specimen'
+import {
+  TSpecimenDamageTypes,
+  TSpecimensOverview,
+} from '../../../../schema/specimen'
 import { TOwner } from '../../../../schema/owner'
 import { TMutation } from '../../../../schema/mutation'
 import { TParams } from '../../../../slices/useSpecimensOverviewStore'
-import { TSpecimenList, TSpecimensFacets } from '../../../../api/specimen'
+import { TSpecimensFacets } from '../../../../api/specimen'
 import { TEdition } from '../../../../schema/edition'
 import { TSupportedLanguages } from '../../../../i18next'
 
@@ -19,7 +22,7 @@ type TFacetsContext = {
   editions: TEdition[] | undefined
   isError: boolean
   isFetching: boolean
-  specimens: TSpecimenList | undefined
+  specimens: TSpecimensOverview | undefined
   calendarDateFromQuery: number | undefined
 }
 

@@ -10,6 +10,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class MetaTitleService implements MetaTitleDefinition {
 
     public MetaTitle getMetaTitleById(String metaTitleId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + metaTitleId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitleId) + "\"");
 
         if (getCurrentUser() == null) {
             solrQuery.addFilterQuery(IS_PUBLIC_FIELD + ":true");
@@ -97,7 +98,7 @@ public class MetaTitleService implements MetaTitleDefinition {
 
     public void updateMetaTitle(String metaTitleId, MetaTitle metaTitle) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + metaTitleId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitleId) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(META_TITLE_CORE_NAME, solrQuery);
@@ -127,7 +128,7 @@ public class MetaTitleService implements MetaTitleDefinition {
 
     public void createMetaTitle(CreatableMetaTitleDTO metaTitle) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + metaTitle.name() + "\"");
+        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitle.name()) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(META_TITLE_CORE_NAME, solrQuery);

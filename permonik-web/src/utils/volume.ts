@@ -31,7 +31,7 @@ export const repairVolume = (
     firstNumber: Number(volume.firstNumber) ?? -1,
     lastNumber: Number(volume.lastNumber),
     note: volume.note?.trim() ?? '',
-    showAttachmentsAtTheEnd: volume.showAttachmentsAtTheEnd ?? false,
+    attachmentsSort: volume.attachmentsSort ?? 'NONE',
     signature: volume.signature?.trim() ?? '',
     ownerId: volume.ownerId ?? '',
     year: Number(volume.year) ?? -1,

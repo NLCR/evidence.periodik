@@ -9,6 +9,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class OwnerService implements OwnerDefinition {
 
     public void updateOwner(String ownerId, Owner owner) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ownerId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(ownerId) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(OWNER_CORE_NAME, solrQuery);
@@ -74,7 +75,7 @@ public class OwnerService implements OwnerDefinition {
     public void createOwner(CreatableOwnerDTO owner) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
-        solrQuery.addFilterQuery(SHORTHAND_SEARCH_FIELD + ":\"" + owner.shorthand() + "\" OR " + SIGLA_SEARCH_FIELD + ":\"" + owner.sigla() + "\"");
+        solrQuery.addFilterQuery(SHORTHAND_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(owner.shorthand()) + "\" OR " + SIGLA_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(owner.sigla()) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(OWNER_CORE_NAME, solrQuery);

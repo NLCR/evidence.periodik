@@ -7,7 +7,7 @@ import Table from '@mui/material/Table'
 import { TMainModalData } from '../models'
 import { useEditionListQuery } from '../../../../../api/edition'
 import { useOwnerListQuery } from '../../../../../api/owner'
-import { TSpecimen } from '../../../../../schema/specimen'
+import { TSpecimenOverview } from '../../../../../schema/specimen'
 import { useTranslation } from 'react-i18next'
 import { TMetaTitle } from '../../../../../schema/metaTitle'
 import CalendarSubModal from '../CalendarSubModal'
@@ -29,7 +29,9 @@ const CalendarMainModal = ({
   metaTitle,
   mutations,
 }: Props) => {
-  const [subModalData, setSubModalData] = useState<TSpecimen | null>(null)
+  const [subModalData, setSubModalData] = useState<TSpecimenOverview | null>(
+    null
+  )
 
   const { data: editions } = useEditionListQuery()
   const { data: owners } = useOwnerListQuery()

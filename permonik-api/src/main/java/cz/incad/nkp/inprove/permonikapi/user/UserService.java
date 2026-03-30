@@ -5,6 +5,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class UserService implements UserDefinition {
 
     public void updateUser(String userId, User user) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + userId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(userId) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(USER_CORE_NAME, solrQuery);
@@ -59,7 +60,7 @@ public class UserService implements UserDefinition {
     public User findUserByUserName(String userName) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         // TODO: check if user is active
-        solrQuery.addFilterQuery(USERNAME_FIELD + ":\"" + userName + "\"");
+        solrQuery.addFilterQuery(USERNAME_FIELD + ":\"" + ClientUtils.escapeQueryChars(userName) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(USER_CORE_NAME, solrQuery);
@@ -75,7 +76,7 @@ public class UserService implements UserDefinition {
 
     public User createUser(User user) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(USERNAME_FIELD + ":\"" + user.getUserName() + "\"");
+        solrQuery.addFilterQuery(USERNAME_FIELD + ":\"" + ClientUtils.escapeQueryChars(user.getUserName()) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(USER_CORE_NAME, solrQuery);

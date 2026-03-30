@@ -84,7 +84,6 @@ export const useGenerateVolume = (
           const specimen = repairOrCreateSpecimen(
             {
               publicationDate: dt,
-              publicationDateString: dayjs(dt).format('YYYYMMDD'),
               mutationMark: repairedVolume.mutationMark,
               mutationId: repairedVolume.mutationId,
               numExists: true,
@@ -121,7 +120,6 @@ export const useGenerateVolume = (
         const specimen = repairOrCreateSpecimen(
           {
             publicationDate: dt,
-            publicationDateString: dayjs(dt).format('YYYYMMDD'),
             mutationMark: repairedVolume.mutationMark,
             mutationId: repairedVolume.mutationId,
             numExists: false,

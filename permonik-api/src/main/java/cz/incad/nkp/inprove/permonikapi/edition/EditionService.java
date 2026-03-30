@@ -11,6 +11,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class EditionService implements EditionDefinition {
 
     public void updateEdition(String editionId, EditionDTO edition) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + editionId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(editionId) + "\"");
         solrQuery.setRows(1);
         QueryResponse response = solrClient.query(EDITION_CORE_NAME, solrQuery);
 
@@ -78,7 +79,7 @@ public class EditionService implements EditionDefinition {
     public void createEdition(EditionDTO edition) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
-        solrQuery.addFilterQuery(NAME_CS_SEARCH_FIELD + ":\"" + edition.getName().cs() + "\" OR " + NAME_SK_SEARCH_FIELD + ":\"" + edition.getName().sk() + "\" OR " + NAME_EN_SEARCH_FIELD + ":\"" + edition.getName().en() + "\"");
+        solrQuery.addFilterQuery(NAME_CS_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(edition.getName().cs()) + "\" OR " + NAME_SK_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(edition.getName().sk()) + "\" OR " + NAME_EN_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(edition.getName().en()) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(EDITION_CORE_NAME, solrQuery);

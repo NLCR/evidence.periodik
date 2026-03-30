@@ -1,6 +1,10 @@
 package cz.incad.nkp.inprove.permonikapi.specimen;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.incad.nkp.inprove.permonikapi.common.ReferenceDataService;
+import cz.incad.nkp.inprove.permonikapi.edition.model.Edition;
+import cz.incad.nkp.inprove.permonikapi.mutation.model.Mutation;
+import cz.incad.nkp.inprove.permonikapi.owner.Owner;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.*;
 import cz.incad.nkp.inprove.permonikapi.specimen.enums.SpecimenTableViewEnum;
 import cz.incad.nkp.inprove.permonikapi.specimen.model.Specimen;
@@ -8,11 +12,13 @@ import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDTO;
 import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDefinition;
 import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenMapper;
 import cz.incad.nkp.inprove.permonikapi.volume.enums.AttachmentsSortEnum;
+import cz.incad.nkp.inprove.permonikapi.volume.model.Volume;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.*;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.params.GroupParams;
 import org.apache.solr.common.params.StatsParams;
 import org.slf4j.Logger;
@@ -37,13 +43,13 @@ public class SpecimenService implements SpecimenDefinition {
 
     private final SolrClient solrClient;
     private final SpecimenMapper specimenMapper;
-
     private final ObjectMapper objectMapper;
+    private final ReferenceDataService referenceDataService;
 
 
     public StatsForMetaTitleOverviewDTO getStatsForMetaTitleOverview(String metaTitleId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"", NUM_EXISTS_FIELD + ":true");
+        solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitleId) + "\"", NUM_EXISTS_FIELD + ":true");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setParam(StatsParams.STATS, true);
         solrQuery.setParam(StatsParams.STATS_FIELD, MUTATION_ID_FIELD, PUBLICATION_DATE_FIELD, OWNER_ID_FIELD);
@@ -77,14 +83,14 @@ public class SpecimenService implements SpecimenDefinition {
     }
 
 
-    public SearchedSpecimensDTO getSearchedSpecimens(String metaTitleId, Integer offset, Integer rows, String facets, SpecimenTableViewEnum view) throws IOException, SolrServerException {
+    public SpecimensOverviewDTO getSpecimensOverview(String metaTitleId, Integer offset, Integer rows, String facets, SpecimenTableViewEnum view, String lang) throws IOException, SolrServerException {
 
         Integer localRows = rows;
 
         SpecimenFacets specimenFacets = objectMapper.readValue(facets, SpecimenFacets.class);
 
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"");
+        solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitleId) + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
 
         if (!specimenFacets.getNames().isEmpty()) {
@@ -149,20 +155,19 @@ public class SpecimenService implements SpecimenDefinition {
         solrQuery.setRows(localRows);
         solrQuery.setStart(offset);
         solrQuery.setSort(PUBLICATION_DATE_FIELD, SolrQuery.ORDER.asc);
-        // TODO: this will be sorting based on UUID, that's wrong
-        solrQuery.addSort(EDITION_ID_FIELD, SolrQuery.ORDER.desc);
-//        solrQuery.addSort(MUTATION_ID_FIELD, SolrQuery.ORDER.asc);
+        solrQuery.addSort(editionSortField(lang), SolrQuery.ORDER.asc);
 
         QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, solrQuery);
         List<Specimen> specimenList = response.getBeans(Specimen.class);
-        List<SpecimenDTO> specimenDTOList = specimenList.stream().map(specimenMapper::toDTO).toList();
 
-        List<String> ownerList = specimenDTOList.stream()
-            .map(SpecimenDTO::getOwnerId)
+        List<String> ownerList = specimenList.stream()
+            .map(Specimen::getOwnerId)
             .collect(Collectors.toSet()).stream().toList();
 
+        List<SpecimenOverviewDTO> specimenDTOList = specimenList.stream().map(specimenMapper::toSpecimenOverviewDTO).toList();
+
         SolrQuery statsQuery = new SolrQuery("*:*");
-        statsQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"", NUM_EXISTS_FIELD + ":true");
+        statsQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitleId) + "\"", NUM_EXISTS_FIELD + ":true");
         statsQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         statsQuery.setRows(0);
         statsQuery.setParam(StatsParams.STATS, true);
@@ -188,7 +193,7 @@ public class SpecimenService implements SpecimenDefinition {
         GroupCommand groupCommand = groupResponse.getValues().getFirst();
         Integer groupedSpecimens = groupCommand.getMatches();
 
-        return new SearchedSpecimensDTO(
+        return new SpecimensOverviewDTO(
             specimenDTOList,
             publicationDayMax,
             publicationDayMin,
@@ -203,14 +208,10 @@ public class SpecimenService implements SpecimenDefinition {
         SpecimenFacets specimenFacets = objectMapper.readValue(facets, SpecimenFacets.class);
 
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"");
+        solrQuery.setFilterQueries(META_TITLE_ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitleId) + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(0);
         solrQuery.setStart(0);
-//        solrQuery.setSort(PUBLICATION_DATE_STRING_FIELD, SolrQuery.ORDER.asc);
-        // TODO this will be sorting based on UUID, that's wrong
-        solrQuery.addSort(EDITION_ID_FIELD, SolrQuery.ORDER.desc);
-//        solrQuery.addSort(MUTATION_ID_FIELD, SolrQuery.ORDER.asc);
         solrQuery.setFacet(true);
         solrQuery.setParam("f." + MUTATION_MARK_FIELD + ".facet.missing", "true"); // query MUTATION_MARK_FIELD also for empty value
         solrQuery.addFacetField(NAME_FIELD, SUB_NAME_FIELD, MUTATION_ID_FIELD, EDITION_ID_FIELD, MUTATION_MARK_FIELD, OWNER_ID_FIELD, DAMAGE_TYPES_FIELD);
@@ -306,7 +307,7 @@ public class SpecimenService implements SpecimenDefinition {
     public List<SpecimenDTO> getSpecimensForVolumeDetail(String volumeId, Boolean onlyPublic, AttachmentsSortEnum attachmentsSort) throws SolrServerException, IOException {
 
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(VOLUME_ID_FIELD + ":\"" + volumeId + "\"");
+        solrQuery.addFilterQuery(VOLUME_ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(volumeId) + "\"");
         if (onlyPublic) {
             solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true OR " + NUM_MISSING_FIELD + ":true");
         }
@@ -329,7 +330,7 @@ public class SpecimenService implements SpecimenDefinition {
     public Object getSpecimensStartDate(String metaTitleId) throws SolrServerException, IOException {
 
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(META_TITLE_ID_FIELD + ":\"" + metaTitleId + "\"");
+        solrQuery.addFilterQuery(META_TITLE_ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitleId) + "\"");
         solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setParam(StatsParams.STATS, true);
@@ -356,7 +357,7 @@ public class SpecimenService implements SpecimenDefinition {
         Date endDate = end.getTime();
 
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(VOLUME_ID_FIELD + ":\"" + volumeId + "\"");
+        solrQuery.addFilterQuery(VOLUME_ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(volumeId) + "\"");
         solrQuery.addFilterQuery(NUM_EXISTS_FIELD + ":true");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setParam(StatsParams.STATS, true);
@@ -377,7 +378,7 @@ public class SpecimenService implements SpecimenDefinition {
         Object pagesCount = statsInfo.get(PAGES_COUNT_FIELD).getSum();
 
         SolrQuery solrQuery2 = new SolrQuery("*:*");
-        solrQuery2.addFilterQuery(VOLUME_ID_FIELD + ":\"" + volumeId + "\"");
+        solrQuery2.addFilterQuery(VOLUME_ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(volumeId) + "\"");
         solrQuery2.addFilterQuery(NUM_EXISTS_FIELD + ":true OR " + NUM_MISSING_FIELD + ":true");
         solrQuery2.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery2.setSort(PUBLICATION_DATE_FIELD, SolrQuery.ORDER.asc);
@@ -389,7 +390,7 @@ public class SpecimenService implements SpecimenDefinition {
         List<FacetFieldDTO> publicationDateList = response.getFacetRanges().stream()
             .filter(rangeFacet -> PUBLICATION_DATE_FIELD.equals(rangeFacet.getName()))
             .findFirst()
-            .map(rangeFacet -> (List<RangeFacet.Count>) rangeFacet.getCounts())
+            .map(rangeFacet -> (List<RangeFacet.Count>) rangeFacet.getCounts()) // SolrJ returns raw List
             .stream()
             .flatMap(counts -> counts.stream()
                 .map(count -> new FacetFieldDTO(
@@ -441,11 +442,11 @@ public class SpecimenService implements SpecimenDefinition {
 
     public void createSpecimens(List<SpecimenDTO> specimens) {
         try {
-            List<Specimen> specimenList = specimens.stream().peek(SpecimenDTO::prePersist).map(specimenMapper::toModel).toList();
-
-            // TODO: add volumeId, barcode, ownerId, metatitleId from volume
-            // TODO: then add owner, metatitle, mutation, edition info
-
+            List<Specimen> specimenList = specimens.stream()
+                .peek(SpecimenDTO::prePersist)
+                .map(specimenMapper::toModel)
+                .toList();
+            resolveSpecimenReferenceNames(specimenList, specimens);
             solrClient.addBeans(SPECIMEN_CORE_NAME, specimenList);
             solrClient.commit(SPECIMEN_CORE_NAME);
             logger.info("specimens successfully created");
@@ -467,16 +468,79 @@ public class SpecimenService implements SpecimenDefinition {
                 })
                 .map(specimenMapper::toModel)
                 .toList();
-
-            // TODO: add volumeId, barcode, ownerId, metatitleId from volume
-            // TODO: then add owner, metatitle, mutation, edition info
-
+            resolveSpecimenReferenceNames(specimenList, specimens);
             solrClient.addBeans(SPECIMEN_CORE_NAME, specimenList);
             solrClient.commit(SPECIMEN_CORE_NAME);
             logger.info("specimens successfully updated");
         } catch (Exception e) {
             throw new RuntimeException("Failed to update specimens", e);
         }
+    }
+
+    private void resolveSpecimenReferenceNames(List<Specimen> specimenList, List<SpecimenDTO> dtos) {
+        // Cache per unique ID to avoid redundant Solr queries within the same batch
+        Map<String, Volume> volumeCache = new HashMap<>();
+        Map<String, Mutation> mutationCache = new HashMap<>();
+        Map<String, Owner> ownerCache = new HashMap<>();
+        Map<String, Edition> editionCache = new HashMap<>();
+
+        for (int i = 0; i < specimenList.size(); i++) {
+            Specimen specimen = specimenList.get(i);
+            SpecimenDTO dto = dtos.get(i);
+
+            // metaTitleId, metaTitleName, barCode and ownerId come from the volume (not present in SpecimenDTO)
+            String volumeId = dto.getVolumeId();
+            Volume volume = volumeCache.computeIfAbsent(volumeId, id -> {
+                try {
+                    return referenceDataService.resolveVolume(id);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to resolve volume: " + id, e);
+                }
+            });
+            specimen.setMetaTitleId(volume.getMetaTitleId());
+            specimen.setMetaTitleName(volume.getMetaTitleName());
+            specimen.setBarCode(volume.getBarCode());
+            specimen.setOwnerId(volume.getOwnerId());
+
+            Owner owner = ownerCache.computeIfAbsent(volume.getOwnerId(), id -> {
+                try {
+                    return referenceDataService.resolveOwner(id);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to resolve owner: " + id, e);
+                }
+            });
+            specimen.setOwnerName(owner.getName());
+
+            Mutation mutation = mutationCache.computeIfAbsent(dto.getMutationId(), id -> {
+                try {
+                    return referenceDataService.resolveMutation(id);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to resolve mutation: " + id, e);
+                }
+            });
+            specimen.setMutationCsName(mutation.getNameCs());
+            specimen.setMutationSkName(mutation.getNameSk());
+            specimen.setMutationEnName(mutation.getNameEn());
+
+            Edition edition = editionCache.computeIfAbsent(dto.getEditionId(), id -> {
+                try {
+                    return referenceDataService.resolveEdition(id);
+                } catch (Exception e) {
+                    throw new RuntimeException("Failed to resolve edition: " + id, e);
+                }
+            });
+            specimen.setEditionCsName(edition.getNameCs());
+            specimen.setEditionSkName(edition.getNameSk());
+            specimen.setEditionEnName(edition.getNameEn());
+        }
+    }
+
+    private String editionSortField(String lang) {
+        return switch (lang) {
+            case "sk" -> EDITION_SK_SORT_FIELD;
+            case "en" -> EDITION_EN_SORT_FIELD;
+            default -> EDITION_CS_SORT_FIELD;
+        };
     }
 
     public void deleteSpecimens(List<SpecimenDTO> specimens) {
@@ -493,7 +557,7 @@ public class SpecimenService implements SpecimenDefinition {
 
     public Specimen getSpecimenById(String specimenId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + specimenId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(specimenId) + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(1);
 

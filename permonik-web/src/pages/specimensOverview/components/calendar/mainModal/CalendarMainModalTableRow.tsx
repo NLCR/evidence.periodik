@@ -3,7 +3,7 @@ import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import React, { Dispatch, SetStateAction } from 'react'
 import { generateVolumeUrlWithParams } from '../../../../../utils/generateVolumeUrlWithParams'
-import { TSpecimen } from '../../../../../schema/specimen'
+import { TSpecimenOverview } from '../../../../../schema/specimen'
 import { TMutation } from '../../../../../schema/mutation'
 import { TEdition } from '../../../../../schema/edition'
 import { useLanguageCode } from '../../../../../hooks/useLanguageCode'
@@ -18,11 +18,11 @@ import LibraryExternalLink from './LibraryExternalLink'
 import theme from '../../../../../theme'
 
 type Props = {
-  specimen: TSpecimen
+  specimen: TSpecimenOverview
   mutations: TMutation[] | undefined
   editions: TEdition[] | undefined
   owners: TOwner[] | undefined
-  setSubModalData: Dispatch<SetStateAction<TSpecimen | null>>
+  setSubModalData: Dispatch<SetStateAction<TSpecimenOverview | null>>
 }
 
 const CalendarMainModalTableRow = ({
