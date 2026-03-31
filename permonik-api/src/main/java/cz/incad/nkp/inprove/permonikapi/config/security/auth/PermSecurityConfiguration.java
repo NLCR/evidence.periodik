@@ -1,17 +1,14 @@
 package cz.incad.nkp.inprove.permonikapi.config.security.auth;
 
 import cz.incad.nkp.inprove.permonikapi.config.ProfileManager;
-import cz.incad.nkp.inprove.permonikapi.config.security.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
@@ -23,8 +20,6 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 public class PermSecurityConfiguration {
 
     private final ProfileManager profileManager;
-    private final UserDetailsServiceImpl userDetailsService;
-    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public HttpFirewall allowNonAsciiHeadersFirewall() {
@@ -36,7 +31,7 @@ public class PermSecurityConfiguration {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) {
         http
             .authorizeHttpRequests((authz) -> {
                 if (profileManager.isDevelopmentEnvironment()) {
@@ -49,7 +44,6 @@ public class PermSecurityConfiguration {
                 }
                 authz
                     .requestMatchers("/api/auth/login/shibboleth").permitAll()
-                    .requestMatchers("/api/auth/login/basic").permitAll()
                     .requestMatchers("/api/auth/logout").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/me").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/metatitle/**").permitAll()
@@ -84,15 +78,6 @@ public class PermSecurityConfiguration {
 
 
         return http.build();
-    }
-
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder);
-        return provider;
     }
 
 

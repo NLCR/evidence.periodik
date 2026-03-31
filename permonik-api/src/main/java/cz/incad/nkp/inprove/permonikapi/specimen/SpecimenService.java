@@ -1,6 +1,6 @@
 package cz.incad.nkp.inprove.permonikapi.specimen;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import cz.incad.nkp.inprove.permonikapi.common.ReferenceDataService;
 import cz.incad.nkp.inprove.permonikapi.edition.model.Edition;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.Mutation;
