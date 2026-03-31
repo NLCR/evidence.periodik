@@ -79,6 +79,14 @@ const baseApi = ({ handledCodes, throwErrorFromKy = true }: BaseOptions) =>
     throwHttpErrors: throwErrorFromKy,
     retry: 0,
     hooks: {
+      beforeRequest: [
+        (request) => {
+          request.headers.set(
+            'Accept-Language',
+            i18next.resolvedLanguage ?? i18next.language ?? 'cs'
+          )
+        },
+      ],
       afterResponse: [
         // Handle errors
         async (_request, _options, response) => {

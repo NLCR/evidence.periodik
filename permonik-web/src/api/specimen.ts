@@ -9,7 +9,6 @@ import {
   type TSpecimenState,
 } from '../schema/specimen'
 import { useSpecimensOverviewStore } from '../slices/useSpecimensOverviewStore'
-import { useTranslation } from 'react-i18next'
 
 export interface TSpecimensFacets {
   names: TSpecimenFacet[]
@@ -81,8 +80,6 @@ export const useSpecimenFacetsQuery = (metaTitleId?: string) => {
 }
 
 export const useSpecimenListQuery = (metaTitleId?: string) => {
-  const { i18n } = useTranslation()
-
   const params = useSpecimensOverviewStore((state) => state.params)
   const pagination = useSpecimensOverviewStore((state) => state.pagination)
   const barCodeInput = useSpecimensOverviewStore((state) => state.barCodeInput)
@@ -113,7 +110,6 @@ export const useSpecimenListQuery = (metaTitleId?: string) => {
       calendarDate,
       barCodeInput,
       specimenStates,
-      i18n.language,
     ],
     queryFn: () => {
       const formData = new FormData()
@@ -147,7 +143,6 @@ export const useSpecimenListQuery = (metaTitleId?: string) => {
         })
       )
       formData.set('view', view)
-      formData.set('lang', i18n.language)
 
       return api()
         .post(`specimen/${metaTitleId}/list`, {
