@@ -1,13 +1,13 @@
 import { FC, RefObject, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
+  DataGridPro,
+  GridAlignment,
+  GridApiPro,
   gridClasses,
   GridColDef,
-  GridRenderCellParams,
-  DataGridPro,
   GridColumnHeaderParams,
-  GridApiPro,
-  GridAlignment,
+  GridRenderCellParams,
 } from '@mui/x-data-grid-pro'
 import Box from '@mui/material/Box'
 import { alpha, styled } from '@mui/material/styles'
@@ -56,6 +56,7 @@ import {
   getMutationMarkLabel,
   isUnmarkedMutationMark,
 } from '../../../utils/mutationMark'
+import { useMeQuery } from '../../../api/user'
 import dayjs from 'dayjs'
 import { toast } from 'react-toastify'
 
@@ -221,9 +222,17 @@ const renderDuplicationEditCell = (
 const renderDeletionEditCell = (
   row: TEditableSpecimen,
   api: GridApiCommunity,
-  canEdit: boolean
+  canEdit: boolean,
+  currentUserId: string | undefined
 ) => {
-  return <DeletionEditCell row={row} api={api} canEdit={canEdit} />
+  return (
+    <DeletionEditCell
+      row={row}
+      api={api}
+      canEdit={canEdit}
+      currentUserId={currentUserId}
+    />
+  )
 }
 
 interface TableProps {
@@ -239,6 +248,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
   const { formatDate } = useFormatDate()
   const { disabled, locked: isInputDataLocked } =
     useInputDataEditabilityContext()
+  const me = useMeQuery()
 
   const [searchParams] = useSearchParams()
 
@@ -344,7 +354,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
               headerAlign: 'center' as GridAlignment,
               renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
                 const { api, row } = params
-                return renderDeletionEditCell(row, api, !disabled)
+                return renderDeletionEditCell(row, api, !disabled, me.data?.id)
               },
             },
           ]
@@ -948,14 +958,15 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       },
     ],
     [
-      apiRef,
-      disabled,
-      editions,
-      languageCode,
-      mutations,
-      specimensState,
       t,
+      disabled,
+      mutations,
+      editions,
+      specimensState,
       formatDate,
+      me.data?.id,
+      apiRef,
+      languageCode,
     ]
   )
 
@@ -977,9 +988,6 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       canUseAttachmentOnDate({
         editions,
         specimens: specimensState,
-        publicationDateString:
-          row.publicationDateString ||
-          dayjs(row.publicationDate).format('YYYYMMDD'),
         candidateRowId: row.id,
       })
 

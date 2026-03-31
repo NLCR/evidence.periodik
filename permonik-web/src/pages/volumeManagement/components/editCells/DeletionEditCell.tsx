@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import ModalContainer from '../../../../components/ModalContainer'
 import theme from '../../../../theme'
 import { GridApiCommunity } from '@mui/x-data-grid/internals'
-import { useMeQuery } from '../../../../api/user'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { canDeleteSpecimen } from '../../../../utils/specimen'
 import { useEditionListQuery } from '../../../../api/edition'
@@ -16,12 +15,17 @@ type DuplicationCellProps = {
   row: TEditableSpecimen
   api: GridApiCommunity
   canEdit: boolean
+  currentUserId: string | undefined
 }
 
-const DeletionEditCell: FC<DuplicationCellProps> = ({ row, api, canEdit }) => {
+const DeletionEditCell: FC<DuplicationCellProps> = ({
+  row,
+  api,
+  canEdit,
+  currentUserId,
+}) => {
   // const { mutateAsync: doDelete, status } = useDeleteSpecimenById()
   const { t } = useTranslation()
-  const me = useMeQuery()
   const { data: editions } = useEditionListQuery()
 
   const [confirmDeletionModalOpened, setConfirmDeletionModalOpened] =
@@ -52,7 +56,7 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({ row, api, canEdit }) => {
 
     if (!specimenValidation.success) {
       // toast.error(t('volume_overview.specimens_validation_error'))
-      specimenValidation.error.errors.forEach((e) => toast.error(e.message))
+      specimenValidation.error.issues.forEach((e) => toast.error(e.message))
 
       throw new Error(specimenValidation.error.message)
     }
@@ -73,7 +77,7 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({ row, api, canEdit }) => {
       {
         ...row,
         deleted: new Date().toISOString(),
-        deletedBy: me.data?.id,
+        deletedBy: currentUserId,
       },
     ])
 
