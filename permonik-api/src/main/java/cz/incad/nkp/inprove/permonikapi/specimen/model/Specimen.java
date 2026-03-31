@@ -36,6 +36,10 @@ public class Specimen extends Auditable {
     private String ownerId; // UUID of an owner
     @Field(OWNER_NAME_FIELD)
     private String ownerName;
+    @Field(OWNER_SHORTHAND_FIELD)
+    private String ownerShorthand;
+    @Field(OWNER_SIGLA_FIELD)
+    private String ownerSigla;
     @Field(DAMAGE_TYPES_FIELD)
     private List<String> damageTypes;
     @Field(DAMAGED_PAGES_FIELD)

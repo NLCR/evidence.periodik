@@ -510,6 +510,8 @@ public class SpecimenService implements SpecimenDefinition {
                 }
             });
             specimen.setOwnerName(owner.getName());
+            specimen.setOwnerShorthand(owner.getShorthand());
+            specimen.setOwnerSigla(owner.getSigla());
 
             Mutation mutation = mutationCache.computeIfAbsent(dto.getMutationId(), id -> {
                 try {
@@ -532,6 +534,12 @@ public class SpecimenService implements SpecimenDefinition {
             specimen.setEditionCsName(edition.getNameCs());
             specimen.setEditionSkName(edition.getNameSk());
             specimen.setEditionEnName(edition.getNameEn());
+
+            if (Boolean.TRUE.equals(specimen.getIsAttachment())) {
+                specimen.setNumber(null);
+            } else {
+                specimen.setAttachmentNumber(null);
+            }
         }
     }
 
@@ -545,8 +553,17 @@ public class SpecimenService implements SpecimenDefinition {
 
     public void deleteSpecimens(List<SpecimenDTO> specimens) {
         try {
-            List<Specimen> specimenList = specimens.stream().peek(SpecimenDTO::preRemove).map(specimenMapper::toModel).toList();
-
+            List<Specimen> specimenList = specimens.stream()
+                .map(dto -> {
+                    try {
+                        Specimen existing = getSpecimenById(dto.getId());
+                        existing.preRemove();
+                        return existing;
+                    } catch (Exception e) {
+                        throw new RuntimeException("Failed to load specimen: " + dto.getId(), e);
+                    }
+                })
+                .toList();
             solrClient.addBeans(SPECIMEN_CORE_NAME, specimenList);
             solrClient.commit(SPECIMEN_CORE_NAME);
             logger.info("specimens successfully deleted");

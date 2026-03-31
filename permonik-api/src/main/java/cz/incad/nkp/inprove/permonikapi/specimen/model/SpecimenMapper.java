@@ -26,6 +26,8 @@ public interface SpecimenMapper {
     @Mapping(target = "barCode", ignore = true)
     @Mapping(target = "ownerId", ignore = true)
     @Mapping(target = "ownerName", ignore = true)
+    @Mapping(target = "ownerShorthand", ignore = true)
+    @Mapping(target = "ownerSigla", ignore = true)
     @Mapping(target = "editionCsName", ignore = true)
     @Mapping(target = "editionSkName", ignore = true)
     @Mapping(target = "editionEnName", ignore = true)

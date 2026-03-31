@@ -1,9 +1,8 @@
 import argparse
 import json
+import pysolr
 from pathlib import Path
 from xml.etree import ElementTree as ET
-
-import pysolr
 
 DEFAULT_OLD_URL = "http://localhost:8983/solr"
 DEFAULT_NEW_URL = "http://localhost:8990/solr"
@@ -281,10 +280,12 @@ def transform_specimen(doc, cache):
     put(out, "mutation_mark_type", pick(doc, "mutation_mark_type", "mutationMarkType"))
     put(out, "mutation_mark_description", pick(doc, "mutation_mark_description", "mutationMarkDescription"))
     put(out, "publication_date", pick(doc, "publication_date", "publicationDate"))
-    put(out, "number", pick(doc, "number"))
-    put(out, "attachment_number", pick(doc, "attachment_number", "attachmentNumber"))
     put(out, "pages_count", pick(doc, "pages_count", "pagesCount"))
     put(out, "is_attachment", pick(doc, "is_attachment", "isAttachment"))
+    if out.get("is_attachment"):
+        put(out, "attachment_number", pick(doc, "attachment_number", "attachmentNumber"))
+    else:
+        put(out, "number", pick(doc, "number"))
     put(out, "created", pick(doc, "created"))
     put(out, "created_by", pick(doc, "created_by", "createdBy"))
     put(out, "updated", pick(doc, "updated"))
@@ -492,7 +493,8 @@ def parse_args():
         default=",".join(CORE_ORDER),
         help="Comma separated core list (dependencies are auto-added).",
     )
-    parser.add_argument("--dry-run", action="store_true", help="Run transformation and validation without writing data.")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="Run transformation and validation without writing data.")
     parser.add_argument("--delete-target", action="store_true", help="Delete all docs in target core before migrating.")
     return parser.parse_args()
 
