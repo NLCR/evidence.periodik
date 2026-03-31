@@ -2,6 +2,7 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
 
 stages:
+  - test
   - build
 
 .build:
@@ -58,6 +59,24 @@ stages:
   variables:
     DOCKERFILE: Dockerfile
 
+
+test_permonik_api:
+  stage: test
+  allow_failure: false
+  tags:
+    - docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "test" || $CI_COMMIT_BRANCH == "prod"'
+      when: manual
+  script:
+    - ./gradlew :permonik-api:test
+  artifacts:
+    when: always
+    reports:
+      junit: permonik-api/build/test-results/test/*.xml
+    paths:
+      - permonik-api/build/reports/tests/
+    expire_in: 7 days
 
 build_permonik_api_test:
   extends: .build

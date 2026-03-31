@@ -1,5 +1,6 @@
 package cz.incad.nkp.inprove.permonikapi.specimen;
 
+import cz.incad.nkp.inprove.permonikapi.common.LanguageResolver;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.FacetsDTO;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.NamesDTO;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.SpecimensOverviewDTO;
@@ -29,9 +30,16 @@ public class SpecimenController {
         @RequestParam Integer rows,
         @RequestParam String facets,
         @RequestParam SpecimenTableViewEnum view,
-        @RequestParam(defaultValue = "cs") String lang
+        @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage
     ) throws IOException, SolrServerException {
-        return specimenService.getSpecimensOverview(id, offset, rows, facets, view, lang);
+        return specimenService.getSpecimensOverview(
+            id,
+            offset,
+            rows,
+            facets,
+            view,
+            LanguageResolver.resolve(acceptLanguage)
+        );
     }
 
     @Operation(summary = "Gets facets for searched specimens")

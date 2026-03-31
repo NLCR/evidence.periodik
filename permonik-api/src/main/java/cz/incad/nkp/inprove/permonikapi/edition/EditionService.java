@@ -31,15 +31,23 @@ public class EditionService implements EditionDefinition {
     private final SolrClient solrClient;
     private final DenormalizationService denormalizationService;
 
-
-    public List<EditionDTO> getEditions() throws SolrServerException, IOException {
+    public List<EditionDTO> getEditions(String lang) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(100000);
+        solrQuery.setSort(nameSortField(lang), SolrQuery.ORDER.asc);
 
         QueryResponse response = solrClient.query(EDITION_CORE_NAME, solrQuery);
 
         return response.getBeans(Edition.class).stream().map(editionMapper::toDTO).toList();
+    }
+
+    private String nameSortField(String lang) {
+        return switch (lang) {
+            case "sk" -> NAME_SK_SORT_FIELD;
+            case "en" -> NAME_EN_SORT_FIELD;
+            default -> NAME_CS_SORT_FIELD;
+        };
     }
 
     public void updateEdition(String editionId, EditionDTO edition) throws SolrServerException, IOException {

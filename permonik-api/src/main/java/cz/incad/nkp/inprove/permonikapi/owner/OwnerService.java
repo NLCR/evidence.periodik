@@ -34,7 +34,7 @@ public class OwnerService implements OwnerDefinition {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(100000);
-        solrQuery.setSort(NAME_FIELD, SolrQuery.ORDER.asc);
+        solrQuery.setSort(NAME_SORT_FIELD, SolrQuery.ORDER.asc);
 
         QueryResponse response = solrClient.query(OWNER_CORE_NAME, solrQuery);
 

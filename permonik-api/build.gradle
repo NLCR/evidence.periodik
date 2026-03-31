@@ -54,6 +54,8 @@ ext {
     mapstruct = '1.6.3'
     slf4j = '2.0.17'
     logback = '1.5.32'
+    testSolr = '2.0.4'
+    testRedis = '2.2.2'
 }
 
 repositories {
@@ -93,8 +95,11 @@ dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools"
 
     // TESTING
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation "org.testcontainers:testcontainers-solr:${testSolr}"
+    testImplementation "com.redis:testcontainers-redis:${testRedis}"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 

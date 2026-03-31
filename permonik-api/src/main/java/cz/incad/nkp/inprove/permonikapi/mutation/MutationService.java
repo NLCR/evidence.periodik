@@ -31,15 +31,23 @@ public class MutationService implements MutationDefinition {
     private final SolrClient solrClient;
     private final DenormalizationService denormalizationService;
 
-
-    public List<MutationDTO> getMutations() throws SolrServerException, IOException {
+    public List<MutationDTO> getMutations(String lang) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(100000);
+        solrQuery.setSort(nameSortField(lang), SolrQuery.ORDER.asc);
 
         QueryResponse response = solrClient.query(MUTATION_CORE_NAME, solrQuery);
 
         return response.getBeans(Mutation.class).stream().map(mutationMapper::toDTO).toList();
+    }
+
+    private String nameSortField(String lang) {
+        return switch (lang) {
+            case "sk" -> NAME_SK_SORT_FIELD;
+            case "en" -> NAME_EN_SORT_FIELD;
+            default -> NAME_CS_SORT_FIELD;
+        };
     }
 
     public void updateMutation(String mutationId, MutationDTO mutation) throws SolrServerException, IOException {

@@ -25,7 +25,7 @@ public class UserService implements UserDefinition {
     public List<User> getUsers() throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.setRows(100000);
-        solrQuery.setSort(USERNAME_FIELD, SolrQuery.ORDER.asc);
+        solrQuery.setSort(FIRST_NAME_SORT_FIELD, SolrQuery.ORDER.asc);
 
         QueryResponse response = solrClient.query(USER_CORE_NAME, solrQuery);
 
