@@ -85,7 +85,7 @@ const Owners = () => {
     let ownerClone = clone(owner)
     const validation = EditableOwnerSchema.safeParse(ownerClone)
     if (!validation.success) {
-      validation.error.errors.map((e) => toast.error(e.message))
+      validation.error.issues.map((e) => toast.error(e.message))
       return
     }
 

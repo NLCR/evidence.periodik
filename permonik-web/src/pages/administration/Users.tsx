@@ -97,7 +97,7 @@ const Users = ({ me }: { me: TMe }) => {
   const handleUpdate = async () => {
     const validation = EditableUserSchema.safeParse(user)
     if (!validation.success) {
-      validation.error.errors.map((e) => toast.error(e.message))
+      validation.error.issues.map((e) => toast.error(e.message))
       return
     }
 

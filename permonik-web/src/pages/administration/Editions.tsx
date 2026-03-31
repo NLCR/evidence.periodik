@@ -91,7 +91,7 @@ const Editions = () => {
   const handleSubmit = async () => {
     const validation = EditableEditionSchema.safeParse(edition)
     if (!validation.success) {
-      validation.error.errors.map((e) => toast.error(e.message))
+      validation.error.issues.map((e) => toast.error(e.message))
       return
     }
     try {

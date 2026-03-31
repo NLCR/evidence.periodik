@@ -89,7 +89,7 @@ const Mutations = () => {
   const handleSubmit = async () => {
     const validation = EditableMutationSchema.safeParse(mutation)
     if (!validation.success) {
-      validation.error.errors.map((e) => toast.error(e.message))
+      validation.error.issues.map((e) => toast.error(e.message))
       return
     }
     try {

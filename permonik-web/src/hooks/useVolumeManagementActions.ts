@@ -79,13 +79,13 @@ const useVolumeManagementActions = (
 
     if (!volumeValidation.success) {
       // toast.error(t('volume_overview.volume_input_data_validation_error'))
-      volumeValidation.error.errors.forEach((e) => toast.error(e.message))
+      volumeValidation.error.issues.forEach((e) => toast.error(e.message))
 
       throw new Error(volumeValidation.error.message)
     }
     if (!specimensValidation.success) {
       // toast.error(t('volume_overview.specimens_validation_error'))
-      specimensValidation.error.errors.forEach((e) => toast.error(e.message))
+      specimensValidation.error.issues.forEach((e) => toast.error(e.message))
 
       throw new Error(specimensValidation.error.message)
     }
