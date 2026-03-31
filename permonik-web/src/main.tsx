@@ -5,10 +5,10 @@ import { I18nextProvider } from 'react-i18next'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClientProvider } from '@tanstack/react-query'
 import {
-  setTag,
-  init as SentryInit,
   browserTracingIntegration,
   extraErrorDataIntegration,
+  init as SentryInit,
+  setTag,
 } from '@sentry/react'
 import { ToastContainer } from 'react-toastify'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -63,7 +63,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           <App />
         </ThemeProvider>
       </I18nextProvider>
-      <ReactQueryDevtools buttonPosition="bottom-left" />
+      <ReactQueryDevtools buttonPosition="bottom-right" />
     </QueryClientProvider>
     <ToastContainer
       position="bottom-left"

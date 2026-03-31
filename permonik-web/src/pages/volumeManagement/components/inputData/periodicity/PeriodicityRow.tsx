@@ -5,21 +5,21 @@ import TableRow from '@mui/material/TableRow'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { t } from 'i18next'
-import { TVolumePeriodicityDays } from '../../../../../schema/volume'
+import { type TVolumePeriodicityDays } from '../../../../../schema/volume'
 import InputDataAutocomplete from '../InputDataAutocomplete'
 import InputDataCheckbox from '../InputDataCheckbox'
 import InputDataSelect from '../InputDataSelect'
 import InputDataTextField from '../InputDataTextField'
 import {
-  FieldValues,
-  UseFieldArrayInsert,
-  UseFieldArrayRemove,
+  type FieldValues,
+  type UseFieldArrayInsert,
+  type UseFieldArrayRemove,
   useFormContext,
 } from 'react-hook-form'
 import useSortedSpecimensNamesAndSubNames from '../../../../../hooks/useSortedSpecimensNamesAndSubNames'
 import { useLanguageCode } from '../../../../../hooks/useLanguageCode'
 import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
-import { TEdition } from '../../../../../schema/edition'
+import { type TEdition } from '../../../../../schema/edition'
 
 type Props = {
   index: number

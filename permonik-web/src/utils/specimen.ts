@@ -1,8 +1,8 @@
 import type { TVolume } from '../schema/volume'
 import { v4 as uuid } from 'uuid'
-import { TEdition } from '../schema/edition'
+import { type TEdition } from '../schema/edition'
 import { copyAuditable } from '../schema/common'
-import { TEditableSpecimen, TSpecimen } from '../schema/specimen'
+import { type TEditableSpecimen, type TSpecimen } from '../schema/specimen'
 import { emptyMutationMark, repairMutationMark } from './mutationMark'
 import dayjs from 'dayjs'
 

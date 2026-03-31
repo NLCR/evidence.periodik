@@ -1,5 +1,5 @@
 import LockedInputDataItem from './LockedInputDataItem'
-import TextField, { TextFieldProps } from '@mui/material/TextField'
+import TextField, { type TextFieldProps } from '@mui/material/TextField'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import { Controller, useFormContext } from 'react-hook-form'
 

@@ -1,7 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { api, queryClient } from './index'
-import { TVolume, TVolumeDetail, TVolumeOverviewStats } from '../schema/volume'
-import { TSpecimen } from '../schema/specimen'
+import {
+  type TVolume,
+  type TVolumeDetail,
+  type TVolumeOverviewStats,
+} from '../schema/volume'
+import { type TSpecimen } from '../schema/specimen'
 
 export const useManagedVolumeDetailQuery = (id?: string) =>
   useQuery({

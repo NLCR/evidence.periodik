@@ -1,10 +1,10 @@
-import React, { ReactNode, useState } from 'react'
+import React, { type ReactNode, useState } from 'react'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import DuplicateVolumeModal from './DuplicateVolumeModal'
 import { generateVolumeUrlWithParams } from '../utils/generateVolumeUrlWithParams'
-import { FieldsToReset } from '../utils/duplicateVolume/types'
+import { type FieldsToReset } from '../utils/duplicateVolume/types'
 
 type Props = {
   volumeId?: string | null

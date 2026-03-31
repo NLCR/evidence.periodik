@@ -1,7 +1,7 @@
-import { TEdition } from '../schema/edition'
+import { type TEdition } from '../schema/edition'
 import { copyAuditable } from '../schema/common'
 import { v4 as uuid } from 'uuid'
-import { TEditableVolume, TVolume } from '../schema/volume'
+import { type TEditableVolume, type TVolume } from '../schema/volume'
 import { repairMutationMark } from './mutationMark'
 
 export const repairVolume = (

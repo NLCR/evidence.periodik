@@ -1,4 +1,4 @@
-import { InputDataProps } from './InputData'
+import { type InputDataProps } from './InputData'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import { FormProvider, useForm } from 'react-hook-form'
 import TableHead from '@mui/material/TableHead'
@@ -26,12 +26,12 @@ import {
 import { useEffect } from 'react'
 import {
   EditableVolumeSchema,
-  TEditableVolume,
+  type TEditableVolume,
 } from '../../../../schema/volume'
 import InputDataBarCode from './InputDataBarCode'
 import InputDataSignature from './InputDataSignature'
 import { api } from '../../../../api'
-import { TSpecimen } from '../../../../schema/specimen'
+import { type TSpecimen } from '../../../../schema/specimen'
 import InputDataOwner from './InputDataOwner'
 import InputDataNote from './InputDataNote'
 import { duplicateVolume } from '../../../../utils/duplicateVolume/duplicateVolume'

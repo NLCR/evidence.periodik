@@ -13,7 +13,7 @@ import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
 import {
   EditableMutationSchema,
-  TEditableMutation,
+  type TEditableMutation,
 } from '../../schema/mutation'
 import {
   useCreateMutationMutation,

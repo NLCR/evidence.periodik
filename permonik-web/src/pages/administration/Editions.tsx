@@ -11,7 +11,10 @@ import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
-import { EditableEditionSchema, TEditableEdition } from '../../schema/edition'
+import {
+  EditableEditionSchema,
+  type TEditableEdition,
+} from '../../schema/edition'
 import {
   useCreateEditionMutation,
   useEditionListQuery,

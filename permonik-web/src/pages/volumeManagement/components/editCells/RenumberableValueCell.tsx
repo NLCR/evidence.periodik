@@ -1,16 +1,16 @@
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import React, { FC, RefObject, useState } from 'react'
+import React, { type FC, type RefObject, useState } from 'react'
 import clone from 'lodash/clone'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
-import { TEditableSpecimen } from '../../../../schema/specimen'
+import { type TEditableSpecimen } from '../../../../schema/specimen'
 import ModalContainer from '../../../../components/ModalContainer'
 import Box from '@mui/material/Box'
 import {
-  GridApiPro,
+  type GridApiPro,
   gridExpandedSortedRowEntriesSelector,
 } from '@mui/x-data-grid-pro'
 

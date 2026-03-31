@@ -1,13 +1,13 @@
 import isArray from 'lodash/isArray'
 import Slider from '@mui/material/Slider'
-import { FC, useEffect, useRef } from 'react'
+import { type FC, useEffect, useRef } from 'react'
 import { useSpecimensOverviewStore } from '../../../slices/useSpecimensOverviewStore'
 import Loader from '../../../components/Loader'
 import { styled } from '@mui/material/styles'
 import theme from '../../../theme'
 import Box from '@mui/material/Box'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { type Dayjs } from 'dayjs'
 
 const StyledSlider = styled(Slider)(() => ({
   '& .MuiSlider-valueLabel': {

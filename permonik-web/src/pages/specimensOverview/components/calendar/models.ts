@@ -1,4 +1,4 @@
-import { TSpecimenOverview } from '../../../../schema/specimen'
+import { type TSpecimenOverview } from '../../../../schema/specimen'
 
 export type TMainModalData = {
   data: TSpecimenOverview[]

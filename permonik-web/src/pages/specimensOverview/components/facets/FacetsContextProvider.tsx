@@ -1,5 +1,5 @@
-import React, { PropsWithChildren } from 'react'
-import { TMetaTitle } from '../../../../schema/metaTitle'
+import React, { type PropsWithChildren } from 'react'
+import { type TMetaTitle } from '../../../../schema/metaTitle'
 import { useFacetsData } from './api'
 import { damageTypes } from '../../../../utils/constants'
 import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'

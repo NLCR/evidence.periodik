@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import { FC, useMemo, useState } from 'react'
+import { type FC, useMemo, useState } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -8,14 +8,14 @@ import TableRow from '@mui/material/TableRow'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
-import { TEdition } from '../../../../../schema/edition'
+import { type TEdition } from '../../../../../schema/edition'
 import ModalContainer from '../../../../../components/ModalContainer'
 import InputDataSelect from '../InputDataSelect'
 import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useGenerateVolume } from './useGenerateVolume'
 import PeriodicityRow from './PeriodicityRow'
-import { TMetaTitle } from '../../../../../schema/metaTitle'
+import { type TMetaTitle } from '../../../../../schema/metaTitle'
 
 interface PeriodicityProps {
   editions: TEdition[]

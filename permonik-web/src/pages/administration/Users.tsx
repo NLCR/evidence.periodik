@@ -17,7 +17,7 @@ import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
-import { EditableUserSchema, TMe, TUser } from '../../schema/user'
+import { EditableUserSchema, type TMe, type TUser } from '../../schema/user'
 import { useOwnerListQuery } from '../../api/owner'
 import { useUpdateUserMutation, useUserListQuery } from '../../api/user'
 

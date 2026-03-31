@@ -1,7 +1,10 @@
-import { TEditableVolume } from '../../schema/volume'
+import { type TEditableVolume } from '../../schema/volume'
 import { v4 as uuid } from 'uuid'
 import { emptyMutationMark } from '../mutationMark'
-import { TEditableSpecimen, TSpecimenDamageTypes } from '../../schema/specimen'
+import {
+  type TEditableSpecimen,
+  type TSpecimenDamageTypes,
+} from '../../schema/specimen'
 import { FieldsToReset } from './types'
 
 const resetDamageTypes = (

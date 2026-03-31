@@ -15,7 +15,7 @@ import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
 import {
   EditableMetaTitleSchema,
-  TEditableMetaTitle,
+  type TEditableMetaTitle,
 } from '../../schema/metaTitle'
 import {
   useCreateMetaTitleMutation,

@@ -1,18 +1,18 @@
-import { FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { useTranslation } from 'react-i18next'
-import { TEditableSpecimen } from '../../../../schema/specimen'
-import { TEditableVolume } from '../../../../schema/volume'
+import { type TEditableSpecimen } from '../../../../schema/specimen'
+import { type TEditableVolume } from '../../../../schema/volume'
 import ModalContainer from '../../../../components/ModalContainer'
 import { TabSelect } from '../../../../components/TabSelect'
 import Checkbox from '@mui/material/Checkbox'
 import { toast } from 'react-toastify'
 import {
   emptyMutationMark,
-  TMutationMark,
-  TMutationMarkType,
+  type TMutationMark,
+  type TMutationMarkType,
 } from '../../../../utils/mutationMark'
 
 const marks = ['●', '○', '■', '□', '★', '☆', '△', '▲', '✶'] as const

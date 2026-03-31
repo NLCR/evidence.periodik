@@ -2,18 +2,18 @@
 import { create } from 'zustand'
 import { produce } from 'immer'
 import { devtools } from 'zustand/middleware'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { type Dayjs } from 'dayjs'
 import {
-  TEditableVolume,
-  TEditableVolumePeriodicity,
-  TVolumeAttachmentsSort,
-  TVolumePeriodicityDays,
+  type TEditableVolume,
+  type TEditableVolumePeriodicity,
+  type TVolumeAttachmentsSort,
+  type TVolumePeriodicityDays,
 } from '../schema/volume'
-import { TEditableSpecimen } from '../schema/specimen'
-import { TEdition } from '../schema/edition'
+import { type TEditableSpecimen } from '../schema/specimen'
+import { type TEdition } from '../schema/edition'
 import { filterSpecimen } from '../utils/specimen'
 import clone from 'lodash/clone'
-import { emptyMutationMark, TMutationMark } from '../utils/mutationMark'
+import { emptyMutationMark, type TMutationMark } from '../utils/mutationMark'
 
 const periodicityDays: TVolumePeriodicityDays[] = [
   'Monday',

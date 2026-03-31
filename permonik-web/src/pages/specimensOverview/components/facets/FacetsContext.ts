@@ -1,14 +1,14 @@
 import { createContext, useContext } from 'react'
 import {
-  TSpecimenDamageTypes,
-  TSpecimensOverview,
+  type TSpecimenDamageTypes,
+  type TSpecimensOverview,
 } from '../../../../schema/specimen'
-import { TOwner } from '../../../../schema/owner'
-import { TMutation } from '../../../../schema/mutation'
-import { TParams } from '../../../../slices/useSpecimensOverviewStore'
-import { TSpecimensFacets } from '../../../../api/specimen'
-import { TEdition } from '../../../../schema/edition'
-import { TSupportedLanguages } from '../../../../i18next'
+import { type TOwner } from '../../../../schema/owner'
+import { type TMutation } from '../../../../schema/mutation'
+import { type TParams } from '../../../../slices/useSpecimensOverviewStore'
+import { type TSpecimensFacets } from '../../../../api/specimen'
+import { type TEdition } from '../../../../schema/edition'
+import { type TSupportedLanguages } from '../../../../i18next'
 
 type TFacetsContext = {
   facets: TSpecimensFacets | undefined

@@ -3,10 +3,10 @@ import dayjs from 'dayjs'
 import { api, queryClient } from './index'
 import {
   SpecimenStateEnum,
-  TSpecimenDamageTypesFacet,
-  TSpecimenFacet,
-  TSpecimensOverview,
-  TSpecimenState,
+  type TSpecimenDamageTypesFacet,
+  type TSpecimenFacet,
+  type TSpecimensOverview,
+  type TSpecimenState,
 } from '../schema/specimen'
 import { useSpecimensOverviewStore } from '../slices/useSpecimensOverviewStore'
 import { useTranslation } from 'react-i18next'

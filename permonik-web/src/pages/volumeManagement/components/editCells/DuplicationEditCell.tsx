@@ -1,4 +1,4 @@
-import { TEditableSpecimen } from '../../../../schema/specimen'
+import { type TEditableSpecimen } from '../../../../schema/specimen'
 import clone from 'lodash/clone'
 import {
   canDeleteSpecimen,
@@ -6,7 +6,7 @@ import {
   duplicatePartialSpecimen,
   isAttachmentSpecimen,
 } from '../../../../utils/specimen'
-import React, { FC, useState } from 'react'
+import React, { type FC, useState } from 'react'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import Box from '@mui/material/Box'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
@@ -14,9 +14,9 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import theme from '../../../../theme'
 import ModalContainer from '../../../../components/ModalContainer'
 import { useTranslation } from 'react-i18next'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { type Dayjs } from 'dayjs'
 import DuplicationEditCellDateModal from './DuplicationEditCellDateModal'
-import { TEdition } from '../../../../schema/edition'
+import { type TEdition } from '../../../../schema/edition'
 import { toast } from 'react-toastify'
 
 type DuplicationCellProps = {

@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import clone from 'lodash/clone'
 import { api, queryClient } from './index'
-import { TMe, TUser } from '../schema/user'
+import { type TMe, type TUser } from '../schema/user'
 // import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
 
 // const { MODE } = import.meta.env

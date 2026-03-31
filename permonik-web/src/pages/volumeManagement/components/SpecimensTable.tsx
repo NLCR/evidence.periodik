@@ -1,29 +1,29 @@
-import { FC, RefObject, useEffect, useMemo, useRef } from 'react'
+import { type FC, type RefObject, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   DataGridPro,
-  GridAlignment,
-  GridApiPro,
+  type GridAlignment,
+  type GridApiPro,
   gridClasses,
-  GridColDef,
-  GridColumnHeaderParams,
-  GridRenderCellParams,
+  type GridColDef,
+  type GridColumnHeaderParams,
+  type GridRenderCellParams,
 } from '@mui/x-data-grid-pro'
 import Box from '@mui/material/Box'
 import { alpha, styled } from '@mui/material/styles'
 import Checkbox from '@mui/material/Checkbox'
 import {
-  GridCellParams,
-  GridRenderEditCellParams,
+  type GridCellParams,
+  type GridRenderEditCellParams,
 } from '@mui/x-data-grid/models/params/gridCellParams'
 import { blue, pink } from '@mui/material/colors'
 import {
-  TEditableSpecimen,
-  TSpecimenDamageTypes,
+  type TEditableSpecimen,
+  type TSpecimenDamageTypes,
 } from '../../../schema/specimen'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { TMutation } from '../../../schema/mutation'
-import { TEdition } from '../../../schema/edition'
+import { type TMutation } from '../../../schema/mutation'
+import { type TEdition } from '../../../schema/edition'
 import DamagedAndMissingPagesEditCell from './editCells/DamagedAndMissingPagesEditCell'
 import DamageTypesEditCell from './editCells/DamageTypesEditCell'
 import MutationMarkSelectorModalContainer from './editCells/MutationMarkSelectorModalContainer'
@@ -50,7 +50,7 @@ import DeletionEditCell from './editCells/DeletionEditCell'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
-import { GridApiCommunity } from '@mui/x-data-grid/internals'
+import { type GridApiCommunity } from '@mui/x-data-grid/internals'
 import { useFormatDate } from '../../../utils/date'
 import {
   getMutationMarkLabel,

@@ -4,24 +4,24 @@ import clone from 'lodash/clone'
 import { useTranslation } from 'react-i18next'
 import { useVolumeManagementStore } from '../slices/useVolumeManagementStore'
 import { VolumeSchema } from '../schema/volume'
-import { SpecimenSchema, TEditableSpecimen } from '../schema/specimen'
+import { SpecimenSchema, type TEditableSpecimen } from '../schema/specimen'
 import {
   useCreateVolumeWithSpecimensMutation,
   useDeleteVolumeWithSpecimensMutation,
   useUpdateOvergeneratedVolumeWithSpecimensMutation,
   useUpdateVolumeWithSpecimensMutation,
 } from '../api/volume'
-import { TEdition } from '../schema/edition'
+import { type TEdition } from '../schema/edition'
 import { BACK_META_TITLE_ID } from '../utils/constants'
 import { generateVolumeUrlWithParams } from '../utils/generateVolumeUrlWithParams'
 import { repairOrCreateSpecimen } from '../utils/specimen'
 import { repairVolume } from '../utils/volume'
 import { waitFor } from '../utils/waitFor'
 import i18next from '../i18next'
-import { RefObject } from 'react'
-import { GridApiPro } from '@mui/x-data-grid-pro/models'
+import { type RefObject } from 'react'
+import { type GridApiPro } from '@mui/x-data-grid-pro/models'
 import { duplicateVolume } from '../utils/duplicateVolume/duplicateVolume'
-import { FieldsToReset } from '../utils/duplicateVolume/types'
+import { type FieldsToReset } from '../utils/duplicateVolume/types'
 
 const useVolumeManagementActions = (
   apiRef: RefObject<GridApiPro | null>,
