@@ -11,14 +11,6 @@ export const useManagedVolumeDetailQuery = (id?: string) =>
     enabled: !!id,
   })
 
-export const usePublicVolumeDetailQuery = (id?: string) =>
-  useQuery({
-    queryKey: ['volume', 'detail', id, 'public'],
-    queryFn: () =>
-      api().get(`volume/${id}/detail/public`).json<TVolumeDetail | null>(),
-    enabled: !!id,
-  })
-
 export const useVolumeOverviewStatsQuery = (id?: string) =>
   useQuery({
     queryKey: ['volume', 'stats', id],
