@@ -16,6 +16,8 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useGenerateVolume } from './useGenerateVolume'
 import PeriodicityRow from './PeriodicityRow'
 import { type TMetaTitle } from '../../../../../schema/metaTitle'
+import theme from '../../../../../theme'
+import { Typography } from '@mui/material'
 
 interface PeriodicityProps {
   editions: TEdition[]
@@ -98,13 +100,22 @@ const Periodicity: FC<PeriodicityProps> = ({ editions, metaTitles }) => {
         <Box
           sx={{
             marginTop: '10px',
-            display: 'grid',
-            gridTemplateColumns: '1fr 260px',
+            display: 'flex',
+            flexDirection: 'column',
             gap: '12px',
-            alignItems: 'center',
+            alignItems: 'flex-start',
+            width: 'fit-content',
           }}
         >
-          <Box>{t('volume_overview.attachments_sort')}</Box>
+          <Typography
+            sx={{
+              color: theme.palette.primary.main,
+              fontSize: '16px',
+              fontWeight: 'bold',
+            }}
+          >
+            {t('volume_overview.attachments_sort')}
+          </Typography>
           <InputDataSelect
             name="attachmentsSort"
             options={[
