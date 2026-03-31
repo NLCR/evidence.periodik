@@ -36,6 +36,10 @@ module.exports = {
     'import/no-extraneous-dependencies': 0,
     'no-continue': 0,
     '@typescript-eslint/no-unused-vars': 1,
+    // '@typescript-eslint/consistent-type-imports': [
+    //   'error',
+    //   { prefer: 'type-imports', fixStyle: 'inline-type-imports' },
+    // ],
     'react/no-unstable-nested-components': [
       'error',
       {
