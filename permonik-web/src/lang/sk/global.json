@@ -300,7 +300,11 @@
     "login": "Prihlásenie",
     "administration": "Administrácia",
     "logout": "Odhlásiť sa",
-    "volume": "Zväzok"
+    "volume": "Zväzok",
+    "dev_login_title": "Prihlásenie (lokálny vývoj)",
+    "dev_login_username": "Používateľské meno",
+    "dev_login_password": "Heslo",
+    "dev_login_error": "Prihlásenie zlyhalo"
   },
   "not_found": {
     "page_dont_exists": "Táto stránka neexistuje"
@@ -348,6 +352,8 @@
     "first_name_min_length": "Vyplňte prosím pole 'meno'",
     "last_name_min_length": "Vyplňte prosím pole 'priezvisko'",
     "email": "Vyplňte prosím správne pole 'email'",
+    "username_required": "Vyplňte prosím pole 'Používateľské meno'",
+    "password_required": "Vyplňte prosím pole 'Heslo'",
     "cs_name_min_length": "Vyplňte prosím pole 'Český názov'",
     "sk_name_min_length": "Vyplňte prosím pole 'Slovenský názov'",
     "en_name_min_length": "Vyplňte prosím pole 'Anglický názov'",

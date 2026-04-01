@@ -299,7 +299,11 @@
     "login": "Login",
     "administration": "Administration",
     "logout": "Logout",
-    "volume": "Volume"
+    "volume": "Volume",
+    "dev_login_title": "Login (local development)",
+    "dev_login_username": "Username",
+    "dev_login_password": "Password",
+    "dev_login_error": "Login failed"
   },
   "not_found": {
     "page_dont_exists": "This page does not exist"
@@ -347,6 +351,8 @@
     "first_name_min_length": "Please fill out the 'First name' field",
     "last_name_min_length": "Please fill out the 'Last name' field",
     "email": "Please fill out the 'Email' field correctly",
+    "username_required": "Please fill out the 'Username' field",
+    "password_required": "Please fill out the 'Password' field",
     "cs_name_min_length": "Please fill out the 'Czech name' field",
     "sk_name_min_length": "Please fill out the 'Slovak name' field",
     "en_name_min_length": "Please fill out the 'English name' field",

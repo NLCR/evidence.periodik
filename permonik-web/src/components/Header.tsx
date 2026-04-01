@@ -5,6 +5,11 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 // import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import TextField from '@mui/material/TextField'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Box from '@mui/material/Box'
@@ -16,12 +21,20 @@ import { styled } from '@mui/material/styles'
 // import MenuIcon from '@mui/icons-material/Menu'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { blue, pink } from '@mui/material/colors'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import Logo from '../assets/logo.png'
 import Czech from '../assets/images/czech-republic.png'
 import Slovakia from '../assets/images/slovakia.png'
 import English from '../assets/images/united-states.png'
 import { changeAppLanguage, type TSupportedLanguages } from '../i18next'
-import { useLogoutMutation, useMeQuery } from '../api/user'
+import {
+  useBasicLoginMutation,
+  useLogoutMutation,
+  useMeQuery,
+} from '../api/user'
+import { BasicLoginSchema, type TBasicLogin } from '../schema/user'
 import { queryClient } from '../api'
 import { APP_WITH_EDITING_ENABLED, LOGIN_URL } from '../utils/constants'
 
@@ -100,10 +113,26 @@ const data: { shorthand: TSupportedLanguages; label: string; image: string }[] =
 const Header = () => {
   const navigate = useNavigate()
   const [langAnchorEl, setLangAnchorEl] = useState<null | HTMLElement>(null)
+  const [devLoginOpen, setDevLoginOpen] = useState(false)
   // const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null)
   const { t, i18n } = useTranslation()
   const { data: me } = useMeQuery()
   const { mutateAsync: doLogout } = useLogoutMutation()
+  const { mutateAsync: doBasicLogin, isPending: basicLoginPending } =
+    useBasicLoginMutation()
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors: devLoginErrors },
+  } = useForm<TBasicLogin>({
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+    resolver: zodResolver(BasicLoginSchema),
+  })
+  const useDevBasicLogin = APP_WITH_EDITING_ENABLED && import.meta.env.DEV
 
   const handleLangMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setLangAnchorEl(event.currentTarget)
@@ -131,6 +160,33 @@ const Header = () => {
       /* empty */
     }
   }
+
+  const handleLoginClick = () => {
+    if (useDevBasicLogin) {
+      setDevLoginOpen(true)
+      return
+    }
+    window.location.href = LOGIN_URL
+  }
+
+  const handleDevLoginClose = () => {
+    if (basicLoginPending) {
+      return
+    }
+    setDevLoginOpen(false)
+    reset()
+  }
+
+  const handleDevLoginSubmit = handleSubmit(async (values) => {
+    const response = await doBasicLogin(values)
+
+    if (!response.ok) {
+      toast.error(t('header.dev_login_error'))
+      return
+    }
+
+    handleDevLoginClose()
+  })
 
   const items = data.map((item) => (
     <MenuItem
@@ -188,9 +244,7 @@ const Header = () => {
                       backgroundColor: theme.palette.grey['900'],
                     },
                   })}
-                  onClick={() => {
-                    window.location.href = LOGIN_URL
-                  }}
+                  onClick={handleLoginClick}
                 >
                   {t('header.login')}
                 </Button>
@@ -265,6 +319,48 @@ const Header = () => {
               >
                 {items}
               </Menu>
+              <Dialog
+                open={devLoginOpen}
+                onClose={handleDevLoginClose}
+                fullWidth
+                maxWidth="xs"
+                PaperProps={{
+                  component: 'form',
+                  onSubmit: handleDevLoginSubmit,
+                }}
+              >
+                <DialogTitle>{t('header.dev_login_title')}</DialogTitle>
+                <DialogContent>
+                  <TextField
+                    label={t('header.dev_login_username')}
+                    fullWidth
+                    margin="dense"
+                    error={Boolean(devLoginErrors.username)}
+                    helperText={devLoginErrors.username?.message}
+                    {...register('username')}
+                  />
+                  <TextField
+                    label={t('header.dev_login_password')}
+                    type="password"
+                    fullWidth
+                    margin="dense"
+                    error={Boolean(devLoginErrors.password)}
+                    helperText={devLoginErrors.password?.message}
+                    {...register('password')}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={handleDevLoginClose}
+                    disabled={basicLoginPending}
+                  >
+                    {t('common.close')}
+                  </Button>
+                  <Button type="submit" disabled={basicLoginPending}>
+                    {t('header.login')}
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </LinksContainer>
             {/* <BurgerContainer */}
             {/*  edge="end" */}

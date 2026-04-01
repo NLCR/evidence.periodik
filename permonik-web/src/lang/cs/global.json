@@ -299,7 +299,11 @@
     "login": "Přihlášení",
     "administration": "Administrace",
     "logout": "Odhlásit se",
-    "volume": "Svazek"
+    "volume": "Svazek",
+    "dev_login_title": "Přihlášení (lokální vývoj)",
+    "dev_login_username": "Uživatelské jméno",
+    "dev_login_password": "Heslo",
+    "dev_login_error": "Přihlášení se nezdařilo"
   },
   "not_found": {
     "page_dont_exists": "Tato stránka neexistuje"
@@ -347,6 +351,8 @@
     "first_name_min_length": "Vyplňte prosím pole 'Jméno'",
     "last_name_min_length": "Vyplňte prosím pole 'Příjmení'",
     "email": "Vyplňte prosím správně pole 'Email'",
+    "username_required": "Vyplňte prosím pole 'Uživatelské jméno'",
+    "password_required": "Vyplňte prosím pole 'Heslo'",
     "cs_name_min_length": "Vyplňte prosím pole 'Český název'",
     "sk_name_min_length": "Vyplňte prosím pole 'Slovenský název'",
     "en_name_min_length": "Vyplňte prosím pole 'Anglický název'",
