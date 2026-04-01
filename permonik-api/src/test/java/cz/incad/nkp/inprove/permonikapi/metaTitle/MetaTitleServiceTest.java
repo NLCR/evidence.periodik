@@ -82,6 +82,18 @@ class MetaTitleServiceTest extends AbstractSolrIntegrationTest {
     }
 
     @Test
+        // Verifies authenticated users can access non-public metatitle by id.
+    void getMetaTitleById_authenticatedCanAccessNonPublicMetaTitle() throws Exception {
+        metaTitleService.createMetaTitle(new CreatableMetaTitleDTO("Private Authenticated", "N", false));
+        String id = metaTitleService.getMetaTitles().getFirst().getId();
+
+        MetaTitle metaTitle = metaTitleService.getMetaTitleById(id);
+
+        assertThat(metaTitle.getId()).isEqualTo(id);
+        assertThat(metaTitle.getIsPublic()).isFalse();
+    }
+
+    @Test
         // Verifies overview projection contains aggregated specimen stats.
     void getMetaTitleOverview_returnsOverviewDto() throws Exception {
         metaTitleService.createMetaTitle(new CreatableMetaTitleDTO("Overview", "", true));

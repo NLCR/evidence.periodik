@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +50,10 @@ public class VolumeController {
     @Operation(summary = "Gets volume detail with specimens by given id. Returns all specimens for authenticated users, only public specimens for anonymous users.")
     @GetMapping("/{id}/detail")
     public VolumeDetailDTO getVolumeDetailById(@PathVariable String id, Authentication authentication) throws SolrServerException, IOException {
-        boolean onlyPublic = !authentication.isAuthenticated();
+        boolean onlyPublic =
+            authentication == null
+                || authentication instanceof AnonymousAuthenticationToken
+                || !authentication.isAuthenticated();
         return volumeService.getVolumeDetailById(id, onlyPublic);
     }
 
