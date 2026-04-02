@@ -80,6 +80,8 @@ public class Specimen extends Auditable {
     private String number; // filled if specimen is not attachment
     @Field(ATTACHMENT_NUMBER_FIELD)
     private String attachmentNumber; // filled if specimen is an attachment
+    @Field(NUMBER_SORT_KEY_FIELD)
+    private String numberSortKey; // normalized key used for natural sorting of number/attachmentNumber
     @Field(PAGES_COUNT_FIELD)
     private Integer pagesCount;
     @Field(IS_ATTACHMENT_FIELD)

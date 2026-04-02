@@ -68,6 +68,7 @@ public interface SpecimenDefinition {
     String PUBLICATION_DATE_FIELD = "publication_date";
     String NUMBER_FIELD = "number";
     String ATTACHMENT_NUMBER_FIELD = "attachment_number";
+    String NUMBER_SORT_KEY_FIELD = "number_sort_key";
     String PAGES_COUNT_FIELD = "pages_count";
     String IS_ATTACHMENT_FIELD = "is_attachment";
 }

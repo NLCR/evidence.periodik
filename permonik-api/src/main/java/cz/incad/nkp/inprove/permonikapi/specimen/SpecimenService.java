@@ -1,6 +1,5 @@
 package cz.incad.nkp.inprove.permonikapi.specimen;
 
-import tools.jackson.databind.ObjectMapper;
 import cz.incad.nkp.inprove.permonikapi.common.ReferenceDataService;
 import cz.incad.nkp.inprove.permonikapi.edition.model.Edition;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.Mutation;
@@ -26,9 +25,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -540,6 +539,11 @@ public class SpecimenService implements SpecimenDefinition {
             } else {
                 specimen.setAttachmentNumber(null);
             }
+
+            String specimenNumber = Boolean.TRUE.equals(specimen.getIsAttachment())
+                ? specimen.getAttachmentNumber()
+                : specimen.getNumber();
+            specimen.setNumberSortKey(SpecimenNaturalSortKey.from(specimenNumber));
         }
     }
 

@@ -130,6 +130,7 @@
     <!-- NOTE: here we choose number or attachment_number, that's why these fields are optional; a string type is used, because number can be 1-2, 1a, 1, etc. -->
     <field name="number" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
     <field name="attachment_number" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
+    <field name="number_sort_key" type="string" indexed="true" stored="false" required="true" multiValued="false"/>
     <field name="pages_count" type="pint" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="is_attachment" type="boolean" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="created" type="pdate" indexed="true" stored="true" required="true" multiValued="false"/>

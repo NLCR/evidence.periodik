@@ -6,6 +6,7 @@ import cz.incad.nkp.inprove.permonikapi.edition.model.EditionDefinition;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitleDefinition;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDefinition;
 import cz.incad.nkp.inprove.permonikapi.owner.OwnerDefinition;
+import cz.incad.nkp.inprove.permonikapi.specimen.SpecimenNaturalSortKey;
 import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDefinition;
 import cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition;
 import org.apache.solr.client.solrj.SolrClient;
@@ -308,6 +309,9 @@ public final class SolrFixtureFactory {
         doc.addField(SpecimenDefinition.MUTATION_EN_NAME_FIELD, mutationEn);
         doc.addField(SpecimenDefinition.MUTATION_MARK_TYPE_FIELD, mutationMarkType.name());
         doc.addField(SpecimenDefinition.PUBLICATION_DATE_FIELD, publicationDate);
+        String specimenNumber = "1";
+        doc.addField(SpecimenDefinition.NUMBER_FIELD, specimenNumber);
+        doc.addField(SpecimenDefinition.NUMBER_SORT_KEY_FIELD, SpecimenNaturalSortKey.from(specimenNumber));
         doc.addField(SpecimenDefinition.PAGES_COUNT_FIELD, 8);
         doc.addField(SpecimenDefinition.IS_ATTACHMENT_FIELD, false);
         doc.addField(AuditableDefinition.CREATED_FIELD, now);

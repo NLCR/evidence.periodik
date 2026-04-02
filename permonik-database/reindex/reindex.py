@@ -1,5 +1,6 @@
 import argparse
 import json
+import re
 import pysolr
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -14,6 +15,7 @@ CORE_DEPENDENCIES = {
     "volume": ["metatitle", "mutation", "owner"],
     "specimen": ["metatitle", "edition", "mutation", "owner", "volume"],
 }
+SPECIMEN_DIGIT_RUN = re.compile(r"\d+")
 
 
 def pick(doc, *keys):
@@ -41,6 +43,33 @@ def normalize_attachments_sort(value):
     if normalized in {"FALSE", "0"}:
         return "NONE"
     return "NONE"
+
+
+def specimen_natural_sort_key_from(value):
+    if value is None:
+        return None
+
+    normalized = str(value).strip().lower()
+    if not normalized:
+        return None
+
+    key_parts = []
+    index = 0
+
+    for match in SPECIMEN_DIGIT_RUN.finditer(normalized):
+        start, end = match.span()
+        if index < start:
+            key_parts.append(f"T{normalized[index:start]};")
+
+        digits = match.group(0)
+        canonical = re.sub(r"^0+(?!$)", "", digits)
+        key_parts.append(f"N{len(canonical):06d}:{canonical};")
+        index = end
+
+    if index < len(normalized):
+        key_parts.append(f"T{normalized[index:]};")
+
+    return "".join(key_parts)
 
 
 def parse_schema(schema_path):
@@ -286,6 +315,8 @@ def transform_specimen(doc, cache):
         put(out, "attachment_number", pick(doc, "attachment_number", "attachmentNumber"))
     else:
         put(out, "number", pick(doc, "number"))
+    specimen_number = out.get("attachment_number") if out.get("is_attachment") else out.get("number")
+    put(out, "number_sort_key", specimen_natural_sort_key_from(specimen_number))
     put(out, "created", pick(doc, "created"))
     put(out, "created_by", pick(doc, "created_by", "createdBy"))
     put(out, "updated", pick(doc, "updated"))

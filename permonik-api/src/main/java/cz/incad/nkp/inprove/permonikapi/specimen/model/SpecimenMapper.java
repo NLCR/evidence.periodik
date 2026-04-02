@@ -34,6 +34,7 @@ public interface SpecimenMapper {
     @Mapping(target = "mutationCsName", ignore = true)
     @Mapping(target = "mutationSkName", ignore = true)
     @Mapping(target = "mutationEnName", ignore = true)
+    @Mapping(target = "numberSortKey", ignore = true)
     Specimen toModel(SpecimenDTO specimenDTO);
 
 }
