@@ -45,7 +45,9 @@
       "replacement_sources_title": "Zdroje náhrad"
     },
     "content_template": {
-      "no_items": "Pre zvolený filter nie sú dostupné žiadne položky."
+      "no_items": "Pre zvolený filter nie sú dostupné žiadne položky.",
+      "preview_dialog_title": "Náhľad predlohy",
+      "export_button": "Export"
     },
     "template_state": {
       "created": "Vytvorená",

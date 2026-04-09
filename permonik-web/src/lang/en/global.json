@@ -45,7 +45,9 @@
       "replacement_sources_title": "Replacement sources"
     },
     "content_template": {
-      "no_items": "No items are available for the selected filter."
+      "no_items": "No items are available for the selected filter.",
+      "preview_dialog_title": "Template preview",
+      "export_button": "Export"
     },
     "template_state": {
       "created": "Created",

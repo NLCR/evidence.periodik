@@ -5491,6 +5491,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-to-print@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "react-to-print@npm:3.3.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ~19
+  checksum: 10/c1d6d28cef1aedd61e1d2d3d26b3a3d02bb53ad9edad0ad473387e09a5a0b29d384fd459baff4b21d2e6681afdad87eddad29499b4be135eab4210ec54676783
+  languageName: node
+  linkType: hard
+
 "react-toastify@npm:^11.0.5":
   version: 11.0.5
   resolution: "react-toastify@npm:11.0.5"
@@ -6978,6 +6987,7 @@ __metadata:
     react-hook-form: "npm:^7.58.1"
     react-i18next: "npm:^15.5.1"
     react-router-dom: "npm:^7.5.1"
+    react-to-print: "npm:^3.3.0"
     react-toastify: "npm:^11.0.5"
     react-window: "npm:1.8.10"
     rimraf: "npm:^6.0.1"
