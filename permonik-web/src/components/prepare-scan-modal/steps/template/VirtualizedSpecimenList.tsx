@@ -14,11 +14,11 @@ import { useTranslation } from 'react-i18next'
 import { VariableSizeList, ListChildComponentProps } from 'react-window'
 import { TReplacementSource, TTemplateItem } from '../../schemas/schemas'
 import SpecimenItem from './SpecimenItem'
+import { getVisibleTemplateItems } from './templateGrouping'
 
 type Props = {
   items: TTemplateItem[]
   showOnlyRescans: boolean
-  groupByVolumes: boolean
 } & (
   | {
       viewOnly: true
@@ -104,15 +104,7 @@ const VirtualizedSpecimenList = (props: Props) => {
   const { items, viewOnly, showOnlyRescans } = props
 
   const visibleItems = useMemo(
-    () =>
-      items
-        .map((item, index) => ({ item, formIndex: index }))
-        .filter(({ item }) =>
-          showOnlyRescans
-            ? !!item.replacement?.isWaitingForRescan ||
-              item.pageReplacements.some((r) => r.isWaitingForRescan)
-            : true
-        ),
+    () => getVisibleTemplateItems(items, showOnlyRescans),
     [items, showOnlyRescans]
   )
 

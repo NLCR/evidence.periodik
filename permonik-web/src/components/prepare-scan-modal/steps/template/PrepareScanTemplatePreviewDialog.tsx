@@ -1,7 +1,9 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import PrintOutlinedIcon from '@mui/icons-material/PrintOutlined'
-import { FC, useRef } from 'react'
+import { FC, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 // eslint-disable-next-line import/no-unresolved -- eslint resolver v projektu neumi spravne rozpoznat export react-to-print
 import { useReactToPrint } from 'react-to-print'
@@ -13,6 +15,7 @@ import TemplatePreviewHeader, {
 } from './TemplatePreviewHeader'
 import VirtualizedSpecimenList from './VirtualizedSpecimenList'
 import PrepareScanTemplatePrintContent from './PrepareScanTemplatePrintContent'
+import GroupedTemplateSections from './grouped-by-volumes/GroupedTemplateSections'
 
 type Props = {
   opened: boolean
@@ -21,7 +24,6 @@ type Props = {
   barCode?: string
   items: TTemplateItem[]
   showOnlyRescans: boolean
-  groupByVolumes: boolean
 }
 
 const PrepareScanTemplatePreviewDialog: FC<Props> = ({
@@ -31,10 +33,10 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
   barCode = undefined,
   items,
   showOnlyRescans,
-  groupByVolumes,
 }) => {
   const { t } = useTranslation()
   const printContentRef = useRef<HTMLDivElement>(null)
+  const [groupByVolumes, setGroupByVolumes] = useState(false)
 
   const handlePrint = useReactToPrint({
     contentRef: printContentRef,
@@ -97,15 +99,31 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
               <Barcode value={barCode} />
             </Box>
           ) : null}
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={groupByVolumes}
+                onChange={(_, checked) => setGroupByVolumes(checked)}
+              />
+            }
+            label={t('prepare_scan_modal.content_template.group_by_volumes')}
+          />
         </Box>
 
         <Box sx={{ flex: 1, minHeight: 0 }}>
-          <VirtualizedSpecimenList
-            items={items}
-            viewOnly
-            showOnlyRescans={showOnlyRescans}
-            groupByVolumes={groupByVolumes}
-          />
+          {groupByVolumes ? (
+            <GroupedTemplateSections
+              items={items}
+              showOnlyRescans={showOnlyRescans}
+            />
+          ) : (
+            <VirtualizedSpecimenList
+              items={items}
+              viewOnly
+              showOnlyRescans={showOnlyRescans}
+            />
+          )}
         </Box>
 
         <Box

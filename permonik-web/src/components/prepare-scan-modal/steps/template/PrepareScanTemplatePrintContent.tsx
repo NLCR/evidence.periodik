@@ -4,10 +4,12 @@ import { FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import Barcode from 'react-barcode'
 import { TTemplateItem } from '../../schemas/schemas'
+import { getVisibleTemplateItems } from './templateGrouping'
 import TemplatePreviewHeader, {
   TTemplatePreviewHeaderProps,
 } from './TemplatePreviewHeader'
 import SpecimenItem from './SpecimenItem'
+import GroupedTemplateSections from './grouped-by-volumes/GroupedTemplateSections'
 
 type Props = {
   header: TTemplatePreviewHeaderProps
@@ -17,45 +19,22 @@ type Props = {
   groupByVolumes: boolean
 }
 
-type TVisibleItem = {
-  item: TTemplateItem
-  formIndex: number
-}
-
-const shouldIncludeTemplateItemForPrint = (
-  item: TTemplateItem,
-  showOnlyRescans: boolean
-) =>
-  showOnlyRescans
-    ? !!item.replacement?.isWaitingForRescan ||
-      item.pageReplacements.some(
-        (replacement) => replacement.isWaitingForRescan
-      )
-    : true
-
 export const filterTemplateItemsForPrint = (
   items: TTemplateItem[],
   showOnlyRescans: boolean
-) =>
-  items.filter((item) =>
-    shouldIncludeTemplateItemForPrint(item, showOnlyRescans)
-  )
+) => getVisibleTemplateItems(items, showOnlyRescans).map(({ item }) => item)
 
 const PrepareScanTemplatePrintContent: FC<Props> = ({
   header,
   barCode = undefined,
   items,
   showOnlyRescans,
+  groupByVolumes,
 }) => {
   const { t } = useTranslation()
 
-  const visibleItems = useMemo<TVisibleItem[]>(
-    () =>
-      items
-        .map((item, formIndex) => ({ item, formIndex }))
-        .filter(({ item }) =>
-          shouldIncludeTemplateItemForPrint(item, showOnlyRescans)
-        ),
+  const visibleItems = useMemo(
+    () => getVisibleTemplateItems(items, showOnlyRescans),
     [items, showOnlyRescans]
   )
 
@@ -87,26 +66,34 @@ const PrepareScanTemplatePrintContent: FC<Props> = ({
       ) : null}
 
       {visibleItems.length > 0 ? (
-        <Box>
-          {visibleItems.map(({ item, formIndex }) => (
-            <Box
-              key={item.specimen.id}
-              sx={{
-                mb: 1,
-                breakInside: 'avoid',
-                pageBreakInside: 'avoid',
-              }}
-            >
-              <SpecimenItem
-                specimen={item.specimen}
-                itemPath={`items.${formIndex}`}
-                viewOnly
-                showOnlyRescans={showOnlyRescans}
-                replacementSourceCandidates={[]}
-              />
-            </Box>
-          ))}
-        </Box>
+        groupByVolumes ? (
+          <GroupedTemplateSections
+            items={items}
+            showOnlyRescans={showOnlyRescans}
+            compact
+          />
+        ) : (
+          <Box>
+            {visibleItems.map(({ item, formIndex }) => (
+              <Box
+                key={item.specimen.id}
+                sx={{
+                  mb: 1,
+                  breakInside: 'avoid',
+                  pageBreakInside: 'avoid',
+                }}
+              >
+                <SpecimenItem
+                  specimen={item.specimen}
+                  itemPath={`items.${formIndex}`}
+                  viewOnly
+                  showOnlyRescans={showOnlyRescans}
+                  replacementSourceCandidates={[]}
+                />
+              </Box>
+            ))}
+          </Box>
+        )
       ) : (
         <Typography>
           {t('prepare_scan_modal.content_template.no_items')}

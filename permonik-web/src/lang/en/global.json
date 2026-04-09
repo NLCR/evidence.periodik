@@ -47,7 +47,25 @@
     "content_template": {
       "no_items": "No items are available for the selected filter.",
       "preview_dialog_title": "Template preview",
-      "export_button": "Export"
+      "export_button": "Export",
+      "group_by_volumes": "Group by volumes",
+      "primary_volume_section": "Primary volume",
+      "other_volume_section": "Other volume designation",
+      "volume_signature": "Signature",
+      "signature_label": "Signature",
+      "unknown_signature": "Unknown signature",
+      "volume_owner": "Owner",
+      "volume_barcode_short": "BC",
+      "volume_mutation": "Mutation",
+      "volume_mutation_edition": "ME",
+      "issue_number_label": "No. {{number}}",
+      "attachment_number_label": "Supplement No. {{number}}",
+      "unknown_number_label": "Unknown issue",
+      "pages_label": "pages",
+      "all_pages_label": "all",
+      "grouped_column_number": "Issue",
+      "grouped_column_date": "Date",
+      "grouped_column_pages": "Pages"
     },
     "template_state": {
       "created": "Created",

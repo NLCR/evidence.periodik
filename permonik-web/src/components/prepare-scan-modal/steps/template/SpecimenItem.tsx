@@ -30,6 +30,7 @@ import {
 } from '../../schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
 import ReplacementInput from '../common/ReplacementInput'
+import { getReplacementSourceCandidatesForField } from './specimenItemReplacementSourceCandidates'
 
 type Props = {
   specimen: TTemplateSpecimenRef
@@ -98,6 +99,18 @@ const SpecimenItem = ({
       ? replacements.filter((replacement) => replacement?.isWaitingForRescan)
       : replacements
 
+  const getReplacementCandidates = (
+    currentPageReplacementIndex: number | null
+  ) =>
+    getReplacementSourceCandidatesForField({
+      replacementSources: replacementSourceCandidates,
+      mainReplacement,
+      pageReplacements: replacements,
+      activePageReplacementIndex: currentPageReplacementIndex,
+    })
+
+  const filteredMainReplacementCandidates = getReplacementCandidates(null)
+
   if (viewOnly)
     return (
       <SpecimenItemViewOnly
@@ -143,7 +156,7 @@ const SpecimenItem = ({
                     <ReplacementSourceInput
                       viewOnly={viewOnly}
                       value={field.value ?? EMPTY_REPLACEMENT_SOURCE}
-                      candidates={replacementSourceCandidates}
+                      candidates={filteredMainReplacementCandidates}
                       onChange={field.onChange}
                       errorMessage={fieldState.error?.message}
                     />
@@ -197,9 +210,9 @@ const SpecimenItem = ({
                         name={`${itemPath}.pageReplacements.${index}`}
                         index={index}
                         viewOnly={viewOnly}
-                        replacementSourceCandidates={
-                          replacementSourceCandidates
-                        }
+                        replacementSourceCandidates={getReplacementCandidates(
+                          index
+                        )}
                         onRemove={remove}
                       />
                     )

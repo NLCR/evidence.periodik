@@ -47,7 +47,25 @@
     "content_template": {
       "no_items": "Pre zvolený filter nie sú dostupné žiadne položky.",
       "preview_dialog_title": "Náhľad predlohy",
-      "export_button": "Export"
+      "export_button": "Export",
+      "group_by_volumes": "Zoskupiť podľa zväzkov",
+      "primary_volume_section": "Primárny zväzok",
+      "other_volume_section": "Označenie iného zväzku",
+      "volume_signature": "Signatúra",
+      "signature_label": "Signatúra",
+      "unknown_signature": "Neznáma signatúra",
+      "volume_owner": "Vlastník",
+      "volume_barcode_short": "ČK",
+      "volume_mutation": "Mutácia",
+      "volume_mutation_edition": "MV",
+      "issue_number_label": "č. {{number}}",
+      "attachment_number_label": "Príloha č. {{number}}",
+      "unknown_number_label": "Neznáme číslo",
+      "pages_label": "strany",
+      "all_pages_label": "všetky",
+      "grouped_column_number": "Číslo",
+      "grouped_column_date": "Dátum",
+      "grouped_column_pages": "Strany"
     },
     "template_state": {
       "created": "Vytvorená",

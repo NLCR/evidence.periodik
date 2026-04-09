@@ -1,0 +1,54 @@
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { FC, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { TTemplateItem } from '../../../schemas/schemas'
+import { buildGroupedScanSections } from '../templateGrouping'
+import GroupedSectionCard from './GroupedSectionCard'
+
+type Props = {
+  items: TTemplateItem[]
+  showOnlyRescans: boolean
+  compact?: boolean
+}
+
+const GroupedTemplateSections: FC<Props> = ({
+  items,
+  showOnlyRescans,
+  compact = false,
+}) => {
+  const { t } = useTranslation()
+
+  const sections = useMemo(
+    () => buildGroupedScanSections(items, showOnlyRescans),
+    [items, showOnlyRescans]
+  )
+
+  if (sections.length === 0) {
+    return (
+      <Typography>
+        {t('prepare_scan_modal.content_template.no_items')}
+      </Typography>
+    )
+  }
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 1.5,
+      }}
+    >
+      {sections.map((section) => (
+        <GroupedSectionCard
+          key={section.key}
+          compact={compact}
+          section={section}
+        />
+      ))}
+    </Box>
+  )
+}
+
+export default GroupedTemplateSections

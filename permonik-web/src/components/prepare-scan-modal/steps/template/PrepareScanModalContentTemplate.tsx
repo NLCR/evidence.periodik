@@ -31,7 +31,6 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
   replacementSources = [],
 }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
-  const [groupByVolumes, setGroupByVolumes] = useState(false)
   const [showOnlyRescans, setShowOnlyRescans] = useState(false)
   const { control, getValues, setValue, trigger, clearErrors, setError } =
     useFormContext<TTemplate>()
@@ -160,15 +159,6 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={groupByVolumes}
-                  onChange={(_, checked) => setGroupByVolumes(checked)}
-                />
-              }
-              label="Seskupit po svazcích"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
                   checked={showOnlyRescans}
                   onChange={(_, checked) => setShowOnlyRescans(checked)}
                 />
@@ -205,7 +195,6 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
           viewOnly={false}
           replacementSourceCandidates={replacementSources}
           showOnlyRescans={showOnlyRescans}
-          groupByVolumes={groupByVolumes}
         />
       </Box>
 
@@ -216,7 +205,6 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         barCode={primaryVolume?.barCode}
         items={items}
         showOnlyRescans={showOnlyRescans}
-        groupByVolumes={groupByVolumes}
       />
     </Box>
   )
