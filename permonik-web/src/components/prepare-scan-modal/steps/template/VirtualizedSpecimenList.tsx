@@ -19,6 +19,7 @@ import { getVisibleTemplateItems } from './templateGrouping'
 type Props = {
   items: TTemplateItem[]
   showOnlyRescans: boolean
+  disabled?: boolean
 } & (
   | {
       viewOnly: true
@@ -36,6 +37,7 @@ type RowData = {
   showOnlyRescans: boolean
   replacementSourceCandidates: TReplacementSource[]
   setRowHeight: (index: number, height: number) => void
+  disabled?: boolean
 }
 
 const ESTIMATED_ROW_HEIGHT = 280
@@ -92,6 +94,7 @@ const Row = memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
           viewOnly={data.viewOnly}
           showOnlyRescans={data.showOnlyRescans}
           replacementSourceCandidates={data.replacementSourceCandidates}
+          disabled={data.disabled}
         />
       </Box>
     </Box>
@@ -100,17 +103,21 @@ const Row = memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
 
 Row.displayName = 'VirtualizedSpecimenListRow'
 
-const VirtualizedSpecimenList = (props: Props) => {
-  const { items, viewOnly, showOnlyRescans } = props
-
+const VirtualizedSpecimenList = ({
+  items,
+  viewOnly,
+  showOnlyRescans,
+  replacementSourceCandidates: _replacementSourceCandidates,
+  disabled = false,
+}: Props) => {
   const visibleItems = useMemo(
     () => getVisibleTemplateItems(items, showOnlyRescans),
     [items, showOnlyRescans]
   )
 
   const replacementSourceCandidates = useMemo(
-    () => (viewOnly ? [] : props.replacementSourceCandidates),
-    [props.replacementSourceCandidates, viewOnly]
+    () => (viewOnly ? [] : _replacementSourceCandidates),
+    [_replacementSourceCandidates, viewOnly]
   )
   const visibleItemIds = useMemo(
     () => visibleItems.map(({ item }) => item.specimen.id),
@@ -145,6 +152,7 @@ const VirtualizedSpecimenList = (props: Props) => {
       showOnlyRescans,
       replacementSourceCandidates,
       setRowHeight,
+      disabled,
     }),
     [
       replacementSourceCandidates,
@@ -152,6 +160,7 @@ const VirtualizedSpecimenList = (props: Props) => {
       showOnlyRescans,
       viewOnly,
       visibleItems,
+      disabled,
     ]
   )
 

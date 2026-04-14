@@ -7,11 +7,17 @@ export type SectionMetadataItem = {
 }
 
 export const getSectionTitle = (section: TGroupedScanSection, t: TFunction) =>
-  section.isPrimary
+  section.sectionType === 'primaryVolume'
     ? t('prepare_scan_modal.content_template.primary_volume_section')
-    : section.volume?.signature
-      ? `${t('prepare_scan_modal.content_template.signature_label')}: ${section.volume.signature}`
-      : t('prepare_scan_modal.content_template.unknown_signature')
+    : section.sectionType === 'waitingForRescan'
+      ? t('prepare_scan_modal.content_template.waiting_for_rescan_section')
+      : section.sectionType === 'unreplaceable'
+        ? t('prepare_scan_modal.content_template.unreplaceable_section')
+        : section.sectionType === 'notFilled'
+          ? t('prepare_scan_modal.content_template.not_filled_section')
+          : section.volume?.signature
+            ? `${t('prepare_scan_modal.content_template.signature_label')}: ${section.volume.signature}`
+            : t('prepare_scan_modal.content_template.unknown_signature')
 
 export const getSectionMetadata = (
   section: TGroupedScanSection,

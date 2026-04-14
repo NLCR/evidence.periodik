@@ -26,9 +26,10 @@ const GroupedSectionCard: FC<Props> = ({ compact, section }) => {
         borderRadius: 0,
         borderLeftWidth: 3,
         borderLeftStyle: 'solid',
-        borderLeftColor: section.isPrimary
-          ? theme.palette.success.main
-          : theme.palette.error.main,
+        borderLeftColor:
+          section.sectionType === 'primaryVolume'
+            ? theme.palette.success.main
+            : theme.palette.error.main,
       })}
     >
       <CardContent
@@ -44,7 +45,7 @@ const GroupedSectionCard: FC<Props> = ({ compact, section }) => {
           {title}
         </Typography>
 
-        {!section.isPrimary && metadata.length > 0 ? (
+        {section.sectionType !== 'primaryVolume' && metadata.length > 0 ? (
           <Box mt={0.75}>
             <Stack direction="row" spacing={1.5} useFlexGap flexWrap="wrap">
               {metadata.map(({ label, value }) => (

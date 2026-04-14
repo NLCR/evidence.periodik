@@ -14,6 +14,7 @@ type Props = {
   index: number
   replacementSourceCandidates: TReplacementSource[]
   onRemove: (index: number) => void
+  disabled?: boolean
 }
 
 const ReplacementInput = ({
@@ -23,6 +24,7 @@ const ReplacementInput = ({
   index,
   replacementSourceCandidates,
   onRemove,
+  disabled = false,
 }: Props) => {
   const { control, formState } = useFormContext<TTemplate>()
 
@@ -45,7 +47,11 @@ const ReplacementInput = ({
                   label="Strany"
                   value={field.value}
                   onChange={field.onChange}
-                  disabled={item?.isUnreplaceable || item?.isWaitingForRescan}
+                  disabled={
+                    disabled ||
+                    item?.isUnreplaceable ||
+                    item?.isWaitingForRescan
+                  }
                 />
               )
             }
@@ -61,7 +67,9 @@ const ReplacementInput = ({
               candidates={replacementSourceCandidates}
               onChange={field.onChange}
               errorMessage={fieldState.error?.message}
-              disabled={item?.isUnreplaceable || item?.isWaitingForRescan}
+              disabled={
+                disabled || item?.isUnreplaceable || item?.isWaitingForRescan
+              }
             />
           )}
         />
@@ -74,14 +82,14 @@ const ReplacementInput = ({
           <FormCheckbox<TTemplate>
             name={`${name}.isUnreplaceable` as const}
             label="Náhrada není dostupná"
-            disabled={item?.isWaitingForRescan}
+            disabled={disabled || item?.isWaitingForRescan}
           />
         </Box>
         <Box>
           <FormCheckbox<TTemplate>
             name={`${name}.isWaitingForRescan` as const}
             label="Čeká na dosken"
-            disabled={item?.isUnreplaceable}
+            disabled={disabled || item?.isUnreplaceable}
           />
         </Box>
       </Stack>

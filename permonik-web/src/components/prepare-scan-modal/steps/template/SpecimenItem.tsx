@@ -38,6 +38,7 @@ type Props = {
   viewOnly?: boolean
   showOnlyRescans?: boolean
   replacementSourceCandidates: TReplacementSource[]
+  disabled?: boolean
 }
 
 export const getNumberLabel = (specimen: TTemplateSpecimenRef) => {
@@ -49,8 +50,19 @@ export const getNumberLabel = (specimen: TTemplateSpecimenRef) => {
 
 export const getDateLabel = (date: string) => dayjs(date).format('DD. MM. YYYY')
 
-const AddReplacementButton = ({ callback }: { callback: () => void }) => (
-  <Button variant="outlined" startIcon={<PlusIcon />} onClick={callback}>
+const AddReplacementButton = ({
+  callback,
+  disabled = false,
+}: {
+  callback: () => void
+  disabled?: boolean
+}) => (
+  <Button
+    variant="outlined"
+    startIcon={<PlusIcon />}
+    onClick={callback}
+    disabled={disabled}
+  >
     Přidat náhradu
   </Button>
 )
@@ -61,6 +73,7 @@ const SpecimenItem = ({
   viewOnly = false,
   showOnlyRescans = false,
   replacementSourceCandidates,
+  disabled = false,
 }: Props) => {
   const { control, setValue } = useFormContext<TTemplate>()
 
@@ -159,6 +172,7 @@ const SpecimenItem = ({
                       candidates={filteredMainReplacementCandidates}
                       onChange={field.onChange}
                       errorMessage={fieldState.error?.message}
+                      disabled={disabled}
                     />
                   )}
                 />
@@ -168,12 +182,14 @@ const SpecimenItem = ({
                   <FormCheckbox<TTemplate>
                     name={`${itemPath}.replacement.isUnreplaceable` as const}
                     label="Náhrada není dostupná"
+                    disabled={disabled}
                   />
                 </Box>
                 <Box>
                   <FormCheckbox<TTemplate>
                     name={`${itemPath}.replacement.isWaitingForRescan` as const}
                     label="Čeká na dosken"
+                    disabled={disabled}
                   />
                 </Box>
               </Stack>
@@ -214,10 +230,12 @@ const SpecimenItem = ({
                           index
                         )}
                         onRemove={remove}
+                        disabled={disabled}
                       />
                     )
                   })}
                   <AddReplacementButton
+                    disabled={disabled}
                     callback={() => appendReplacement(EMPTY_REPLACEMENT)}
                   />
                 </Stack>
@@ -225,6 +243,7 @@ const SpecimenItem = ({
             ) : (
               !showOnlyRescans && (
                 <AddReplacementButton
+                  disabled={disabled}
                   callback={() => appendReplacement(EMPTY_REPLACEMENT)}
                 />
               )
@@ -244,6 +263,7 @@ const SpecimenItem = ({
                   fullWidth
                   value={field.value ?? ''}
                   onChange={(e) => field.onChange(e.target.value)}
+                  disabled={disabled}
                 />
               )}
             />

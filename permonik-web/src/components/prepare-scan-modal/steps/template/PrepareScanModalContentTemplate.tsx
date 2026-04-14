@@ -170,13 +170,16 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             <Button variant="outlined" onClick={() => setIsPreviewOpen(true)}>
               Zobrazit náhled
             </Button>
-            <Button variant="outlined" onClick={handleValidate}>
-              Validovat
-            </Button>
+            {watchedState !== TemplateState.FINALIZED && (
+              <Button variant="outlined" onClick={handleValidate}>
+                Validovat
+              </Button>
+            )}
             <Button
               variant="contained"
               onClick={handleCloseToRescanOrFinalize}
               disabled={
+                watchedState === TemplateState.FINALIZED ||
                 saveTemplateMutation.isPending ||
                 updateTemplateStateMutation.isPending
               }
@@ -195,6 +198,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
           viewOnly={false}
           replacementSourceCandidates={replacementSources}
           showOnlyRescans={showOnlyRescans}
+          disabled={watchedState === TemplateState.FINALIZED}
         />
       </Box>
 

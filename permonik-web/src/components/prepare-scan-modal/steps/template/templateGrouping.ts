@@ -12,7 +12,12 @@ export type TVisibleTemplateItem = {
 
 export type TGroupedScanSection = {
   key: string
-  isPrimary: boolean
+  sectionType:
+    | 'primaryVolume'
+    | 'volume'
+    | 'waitingForRescan'
+    | 'unreplaceable'
+    | 'notFilled'
   volume: TReplacementSource | null
   items: Array<{
     specimen: TTemplateSpecimenRef
@@ -22,6 +27,15 @@ export type TGroupedScanSection = {
 
 const PRIMARY_VOLUME_GROUP_KEY = '__primary__'
 const UNKNOWN_REPLACEMENT_GROUP_KEY = '__unknown_replacement__'
+const WAITING_FOR_RESCAN_GROUP_KEY = '__waiting_for_rescan__'
+const UNREPLACEABLE_GROUP_KEY = '__unreplaceable__'
+const NOT_FILLED_GROUP_KEY = '__not_filled__'
+
+const STATUS_SECTION_KEYS = [
+  WAITING_FOR_RESCAN_GROUP_KEY,
+  UNREPLACEABLE_GROUP_KEY,
+  NOT_FILLED_GROUP_KEY,
+]
 
 type TGroupedScanItem = TGroupedScanSection['items'][number]
 
@@ -31,7 +45,7 @@ type TGroupedScanSectionAccumulator = Omit<TGroupedScanSection, 'items'> & {
 
 type TSectionDescriptor = {
   key: string
-  isPrimary: boolean
+  sectionType: TGroupedScanSection['sectionType']
   volume: TReplacementSource | null
 }
 
@@ -91,23 +105,39 @@ const appendItemToSection = (
   sections.set(descriptor.key, section)
 }
 
-const PRIMARY_SECTION_DESCRIPTOR = {
+const PRIMARY_SECTION_DESCRIPTOR: TSectionDescriptor = {
   key: PRIMARY_VOLUME_GROUP_KEY,
-  isPrimary: true,
+  sectionType: 'primaryVolume',
   volume: null,
 }
 
-const UNKNOWN_REPLACEMENT_SECTION_DESCRIPTOR = {
-  key: UNKNOWN_REPLACEMENT_GROUP_KEY,
-  isPrimary: false,
+const WAITING_FOR_RESCAN_SECTION_DESCRIPTOR: TSectionDescriptor = {
+  key: WAITING_FOR_RESCAN_GROUP_KEY,
+  sectionType: 'waitingForRescan',
   volume: null,
 }
+
+const UNREPLACEABLE_SECTION_DESCRIPTOR: TSectionDescriptor = {
+  key: UNREPLACEABLE_GROUP_KEY,
+  sectionType: 'unreplaceable',
+  volume: null,
+}
+
+const NOT_FILLED_SECTION_DESCRIPTOR: TSectionDescriptor = {
+  key: NOT_FILLED_GROUP_KEY,
+  sectionType: 'notFilled',
+  volume: null,
+}
+
+const hasReplacementSource = (replacement: TReplacement): boolean =>
+  getVolumeKey(replacement.volume, UNKNOWN_REPLACEMENT_GROUP_KEY) !==
+  UNKNOWN_REPLACEMENT_GROUP_KEY
 
 const getReplacementSectionDescriptor = (
   replacement: TReplacement
 ): TSectionDescriptor => ({
   key: getVolumeKey(replacement.volume, UNKNOWN_REPLACEMENT_GROUP_KEY),
-  isPrimary: false,
+  sectionType: 'volume',
   volume: replacement.volume ?? null,
 })
 
@@ -115,8 +145,13 @@ const getTemplateItemSectionDescriptor = (
   item: TTemplateItem
 ): TSectionDescriptor => {
   if (item.usePrimaryVolume) return PRIMARY_SECTION_DESCRIPTOR
-  if (item.replacement) return getReplacementSectionDescriptor(item.replacement)
-  return UNKNOWN_REPLACEMENT_SECTION_DESCRIPTOR
+  if (item.replacement?.isWaitingForRescan)
+    return WAITING_FOR_RESCAN_SECTION_DESCRIPTOR
+  if (item.replacement?.isUnreplaceable) return UNREPLACEABLE_SECTION_DESCRIPTOR
+  if (!item.replacement || !hasReplacementSource(item.replacement))
+    return NOT_FILLED_SECTION_DESCRIPTOR
+
+  return getReplacementSectionDescriptor(item.replacement)
 }
 
 const initSectionsAccumulator = (): Map<
@@ -152,5 +187,15 @@ export const buildGroupedScanSections = (
     }
   }
 
-  return Array.from(sections.values())
+  const allSections = Array.from(sections.values())
+
+  // status sections at the end
+  return [
+    ...allSections.filter(
+      (section) => !STATUS_SECTION_KEYS.includes(section.key)
+    ),
+    ...allSections.filter((section) =>
+      STATUS_SECTION_KEYS.includes(section.key)
+    ),
+  ]
 }
