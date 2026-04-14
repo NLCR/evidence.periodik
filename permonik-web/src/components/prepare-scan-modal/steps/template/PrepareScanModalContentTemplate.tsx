@@ -5,7 +5,10 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Stack from '@mui/material/Stack'
 import { FC, useMemo, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import {
+  getNextTemplateState,
+  shouldValidateTemplateForNextState,
   TReplacementSource,
   TemplateState,
   TTemplate,
@@ -30,6 +33,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
   volumeId = undefined,
   replacementSources = [],
 }) => {
+  const { t } = useTranslation()
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [showOnlyRescans, setShowOnlyRescans] = useState(false)
   const { control, getValues, setValue, trigger, clearErrors, setError } =
@@ -107,22 +111,20 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
   }
 
   const handleValidate = async () => {
-    const nextState =
-      watchedState === TemplateState.CREATED && hasWaitingForRescan
-        ? TemplateState.WAITING_FOR_RESCAN
-        : TemplateState.FINALIZED
+    const nextState = getNextTemplateState(watchedState, hasWaitingForRescan)
+
+    if (!shouldValidateTemplateForNextState(nextState)) return
 
     await validateTemplateForNextState(nextState)
   }
 
   const handleCloseToRescanOrFinalize = async () => {
-    const nextState =
-      watchedState === TemplateState.CREATED && hasWaitingForRescan
-        ? TemplateState.WAITING_FOR_RESCAN
-        : TemplateState.FINALIZED
+    const nextState = getNextTemplateState(watchedState, hasWaitingForRescan)
 
     try {
-      const isValid = await validateTemplateForNextState(nextState)
+      const isValid = shouldValidateTemplateForNextState(nextState)
+        ? await validateTemplateForNextState(nextState)
+        : true
 
       if (!isValid) return
 
@@ -133,6 +135,18 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
       // TODO napojit UI notifikaci chyboveho stavu
     }
   }
+
+  const submitButtonLabel = useMemo(() => {
+    const nextState = getNextTemplateState(watchedState, hasWaitingForRescan)
+
+    if (nextState === TemplateState.WAITING_FOR_RESCAN)
+      return t('prepare_scan_modal.content_template.close_to_rescan_button')
+
+    if (nextState === TemplateState.LATE_FIXES)
+      return t('prepare_scan_modal.content_template.switch_to_repairs_button')
+
+    return t('prepare_scan_modal.content_template.finalize_button')
+  }, [hasWaitingForRescan, t, watchedState])
 
   return (
     <Box
@@ -163,30 +177,27 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
                   onChange={(_, checked) => setShowOnlyRescans(checked)}
                 />
               }
-              label="Zobrazit pouze doskeny"
+              label={t('prepare_scan_modal.content_template.show_only_rescans')}
             />
           </Stack>
           <Stack direction="row" spacing={2}>
             <Button variant="outlined" onClick={() => setIsPreviewOpen(true)}>
-              Zobrazit náhled
+              {t('prepare_scan_modal.content_template.show_preview_button')}
             </Button>
             {watchedState !== TemplateState.FINALIZED && (
               <Button variant="outlined" onClick={handleValidate}>
-                Validovat
+                {t('prepare_scan_modal.content_template.validate_button')}
               </Button>
             )}
             <Button
               variant="contained"
               onClick={handleCloseToRescanOrFinalize}
               disabled={
-                watchedState === TemplateState.FINALIZED ||
                 saveTemplateMutation.isPending ||
                 updateTemplateStateMutation.isPending
               }
             >
-              {watchedState === TemplateState.CREATED && hasWaitingForRescan
-                ? 'Uzavřít k doskenování'
-                : 'Finalizovat'}
+              {submitButtonLabel}
             </Button>
           </Stack>
         </Box>

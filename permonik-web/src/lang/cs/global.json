@@ -48,6 +48,12 @@
       "no_items": "Pro zvolený filtr nejsou dostupné žádné položky.",
       "preview_dialog_title": "Náhled předlohy",
       "export_button": "Export",
+      "show_only_rescans": "Zobrazit pouze doskeny",
+      "show_preview_button": "Zobrazit náhled",
+      "validate_button": "Validovat",
+      "close_to_rescan_button": "Uzavřít k doskenování",
+      "finalize_button": "Finalizovat",
+      "switch_to_repairs_button": "Odemknout k opravám",
       "group_by_volumes": "Seskupit po svazcích",
       "primary_volume_section": "Primární svazek",
       "waiting_for_rescan_section": "Čeká na doskeny",
@@ -73,7 +79,8 @@
     "template_state": {
       "created": "Vytvořená",
       "waiting_for_rescan": "Čeká na doskeny",
-      "finalized": "Finalizovaná"
+      "finalized": "Finalizovaná",
+      "late_fixes": "Opravy"
     },
     "validation": {
       "waiting_for_rescan": "Před uzavřením k doskenování musí mít každá náhrada vyplněný zdroj, nebo být označená jako nedostupná, nebo čekající na dosken.",

@@ -48,6 +48,12 @@
       "no_items": "Pre zvolený filter nie sú dostupné žiadne položky.",
       "preview_dialog_title": "Náhľad predlohy",
       "export_button": "Export",
+      "show_only_rescans": "Zobraziť iba doskeny",
+      "show_preview_button": "Zobraziť náhľad",
+      "validate_button": "Validovať",
+      "close_to_rescan_button": "Uzavrieť na doskenovanie",
+      "finalize_button": "Finalizovať",
+      "switch_to_repairs_button": "Odomknúť na opravy",
       "group_by_volumes": "Zoskupiť podľa zväzkov",
       "primary_volume_section": "Primárny zväzok",
       "waiting_for_rescan_section": "Čaká na doskeny",
@@ -73,7 +79,8 @@
     "template_state": {
       "created": "Vytvorená",
       "waiting_for_rescan": "Čaká na doskeny",
-      "finalized": "Finalizovaná"
+      "finalized": "Finalizovaná",
+      "late_fixes": "Opravy"
     },
     "validation": {
       "waiting_for_rescan": "Pred uzavretím na doskenovanie musí mať každá náhrada vyplnený zdroj, alebo byť označená ako nedostupná, alebo čakajúca na dosken.",

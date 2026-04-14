@@ -48,6 +48,12 @@
       "no_items": "No items are available for the selected filter.",
       "preview_dialog_title": "Template preview",
       "export_button": "Export",
+      "show_only_rescans": "Show only rescans",
+      "show_preview_button": "Show preview",
+      "validate_button": "Validate",
+      "close_to_rescan_button": "Close for rescan",
+      "finalize_button": "Finalize",
+      "switch_to_repairs_button": "Unlock for repairs",
       "group_by_volumes": "Group by volumes",
       "primary_volume_section": "Primary volume",
       "waiting_for_rescan_section": "Waiting for rescan",
@@ -73,7 +79,8 @@
     "template_state": {
       "created": "Created",
       "waiting_for_rescan": "Waiting for rescan",
-      "finalized": "Finalized"
+      "finalized": "Finalized",
+      "late_fixes": "Repairs"
     },
     "validation": {
       "waiting_for_rescan": "Before closing for rescan, each replacement must have a filled source, or be marked as unavailable, or marked as waiting for rescan.",
