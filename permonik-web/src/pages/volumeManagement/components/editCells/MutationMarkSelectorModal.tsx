@@ -197,7 +197,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
           }}
         >
           <TextField
-            label={t('volume_overview.mutation_mark_label_number_decription')}
+            label={t('volume_overview.mutation_mark_label_number_description')}
             value={inputMarkState.mark}
             disabled={inputNumberImpossible}
             onChange={(e) => handleInputNumberChange(e.target.value)}
@@ -224,7 +224,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
             />
             <div style={{ marginTop: 8 }}>
               {t(
-                'volume_overview.mutation_mark_label_number_decription_impossible'
+                'volume_overview.mutation_mark_label_number_description_impossible'
               )}
             </div>
           </Box>

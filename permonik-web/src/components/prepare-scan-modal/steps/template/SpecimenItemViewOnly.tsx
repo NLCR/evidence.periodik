@@ -6,6 +6,7 @@ import { noop } from 'lodash'
 import theme from '../../../../theme'
 import { TReplacement, TTemplateSpecimenRef } from '../../schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
+import { useTranslation } from 'react-i18next'
 
 type Props = {
   specimen: TTemplateSpecimenRef
@@ -20,6 +21,18 @@ const SpecimenItemViewOnly = ({
   mainReplacement,
   note,
 }: Props) => {
+  const { t } = useTranslation()
+  const getPagesLabel = (value: string | null | undefined) => {
+    if (!value) return t('prepare_scan_modal.content_template.all_pages_label')
+
+    const normalizedValue = value.trim().toLowerCase()
+    if (['všechny', 'vsetky', 'všetky', 'all'].includes(normalizedValue)) {
+      return t('prepare_scan_modal.content_template.all_pages_label')
+    }
+
+    return value
+  }
+
   return (
     <Card
       variant="outlined"
@@ -36,7 +49,7 @@ const SpecimenItemViewOnly = ({
         <Stack justifyContent={'space-between'} direction={'row'}>
           <Stack direction="row" spacing={1} alignItems="center">
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {getNumberLabel(specimen)}
+              {getNumberLabel(specimen, t)}
             </Typography>
 
             <Typography variant="body2" color="text.secondary">
@@ -50,12 +63,16 @@ const SpecimenItemViewOnly = ({
           {specimen.numExists ? (
             <Stack direction="row" spacing={1} alignItems="center">
               <CheckIcon color="success" fontSize="small" />
-              <Typography>Skenovat ze svazku</Typography>
+              <Typography>
+                {t('prepare_scan_modal.content_template.scan_from_volume')}
+              </Typography>
             </Stack>
           ) : (
             <Stack direction="row" spacing={1} alignItems="center">
               <WarningIcon color="error" fontSize="small" />
-              <Typography>Nahradit</Typography>
+              <Typography>
+                {t('prepare_scan_modal.content_template.replace_label')}
+              </Typography>
             </Stack>
           )}
         </Stack>
@@ -79,7 +96,7 @@ const SpecimenItemViewOnly = ({
                   transformOrigin: 'right center',
                 }}
               >
-                Náhrady
+                {t('prepare_scan_modal.content_template.replacements_label')}
               </Typography>
               <Box
                 sx={{
@@ -100,19 +117,21 @@ const SpecimenItemViewOnly = ({
                     }}
                   >
                     <th style={{ fontWeight: 200, textAlign: 'left' }}>
-                      Signatura
+                      {t('prepare_scan_modal.content_template.signature_label')}
                     </th>
                     <th style={{ fontWeight: 200, textAlign: 'left' }}>
-                      Vlastník
+                      {t('prepare_scan_modal.content_template.volume_owner')}
                     </th>
                     <th style={{ fontWeight: 200, textAlign: 'left' }}>
-                      Čárový kód
+                      {t(
+                        'prepare_scan_modal.content_template.replacement_barcode'
+                      )}
                     </th>
                     <th style={{ fontWeight: 200, textAlign: 'left' }}>
-                      Mutace
+                      {t('prepare_scan_modal.content_template.volume_mutation')}
                     </th>
                     <th style={{ fontWeight: 200, textAlign: 'left' }}>
-                      Strany
+                      {t('prepare_scan_modal.content_template.pages_label')}
                     </th>
                   </thead>
 
@@ -123,7 +142,7 @@ const SpecimenItemViewOnly = ({
                         <td>{item.volume.owner}</td>
                         <td>{item.volume.barcode}</td>
                         <td>{item.volume.mutation}</td>
-                        <td>{item.pages}</td>
+                        <td>{getPagesLabel(item.pages)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -133,7 +152,11 @@ const SpecimenItemViewOnly = ({
           </Box>
         )}
 
-        {note && <Typography>Poznámka: {note}</Typography>}
+        {note && (
+          <Typography>
+            {t('prepare_scan_modal.content_template.note_label')} {note}
+          </Typography>
+        )}
       </CardContent>
     </Card>
   )

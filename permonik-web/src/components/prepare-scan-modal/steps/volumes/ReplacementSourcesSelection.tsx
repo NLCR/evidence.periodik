@@ -11,8 +11,10 @@ import {
   TScanTemplateSettings,
 } from '../../schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
+import { useTranslation } from 'react-i18next'
 
 const ReplacementSourcesSelection = () => {
+  const { t } = useTranslation()
   const { control, watch } = useFormContext<TScanTemplateSettings>()
 
   const issues = watch('issues')
@@ -61,7 +63,9 @@ const ReplacementSourcesSelection = () => {
           </Box>
           <Box flexGrow={0}>
             <IconButton
-              aria-label="Smazat zdroj náhrady"
+              aria-label={t(
+                'prepare_scan_modal.content_volumes.delete_replacement_source_aria'
+              )}
               disabled={index === 0}
               onClick={() => remove(index)}
             >
@@ -75,7 +79,7 @@ const ReplacementSourcesSelection = () => {
         variant="outlined"
         onClick={() => append(EMPTY_REPLACEMENT_SOURCE)}
       >
-        Přidat zdroj náhrad
+        {t('prepare_scan_modal.content_volumes.add_replacement_source_button')}
       </Button>
     </>
   )

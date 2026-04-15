@@ -3,6 +3,7 @@ import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { FC } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   getTemplateStateIcon,
   getTemplateStateLabel,
@@ -38,6 +39,7 @@ const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
   displayCurrentState = false,
   currentState = undefined,
 }) => {
+  const { t } = useTranslation()
   const StateIconComponent = currentState
     ? getTemplateStateIcon(currentState)
     : undefined
@@ -46,7 +48,7 @@ const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
     <>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography sx={{ fontWeight: 700, fontSize: 20 }}>
-          {title} (signatura {signature ?? 'neznámá signatura'})
+          {`${title} (${t('prepare_scan_modal.content_template.signature_label').toLowerCase()} ${signature ?? t('prepare_scan_modal.content_template.unknown_signature').toLowerCase()})`}
         </Typography>
         {displayCurrentState && currentState && (
           <Chip
@@ -69,14 +71,38 @@ const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
         )}
       </Stack>
       <Box display="grid" gridTemplateColumns="1fr 1fr">
-        <Typography>Podnázev: {subTitle ?? '-'}</Typography>
-        <Typography>Vlastník: {owner ?? '-'}</Typography>
-        <Typography>Mutace: {mutation ?? '-'}</Typography>
-        <Typography>Mutační vydání: {mutationEdition ?? '-'}</Typography>
-        <Typography>Rozsah od: {dateFrom ?? '-'}</Typography>
-        <Typography>Rozsah do: {dateTo ?? '-'}</Typography>
-        <Typography>Počet čísel: {specimensCount}</Typography>
-        <Typography>Počet příloh: {attachmentsCount}</Typography>
+        <Typography>
+          {t('prepare_scan_modal.content_template.header_subtitle')}:{' '}
+          {subTitle ?? '-'}
+        </Typography>
+        <Typography>
+          {t('prepare_scan_modal.content_template.volume_owner')}:{' '}
+          {owner ?? '-'}
+        </Typography>
+        <Typography>
+          {t('prepare_scan_modal.content_template.volume_mutation')}:{' '}
+          {mutation ?? '-'}
+        </Typography>
+        <Typography>
+          {t('prepare_scan_modal.content_template.volume_mutation_edition')}:{' '}
+          {mutationEdition ?? '-'}
+        </Typography>
+        <Typography>
+          {t('prepare_scan_modal.content_template.header_range_from')}:{' '}
+          {dateFrom ?? '-'}
+        </Typography>
+        <Typography>
+          {t('prepare_scan_modal.content_template.header_range_to')}:{' '}
+          {dateTo ?? '-'}
+        </Typography>
+        <Typography>
+          {t('prepare_scan_modal.content_template.header_specimens_count')}:{' '}
+          {specimensCount}
+        </Typography>
+        <Typography>
+          {t('prepare_scan_modal.content_template.header_attachments_count')}:{' '}
+          {attachmentsCount}
+        </Typography>
       </Box>
     </>
   )

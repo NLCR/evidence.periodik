@@ -1,6 +1,7 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, IconButton, Stack, TextField, Typography } from '@mui/material'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import FormCheckbox from '../../../form/FormCheckbox'
 import { TReplacementSource, TTemplate } from '../../schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
@@ -26,6 +27,7 @@ const ReplacementInput = ({
   onRemove,
   disabled = false,
 }: Props) => {
+  const { t } = useTranslation()
   const { control } = useFormContext<TTemplate>()
 
   const item = useWatch({ control, name })
@@ -41,7 +43,7 @@ const ReplacementInput = ({
                 <Typography>{field.value?.toString()}</Typography>
               ) : (
                 <TextField
-                  label="Strany"
+                  label={t('prepare_scan_modal.content_template.pages_label')}
                   value={field.value}
                   onChange={field.onChange}
                   disabled={
@@ -78,14 +80,18 @@ const ReplacementInput = ({
         <Box>
           <FormCheckbox<TTemplate>
             name={`${name}.isUnreplaceable` as const}
-            label="Náhrada není dostupná"
+            label={t(
+              'prepare_scan_modal.content_template.replacement_unavailable'
+            )}
             disabled={disabled || item?.isWaitingForRescan}
           />
         </Box>
         <Box>
           <FormCheckbox<TTemplate>
             name={`${name}.isWaitingForRescan` as const}
-            label="Čeká na dosken"
+            label={t(
+              'prepare_scan_modal.content_template.waiting_for_rescan_label'
+            )}
             disabled={disabled || item?.isUnreplaceable}
           />
         </Box>

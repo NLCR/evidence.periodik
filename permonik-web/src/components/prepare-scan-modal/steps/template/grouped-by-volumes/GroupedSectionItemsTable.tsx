@@ -18,6 +18,16 @@ type Props = {
 
 const GroupedSectionItemsTable: FC<Props> = ({ compact, section }) => {
   const { t } = useTranslation()
+  const getPagesLabel = (value: string | null) => {
+    if (!value) return t('prepare_scan_modal.content_template.all_pages_label')
+
+    const normalizedValue = value.trim().toLowerCase()
+    if (['všechny', 'vsetky', 'všetky', 'all'].includes(normalizedValue)) {
+      return t('prepare_scan_modal.content_template.all_pages_label')
+    }
+
+    return value
+  }
 
   return (
     <TableContainer>
@@ -65,7 +75,7 @@ const GroupedSectionItemsTable: FC<Props> = ({ compact, section }) => {
               <TableCell>
                 <Stack direction="row" spacing={1} alignItems="center">
                   <Typography sx={{ fontWeight: 600 }}>
-                    {getNumberLabel(specimen)}
+                    {getNumberLabel(specimen, t)}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     (
@@ -76,10 +86,7 @@ const GroupedSectionItemsTable: FC<Props> = ({ compact, section }) => {
                   </Typography>
                 </Stack>
               </TableCell>
-              <TableCell>
-                {pages ||
-                  t('prepare_scan_modal.content_template.all_pages_label')}
-              </TableCell>
+              <TableCell>{getPagesLabel(pages)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

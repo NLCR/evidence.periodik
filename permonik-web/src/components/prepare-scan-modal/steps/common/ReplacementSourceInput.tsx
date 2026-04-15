@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import { ReactNode, useId, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   EMPTY_REPLACEMENT_SOURCE,
   TReplacementSource,
@@ -31,6 +32,7 @@ const ReplacementSourceInput = ({
   errorMessage = undefined,
   disabled = false,
 }: Props) => {
+  const { t } = useTranslation()
   const [mode, setMode] = useState<'SELECT' | 'MANUAL'>('SELECT')
   const [selectedOptionId, setSelectedOptionId] = useState<string>('')
   const selectId = useId()
@@ -73,7 +75,7 @@ const ReplacementSourceInput = ({
             justifyContent={'space-between'}
           >
             <ReplacementSourceInputComponent
-              label="Signatura"
+              label={t('prepare_scan_modal.content_template.signature_label')}
               viewOnly={viewOnly}
               value={value.signature}
               onChange={(next) => safeSetReplacement({ signature: next })}
@@ -81,7 +83,7 @@ const ReplacementSourceInput = ({
               disabled={disabled}
             />
             <ReplacementSourceInputComponent
-              label="Vlastník"
+              label={t('prepare_scan_modal.content_template.volume_owner')}
               viewOnly={viewOnly}
               value={value.owner}
               onChange={(next) => safeSetReplacement({ owner: next })}
@@ -89,7 +91,9 @@ const ReplacementSourceInput = ({
               disabled={disabled}
             />
             <ReplacementSourceInputComponent
-              label="Čárový kód"
+              label={t(
+                'prepare_scan_modal.content_template.replacement_barcode'
+              )}
               viewOnly={viewOnly}
               value={value.barcode}
               onChange={(next) => safeSetReplacement({ barcode: next })}
@@ -97,7 +101,7 @@ const ReplacementSourceInput = ({
               disabled={disabled}
             />
             <ReplacementSourceInputComponent
-              label="Mutace"
+              label={t('prepare_scan_modal.content_template.volume_mutation')}
               viewOnly={viewOnly}
               value={value.mutation}
               onChange={(next) => safeSetReplacement({ mutation: next })}
@@ -105,7 +109,9 @@ const ReplacementSourceInput = ({
               disabled={disabled}
             />
             <ReplacementSourceInputComponent
-              label="Mutační vydání"
+              label={t(
+                'prepare_scan_modal.content_template.volume_mutation_edition'
+              )}
               viewOnly={viewOnly}
               value={value.mutationEdition}
               onChange={(next) => safeSetReplacement({ mutationEdition: next })}
@@ -117,14 +123,18 @@ const ReplacementSourceInput = ({
           <>
             <FormControl fullWidth error={!!errorMessage}>
               <InputLabel id={`${selectId}-label`}>
-                Vyberte náhradní svazek
+                {t(
+                  'prepare_scan_modal.content_template.select_replacement_volume'
+                )}
               </InputLabel>
               <Select
                 fullWidth
                 labelId={`${selectId}-label`}
                 id={selectId}
                 value={selectedOptionId}
-                label="Vyberte náhradní svazek"
+                label={t(
+                  'prepare_scan_modal.content_template.select_replacement_volume'
+                )}
                 onChange={(event) =>
                   handleSelectChange(String(event.target.value))
                 }

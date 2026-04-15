@@ -19,6 +19,8 @@ import {
   useFormContext,
   useWatch,
 } from 'react-hook-form'
+import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import SpecimenItemViewOnly from './SpecimenItemViewOnly'
 import FormCheckbox from '../../../form/FormCheckbox'
 import {
@@ -41,11 +43,19 @@ type Props = {
   disabled?: boolean
 }
 
-export const getNumberLabel = (specimen: TTemplateSpecimenRef) => {
-  if (specimen.number) return `č. ${specimen.number}`
+export const getNumberLabel = (
+  specimen: TTemplateSpecimenRef,
+  t: TFunction
+) => {
+  if (specimen.number)
+    return t('prepare_scan_modal.content_template.issue_number_label', {
+      number: specimen.number,
+    })
   if (specimen.attachmentNumber)
-    return `Příloha č. ${specimen.attachmentNumber}`
-  return 'Neznámé číslo'
+    return t('prepare_scan_modal.content_template.attachment_number_label', {
+      number: specimen.attachmentNumber,
+    })
+  return t('prepare_scan_modal.content_template.unknown_number_label')
 }
 
 export const getDateLabel = (date: string) => dayjs(date).format('DD. MM. YYYY')
@@ -53,9 +63,11 @@ export const getDateLabel = (date: string) => dayjs(date).format('DD. MM. YYYY')
 const AddReplacementButton = ({
   callback,
   disabled = false,
+  label,
 }: {
   callback: () => void
   disabled?: boolean
+  label: string
 }) => (
   <Button
     variant="outlined"
@@ -63,7 +75,7 @@ const AddReplacementButton = ({
     onClick={callback}
     disabled={disabled}
   >
-    Přidat náhradu
+    {label}
   </Button>
 )
 
@@ -75,6 +87,7 @@ const SpecimenItem = ({
   replacementSourceCandidates,
   disabled = false,
 }: Props) => {
+  const { t } = useTranslation()
   const { control, setValue } = useFormContext<TTemplate>()
 
   const {
@@ -139,7 +152,7 @@ const SpecimenItem = ({
       <CardContent sx={{ p: 1, '&:last-child': { pb: 1 } }}>
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography variant="h6" sx={{ fontWeight: 600, minWidth: 140 }}>
-            {getNumberLabel(specimen)}
+            {getNumberLabel(specimen, t)}
           </Typography>
 
           <Typography variant="body2" color="text.secondary">
@@ -155,13 +168,17 @@ const SpecimenItem = ({
           {specimen.numExists ? (
             <Stack direction="row" spacing={1} alignItems="center">
               <CheckIcon color="success" fontSize="small" />
-              <Typography>Skenovat ze svazku</Typography>
+              <Typography>
+                {t('prepare_scan_modal.content_template.scan_from_volume')}
+              </Typography>
             </Stack>
           ) : (
             <>
               <Stack direction="row" spacing={1} alignItems="center">
                 <WarningIcon color="error" fontSize="small" />
-                <Typography>Nahradit:</Typography>
+                <Typography>
+                  {t('prepare_scan_modal.content_template.replace_label')}
+                </Typography>
                 <Controller
                   control={control}
                   name={`${itemPath}.replacement.volume`}
@@ -185,14 +202,18 @@ const SpecimenItem = ({
                 <Box>
                   <FormCheckbox<TTemplate>
                     name={`${itemPath}.replacement.isUnreplaceable` as const}
-                    label="Náhrada není dostupná"
+                    label={t(
+                      'prepare_scan_modal.content_template.replacement_unavailable'
+                    )}
                     disabled={disabled || mainReplacement?.isWaitingForRescan}
                   />
                 </Box>
                 <Box>
                   <FormCheckbox<TTemplate>
                     name={`${itemPath}.replacement.isWaitingForRescan` as const}
-                    label="Čeká na dosken"
+                    label={t(
+                      'prepare_scan_modal.content_template.waiting_for_rescan_label'
+                    )}
                     disabled={disabled || mainReplacement?.isUnreplaceable}
                   />
                 </Box>
@@ -214,7 +235,7 @@ const SpecimenItem = ({
                 }}
               >
                 <Typography sx={{ mb: 1, fontWeight: 600 }}>
-                  Náhrady:
+                  {t('prepare_scan_modal.content_template.replacements_label')}
                 </Typography>
 
                 <Stack spacing={1}>
@@ -240,6 +261,9 @@ const SpecimenItem = ({
                   })}
                   <AddReplacementButton
                     disabled={disabled}
+                    label={t(
+                      'prepare_scan_modal.content_template.add_replacement_button'
+                    )}
                     callback={() => appendReplacement(EMPTY_REPLACEMENT)}
                   />
                 </Stack>
@@ -248,6 +272,9 @@ const SpecimenItem = ({
               !showOnlyRescans && (
                 <AddReplacementButton
                   disabled={disabled}
+                  label={t(
+                    'prepare_scan_modal.content_template.add_replacement_button'
+                  )}
                   callback={() => appendReplacement(EMPTY_REPLACEMENT)}
                 />
               )
@@ -257,7 +284,9 @@ const SpecimenItem = ({
 
         <Box mt={1}>
           <Stack direction="row" spacing={1} alignItems="center">
-            <Typography>Poznámka: </Typography>
+            <Typography>
+              {t('prepare_scan_modal.content_template.note_label')}
+            </Typography>
             <Controller
               control={control}
               name={`${itemPath}.note`}

@@ -221,8 +221,12 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
                   <DeleteIcon />
                 </Button>
               }
-              title="Opravdu chcete předlohu k digitalizaci smazat?"
-              description="Tuto akci nelze vrátit zpět."
+              title={t(
+                'prepare_scan_modal.content_template.delete_template_confirm_title'
+              )}
+              description={t(
+                'prepare_scan_modal.content_template.delete_template_confirm_description'
+              )}
               onConfirm={handleDeleteTemplate}
             />
           </Stack>
