@@ -26,12 +26,9 @@ const ReplacementInput = ({
   onRemove,
   disabled = false,
 }: Props) => {
-  const { control, formState } = useFormContext<TTemplate>()
-
-  console.log('ERR', formState.errors)
+  const { control } = useFormContext<TTemplate>()
 
   const item = useWatch({ control, name })
-
   return (
     <>
       <Stack direction="row" alignItems="center" gap={1}>

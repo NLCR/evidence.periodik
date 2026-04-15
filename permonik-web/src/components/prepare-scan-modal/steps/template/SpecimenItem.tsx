@@ -172,7 +172,11 @@ const SpecimenItem = ({
                       candidates={filteredMainReplacementCandidates}
                       onChange={field.onChange}
                       errorMessage={fieldState.error?.message}
-                      disabled={disabled}
+                      disabled={
+                        disabled ||
+                        mainReplacement?.isUnreplaceable ||
+                        mainReplacement?.isWaitingForRescan
+                      }
                     />
                   )}
                 />
@@ -182,14 +186,14 @@ const SpecimenItem = ({
                   <FormCheckbox<TTemplate>
                     name={`${itemPath}.replacement.isUnreplaceable` as const}
                     label="Náhrada není dostupná"
-                    disabled={disabled}
+                    disabled={disabled || mainReplacement?.isWaitingForRescan}
                   />
                 </Box>
                 <Box>
                   <FormCheckbox<TTemplate>
                     name={`${itemPath}.replacement.isWaitingForRescan` as const}
                     label="Čeká na dosken"
-                    disabled={disabled}
+                    disabled={disabled || mainReplacement?.isUnreplaceable}
                   />
                 </Box>
               </Stack>

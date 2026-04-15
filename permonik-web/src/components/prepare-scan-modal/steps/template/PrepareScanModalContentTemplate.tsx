@@ -23,6 +23,10 @@ import TemplatePreviewHeader, {
   TTemplatePreviewHeaderProps,
 } from './TemplatePreviewHeader'
 import VirtualizedSpecimenList from './VirtualizedSpecimenList'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EyeIcon from '@mui/icons-material/Visibility'
+import CheckIcon from '@mui/icons-material/Check'
+import ConfirmDialog from '../../../../pages/specimensOverview/components/dialogs/ConfirmDialog'
 
 type TProps = {
   volumeId?: string
@@ -136,6 +140,10 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
     }
   }
 
+  const handleDeleteTemplate = () => {
+    console.log('this is not implemented yet.')
+  }
+
   const submitButtonLabel = useMemo(() => {
     const nextState = getNextTemplateState(watchedState, hasWaitingForRescan)
 
@@ -181,11 +189,19 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             />
           </Stack>
           <Stack direction="row" spacing={2}>
-            <Button variant="outlined" onClick={() => setIsPreviewOpen(true)}>
+            <Button
+              variant="outlined"
+              onClick={() => setIsPreviewOpen(true)}
+              startIcon={<EyeIcon />}
+            >
               {t('prepare_scan_modal.content_template.show_preview_button')}
             </Button>
             {watchedState !== TemplateState.FINALIZED && (
-              <Button variant="outlined" onClick={handleValidate}>
+              <Button
+                variant="outlined"
+                onClick={handleValidate}
+                startIcon={<CheckIcon />}
+              >
                 {t('prepare_scan_modal.content_template.validate_button')}
               </Button>
             )}
@@ -199,6 +215,16 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             >
               {submitButtonLabel}
             </Button>
+            <ConfirmDialog
+              TriggerButton={
+                <Button variant="outlined" sx={{ minWidth: 0 }}>
+                  <DeleteIcon />
+                </Button>
+              }
+              title="Opravdu chcete předlohu k digitalizaci smazat?"
+              description="Tuto akci nelze vrátit zpět."
+              onConfirm={handleDeleteTemplate}
+            />
           </Stack>
         </Box>
       </Box>

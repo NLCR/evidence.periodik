@@ -75,7 +75,7 @@ const SpecimenItemViewOnly = ({
                 sx={{
                   mb: 0,
                   fontWeight: 600,
-                  transform: 'rotate(-90deg)',
+                  transform: 'translateY(-10px) rotate(-90deg)',
                   transformOrigin: 'right center',
                 }}
               >
