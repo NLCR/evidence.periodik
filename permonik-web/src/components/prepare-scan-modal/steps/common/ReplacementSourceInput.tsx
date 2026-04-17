@@ -49,7 +49,10 @@ const ReplacementSourceInput = ({
     if (!selectedOption) return
 
     setSelectedOptionId(selectedId)
-    onChange(selectedOption)
+    onChange({
+      ...selectedOption,
+      priority: value.priority,
+    })
   }
 
   const buildReplacementOptionLabel = (option: TReplacementSource): ReactNode =>
@@ -165,7 +168,10 @@ const ReplacementSourceInput = ({
               disabled={disabled}
               onClick={() => {
                 setMode(mode === 'MANUAL' ? 'SELECT' : 'MANUAL')
-                onChange(EMPTY_REPLACEMENT_SOURCE)
+                onChange({
+                  ...EMPTY_REPLACEMENT_SOURCE,
+                  priority: value.priority,
+                })
               }}
             >
               <CompareArrowsIcon />

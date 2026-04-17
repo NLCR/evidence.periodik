@@ -77,6 +77,8 @@
       "waiting_for_rescan_section": "Waiting for rescan",
       "unreplaceable_section": "Cannot be replaced",
       "not_filled_section": "Not filled yet",
+      "replacement_section_title": "Replacement {{index}}",
+      "unknown_replacement": "Unknown replacement",
       "other_volume_section": "Other volume designation",
       "volume_signature": "Signature",
       "signature_label": "Signature",

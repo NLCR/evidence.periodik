@@ -19,6 +19,7 @@ export type TReplacementSourceParameters = {
 
 export const replacementSourceSchema = z.object({
   id: z.string().nullish(),
+  priority: z.number().int().positive().nullish(),
   signature: z.string().nullish(),
   owner: z.string().nullish(),
   barcode: z.string().nullish(),
@@ -39,6 +40,7 @@ export type TReplacement = z.infer<typeof replacementSchema>
 
 export const EMPTY_REPLACEMENT_SOURCE: TReplacementSource = {
   id: undefined,
+  priority: undefined,
   barcode: '',
   mutation: '',
   mutationEdition: '',

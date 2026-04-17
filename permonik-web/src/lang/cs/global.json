@@ -77,6 +77,8 @@
       "waiting_for_rescan_section": "Čeká na doskeny",
       "unreplaceable_section": "Nelze nahradit",
       "not_filled_section": "Zatím nevyplněné",
+      "replacement_section_title": "Náhrada {{index}}",
+      "unknown_replacement": "Neznámá náhrada",
       "other_volume_section": "Označení jiného svazku",
       "volume_signature": "Signatura",
       "signature_label": "Signatura",

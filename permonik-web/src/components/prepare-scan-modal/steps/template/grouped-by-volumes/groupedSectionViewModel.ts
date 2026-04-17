@@ -15,8 +15,14 @@ export const getSectionTitle = (section: TGroupedScanSection, t: TFunction) =>
         ? t('prepare_scan_modal.content_template.unreplaceable_section')
         : section.sectionType === 'notFilled'
           ? t('prepare_scan_modal.content_template.not_filled_section')
-          : section.volume?.signature
-            ? `${t('prepare_scan_modal.content_template.signature_label')}: ${section.volume.signature}`
+          : typeof section.volume?.priority === 'number' &&
+              section.volume.priority > 0
+            ? t(
+                'prepare_scan_modal.content_template.replacement_section_title',
+                {
+                  index: section.volume.priority,
+                }
+              )
             : t('prepare_scan_modal.content_template.unknown_signature')
 
 export const getSectionMetadata = (
@@ -24,6 +30,10 @@ export const getSectionMetadata = (
   t: TFunction
 ): SectionMetadataItem[] =>
   [
+    {
+      label: t('prepare_scan_modal.content_template.signature_label'),
+      value: section.volume?.signature,
+    },
     {
       label: t('prepare_scan_modal.content_template.volume_owner'),
       value: section.volume?.owner,

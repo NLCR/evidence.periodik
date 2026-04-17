@@ -8,6 +8,7 @@ import { useReplacementSourceCandidatesQuery } from '../../../../api/replacement
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import {
   EMPTY_REPLACEMENT_SOURCE,
+  TReplacementSource,
   TScanTemplateSettings,
 } from '../../schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
@@ -19,7 +20,8 @@ const ReplacementSourcesSelection = () => {
 
   const issues = watch('issues')
   const replacementSourcesParameters = watch('replacementSourcesParameters')
-  const { fields, append, remove } = useFieldArray({
+  const replacementSources = watch('replacementSources')
+  const { fields, append, replace } = useFieldArray({
     control,
     name: 'replacementSources',
     keyName: 'fieldId',
@@ -33,6 +35,24 @@ const ReplacementSourcesSelection = () => {
     issues,
     replacementSourcesParameters,
   })
+
+  const buildReplacementSource = (priority: number): TReplacementSource => ({
+    ...EMPTY_REPLACEMENT_SOURCE,
+    priority,
+  })
+
+  const handleAppend = () => append(buildReplacementSource(fields.length + 1))
+
+  const handleRemove = (index: number) => {
+    const nextSources = replacementSources
+      .filter((_, sourceIndex) => sourceIndex !== index)
+      .map((source, sourceIndex) => ({
+        ...source,
+        priority: sourceIndex + 1,
+      }))
+
+    replace(nextSources)
+  }
 
   if (replacementSourceCandidatesLoading) return <Loader size="small" />
   if (replacementSourceCandidatesError) return <ShowError />
@@ -67,7 +87,7 @@ const ReplacementSourcesSelection = () => {
                 'prepare_scan_modal.content_volumes.delete_replacement_source_aria'
               )}
               disabled={index === 0}
-              onClick={() => remove(index)}
+              onClick={() => handleRemove(index)}
             >
               <DeleteIcon />
             </IconButton>
@@ -75,10 +95,7 @@ const ReplacementSourcesSelection = () => {
         </Box>
       ))}
 
-      <Button
-        variant="outlined"
-        onClick={() => append(EMPTY_REPLACEMENT_SOURCE)}
-      >
+      <Button variant="outlined" onClick={handleAppend}>
         {t('prepare_scan_modal.content_volumes.add_replacement_source_button')}
       </Button>
     </>

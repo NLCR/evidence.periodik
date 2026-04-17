@@ -29,6 +29,6 @@ export const defaultScanSettings: TScanTemplateSettings = {
     owner: false,
     timeOverlap: true,
   },
-  replacementSources: [EMPTY_REPLACEMENT_SOURCE],
+  replacementSources: [{ ...EMPTY_REPLACEMENT_SOURCE, priority: 1 }],
   primaryVolumeFillIndex: 0,
 }
