@@ -20,10 +20,10 @@ import { blue, pink } from '@mui/material/colors'
 import {
   TEditableSpecimen,
   TSpecimenDamageTypes,
-} from '../../../schema/specimen'
-import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { TMutation } from '../../../schema/mutation'
-import { TEdition } from '../../../schema/edition'
+} from '@/schema/specimen'
+undefined
+undefined
+undefined
 import DamagedAndMissingPagesEditCell from './editCells/DamagedAndMissingPagesEditCell'
 import DamageTypesEditCell from './editCells/DamageTypesEditCell'
 import MutationMarkSelectorModalContainer from './editCells/MutationMarkSelectorModalContainer'
@@ -33,10 +33,10 @@ import { useSearchParams } from 'react-router-dom'
 import {
   APP_WITH_EDITING_ENABLED,
   JUMP_TO_SPECIMEN_WITH_ID,
-} from '../../../utils/constants'
-import { useLanguageCode } from '../../../hooks/useLanguageCode'
-import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
-import { checkAttachmentChange, filterSpecimen } from '../../../utils/specimen'
+} from '@/utils/constants'
+undefined
+undefined
+undefined
 import { validate as uuidValidate } from 'uuid'
 import TableHeader from './TableHeader'
 import Tooltip from '@mui/material/Tooltip'
@@ -46,11 +46,11 @@ import { useInputDataEditabilityContext } from './inputData/InputDataEditability
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
 import { GridApiCommunity } from '@mui/x-data-grid/internals'
-import { useFormatDate } from '../../../utils/date'
+undefined
 import {
   getMutationMarkLabel,
   isUnmarkedMutationMark,
-} from '../../../utils/mutationMark'
+} from '@/utils/mutationMark'
 
 const ODD_OPACITY = 0.2
 
@@ -444,12 +444,12 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       },
       {
         field: 'mutationId',
-        headerName: t('volume_overview.mutation'),
+        headerName: t('common.fields.mutation'),
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.mutation')}>
+          <Tooltip title={t('common.fields.mutation')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.mutation_short'),
+                __html: t('common.fields_short.mutation'),
               }}
             />
           </Tooltip>
@@ -502,12 +502,12 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       },
       {
         field: 'name',
-        headerName: t('volume_overview.name'),
+        headerName: t('common.fields.name'),
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.name')}>
+          <Tooltip title={t('common.fields.name')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.name_short'),
+                __html: t('common.fields_short.name'),
               }}
             />
           </Tooltip>
@@ -523,12 +523,12 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       },
       {
         field: 'subName',
-        headerName: t('volume_overview.sub_name'),
+        headerName: t('common.fields.sub_name'),
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.sub_name')}>
+          <Tooltip title={t('common.fields.sub_name')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.sub_name_short'),
+                __html: t('common.fields_short.sub_name'),
               }}
             />
           </Tooltip>
@@ -567,12 +567,12 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       {
         /* bug fix, with the right name it hasn't updated value */
         field: 'mutationMark2',
-        headerName: t('volume_overview.mutation_mark'),
+        headerName: t('common.fields.mutation_mark'),
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.mutation_mark')}>
+          <Tooltip title={t('common.fields.mutation_mark')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.mutation_mark_short'),
+                __html: t('common.fields_short.mutation_mark'),
               }}
             />
           </Tooltip>

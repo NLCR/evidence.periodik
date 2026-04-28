@@ -21,7 +21,26 @@
     "session_expired": "Relace vypršela",
     "back": "Zpět",
     "close": "Zavřít",
-    "accept": "Potvrdit"
+    "confirm": "Potvrdit",
+    "cancel": "Zrušit",
+    "accept": "Potvrdit",
+    "fields": {
+      "name": "Název",
+      "meta_title": "Metatitul",
+      "sub_name": "Podnázev",
+      "owner": "Vlastník",
+      "signature": "Signatura",
+      "bar_code": "Čárový kód",
+      "mutation": "Mutace",
+      "mutation_mark": "Mutační vydání"
+    },
+    "fields_short": {
+      "name": "Název",
+      "sub_name": "Podnázev",
+      "bar_code": "ČK",
+      "mutation": "Mutace",
+      "mutation_mark": "Mutační<br />vydání"
+    }
   },
   "prepare_scan_modal": {
     "content_preparation": {
@@ -37,11 +56,7 @@
       "primary_fill_index": "Index vyplněnosti primárního svazku:",
       "result_fill_index": "Index vyplněnosti výsledného svazku:",
       "keep_title": "V náhradních svazcích je nutné zachovat:",
-      "metatitle": "Metatitul",
       "time_overlap": "Překryv časového rozpětí",
-      "mutation": "Mutace",
-      "mutational_edition": "Mutační vydání",
-      "owner": "Vlastník",
       "replacement_sources_title": "Zdroje náhrad",
       "delete_replacement_source_aria": "Smazat zdroj náhrady",
       "add_replacement_source_button": "Přidat zdroj náhrad"
@@ -50,6 +65,7 @@
       "no_items": "Pro zvolený filtr nejsou dostupné žádné položky.",
       "preview_dialog_title": "Náhled předlohy",
       "export_button": "Export",
+      "export_visibility_column": "Export",
       "add_replacement_button": "Přidat náhradu",
       "scan_from_volume": "Skenovat ze svazku",
       "replace_label": "Nahradit",
@@ -66,10 +82,26 @@
       "header_attachments_count": "Počet příloh",
       "delete_template_confirm_title": "Opravdu chcete předlohu k digitalizaci smazat?",
       "delete_template_confirm_description": "Tuto akci nelze vrátit zpět.",
-      "show_only_rescans": "Zobrazit pouze doskeny",
-      "show_preview_button": "Zobrazit náhled",
-      "validate_button": "Validovat",
-      "close_to_rescan_button": "Uzavřít k doskenování",
+      "show_only_rescans": "Pouze doskeny",
+      "show_only_unlocked": "Pouze odemčené",
+      "show_in_export_aria": "Zobrazit v exportu",
+      "hide_from_export_aria": "Skrýt z exportu",
+      "sync_from_volume_button": "Synchronizovat ze svazku",
+      "lock_item_confirm_title": "Uzamknout položku předlohy?",
+      "lock_item_confirm_description": "Uzamčená položka nebude dál upravitelná a nebude zahrnuta do automatických ani manuálních změn.",
+      "unlock_item_confirm_title": "Odemknout položku předlohy?",
+      "unlock_item_confirm_description": "Po odemknutí bude možné položku znovu upravovat a může být ovlivněna dalšími změnami předlohy.",
+      "lock_replacement_confirm_title": "Uzamknout náhradu stran?",
+      "unlock_replacement_confirm_title": "Odemknout náhradu stran?",
+      "lock_replacement_confirm_description": "Uzamčená náhrada stran se už nebude upravovat ani zahrnovat do dalších operací.",
+      "unlock_replacement_confirm_description": "Po odemknutí může být náhrada stran znovu upravována a ovlivněna změnami předlohy.",
+      "lock_all_confirm_title": "Uzamknout všechny položky?",
+      "lock_all_confirm_description": "Uzamknou se všechny položky, které nejsou označené jako čeká na dosken. Uzamčené položky nebudou dál upravitelné.",
+      "unlock_all_confirm_title": "Odemknout všechny položky?",
+      "unlock_all_confirm_description": "Tato akce má vysoký dopad. Odemknuté položky bude možné znovu měnit a při dalších krocích se mohou přegenerovat podle zdrojů náhrad.",
+      "show_preview_button": "Náhled",
+      "validate_button": "Zkontrolovat",
+      "close_to_rescan_button": "Uzavřít k doskenu",
       "finalize_button": "Finalizovat",
       "switch_to_repairs_button": "Odemknout k opravám",
       "group_by_volumes": "Seskupit po svazcích",
@@ -80,13 +112,7 @@
       "replacement_section_title": "Náhrada {{index}}",
       "unknown_replacement": "Neznámá náhrada",
       "other_volume_section": "Označení jiného svazku",
-      "volume_signature": "Signatura",
-      "signature_label": "Signatura",
       "unknown_signature": "Neznámá signatura",
-      "volume_owner": "Vlastník",
-      "volume_barcode_short": "ČK",
-      "volume_mutation": "Mutace",
-      "volume_mutation_edition": "MV",
       "issue_number_label": "č. {{number}}",
       "attachment_number_label": "Příloha č. {{number}}",
       "unknown_number_label": "Neznámé číslo",
@@ -105,6 +131,24 @@
     "validation": {
       "waiting_for_rescan": "Před uzavřením k doskenování musí mít každá náhrada vyplněný zdroj, nebo být označená jako nedostupná, nebo čekající na dosken.",
       "finalized": "Pro finalizaci musí mít každá náhrada vyplněný zdroj nebo být označená jako nedostupná a nesmí být čekající na dosken."
+    },
+    "transition_confirm": {
+      "to_waiting": {
+        "title": "Uzavřít předlohu k doskenování?",
+        "description": "Předloha přejde do stavu Čeká na doskeny. Data se přestanou automaticky propisovat ze svazku a případné další změny bude potřeba synchronizovat ručně."
+      },
+      "to_finalized": {
+        "title": "Finalizovat předlohu?",
+        "description": "Předloha přejde do stavu Finalizovaná a uzamkne se. Po finalizaci už nebude možné data v předloze upravovat."
+      },
+      "to_repairs": {
+        "title": "Odemknout předlohu k opravám?",
+        "description": "Předloha přejde do stavu Opravy. Budete moci upravovat náhrady a případně provést ruční synchronizaci změn ze svazku."
+      },
+      "default": {
+        "title": "Potvrdit změnu stavu předlohy?",
+        "description": "Změna stavu může ovlivnit možnosti editace předlohy. Opravdu chcete pokračovat?"
+      }
     },
     "back_warning": {
       "title": "Upozornění",
@@ -165,11 +209,7 @@
     "date": "Datum",
     "volume": "Svazek",
     "name": "Název na titulní straně",
-    "sub_name": "Podnázev",
-    "mutation": "Mutace",
     "edition": "Vydání",
-    "mutation_mark": "Mutační vydání",
-    "owner": "Vlastník",
     "damage_types": "Poškození",
     "state": "Stav",
     "delete_filters": "Vymazat filtry",
@@ -193,10 +233,6 @@
     "duplicate_dialog_title": "Duplikovat záznam",
     "duplicate_dialog_description": "Vyberte datum, ke kterému bude zadán nový záznam",
     "field_names": {
-      "barcode": "Čárový kód",
-      "signature": "Signatura",
-      "mutation": "Mutace",
-      "mutation_mark": "Mutační vydání",
       "note": "Poznámka",
       "damage_types": "Poškození (chybné datum, degradace, svázání atd.)",
       "damaged_pages": "Poškozené strany",
@@ -209,8 +245,7 @@
       "censored": "Cenzurováno",
       "unreadable_binding": "Nečitelně svázáno",
       "censored_version": "Cenzurní výtisk",
-      "wrong_date": "Chybné datum",
-      "owner": "Vlastník"
+      "wrong_date": "Chybné datum"
     },
     "duplicate_volume_modal_header": "Duplikovat svazek",
     "duplicate_volume_modal_description1": "Označte atributy, které se mají při duplikaci resetovat.",
@@ -219,14 +254,7 @@
   "volume_overview": {
     "not_found": "Tento svazek nebyl nalezen",
     "input_data": "Vstupní data",
-    "name": "Název",
-    "name_short": "Název",
     "value": "Hodnota",
-    "meta_title": "Metatitul",
-    "mutation": "Mutace",
-    "mutation_short": "Mutace",
-    "mutation_mark": "Označení mutačního vydání čísla",
-    "mutation_mark_short": "Mutační<br />vydání",
     "mutation_mark_tab_symbol": "Symboly",
     "mutation_mark_tab_number": "Číselné označení",
     "mutation_mark_tab_unmarked": "Neoznačené mut. vyd.",
@@ -235,14 +263,11 @@
     "mutation_mark_label_number_description": "Číselný zápis",
     "mutation_mark_label_number_description_impossible": "Nelze vyjádřit číselně",
     "mutation_mark_number_error": "Číselný zápis je povinný",
-    "bar_code": "Čárový kód",
-    "signature": "Signatura",
     "year": "Ročník",
     "date_from": "Datum od",
     "first_number": "První číslo",
     "date_to": "Datum do",
     "last_number": "Poslední číslo",
-    "owner": "Vlastník",
     "note": "Poznámka",
     "unlock_edit": "Odemknout editaci",
     "unlock_edit_dialog_title": "Odemknout editaci vstupních dat pro generaci nových exemplářů",
@@ -253,8 +278,6 @@
     "editing_dialog_title": "Editace atributu",
     "editing_dialog_description": "Změna bude propsána do všech vygenerovaných exemplářů",
     "editing_dialog_description_mutation_mark": "Změna bude propsána do všech vygenerovaných exemplářů kromě příloh bez mutačního vydání",
-    "editing_dialog_yes": "Potvrdit",
-    "editing_dialog_no": "Zrušit",
     "daily_releases": "Denní vydání",
     "releasing": "Vychází",
     "is_in_volume": "Číslo je ve svazku",
@@ -264,8 +287,6 @@
     "pages_count": "Počet stran v čísle",
     "pages_count_total": "Počet stran ve svazku",
     "pages_count_short": "Stran",
-    "sub_name": "Podnázev",
-    "sub_name_short": "Podnázev",
     "days": {
       "Monday": "Pondělí",
       "Tuesday": "Úterý",

@@ -1,14 +1,10 @@
-import {
+import type {
   TReplacement,
   TReplacementSource,
   TTemplateItem,
+  TTemplateItemWithFormIndex,
   TTemplateSpecimenRef,
-} from '../../schemas/schemas'
-
-export type TVisibleTemplateItem = {
-  item: TTemplateItem
-  formIndex: number
-}
+} from '@/components/prepare-scan-modal/schemas/schemas'
 
 export type TGroupedScanSection = {
   key: string
@@ -51,22 +47,26 @@ type TSectionDescriptor = {
 
 export const shouldIncludeTemplateItem = (
   item: TTemplateItem,
-  showOnlyRescans: boolean
+  showOnlyRescans: boolean,
+  showOnlyUnlocked: boolean
 ) =>
-  showOnlyRescans
-    ? !!item.replacement?.isWaitingForRescan ||
-      item.pageReplacements.some(
-        (replacement) => replacement.isWaitingForRescan
-      )
-    : true
+  (!showOnlyRescans ||
+    !!item.replacement?.isWaitingForRescan ||
+    item.pageReplacements.some(
+      (replacement) => replacement.isWaitingForRescan
+    )) &&
+  (!showOnlyUnlocked || !item.locked)
 
 export const getVisibleTemplateItems = (
   items: TTemplateItem[],
-  showOnlyRescans: boolean
-): TVisibleTemplateItem[] =>
+  showOnlyRescans: boolean,
+  showOnlyUnlocked: boolean
+): TTemplateItemWithFormIndex[] =>
   items
     .map((item, formIndex) => ({ item, formIndex }))
-    .filter(({ item }) => shouldIncludeTemplateItem(item, showOnlyRescans))
+    .filter(({ item }) =>
+      shouldIncludeTemplateItem(item, showOnlyRescans, showOnlyUnlocked)
+    )
 
 const hasVolumeIdentity = (volume: TReplacementSource): boolean =>
   Boolean(
@@ -164,9 +164,14 @@ const initSectionsAccumulator = (): Map<
 
 export const buildGroupedScanSections = (
   items: TTemplateItem[],
-  showOnlyRescans: boolean
+  showOnlyRescans: boolean,
+  showOnlyUnlocked: boolean
 ): TGroupedScanSection[] => {
-  const visibleItems = getVisibleTemplateItems(items, showOnlyRescans)
+  const visibleItems = getVisibleTemplateItems(
+    items,
+    showOnlyRescans,
+    showOnlyUnlocked
+  )
   const sections = initSectionsAccumulator()
 
   for (const { item } of visibleItems) {

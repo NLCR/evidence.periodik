@@ -134,7 +134,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.meta_title')}:
+          {t('common.fields.meta_title')}:
         </Typography>
         <Typography variant="body2">{volumeStats.metaTitleName}</Typography>
       </Box>
@@ -144,7 +144,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.owner')}:
+          {t('common.fields.owner')}:
         </Typography>
         <Typography variant="body2">
           {owners.find((o) => o.id === volumeStats.ownerId)?.shorthand}
@@ -156,7 +156,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.signature')}:
+          {t('common.fields.signature')}:
         </Typography>
         <Typography variant="body2">{volumeStats.signature}</Typography>
       </Box>
@@ -166,7 +166,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.bar_code')}:
+          {t('common.fields.bar_code')}:
         </Typography>
         <Typography variant="body2">{volumeStats.barCode}</Typography>
       </Box>
@@ -176,7 +176,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.mutation')}:
+          {t('common.fields.mutation')}:
         </Typography>
         {volumeStats.mutationIds.map((m) => (
           <Box
@@ -288,7 +288,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.mutation_mark')}:
+          {t('common.fields.mutation_mark')}:
         </Typography>
         {volumeStats.mutationMarks.map((pm) => (
           <Box

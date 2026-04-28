@@ -4,7 +4,7 @@ import Checkbox from '@mui/material/Checkbox'
 import {
   TEditableSpecimen,
   TSpecimenDamageTypes,
-} from '../../../../schema/specimen'
+} from '@/schema/specimen'
 
 const DamageTypesEditCell = (
   props: GridRenderEditCellParams<TEditableSpecimen>

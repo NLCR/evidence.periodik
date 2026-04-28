@@ -1,9 +1,15 @@
 import DeleteIcon from '@mui/icons-material/Delete'
+import LockIcon from '@mui/icons-material/Lock'
+import LockOpenIcon from '@mui/icons-material/LockOpen'
 import { Box, IconButton, Stack, TextField, Typography } from '@mui/material'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import FormCheckbox from '../../../form/FormCheckbox'
-import { TReplacementSource, TTemplate } from '../../schemas/schemas'
+import {
+  TReplacementSource,
+  TemplateState,
+  TTemplate,
+} from '@/components/prepare-scan-modal/schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
 
 type Props = {
@@ -28,9 +34,22 @@ const ReplacementInput = ({
   disabled = false,
 }: Props) => {
   const { t } = useTranslation()
-  const { control } = useFormContext<TTemplate>()
+  const { control, setValue } = useFormContext<TTemplate>()
 
   const item = useWatch({ control, name })
+  const templateState = useWatch({ control, name: 'state' })
+
+  const isLockingAllowed =
+    templateState === TemplateState.CREATED ||
+    templateState === TemplateState.WAITING_FOR_RESCAN ||
+    templateState === TemplateState.LATE_FIXES
+  const isLocked = !!item?.locked
+  const isReadOnly = disabled || isLocked
+
+  const handleToggleLock = () => {
+    setValue(`${name}.locked`, !isLocked, { shouldDirty: true })
+  }
+
   return (
     <>
       <Stack direction="row" alignItems="center" gap={1}>
@@ -47,7 +66,7 @@ const ReplacementInput = ({
                   value={field.value}
                   onChange={field.onChange}
                   disabled={
-                    disabled ||
+                    isReadOnly ||
                     item?.isUnreplaceable ||
                     item?.isWaitingForRescan
                   }
@@ -67,12 +86,19 @@ const ReplacementInput = ({
               onChange={field.onChange}
               errorMessage={fieldState.error?.message}
               disabled={
-                disabled || item?.isUnreplaceable || item?.isWaitingForRescan
+                isReadOnly || item?.isUnreplaceable || item?.isWaitingForRescan
               }
             />
           )}
         />
-        <IconButton onClick={() => onRemove(index)}>
+        <IconButton
+          onClick={handleToggleLock}
+          color={isLocked ? 'primary' : 'default'}
+          disabled={!isLockingAllowed || disabled}
+        >
+          {isLocked ? <LockIcon /> : <LockOpenIcon />}
+        </IconButton>
+        <IconButton onClick={() => onRemove(index)} disabled={isReadOnly}>
           <DeleteIcon />
         </IconButton>
       </Stack>
@@ -83,7 +109,7 @@ const ReplacementInput = ({
             label={t(
               'prepare_scan_modal.content_template.replacement_unavailable'
             )}
-            disabled={disabled || item?.isWaitingForRescan}
+            disabled={isReadOnly || item?.isWaitingForRescan}
           />
         </Box>
         <Box>
@@ -92,7 +118,7 @@ const ReplacementInput = ({
             label={t(
               'prepare_scan_modal.content_template.waiting_for_rescan_label'
             )}
-            disabled={disabled || item?.isUnreplaceable}
+            disabled={isReadOnly || item?.isUnreplaceable}
           />
         </Box>
       </Stack>

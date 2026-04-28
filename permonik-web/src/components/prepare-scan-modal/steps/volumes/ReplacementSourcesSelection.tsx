@@ -2,15 +2,15 @@ import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
-import Loader from '../../../Loader'
-import ShowError from '../../../ShowError'
-import { useReplacementSourceCandidatesQuery } from '../../../../api/replacementSourceCandidates'
+undefined
+undefined
+undefined
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import {
-  EMPTY_REPLACEMENT_SOURCE,
+  createEmptyReplacementSource,
   TReplacementSource,
   TScanTemplateSettings,
-} from '../../schemas/schemas'
+} from '@/components/prepare-scan-modal/schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
 import { useTranslation } from 'react-i18next'
 
@@ -37,7 +37,7 @@ const ReplacementSourcesSelection = () => {
   })
 
   const buildReplacementSource = (priority: number): TReplacementSource => ({
-    ...EMPTY_REPLACEMENT_SOURCE,
+    ...createEmptyReplacementSource(),
     priority,
   })
 

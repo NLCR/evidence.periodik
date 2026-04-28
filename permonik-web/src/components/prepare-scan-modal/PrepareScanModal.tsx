@@ -6,7 +6,7 @@ import PrepareScanModalContentVolumes from './steps/volumes/PrepareScanModalCont
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import {
-  defaultScanSettings,
+  createDefaultScanSettings,
   TemplateState,
   TScanTemplateSettings,
   TTemplate,
@@ -14,17 +14,16 @@ import {
 import Typography from '@mui/material/Typography'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import {
-  useSaveVolumeTemplateSettingsMutation,
-  useVolumeTemplateSettingsQuery,
-} from '../../api/volumeTemplateSettings'
 import Loader from '../Loader'
 import ShowError from '../ShowError'
-import {
-  useSaveVolumeTemplateMutation,
-  useVolumeTemplateQuery,
-} from '../../api/volumeTemplate'
 import ConfirmDialog from '../../pages/specimensOverview/components/dialogs/ConfirmDialog'
+import {
+  useSavePrepareScanTemplateMutation,
+  usePrepareScanTemplateQuery,
+  usePrepareScanTemplateSettingsQuery,
+  useSavePrepareScanTemplateSettingsMutation,
+} from '@/api/prepareScanModal'
+import { sanitizeTemplateForApi } from './mutations'
 
 type Props = {
   isOpen: boolean
@@ -38,7 +37,7 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
   // TODO default step needs to be fetched from BE
   const [step, setStep] = useState<number>(0)
   const settingsMethods = useForm<TScanTemplateSettings>({
-    defaultValues: defaultScanSettings,
+    defaultValues: createDefaultScanSettings(),
   })
   const templateMethods = useForm<TTemplate>()
   const { reset: resetSettings } = settingsMethods
@@ -53,14 +52,15 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
     data: volumeTemplateSettings,
     isLoading: settingsLoading,
     isError: settingsError,
-  } = useVolumeTemplateSettingsQuery(volumeId)
+  } = usePrepareScanTemplateSettingsQuery(volumeId)
   const {
     data: volumeTemplate,
     isLoading: templateLoading,
     isError: templateError,
-  } = useVolumeTemplateQuery(volumeId, { enabled: step === 2 })
-  const saveSettingsMutation = useSaveVolumeTemplateSettingsMutation(volumeId)
-  const saveTemplateMutation = useSaveVolumeTemplateMutation(volumeId)
+  } = usePrepareScanTemplateQuery(volumeId, { enabled: step === 2 })
+  const saveSettingsMutation =
+    useSavePrepareScanTemplateSettingsMutation(volumeId)
+  const saveTemplateMutation = useSavePrepareScanTemplateMutation(volumeId)
 
   const replacementSources = settingsMethods.watch('replacementSources')
 
@@ -75,7 +75,6 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
   }, [resetTemplate, volumeTemplate])
 
   const nextStep = async () => {
-    // TODO validace?
     if (step === 1) {
       try {
         await saveSettingsMutation.mutateAsync(settingsMethods.getValues())
@@ -88,7 +87,6 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
   }
 
   const previousStep = () => {
-    // TODO validace?
     setStep((prev) => prev - 1)
   }
 
@@ -172,7 +170,11 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
               <Button
                 fullWidth
                 variant="contained"
-                onClick={() => saveTemplateMutation.mutate(getTemplateValues())}
+                onClick={() =>
+                  saveTemplateMutation.mutate(
+                    sanitizeTemplateForApi(getTemplateValues())
+                  )
+                }
                 disabled={saveTemplateMutation.isPending}
               >
                 {t('prepare_scan_modal.wizard.save_template')}

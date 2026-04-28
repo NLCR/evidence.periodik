@@ -9,21 +9,21 @@ import React, { Suspense, useState } from 'react'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import TableRowsIcon from '@mui/icons-material/TableRows'
-import { useMetaTitleQuery } from '../../api/metaTitle'
-import Loader from '../../components/Loader'
-import ShowError from '../../components/ShowError'
-import ShowInfoMessage from '../../components/ShowInfoMessage'
-import { useSpecimensOverviewStore } from '../../slices/useSpecimensOverviewStore'
-import SpecimenDayDetailExampleImage from '../../assets/images/specimen-day-detail-example.png'
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
 import Facets from './components/facets/Facets'
 import Calendar from './components/calendar/Calendar'
 import CalendarToolbar from './components/calendar/CalendarToolbar'
-import ModalContainer from '../../components/ModalContainer'
+undefined
 import SynchronizeYearsSwitch from './components/SynchronizeYearsSwitch'
-import CollapsableSidebar from '../../components/CollapsableSidebar'
+undefined
 import FacetsContextProvider from './components/facets/FacetsContextProvider'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import theme from '../../theme'
+undefined
 
 const Table = React.lazy(() => import('./components/Table'))
 

@@ -5,7 +5,7 @@ import TableRow from '@mui/material/TableRow'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { t } from 'i18next'
-import { TVolumePeriodicityDays } from '../../../../../schema/volume'
+undefined
 import InputDataAutocomplete from '../InputDataAutocomplete'
 import InputDataCheckbox from '../InputDataCheckbox'
 import InputDataSelect from '../InputDataSelect'
@@ -16,10 +16,10 @@ import {
   UseFieldArrayRemove,
   useFormContext,
 } from 'react-hook-form'
-import useSortedSpecimensNamesAndSubNames from '../../../../../hooks/useSortedSpecimensNamesAndSubNames'
-import { useLanguageCode } from '../../../../../hooks/useLanguageCode'
+undefined
+undefined
 import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
-import { TEdition } from '../../../../../schema/edition'
+undefined
 
 type Props = {
   index: number

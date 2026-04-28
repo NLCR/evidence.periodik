@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { TemplateState } from './templateStateSchema'
-import { VolumeSchema } from '../../../schema/volume'
 import { replacementSchema } from './commonSchemas'
+import { VolumeSchema } from '@/schema/volume'
 
 export const TemplateSpecimenRefSchema = z.object({
   id: z.string(),
@@ -14,6 +14,8 @@ export const TemplateSpecimenRefSchema = z.object({
 
 export const TemplateItemSchema = z.object({
   specimen: TemplateSpecimenRefSchema,
+  locked: z.boolean(),
+  visible: z.boolean().optional(),
   usePrimaryVolume: z.boolean(),
   replacement: replacementSchema.nullish(),
   pageReplacements: z.array(replacementSchema),
@@ -28,4 +30,8 @@ export const TemplateSchema = z.object({
 
 export type TTemplateSpecimenRef = z.infer<typeof TemplateSpecimenRefSchema>
 export type TTemplateItem = z.infer<typeof TemplateItemSchema>
+export type TTemplateItemWithFormIndex = {
+  item: TTemplateItem
+  formIndex: number
+}
 export type TTemplate = z.infer<typeof TemplateSchema>

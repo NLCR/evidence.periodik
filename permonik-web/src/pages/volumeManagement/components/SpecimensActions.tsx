@@ -2,9 +2,9 @@ import ScannerIcon from '@mui/icons-material/AdfScanner'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { TEdition } from '../../../schema/edition'
-import { TUpdatableVolume } from '../../../api/volume'
+undefined
+undefined
+undefined
 import Box from '@mui/material/Box'
 import SaveIcon from '@mui/icons-material/Save'
 import SaveAsIcon from '@mui/icons-material/SaveAs'
@@ -12,15 +12,15 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import Button from '@mui/material/Button'
-import ModalContainer from '../../../components/ModalContainer'
+undefined
 import Typography from '@mui/material/Typography'
 import { validate as uuidValidate } from 'uuid'
-import { BACK_META_TITLE_ID } from '../../../utils/constants'
+undefined
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
-import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
-import PrepareScanModal from '../../../components/prepare-scan-modal/PrepareScanModal'
-import { FieldsToReset } from '../../../utils/duplicateVolume/types'
-import DuplicateVolumeModal from '../../../components/DuplicateVolumeModal'
+undefined
+undefined
+undefined
+undefined
 
 type Props = {
   duplicated: boolean
@@ -141,7 +141,7 @@ const SpecimensActions = ({
       actionsArray.push(
         {
           icon: <ScannerIcon />,
-          name: 'Připravit na skenování',
+          name: t('prepare_scan_modal.wizard.title'),
           color: 'primary',
           onClick: () => setPrepareScanModalOpened(true),
         },

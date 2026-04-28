@@ -1,4 +1,6 @@
 /// <reference types="vite/client" />
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import eslintPlugin from 'vite-plugin-eslint'
@@ -7,11 +9,17 @@ import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url))
   const env = loadEnv(mode, process.cwd(), '')
 
   process.env = { ...process.env, ...env }
 
   return {
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+      },
+    },
     plugins: [
       react({ jsxImportSource: '@welldone-software/why-did-you-render' }),
       eslintPlugin(),

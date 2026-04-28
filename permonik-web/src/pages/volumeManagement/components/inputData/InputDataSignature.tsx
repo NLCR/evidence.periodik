@@ -1,7 +1,7 @@
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import InputDataTextField from './InputDataTextField'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
+undefined
 import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
@@ -31,11 +31,11 @@ const InputDataSignature = () => {
         ),
       }}
     >
-      <TableCell>{t('volume_overview.signature')}</TableCell>
+      <TableCell>{t('common.fields.signature')}</TableCell>
       <TableCell>
         <InputDataTextField
           editableData={{
-            fieldName: t('volume_overview.signature'),
+            fieldName: t('common.fields.signature'),
             saveChange: (value: string) => {
               setSignature(value)
               setSpecimensState(

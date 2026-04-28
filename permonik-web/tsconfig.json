@@ -15,7 +15,11 @@
     "isolatedModules": true,
     "importHelpers": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["./.eslintrc.cjs", "src"],
   "references": [{ "path": "./tsconfig.node.json" }]

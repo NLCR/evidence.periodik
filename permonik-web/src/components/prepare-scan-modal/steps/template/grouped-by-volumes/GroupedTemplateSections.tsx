@@ -2,26 +2,28 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TTemplateItem } from '../../../schemas/schemas'
+undefined
 import { buildGroupedScanSections } from '../templateGrouping'
 import GroupedSectionCard from './GroupedSectionCard'
 
 type Props = {
   items: TTemplateItem[]
   showOnlyRescans: boolean
+  showOnlyUnlocked?: boolean
   compact?: boolean
 }
 
 const GroupedTemplateSections: FC<Props> = ({
   items,
   showOnlyRescans,
+  showOnlyUnlocked = false,
   compact = false,
 }) => {
   const { t } = useTranslation()
 
   const sections = useMemo(
-    () => buildGroupedScanSections(items, showOnlyRescans),
-    [items, showOnlyRescans]
+    () => buildGroupedScanSections(items, showOnlyRescans, showOnlyUnlocked),
+    [items, showOnlyRescans, showOnlyUnlocked]
   )
 
   if (sections.length === 0) {

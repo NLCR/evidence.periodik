@@ -2,16 +2,16 @@ import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { usePublicVolumeDetailQuery } from '../../api/volume'
-import Loader from '../../components/Loader'
-import ShowError from '../../components/ShowError'
-import ShowInfoMessage from '../../components/ShowInfoMessage'
-import { useMutationListQuery } from '../../api/mutation'
-import { useOwnerListQuery } from '../../api/owner'
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
 import SpecimensTable from './components/Table'
-import { useMetaTitleListQuery } from '../../api/metaTitle'
+undefined
 import InputData from './components/InputData'
-import theme from '../../theme'
+undefined
 
 const VolumeOverview = () => {
   const { volumeId } = useParams()

@@ -1,8 +1,8 @@
 import React, { PropsWithChildren } from 'react'
-import { TMetaTitle } from '../../../../schema/metaTitle'
+undefined
 import { useFacetsData } from './api'
-import { damageTypes } from '../../../../utils/constants'
-import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
+undefined
+undefined
 import { FacetsContext } from './FacetsContext'
 
 type Props = { metaTitle: TMetaTitle }

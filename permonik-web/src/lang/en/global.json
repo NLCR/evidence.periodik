@@ -21,7 +21,26 @@
     "session_expired": "Session expired",
     "back": "Back",
     "close": "Close",
-    "accept": "Accept"
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "accept": "Accept",
+    "fields": {
+      "name": "Title",
+      "meta_title": "Meta title",
+      "sub_name": "Subtitle",
+      "owner": "Owner",
+      "signature": "Signature",
+      "bar_code": "Barcode",
+      "mutation": "Mutation",
+      "mutation_mark": "Mutational edition"
+    },
+    "fields_short": {
+      "name": "Title",
+      "sub_name": "Subtitle",
+      "bar_code": "BC",
+      "mutation": "Mutation",
+      "mutation_mark": "Mutational<br /> edition"
+    }
   },
   "prepare_scan_modal": {
     "content_preparation": {
@@ -37,11 +56,7 @@
       "primary_fill_index": "Primary volume fill index:",
       "result_fill_index": "Resulting volume fill index:",
       "keep_title": "In replacement volumes, keep:",
-      "metatitle": "Meta title",
       "time_overlap": "Time range overlap",
-      "mutation": "Mutation",
-      "mutational_edition": "Mutational edition",
-      "owner": "Owner",
       "replacement_sources_title": "Replacement sources",
       "delete_replacement_source_aria": "Delete replacement source",
       "add_replacement_source_button": "Add replacement source"
@@ -50,6 +65,7 @@
       "no_items": "No items are available for the selected filter.",
       "preview_dialog_title": "Template preview",
       "export_button": "Export",
+      "export_visibility_column": "Export",
       "add_replacement_button": "Add replacement",
       "scan_from_volume": "Scan from volume",
       "replace_label": "Replace",
@@ -66,9 +82,25 @@
       "header_attachments_count": "Supplement count",
       "delete_template_confirm_title": "Do you really want to delete the digitization template?",
       "delete_template_confirm_description": "This action cannot be undone.",
-      "show_only_rescans": "Show only rescans",
-      "show_preview_button": "Show preview",
-      "validate_button": "Validate",
+      "show_only_rescans": "Only rescans",
+      "show_only_unlocked": "Only unlocked",
+      "show_in_export_aria": "Show in export",
+      "hide_from_export_aria": "Hide from export",
+      "sync_from_volume_button": "Synchronize from volume",
+      "lock_item_confirm_title": "Lock template item?",
+      "lock_item_confirm_description": "A locked item will no longer be editable and will be excluded from automatic and manual changes.",
+      "unlock_item_confirm_title": "Unlock template item?",
+      "unlock_item_confirm_description": "After unlocking, the item can be edited again and may be affected by subsequent template changes.",
+      "lock_replacement_confirm_title": "Lock page replacement?",
+      "unlock_replacement_confirm_title": "Unlock page replacement?",
+      "lock_replacement_confirm_description": "A locked page replacement will no longer be editable or included in subsequent operations.",
+      "unlock_replacement_confirm_description": "After unlocking, the page replacement can be edited again and may be affected by template changes.",
+      "lock_all_confirm_title": "Lock all items?",
+      "lock_all_confirm_description": "All items not marked as waiting for rescan will be locked. Locked items will no longer be editable.",
+      "unlock_all_confirm_title": "Unlock all items?",
+      "unlock_all_confirm_description": "This is a high-impact action. Unlocked items can be modified again and may be regenerated based on replacement sources in subsequent steps.",
+      "show_preview_button": "Preview",
+      "validate_button": "Check",
       "close_to_rescan_button": "Close for rescan",
       "finalize_button": "Finalize",
       "switch_to_repairs_button": "Unlock for repairs",
@@ -80,13 +112,7 @@
       "replacement_section_title": "Replacement {{index}}",
       "unknown_replacement": "Unknown replacement",
       "other_volume_section": "Other volume designation",
-      "volume_signature": "Signature",
-      "signature_label": "Signature",
       "unknown_signature": "Unknown signature",
-      "volume_owner": "Owner",
-      "volume_barcode_short": "BC",
-      "volume_mutation": "Mutation",
-      "volume_mutation_edition": "ME",
       "issue_number_label": "No. {{number}}",
       "attachment_number_label": "Supplement No. {{number}}",
       "unknown_number_label": "Unknown issue",
@@ -105,6 +131,24 @@
     "validation": {
       "waiting_for_rescan": "Before closing for rescan, each replacement must have a filled source, or be marked as unavailable, or marked as waiting for rescan.",
       "finalized": "To finalize, each replacement must have a filled source or be marked as unavailable and must not be marked as waiting for rescan."
+    },
+    "transition_confirm": {
+      "to_waiting": {
+        "title": "Close template for rescan?",
+        "description": "The template will move to Waiting for rescan. Data will no longer be synchronized from the volume automatically and further changes will require manual synchronization."
+      },
+      "to_finalized": {
+        "title": "Finalize template?",
+        "description": "The template will move to Finalized and become locked. After finalization, template data can no longer be edited."
+      },
+      "to_repairs": {
+        "title": "Unlock template for repairs?",
+        "description": "The template will move to Repairs. You will be able to edit replacements and run manual synchronization from the volume if needed."
+      },
+      "default": {
+        "title": "Confirm template state change?",
+        "description": "Changing state may affect template editability. Do you really want to continue?"
+      }
     },
     "back_warning": {
       "title": "Warning",
@@ -165,11 +209,7 @@
     "date": "Date",
     "volume": "Volume",
     "name": "Title on title page",
-    "sub_name": "Subtitle",
-    "mutation": "Mutation",
     "edition": "Edition",
-    "mutation_mark": "Mutational edition",
-    "owner": "Owner",
     "damage_types": "Damage",
     "state": "State",
     "delete_filters": "Clear filters",
@@ -193,10 +233,6 @@
     "duplicate_dialog_title": "Duplicate entry",
     "duplicate_dialog_description": "Select the date for which a new record will be entered",
     "field_names": {
-      "barcode": "Barcode",
-      "signature": "Signature",
-      "mutation": "Mutation",
-      "mutation_mark": "Mutational edition",
       "note": "Note",
       "damage_types": "Damage (wrong date, degradation, binding, etc.)",
       "damaged_pages": "Damaged pages",
@@ -209,8 +245,7 @@
       "censored": "Censored",
       "unreadable_binding": "Unreadable binding",
       "censored_version": "Censored version",
-      "wrong_date": "Wrong date",
-      "owner": "Owner"
+      "wrong_date": "Wrong date"
     },
     "duplicate_volume_modal_header": "Duplicate volume",
     "duplicate_volume_modal_description1": "Mark the attributes that should be reset during duplication.",
@@ -219,14 +254,7 @@
   "volume_overview": {
     "not_found": "This volume was not found",
     "input_data": "Input data",
-    "name": "Title",
-    "name_short": "Title",
     "value": "Value",
-    "meta_title": "Meta title",
-    "mutation": "Mutation",
-    "mutation_short": "Mutation",
-    "mutation_mark": "Mutational edition",
-    "mutation_mark_short": "Mutational<br /> edition",
     "mutation_mark_tab_symbol": "Symbols",
     "mutation_mark_tab_number": "Number",
     "mutation_mark_tab_unmarked": "Unmarked mut. ed.",
@@ -235,14 +263,11 @@
     "mutation_mark_label_number_description": "Numeric entry",
     "mutation_mark_label_number_description_impossible": "Cannot be expressed numerically",
     "mutation_mark_number_error": "Numerical entry is required",
-    "bar_code": "Barcode",
-    "signature": "Signature",
     "year": "Year",
     "date_from": "Date from",
     "first_number": "First issue No.",
     "date_to": "Date to",
     "last_number": "Last issue No.",
-    "owner": "Owner",
     "note": "Note",
     "unlock_edit": "Unlock editing",
     "unlock_edit_dialog_title": "Unlock input data editing for generating new instances",
@@ -253,8 +278,6 @@
     "editing_dialog_title": "Edit attribute",
     "editing_dialog_description": "The change will be applied to all generated instances",
     "editing_dialog_description_mutation_mark": "The change will be applied to all generated instances apart from supplements without a mutation mark",
-    "editing_dialog_yes": "Confirm",
-    "editing_dialog_no": "Cancel",
     "daily_releases": "Daily releases",
     "releasing": "Releasing",
     "is_in_volume": "Is in volume",
@@ -264,8 +287,6 @@
     "pages_count": "Page count",
     "pages_count_total": "Page count",
     "pages_count_short": "Pages",
-    "sub_name": "Subtitle",
-    "sub_name_short": "Subtit.",
     "days": {
       "Monday": "Monday",
       "Tuesday": "Tuesday",

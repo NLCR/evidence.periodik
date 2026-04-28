@@ -1,7 +1,7 @@
-import { TEditableVolume } from '../../schema/volume'
+undefined
 import { v4 as uuid } from 'uuid'
-import { emptyMutationMark } from '../mutationMark'
-import { TEditableSpecimen, TSpecimenDamageTypes } from '../../schema/specimen'
+import { createEmptyMutationMark } from '../mutationMark'
+undefined
 import { FieldsToReset } from './types'
 
 const resetDamageTypes = (
@@ -76,7 +76,7 @@ export function duplicateVolume(
       : volumeData.ownerId,
     year: volumeData.year,
     mutationMark: fieldsToReset.includes(FieldsToReset.mutationMark)
-      ? emptyMutationMark
+      ? createEmptyMutationMark()
       : volumeData.mutationMark,
   }
   const duplicatedSpecimens: TEditableSpecimen[] = specimensData.map(

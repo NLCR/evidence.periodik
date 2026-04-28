@@ -3,39 +3,58 @@ import Typography from '@mui/material/Typography'
 import { FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import Barcode from 'react-barcode'
-import { TTemplateItem } from '../../schemas/schemas'
-import { getVisibleTemplateItems } from './templateGrouping'
+import type { TTemplateItem } from '@/components/prepare-scan-modal/schemas/schemas'
+import { getVisibleTemplateItems } from '../templateGrouping'
+import { applyExportVisibilityToTemplateItems } from '../templateExportVisibility'
 import TemplatePreviewHeader, {
   TTemplatePreviewHeaderProps,
 } from './TemplatePreviewHeader'
-import SpecimenItem from './SpecimenItem'
-import GroupedTemplateSections from './grouped-by-volumes/GroupedTemplateSections'
+import SpecimenItemViewOnly from '../components/specimen-item/SpecimenItemViewOnly'
+import GroupedTemplateSections from '../grouped-by-volumes/GroupedTemplateSections'
 
 type Props = {
   header: TTemplatePreviewHeaderProps
   barCode?: string
   items: TTemplateItem[]
   showOnlyRescans: boolean
+  showOnlyUnlocked: boolean
   groupByVolumes: boolean
 }
 
 export const filterTemplateItemsForPrint = (
   items: TTemplateItem[],
-  showOnlyRescans: boolean
-) => getVisibleTemplateItems(items, showOnlyRescans).map(({ item }) => item)
+  showOnlyRescans: boolean,
+  showOnlyUnlocked: boolean
+) => {
+  const filteredItems = getVisibleTemplateItems(
+    items,
+    showOnlyRescans,
+    showOnlyUnlocked
+  )
+
+  return filteredItems.flatMap(({ item, formIndex }) => {
+    const visibleItems = applyExportVisibilityToTemplateItems([item])
+
+    return visibleItems.map((visibleItem) => ({
+      item: visibleItem,
+      formIndex,
+    }))
+  })
+}
 
 const PrepareScanTemplatePrintContent: FC<Props> = ({
   header,
   barCode = undefined,
   items,
   showOnlyRescans,
+  showOnlyUnlocked,
   groupByVolumes,
 }) => {
   const { t } = useTranslation()
 
   const visibleItems = useMemo(
-    () => getVisibleTemplateItems(items, showOnlyRescans),
-    [items, showOnlyRescans]
+    () => filterTemplateItemsForPrint(items, showOnlyRescans, showOnlyUnlocked),
+    [items, showOnlyRescans, showOnlyUnlocked]
   )
 
   return (
@@ -68,13 +87,14 @@ const PrepareScanTemplatePrintContent: FC<Props> = ({
       {visibleItems.length > 0 ? (
         groupByVolumes ? (
           <GroupedTemplateSections
-            items={items}
-            showOnlyRescans={showOnlyRescans}
+            items={visibleItems.map(({ item }) => item)}
+            showOnlyRescans={false}
+            showOnlyUnlocked={false}
             compact
           />
         ) : (
           <Box>
-            {visibleItems.map(({ item, formIndex }) => (
+            {visibleItems.map(({ item }) => (
               <Box
                 key={item.specimen.id}
                 sx={{
@@ -83,12 +103,18 @@ const PrepareScanTemplatePrintContent: FC<Props> = ({
                   pageBreakInside: 'avoid',
                 }}
               >
-                <SpecimenItem
+                <SpecimenItemViewOnly
                   specimen={item.specimen}
-                  itemPath={`items.${formIndex}`}
-                  viewOnly
-                  showOnlyRescans={showOnlyRescans}
-                  replacementSourceCandidates={[]}
+                  mainReplacement={item.replacement ?? null}
+                  replacementRows={item.pageReplacements.map(
+                    (replacement, replacementIndex) => ({
+                      replacement,
+                      replacementIndex,
+                      isVisible: true,
+                    })
+                  )}
+                  itemVisible
+                  note={item.note ?? ''}
                 />
               </Box>
             ))}

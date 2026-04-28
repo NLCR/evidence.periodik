@@ -1,32 +1,37 @@
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Stack from '@mui/material/Stack'
-import { FC, useMemo, useState } from 'react'
-import { useFormContext, useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
+import { FC, useEffect, useMemo, useState } from 'react'
 import {
+  TReplacementSource,
+  TTemplate,
+  TemplateState,
   getNextTemplateState,
   shouldValidateTemplateForNextState,
-  TReplacementSource,
-  TemplateState,
-  TTemplate,
-} from '../../schemas/schemas'
-import { validateTemplateForTransition } from '../../validators/templateTransitionValidator'
-import {
-  useSaveVolumeTemplateMutation,
-  useUpdateVolumeTemplateStateMutation,
-} from '../../../../api/volumeTemplate'
-import PrepareScanTemplatePreviewDialog from './PrepareScanTemplatePreviewDialog'
+} from '@/components/prepare-scan-modal/schemas/schemas'
+import PrepareScanTemplatePreviewDialog from './preview/PrepareScanTemplatePreviewDialog'
 import TemplatePreviewHeader, {
   TTemplatePreviewHeaderProps,
-} from './TemplatePreviewHeader'
+} from './preview/TemplatePreviewHeader'
 import VirtualizedSpecimenList from './VirtualizedSpecimenList'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EyeIcon from '@mui/icons-material/Visibility'
-import CheckIcon from '@mui/icons-material/Check'
-import ConfirmDialog from '../../../../pages/specimensOverview/components/dialogs/ConfirmDialog'
+import PrepareScanTemplateFilters from '@/components/prepare-scan-modal/steps/template/components/PrepareScanTemplateFilters'
+import PrepareScanTemplateActionBar from '@/components/prepare-scan-modal/steps/template/components/PrepareScanTemplateActionBar'
+import { applyExportVisibilityToTemplateItems } from './templateExportVisibility'
+import { useSubmitButtonLabel } from './hooks/useSubmitButtonLabel'
+import { useTransitionDialogConfig } from './hooks/useTransitionDialogConfig'
+import { useFormContext, useWatch } from 'react-hook-form'
+import { validateTemplateForNextState } from '../../validators/templateTransitionValidator'
+import {
+  hasWaitingReplacement,
+  isLockingEnabled,
+  applyItemLockState,
+} from './utils/templateItemLocking'
+import {
+  useDeletePrepareScanTemplateMutation,
+  useSynchronizePrepareScanTemplateMutation,
+} from '@/api/prepareScanModal'
+import {
+  useCloseToRescanOrFinalizeMutation,
+  useTransitionTemplateStateMutation,
+} from '../../mutations'
 
 type TProps = {
   volumeId?: string
@@ -37,18 +42,52 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
   volumeId = undefined,
   replacementSources = [],
 }) => {
-  const { t } = useTranslation()
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [showOnlyRescans, setShowOnlyRescans] = useState(false)
+  const [showOnlyUnlocked, setShowOnlyUnlocked] = useState(false)
   const { control, getValues, setValue, trigger, clearErrors, setError } =
     useFormContext<TTemplate>()
-  const saveTemplateMutation = useSaveVolumeTemplateMutation(volumeId)
-  const updateTemplateStateMutation =
-    useUpdateVolumeTemplateStateMutation(volumeId)
+
+  const transitionTemplateStateMutation =
+    useTransitionTemplateStateMutation(volumeId)
+  const synchronizeVolumeMutation =
+    useSynchronizePrepareScanTemplateMutation(volumeId)
+  const deleteTemplateMutation = useDeletePrepareScanTemplateMutation(volumeId)
+
   const primaryVolume = useWatch({ control, name: 'primaryVolume' })
   const watchedItems = useWatch({ control, name: 'items' })
   const watchedState = useWatch({ control, name: 'state' })
+
   const items = useMemo(() => watchedItems ?? [], [watchedItems])
+
+  useEffect(() => {
+    if (!watchedItems?.length) return
+
+    const nextItems = watchedItems.map((item) => ({
+      ...item,
+      visible: item.visible ?? !item.locked,
+      pageReplacements: item.pageReplacements.map((replacement) => ({
+        ...replacement,
+        visible: replacement.visible ?? !replacement.locked,
+      })),
+    }))
+
+    const hasChanges = nextItems.some((item, itemIndex) => {
+      const previousItem = watchedItems[itemIndex]
+      if (!previousItem) return false
+      if (item.visible !== previousItem.visible) return true
+
+      return item.pageReplacements.some(
+        (replacement, replacementIndex) =>
+          replacement.visible !==
+          previousItem.pageReplacements[replacementIndex]?.visible
+      )
+    })
+
+    if (hasChanges) {
+      setValue('items', nextItems, { shouldDirty: false })
+    }
+  }, [setValue, watchedItems])
 
   const headerProps = useMemo<TTemplatePreviewHeaderProps>(
     () => ({
@@ -57,7 +96,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
       subTitle: primaryVolume?.subName,
       owner: primaryVolume?.ownerId,
       mutation: primaryVolume?.mutationId,
-      mutationEdition: primaryVolume?.mutationMark.mark ?? undefined,
+      mutationEdition: primaryVolume?.mutationMark?.mark ?? undefined,
       dateFrom: primaryVolume?.dateFrom
         ? new Date(primaryVolume.dateFrom).toLocaleDateString()
         : '-',
@@ -84,77 +123,70 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
     [items]
   )
 
-  const validateTemplateForNextState = async (
-    nextState: TemplateState.WAITING_FOR_RESCAN | TemplateState.FINALIZED
-  ) => {
-    const isBaseValid = await trigger()
+  const nextState = getNextTemplateState(watchedState, hasWaitingForRescan)
 
-    if (!isBaseValid) return false
-
-    clearErrors('items')
-
-    const transitionIssues = validateTemplateForTransition(
-      getValues(),
-      nextState
-    )
-
-    if (transitionIssues.length > 0) {
-      transitionIssues.forEach((issue) => {
-        setError(
-          issue.path as `items.${number}` | `items.${number}.replacement`,
-          {
-            type: 'manual',
-            message: issue.message,
-          }
-        )
-      })
-      return false
-    }
-
-    return true
-  }
+  const closeToRescanOrFinalizeMutation = useCloseToRescanOrFinalizeMutation({
+    volumeId,
+    getValues,
+    setValue,
+    validateTemplateForNextState: (targetState) =>
+      validateTemplateForNextState({
+        trigger,
+        clearErrors,
+        setError,
+        getValues,
+        nextTemplateState: targetState as
+          | TemplateState.WAITING_FOR_RESCAN
+          | TemplateState.FINALIZED,
+      }),
+  })
 
   const handleValidate = async () => {
-    const nextState = getNextTemplateState(watchedState, hasWaitingForRescan)
-
     if (!shouldValidateTemplateForNextState(nextState)) return
-
-    await validateTemplateForNextState(nextState)
+    await validateTemplateForNextState({
+      trigger,
+      clearErrors,
+      setError,
+      getValues,
+      nextTemplateState: nextState,
+    })
   }
 
   const handleCloseToRescanOrFinalize = async () => {
-    const nextState = getNextTemplateState(watchedState, hasWaitingForRescan)
-
-    try {
-      const isValid = shouldValidateTemplateForNextState(nextState)
-        ? await validateTemplateForNextState(nextState)
-        : true
-
-      if (!isValid) return
-
-      await saveTemplateMutation.mutateAsync(getValues())
-      await updateTemplateStateMutation.mutateAsync(nextState)
-      setValue('state', nextState)
-    } catch {
-      // TODO napojit UI notifikaci chyboveho stavu
-    }
+    await closeToRescanOrFinalizeMutation.mutate({
+      nextState,
+      shouldValidate: shouldValidateTemplateForNextState(nextState),
+    })
   }
 
-  const handleDeleteTemplate = () => {
-    console.log('this is not implemented yet.')
+  const handleLockAll = () => {
+    const nextItems = getValues('items').map((item) =>
+      hasWaitingReplacement(item) ? item : applyItemLockState(item, true)
+    )
+    setValue('items', nextItems, { shouldDirty: true })
   }
 
-  const submitButtonLabel = useMemo(() => {
-    const nextState = getNextTemplateState(watchedState, hasWaitingForRescan)
+  const handleUnlockAll = () => {
+    const nextItems = getValues('items').map((item) =>
+      applyItemLockState(item, false)
+    )
+    setValue('items', nextItems, { shouldDirty: true })
+  }
 
-    if (nextState === TemplateState.WAITING_FOR_RESCAN)
-      return t('prepare_scan_modal.content_template.close_to_rescan_button')
+  const canSyncFromVolume =
+    watchedState === TemplateState.WAITING_FOR_RESCAN ||
+    watchedState === TemplateState.LATE_FIXES
 
-    if (nextState === TemplateState.LATE_FIXES)
-      return t('prepare_scan_modal.content_template.switch_to_repairs_button')
+  const canManageLocks = isLockingEnabled(watchedState)
 
-    return t('prepare_scan_modal.content_template.finalize_button')
-  }, [hasWaitingForRescan, t, watchedState])
+  const isMutating =
+    transitionTemplateStateMutation.isPending ||
+    synchronizeVolumeMutation.isPending ||
+    deleteTemplateMutation.isPending
+
+  const submitButtonLabel = useSubmitButtonLabel(nextState)
+
+  const transitionDialogConfig = useTransitionDialogConfig(nextState)
 
   return (
     <Box
@@ -165,71 +197,44 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         minHeight: 0,
       }}
     >
-      <Box
-        sx={{
-          marginBottom: '10px',
-        }}
-      >
+      <Box sx={{ marginBottom: '10px' }}>
         <TemplatePreviewHeader
           {...headerProps}
           displayCurrentState
           currentState={watchedState}
         />
 
-        <Box display="flex" justifyContent="space-between" marginTop={0.25}>
-          <Stack direction="row" spacing={2}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={showOnlyRescans}
-                  onChange={(_, checked) => setShowOnlyRescans(checked)}
-                />
-              }
-              label={t('prepare_scan_modal.content_template.show_only_rescans')}
-            />
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Button
-              variant="outlined"
-              onClick={() => setIsPreviewOpen(true)}
-              startIcon={<EyeIcon />}
-            >
-              {t('prepare_scan_modal.content_template.show_preview_button')}
-            </Button>
-            {watchedState !== TemplateState.FINALIZED && (
-              <Button
-                variant="outlined"
-                onClick={handleValidate}
-                startIcon={<CheckIcon />}
-              >
-                {t('prepare_scan_modal.content_template.validate_button')}
-              </Button>
-            )}
-            <Button
-              variant="contained"
-              onClick={handleCloseToRescanOrFinalize}
-              disabled={
-                saveTemplateMutation.isPending ||
-                updateTemplateStateMutation.isPending
-              }
-            >
-              {submitButtonLabel}
-            </Button>
-            <ConfirmDialog
-              TriggerButton={
-                <Button variant="outlined" sx={{ minWidth: 0 }}>
-                  <DeleteIcon />
-                </Button>
-              }
-              title={t(
-                'prepare_scan_modal.content_template.delete_template_confirm_title'
-              )}
-              description={t(
-                'prepare_scan_modal.content_template.delete_template_confirm_description'
-              )}
-              onConfirm={handleDeleteTemplate}
-            />
-          </Stack>
+        <Box
+          display="flex"
+          flexDirection={{ xs: 'column', md: 'row' }}
+          justifyContent="space-between"
+          gap={1}
+          marginTop={0.25}
+        >
+          <PrepareScanTemplateFilters
+            showOnlyRescans={showOnlyRescans}
+            showOnlyUnlocked={showOnlyUnlocked}
+            onShowOnlyRescansChange={setShowOnlyRescans}
+            onShowOnlyUnlockedChange={setShowOnlyUnlocked}
+          />
+
+          <PrepareScanTemplateActionBar
+            watchedState={watchedState}
+            canSyncFromVolume={canSyncFromVolume}
+            canManageLocks={canManageLocks}
+            isMutating={isMutating}
+            submitButtonLabel={submitButtonLabel}
+            transitionDialogConfig={transitionDialogConfig}
+            onOpenPreview={() => setIsPreviewOpen(true)}
+            onValidate={handleValidate}
+            onSyncFromVolume={() =>
+              synchronizeVolumeMutation.mutate({ state: watchedState })
+            }
+            onCloseToRescanOrFinalize={handleCloseToRescanOrFinalize}
+            onLockAll={handleLockAll}
+            onUnlockAll={handleUnlockAll}
+            onDeleteTemplate={deleteTemplateMutation.mutate}
+          />
         </Box>
       </Box>
 
@@ -239,6 +244,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
           viewOnly={false}
           replacementSourceCandidates={replacementSources}
           showOnlyRescans={showOnlyRescans}
+          showOnlyUnlocked={showOnlyUnlocked}
           disabled={watchedState === TemplateState.FINALIZED}
         />
       </Box>
@@ -248,8 +254,9 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         onClose={() => setIsPreviewOpen(false)}
         header={headerProps}
         barCode={primaryVolume?.barCode}
-        items={items}
+        items={applyExportVisibilityToTemplateItems(items)}
         showOnlyRescans={showOnlyRescans}
+        showOnlyUnlocked={showOnlyUnlocked}
       />
     </Box>
   )

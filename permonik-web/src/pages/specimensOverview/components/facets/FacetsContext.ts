@@ -1,11 +1,11 @@
 import { createContext, useContext } from 'react'
-import { TSpecimenDamageTypes } from '../../../../schema/specimen'
-import { TOwner } from '../../../../schema/owner'
-import { TMutation } from '../../../../schema/mutation'
-import { TParams } from '../../../../slices/useSpecimensOverviewStore'
-import { TSpecimenList, TSpecimensFacets } from '../../../../api/specimen'
-import { TEdition } from '../../../../schema/edition'
-import { TSupportedLanguages } from '../../../../i18next'
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
 
 type TFacetsContext = {
   facets: TSpecimensFacets | undefined

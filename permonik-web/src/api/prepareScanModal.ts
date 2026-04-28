@@ -1,5 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
+  createDefaultScanSettings,
+  TScanTemplateSettings,
   TTemplate,
   TTemplateItem,
   TemplateState,
@@ -17,6 +19,7 @@ const MOCK_TEMPLATE_ITEMS: TTemplateItem[] = [
       numExists: true,
       numMissing: false,
     },
+    locked: false,
     usePrimaryVolume: true,
     replacement: null,
     pageReplacements: [],
@@ -31,6 +34,7 @@ const MOCK_TEMPLATE_ITEMS: TTemplateItem[] = [
       numExists: false,
       numMissing: true,
     },
+    locked: false,
     usePrimaryVolume: false,
     replacement: {
       volume: {
@@ -44,20 +48,20 @@ const MOCK_TEMPLATE_ITEMS: TTemplateItem[] = [
       pages: 'vsechny',
       isUnreplaceable: false,
       isWaitingForRescan: true,
+      locked: false,
     },
     pageReplacements: [],
     note: 'Mock replacement item',
   },
 ]
 
-export const useVolumeTemplateQuery = (
+export const usePrepareScanTemplateQuery = (
   volumeId?: string,
   options: { enabled?: boolean } = {}
 ) =>
   useQuery<TTemplate | null>({
     queryKey: [`/volume/${volumeId}/template`],
     queryFn: async () => {
-      // TODO: Zapojit realny endpoint `/volume/id/template` po finalizaci BE kontraktu.
       const detail = await api()
         .get(`volume/${volumeId}/detail`)
         .json<TVolumeDetail>()
@@ -71,15 +75,10 @@ export const useVolumeTemplateQuery = (
     enabled: (options.enabled ?? true) && !!volumeId,
   })
 
-export const useSaveVolumeTemplateMutation = (volumeId?: string) =>
+export const useSavePrepareScanTemplateMutation = (volumeId?: string) =>
   useMutation({
     mutationFn: async (payload: TTemplate) => {
       if (!volumeId) return
-
-      // TODO: Zapojit realny endpoint `/volume/id/template` po finalizaci BE kontraktu.
-      // return api()
-      //   .post(`volume/${volumeId}/template`, { json: payload })
-      //   .json<void>()
       await Promise.resolve(payload)
     },
     onSuccess: () => {
@@ -89,20 +88,57 @@ export const useSaveVolumeTemplateMutation = (volumeId?: string) =>
     },
   })
 
-export const useUpdateVolumeTemplateStateMutation = (volumeId?: string) =>
+export const useUpdatePrepareScanTemplateStateMutation = (volumeId?: string) =>
   useMutation({
     mutationFn: async (state: TemplateState) => {
       if (!volumeId) return
-
-      // TODO: Zapojit realny endpoint `/template/${volumeId}/state` po finalizaci BE kontraktu.
-      // return api()
-      //   .post(`template/${volumeId}/state`, { json: { state } })
-      //   .json<void>()
       await Promise.resolve({ status: 200, state })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [`/volume/${volumeId}/template`],
       })
+    },
+  })
+
+export const usePrepareScanTemplateSettingsQuery = (volumeId?: string) =>
+  useQuery<TScanTemplateSettings | null>({
+    queryKey: [`/volume/${volumeId}/template/settings`],
+    queryFn: async () => createDefaultScanSettings(),
+    enabled: !!volumeId,
+  })
+
+export const useSavePrepareScanTemplateSettingsMutation = (volumeId?: string) =>
+  useMutation({
+    mutationFn: async (payload: TScanTemplateSettings) => {
+      if (!volumeId) return
+      await Promise.resolve(payload)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [`/volume/${volumeId}/template/settings`],
+      })
+    },
+  })
+
+type TSynchronizeVolumePayload = {
+  state: TemplateState
+}
+
+export const useSynchronizePrepareScanTemplateMutation = (volumeId?: string) =>
+  useMutation({
+    mutationFn: async ({ state }: TSynchronizeVolumePayload) => {
+      if (!volumeId) return
+      // TODO: zapojit BE endpoint pro synchronizaci template z volume
+      await Promise.resolve({ volumeId, state, synchronized: true })
+    },
+  })
+
+export const useDeletePrepareScanTemplateMutation = (volumeId?: string) =>
+  useMutation({
+    mutationFn: async () => {
+      if (!volumeId) return
+      // TODO: zapojit BE endpoint pro smazani template
+      await Promise.resolve({ volumeId, deleted: true })
     },
   })

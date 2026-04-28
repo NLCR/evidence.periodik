@@ -7,16 +7,16 @@ import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import { DateCalendar } from '@mui/x-date-pickers-pro'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
-import { TMetaTitle } from '../../../../schema/metaTitle'
-import ShowError from '../../../../components/ShowError'
-import Loader from '../../../../components/Loader'
+undefined
+undefined
+undefined
 import ControlledSliderAndDateInput from '../ControlledSliderAndDateInput'
 import ControlledBarCodeInput from '../ControlledBarCodeInput'
 import * as FacetGroups from './facet-groups'
 import { useFacetsContext } from './FacetsContext'
 import { useFacetsStoreData } from './store'
 import NumberOptionsTabMultiSelect from './NumberOptionsTabMultiSelect'
-import theme from '../../../../theme'
+undefined
 
 type TProps = {
   metaTitle: TMetaTitle

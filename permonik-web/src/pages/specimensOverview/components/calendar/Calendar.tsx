@@ -7,23 +7,23 @@ import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import { TSpecimen } from '../../../../schema/specimen'
-import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
-import { TMetaTitle } from '../../../../schema/metaTitle'
-import ShowInfoMessage from '../../../../components/ShowInfoMessage'
-import { useMutationListQuery } from '../../../../api/mutation'
-import Loader from '../../../../components/Loader'
-import { useSpecimenListQuery } from '../../../../api/specimen'
-import ShowError from '../../../../components/ShowError'
-import { useLanguageCode } from '../../../../hooks/useLanguageCode'
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
+undefined
 import { TMainModalData } from './models'
 import CalendarMainModal from './mainModal/CalendarMainModal'
-import theme from '../../../../theme'
+undefined
 import Button from '@mui/material/Button'
 import {
   getMutationMarkLabel,
   isUnmarkedMutationMark,
-} from '../../../../utils/mutationMark'
+} from '@/utils/mutationMark'
 
 type TProps = {
   metaTitle: TMetaTitle

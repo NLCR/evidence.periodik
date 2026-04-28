@@ -8,8 +8,8 @@ import { GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCel
 import {
   TEditableSpecimen,
   TSpecimenDamageTypes,
-} from '../../../../schema/specimen'
-import ModalContainer from '../../../../components/ModalContainer'
+} from '@/schema/specimen'
+undefined
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 

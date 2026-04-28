@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid'
 import { TEdition } from '../schema/edition'
 import { copyAuditable } from '../schema/common'
 import { TEditableSpecimen, TSpecimen } from '../schema/specimen'
-import { emptyMutationMark, repairMutationMark } from './mutationMark'
+import { createEmptyMutationMark, repairMutationMark } from './mutationMark'
 
 export const filterSpecimen = (
   specimen: TEditableSpecimen
@@ -88,7 +88,7 @@ export const duplicatePartialSpecimen = (
     subName: specimen.subName ?? '',
     editionId: specimen.editionId ?? '',
     mutationId: specimen.mutationId ?? '',
-    mutationMark: specimen.mutationMark ?? emptyMutationMark,
+    mutationMark: specimen.mutationMark ?? createEmptyMutationMark(),
     publicationDate: specimen.publicationDate ?? '',
     publicationDateString: specimen.publicationDateString ?? '',
     number: specimen.number ?? '',

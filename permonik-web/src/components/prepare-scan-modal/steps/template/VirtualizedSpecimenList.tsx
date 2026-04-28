@@ -1,8 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import {
-  CSSProperties,
-  memo,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -11,37 +9,35 @@ import {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
-import { VariableSizeList, ListChildComponentProps } from 'react-window'
-import { TReplacementSource, TTemplateItem } from '../../schemas/schemas'
-import SpecimenItem from './SpecimenItem'
+import { VariableSizeList } from 'react-window'
+import type {
+  TReplacementSource,
+  TTemplateItem,
+  TTemplateItemWithFormIndex,
+} from '@/components/prepare-scan-modal/schemas/schemas'
 import { getVisibleTemplateItems } from './templateGrouping'
+import VirtualizedSpecimenRow from './components/VirtualizedSpecimenRow'
 
-type Props = {
+const ESTIMATED_ROW_HEIGHT = 280
+const OVERSCAN_COUNT = 3
+
+type TVirtualizedSpecimenListProps = {
   items: TTemplateItem[]
+  viewOnly: boolean
   showOnlyRescans: boolean
+  showOnlyUnlocked: boolean
+  replacementSourceCandidates?: TReplacementSource[]
   disabled?: boolean
-} & (
-  | {
-      viewOnly: true
-      replacementSourceCandidates?: never
-    }
-  | {
-      viewOnly: false
-      replacementSourceCandidates: TReplacementSource[]
-    }
-)
+}
 
-type RowData = {
-  items: Array<{ item: TTemplateItem; formIndex: number }>
+export type TVirtualizedSpecimenRowData = {
+  items: TTemplateItemWithFormIndex[]
   viewOnly: boolean
   showOnlyRescans: boolean
   replacementSourceCandidates: TReplacementSource[]
   setRowHeight: (index: number, height: number) => void
   disabled?: boolean
 }
-
-const ESTIMATED_ROW_HEIGHT = 280
-const OVERSCAN_COUNT = 3
 
 const hasListCompositionChanged = (
   previousItemIds: string[],
@@ -56,63 +52,17 @@ const hasListCompositionChanged = (
   return false
 }
 
-const Row = memo(({ index, style, data }: ListChildComponentProps<RowData>) => {
-  const rowRef = useRef<HTMLDivElement | null>(null)
-  const { item, formIndex } = data.items[index]
-
-  const rowStyle = useMemo<CSSProperties>(
-    () => ({ ...style, width: '100%' }),
-    [style]
-  )
-
-  useLayoutEffect(() => {
-    const element = rowRef.current
-
-    if (!element) return
-
-    const measure = () => {
-      data.setRowHeight(
-        index,
-        Math.ceil(element.getBoundingClientRect().height)
-      )
-    }
-
-    measure()
-
-    const observer = new ResizeObserver(measure)
-    observer.observe(element)
-
-    return () => observer.disconnect()
-  }, [data, index])
-
-  return (
-    <Box style={rowStyle}>
-      <Box ref={rowRef} pb={1}>
-        <SpecimenItem
-          specimen={item.specimen}
-          itemPath={`items.${formIndex}`}
-          viewOnly={data.viewOnly}
-          showOnlyRescans={data.showOnlyRescans}
-          replacementSourceCandidates={data.replacementSourceCandidates}
-          disabled={data.disabled}
-        />
-      </Box>
-    </Box>
-  )
-})
-
-Row.displayName = 'VirtualizedSpecimenListRow'
-
 const VirtualizedSpecimenList = ({
   items,
   viewOnly,
   showOnlyRescans,
-  replacementSourceCandidates: _replacementSourceCandidates,
+  showOnlyUnlocked,
+  replacementSourceCandidates: _replacementSourceCandidates = [],
   disabled = false,
-}: Props) => {
+}: TVirtualizedSpecimenListProps) => {
   const visibleItems = useMemo(
-    () => getVisibleTemplateItems(items, showOnlyRescans),
-    [items, showOnlyRescans]
+    () => getVisibleTemplateItems(items, showOnlyRescans, showOnlyUnlocked),
+    [items, showOnlyRescans, showOnlyUnlocked]
   )
 
   const replacementSourceCandidates = useMemo(
@@ -125,7 +75,9 @@ const VirtualizedSpecimenList = ({
   )
 
   const { t } = useTranslation()
-  const listRef = useRef<VariableSizeList<RowData> | null>(null)
+  const listRef = useRef<VariableSizeList<TVirtualizedSpecimenRowData> | null>(
+    null
+  )
   const containerRef = useRef<HTMLDivElement | null>(null)
   const rowHeightsRef = useRef<Record<number, number>>({})
   const previousVisibleItemIdsRef = useRef<string[] | null>(null)
@@ -145,7 +97,7 @@ const VirtualizedSpecimenList = ({
     []
   )
 
-  const itemData = useMemo<RowData>(
+  const itemData = useMemo<TVirtualizedSpecimenRowData>(
     () => ({
       items: visibleItems,
       viewOnly,
@@ -221,7 +173,7 @@ const VirtualizedSpecimenList = ({
         overscanCount={OVERSCAN_COUNT}
         itemKey={(index, data) => data.items[index].item.specimen.id}
       >
-        {Row}
+        {VirtualizedSpecimenRow}
       </VariableSizeList>
     </Box>
   )

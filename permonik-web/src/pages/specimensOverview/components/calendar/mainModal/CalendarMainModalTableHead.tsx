@@ -9,11 +9,11 @@ const CalendarMainModalTableHead = () => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>{t('specimens_overview.mutation')}</TableCell>
+        <TableCell>{t('common.fields.mutation')}</TableCell>
         <TableCell>{t('specimens_overview.edition')}</TableCell>
         <TableCell>{t('specimens_overview.name')}</TableCell>
-        <TableCell>{t('specimens_overview.sub_name')}</TableCell>
-        <TableCell>{t('specimens_overview.owner')}</TableCell>
+        <TableCell>{t('common.fields.sub_name')}</TableCell>
+        <TableCell>{t('common.fields.owner')}</TableCell>
         <TableCell>{t('specimens_overview.digitization')}</TableCell>
         <TableCell>
           {t('specimens_overview.volume_overview_modal_link')}

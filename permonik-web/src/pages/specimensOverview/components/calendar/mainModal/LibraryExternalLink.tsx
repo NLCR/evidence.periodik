@@ -1,10 +1,10 @@
 import Typography from '@mui/material/Typography'
 import React from 'react'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
-import { TOwner } from '../../../../../schema/owner'
-import Loader from '../../../../../components/Loader'
+undefined
+undefined
 import WarningIcon from '@mui/icons-material/Warning'
-import theme from '../../../../../theme'
+undefined
 
 type Props = {
   owners: TOwner[] | undefined

@@ -11,17 +11,17 @@ import { clsx } from 'clsx'
 import { toast } from 'react-toastify'
 import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
-import Loader from '../../components/Loader'
-import ShowError from '../../components/ShowError'
+undefined
+undefined
 import {
   EditableMetaTitleSchema,
   TEditableMetaTitle,
-} from '../../schema/metaTitle'
+} from '@/schema/metaTitle'
 import {
   useCreateMetaTitleMutation,
   useMetaTitleListQuery,
   useUpdateMetaTitleMutation,
-} from '../../api/metaTitle'
+} from '@/api/metaTitle'
 
 const Container = styled('div')(() => ({
   position: 'relative',
@@ -59,16 +59,18 @@ const SaveButton = styled(LoadingButton)(() => ({
   width: 'fit-content',
 }))
 
-const initialState: TEditableMetaTitle = {
+const createInitialMetaTitleState = (): TEditableMetaTitle => ({
   name: '',
   note: '',
   isPublic: false,
-}
+})
 
 const MetaTitles = () => {
   const { t } = useTranslation()
   const theme = useTheme()
-  const [metaTitle, setMetaTitle] = useState<TEditableMetaTitle>(initialState)
+  const [metaTitle, setMetaTitle] = useState<TEditableMetaTitle>(
+    createInitialMetaTitleState()
+  )
 
   const {
     data: metaTitles,
@@ -119,7 +121,9 @@ const MetaTitles = () => {
               component="div"
               className={clsx({ active: !metaTitle.id })}
               onClick={() =>
-                !pendingMutation ? setMetaTitle(initialState) : null
+                !pendingMutation
+                  ? setMetaTitle(createInitialMetaTitleState())
+                  : null
               }
               sx={{
                 marginTop: theme.spacing(0.875),

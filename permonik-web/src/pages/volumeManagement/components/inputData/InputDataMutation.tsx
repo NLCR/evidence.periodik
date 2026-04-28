@@ -2,9 +2,9 @@ import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import { useTranslation } from 'react-i18next'
 import InputDataSelect from './InputDataSelect'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
-import { TMutation } from '../../../../schema/mutation'
-import { useLanguageCode } from '../../../../hooks/useLanguageCode'
+undefined
+undefined
+undefined
 import { useFormContext } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
 
@@ -36,7 +36,7 @@ const InputDataMutation = ({ mutations }: Props) => {
         ),
       }}
     >
-      <TableCell>{t('volume_overview.mutation')}</TableCell>
+      <TableCell>{t('common.fields.mutation')}</TableCell>
       <TableCell>
         <InputDataSelect
           editableData={{
@@ -50,7 +50,7 @@ const InputDataMutation = ({ mutations }: Props) => {
                 true
               )
             },
-            fieldName: t('volume_overview.mutation'),
+            fieldName: t('common.fields.mutation'),
           }}
           name={'mutationId'}
           options={mutations.map((mutation) => ({

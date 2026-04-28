@@ -9,15 +9,15 @@ import { clsx } from 'clsx'
 import { toast } from 'react-toastify'
 import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
-import Loader from '../../components/Loader'
-import ShowError from '../../components/ShowError'
-import { EditableEditionSchema, TEditableEdition } from '../../schema/edition'
+undefined
+undefined
+undefined
 import {
   useCreateEditionMutation,
   useEditionListQuery,
   useUpdateEditionMutation,
-} from '../../api/edition'
-import { useLanguageCode } from '../../hooks/useLanguageCode'
+} from '@/api/edition'
+undefined
 
 const Container = styled('div')(() => ({
   position: 'relative',
@@ -55,7 +55,7 @@ const SaveButton = styled(LoadingButton)(() => ({
   width: 'fit-content',
 }))
 
-const initialState: TEditableEdition = {
+const createInitialEditionState = (): TEditableEdition => ({
   name: {
     cs: '',
     sk: '',
@@ -64,12 +64,14 @@ const initialState: TEditableEdition = {
   isDefault: false,
   isAttachment: false,
   isPeriodicAttachment: false,
-}
+})
 
 const Editions = () => {
   const theme = useTheme()
   const { t } = useTranslation()
-  const [edition, setEdition] = useState<TEditableEdition>(initialState)
+  const [edition, setEdition] = useState<TEditableEdition>(
+    createInitialEditionState()
+  )
   const { languageCode } = useLanguageCode()
 
   const {
@@ -121,7 +123,9 @@ const Editions = () => {
               component="div"
               className={clsx({ active: !edition.id })}
               onClick={() =>
-                !pendingMutation ? setEdition(initialState) : null
+                !pendingMutation
+                  ? setEdition(createInitialEditionState())
+                  : null
               }
               sx={{
                 marginTop: theme.spacing(0.875),

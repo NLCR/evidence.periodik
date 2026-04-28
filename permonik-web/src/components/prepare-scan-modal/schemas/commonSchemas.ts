@@ -32,13 +32,15 @@ export const replacementSchema = z.object({
   pages: z.string(),
   isUnreplaceable: z.boolean(),
   isWaitingForRescan: z.boolean(),
+  locked: z.boolean(),
+  visible: z.boolean().optional(),
 })
 
 export type TReplacementSource = z.infer<typeof replacementSourceSchema>
 
 export type TReplacement = z.infer<typeof replacementSchema>
 
-export const EMPTY_REPLACEMENT_SOURCE: TReplacementSource = {
+export const createEmptyReplacementSource = (): TReplacementSource => ({
   id: undefined,
   priority: undefined,
   barcode: '',
@@ -46,11 +48,12 @@ export const EMPTY_REPLACEMENT_SOURCE: TReplacementSource = {
   mutationEdition: '',
   owner: '',
   signature: '',
-}
+})
 
-export const EMPTY_REPLACEMENT: TReplacement = {
-  volume: EMPTY_REPLACEMENT_SOURCE,
+export const createEmptyReplacement = (): TReplacement => ({
+  volume: createEmptyReplacementSource(),
   pages: 'všechny',
   isUnreplaceable: false,
   isWaitingForRescan: false,
-}
+  locked: false,
+})

@@ -1,4 +1,4 @@
-import { TSpecimen } from '../../../../schema/specimen'
+undefined
 
 export type TMainModalData = {
   data: TSpecimen[]

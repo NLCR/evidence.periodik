@@ -2,7 +2,7 @@ import {
   TReplacementSourceParameters,
   TTemplateIssues,
   TReplacementSource,
-  EMPTY_REPLACEMENT_SOURCE,
+  createEmptyReplacementSource,
 } from './commonSchemas'
 
 export type TScanTemplateSettings = {
@@ -13,7 +13,7 @@ export type TScanTemplateSettings = {
   primaryVolumeFillIndex: number
 }
 
-export const defaultScanSettings: TScanTemplateSettings = {
+export const createDefaultScanSettings = (): TScanTemplateSettings => ({
   issues: {
     missingPages: true,
     damagedPages: false,
@@ -29,6 +29,6 @@ export const defaultScanSettings: TScanTemplateSettings = {
     owner: false,
     timeOverlap: true,
   },
-  replacementSources: [{ ...EMPTY_REPLACEMENT_SOURCE, priority: 1 }],
+  replacementSources: [{ ...createEmptyReplacementSource(), priority: 1 }],
   primaryVolumeFillIndex: 0,
-}
+})

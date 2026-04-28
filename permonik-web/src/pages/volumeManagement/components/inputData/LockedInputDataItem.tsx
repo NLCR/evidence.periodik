@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
-import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
+undefined
 import { useTranslation } from 'react-i18next'
 import { ReactElement } from 'react'
 import { useFormContext } from 'react-hook-form'
-import { useFormatDate } from '../../../../utils/date'
+undefined
 
 type Props = {
   name: string
@@ -88,8 +88,8 @@ const LockedInputDataItem = ({
                 <EditIcon />
               </IconButton>
             }
-            confirmLabel={t('volume_overview.editing_dialog_yes')}
-            refuseLabel={t('volume_overview.editing_dialog_no')}
+            confirmLabel={t('common.confirm')}
+            refuseLabel={t('common.cancel')}
           />
         </>
       )}

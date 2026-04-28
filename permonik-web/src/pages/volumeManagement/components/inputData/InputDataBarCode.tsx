@@ -1,7 +1,7 @@
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import InputDataTextField from './InputDataTextField'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
+undefined
 import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
@@ -31,11 +31,11 @@ const InputDataBarCode = () => {
         ),
       }}
     >
-      <TableCell>{t('volume_overview.bar_code')}</TableCell>
+      <TableCell>{t('common.fields.bar_code')}</TableCell>
       <TableCell>
         <InputDataTextField
           editableData={{
-            fieldName: t('volume_overview.bar_code'),
+            fieldName: t('common.fields.bar_code'),
             saveChange: (value: string) => {
               setBarCode(value)
               setSpecimensState(

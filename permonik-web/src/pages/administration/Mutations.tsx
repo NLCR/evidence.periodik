@@ -9,19 +9,19 @@ import { clsx } from 'clsx'
 import { toast } from 'react-toastify'
 import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
-import Loader from '../../components/Loader'
-import ShowError from '../../components/ShowError'
+undefined
+undefined
 import {
   EditableMutationSchema,
   TEditableMutation,
-} from '../../schema/mutation'
+} from '@/schema/mutation'
 import {
   useCreateMutationMutation,
   useMutationListQuery,
   useUpdateMutationMutation,
-} from '../../api/mutation'
+} from '@/api/mutation'
 
-import { useLanguageCode } from '../../hooks/useLanguageCode'
+undefined
 
 const Container = styled('div')(() => ({
   position: 'relative',
@@ -59,18 +59,20 @@ const SaveButton = styled(LoadingButton)(() => ({
   width: 'fit-content',
 }))
 
-const initialState: TEditableMutation = {
+const createInitialMutationState = (): TEditableMutation => ({
   name: {
     cs: '',
     sk: '',
     en: '',
   },
-}
+})
 
 const Mutations = () => {
   const { t } = useTranslation()
   const theme = useTheme()
-  const [mutation, setMutation] = useState<TEditableMutation>(initialState)
+  const [mutation, setMutation] = useState<TEditableMutation>(
+    createInitialMutationState()
+  )
   const { languageCode } = useLanguageCode()
 
   const {
@@ -122,7 +124,9 @@ const Mutations = () => {
               component="div"
               className={clsx({ active: !mutation.id })}
               onClick={() =>
-                !pendingMutation ? setMutation(initialState) : null
+                !pendingMutation
+                  ? setMutation(createInitialMutationState())
+                  : null
               }
               sx={{
                 marginTop: theme.spacing(0.875),

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { SpecimenStateEnum, TSpecimenState } from '../../../../schema/specimen'
-import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
+undefined
+undefined
 import { FormTabMultiSelect } from '../FormTabMultiSelect'
 
 const NumberOptionsTabMultiSelect = () => {

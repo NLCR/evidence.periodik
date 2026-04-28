@@ -1,0 +1,89 @@
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import { Controller, Control } from 'react-hook-form'
+import { TFunction } from 'i18next'
+undefined
+undefined
+import {
+  createEmptyReplacementSource,
+  TReplacement,
+  TReplacementSource,
+  TTemplate,
+  TTemplateSpecimenRef,
+} from '@/components/prepare-scan-modal/schemas/schemas'
+
+type Props = {
+  control: Control<TTemplate>
+  itemPath: `items.${number}`
+  specimen: TTemplateSpecimenRef
+  t: TFunction
+  disabled: boolean
+  isItemLocked: boolean
+  mainReplacement: TReplacement | null | undefined
+  replacementSourceCandidates: TReplacementSource[]
+}
+
+const SpecimenMainReplacementSection = ({
+  control,
+  itemPath,
+  specimen,
+  t,
+  disabled,
+  isItemLocked,
+  mainReplacement,
+  replacementSourceCandidates,
+}: Props) => {
+  if (specimen.numExists) return null
+
+  return (
+    <Box mt={1}>
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Controller
+          control={control}
+          name={`${itemPath}.replacement.volume`}
+          render={({ field, fieldState }) => (
+            <ReplacementSourceInput
+              viewOnly={false}
+              value={field.value ?? createEmptyReplacementSource()}
+              candidates={replacementSourceCandidates}
+              onChange={field.onChange}
+              errorMessage={fieldState.error?.message}
+              disabled={
+                disabled ||
+                isItemLocked ||
+                mainReplacement?.isUnreplaceable ||
+                mainReplacement?.isWaitingForRescan
+              }
+            />
+          )}
+        />
+      </Stack>
+      <Stack direction="row" gap={8}>
+        <Box>
+          <FormCheckbox<TTemplate>
+            name={`${itemPath}.replacement.isUnreplaceable` as const}
+            label={t(
+              'prepare_scan_modal.content_template.replacement_unavailable'
+            )}
+            disabled={
+              disabled || isItemLocked || mainReplacement?.isWaitingForRescan
+            }
+          />
+        </Box>
+        <Box>
+          <FormCheckbox<TTemplate>
+            name={`${itemPath}.replacement.isWaitingForRescan` as const}
+            label={t(
+              'prepare_scan_modal.content_template.waiting_for_rescan_label'
+            )}
+            disabled={
+              disabled || isItemLocked || mainReplacement?.isUnreplaceable
+            }
+          />
+        </Box>
+      </Stack>
+    </Box>
+  )
+}
+
+export default SpecimenMainReplacementSection

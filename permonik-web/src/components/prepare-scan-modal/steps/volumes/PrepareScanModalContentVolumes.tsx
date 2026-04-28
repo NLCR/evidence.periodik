@@ -3,10 +3,10 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
-import { useCalculatedFillIndexQuery } from '../../../../api/volumeCalculatedFillIndex'
-import { TScanTemplateSettings } from '../../schemas/schemas'
-import FillIndexIndicator from '../../../FillIndexIndicator'
-import FormCheckbox from '../../../form/FormCheckbox'
+undefined
+undefined
+undefined
+undefined
 import ReplacementSourcesSelection from './ReplacementSourcesSelection'
 
 type Props = {
@@ -49,7 +49,7 @@ const PrepareScanModalContentVolumes = ({ volumeId }: Props) => {
           <FormCheckbox
             disabled
             name="replacementSourcesParameters.metatitle"
-            label={t('prepare_scan_modal.content_volumes.metatitle')}
+            label={t('common.fields.meta_title')}
           />
           <FormCheckbox
             disabled
@@ -58,15 +58,15 @@ const PrepareScanModalContentVolumes = ({ volumeId }: Props) => {
           />
           <FormCheckbox
             name="replacementSourcesParameters.mutation"
-            label={t('prepare_scan_modal.content_volumes.mutation')}
+            label={t('common.fields.mutation')}
           />
           <FormCheckbox
             name="replacementSourcesParameters.mutationalEdition"
-            label={t('prepare_scan_modal.content_volumes.mutational_edition')}
+            label={t('common.fields.mutation_mark')}
           />
           <FormCheckbox
             name="replacementSourcesParameters.owner"
-            label={t('prepare_scan_modal.content_volumes.owner')}
+            label={t('common.fields.owner')}
           />
         </Stack>
       </Box>

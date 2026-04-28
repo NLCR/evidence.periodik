@@ -2,11 +2,11 @@ import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import { useTranslation } from 'react-i18next'
 import InputDataSelect from './InputDataSelect'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
+undefined
 import { useFormContext } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
-import { TOwner } from '../../../../schema/owner'
-import { TMe } from '../../../../schema/user'
+undefined
+undefined
 
 type Props = { owners: TOwner[]; me: TMe }
 
@@ -35,7 +35,7 @@ const InputDataOwner = ({ owners, me }: Props) => {
         ),
       }}
     >
-      <TableCell>{t('volume_overview.owner')}</TableCell>
+      <TableCell>{t('common.fields.owner')}</TableCell>
       <TableCell>
         <InputDataSelect
           editableData={{
@@ -49,7 +49,7 @@ const InputDataOwner = ({ owners, me }: Props) => {
                 true
               )
             },
-            fieldName: t('volume_overview.owner'),
+            fieldName: t('common.fields.owner'),
           }}
           name="ownerId"
           options={owners

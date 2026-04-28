@@ -15,31 +15,31 @@ import InputDataMutationMark from './InputDataMutationMark'
 import InputDataTextField from './InputDataTextField'
 import InputDataDatePicker from './InputDataDatePicker'
 import Periodicity from './periodicity/Periodicity'
-import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
+undefined
 import Button from '@mui/material/Button'
 import { useParams, useSearchParams } from 'react-router-dom'
 import UnsavedChangesModal from '../UnsavedChangesModal'
 import {
-  initialState,
+  createInitialVolumeState,
   useVolumeManagementStore,
-} from '../../../../slices/useVolumeManagementStore'
+} from '@/slices/useVolumeManagementStore'
 import { useEffect } from 'react'
 import {
   EditableVolumeSchema,
   TEditableVolume,
-} from '../../../../schema/volume'
+} from '@/schema/volume'
 import InputDataBarCode from './InputDataBarCode'
 import InputDataSignature from './InputDataSignature'
-import { api } from '../../../../api'
-import { TSpecimen } from '../../../../schema/specimen'
+undefined
+undefined
 import InputDataOwner from './InputDataOwner'
 import InputDataNote from './InputDataNote'
-import { duplicateVolume } from '../../../../utils/duplicateVolume/duplicateVolume'
-import { emptyMutationMark } from '../../../../utils/mutationMark'
+undefined
+undefined
 import {
   basicFieldsToReset,
   FieldsToReset,
-} from '../../../../utils/duplicateVolume/types'
+} from '@/utils/duplicateVolume/types'
 
 const InputDataForm = ({
   editions,
@@ -59,7 +59,7 @@ const InputDataForm = ({
   )
 
   const methods = useForm<TEditableVolume>({
-    defaultValues: volume ?? initialState.volumeState,
+    defaultValues: volume ?? createInitialVolumeState(),
     resolver: zodResolver(EditableVolumeSchema),
   })
 
@@ -112,11 +112,11 @@ const InputDataForm = ({
     if (!duplicated) {
       methods.reset(
         volumeId
-          ? (volume ?? initialState.volumeState)
-          : initialState.volumeState
+          ? (volume ?? createInitialVolumeState())
+          : createInitialVolumeState()
       )
       setVolumeState(
-        { ...(volume ?? initialState.volumeState), isLoading: false },
+        { ...(volume ?? createInitialVolumeState()), isLoading: false },
         false
       )
     } else {
@@ -125,7 +125,7 @@ const InputDataForm = ({
         basicFieldsToReset.includes(f)
       )) {
         if (field === FieldsToReset.mutationMark) {
-          methods.setValue('mutationMark', emptyMutationMark)
+          methods.setValue('mutationMark', createEmptyMutationMark())
         } else {
           methods.setValue(FieldsToReset[field] as keyof TEditableVolume, '')
         }
@@ -150,7 +150,7 @@ const InputDataForm = ({
         <TableHead>
           <TableRow>
             <TableCell sx={{ fontWeight: 'bold' }}>
-              {t('volume_overview.name')}
+              {t('common.fields.name')}
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>
               {t('volume_overview.value')}
@@ -159,7 +159,7 @@ const InputDataForm = ({
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell>{t('volume_overview.meta_title')}</TableCell>
+            <TableCell>{t('common.fields.meta_title')}</TableCell>
             <TableCell>
               <InputDataSelect
                 name="metaTitleId"

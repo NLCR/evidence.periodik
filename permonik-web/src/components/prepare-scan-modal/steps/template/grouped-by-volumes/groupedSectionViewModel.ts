@@ -31,23 +31,23 @@ export const getSectionMetadata = (
 ): SectionMetadataItem[] =>
   [
     {
-      label: t('prepare_scan_modal.content_template.signature_label'),
+      label: t('common.fields.signature'),
       value: section.volume?.signature,
     },
     {
-      label: t('prepare_scan_modal.content_template.volume_owner'),
+      label: t('common.fields.owner'),
       value: section.volume?.owner,
     },
     {
-      label: t('prepare_scan_modal.content_template.volume_barcode_short'),
+      label: t('common.fields_short.bar_code'),
       value: section.volume?.barcode,
     },
     {
-      label: t('prepare_scan_modal.content_template.volume_mutation'),
+      label: t('common.fields.mutation'),
       value: section.volume?.mutation,
     },
     {
-      label: t('prepare_scan_modal.content_template.volume_mutation_edition'),
+      label: t('common.fields.mutation_mark'),
       value: section.volume?.mutationEdition,
     },
   ].filter((item): item is SectionMetadataItem => !!item.value)

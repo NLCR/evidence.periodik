@@ -3,7 +3,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
-import Loader from '../../components/Loader'
+undefined
 
 const Container = styled('div')(({ theme }) => ({
   backgroundColor: 'white',

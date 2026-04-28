@@ -8,14 +8,14 @@ import TableRow from '@mui/material/TableRow'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
-import { TEdition } from '../../../../../schema/edition'
-import ModalContainer from '../../../../../components/ModalContainer'
+undefined
+undefined
 import InputDataCheckbox from '../InputDataCheckbox'
 import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useGenerateVolume } from './useGenerateVolume'
 import PeriodicityRow from './PeriodicityRow'
-import { TMetaTitle } from '../../../../../schema/metaTitle'
+undefined
 
 interface PeriodicityProps {
   editions: TEdition[]
@@ -77,8 +77,8 @@ const Periodicity: FC<PeriodicityProps> = ({ editions, metaTitles }) => {
               <TableCell>{t('volume_overview.is_in_volume')}</TableCell>
               <TableCell>{t('volume_overview.edition')}</TableCell>
               <TableCell>{t('volume_overview.pages_count')}</TableCell>
-              <TableCell>{t('volume_overview.name')}</TableCell>
-              <TableCell>{t('volume_overview.sub_name')}</TableCell>
+              <TableCell>{t('common.fields.name')}</TableCell>
+              <TableCell>{t('common.fields.sub_name')}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>

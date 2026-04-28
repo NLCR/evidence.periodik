@@ -8,14 +8,15 @@ import { useTranslation } from 'react-i18next'
 // eslint-disable-next-line import/no-unresolved -- eslint resolver v projektu neumi spravne rozpoznat export react-to-print
 import { useReactToPrint } from 'react-to-print'
 import Barcode from 'react-barcode'
-import ModalContainer from '../../../ModalContainer'
-import { TTemplateItem } from '../../schemas/schemas'
+import ModalContainer from '@/components/ModalContainer'
+import type { TTemplateItem } from '@/components/prepare-scan-modal/schemas/schemas'
 import TemplatePreviewHeader, {
   TTemplatePreviewHeaderProps,
 } from './TemplatePreviewHeader'
-import VirtualizedSpecimenList from './VirtualizedSpecimenList'
+import VirtualizedSpecimenList from '../VirtualizedSpecimenList'
 import PrepareScanTemplatePrintContent from './PrepareScanTemplatePrintContent'
-import GroupedTemplateSections from './grouped-by-volumes/GroupedTemplateSections'
+import GroupedTemplateSections from '../grouped-by-volumes/GroupedTemplateSections'
+import { getVisibleTemplateItems } from '../templateGrouping'
 
 type Props = {
   opened: boolean
@@ -24,6 +25,7 @@ type Props = {
   barCode?: string
   items: TTemplateItem[]
   showOnlyRescans: boolean
+  showOnlyUnlocked: boolean
 }
 
 const PrepareScanTemplatePreviewDialog: FC<Props> = ({
@@ -33,6 +35,7 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
   barCode = undefined,
   items,
   showOnlyRescans,
+  showOnlyUnlocked,
 }) => {
   const { t } = useTranslation()
   const printContentRef = useRef<HTMLDivElement>(null)
@@ -43,6 +46,11 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
     documentTitle: header.title,
   })
 
+  const groupedVisibleItems = getVisibleTemplateItems(
+    items,
+    showOnlyRescans,
+    showOnlyUnlocked
+  ).map(({ item }) => item)
   return (
     <ModalContainer
       opened={opened}
@@ -60,10 +68,6 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
             justifyContent: 'space-between',
             width: '100%',
             alignItems: 'center',
-            gap: '12px',
-            marginTop: 'auto',
-            paddingTop: '8px',
-            backgroundColor: 'background.paper',
           }}
         >
           <Button variant="outlined" onClick={onClose}>
@@ -114,18 +118,21 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
         <Box sx={{ flex: 1, minHeight: 0 }}>
           {groupByVolumes ? (
             <GroupedTemplateSections
-              items={items}
-              showOnlyRescans={showOnlyRescans}
+              items={groupedVisibleItems}
+              showOnlyRescans={false}
+              showOnlyUnlocked={false}
             />
           ) : (
             <VirtualizedSpecimenList
               items={items}
               viewOnly
               showOnlyRescans={showOnlyRescans}
+              showOnlyUnlocked={showOnlyUnlocked}
             />
           )}
         </Box>
 
+        {/* Print Content has to be visible only when printing, has to be in DOM */}
         <Box
           ref={printContentRef}
           aria-hidden
@@ -145,6 +152,7 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
             barCode={barCode}
             items={items}
             showOnlyRescans={showOnlyRescans}
+            showOnlyUnlocked={showOnlyUnlocked}
             groupByVolumes={groupByVolumes}
           />
         </Box>

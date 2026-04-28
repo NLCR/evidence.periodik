@@ -13,11 +13,11 @@ export const MutationMarkTypeEnum = mutationMarkTypeSchema.Enum
 
 export type TMutationMark = z.infer<typeof mutationMarkSchema>
 
-export const emptyMutationMark: TMutationMark = {
+export const createEmptyMutationMark = (): TMutationMark => ({
   mark: '',
   type: MutationMarkTypeEnum.MARK,
   description: '',
-}
+})
 
 export const UNMARKED_MUTATION_MARK_SYMBOL = '✓'
 
@@ -55,7 +55,7 @@ export function getMutationMarkCompoundValue(
 export function repairMutationMark(
   value: TMutationMark | undefined
 ): TMutationMark {
-  if (!value) return emptyMutationMark
+  if (!value) return createEmptyMutationMark()
 
   return {
     ...value,

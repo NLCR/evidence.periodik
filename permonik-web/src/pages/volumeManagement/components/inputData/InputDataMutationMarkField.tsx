@@ -3,14 +3,14 @@ import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import { useState } from 'react'
 import MutationMarkSelectorModal from '../editCells/MutationMarkSelectorModal'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
+undefined
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
   getMutationMarkCompoundValue,
   hasMutationMark,
   TMutationMark,
-} from '../../../../utils/mutationMark'
+} from '@/utils/mutationMark'
 
 type FieldProps = {
   disabled?: boolean
@@ -89,7 +89,7 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
       editableData={{
         isMutationMark: true,
         DialogContent: <Field defaultValue={value} {...props} />,
-        fieldName: t('specimens_overview.mutation_mark'),
+        fieldName: t('common.fields.mutation_mark'),
         saveChange: () => {
           const mutationMark = getValues('mutationMark_internal')
 

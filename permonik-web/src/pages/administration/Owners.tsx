@@ -9,15 +9,15 @@ import { clsx } from 'clsx'
 import { toast } from 'react-toastify'
 import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
-import Loader from '../../components/Loader'
-import ShowError from '../../components/ShowError'
-import { EditableOwnerSchema, TEditableOwner } from '../../schema/owner'
+undefined
+undefined
+undefined
 import {
   useCreateOwnerMutation,
   useGetSiglaListMutation,
   useOwnerListQuery,
   useUpdateOwnerMutation,
-} from '../../api/owner'
+} from '@/api/owner'
 import clone from 'lodash/clone'
 
 const Container = styled('div')(() => ({
@@ -56,16 +56,16 @@ const SaveButton = styled(LoadingButton)(() => ({
   width: 'fit-content',
 }))
 
-const initialState: TEditableOwner = {
+const createInitialOwnerState = (): TEditableOwner => ({
   name: '',
   shorthand: '',
   sigla: '',
-}
+})
 
 const Owners = () => {
   const { t } = useTranslation()
   const theme = useTheme()
-  const [owner, setOwner] = useState<TEditableOwner>(initialState)
+  const [owner, setOwner] = useState<TEditableOwner>(createInitialOwnerState())
 
   const {
     data: owners,
@@ -132,7 +132,9 @@ const Owners = () => {
             <Typography
               component="div"
               className={clsx({ active: !owner.id })}
-              onClick={() => (!pendingMutation ? setOwner(initialState) : null)}
+              onClick={() =>
+                !pendingMutation ? setOwner(createInitialOwnerState()) : null
+              }
               sx={{
                 marginTop: theme.spacing(0.875),
                 marginBottom: theme.spacing(0.875),

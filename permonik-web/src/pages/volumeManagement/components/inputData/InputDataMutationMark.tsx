@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
 import InputDataMutationMarkField from './InputDataMutationMarkField'
-import { hasMutationMark } from '../../../../utils/mutationMark'
+undefined
 
 const InputDataMutationMark = () => {
   const { watch } = useFormContext()
@@ -20,7 +20,7 @@ const InputDataMutationMark = () => {
         ),
       }}
     >
-      <TableCell>{t('specimens_overview.mutation_mark')}</TableCell>
+      <TableCell>{t('common.fields.mutation_mark')}</TableCell>
       <TableCell>
         <InputDataMutationMarkField />
       </TableCell>

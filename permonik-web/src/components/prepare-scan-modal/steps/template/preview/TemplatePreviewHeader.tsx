@@ -8,7 +8,7 @@ import {
   getTemplateStateIcon,
   getTemplateStateLabel,
   TemplateState,
-} from '../../schemas/templateStateSchema'
+} from '@/components/prepare-scan-modal/schemas/templateStateSchema'
 
 export type TTemplatePreviewHeaderProps = {
   title: string
@@ -48,7 +48,7 @@ const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
     <>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Typography sx={{ fontWeight: 700, fontSize: 20 }}>
-          {`${title} (${t('prepare_scan_modal.content_template.signature_label').toLowerCase()} ${signature ?? t('prepare_scan_modal.content_template.unknown_signature').toLowerCase()})`}
+          {`${title} (${t('common.fields.signature').toLowerCase()} ${signature ?? t('prepare_scan_modal.content_template.unknown_signature').toLowerCase()})`}
         </Typography>
         {displayCurrentState && currentState && (
           <Chip
@@ -76,16 +76,13 @@ const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
           {subTitle ?? '-'}
         </Typography>
         <Typography>
-          {t('prepare_scan_modal.content_template.volume_owner')}:{' '}
-          {owner ?? '-'}
+          {t('common.fields.owner')}: {owner ?? '-'}
         </Typography>
         <Typography>
-          {t('prepare_scan_modal.content_template.volume_mutation')}:{' '}
-          {mutation ?? '-'}
+          {t('common.fields.mutation')}: {mutation ?? '-'}
         </Typography>
         <Typography>
-          {t('prepare_scan_modal.content_template.volume_mutation_edition')}:{' '}
-          {mutationEdition ?? '-'}
+          {t('common.fields.mutation_mark')}: {mutationEdition ?? '-'}
         </Typography>
         <Typography>
           {t('prepare_scan_modal.content_template.header_range_from')}:{' '}

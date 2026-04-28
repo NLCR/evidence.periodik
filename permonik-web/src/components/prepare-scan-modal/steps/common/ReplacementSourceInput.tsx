@@ -10,9 +10,9 @@ import Stack from '@mui/material/Stack'
 import { ReactNode, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  EMPTY_REPLACEMENT_SOURCE,
+  createEmptyReplacementSource,
   TReplacementSource,
-} from '../../schemas/schemas'
+} from '@/components/prepare-scan-modal/schemas/schemas'
 import ReplacementSourceInputComponent from './ReplacementSourceInputComponent'
 
 type Props = {
@@ -78,7 +78,7 @@ const ReplacementSourceInput = ({
             justifyContent={'space-between'}
           >
             <ReplacementSourceInputComponent
-              label={t('prepare_scan_modal.content_template.signature_label')}
+              label={t('common.fields.signature')}
               viewOnly={viewOnly}
               value={value.signature}
               onChange={(next) => safeSetReplacement({ signature: next })}
@@ -86,7 +86,7 @@ const ReplacementSourceInput = ({
               disabled={disabled}
             />
             <ReplacementSourceInputComponent
-              label={t('prepare_scan_modal.content_template.volume_owner')}
+              label={t('common.fields.owner')}
               viewOnly={viewOnly}
               value={value.owner}
               onChange={(next) => safeSetReplacement({ owner: next })}
@@ -104,7 +104,7 @@ const ReplacementSourceInput = ({
               disabled={disabled}
             />
             <ReplacementSourceInputComponent
-              label={t('prepare_scan_modal.content_template.volume_mutation')}
+              label={t('common.fields.mutation')}
               viewOnly={viewOnly}
               value={value.mutation}
               onChange={(next) => safeSetReplacement({ mutation: next })}
@@ -112,9 +112,7 @@ const ReplacementSourceInput = ({
               disabled={disabled}
             />
             <ReplacementSourceInputComponent
-              label={t(
-                'prepare_scan_modal.content_template.volume_mutation_edition'
-              )}
+              label={t('common.fields.mutation_mark')}
               viewOnly={viewOnly}
               value={value.mutationEdition}
               onChange={(next) => safeSetReplacement({ mutationEdition: next })}
@@ -169,7 +167,7 @@ const ReplacementSourceInput = ({
               onClick={() => {
                 setMode(mode === 'MANUAL' ? 'SELECT' : 'MANUAL')
                 onChange({
-                  ...EMPTY_REPLACEMENT_SOURCE,
+                  ...createEmptyReplacementSource(),
                   priority: value.priority,
                 })
               }}
