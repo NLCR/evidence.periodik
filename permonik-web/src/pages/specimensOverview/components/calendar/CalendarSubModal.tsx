@@ -1,5 +1,5 @@
 import { t } from 'i18next'
-import React, { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import ModalContainer from '../../../../components/ModalContainer'
 import VolumeStatsModalContent from '../../../../components/prepare-scan-modal/steps/template/PrepareScanModalContentTemplate'
 import { generateVolumeUrlWithParams } from '../../../../utils/generateVolumeUrlWithParams'

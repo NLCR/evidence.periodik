@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import flow from 'lodash/flow'
 import groupBy from 'lodash/groupBy'
 import map from 'lodash/map'

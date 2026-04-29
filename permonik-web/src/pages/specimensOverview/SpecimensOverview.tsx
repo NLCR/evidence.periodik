@@ -5,7 +5,7 @@ import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import React, { Suspense, useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import TableRowsIcon from '@mui/icons-material/TableRows'
@@ -25,7 +25,7 @@ import FacetsContextProvider from './components/facets/FacetsContextProvider'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import theme from '../../theme'
 
-const Table = React.lazy(() => import('./components/Table'))
+const Table = lazy(() => import('./components/Table'))
 
 const SpecimensOverview = () => {
   const { metaTitleId } = useParams()

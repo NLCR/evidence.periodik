@@ -1,14 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import clone from 'lodash/clone'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
 import { GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
-import {
-  TEditableSpecimen,
-  TSpecimenDamageTypes,
-} from '@/schema/specimen'
+import { TEditableSpecimen, TSpecimenDamageTypes } from '@/schema/specimen'
 import ModalContainer from '../../../../components/ModalContainer'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'

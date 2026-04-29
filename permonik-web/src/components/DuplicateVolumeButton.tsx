@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react'
+import { FC, ReactNode, useState } from 'react'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -19,7 +19,7 @@ type Props = {
   forceOwnerReset?: boolean
 }
 
-const DuplicateVolumeButton: React.FC<Props> = ({
+const DuplicateVolumeButton: FC<Props> = ({
   volumeId = null,
   metaTitleId = null,
   specimenId = null,

@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import React, { FC, RefObject, useState } from 'react'
+import { FC, RefObject, useState } from 'react'
 import clone from 'lodash/clone'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'

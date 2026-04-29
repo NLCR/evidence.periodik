@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { MouseEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
@@ -105,7 +105,7 @@ const Header = () => {
   const { data: me } = useMeQuery()
   const { mutateAsync: doLogout } = useLogoutMutation()
 
-  const handleLangMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleLangMenuOpen = (event: MouseEvent<HTMLElement>) => {
     setLangAnchorEl(event.currentTarget)
   }
 

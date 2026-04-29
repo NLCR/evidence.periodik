@@ -1,5 +1,5 @@
 import { SpecimenSchema, TEditableSpecimen } from '../../../../schema/specimen'
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import Box from '@mui/material/Box'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { toast } from 'react-toastify'

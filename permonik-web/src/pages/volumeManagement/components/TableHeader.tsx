@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import React, { FC, RefObject, useEffect, useState } from 'react'
+import { FC, RefObject, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useManagedVolumeDetailQuery } from '../../../api/volume'
 import { useParams } from 'react-router-dom'

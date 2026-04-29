@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 import { TMetaTitle } from '../../../../schema/metaTitle'
 import { useFacetsData } from './api'
 import { damageTypes } from '../../../../utils/constants'

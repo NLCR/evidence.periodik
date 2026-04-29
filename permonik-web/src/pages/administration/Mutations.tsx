@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
@@ -11,10 +11,7 @@ import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
-import {
-  EditableMutationSchema,
-  TEditableMutation,
-} from '@/schema/mutation'
+import { EditableMutationSchema, TEditableMutation } from '@/schema/mutation'
 import {
   useCreateMutationMutation,
   useMutationListQuery,

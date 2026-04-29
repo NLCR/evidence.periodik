@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography'
-import React from 'react'
+
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { TOwner } from '../../../../../schema/owner'
 import Loader from '../../../../../components/Loader'

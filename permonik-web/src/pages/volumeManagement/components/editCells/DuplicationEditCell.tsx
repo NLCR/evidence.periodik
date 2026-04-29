@@ -1,7 +1,7 @@
 import { TEditableSpecimen } from '../../../../schema/specimen'
 import clone from 'lodash/clone'
 import { duplicatePartialSpecimen } from '../../../../utils/specimen'
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import Box from '@mui/material/Box'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
