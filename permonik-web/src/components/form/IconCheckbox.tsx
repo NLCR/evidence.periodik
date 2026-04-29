@@ -12,16 +12,16 @@ type IconCheckboxProps<TFieldValues extends FieldValues = FieldValues> = Omit<
   CheckboxProps,
   'name' | 'icon' | 'checkedIcon'
 > & {
-  iconTrue: ReactNode
-  iconFalse: ReactNode
+  IconTrue: ReactNode
+  IconFalse: ReactNode
   name: FieldPath<TFieldValues>
   afterChange?: (value: boolean) => void
 }
 
 const IconCheckbox = <TFieldValues extends FieldValues = FieldValues>({
   name,
-  iconTrue,
-  iconFalse,
+  IconTrue,
+  IconFalse,
   afterChange = noop,
   ...checkboxProps
 }: IconCheckboxProps<TFieldValues>) => {
@@ -41,8 +41,8 @@ const IconCheckbox = <TFieldValues extends FieldValues = FieldValues>({
             field.onChange(checked)
             afterChange?.(checked)
           }}
-          icon={iconFalse}
-          checkedIcon={iconTrue}
+          icon={IconFalse}
+          checkedIcon={IconTrue}
         />
       )}
     />

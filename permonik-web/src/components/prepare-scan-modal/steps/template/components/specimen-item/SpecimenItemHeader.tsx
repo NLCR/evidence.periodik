@@ -55,8 +55,8 @@ const SpecimenItemHeader = ({
           </Stack>
           <IconCheckbox
             name={`${itemPath}.locked`}
-            iconFalse={<LockOpenIcon />}
-            iconTrue={<LockIcon />}
+            IconFalse={<LockOpenIcon />}
+            IconTrue={<LockIcon />}
             disabled={!canManageLocks}
             afterChange={(value) => {
               const currentItem = getValues(itemPath)

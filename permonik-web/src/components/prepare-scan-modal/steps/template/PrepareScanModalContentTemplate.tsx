@@ -20,7 +20,6 @@ import {
   hasWaitingReplacement,
   isLockingEnabled,
   applyItemLock,
-  applyItemVisibility,
   initItemVisibility,
 } from './utils/templateItemLocking'
 import {

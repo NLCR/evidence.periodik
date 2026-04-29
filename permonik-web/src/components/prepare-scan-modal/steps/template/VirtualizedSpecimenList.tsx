@@ -15,8 +15,8 @@ import type {
   TTemplateItem,
   TTemplateItemWithFormIndex,
 } from '@/components/prepare-scan-modal/schemas/schemas'
-import { getFilteredTemplateItems } from './templateGrouping'
 import VirtualizedSpecimenRow from './components/VirtualizedSpecimenRow'
+import { getFilteredTemplateItems } from './utils/filters'
 
 const ESTIMATED_ROW_HEIGHT = 280
 const OVERSCAN_COUNT = 3

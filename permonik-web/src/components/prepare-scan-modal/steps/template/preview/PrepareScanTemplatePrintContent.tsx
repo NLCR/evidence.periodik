@@ -4,11 +4,11 @@ import { FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import Barcode from 'react-barcode'
 import type { TTemplateItem } from '@/components/prepare-scan-modal/schemas/schemas'
-import { getFilteredTemplateItems } from '../templateGrouping'
 import SpecimenItemViewOnly from '../components/specimen-item/SpecimenItemViewOnly'
 import GroupedTemplateSections from '../grouped-by-volumes/GroupedTemplateSections'
 import { TVolume } from '@/schema/volume'
 import TemplatePreviewHeader from './TemplatePreviewHeader'
+import { filterTemplateItemsForPrint } from '../utils/filters'
 
 type Props = {
   primaryVolume: TVolume
@@ -17,25 +17,6 @@ type Props = {
   showOnlyRescans: boolean
   showOnlyUnlocked: boolean
   groupByVolumes: boolean
-}
-
-export const filterTemplateItemsForPrint = (
-  items: TTemplateItem[],
-  showOnlyRescans: boolean,
-  showOnlyUnlocked: boolean
-) => {
-  const filteredItems = getFilteredTemplateItems(
-    items,
-    showOnlyRescans,
-    showOnlyUnlocked
-  )
-
-  return filteredItems
-    .filter((item) => item.item.visible)
-    .map((item) => ({
-      ...item.item,
-      pageReplacements: item.item.pageReplacements.filter((r) => r.visible),
-    }))
 }
 
 const PrepareScanTemplatePrintContent: FC<Props> = ({

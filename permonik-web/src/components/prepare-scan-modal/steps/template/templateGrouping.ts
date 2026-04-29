@@ -2,9 +2,9 @@ import type {
   TReplacement,
   TReplacementSource,
   TTemplateItem,
-  TTemplateItemWithFormIndex,
   TTemplateSpecimenRef,
 } from '@/components/prepare-scan-modal/schemas/schemas'
+import { getFilteredTemplateItems } from './utils/filters'
 
 export type TGroupedScanSection = {
   key: string
@@ -44,29 +44,6 @@ type TSectionDescriptor = {
   sectionType: TGroupedScanSection['sectionType']
   volume: TReplacementSource | null
 }
-
-export const shouldIncludeTemplateItem = (
-  item: TTemplateItem,
-  showOnlyRescans: boolean,
-  showOnlyUnlocked: boolean
-) =>
-  (!showOnlyRescans ||
-    !!item.replacement?.isWaitingForRescan ||
-    item.pageReplacements.some(
-      (replacement) => replacement.isWaitingForRescan
-    )) &&
-  (!showOnlyUnlocked || !item.locked)
-
-export const getFilteredTemplateItems = (
-  items: TTemplateItem[],
-  showOnlyRescans: boolean,
-  showOnlyUnlocked: boolean
-): TTemplateItemWithFormIndex[] =>
-  items
-    .map((item, formIndex) => ({ item, formIndex }))
-    .filter(({ item }) =>
-      shouldIncludeTemplateItem(item, showOnlyRescans, showOnlyUnlocked)
-    )
 
 const hasVolumeIdentity = (volume: TReplacementSource): boolean =>
   Boolean(

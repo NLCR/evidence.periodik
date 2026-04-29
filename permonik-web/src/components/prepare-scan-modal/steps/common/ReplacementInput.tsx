@@ -1,7 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
-import Checkbox from '@mui/material/Checkbox'
 import { Box, IconButton, Stack, TextField, Typography } from '@mui/material'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -36,7 +35,7 @@ const ReplacementInput = ({
   disabled = false,
 }: Props) => {
   const { t } = useTranslation()
-  const { control, getValues, setValue } = useFormContext<TTemplate>()
+  const { control, setValue } = useFormContext<TTemplate>()
 
   const item = useWatch({ control, name })
   const templateState = useWatch({ control, name: 'state' })
@@ -87,8 +86,8 @@ const ReplacementInput = ({
           )}
         />
         <IconCheckbox
-          iconTrue={<LockIcon />}
-          iconFalse={<LockOpenIcon />}
+          IconTrue={<LockIcon />}
+          IconFalse={<LockOpenIcon />}
           name={`${name}.locked`}
           afterChange={(value) => setValue(`${name}.visible`, !value)}
           disabled={!isLockingAllowed || disabled}

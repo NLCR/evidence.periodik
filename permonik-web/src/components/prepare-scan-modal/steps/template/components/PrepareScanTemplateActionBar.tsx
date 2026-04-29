@@ -1,6 +1,6 @@
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
-import EyeIcon from '@mui/icons-material/Visibility'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import SyncRoundedIcon from '@mui/icons-material/SyncRounded'
@@ -52,7 +52,7 @@ const PrepareScanTemplateActionBar: FC<TProps> = ({
       <ResponsiveActionButton
         variant="outlined"
         onClick={onOpenPreview}
-        icon={<EyeIcon sx={{ translate: { xs: '-2px 0', sm: '' } }} />}
+        icon={<VisibilityIcon sx={{ translate: { xs: '-2px 0', sm: '' } }} />}
         label={t('prepare_scan_modal.content_template.show_preview_button')}
       />
 

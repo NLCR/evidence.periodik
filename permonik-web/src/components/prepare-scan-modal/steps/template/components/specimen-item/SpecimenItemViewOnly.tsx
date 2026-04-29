@@ -29,6 +29,7 @@ type Props = {
   specimen: TTemplateSpecimenRef
   replacementRows: TSpecimenReplacementViewOnlyRow[]
   mainReplacement: TReplacement | null
+  allowVisibilityChanges?: boolean
   itemPath?: `items.${number}`
   note: string
 }
@@ -37,11 +38,15 @@ const SpecimenItemViewOnly = ({
   specimen,
   replacementRows,
   mainReplacement,
+  allowVisibilityChanges = false,
   itemPath = undefined,
   note,
 }: Props) => {
   const { t } = useTranslation()
   const { getValues, setValue } = useFormContext<TTemplate>()
+
+  if (allowVisibilityChanges && !itemPath)
+    throw new Error('Cannot allow visibilityChanges without providing itemPath')
 
   return (
     <Card
@@ -85,8 +90,8 @@ const SpecimenItemViewOnly = ({
             {itemPath ? (
               <IconCheckbox
                 name={itemPath}
-                iconFalse={<VisibilityOffIcon />}
-                iconTrue={<VisibilityIcon />}
+                IconFalse={<VisibilityOffIcon />}
+                IconTrue={<VisibilityIcon />}
                 afterChange={(value) => {
                   const currentItem = getValues(itemPath)
                   setValue(itemPath, applyItemVisibility(currentItem, value), {
@@ -138,23 +143,24 @@ const SpecimenItemViewOnly = ({
                     }}
                   >
                     <tr>
-                      <th style={{ textAlign: 'left', fontWeight: 100 }}>
+                      <th style={{ textAlign: 'left' }}>
                         {t('common.fields.signature')}
                       </th>
-                      <th style={{ textAlign: 'left', fontWeight: 100 }}>
+                      <th style={{ textAlign: 'left' }}>
                         {t('common.fields.owner')}
                       </th>
-                      <th style={{ textAlign: 'left', fontWeight: 100 }}>
+                      <th style={{ textAlign: 'left' }}>
                         {t(
                           'prepare_scan_modal.content_template.replacement_barcode'
                         )}
                       </th>
-                      <th style={{ textAlign: 'left', fontWeight: 100 }}>
+                      <th style={{ textAlign: 'left' }}>
                         {t('common.fields.mutation')}
                       </th>
-                      <th style={{ textAlign: 'left', fontWeight: 100 }}>
+                      <th style={{ textAlign: 'left' }}>
                         {t('prepare_scan_modal.content_template.pages_label')}
                       </th>
+                      {/*eslint-disable-next-line jsx-a11y/control-has-associated-label*/}
                       {itemPath ? <th></th> : null}
                     </tr>
                   </thead>
@@ -172,8 +178,8 @@ const SpecimenItemViewOnly = ({
                               <IconCheckbox
                                 name={`${itemPath}.pageReplacements.${replacementIndex}.visible`}
                                 size="small"
-                                iconTrue={<VisibilityIcon />}
-                                iconFalse={<VisibilityOffIcon />}
+                                IconTrue={<VisibilityIcon />}
+                                IconFalse={<VisibilityOffIcon />}
                               />
                             </td>
                           ) : null}

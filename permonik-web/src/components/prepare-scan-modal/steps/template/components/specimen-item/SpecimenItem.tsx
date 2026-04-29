@@ -103,6 +103,7 @@ const SpecimenItem = ({
         specimen={specimen}
         mainReplacement={mainReplacement ?? createEmptyReplacement()}
         replacementRows={replacementRows}
+        allowVisibilityChanges
         itemPath={itemPath}
         note={note ?? ''}
       />
