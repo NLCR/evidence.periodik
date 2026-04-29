@@ -57,7 +57,7 @@ export const shouldIncludeTemplateItem = (
     )) &&
   (!showOnlyUnlocked || !item.locked)
 
-export const getVisibleTemplateItems = (
+export const getFilteredTemplateItems = (
   items: TTemplateItem[],
   showOnlyRescans: boolean,
   showOnlyUnlocked: boolean
@@ -167,7 +167,7 @@ export const buildGroupedScanSections = (
   showOnlyRescans: boolean,
   showOnlyUnlocked: boolean
 ): TGroupedScanSection[] => {
-  const visibleItems = getVisibleTemplateItems(
+  const visibleItems = getFilteredTemplateItems(
     items,
     showOnlyRescans,
     showOnlyUnlocked

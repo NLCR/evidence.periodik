@@ -1,16 +1,18 @@
 import DeleteIcon from '@mui/icons-material/Delete'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
+import Checkbox from '@mui/material/Checkbox'
 import { Box, IconButton, Stack, TextField, Typography } from '@mui/material'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import FormCheckbox from '../../../form/FormCheckbox'
 import {
   TReplacementSource,
-  TemplateState,
   TTemplate,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
+import { isLockingEnabled } from '../template/utils/templateItemLocking'
+import IconCheckbox from '@/components/form/IconCheckbox'
 
 type Props = {
   name:
@@ -34,21 +36,14 @@ const ReplacementInput = ({
   disabled = false,
 }: Props) => {
   const { t } = useTranslation()
-  const { control, setValue } = useFormContext<TTemplate>()
+  const { control, getValues, setValue } = useFormContext<TTemplate>()
 
   const item = useWatch({ control, name })
   const templateState = useWatch({ control, name: 'state' })
 
-  const isLockingAllowed =
-    templateState === TemplateState.CREATED ||
-    templateState === TemplateState.WAITING_FOR_RESCAN ||
-    templateState === TemplateState.LATE_FIXES
+  const isLockingAllowed = isLockingEnabled(templateState)
   const isLocked = !!item?.locked
   const isReadOnly = disabled || isLocked
-
-  const handleToggleLock = () => {
-    setValue(`${name}.locked`, !isLocked, { shouldDirty: true })
-  }
 
   return (
     <>
@@ -91,13 +86,13 @@ const ReplacementInput = ({
             />
           )}
         />
-        <IconButton
-          onClick={handleToggleLock}
-          color={isLocked ? 'primary' : 'default'}
+        <IconCheckbox
+          iconTrue={<LockIcon />}
+          iconFalse={<LockOpenIcon />}
+          name={`${name}.locked`}
+          afterChange={(value) => setValue(`${name}.visible`, !value)}
           disabled={!isLockingAllowed || disabled}
-        >
-          {isLocked ? <LockIcon /> : <LockOpenIcon />}
-        </IconButton>
+        />
         <IconButton onClick={() => onRemove(index)} disabled={isReadOnly}>
           <DeleteIcon />
         </IconButton>

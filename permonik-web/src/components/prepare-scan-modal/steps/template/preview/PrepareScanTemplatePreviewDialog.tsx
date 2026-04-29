@@ -9,19 +9,17 @@ import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
 import Barcode from 'react-barcode'
 import ModalContainer from '@/components/ModalContainer'
-import type { TTemplateItem } from '@/components/prepare-scan-modal/schemas/schemas'
-import TemplatePreviewHeader, {
-  TTemplatePreviewHeaderProps,
-} from './TemplatePreviewHeader'
 import VirtualizedSpecimenList from '../VirtualizedSpecimenList'
 import PrepareScanTemplatePrintContent from './PrepareScanTemplatePrintContent'
 import GroupedTemplateSections from '../grouped-by-volumes/GroupedTemplateSections'
-import { getVisibleTemplateItems } from '../templateGrouping'
+import { TVolume } from '@/schema/volume'
+import { TTemplateItem } from '@/components/prepare-scan-modal/schemas/templateSchema'
+import TemplatePreviewHeader from './TemplatePreviewHeader'
 
 type Props = {
   opened: boolean
   onClose: () => void
-  header: TTemplatePreviewHeaderProps
+  primaryVolume: TVolume
   barCode?: string
   items: TTemplateItem[]
   showOnlyRescans: boolean
@@ -31,8 +29,8 @@ type Props = {
 const PrepareScanTemplatePreviewDialog: FC<Props> = ({
   opened,
   onClose,
-  header,
   barCode = undefined,
+  primaryVolume,
   items,
   showOnlyRescans,
   showOnlyUnlocked,
@@ -43,14 +41,9 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
 
   const handlePrint = useReactToPrint({
     contentRef: printContentRef,
-    documentTitle: header.title,
+    documentTitle: primaryVolume?.metaTitleId ?? '-',
   })
 
-  const groupedVisibleItems = getVisibleTemplateItems(
-    items,
-    showOnlyRescans,
-    showOnlyUnlocked
-  ).map(({ item }) => item)
   return (
     <ModalContainer
       opened={opened}
@@ -96,7 +89,7 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
             marginBottom: '10px',
           }}
         >
-          <TemplatePreviewHeader {...header} />
+          <TemplatePreviewHeader items={items} primaryVolume={primaryVolume} />
 
           {barCode ? (
             <Box display="flex" justifyContent="center" marginTop={1}>
@@ -118,7 +111,7 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
         <Box sx={{ flex: 1, minHeight: 0 }}>
           {groupByVolumes ? (
             <GroupedTemplateSections
-              items={groupedVisibleItems}
+              items={items}
               showOnlyRescans={false}
               showOnlyUnlocked={false}
             />
@@ -148,7 +141,7 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
           }}
         >
           <PrepareScanTemplatePrintContent
-            header={header}
+            primaryVolume={primaryVolume}
             barCode={barCode}
             items={items}
             showOnlyRescans={showOnlyRescans}

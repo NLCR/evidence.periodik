@@ -4,16 +4,14 @@ import { FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import Barcode from 'react-barcode'
 import type { TTemplateItem } from '@/components/prepare-scan-modal/schemas/schemas'
-import { getVisibleTemplateItems } from '../templateGrouping'
-import { applyExportVisibilityToTemplateItems } from '../templateExportVisibility'
-import TemplatePreviewHeader, {
-  TTemplatePreviewHeaderProps,
-} from './TemplatePreviewHeader'
+import { getFilteredTemplateItems } from '../templateGrouping'
 import SpecimenItemViewOnly from '../components/specimen-item/SpecimenItemViewOnly'
 import GroupedTemplateSections from '../grouped-by-volumes/GroupedTemplateSections'
+import { TVolume } from '@/schema/volume'
+import TemplatePreviewHeader from './TemplatePreviewHeader'
 
 type Props = {
-  header: TTemplatePreviewHeaderProps
+  primaryVolume: TVolume
   barCode?: string
   items: TTemplateItem[]
   showOnlyRescans: boolean
@@ -26,24 +24,22 @@ export const filterTemplateItemsForPrint = (
   showOnlyRescans: boolean,
   showOnlyUnlocked: boolean
 ) => {
-  const filteredItems = getVisibleTemplateItems(
+  const filteredItems = getFilteredTemplateItems(
     items,
     showOnlyRescans,
     showOnlyUnlocked
   )
 
-  return filteredItems.flatMap(({ item, formIndex }) => {
-    const visibleItems = applyExportVisibilityToTemplateItems([item])
-
-    return visibleItems.map((visibleItem) => ({
-      item: visibleItem,
-      formIndex,
+  return filteredItems
+    .filter((item) => item.item.visible)
+    .map((item) => ({
+      ...item.item,
+      pageReplacements: item.item.pageReplacements.filter((r) => r.visible),
     }))
-  })
 }
 
 const PrepareScanTemplatePrintContent: FC<Props> = ({
-  header,
+  primaryVolume,
   barCode = undefined,
   items,
   showOnlyRescans,
@@ -71,7 +67,10 @@ const PrepareScanTemplatePrintContent: FC<Props> = ({
         },
       }}
     >
-      <TemplatePreviewHeader {...header} />
+      <TemplatePreviewHeader
+        primaryVolume={primaryVolume}
+        items={visibleItems}
+      />
 
       {barCode ? (
         <Box
@@ -87,14 +86,14 @@ const PrepareScanTemplatePrintContent: FC<Props> = ({
       {visibleItems.length > 0 ? (
         groupByVolumes ? (
           <GroupedTemplateSections
-            items={visibleItems.map(({ item }) => item)}
+            items={visibleItems}
             showOnlyRescans={false}
             showOnlyUnlocked={false}
             compact
           />
         ) : (
           <Box>
-            {visibleItems.map(({ item }) => (
+            {visibleItems.map((item) => (
               <Box
                 key={item.specimen.id}
                 sx={{
@@ -110,10 +109,8 @@ const PrepareScanTemplatePrintContent: FC<Props> = ({
                     (replacement, replacementIndex) => ({
                       replacement,
                       replacementIndex,
-                      isVisible: true,
                     })
                   )}
-                  itemVisible
                   note={item.note ?? ''}
                 />
               </Box>

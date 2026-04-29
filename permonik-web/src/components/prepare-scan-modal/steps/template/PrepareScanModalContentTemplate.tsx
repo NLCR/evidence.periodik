@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, useMemo, useState } from 'react'
 import {
   TReplacementSource,
   TTemplate,
@@ -8,13 +8,10 @@ import {
   shouldValidateTemplateForNextState,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import PrepareScanTemplatePreviewDialog from './preview/PrepareScanTemplatePreviewDialog'
-import TemplatePreviewHeader, {
-  TTemplatePreviewHeaderProps,
-} from './preview/TemplatePreviewHeader'
+import TemplatePreviewHeader from './preview/TemplatePreviewHeader'
 import VirtualizedSpecimenList from './VirtualizedSpecimenList'
 import PrepareScanTemplateFilters from '@/components/prepare-scan-modal/steps/template/components/PrepareScanTemplateFilters'
 import PrepareScanTemplateActionBar from '@/components/prepare-scan-modal/steps/template/components/PrepareScanTemplateActionBar'
-import { applyExportVisibilityToTemplateItems } from './templateExportVisibility'
 import { useSubmitButtonLabel } from './hooks/useSubmitButtonLabel'
 import { useTransitionDialogConfig } from './hooks/useTransitionDialogConfig'
 import { useFormContext, useWatch } from 'react-hook-form'
@@ -22,7 +19,9 @@ import { validateTemplateForNextState } from '../../validators/templateTransitio
 import {
   hasWaitingReplacement,
   isLockingEnabled,
-  applyItemLockState,
+  applyItemLock,
+  applyItemVisibility,
+  initItemVisibility,
 } from './utils/templateItemLocking'
 import {
   useDeletePrepareScanTemplateMutation,
@@ -32,6 +31,7 @@ import {
   useCloseToRescanOrFinalizeMutation,
   useTransitionTemplateStateMutation,
 } from '../../mutations'
+import { includesWaitingForRescan } from './utils/filters'
 
 type TProps = {
   volumeId?: string
@@ -58,68 +58,13 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
   const watchedItems = useWatch({ control, name: 'items' })
   const watchedState = useWatch({ control, name: 'state' })
 
-  const items = useMemo(() => watchedItems ?? [], [watchedItems])
-
-  useEffect(() => {
-    if (!watchedItems?.length) return
-
-    const nextItems = watchedItems.map((item) => ({
-      ...item,
-      visible: item.visible ?? !item.locked,
-      pageReplacements: item.pageReplacements.map((replacement) => ({
-        ...replacement,
-        visible: replacement.visible ?? !replacement.locked,
-      })),
-    }))
-
-    const hasChanges = nextItems.some((item, itemIndex) => {
-      const previousItem = watchedItems[itemIndex]
-      if (!previousItem) return false
-      if (item.visible !== previousItem.visible) return true
-
-      return item.pageReplacements.some(
-        (replacement, replacementIndex) =>
-          replacement.visible !==
-          previousItem.pageReplacements[replacementIndex]?.visible
-      )
-    })
-
-    if (hasChanges) {
-      setValue('items', nextItems, { shouldDirty: false })
-    }
-  }, [setValue, watchedItems])
-
-  const headerProps = useMemo<TTemplatePreviewHeaderProps>(
-    () => ({
-      title: primaryVolume?.metaTitleId ?? '-',
-      signature: primaryVolume?.signature,
-      subTitle: primaryVolume?.subName,
-      owner: primaryVolume?.ownerId,
-      mutation: primaryVolume?.mutationId,
-      mutationEdition: primaryVolume?.mutationMark?.mark ?? undefined,
-      dateFrom: primaryVolume?.dateFrom
-        ? new Date(primaryVolume.dateFrom).toLocaleDateString()
-        : '-',
-      dateTo: primaryVolume?.dateTo
-        ? new Date(primaryVolume.dateTo).toLocaleDateString()
-        : '-',
-      specimensCount: items.filter((item) => !item.specimen.attachmentNumber)
-        .length,
-      attachmentsCount: items.filter((item) => !!item.specimen.attachmentNumber)
-        .length,
-    }),
-    [items, primaryVolume]
+  const items = useMemo(
+    () => (watchedItems ?? []).map(initItemVisibility),
+    [watchedItems]
   )
 
   const hasWaitingForRescan = useMemo(
-    () =>
-      items.some(
-        (item) =>
-          item.replacement?.isWaitingForRescan ||
-          item.pageReplacements.some(
-            (replacement) => replacement.isWaitingForRescan
-          )
-      ),
+    () => includesWaitingForRescan(items),
     [items]
   )
 
@@ -161,14 +106,14 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
 
   const handleLockAll = () => {
     const nextItems = getValues('items').map((item) =>
-      hasWaitingReplacement(item) ? item : applyItemLockState(item, true)
+      hasWaitingReplacement(item) ? item : applyItemLock(item, true)
     )
     setValue('items', nextItems, { shouldDirty: true })
   }
 
   const handleUnlockAll = () => {
     const nextItems = getValues('items').map((item) =>
-      applyItemLockState(item, false)
+      applyItemLock(item, false)
     )
     setValue('items', nextItems, { shouldDirty: true })
   }
@@ -199,7 +144,8 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
     >
       <Box sx={{ marginBottom: '10px' }}>
         <TemplatePreviewHeader
-          {...headerProps}
+          primaryVolume={primaryVolume}
+          items={items}
           displayCurrentState
           currentState={watchedState}
         />
@@ -252,9 +198,9 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
       <PrepareScanTemplatePreviewDialog
         opened={isPreviewOpen}
         onClose={() => setIsPreviewOpen(false)}
-        header={headerProps}
+        primaryVolume={primaryVolume}
         barCode={primaryVolume?.barCode}
-        items={applyExportVisibilityToTemplateItems(items)}
+        items={items}
         showOnlyRescans={showOnlyRescans}
         showOnlyUnlocked={showOnlyUnlocked}
       />

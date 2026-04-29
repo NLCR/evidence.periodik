@@ -2,18 +2,14 @@ import CheckIcon from '@mui/icons-material/Check'
 import WarningIcon from '@mui/icons-material/PriorityHigh'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-import {
-  Box,
-  Card,
-  CardContent,
-  IconButton,
-  Stack,
-  Typography,
-} from '@mui/material'
+import { Box, Card, CardContent, Stack, Typography } from '@mui/material'
 import { noop } from 'lodash'
 import { useTranslation } from 'react-i18next'
+import { useFormContext } from 'react-hook-form'
+import IconCheckbox from '@/components/form/IconCheckbox'
 import ReplacementSourceInput from '@/components/prepare-scan-modal/steps/common/ReplacementSourceInput'
 import type {
+  TTemplate,
   TReplacement,
   TTemplateSpecimenRef,
 } from '@/components/prepare-scan-modal/schemas/schemas'
@@ -21,20 +17,19 @@ import {
   getDateLabel,
   getNumberLabel,
 } from '@/components/prepare-scan-modal/steps/template/utils/specimenLabels'
+import theme from '@/theme'
+import { applyItemVisibility } from '../../utils/templateItemLocking'
 
 type TSpecimenReplacementViewOnlyRow = {
   replacement: TReplacement
   replacementIndex: number
-  isVisible: boolean
 }
 
 type Props = {
   specimen: TTemplateSpecimenRef
   replacementRows: TSpecimenReplacementViewOnlyRow[]
   mainReplacement: TReplacement | null
-  itemVisible: boolean
-  onToggleItemVisibility?: () => void
-  onToggleReplacementVisibility?: (replacementIndex: number) => void
+  itemPath?: `items.${number}`
   note: string
 }
 
@@ -42,12 +37,11 @@ const SpecimenItemViewOnly = ({
   specimen,
   replacementRows,
   mainReplacement,
-  itemVisible,
-  onToggleItemVisibility = undefined,
-  onToggleReplacementVisibility = undefined,
+  itemPath = undefined,
   note,
 }: Props) => {
   const { t } = useTranslation()
+  const { getValues, setValue } = useFormContext<TTemplate>()
 
   return (
     <Card
@@ -88,26 +82,18 @@ const SpecimenItemViewOnly = ({
                   : t('prepare_scan_modal.content_template.replace_label')}
               </Typography>
             </Stack>
-            {onToggleItemVisibility ? (
-              <IconButton
-                size="small"
-                onClick={onToggleItemVisibility}
-                aria-label={
-                  itemVisible
-                    ? t(
-                        'prepare_scan_modal.content_template.hide_from_export_aria'
-                      )
-                    : t(
-                        'prepare_scan_modal.content_template.show_in_export_aria'
-                      )
-                }
-              >
-                {itemVisible ? (
-                  <VisibilityIcon color="primary" />
-                ) : (
-                  <VisibilityOffIcon />
-                )}
-              </IconButton>
+            {itemPath ? (
+              <IconCheckbox
+                name={itemPath}
+                iconFalse={<VisibilityOffIcon />}
+                iconTrue={<VisibilityIcon />}
+                afterChange={(value) => {
+                  const currentItem = getValues(itemPath)
+                  setValue(itemPath, applyItemVisibility(currentItem, value), {
+                    shouldDirty: true,
+                  })
+                }}
+              />
             ) : null}
           </Stack>
         </Stack>
@@ -147,71 +133,50 @@ const SpecimenItemViewOnly = ({
                     style={{
                       textTransform: 'uppercase',
                       fontSize: '0.65rem',
-                      fontWeight: 200,
-                      color: '#1976d2',
+                      color: theme.palette.primary.main,
+                      textAlign: 'left',
                     }}
                   >
                     <tr>
-                      <th style={{ width: 36, textAlign: 'left' }}>
-                        {t(
-                          'prepare_scan_modal.content_template.export_visibility_column'
-                        )}
-                      </th>
-                      <th style={{ fontWeight: 200, textAlign: 'left' }}>
+                      <th style={{ textAlign: 'left', fontWeight: 100 }}>
                         {t('common.fields.signature')}
                       </th>
-                      <th style={{ fontWeight: 200, textAlign: 'left' }}>
+                      <th style={{ textAlign: 'left', fontWeight: 100 }}>
                         {t('common.fields.owner')}
                       </th>
-                      <th style={{ fontWeight: 200, textAlign: 'left' }}>
+                      <th style={{ textAlign: 'left', fontWeight: 100 }}>
                         {t(
                           'prepare_scan_modal.content_template.replacement_barcode'
                         )}
                       </th>
-                      <th style={{ fontWeight: 200, textAlign: 'left' }}>
+                      <th style={{ textAlign: 'left', fontWeight: 100 }}>
                         {t('common.fields.mutation')}
                       </th>
-                      <th style={{ fontWeight: 200, textAlign: 'left' }}>
+                      <th style={{ textAlign: 'left', fontWeight: 100 }}>
                         {t('prepare_scan_modal.content_template.pages_label')}
                       </th>
+                      {itemPath ? <th></th> : null}
                     </tr>
                   </thead>
                   <tbody>
                     {replacementRows.map(
-                      ({ replacement, replacementIndex, isVisible }) => (
+                      ({ replacement, replacementIndex }) => (
                         <tr key={replacementIndex}>
-                          <td>
-                            {onToggleReplacementVisibility ? (
-                              <IconButton
+                          <td>{replacement.volume.signature || '-'}</td>
+                          <td>{replacement.volume.owner || '-'}</td>
+                          <td>{replacement.volume.barcode || '-'}</td>
+                          <td>{replacement.volume.mutation || '-'}</td>
+                          <td>{replacement.pages || '-'}</td>
+                          {itemPath ? (
+                            <td>
+                              <IconCheckbox
+                                name={`${itemPath}.pageReplacements.${replacementIndex}.visible`}
                                 size="small"
-                                onClick={() =>
-                                  onToggleReplacementVisibility(
-                                    replacementIndex
-                                  )
-                                }
-                                aria-label={
-                                  isVisible
-                                    ? t(
-                                        'prepare_scan_modal.content_template.hide_from_export_aria'
-                                      )
-                                    : t(
-                                        'prepare_scan_modal.content_template.show_in_export_aria'
-                                      )
-                                }
-                              >
-                                {isVisible ? (
-                                  <VisibilityIcon fontSize="small" />
-                                ) : (
-                                  <VisibilityOffIcon fontSize="small" />
-                                )}
-                              </IconButton>
-                            ) : null}
-                          </td>
-                          <td>{replacement.volume.signature}</td>
-                          <td>{replacement.volume.owner}</td>
-                          <td>{replacement.volume.barcode}</td>
-                          <td>{replacement.volume.mutation}</td>
-                          <td>{replacement.pages}</td>
+                                iconTrue={<VisibilityIcon />}
+                                iconFalse={<VisibilityOffIcon />}
+                              />
+                            </td>
+                          ) : null}
                         </tr>
                       )
                     )}

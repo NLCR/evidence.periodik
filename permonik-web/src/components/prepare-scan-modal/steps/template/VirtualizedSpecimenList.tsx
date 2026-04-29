@@ -15,7 +15,7 @@ import type {
   TTemplateItem,
   TTemplateItemWithFormIndex,
 } from '@/components/prepare-scan-modal/schemas/schemas'
-import { getVisibleTemplateItems } from './templateGrouping'
+import { getFilteredTemplateItems } from './templateGrouping'
 import VirtualizedSpecimenRow from './components/VirtualizedSpecimenRow'
 
 const ESTIMATED_ROW_HEIGHT = 280
@@ -61,7 +61,7 @@ const VirtualizedSpecimenList = ({
   disabled = false,
 }: TVirtualizedSpecimenListProps) => {
   const visibleItems = useMemo(
-    () => getVisibleTemplateItems(items, showOnlyRescans, showOnlyUnlocked),
+    () => getFilteredTemplateItems(items, showOnlyRescans, showOnlyUnlocked),
     [items, showOnlyRescans, showOnlyUnlocked]
   )
 

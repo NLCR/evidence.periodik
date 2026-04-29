@@ -16,10 +16,7 @@ import SpecimenMainReplacementSection from './SpecimenMainReplacementSection'
 import SpecimenNoteField from './SpecimenNoteField'
 import SpecimenPageReplacementsSection from './SpecimenPageReplacementsSection'
 import { getReplacementSourceCandidatesForField } from './specimenItemReplacementSourceCandidates'
-import {
-  applyItemLockState,
-  isLockingEnabled,
-} from '@/components/prepare-scan-modal/steps/template/utils/templateItemLocking'
+import { isLockingEnabled } from '@/components/prepare-scan-modal/steps/template/utils/templateItemLocking'
 
 type Props = {
   specimen: TTemplateSpecimenRef
@@ -47,7 +44,7 @@ const SpecimenItem = ({
   replacementRows: replacementRowsOverride = undefined,
 }: Props) => {
   const { t } = useTranslation()
-  const { control, setValue, getValues } = useFormContext<TTemplate>()
+  const { control } = useFormContext<TTemplate>()
 
   const {
     fields: replacementFields,
@@ -64,12 +61,10 @@ const SpecimenItem = ({
     name: `${itemPath}.pageReplacements`,
   })
   const note = useWatch({ control, name: `${itemPath}.note` }) ?? ''
-  const itemLocked = useWatch({ control, name: `${itemPath}.locked` })
-  const itemVisible = useWatch({ control, name: `${itemPath}.visible` })
+  const isItemLocked = !!useWatch({ control, name: `${itemPath}.locked` })
   const templateState = useWatch({ control, name: 'state' })
 
   const canManageLocks = isLockingEnabled(templateState)
-  const isItemLocked = !!itemLocked
 
   const replacementRows = useMemo(
     () =>
@@ -102,44 +97,13 @@ const SpecimenItem = ({
 
   const filteredMainReplacementCandidates = getReplacementCandidates(null)
 
-  const handleToggleItemLock = () => {
-    const nextLocked = !isItemLocked
-    const item = getValues(itemPath)
-    const nextItem = applyItemLockState(item, nextLocked)
-
-    setValue(itemPath, nextItem, { shouldDirty: true })
-  }
-
-  const handleToggleItemVisibility = () => {
-    setValue(`${itemPath}.visible`, !(itemVisible ?? !itemLocked), {
-      shouldDirty: true,
-    })
-  }
-
-  const handleToggleReplacementVisibility = (replacementIndex: number) => {
-    const replacementPath =
-      `${itemPath}.pageReplacements.${replacementIndex}` as const
-    const replacement = getValues(replacementPath)
-    if (!replacement) return
-
-    setValue(
-      `${replacementPath}.visible`,
-      !(replacement.visible ?? !replacement.locked),
-      {
-        shouldDirty: true,
-      }
-    )
-  }
-
   if (viewOnly)
     return (
       <SpecimenItemViewOnly
         specimen={specimen}
         mainReplacement={mainReplacement ?? createEmptyReplacement()}
         replacementRows={replacementRows}
-        itemVisible={itemVisible ?? !itemLocked}
-        onToggleItemVisibility={handleToggleItemVisibility}
-        onToggleReplacementVisibility={handleToggleReplacementVisibility}
+        itemPath={itemPath}
         note={note ?? ''}
       />
     )
@@ -150,9 +114,8 @@ const SpecimenItem = ({
         <SpecimenItemHeader
           specimen={specimen}
           t={t}
-          isItemLocked={isItemLocked}
+          itemPath={itemPath}
           canManageLocks={canManageLocks}
-          onToggleItemLock={handleToggleItemLock}
         />
 
         <SpecimenMainReplacementSection

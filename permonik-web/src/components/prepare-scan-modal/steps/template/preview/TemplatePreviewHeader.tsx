@@ -9,33 +9,19 @@ import {
   getTemplateStateLabel,
   TemplateState,
 } from '@/components/prepare-scan-modal/schemas/templateStateSchema'
+import { TVolume } from '@/schema/volume'
+import { TTemplateItem } from '@/components/prepare-scan-modal/schemas/templateSchema'
 
 export type TTemplatePreviewHeaderProps = {
-  title: string
-  signature?: string
-  subTitle?: string
-  owner?: string
-  mutation?: string
-  mutationEdition?: string
-  dateFrom?: string
-  dateTo?: string
-  specimensCount: number
-  attachmentsCount: number
+  primaryVolume: TVolume
+  items: TTemplateItem[]
   displayCurrentState?: boolean
   currentState?: TemplateState
 }
 
 const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
-  title,
-  signature = undefined,
-  subTitle = undefined,
-  owner = undefined,
-  mutation = undefined,
-  mutationEdition = undefined,
-  dateFrom = undefined,
-  dateTo = undefined,
-  specimensCount,
-  attachmentsCount,
+  primaryVolume,
+  items,
   displayCurrentState = false,
   currentState = undefined,
 }) => {
@@ -43,6 +29,25 @@ const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
   const StateIconComponent = currentState
     ? getTemplateStateIcon(currentState)
     : undefined
+
+  const title = primaryVolume.metaTitleId ?? '-'
+  const signature = primaryVolume.signature
+  const subTitle = primaryVolume.subName
+  const owner = primaryVolume.ownerId
+  const mutation = primaryVolume.mutationId
+  const mutationEdition = primaryVolume.mutationMark?.mark ?? undefined
+  const dateFrom = primaryVolume.dateFrom
+    ? new Date(primaryVolume.dateFrom).toLocaleDateString()
+    : '-'
+  const dateTo = primaryVolume.dateTo
+    ? new Date(primaryVolume.dateTo).toLocaleDateString()
+    : '-'
+  const specimensCount = items.filter(
+    (item) => !item.specimen.attachmentNumber
+  ).length
+  const attachmentsCount = items.filter(
+    (item) => !!item.specimen.attachmentNumber
+  ).length
 
   return (
     <>

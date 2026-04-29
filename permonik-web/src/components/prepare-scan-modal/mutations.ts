@@ -5,7 +5,7 @@ import {
   useUpdatePrepareScanTemplateStateMutation,
 } from '@/api/prepareScanModal'
 import { TTemplate, TemplateState } from './schemas/schemas'
-import { applyItemLockState } from '@/components/prepare-scan-modal/steps/template/utils/templateItemLocking'
+import { applyItemLock } from '@/components/prepare-scan-modal/steps/template/utils/templateItemLocking'
 
 type TTransitionTemplateStatePayload = {
   template: TTemplate
@@ -99,10 +99,9 @@ export const useCloseToRescanOrFinalizeMutation = ({
 
     const payload = getValues()
 
+    // TODO delete, BE will handle this
     if (nextState === TemplateState.FINALIZED) {
-      payload.items = payload.items.map((item) =>
-        applyItemLockState(item, true)
-      )
+      payload.items = payload.items.map((item) => applyItemLock(item, true))
     }
 
     try {
