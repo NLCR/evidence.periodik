@@ -1,4 +1,7 @@
-undefined
+import {
+  TReplacement,
+  TReplacementSource,
+} from '@/components/prepare-scan-modal/schemas/schemas'
 
 type TFilterReplacementSourcesInput = {
   replacementSources: TReplacementSource[]

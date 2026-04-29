@@ -1,19 +1,19 @@
 import { useTranslation } from 'react-i18next'
 import { FC, useEffect } from 'react'
 import Box from '@mui/material/Box'
-undefined
-undefined
-undefined
-undefined
-undefined
+import { TMe } from '../../../../schema/user'
+import { TMutation } from '../../../../schema/mutation'
+import { TOwner } from '../../../../schema/owner'
+import { TMetaTitle } from '../../../../schema/metaTitle'
+import { TEdition } from '../../../../schema/edition'
 import Typography from '@mui/material/Typography'
-undefined
+import CollapsableSidebar from '../../../../components/CollapsableSidebar'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import { useParams } from 'react-router-dom'
-undefined
+import Loader from '../../../../components/Loader'
 import InputDataForm from './InputDataForm'
-undefined
-undefined
+import { TVolume } from '../../../../schema/volume'
+import theme from '../../../../theme'
 
 export interface InputDataProps {
   me: TMe

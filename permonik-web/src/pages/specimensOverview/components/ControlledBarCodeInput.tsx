@@ -1,6 +1,6 @@
 import TextField from '@mui/material/TextField'
 import { useEffect, useState } from 'react'
-undefined
+import { useSpecimensOverviewStore } from '../../../slices/useSpecimensOverviewStore'
 
 const ControlledBarCodeInput = () => {
   const barCodeInput = useSpecimensOverviewStore((state) => state.barCodeInput)

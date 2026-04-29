@@ -3,10 +3,10 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
-undefined
-undefined
-undefined
-undefined
+import { useCalculatedFillIndexQuery } from '../../../../api/volumeCalculatedFillIndex'
+import { TScanTemplateSettings } from '../../schemas/schemas'
+import FillIndexIndicator from '../../../FillIndexIndicator'
+import FormCheckbox from '../../../form/FormCheckbox'
 import ReplacementSourcesSelection from './ReplacementSourcesSelection'
 
 type Props = {

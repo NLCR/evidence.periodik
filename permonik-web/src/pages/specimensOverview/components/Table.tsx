@@ -6,25 +6,25 @@ import Box from '@mui/material/Box'
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
 import { green, grey, orange, red } from '@mui/material/colors'
 import { TFunction } from 'i18next'
-undefined
-undefined
-undefined
-undefined
-undefined
-undefined
-undefined
-undefined
+import { TMetaTitle } from '../../../schema/metaTitle'
+import { useMutationListQuery } from '../../../api/mutation'
+import { useEditionListQuery } from '../../../api/edition'
+import { useOwnerListQuery } from '../../../api/owner'
+import { useSpecimenListQuery } from '../../../api/specimen'
+import { TSpecimen } from '../../../schema/specimen'
+import { damageTypes } from '../../../utils/constants'
+import { useSpecimensOverviewStore } from '../../../slices/useSpecimensOverviewStore'
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined'
-undefined
-undefined
-undefined
-undefined
-undefined
-undefined
-undefined
-undefined
-undefined
-undefined
+import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
+import ModalContainer from '../../../components/ModalContainer'
+import { useLanguageCode } from '../../../hooks/useLanguageCode'
+import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
+import { generateVolumeUrlWithParams } from '../../../utils/generateVolumeUrlWithParams'
+import theme from '../../../theme'
+import { useMeQuery } from '../../../api/user'
+import { useFormatDate } from '../../../utils/date'
+import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
+import DuplicateVolumeButton from '../../../components/DuplicateVolumeButton'
 
 const getSpecimenState = (sp: TSpecimen, t: TFunction) => {
   if (sp.damageTypes) {

@@ -1,6 +1,5 @@
 import './wdyr'
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { createRoot } from 'react-dom/client'
 import { I18nextProvider } from 'react-i18next'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -19,6 +18,7 @@ import App from './App'
 import theme from './theme'
 import './styles.css'
 import { LicenseInfo } from '@mui/x-license'
+import { StrictMode } from 'react'
 
 const { MODE, VITE_SENTRY_DNS, VITE_MUI_LICENCE_KEY } = import.meta.env
 
@@ -54,8 +54,8 @@ SentryInit({
 
 LicenseInfo.setLicenseKey(VITE_MUI_LICENCE_KEY)
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+createRoot(document.getElementById('root') as HTMLElement).render(
+  <StrictMode>
     <QueryClientProvider client={queryClient}>
       <I18nextProvider i18n={i18next}>
         <ThemeProvider theme={theme}>
@@ -77,5 +77,5 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       pauseOnHover
       theme="light"
     />
-  </React.StrictMode>
+  </StrictMode>
 )

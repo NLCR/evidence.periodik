@@ -4,24 +4,24 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
-undefined
-undefined
+import ModalContainer from '../../../components/ModalContainer'
+import VolumeStatsModalContent from '../../../components/prepare-scan-modal/steps/template/PrepareScanModalContentTemplate'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import React, { FC, useMemo, useState } from 'react'
-undefined
-undefined
-undefined
+import { TMutation } from '../../../schema/mutation'
+import { TOwner } from '../../../schema/owner'
+import { TMetaTitle } from '../../../schema/metaTitle'
 import { useTranslation } from 'react-i18next'
-undefined
-undefined
+import { useLanguageCode } from '../../../hooks/useLanguageCode'
+import { TVolumeDetail } from '../../../schema/volume'
 import { Link, useSearchParams } from 'react-router-dom'
 import { validate as uuidValidate } from 'uuid'
-undefined
-undefined
-undefined
-undefined
-undefined
+import { BACK_META_TITLE_ID } from '../../../utils/constants'
+import CollapsableSidebar from '../../../components/CollapsableSidebar'
+import theme from '../../../theme'
+import { getMutationMarkLabel } from '../../../utils/mutationMark'
+import { useFormatDate } from '../../../utils/date'
 
 interface InputDataProps {
   volume: TVolumeDetail

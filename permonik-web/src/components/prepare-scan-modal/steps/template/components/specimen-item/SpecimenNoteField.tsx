@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { Control, Controller } from 'react-hook-form'
 import { TFunction } from 'i18next'
-undefined
+import { TTemplate } from '@/components/prepare-scan-modal/schemas/schemas'
 
 type Props = {
   control: Control<TTemplate>

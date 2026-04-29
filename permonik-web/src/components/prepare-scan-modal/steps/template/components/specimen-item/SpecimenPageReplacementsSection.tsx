@@ -9,13 +9,13 @@ import {
   UseFieldArrayRemove,
 } from 'react-hook-form'
 import { TFunction } from 'i18next'
-undefined
 import {
   createEmptyReplacement,
   TReplacement,
   TReplacementSource,
   TTemplate,
 } from '@/components/prepare-scan-modal/schemas/schemas'
+import ReplacementInput from '../../../common/ReplacementInput'
 
 type TVisibleReplacementRow = {
   replacement: TReplacement

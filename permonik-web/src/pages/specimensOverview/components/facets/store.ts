@@ -1,4 +1,4 @@
-undefined
+import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
 
 export const useFacetsStoreData = () => {
   const params = useSpecimensOverviewStore((state) => state.params)

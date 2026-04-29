@@ -2,8 +2,6 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { Controller, Control } from 'react-hook-form'
 import { TFunction } from 'i18next'
-undefined
-undefined
 import {
   createEmptyReplacementSource,
   TReplacement,
@@ -11,6 +9,8 @@ import {
   TTemplate,
   TTemplateSpecimenRef,
 } from '@/components/prepare-scan-modal/schemas/schemas'
+import FormCheckbox from '../../../../../form/FormCheckbox'
+import ReplacementSourceInput from '../../../common/ReplacementSourceInput'
 
 type Props = {
   control: Control<TTemplate>

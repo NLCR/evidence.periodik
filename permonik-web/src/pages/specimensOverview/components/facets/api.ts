@@ -1,13 +1,13 @@
-undefined
-undefined
-undefined
+import { useEditionListQuery } from '../../../../api/edition'
+import { useMutationListQuery } from '../../../../api/mutation'
+import { useOwnerListQuery } from '../../../../api/owner'
 import {
   useSpecimenFacetsQuery,
   useSpecimenListQuery,
   useSpecimensStartDateForCalendar,
 } from '@/api/specimen'
-undefined
-undefined
+import { useLanguageCode } from '../../../../hooks/useLanguageCode'
+import { TMetaTitle } from '../../../../schema/metaTitle'
 
 export const useFacetsData = (metaTitle: TMetaTitle) => {
   const { data: mutations } = useMutationListQuery()

@@ -7,8 +7,8 @@ import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { TFunction } from 'i18next'
-undefined
-undefined
+import { TTemplateSpecimenRef } from '@/components/prepare-scan-modal/schemas/schemas'
+import { getDateLabel, getNumberLabel } from '../../utils/specimenLabels'
 
 type Props = {
   specimen: TTemplateSpecimenRef

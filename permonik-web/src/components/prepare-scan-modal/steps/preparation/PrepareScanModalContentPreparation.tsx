@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { Box, Typography, Stack } from '@mui/material'
-undefined
+import FormCheckbox from '../../../form/FormCheckbox'
 
 const PrepareScanModalContentPreparation = () => {
   const { t } = useTranslation()

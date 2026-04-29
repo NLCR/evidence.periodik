@@ -8,14 +8,14 @@ import TableRow from '@mui/material/TableRow'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
-undefined
-undefined
+import { TEdition } from '../../../../../schema/edition'
+import ModalContainer from '../../../../../components/ModalContainer'
 import InputDataCheckbox from '../InputDataCheckbox'
 import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import { useGenerateVolume } from './useGenerateVolume'
 import PeriodicityRow from './PeriodicityRow'
-undefined
+import { TMetaTitle } from '../../../../../schema/metaTitle'
 
 interface PeriodicityProps {
   editions: TEdition[]

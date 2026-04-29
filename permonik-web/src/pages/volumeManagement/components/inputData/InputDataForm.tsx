@@ -15,7 +15,7 @@ import InputDataMutationMark from './InputDataMutationMark'
 import InputDataTextField from './InputDataTextField'
 import InputDataDatePicker from './InputDataDatePicker'
 import Periodicity from './periodicity/Periodicity'
-undefined
+import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import Button from '@mui/material/Button'
 import { useParams, useSearchParams } from 'react-router-dom'
 import UnsavedChangesModal from '../UnsavedChangesModal'
@@ -24,18 +24,15 @@ import {
   useVolumeManagementStore,
 } from '@/slices/useVolumeManagementStore'
 import { useEffect } from 'react'
-import {
-  EditableVolumeSchema,
-  TEditableVolume,
-} from '@/schema/volume'
+import { EditableVolumeSchema, TEditableVolume } from '@/schema/volume'
 import InputDataBarCode from './InputDataBarCode'
 import InputDataSignature from './InputDataSignature'
-undefined
-undefined
+import { api } from '../../../../api'
+import { TSpecimen } from '../../../../schema/specimen'
 import InputDataOwner from './InputDataOwner'
 import InputDataNote from './InputDataNote'
-undefined
-undefined
+import { duplicateVolume } from '../../../../utils/duplicateVolume/duplicateVolume'
+import { createEmptyMutationMark } from '../../../../utils/mutationMark'
 import {
   basicFieldsToReset,
   FieldsToReset,

@@ -2,11 +2,11 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import React, { FC, RefObject, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-undefined
+import { useManagedVolumeDetailQuery } from '../../../api/volume'
 import { useParams } from 'react-router-dom'
 import { GridApiPro, GridEventListener, GridState } from '@mui/x-data-grid-pro'
-undefined
-undefined
+import theme from '../../../theme'
+import { useFormatDate } from '../../../utils/date'
 
 type TableHeaderProps = {
   apiRef: RefObject<GridApiPro | null>

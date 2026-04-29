@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
 import InputDataMutationMarkField from './InputDataMutationMarkField'
-undefined
+import { hasMutationMark } from '../../../../utils/mutationMark'
 
 const InputDataMutationMark = () => {
   const { watch } = useFormContext()

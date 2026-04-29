@@ -3,10 +3,10 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { useTranslation } from 'react-i18next'
-undefined
-undefined
-undefined
-undefined
+import { TEditableSpecimen } from '../../../../schema/specimen'
+import { TEditableVolume } from '../../../../schema/volume'
+import ModalContainer from '../../../../components/ModalContainer'
+import { TabSelect } from '../../../../components/TabSelect'
 import Checkbox from '@mui/material/Checkbox'
 import { toast } from 'react-toastify'
 import {

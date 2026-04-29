@@ -9,7 +9,7 @@ import {
   TEditableSpecimen,
   TSpecimenDamageTypes,
 } from '@/schema/specimen'
-undefined
+import ModalContainer from '../../../../components/ModalContainer'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
 

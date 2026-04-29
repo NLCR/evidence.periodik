@@ -17,13 +17,10 @@ import {
   GridRenderEditCellParams,
 } from '@mui/x-data-grid/models/params/gridCellParams'
 import { blue, pink } from '@mui/material/colors'
-import {
-  TEditableSpecimen,
-  TSpecimenDamageTypes,
-} from '@/schema/specimen'
-undefined
-undefined
-undefined
+import { TEditableSpecimen, TSpecimenDamageTypes } from '@/schema/specimen'
+import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
+import { TMutation } from '../../../schema/mutation'
+import { TEdition } from '../../../schema/edition'
 import DamagedAndMissingPagesEditCell from './editCells/DamagedAndMissingPagesEditCell'
 import DamageTypesEditCell from './editCells/DamageTypesEditCell'
 import MutationMarkSelectorModalContainer from './editCells/MutationMarkSelectorModalContainer'
@@ -34,9 +31,9 @@ import {
   APP_WITH_EDITING_ENABLED,
   JUMP_TO_SPECIMEN_WITH_ID,
 } from '@/utils/constants'
-undefined
-undefined
-undefined
+import { useLanguageCode } from '../../../hooks/useLanguageCode'
+import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
+import { checkAttachmentChange, filterSpecimen } from '../../../utils/specimen'
 import { validate as uuidValidate } from 'uuid'
 import TableHeader from './TableHeader'
 import Tooltip from '@mui/material/Tooltip'
@@ -46,7 +43,7 @@ import { useInputDataEditabilityContext } from './inputData/InputDataEditability
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
 import { GridApiCommunity } from '@mui/x-data-grid/internals'
-undefined
+import { useFormatDate } from '../../../utils/date'
 import {
   getMutationMarkLabel,
   isUnmarkedMutationMark,

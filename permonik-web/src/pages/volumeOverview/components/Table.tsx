@@ -3,16 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro'
 import CheckIcon from '@mui/icons-material/Check'
 import Box from '@mui/material/Box'
-undefined
-undefined
-undefined
-undefined
-undefined
-undefined
+import { TEditableSpecimen, TSpecimen } from '../../../schema/specimen'
+import { TVolumeDetail } from '../../../schema/volume'
+import { useMutationListQuery } from '../../../api/mutation'
+import { useEditionListQuery } from '../../../api/edition'
 import Tooltip from '@mui/material/Tooltip'
-undefined
-undefined
-undefined
+import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
+import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
+import { useLanguageCode } from '@/hooks/useLanguageCode'
+import { useFormatDate } from '@/utils/date'
+import { getMutationMarkLabel } from '@/utils/mutationMark'
 
 type TProps = {
   volume?: TVolumeDetail
