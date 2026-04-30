@@ -77,6 +77,8 @@
     "detailed_volume_overview": "Detailní popis svazku",
     "duplicate_dialog_title": "Duplikovat záznam",
     "duplicate_dialog_description": "Vyberte datum, ke kterému bude zadán nový záznam",
+    "duplicate_attachment_requires_regular": "Přílohu lze zadat jen k datu, kde už existuje jiné nepřílohové číslo.",
+    "cannot_delete_last_regular_with_attachments": "Nelze smazat poslední nepřílohové číslo k tomuto datu, dokud zde existují přílohy.",
     "field_names": {
       "barcode": "Čárový kód",
       "signature": "Signatura",

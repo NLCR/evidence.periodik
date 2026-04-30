@@ -30,3 +30,6 @@ dist-ssr
 *.sw?
 
 analyse.html
+
+docs/
+.codex

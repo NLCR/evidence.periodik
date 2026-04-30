@@ -8,6 +8,9 @@ import ModalContainer from '../../../../components/ModalContainer'
 import theme from '../../../../theme'
 import { GridApiCommunity } from '@mui/x-data-grid/internals'
 import { useMeQuery } from '../../../../api/user'
+import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
+import { canDeleteSpecimen } from '../../../../utils/specimen'
+import { useEditionListQuery } from '../../../../api/edition'
 
 type DuplicationCellProps = {
   row: TEditableSpecimen
@@ -19,11 +22,32 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({ row, api, canEdit }) => {
   // const { mutateAsync: doDelete, status } = useDeleteSpecimenById()
   const { t } = useTranslation()
   const me = useMeQuery()
+  const { data: editions } = useEditionListQuery()
 
   const [confirmDeletionModalOpened, setConfirmDeletionModalOpened] =
     useState(false)
 
+  /**
+   * Deletes row through DataGrid row-edit lifecycle.
+   *
+   * Deletion is blocked when it would remove the last regular issue for the day
+   * while attachments on that same day still exist.
+   */
   const deleteRow = async () => {
+    const specimensState = useVolumeManagementStore.getState().specimensState
+    if (
+      !canDeleteSpecimen({
+        editions,
+        specimens: specimensState,
+        candidateRow: row,
+      })
+    ) {
+      toast.error(
+        t('specimens_overview.cannot_delete_last_regular_with_attachments')
+      )
+      return
+    }
+
     const specimenValidation = SpecimenSchema.safeParse(row)
 
     if (!specimenValidation.success) {

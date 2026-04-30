@@ -77,6 +77,8 @@
     "detailed_volume_overview": "Detailed volume overview",
     "duplicate_dialog_title": "Duplicate entry",
     "duplicate_dialog_description": "Select the date for which a new record will be entered",
+    "duplicate_attachment_requires_regular": "Supplements can be entered only on dates where at least one other regular issue already exists.",
+    "cannot_delete_last_regular_with_attachments": "Cannot delete the last regular issue for this date while supplements still exist.",
     "field_names": {
       "barcode": "Barcode",
       "signature": "Signature",

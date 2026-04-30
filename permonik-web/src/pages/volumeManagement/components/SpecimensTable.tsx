@@ -36,7 +36,12 @@ import {
 } from '../../../utils/constants'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
-import { checkAttachmentChange, filterSpecimen } from '../../../utils/specimen'
+import {
+  canUseAttachmentOnDate,
+  checkAttachmentChange,
+  filterSpecimen,
+  getPublicationDay,
+} from '../../../utils/specimen'
 import { validate as uuidValidate } from 'uuid'
 import TableHeader from './TableHeader'
 import Tooltip from '@mui/material/Tooltip'
@@ -51,6 +56,8 @@ import {
   getMutationMarkLabel,
   isUnmarkedMutationMark,
 } from '../../../utils/mutationMark'
+import dayjs from 'dayjs'
+import { toast } from 'react-toastify'
 
 const ODD_OPACITY = 0.2
 
@@ -205,9 +212,10 @@ const renderMutationMarkEditCell = (
 
 const renderDuplicationEditCell = (
   row: TEditableSpecimen,
-  canEdit: boolean
+  canEdit: boolean,
+  editions: TEdition[]
 ) => {
-  return <DuplicationEditCell row={row} canEdit={canEdit} />
+  return <DuplicationEditCell row={row} canEdit={canEdit} editions={editions} />
 }
 
 const renderDeletionEditCell = (
@@ -308,7 +316,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          return renderDuplicationEditCell(row, !disabled)
+          return renderDuplicationEditCell(row, !disabled, editions)
         },
       },
       ...// !stateHasUnsavedData &&
@@ -494,10 +502,34 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
             !disabled
           )
         },
-        valueOptions: editions.map((v) => ({
-          value: v.id,
-          label: v.name[languageCode],
-        })),
+        valueOptions: (params) => {
+          const row = params.row
+          // for internal MUI table purposes, fallback without provided row must return all items
+          const allowAll = !row
+
+          const canUseAttachments =
+            !!row?.id &&
+            canUseAttachmentOnDate({
+              editions,
+              specimens: specimensState,
+              publicationDateString: getPublicationDay(row),
+              candidateRowId: row.id,
+            })
+
+          return editions
+            .filter((edition) => {
+              if (allowAll) return true
+
+              if (edition.isAttachment || edition.isPeriodicAttachment) {
+                return canUseAttachments
+              }
+              return true
+            })
+            .map((edition) => ({
+              value: edition.id,
+              label: edition.name[languageCode],
+            }))
+        },
         type: 'singleSelect',
       },
       {
@@ -921,14 +953,41 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       editions,
       languageCode,
       mutations,
-      specimensState.length,
+      specimensState,
       t,
       formatDate,
     ]
   )
 
-  const handleUpdate = (newRow: TEditableSpecimen) => {
+  /**
+   * Commits edited row and enforces attachment-day rule.
+   *
+   * If user tries to save an attachment edition on a day without another
+   * regular issue, the update is rejected and old row is kept.
+   */
+  const handleUpdate = (
+    newRow: TEditableSpecimen,
+    oldRow: TEditableSpecimen
+  ) => {
     const row = checkAttachmentChange(editions, newRow)
+    const edition = editions.find((e) => e.id === row.editionId)
+    const isAttachment = edition?.isAttachment || edition?.isPeriodicAttachment
+    const canUseEdition =
+      !isAttachment ||
+      canUseAttachmentOnDate({
+        editions,
+        specimens: specimensState,
+        publicationDateString:
+          row.publicationDateString ||
+          dayjs(row.publicationDate).format('YYYYMMDD'),
+        candidateRowId: row.id,
+      })
+
+    if (!canUseEdition) {
+      toast.error(t('specimens_overview.duplicate_attachment_requires_regular'))
+      return filterSpecimen(oldRow)
+    }
+
     specimenActions.setSpecimen(row)
     return filterSpecimen(row)
   }
