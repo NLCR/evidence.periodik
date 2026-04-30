@@ -23,7 +23,7 @@ const App = () => {
   extend(localeData)
   extend(utc)
   extend(timezone)
-  tz.setDefault('Europe/Prague')
+  tz?.setDefault('Europe/Prague')
   locale(i18n.resolvedLanguage)
 
   return (

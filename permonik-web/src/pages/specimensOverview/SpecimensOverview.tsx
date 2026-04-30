@@ -1,3 +1,4 @@
+import ChecklistIcon from '@mui/icons-material/Checklist'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
@@ -24,6 +25,8 @@ import CollapsableSidebar from '../../components/CollapsableSidebar'
 import FacetsContextProvider from './components/facets/FacetsContextProvider'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import theme from '../../theme'
+import PlanDigitalizationModal from '@/components/plan-digitalization-modal/PlanDigitalizationModal'
+import ResponsiveActionButton from '@/components/prepare-scan-modal/steps/template/components/ResponsiveActionButton'
 
 const Table = lazy(() => import('./components/Table'))
 
@@ -33,6 +36,7 @@ const SpecimensOverview = () => {
   const { t } = useTranslation()
   const view = useSpecimensOverviewStore((state) => state.view)
   const setView = useSpecimensOverviewStore((state) => state.setView)
+  const [isPlanModalOpen, setIsPlanModalOpen] = useState(false)
 
   const {
     data: metaTitle,
@@ -178,11 +182,29 @@ const SpecimensOverview = () => {
             </Box>
             <SynchronizeYearsSwitch />
           </Box>
-          {view === 'CALENDAR' && (
-            <IconButton onClick={() => setModalOpened(true)}>
-              <HelpOutlineIcon />
-            </IconButton>
-          )}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}
+          >
+            <ResponsiveActionButton
+              variant="contained"
+              icon={<ChecklistIcon />}
+              label={'Naplánovat digitalizaci'}
+              onClick={() => setIsPlanModalOpen(true)}
+            />
+            <PlanDigitalizationModal
+              isOpen={isPlanModalOpen}
+              setIsOpen={setIsPlanModalOpen}
+            />
+            {view === 'CALENDAR' && (
+              <IconButton onClick={() => setModalOpened(true)}>
+                <HelpOutlineIcon />
+              </IconButton>
+            )}
+          </Box>
         </Box>
         {view === 'CALENDAR' ? (
           <Calendar

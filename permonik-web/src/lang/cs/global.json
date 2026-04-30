@@ -154,7 +154,7 @@
       "title": "Upozornění",
       "stay_button": "Zůstat v kroku předlohy",
       "proceed_button": "Přejít na předchozí krok",
-      "message": "Pokud nyní přejdete do přípravných kroků a poté se vrátíte zpět, přijdete o ručně vyplněná data v tomto kroku předlohy. Předloha se znovu vygeneruje podle nastavení v krocích 1 a 2. Opravdu chcete pokračovat?"
+      "message": "Pokud nyní přejdete do přípravných kroků a poté se vrátíte zpět, přijdete o ručně vyplněná data v neuzamčených položkách tohoto kroku předlohy. Předloha se znovu vygeneruje podle nastavení v krocích 1 a 2. Opravdu chcete pokračovat?"
     },
     "wizard": {
       "title": "Příprava pro skenování",
