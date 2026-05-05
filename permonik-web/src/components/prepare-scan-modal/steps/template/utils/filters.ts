@@ -2,11 +2,16 @@ import {
   TTemplateItem,
   TTemplateItemWithFormIndex,
 } from '@/components/prepare-scan-modal/schemas/templateSchema'
+import {
+  getVisiblePageReplacements,
+  hasVisibleScanTask,
+} from './templateItemLocking'
 
 export const includesWaitingForRescan = (items: TTemplateItem[]) =>
   items.some(
     (item) =>
-      item.replacement?.isWaitingForRescan ||
+      (item.mainScan.type === 'REPLACEMENT' &&
+        item.mainScan.replacement.isWaitingForRescan) ||
       item.pageReplacements.some(
         (replacement) => replacement.isWaitingForRescan
       )
@@ -24,11 +29,11 @@ export const filterTemplateItemsForPrint = (
   )
 
   return filteredItems
-    .filter((item) => item.item.visible)
-    .map((item) => ({
-      ...item.item,
-      pageReplacements: item.item.pageReplacements.filter((r) => r.visible),
+    .map(({ item }) => ({
+      ...item,
+      pageReplacements: getVisiblePageReplacements(item),
     }))
+    .filter(hasVisibleScanTask)
 }
 
 export const getFilteredTemplateItems = (
@@ -48,8 +53,19 @@ export const shouldIncludeTemplateItem = (
   showOnlyUnlocked: boolean
 ) =>
   (!showOnlyRescans ||
-    !!item.replacement?.isWaitingForRescan ||
+    (item.mainScan.type === 'REPLACEMENT' &&
+      item.mainScan.replacement.isWaitingForRescan) ||
     item.pageReplacements.some(
       (replacement) => replacement.isWaitingForRescan
     )) &&
-  (!showOnlyUnlocked || !item.locked)
+  (!showOnlyUnlocked || !getMainScanLockedForFilter(item))
+
+const getMainScanLockedForFilter = (item: TTemplateItem) => {
+  const mainScanLocks = item.mainScan.visible ? [item.mainScan.locked] : []
+  const visibleReplacementLocks = getVisiblePageReplacements(item).map(
+    (replacement) => replacement.locked
+  )
+  const locks = [...mainScanLocks, ...visibleReplacementLocks]
+
+  return locks.length > 0 && locks.every(Boolean)
+}

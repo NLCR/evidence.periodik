@@ -2,10 +2,9 @@ import { useMemo } from 'react'
 
 import { Card, CardContent, Box } from '@mui/material'
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
-import { useTranslation } from 'react-i18next'
 import SpecimenItemViewOnly from './SpecimenItemViewOnly'
 import {
-  createEmptyReplacement,
+  createEmptyMainReplacement,
   TReplacement,
   TReplacementSource,
   TTemplate,
@@ -43,7 +42,6 @@ const SpecimenItem = ({
   disabled = false,
   replacementRows: replacementRowsOverride = undefined,
 }: Props) => {
-  const { t } = useTranslation()
   const { control } = useFormContext<TTemplate>()
 
   const {
@@ -54,14 +52,15 @@ const SpecimenItem = ({
 
   const mainReplacement = useWatch({
     control,
-    name: `${itemPath}.replacement`,
+    name: `${itemPath}.mainScan.replacement`,
   })
   const pageReplacements = useWatch({
     control,
     name: `${itemPath}.pageReplacements`,
   })
   const note = useWatch({ control, name: `${itemPath}.note` }) ?? ''
-  const isItemLocked = !!useWatch({ control, name: `${itemPath}.locked` })
+  const item = useWatch({ control, name: itemPath })
+  const isMainScanLocked = item ? item.mainScan.locked : false
   const templateState = useWatch({ control, name: 'state' })
 
   const canManageLocks = isLockingEnabled(templateState)
@@ -77,7 +76,7 @@ const SpecimenItem = ({
         acc.push({
           replacement,
           replacementIndex: index,
-          isVisible: replacement.visible ?? !replacement.locked,
+          isVisible: replacement.visible,
         })
 
         return acc
@@ -101,7 +100,7 @@ const SpecimenItem = ({
     return (
       <SpecimenItemViewOnly
         specimen={specimen}
-        mainReplacement={mainReplacement ?? createEmptyReplacement()}
+        mainReplacement={mainReplacement ?? createEmptyMainReplacement()}
         replacementRows={replacementRows}
         allowVisibilityChanges
         itemPath={itemPath}
@@ -114,7 +113,6 @@ const SpecimenItem = ({
       <CardContent sx={{ p: 1, '&:last-child': { pb: 1 } }}>
         <SpecimenItemHeader
           specimen={specimen}
-          t={t}
           itemPath={itemPath}
           canManageLocks={canManageLocks}
         />
@@ -123,20 +121,17 @@ const SpecimenItem = ({
           control={control}
           itemPath={itemPath}
           specimen={specimen}
-          t={t}
           disabled={disabled}
-          isItemLocked={isItemLocked}
+          isItemLocked={isMainScanLocked}
           mainReplacement={mainReplacement}
           replacementSourceCandidates={filteredMainReplacementCandidates}
         />
 
         <SpecimenPageReplacementsSection
-          t={t}
           itemPath={itemPath}
           viewOnly={viewOnly}
           showOnlyRescans={showOnlyRescans}
           disabled={disabled}
-          isItemLocked={isItemLocked}
           replacementRows={replacementRows}
           replacementFields={replacementFields}
           appendReplacement={appendReplacement}
@@ -148,8 +143,7 @@ const SpecimenItem = ({
           <SpecimenNoteField
             control={control}
             itemPath={itemPath}
-            t={t}
-            disabled={disabled || isItemLocked}
+            disabled={disabled}
           />
         </Box>
       </CardContent>

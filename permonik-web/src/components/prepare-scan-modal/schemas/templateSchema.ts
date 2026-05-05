@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { TemplateState } from './templateStateSchema'
-import { replacementSchema } from './commonSchemas'
+import { mainReplacementSchema, replacementSchema } from './commonSchemas'
 import { VolumeSchema } from '@/schema/volume'
 
 export const TemplateSpecimenRefSchema = z.object({
@@ -12,12 +12,27 @@ export const TemplateSpecimenRefSchema = z.object({
   numMissing: z.boolean(),
 })
 
+export const PrimaryMainScanSchema = z.object({
+  type: z.literal('PRIMARY'),
+  locked: z.boolean(),
+  visible: z.boolean(),
+})
+
+export const ReplacementMainScanSchema = z.object({
+  type: z.literal('REPLACEMENT'),
+  locked: z.boolean(),
+  visible: z.boolean(),
+  replacement: mainReplacementSchema,
+})
+
+export const MainScanSchema = z.discriminatedUnion('type', [
+  PrimaryMainScanSchema,
+  ReplacementMainScanSchema,
+])
+
 export const TemplateItemSchema = z.object({
   specimen: TemplateSpecimenRefSchema,
-  locked: z.boolean(),
-  visible: z.boolean().optional(),
-  usePrimaryVolume: z.boolean(),
-  replacement: replacementSchema.nullish(),
+  mainScan: MainScanSchema,
   pageReplacements: z.array(replacementSchema),
   note: z.string().optional(),
 })
@@ -29,6 +44,9 @@ export const TemplateSchema = z.object({
 })
 
 export type TTemplateSpecimenRef = z.infer<typeof TemplateSpecimenRefSchema>
+export type TMainScanPrimary = z.infer<typeof PrimaryMainScanSchema>
+export type TMainScanReplacement = z.infer<typeof ReplacementMainScanSchema>
+export type TMainScan = z.infer<typeof MainScanSchema>
 export type TTemplateItem = z.infer<typeof TemplateItemSchema>
 export type TTemplateItemWithFormIndex = {
   item: TTemplateItem

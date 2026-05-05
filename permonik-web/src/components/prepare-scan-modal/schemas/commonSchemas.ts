@@ -27,16 +27,21 @@ export const replacementSourceSchema = z.object({
   mutationEdition: z.string().nullish(),
 })
 
-export const replacementSchema = z.object({
+export const mainReplacementSchema = z.object({
   volume: replacementSourceSchema,
   pages: z.string(),
   isUnreplaceable: z.boolean(),
   isWaitingForRescan: z.boolean(),
+})
+
+export const replacementSchema = mainReplacementSchema.extend({
   locked: z.boolean(),
-  visible: z.boolean().optional(),
+  visible: z.boolean(),
 })
 
 export type TReplacementSource = z.infer<typeof replacementSourceSchema>
+
+export type TMainReplacement = z.infer<typeof mainReplacementSchema>
 
 export type TReplacement = z.infer<typeof replacementSchema>
 
@@ -50,10 +55,15 @@ export const createEmptyReplacementSource = (): TReplacementSource => ({
   signature: '',
 })
 
-export const createEmptyReplacement = (): TReplacement => ({
+export const createEmptyMainReplacement = (): TMainReplacement => ({
   volume: createEmptyReplacementSource(),
   pages: 'všechny',
   isUnreplaceable: false,
   isWaitingForRescan: false,
+})
+
+export const createEmptyReplacement = (): TReplacement => ({
+  ...createEmptyMainReplacement(),
   locked: false,
+  visible: true,
 })

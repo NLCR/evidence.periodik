@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { Controller, Control } from 'react-hook-form'
-import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import {
   createEmptyReplacementSource,
-  TReplacement,
+  TMainReplacement,
   TReplacementSource,
   TTemplate,
   TTemplateSpecimenRef,
@@ -16,10 +16,9 @@ type Props = {
   control: Control<TTemplate>
   itemPath: `items.${number}`
   specimen: TTemplateSpecimenRef
-  t: TFunction
   disabled: boolean
   isItemLocked: boolean
-  mainReplacement: TReplacement | null | undefined
+  mainReplacement: TMainReplacement | null | undefined
   replacementSourceCandidates: TReplacementSource[]
 }
 
@@ -27,12 +26,13 @@ const SpecimenMainReplacementSection = ({
   control,
   itemPath,
   specimen,
-  t,
   disabled,
   isItemLocked,
   mainReplacement,
   replacementSourceCandidates,
 }: Props) => {
+  const { t } = useTranslation()
+
   if (specimen.numExists) return null
 
   return (
@@ -40,7 +40,7 @@ const SpecimenMainReplacementSection = ({
       <Stack direction="row" spacing={1} alignItems="center">
         <Controller
           control={control}
-          name={`${itemPath}.replacement.volume`}
+          name={`${itemPath}.mainScan.replacement.volume`}
           render={({ field, fieldState }) => (
             <ReplacementSourceInput
               viewOnly={false}
@@ -61,7 +61,7 @@ const SpecimenMainReplacementSection = ({
       <Stack direction="row" gap={8}>
         <Box>
           <FormCheckbox<TTemplate>
-            name={`${itemPath}.replacement.isUnreplaceable` as const}
+            name={`${itemPath}.mainScan.replacement.isUnreplaceable` as const}
             label={t(
               'prepare_scan_modal.content_template.replacement_unavailable'
             )}
@@ -72,7 +72,9 @@ const SpecimenMainReplacementSection = ({
         </Box>
         <Box>
           <FormCheckbox<TTemplate>
-            name={`${itemPath}.replacement.isWaitingForRescan` as const}
+            name={
+              `${itemPath}.mainScan.replacement.isWaitingForRescan` as const
+            }
             label={t(
               'prepare_scan_modal.content_template.waiting_for_rescan_label'
             )}

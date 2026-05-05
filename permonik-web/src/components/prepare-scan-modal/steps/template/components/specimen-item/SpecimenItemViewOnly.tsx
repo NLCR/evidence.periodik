@@ -5,11 +5,11 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { Box, Card, CardContent, Stack, Typography } from '@mui/material'
 import { noop } from 'lodash'
 import { useTranslation } from 'react-i18next'
-import { useFormContext } from 'react-hook-form'
 import IconCheckbox from '@/components/form/IconCheckbox'
 import ReplacementSourceInput from '@/components/prepare-scan-modal/steps/common/ReplacementSourceInput'
 import type {
   TTemplate,
+  TMainReplacement,
   TReplacement,
   TTemplateSpecimenRef,
 } from '@/components/prepare-scan-modal/schemas/schemas'
@@ -18,7 +18,7 @@ import {
   getNumberLabel,
 } from '@/components/prepare-scan-modal/steps/template/utils/specimenLabels'
 import theme from '@/theme'
-import { applyItemVisibility } from '../../utils/templateItemLocking'
+import ItemVisibilityActionsMenu from './ItemVisibilityActionsMenu'
 
 type TSpecimenReplacementViewOnlyRow = {
   replacement: TReplacement
@@ -28,7 +28,7 @@ type TSpecimenReplacementViewOnlyRow = {
 type Props = {
   specimen: TTemplateSpecimenRef
   replacementRows: TSpecimenReplacementViewOnlyRow[]
-  mainReplacement: TReplacement | null
+  mainReplacement: TMainReplacement | null
   allowVisibilityChanges?: boolean
   itemPath?: `items.${number}`
   note: string
@@ -43,7 +43,6 @@ const SpecimenItemViewOnly = ({
   note,
 }: Props) => {
   const { t } = useTranslation()
-  const { getValues, setValue } = useFormContext<TTemplate>()
 
   if (allowVisibilityChanges && !itemPath)
     throw new Error('Cannot allow visibilityChanges without providing itemPath')
@@ -87,18 +86,15 @@ const SpecimenItemViewOnly = ({
                   : t('prepare_scan_modal.content_template.replace_label')}
               </Typography>
             </Stack>
-            {itemPath ? (
-              <IconCheckbox
-                name={itemPath}
-                IconFalse={<VisibilityOffIcon />}
-                IconTrue={<VisibilityIcon />}
-                afterChange={(value) => {
-                  const currentItem = getValues(itemPath)
-                  setValue(itemPath, applyItemVisibility(currentItem, value), {
-                    shouldDirty: true,
-                  })
-                }}
-              />
+            {allowVisibilityChanges && itemPath ? (
+              <Stack direction="row" spacing={1} alignItems="center">
+                <IconCheckbox<TTemplate>
+                  name={`${itemPath}.mainScan.visible`}
+                  IconFalse={<VisibilityOffIcon />}
+                  IconTrue={<VisibilityIcon />}
+                />
+                <ItemVisibilityActionsMenu itemPath={itemPath} />
+              </Stack>
             ) : null}
           </Stack>
         </Stack>
@@ -161,7 +157,7 @@ const SpecimenItemViewOnly = ({
                         {t('prepare_scan_modal.content_template.pages_label')}
                       </th>
                       {/*eslint-disable-next-line jsx-a11y/control-has-associated-label*/}
-                      {itemPath ? <th></th> : null}
+                      {allowVisibilityChanges && itemPath ? <th></th> : null}
                     </tr>
                   </thead>
                   <tbody>
@@ -173,7 +169,7 @@ const SpecimenItemViewOnly = ({
                           <td>{replacement.volume.barcode || '-'}</td>
                           <td>{replacement.volume.mutation || '-'}</td>
                           <td>{replacement.pages || '-'}</td>
-                          {itemPath ? (
+                          {allowVisibilityChanges && itemPath ? (
                             <td>
                               <IconCheckbox
                                 name={`${itemPath}.pageReplacements.${replacementIndex}.visible`}

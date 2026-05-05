@@ -23,7 +23,7 @@ import {
   usePrepareScanTemplateSettingsQuery,
   useSavePrepareScanTemplateSettingsMutation,
 } from '@/api/prepareScanModal'
-import { sanitizeTemplateForApi } from './mutations'
+import { initItemVisibility } from './steps/template/utils/templateItemLocking'
 
 type Props = {
   isOpen: boolean
@@ -71,7 +71,10 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
 
   useEffect(() => {
     if (!volumeTemplate) return
-    resetTemplate(volumeTemplate)
+    resetTemplate({
+      ...volumeTemplate,
+      items: volumeTemplate.items.map(initItemVisibility),
+    })
   }, [resetTemplate, volumeTemplate])
 
   const nextStep = async () => {
@@ -170,11 +173,7 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
               <Button
                 fullWidth
                 variant="contained"
-                onClick={() =>
-                  saveTemplateMutation.mutate(
-                    sanitizeTemplateForApi(getTemplateValues())
-                  )
-                }
+                onClick={() => saveTemplateMutation.mutate(getTemplateValues())}
                 disabled={saveTemplateMutation.isPending}
               >
                 {t('prepare_scan_modal.wizard.save_template')}

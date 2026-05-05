@@ -8,7 +8,7 @@ import {
   UseFieldArrayAppend,
   UseFieldArrayRemove,
 } from 'react-hook-form'
-import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import {
   createEmptyReplacement,
   TReplacement,
@@ -24,12 +24,10 @@ type TVisibleReplacementRow = {
 }
 
 type Props = {
-  t: TFunction
   itemPath: `items.${number}`
   viewOnly: boolean
   showOnlyRescans: boolean
   disabled: boolean
-  isItemLocked: boolean
   replacementRows: TVisibleReplacementRow[]
   replacementFields: FieldArrayWithId<
     TTemplate,
@@ -66,21 +64,21 @@ const AddReplacementButton = ({
 )
 
 const SpecimenPageReplacementsSection = ({
-  t,
   itemPath,
   viewOnly,
   showOnlyRescans,
   disabled,
-  isItemLocked,
   replacementRows,
   replacementFields,
   appendReplacement,
   removeReplacement,
   getReplacementCandidates,
 }: Props) => {
+  const { t } = useTranslation()
+
   const addButton = (
     <AddReplacementButton
-      disabled={disabled || isItemLocked}
+      disabled={disabled}
       label={t('prepare_scan_modal.content_template.add_replacement_button')}
       onClick={() => appendReplacement(createEmptyReplacement())}
     />
@@ -123,7 +121,7 @@ const SpecimenPageReplacementsSection = ({
                     replacementIndex
                   )}
                   onRemove={removeReplacement}
-                  disabled={disabled || isItemLocked}
+                  disabled={disabled}
                 />
               )
             })}

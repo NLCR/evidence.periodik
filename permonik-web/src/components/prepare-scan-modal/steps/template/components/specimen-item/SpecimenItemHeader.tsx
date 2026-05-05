@@ -3,32 +3,56 @@ import LockOpenIcon from '@mui/icons-material/LockOpen'
 import CheckIcon from '@mui/icons-material/Check'
 import WarningIcon from '@mui/icons-material/PriorityHigh'
 import Box from '@mui/material/Box'
+import Checkbox from '@mui/material/Checkbox'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { TFunction } from 'i18next'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import {
   TTemplate,
   TTemplateSpecimenRef,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import { getDateLabel, getNumberLabel } from '../../utils/specimenLabels'
-import { applyItemLock } from '../../utils/templateItemLocking'
-import IconCheckbox from '@/components/form/IconCheckbox'
+import {
+  applyItemLock,
+  areAllScanTasksLocked,
+} from '../../utils/templateItemLocking'
+import ActionsMenu from '../../../../../ActionsMenu'
 
 type Props = {
   specimen: TTemplateSpecimenRef
-  t: TFunction
   itemPath: `items.${number}`
   canManageLocks: boolean
 }
 
-const SpecimenItemHeader = ({
-  specimen,
-  t,
-  itemPath,
-  canManageLocks,
-}: Props) => {
-  const { getValues, setValue } = useFormContext<TTemplate>()
+const SpecimenItemHeader = ({ specimen, itemPath, canManageLocks }: Props) => {
+  const { t } = useTranslation()
+  const { control, getValues, setValue } = useFormContext<TTemplate>()
+  const item = useWatch({ control, name: itemPath })
+
+  const setMainScanLock = (locked: boolean) => {
+    const currentItem = getValues(itemPath)
+    const updatedItem = {
+      ...currentItem,
+      mainScan: { ...currentItem.mainScan, locked, visible: !locked },
+    }
+
+    setValue(itemPath, updatedItem, { shouldDirty: true })
+  }
+
+  const setItemLock = (locked: boolean) => {
+    const currentItem = getValues(itemPath)
+
+    setValue(itemPath, applyItemLock(currentItem, locked), {
+      shouldDirty: true,
+    })
+  }
+
+  const allScanTasksLocked = item ? areAllScanTasksLocked(item) : false
+  const hasLockedScanTasks = item
+    ? item.mainScan.locked ||
+      item.pageReplacements.some((replacement) => replacement.locked)
+    : false
 
   return (
     <>
@@ -53,18 +77,30 @@ const SpecimenItemHeader = ({
               )
             </Typography>
           </Stack>
-          <IconCheckbox
-            name={`${itemPath}.locked`}
-            IconFalse={<LockOpenIcon />}
-            IconTrue={<LockIcon />}
-            disabled={!canManageLocks}
-            afterChange={(value) => {
-              const currentItem = getValues(itemPath)
-              setValue(itemPath, applyItemLock(currentItem, value), {
-                shouldDirty: true,
-              })
-            }}
-          />
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Checkbox
+              name={`${itemPath}.mainScan.locked`}
+              icon={<LockOpenIcon />}
+              checkedIcon={<LockIcon />}
+              checked={item ? item.mainScan.locked : false}
+              disabled={!canManageLocks}
+              onChange={(_, value) => setMainScanLock(value)}
+            />
+            <ActionsMenu
+              actions={[
+                {
+                  label: t('prepare_scan_modal.content_template.lock_item'),
+                  disabled: allScanTasksLocked,
+                  onClick: () => setItemLock(true),
+                },
+                {
+                  label: t('prepare_scan_modal.content_template.unlock_item'),
+                  disabled: !hasLockedScanTasks,
+                  onClick: () => setItemLock(false),
+                },
+              ]}
+            />
+          </Stack>
         </Stack>
       </Stack>
 

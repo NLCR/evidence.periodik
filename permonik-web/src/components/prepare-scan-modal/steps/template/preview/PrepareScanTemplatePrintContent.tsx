@@ -9,6 +9,7 @@ import GroupedTemplateSections from '../grouped-by-volumes/GroupedTemplateSectio
 import { TVolume } from '@/schema/volume'
 import TemplatePreviewHeader from './TemplatePreviewHeader'
 import { filterTemplateItemsForPrint } from '../utils/filters'
+import { getMainReplacement } from '../utils/templateItemLocking'
 
 type Props = {
   primaryVolume: TVolume
@@ -85,7 +86,7 @@ const PrepareScanTemplatePrintContent: FC<Props> = ({
               >
                 <SpecimenItemViewOnly
                   specimen={item.specimen}
-                  mainReplacement={item.replacement ?? null}
+                  mainReplacement={getMainReplacement(item)}
                   replacementRows={item.pageReplacements.map(
                     (replacement, replacementIndex) => ({
                       replacement,

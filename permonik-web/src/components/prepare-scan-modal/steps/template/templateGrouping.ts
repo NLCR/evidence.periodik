@@ -1,10 +1,15 @@
 import type {
+  TMainReplacement,
   TReplacement,
   TReplacementSource,
   TTemplateItem,
   TTemplateSpecimenRef,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import { getFilteredTemplateItems } from './utils/filters'
+import {
+  getMainReplacement,
+  getVisiblePageReplacements,
+} from './utils/templateItemLocking'
 
 export type TGroupedScanSection = {
   key: string
@@ -106,12 +111,12 @@ const NOT_FILLED_SECTION_DESCRIPTOR: TSectionDescriptor = {
   volume: null,
 }
 
-const hasReplacementSource = (replacement: TReplacement): boolean =>
+const hasReplacementSource = (replacement: TMainReplacement): boolean =>
   getVolumeKey(replacement.volume, UNKNOWN_REPLACEMENT_GROUP_KEY) !==
   UNKNOWN_REPLACEMENT_GROUP_KEY
 
 const getReplacementSectionDescriptor = (
-  replacement: TReplacement
+  replacement: TMainReplacement | TReplacement
 ): TSectionDescriptor => ({
   key: getVolumeKey(replacement.volume, UNKNOWN_REPLACEMENT_GROUP_KEY),
   sectionType: 'volume',
@@ -121,23 +126,22 @@ const getReplacementSectionDescriptor = (
 const getTemplateItemSectionDescriptor = (
   item: TTemplateItem
 ): TSectionDescriptor => {
-  if (item.usePrimaryVolume) return PRIMARY_SECTION_DESCRIPTOR
-  if (item.replacement?.isWaitingForRescan)
+  const mainReplacement = getMainReplacement(item)
+
+  if (item.mainScan.type === 'PRIMARY') return PRIMARY_SECTION_DESCRIPTOR
+  if (mainReplacement?.isWaitingForRescan)
     return WAITING_FOR_RESCAN_SECTION_DESCRIPTOR
-  if (item.replacement?.isUnreplaceable) return UNREPLACEABLE_SECTION_DESCRIPTOR
-  if (!item.replacement || !hasReplacementSource(item.replacement))
+  if (mainReplacement?.isUnreplaceable) return UNREPLACEABLE_SECTION_DESCRIPTOR
+  if (!mainReplacement || !hasReplacementSource(mainReplacement))
     return NOT_FILLED_SECTION_DESCRIPTOR
 
-  return getReplacementSectionDescriptor(item.replacement)
+  return getReplacementSectionDescriptor(mainReplacement)
 }
 
 const initSectionsAccumulator = (): Map<
   string,
   TGroupedScanSectionAccumulator
-> =>
-  new Map([
-    [PRIMARY_VOLUME_GROUP_KEY, { ...PRIMARY_SECTION_DESCRIPTOR, items: [] }],
-  ])
+> => new Map()
 
 export const buildGroupedScanSections = (
   items: TTemplateItem[],
@@ -152,12 +156,19 @@ export const buildGroupedScanSections = (
   const sections = initSectionsAccumulator()
 
   for (const { item } of visibleItems) {
-    appendItemToSection(sections, getTemplateItemSectionDescriptor(item), {
-      specimen: item.specimen,
-      pages: item.usePrimaryVolume ? null : item.replacement?.pages || null,
-    })
+    if (item.mainScan.visible) {
+      const mainReplacement = getMainReplacement(item)
 
-    for (const replacement of item.pageReplacements) {
+      appendItemToSection(sections, getTemplateItemSectionDescriptor(item), {
+        specimen: item.specimen,
+        pages:
+          item.mainScan.type === 'PRIMARY'
+            ? null
+            : mainReplacement?.pages || null,
+      })
+    }
+
+    for (const replacement of getVisiblePageReplacements(item)) {
       appendItemToSection(
         sections,
         getReplacementSectionDescriptor(replacement),
@@ -169,7 +180,9 @@ export const buildGroupedScanSections = (
     }
   }
 
-  const allSections = Array.from(sections.values())
+  const allSections = Array.from(sections.values()).filter(
+    (section) => section.items.length > 0
+  )
 
   // status sections at the end
   return [

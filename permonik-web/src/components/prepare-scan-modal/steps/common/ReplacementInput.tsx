@@ -14,9 +14,7 @@ import { isLockingEnabled } from '../template/utils/templateItemLocking'
 import IconCheckbox from '@/components/form/IconCheckbox'
 
 type Props = {
-  name:
-    | `items.${number}.replacement`
-    | `items.${number}.pageReplacements.${number}`
+  name: `items.${number}.pageReplacements.${number}`
   viewOnly: boolean
   includePageSelect?: boolean
   index: number

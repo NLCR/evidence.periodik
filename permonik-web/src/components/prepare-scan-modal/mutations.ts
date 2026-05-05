@@ -12,32 +12,6 @@ type TTransitionTemplateStatePayload = {
   nextState: TemplateState
 }
 
-export const sanitizeTemplateForApi = (template: TTemplate): TTemplate => ({
-  ...template,
-  items: template.items.map((item) => {
-    const itemWithoutVisible = { ...item }
-    delete itemWithoutVisible.visible
-
-    const replacementWithoutVisible = item.replacement
-      ? { ...item.replacement }
-      : item.replacement
-
-    if (replacementWithoutVisible) {
-      delete replacementWithoutVisible.visible
-    }
-
-    return {
-      ...itemWithoutVisible,
-      replacement: replacementWithoutVisible,
-      pageReplacements: item.pageReplacements.map((replacement) => {
-        const replacementWithoutVisible = { ...replacement }
-        delete replacementWithoutVisible.visible
-        return replacementWithoutVisible
-      }),
-    }
-  }),
-})
-
 export const useTransitionTemplateStateMutation = (volumeId?: string) => {
   const saveTemplateMutation = useSavePrepareScanTemplateMutation(volumeId)
   const updateTemplateStateMutation =
@@ -48,7 +22,7 @@ export const useTransitionTemplateStateMutation = (volumeId?: string) => {
       template,
       nextState,
     }: TTransitionTemplateStatePayload) => {
-      await saveTemplateMutation.mutateAsync(sanitizeTemplateForApi(template))
+      await saveTemplateMutation.mutateAsync(template)
       await updateTemplateStateMutation.mutateAsync(nextState)
     },
   })

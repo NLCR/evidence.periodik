@@ -6,7 +6,12 @@ import {
   UseFormSetError,
   UseFormTrigger,
 } from 'react-hook-form'
-import { TemplateState, TReplacement, TTemplate } from '../schemas/schemas'
+import {
+  TemplateState,
+  TMainReplacement,
+  TReplacement,
+  TTemplate,
+} from '../schemas/schemas'
 
 export type TTemplateTransitionState =
   | TemplateState.WAITING_FOR_RESCAN
@@ -29,7 +34,7 @@ const hasAnyText = (value: string | null | undefined) =>
   !!value && value.trim().length > 0
 
 const isReplacementFilled = (
-  replacement: TReplacement,
+  replacement: TMainReplacement | TReplacement,
   options: TReplacementValidationOptions
 ) => {
   const hasVolumeData =
@@ -46,7 +51,7 @@ const isReplacementFilled = (
 }
 
 const isValidForWaitingForRescan = (
-  replacement: TReplacement,
+  replacement: TMainReplacement | TReplacement,
   options: TReplacementValidationOptions
 ) =>
   isReplacementFilled(replacement, options) ||
@@ -54,7 +59,7 @@ const isValidForWaitingForRescan = (
   replacement.isWaitingForRescan
 
 const isValidForFinalized = (
-  replacement: TReplacement,
+  replacement: TMainReplacement | TReplacement,
   options: TReplacementValidationOptions
 ) =>
   (isReplacementFilled(replacement, options) || replacement.isUnreplaceable) &&
@@ -64,7 +69,7 @@ const transitionStateConfig: Record<
   TTemplateTransitionState,
   {
     validateReplacement: (
-      replacement: TReplacement,
+      replacement: TMainReplacement | TReplacement,
       options: TReplacementValidationOptions
     ) => boolean
     messageKey: TValidationMessageKey
@@ -89,7 +94,7 @@ export const validateTemplateForTransition = (
     transitionStateConfig[targetState]
 
   const validateReplacement = (
-    replacement: TReplacement,
+    replacement: TMainReplacement | TReplacement,
     path: string,
     options: TReplacementValidationOptions
   ) => {
@@ -102,10 +107,10 @@ export const validateTemplateForTransition = (
   }
 
   template.items.forEach((item, itemIndex) => {
-    if (item.specimen.numMissing && item.replacement) {
+    if (item.specimen.numMissing && item.mainScan.type === 'REPLACEMENT') {
       validateReplacement(
-        item.replacement,
-        `items.${itemIndex}.replacement.volume`,
+        item.mainScan.replacement,
+        `items.${itemIndex}.mainScan.replacement.volume`,
         {
           requirePages: false,
         }

@@ -20,7 +20,6 @@ import {
   hasWaitingReplacement,
   isLockingEnabled,
   applyItemLock,
-  initItemVisibility,
 } from './utils/templateItemLocking'
 import {
   useDeletePrepareScanTemplateMutation,
@@ -54,13 +53,8 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
   const deleteTemplateMutation = useDeletePrepareScanTemplateMutation(volumeId)
 
   const primaryVolume = useWatch({ control, name: 'primaryVolume' })
-  const watchedItems = useWatch({ control, name: 'items' })
+  const items = useWatch({ control, name: 'items' })
   const watchedState = useWatch({ control, name: 'state' })
-
-  const items = useMemo(
-    () => (watchedItems ?? []).map(initItemVisibility),
-    [watchedItems]
-  )
 
   const hasWaitingForRescan = useMemo(
     () => includesWaitingForRescan(items),

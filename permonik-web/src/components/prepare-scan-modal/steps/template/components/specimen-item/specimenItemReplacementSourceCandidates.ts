@@ -1,11 +1,12 @@
 import {
+  TMainReplacement,
   TReplacement,
   TReplacementSource,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 
 type TFilterReplacementSourcesInput = {
   replacementSources: TReplacementSource[]
-  mainReplacement: TReplacement | null | undefined
+  mainReplacement: TMainReplacement | null | undefined
   pageReplacements: TReplacement[] | null | undefined
   activePageReplacementIndex: number | null
 }
