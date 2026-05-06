@@ -68,7 +68,9 @@ export function duplicateVolume(
     lastNumber: volumeData.lastNumber,
     note: fieldsToReset.includes(FieldsToReset.note) ? '' : volumeData.note,
     showAttachmentsAtTheEnd: volumeData.showAttachmentsAtTheEnd,
-    signature: volumeData.signature,
+    signature: fieldsToReset.includes(FieldsToReset.signature)
+      ? ''
+      : volumeData.signature,
     ownerId: fieldsToReset.includes(FieldsToReset.ownerId)
       ? ''
       : volumeData.ownerId,

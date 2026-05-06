@@ -20,6 +20,10 @@ import { TMainModalData } from './models'
 import CalendarMainModal from './mainModal/CalendarMainModal'
 import theme from '../../../../theme'
 import Button from '@mui/material/Button'
+import {
+  getMutationMarkLabel,
+  isUnmarkedMutationMark,
+} from '../../../../utils/mutationMark'
 
 type TProps = {
   metaTitle: TMetaTitle
@@ -93,9 +97,13 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
           groupBy(
             found.specimens,
             (obj) =>
-              `${obj.mutationId}_${obj.mutationMark.mark}_${obj.number}_${obj.attachmentNumber}`
+              `${obj.mutationId}_${obj.mutationMark.type}_${obj.mutationMark.mark}_${obj.number}_${obj.attachmentNumber}`
           ),
-          (obj) => obj.map((o) => `${o.mutationId}_${o.mutationMark.mark}`)
+          (obj) =>
+            obj.map(
+              (o) =>
+                `${o.mutationId}_${o.mutationMark.type}_${o.mutationMark.mark}`
+            )
         )
       )
       specimensInDay.push({
@@ -212,9 +220,11 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
                       mutations?.find((m) => m.id === firstInRow.mutationId)
                         ?.name[languageCode]
                     }{' '}
-                    {firstInRow.mutationMark.mark?.length
-                      ? firstInRow.mutationMark.mark
-                      : t('specimens_overview.without_mark')}
+                    {isUnmarkedMutationMark(firstInRow.mutationMark)
+                      ? getMutationMarkLabel(firstInRow.mutationMark)
+                      : firstInRow.mutationMark.mark?.length
+                        ? firstInRow.mutationMark.mark
+                        : t('specimens_overview.without_mark')}
                   </Typography>
                   <Box
                     sx={(theme) => ({

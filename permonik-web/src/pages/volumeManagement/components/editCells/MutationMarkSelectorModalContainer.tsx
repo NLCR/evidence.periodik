@@ -5,6 +5,7 @@ import MutationMarkSelectorModal from './MutationMarkSelectorModal'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import Box from '@mui/material/Box'
+import { getMutationMarkLabel } from '../../../../utils/mutationMark'
 
 const MutationMarkSelectorModalContainer = (
   props: GridRenderEditCellParams<TEditableSpecimen>
@@ -24,7 +25,7 @@ const MutationMarkSelectorModalContainer = (
           display: 'flex',
         }}
       >
-        {row.mutationMark.mark}
+        {getMutationMarkLabel(row.mutationMark)}
         <IconButton color="primary" onClick={() => setModalOpened(true)}>
           <EditIcon />
         </IconButton>

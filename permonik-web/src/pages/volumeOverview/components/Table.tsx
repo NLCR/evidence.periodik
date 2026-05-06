@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import React, { FC, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro'
 import CheckIcon from '@mui/icons-material/Check'

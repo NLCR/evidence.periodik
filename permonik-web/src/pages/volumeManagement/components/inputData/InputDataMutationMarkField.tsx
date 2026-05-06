@@ -8,6 +8,7 @@ import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
   getMutationMarkCompoundValue,
+  hasMutationMark,
   TMutationMark,
 } from '../../../../utils/mutationMark'
 
@@ -96,7 +97,7 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
           setMutationMark(mutationMark)
           setSpecimensState(
             specimensState.map((specimen) =>
-              specimen.isAttachment && !specimen.mutationMark?.mark
+              specimen.isAttachment && !hasMutationMark(specimen.mutationMark)
                 ? // do not modify attachments w/o a mutation mark
                   specimen
                 : {

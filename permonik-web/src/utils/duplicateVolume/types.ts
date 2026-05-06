@@ -4,6 +4,7 @@ export enum FieldsToReset {
   mutationId,
   mutationMark,
   ownerId,
+  signature,
   /* damage types */
   damagedPages, // poškozené strany (PP)
   missingPages, // chybí strany (ChS)
@@ -19,6 +20,7 @@ export enum FieldsToReset {
 
 export const basicFieldsToReset: FieldsToReset[] = [
   FieldsToReset.barCode,
+  FieldsToReset.signature,
   FieldsToReset.note,
   FieldsToReset.mutationId,
   FieldsToReset.mutationMark,
