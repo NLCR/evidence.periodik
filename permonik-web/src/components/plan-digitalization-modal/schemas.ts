@@ -1,21 +1,37 @@
-import { TMutationMark } from '../../utils/mutationMark'
+import { z } from 'zod'
+import { MutationSchema } from '@/schema/mutation'
+import { MutationMarkSchema } from '../../utils/mutationMark'
 
-export type PlanDigitalizationResponse = {
-  year: string
-  libraries: {
-    shorthand: string
-    id: string
-    volumes: {
-      id: string
-      number: string
-      fillIndex: number
-    }[]
-  }[]
-}[]
+export const PlanDigitalizationResponseSchema = z.array(
+  z.object({
+    year: z.string(),
+    libraries: z.array(
+      z.object({
+        id: z.string(),
+        shorthand: z.string(),
+        volumes: z.array(
+          z.object({
+            id: z.string(),
+            number: z.string(),
+            fillIndex: z.number(),
+          })
+        ),
+      })
+    ),
+  })
+)
 
-export type PlanDigitalizationFilters = {
-  yearFrom: string
-  yearTo: string
-  mutationId: string
-  mutationalEdition: TMutationMark
-}
+export type PlanDigitalizationResponse = z.infer<
+  typeof PlanDigitalizationResponseSchema
+>
+
+export const PlanDigitalizationFiltersSchema = z.object({
+  yearFrom: z.string(),
+  yearTo: z.string(),
+  mutation: MutationSchema.nullable(),
+  mutationalEdition: MutationMarkSchema,
+})
+
+export type PlanDigitalizationFilters = z.infer<
+  typeof PlanDigitalizationFiltersSchema
+>

@@ -42,6 +42,17 @@
       "mutation_mark": "Mutační<br />vydání"
     }
   },
+  "plan_digitalization_modal": {
+    "title": "Plánování digitalizace",
+    "year_from": "Rok od",
+    "year_to": "Rok do",
+    "mutation": "Mutace",
+    "mutational_edition": "Mutační vydání",
+    "year": "Ročník",
+    "select_filters": "Nastavte filtry a spusťte vyhledávání",
+    "no_results": "Nic nebylo nalezeno",
+    "fill_index_sum": "Součet indexů vyplnění"
+  },
   "prepare_scan_modal": {
     "content_preparation": {
       "title": "Doplnit náhradu za:",

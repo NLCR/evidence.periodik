@@ -198,6 +198,7 @@ const SpecimensOverview = () => {
             <PlanDigitalizationModal
               isOpen={isPlanModalOpen}
               setIsOpen={setIsPlanModalOpen}
+              metatitle={metaTitle.name}
             />
             {view === 'CALENDAR' && (
               <IconButton onClick={() => setModalOpened(true)}>

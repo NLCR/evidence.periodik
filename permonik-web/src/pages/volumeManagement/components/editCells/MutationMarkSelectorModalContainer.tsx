@@ -1,4 +1,4 @@
-import { GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
+import { GridRenderEditCellParams } from '@mui/x-data-grid-pro'
 import { useState } from 'react'
 import { TEditableSpecimen } from '../../../../schema/specimen'
 import MutationMarkSelectorModal from './MutationMarkSelectorModal'

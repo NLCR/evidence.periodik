@@ -6,7 +6,6 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from 'react-router-dom'
-import Container from '@mui/material/Container'
 import NotFound from '../pages/NotFound'
 import Home from '../pages/Home'
 import Loader from './Loader'
@@ -42,14 +41,6 @@ import ShowError from './ShowError'
 // const VolumeManagement = React.lazy(
 //   () => import('../pages/volumeManagement/VolumeManagement')
 // )
-
-const SuspenseLoader = () => {
-  return (
-    <Container sx={{ minHeight: '80vh' }}>
-      <Loader />
-    </Container>
-  )
-}
 
 const RoutesManager = () => {
   const { t } = useTranslation()
@@ -118,7 +109,7 @@ const RoutesManager = () => {
     )
   )
 
-  return <RouterProvider router={router} fallbackElement={<SuspenseLoader />} />
+  return <RouterProvider router={router} />
 }
 
 export default RoutesManager

@@ -42,6 +42,17 @@
       "mutation_mark": "Mutational<br /> edition"
     }
   },
+  "plan_digitalization_modal": {
+    "title": "Digitization planning",
+    "year_from": "Year from",
+    "year_to": "Year to",
+    "mutation": "Mutation",
+    "mutational_edition": "Mutational edition",
+    "year": "Year",
+    "select_filters": "Set filters and start the search",
+    "no_results": "Nothing was found",
+    "fill_index_sum": "Fill index total"
+  },
   "prepare_scan_modal": {
     "content_preparation": {
       "title": "Add replacement for:",

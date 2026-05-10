@@ -9,3 +9,7 @@ Frontend rules:
 - Respect project folder structure
 - Use MUI icons, avoid creating your own
 - All labels and texts must be localized into CZ, SK, EN using i18n
+- Do not write FE tests
+- Avoid unnecessary useEffect hooks. Prefer using callbacks
+- Avoid thin function wrappers
+- Try to reuse existing types as much as possible

@@ -8,14 +8,12 @@ import {
   GridColumnHeaderParams,
   GridApiPro,
   GridAlignment,
+  GridCellParams,
+  GridRenderEditCellParams,
 } from '@mui/x-data-grid-pro'
 import Box from '@mui/material/Box'
 import { alpha, styled } from '@mui/material/styles'
 import Checkbox from '@mui/material/Checkbox'
-import {
-  GridCellParams,
-  GridRenderEditCellParams,
-} from '@mui/x-data-grid/models/params/gridCellParams'
 import { blue, pink } from '@mui/material/colors'
 import { TEditableSpecimen, TSpecimenDamageTypes } from '@/schema/specimen'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'

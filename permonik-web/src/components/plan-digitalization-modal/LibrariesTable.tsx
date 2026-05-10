@@ -33,6 +33,24 @@ const LibrariesTable: FC<Props> = ({ data }) => {
     return Array.from(map.values())
   }, [data])
 
+  const fillIndexSums = useMemo(() => {
+    const sums = new Map<string, number>()
+
+    data.forEach((yearItem) => {
+      yearItem.libraries.forEach((library) => {
+        const currentSum = sums.get(library.id) ?? 0
+        const librarySum = library.volumes.reduce(
+          (sum, volume) => sum + volume.fillIndex,
+          0
+        )
+
+        sums.set(library.id, currentSum + librarySum)
+      })
+    })
+
+    return sums
+  }, [data])
+
   if (!data.length) {
     return (
       <Typography color="text.secondary">
@@ -42,10 +60,17 @@ const LibrariesTable: FC<Props> = ({ data }) => {
   }
 
   return (
-    <TableContainer component={Paper} variant="outlined">
+    <TableContainer component={Paper} variant="outlined" sx={{ mb: 2 }}>
       <Table size="small">
         <TableHead>
-          <TableRow>
+          <TableRow
+            sx={{
+              '& th': {
+                backgroundColor: 'action.hover',
+                fontWeight: 700,
+              },
+            }}
+          >
             <TableCell>
               {t('plan_digitalization_modal.year', { defaultValue: 'Ročník' })}
             </TableCell>
@@ -89,6 +114,26 @@ const LibrariesTable: FC<Props> = ({ data }) => {
               })}
             </TableRow>
           ))}
+          <TableRow
+            sx={(theme) => ({
+              '& td': {
+                backgroundColor: theme.palette.grey[50],
+                borderTop: `2px solid ${theme.palette.divider}`,
+                fontWeight: 700,
+              },
+            })}
+          >
+            <TableCell>
+              {t('plan_digitalization_modal.fill_index_sum', {
+                defaultValue: 'Součet indexů vyplnění',
+              })}
+            </TableCell>
+            {libraryColumns.map((library) => (
+              <TableCell key={`fill-index-sum-${library.id}`}>
+                {fillIndexSums.get(library.id) ?? 0}
+              </TableCell>
+            ))}
+          </TableRow>
         </TableBody>
       </Table>
     </TableContainer>

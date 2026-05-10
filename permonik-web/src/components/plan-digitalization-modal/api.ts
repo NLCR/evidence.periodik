@@ -1,17 +1,66 @@
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../api'
-import { PlanDigitalizationResponse } from './schemas'
-import { TMutationMark } from '@/utils/mutationMark'
+// import { api } from '../../api'
+import {
+  PlanDigitalizationFilters,
+  PlanDigitalizationResponse,
+} from './schemas'
 
-export type PlanDigitalizationQueryParams = {
-  yearFrom: string
-  yearTo: string
-  mutationId: string
-  mutationalEdition: TMutationMark
-}
+const MOCK_PLAN_DIGITALIZATION_RESPONSE: PlanDigitalizationResponse = [
+  {
+    year: '1898',
+    libraries: [
+      {
+        id: 'nk-cr',
+        shorthand: 'NK ČR',
+        volumes: [
+          { id: 'volume-1898-1', number: '1', fillIndex: 92 },
+          { id: 'volume-1898-2', number: '2', fillIndex: 64 },
+        ],
+      },
+      {
+        id: 'mzk',
+        shorthand: 'MZK',
+        volumes: [{ id: 'volume-1898-3', number: '1', fillIndex: 38 }],
+      },
+    ],
+  },
+  {
+    year: '1899',
+    libraries: [
+      {
+        id: 'nk-cr',
+        shorthand: 'NK ČR',
+        volumes: [{ id: 'volume-1899-1', number: '1', fillIndex: 75 }],
+      },
+      {
+        id: 'svkpk',
+        shorthand: 'SVK PK',
+        volumes: [
+          { id: 'volume-1899-2', number: '1', fillIndex: 18 },
+          { id: 'volume-1899-3', number: '2', fillIndex: 100 },
+        ],
+      },
+    ],
+  },
+  {
+    year: '1900',
+    libraries: [
+      {
+        id: 'mzk',
+        shorthand: 'MZK',
+        volumes: [{ id: 'volume-1900-1', number: '1', fillIndex: 47 }],
+      },
+      {
+        id: 'svkpk',
+        shorthand: 'SVK PK',
+        volumes: [],
+      },
+    ],
+  },
+]
 
 export const usePlanDigitalizationQuery = (
-  params: PlanDigitalizationQueryParams | null
+  params: PlanDigitalizationFilters | null
 ) => {
   return useQuery({
     queryKey: ['plan-digitalization', 'overview', params],
@@ -21,19 +70,13 @@ export const usePlanDigitalizationQuery = (
         return Promise.resolve([] as PlanDigitalizationResponse)
       }
 
-      return api()
-        .get('plan-digitalization/overview', {
-          searchParams: {
-            yearFrom: params.yearFrom,
-            yearTo: params.yearTo,
-            mutationId: params.mutationId,
-            mutationalEditionType: params.mutationalEdition.type ?? '',
-            mutationalEditionMark: params.mutationalEdition.mark ?? '',
-            mutationalEditionDescription:
-              params.mutationalEdition.description ?? '',
-          },
-        })
-        .json<PlanDigitalizationResponse>()
+      // TODO: Temporary mock until the plan digitalization backend exists.
+      // return api()
+      //   .post('plan-digitalization', {
+      //     body: JSON.stringify(params),
+      //   })
+      //   .json<PlanDigitalizationResponse>()
+      return Promise.resolve(MOCK_PLAN_DIGITALIZATION_RESPONSE)
     },
   })
 }
