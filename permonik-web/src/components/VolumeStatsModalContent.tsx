@@ -460,7 +460,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
           .filter(
             (s) =>
               s.damageTypes?.includes('PP') &&
-              Number(s.number) >= 0 &&
+              Number(s.isAttachment ? s.attachmentNumber : s.number) >= 0 &&
               s.numExists
           )
           .map((s) => (
@@ -474,7 +474,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
             >
               <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
                 {t('volume_overview.number_super_short').toLowerCase()}{' '}
-                {s.number}
+                {s.isAttachment ? s.attachmentNumber : s.number}
               </Typography>
               <Typography variant="body2">—</Typography>
               <Typography variant="body2">
@@ -504,7 +504,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
               >
                 <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
                   {t('volume_overview.number_super_short').toLowerCase()}{' '}
-                  {s.number}
+                  {s.isAttachment ? s.attachmentNumber : s.number}
                 </Typography>
                 <Typography variant="body2">—</Typography>
                 <Typography variant="body2">
