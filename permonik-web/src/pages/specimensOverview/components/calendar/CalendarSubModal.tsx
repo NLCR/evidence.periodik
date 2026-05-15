@@ -1,13 +1,13 @@
 import { t } from 'i18next'
 import { Dispatch, SetStateAction } from 'react'
-import ModalContainer from '../../../../components/ModalContainer'
-import VolumeStatsModalContent from '../../../../components/prepare-scan-modal/steps/template/PrepareScanModalContentTemplate'
-import { generateVolumeUrlWithParams } from '../../../../utils/generateVolumeUrlWithParams'
+import ModalContainer from '@/components/ModalContainer'
+import VolumeStatsModalContent from '@/components/VolumeStatsModalContent'
+import { generateVolumeUrlWithParams } from '@/utils/generateVolumeUrlWithParams'
 import { useNavigate, useParams } from 'react-router-dom'
-import { TSpecimen } from '../../../../schema/specimen'
+import { TSpecimen } from '@/schema/specimen'
 import { useTranslation } from 'react-i18next'
-import DuplicateVolumeButton from '../../../../components/DuplicateVolumeButton'
-import { useMeQuery } from '../../../../api/user'
+import DuplicateVolumeButton from '@/components/DuplicateVolumeButton'
+import { useMeQuery } from '@/api/user'
 
 type Props = {
   subModalData: TSpecimen | null

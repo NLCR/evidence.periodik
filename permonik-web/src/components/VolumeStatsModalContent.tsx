@@ -474,7 +474,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
             >
               <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
                 {t('volume_overview.number_super_short').toLowerCase()}{' '}
-                {s.number}
+                {s.isAttachment ? s.attachmentNumber : s.number}
               </Typography>
               <Typography variant="body2">—</Typography>
               <Typography variant="body2">
