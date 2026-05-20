@@ -34,7 +34,7 @@ const LibraryExternalLink = ({
         <WarningIcon />
       </span>
     )
-  if (!libraryId) return null
+  if (!libraryId) return <Typography>{owner?.shorthand ?? '-'}</Typography>
 
   return (
     <Typography

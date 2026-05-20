@@ -23,18 +23,23 @@ const sharedStyle = {
   flexDirection: 'column',
 }
 
-const fittedStyle = {
+const fittedStyle = (minWidth?: string, maxWidth?: string) => ({
   height: 'fit-content',
   maxHeight: '80vh',
   width: 'fit-content',
-  maxWidth: '90vw',
+  maxWidth: { xs: '100%', sm: maxWidth ?? '90vw' },
+  minWidth: { xs: '95vw', sm: minWidth ?? '25vw' },
   ...sharedStyle,
-}
+})
 
-const scrollableStyle = (autoWidth: boolean, minWidth?: string) => ({
+const scrollableStyle = (
+  autoWidth: boolean,
+  minWidth?: string,
+  maxWidth?: string
+) => ({
   maxHeight: '800px',
   height: '80vh',
-  maxWidth: { xs: '100%', sm: '1200px' },
+  maxWidth: { xs: '100%', sm: maxWidth ?? '1200px' },
   width: autoWidth ? 'auto' : '90vw',
   minWidth: { xs: '95vw', sm: minWidth ?? '25vw' },
   ...sharedStyle,
@@ -59,6 +64,7 @@ type TModalContainerProps = {
   style?: 'fitted' | 'scrollable'
   autoWidth?: boolean
   minWidth?: string
+  maxWidth?: string
 }
 
 const ModalContainer: FC<TModalContainerProps> = ({
@@ -73,6 +79,7 @@ const ModalContainer: FC<TModalContainerProps> = ({
   style = 'scrollable',
   autoWidth = false,
   minWidth = undefined,
+  maxWidth = undefined,
 }) => {
   const { t } = useTranslation()
 
@@ -91,8 +98,8 @@ const ModalContainer: FC<TModalContainerProps> = ({
       <Box
         sx={
           style === 'scrollable'
-            ? scrollableStyle(autoWidth, minWidth)
-            : fittedStyle
+            ? scrollableStyle(autoWidth, minWidth, maxWidth)
+            : fittedStyle(minWidth, maxWidth)
         }
       >
         <Box

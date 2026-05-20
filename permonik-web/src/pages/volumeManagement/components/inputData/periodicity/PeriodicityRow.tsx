@@ -41,6 +41,9 @@ const PeriodicityRow = ({
   const { names, subNames } = useSortedSpecimensNamesAndSubNames()
   const { languageCode } = useLanguageCode()
 
+  // The attachment must be a duplicated line as there cannot be an attachment without its specimen
+  const canBeAttachment = getValues(`periodicity.${index}.duplicated`)
+
   const disabledRow = !watch(`periodicity.${index}.numExists`)
   const subname = watch('subName')
 
@@ -71,10 +74,12 @@ const PeriodicityRow = ({
         <InputDataSelect
           name={`periodicity.${index}.editionId`}
           disabled={disabledRow}
-          options={editions.map((o) => ({
-            key: o.id,
-            value: o.name[languageCode],
-          }))}
+          options={editions
+            .filter((o) => (canBeAttachment ? true : !o.isAttachment))
+            .map((o) => ({
+              key: o.id,
+              value: o.name[languageCode],
+            }))}
         />
       </TableCell>
       <TableCell>

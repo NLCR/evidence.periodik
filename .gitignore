@@ -17,3 +17,4 @@ permonik-database/reindex/new-solr-data/*
 .gradle/*
 
 build
+docs/

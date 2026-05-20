@@ -20,6 +20,10 @@ import { TMainModalData } from './models'
 import CalendarMainModal from './mainModal/CalendarMainModal'
 import theme from '../../../../theme'
 import Button from '@mui/material/Button'
+import {
+  getMutationMarkLabel,
+  isUnmarkedMutationMark,
+} from '../../../../utils/mutationMark'
 
 type TProps = {
   metaTitle: TMetaTitle
@@ -92,9 +96,14 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
         sortBy(
           groupBy(
             found.specimens,
-            (obj) => `${obj.mutationId}_${obj.mutationMark.mark}_${obj.number}`
+            (obj) =>
+              `${obj.mutationId}_${obj.mutationMark.type}_${obj.mutationMark.mark}_${obj.number}_${obj.attachmentNumber}`
           ),
-          (obj) => obj.map((o) => `${o.mutationId}_${o.mutationMark.mark}`)
+          (obj) =>
+            obj.map(
+              (o) =>
+                `${o.mutationId}_${o.mutationMark.type}_${o.mutationMark.mark}`
+            )
         )
       )
       specimensInDay.push({
@@ -191,7 +200,9 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
                     marginTop: '2px',
                     marginBottom: '2px',
                     padding: '2px 8px',
-                    backgroundColor: theme.palette.grey['800'],
+                    backgroundColor: firstInRow.isAttachment
+                      ? theme.palette.primary.dark
+                      : theme.palette.grey['800'],
                     borderRadius: '4px',
                     color: theme.palette.grey['100'],
                     alignItems: 'center',
@@ -204,14 +215,16 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
                   }}
                 >
                   <Typography variant="body2">
-                    {firstInRow.number}{' '}
+                    {firstInRow.attachmentNumber || firstInRow.number}{' '}
                     {
                       mutations?.find((m) => m.id === firstInRow.mutationId)
                         ?.name[languageCode]
                     }{' '}
-                    {firstInRow.mutationMark.mark?.length
-                      ? firstInRow.mutationMark.mark
-                      : t('specimens_overview.without_mark')}
+                    {isUnmarkedMutationMark(firstInRow.mutationMark)
+                      ? getMutationMarkLabel(firstInRow.mutationMark)
+                      : firstInRow.mutationMark.mark?.length
+                        ? firstInRow.mutationMark.mark
+                        : t('specimens_overview.without_mark')}
                   </Typography>
                   <Box
                     sx={(theme) => ({
