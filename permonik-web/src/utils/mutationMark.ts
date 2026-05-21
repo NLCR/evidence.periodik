@@ -9,7 +9,7 @@ export const mutationMarkSchema = z.object({
   description: z.string().nullish(),
 })
 
-export const MutationMarkTypeEnum = mutationMarkTypeSchema.Enum
+export const MutationMarkTypeEnum = mutationMarkTypeSchema.enum
 
 export type TMutationMark = z.infer<typeof mutationMarkSchema>
 

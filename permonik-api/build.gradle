@@ -1,7 +1,8 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.7'
+    id 'org.springframework.boot' version '4.0.6'
     id 'io.spring.dependency-management' version '1.1.7'
+    id "com.github.ben-manes.versions" version "0.54.0"
 //    id "io.sentry.jvm.gradle" version "5.12.2"
 }
 
@@ -48,58 +49,33 @@ configurations {
 //}
 
 ext {
-    lombok = '1.18.42'
-    openapi = "2.8.14"
-    solrj = '9.10.0'
+    lombok = '1.18.46'
+    openapi = "3.0.3"
+    solrj = '10.0.0'
     mapstruct = '1.6.3'
-    slf4j = '2.0.17'
-    logback = '1.5.18'
-    hibernate = '7.1.1.Final'
-    redisSession = "3.5.2"
+    slf4j = '2.0.18'
+    logback = '1.5.32'
+    testSolr = '2.0.5'
+    testRedis = '2.2.4'
 }
 
 repositories {
     mavenCentral()
 }
 
-bootJar {
-    archiveFileName.set("permonik-api.jar")
-    layered {
-        enabled = true
-    }
-    manifest {
-        attributes(
-                'Implementation-Title': 'Permonik BE',
-                'Implementation-Version': archiveVersion
-        )
-    }
-}
-
-jar {
-    // disabled generating *-plain.jar version during build
-    // https://stackoverflow.com/questions/67663728/spring-boot-2-5-0-generates-plain-jar-file-can-i-remove-it
-    enabled = false
-}
 
 dependencies {
     // SPRING BOOT
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    // HIBERNATE (preCreate, preUpdate, preRemove)
-    implementation "org.hibernate.orm:hibernate-envers:${hibernate}"
 
     // SOLR
     implementation "org.apache.solr:solr-solrj:${solrj}"
 
     // REDIS
-    implementation "org.springframework.session:spring-session-data-redis:${redisSession}"
+    implementation "org.springframework.session:spring-session-data-redis"
     implementation "org.springframework.boot:spring-boot-starter-data-redis"
-
-    // JACKSON
-    implementation "com.fasterxml.jackson.core:jackson-core:2.20.1"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.20.1"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:2.20"
 
     // LOMBOK
     compileOnly "org.projectlombok:lombok:${lombok}"
@@ -120,11 +96,28 @@ dependencies {
     developmentOnly "org.springframework.boot:spring-boot-devtools"
 
     // TESTING
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation "org.testcontainers:testcontainers-solr:${testSolr}"
+    testImplementation "com.redis:testcontainers-redis:${testRedis}"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+def isNonStable = { version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { keyword ->
+        version.toUpperCase().contains(keyword)
+    }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+
+tasks.named("dependencyUpdates").configure {
+    rejectVersionIf {
+        isNonStable(it.candidate.version)
+    }
 }

@@ -11,7 +11,10 @@ import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
-import { EditableEditionSchema, TEditableEdition } from '../../schema/edition'
+import {
+  EditableEditionSchema,
+  type TEditableEdition,
+} from '../../schema/edition'
 import {
   useCreateEditionMutation,
   useEditionListQuery,
@@ -88,7 +91,7 @@ const Editions = () => {
   const handleSubmit = async () => {
     const validation = EditableEditionSchema.safeParse(edition)
     if (!validation.success) {
-      validation.error.errors.map((e) => toast.error(e.message))
+      validation.error.issues.map((e) => toast.error(e.message))
       return
     }
     try {

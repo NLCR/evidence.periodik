@@ -1,9 +1,9 @@
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { TEdition } from '../../../schema/edition'
-import { TUpdatableVolume } from '../../../api/volume'
+import { type TEdition } from '../../../schema/edition'
+import { type TUpdatableVolume } from '../../../api/volume'
 import Box from '@mui/material/Box'
 import SaveIcon from '@mui/icons-material/Save'
 import SaveAsIcon from '@mui/icons-material/SaveAs'
@@ -18,7 +18,7 @@ import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import DuplicateVolumeModal from '../../../components/DuplicateVolumeModal'
-import { FieldsToReset } from '../../../utils/duplicateVolume/types'
+import { type FieldsToReset } from '../../../utils/duplicateVolume/types'
 
 type Props = {
   duplicated: boolean

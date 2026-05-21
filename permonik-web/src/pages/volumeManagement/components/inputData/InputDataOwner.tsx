@@ -5,8 +5,8 @@ import InputDataSelect from './InputDataSelect'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { useFormContext } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
-import { TOwner } from '../../../../schema/owner'
-import { TMe } from '../../../../schema/user'
+import { type TOwner } from '../../../../schema/owner'
+import { type TMe } from '../../../../schema/user'
 
 type Props = { owners: TOwner[]; me: TMe }
 

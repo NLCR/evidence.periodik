@@ -3,6 +3,8 @@ package cz.incad.nkp.inprove.permonikapi.config.security.auth.form;
 import cz.incad.nkp.inprove.permonikapi.config.security.auth.PasswordEncoderFactory;
 import cz.incad.nkp.inprove.permonikapi.config.security.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -20,17 +22,20 @@ public class PermFormAuthenticationProvider extends AbstractUserDetailsAuthentic
 
 
     @Override
-    protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+    protected void additionalAuthenticationChecks(@NonNull UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+        if (authentication.getCredentials() == null) {
+            throw new BadCredentialsException("Password cannot be empty");
+        }
+
         String rawPassword = authentication.getCredentials().toString();
         String encodedPassword = userDetails.getPassword();
-
         if (!passwordEncoderFactory.passwordEncoder().matches(rawPassword, encodedPassword)) {
             throw new BadCredentialsException("Invalid password");
         }
     }
 
     @Override
-    protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+    protected @NullMarked UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
         return userDetailsService.loadUserByUsername(username);
     }
 }

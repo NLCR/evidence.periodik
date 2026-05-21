@@ -1,13 +1,15 @@
 package cz.incad.nkp.inprove.permonikapi.owner;
 
 
+import cz.incad.nkp.inprove.permonikapi.common.DenormalizationService;
 import cz.incad.nkp.inprove.permonikapi.owner.dto.CreatableOwnerDTO;
 import cz.incad.nkp.inprove.permonikapi.owner.mapper.CreatableOwnerMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.request.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,13 +27,14 @@ public class OwnerService implements OwnerDefinition {
 
     private final SolrClient solrClient;
     private final CreatableOwnerMapper creatableOwnerMapper;
+    private final DenormalizationService denormalizationService;
 
 
     public List<Owner> getOwners() throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(100000);
-        solrQuery.setSort(NAME_FIELD, SolrQuery.ORDER.asc);
+        solrQuery.setSort(NAME_SORT_FIELD, SolrQuery.ORDER.asc);
 
         QueryResponse response = solrClient.query(OWNER_CORE_NAME, solrQuery);
 
@@ -41,7 +44,7 @@ public class OwnerService implements OwnerDefinition {
 
     public void updateOwner(String ownerId, Owner owner) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ownerId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(ownerId) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(OWNER_CORE_NAME, solrQuery);
@@ -57,6 +60,10 @@ public class OwnerService implements OwnerDefinition {
         try {
             solrClient.addBean(OWNER_CORE_NAME, owner);
             solrClient.commit(OWNER_CORE_NAME);
+
+            denormalizationService.updateOwnerInVolumes(ownerId, owner.getName(), owner.getShorthand(), owner.getSigla());
+            denormalizationService.updateOwnerInSpecimens(ownerId, owner.getName(), owner.getShorthand(), owner.getSigla());
+
             logger.info("Owner {} successfully updated", owner.getId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to update owner", e);
@@ -67,7 +74,8 @@ public class OwnerService implements OwnerDefinition {
 
     public void createOwner(CreatableOwnerDTO owner) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(SHORTHAND_FIELD + ":\"" + owner.shorthand() + "\"");
+        solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery.addFilterQuery(SHORTHAND_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(owner.shorthand()) + "\" OR " + SIGLA_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(owner.sigla()) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(OWNER_CORE_NAME, solrQuery);

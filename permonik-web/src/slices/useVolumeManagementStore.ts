@@ -2,17 +2,18 @@
 import { create } from 'zustand'
 import { produce } from 'immer'
 import { devtools } from 'zustand/middleware'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { type Dayjs } from 'dayjs'
 import {
-  TEditableVolume,
-  TEditableVolumePeriodicity,
-  TVolumePeriodicityDays,
+  type TEditableVolume,
+  type TEditableVolumePeriodicity,
+  type TVolumeAttachmentsSort,
+  type TVolumePeriodicityDays,
 } from '../schema/volume'
-import { TEditableSpecimen } from '../schema/specimen'
-import { TEdition } from '../schema/edition'
+import { type TEditableSpecimen } from '../schema/specimen'
+import { type TEdition } from '../schema/edition'
 import { filterSpecimen } from '../utils/specimen'
 import clone from 'lodash/clone'
-import { emptyMutationMark, TMutationMark } from '../utils/mutationMark'
+import { emptyMutationMark, type TMutationMark } from '../utils/mutationMark'
 
 const periodicityDays: TVolumePeriodicityDays[] = [
   'Monday',
@@ -55,7 +56,7 @@ export const initialState: TVariablesState = {
     ownerId: '',
     periodicity: initialPeriodicity,
     mutationMark: emptyMutationMark,
-    showAttachmentsAtTheEnd: false,
+    attachmentsSort: 'NONE',
     signature: '',
     year: '',
   },
@@ -92,7 +93,7 @@ interface TState extends TVariablesState {
     setLastNumber: (value: string) => void
     setOwnerId: (value: string) => void
     setNote: (value: string) => void
-    setShowAttachmentsAtTheEnd: (value: boolean) => void
+    setAttachmentsSort: (value: TVolumeAttachmentsSort) => void
   }
   volumePeriodicityActions: {
     setDefaultPeriodicityEdition: (values: TEdition[]) => void
@@ -245,10 +246,10 @@ export const useVolumeManagementStore = create<TState>()(
             state.stateHasUnsavedData = true
           })
         ),
-      setShowAttachmentsAtTheEnd: (value) =>
+      setAttachmentsSort: (value) =>
         set(
           produce((state: TState) => {
-            state.volumeState.showAttachmentsAtTheEnd = value
+            state.volumeState.attachmentsSort = value
             state.stateHasUnsavedData = true
           })
         ),

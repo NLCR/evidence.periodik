@@ -7,7 +7,7 @@ import {
   useSpecimensStartDateForCalendar,
 } from '../../../../api/specimen'
 import { useLanguageCode } from '../../../../hooks/useLanguageCode'
-import { TMetaTitle } from '../../../../schema/metaTitle'
+import { type TMetaTitle } from '../../../../schema/metaTitle'
 
 export const useFacetsData = (metaTitle: TMetaTitle) => {
   const { data: mutations } = useMutationListQuery()

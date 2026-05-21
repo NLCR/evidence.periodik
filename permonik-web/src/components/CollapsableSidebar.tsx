@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
-import { SxProps, Theme } from '@mui/material'
-import React, { PropsWithChildren, useState } from 'react'
+import { type SxProps, type Theme } from '@mui/material'
+import React, { type PropsWithChildren, useState } from 'react'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
 import theme from '../theme'
 

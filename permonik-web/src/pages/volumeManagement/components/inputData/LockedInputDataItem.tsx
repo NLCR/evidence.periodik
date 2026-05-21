@@ -3,7 +3,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import { useTranslation } from 'react-i18next'
-import { ReactElement } from 'react'
+import { type ReactElement } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useFormatDate } from '../../../../utils/date'
 

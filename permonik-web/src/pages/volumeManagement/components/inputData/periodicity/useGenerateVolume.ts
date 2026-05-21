@@ -1,15 +1,18 @@
 import { cloneDeep } from 'lodash'
 import { useVolumeManagementStore } from '../../../../../slices/useVolumeManagementStore'
 import { repairVolume } from '../../../../../utils/volume'
-import { TEditableVolume, VolumeSchema } from '../../../../../schema/volume'
+import {
+  type TEditableVolume,
+  VolumeSchema,
+} from '../../../../../schema/volume'
 import dayjs from 'dayjs'
 import { t } from 'i18next'
 import { toast } from 'react-toastify'
-import { TEditableSpecimen } from '../../../../../schema/specimen'
+import { type TEditableSpecimen } from '../../../../../schema/specimen'
 import { repairOrCreateSpecimen } from '../../../../../utils/specimen'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { TEdition } from '../../../../../schema/edition'
+import { type TEdition } from '../../../../../schema/edition'
 
 const getDaysArray = (start: string, end: string): string[] => {
   const arr: string[] = []
@@ -56,7 +59,7 @@ export const useGenerateVolume = (
     const validation = VolumeSchema.safeParse(repairedVolume)
 
     if (!validation.success) {
-      validation.error.errors.map((e) => toast.error(e.message))
+      validation.error.issues.map((e) => toast.error(e.message))
       // toast.error(t('volume_overview.volume_input_data_validation_error'))
       return false
     }
@@ -84,7 +87,6 @@ export const useGenerateVolume = (
           const specimen = repairOrCreateSpecimen(
             {
               publicationDate: dt,
-              publicationDateString: dayjs(dt).format('YYYYMMDD'),
               mutationMark: repairedVolume.mutationMark,
               mutationId: repairedVolume.mutationId,
               numExists: true,
@@ -121,7 +123,6 @@ export const useGenerateVolume = (
         const specimen = repairOrCreateSpecimen(
           {
             publicationDate: dt,
-            publicationDateString: dayjs(dt).format('YYYYMMDD'),
             mutationMark: repairedVolume.mutationMark,
             mutationId: repairedVolume.mutationId,
             numExists: false,

@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from 'react'
+import { type ChangeEvent, type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'

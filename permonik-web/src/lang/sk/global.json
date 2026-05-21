@@ -188,6 +188,10 @@
     "periodicity": "Tabuľka denných vydaní",
     "edit_periodicity": "Tabuľka denných vydaní",
     "show_attachments_at_the_end": "Zobraziť prílohy na konci zväzku",
+    "attachments_sort": "Radenie príloh",
+    "attachments_sort_asc": "Na konci zväzku",
+    "attachments_sort_desc": "Na začiatku zväzku",
+    "attachments_sort_none": "Bez špeciálneho radenia",
     "volume_input_data_validation_error": "Vstupné údaje zväzku sú nesprávne (chyba validácie)",
     "specimens_validation_error": "Exempláre obsahujú neplatné údaje (chyba validácie)",
     "volume_updated_successfully": "Zväzok bol úspešne upravený",
@@ -296,7 +300,11 @@
     "login": "Prihlásenie",
     "administration": "Administrácia",
     "logout": "Odhlásiť sa",
-    "volume": "Zväzok"
+    "volume": "Zväzok",
+    "dev_login_title": "Prihlásenie (lokálny vývoj)",
+    "dev_login_username": "Používateľské meno",
+    "dev_login_password": "Heslo",
+    "dev_login_error": "Prihlásenie zlyhalo"
   },
   "not_found": {
     "page_dont_exists": "Táto stránka neexistuje"
@@ -344,6 +352,8 @@
     "first_name_min_length": "Vyplňte prosím pole 'meno'",
     "last_name_min_length": "Vyplňte prosím pole 'priezvisko'",
     "email": "Vyplňte prosím správne pole 'email'",
+    "username_required": "Vyplňte prosím pole 'Používateľské meno'",
+    "password_required": "Vyplňte prosím pole 'Heslo'",
     "cs_name_min_length": "Vyplňte prosím pole 'Český názov'",
     "sk_name_min_length": "Vyplňte prosím pole 'Slovenský názov'",
     "en_name_min_length": "Vyplňte prosím pole 'Anglický názov'",

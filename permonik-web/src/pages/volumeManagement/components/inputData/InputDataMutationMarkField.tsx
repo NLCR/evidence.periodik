@@ -1,5 +1,5 @@
 import LockedInputDataItem from './LockedInputDataItem'
-import TextField, { TextFieldProps } from '@mui/material/TextField'
+import TextField, { type TextFieldProps } from '@mui/material/TextField'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import { useState } from 'react'
 import MutationMarkSelectorModal from '../editCells/MutationMarkSelectorModal'
@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next'
 import {
   getMutationMarkCompoundValue,
   hasMutationMark,
-  TMutationMark,
+  type TMutationMark,
 } from '../../../../utils/mutationMark'
 
 type FieldProps = {

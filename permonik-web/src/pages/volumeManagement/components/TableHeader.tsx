@@ -1,10 +1,14 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import React, { FC, RefObject, useEffect, useState } from 'react'
+import React, { type FC, type RefObject, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useManagedVolumeDetailQuery } from '../../../api/volume'
 import { useParams } from 'react-router-dom'
-import { GridApiPro, GridEventListener, GridState } from '@mui/x-data-grid-pro'
+import {
+  type GridApiPro,
+  type GridEventListener,
+  type GridState,
+} from '@mui/x-data-grid-pro'
 import theme from '../../../theme'
 import { useFormatDate } from '../../../utils/date'
 

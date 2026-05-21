@@ -4,24 +4,24 @@ import clone from 'lodash/clone'
 import { useTranslation } from 'react-i18next'
 import { useVolumeManagementStore } from '../slices/useVolumeManagementStore'
 import { VolumeSchema } from '../schema/volume'
-import { SpecimenSchema, TEditableSpecimen } from '../schema/specimen'
+import { SpecimenSchema, type TEditableSpecimen } from '../schema/specimen'
 import {
   useCreateVolumeWithSpecimensMutation,
   useDeleteVolumeWithSpecimensMutation,
   useUpdateOvergeneratedVolumeWithSpecimensMutation,
   useUpdateVolumeWithSpecimensMutation,
 } from '../api/volume'
-import { TEdition } from '../schema/edition'
+import { type TEdition } from '../schema/edition'
 import { BACK_META_TITLE_ID } from '../utils/constants'
 import { generateVolumeUrlWithParams } from '../utils/generateVolumeUrlWithParams'
 import { repairOrCreateSpecimen } from '../utils/specimen'
 import { repairVolume } from '../utils/volume'
 import { waitFor } from '../utils/waitFor'
 import i18next from '../i18next'
-import { RefObject } from 'react'
-import { GridApiPro } from '@mui/x-data-grid-pro/models'
+import { type RefObject } from 'react'
+import { type GridApiPro } from '@mui/x-data-grid-pro/models'
 import { duplicateVolume } from '../utils/duplicateVolume/duplicateVolume'
-import { FieldsToReset } from '../utils/duplicateVolume/types'
+import { type FieldsToReset } from '../utils/duplicateVolume/types'
 
 const useVolumeManagementActions = (
   apiRef: RefObject<GridApiPro | null>,
@@ -79,13 +79,13 @@ const useVolumeManagementActions = (
 
     if (!volumeValidation.success) {
       // toast.error(t('volume_overview.volume_input_data_validation_error'))
-      volumeValidation.error.errors.forEach((e) => toast.error(e.message))
+      volumeValidation.error.issues.forEach((e) => toast.error(e.message))
 
       throw new Error(volumeValidation.error.message)
     }
     if (!specimensValidation.success) {
       // toast.error(t('volume_overview.specimens_validation_error'))
-      specimensValidation.error.errors.forEach((e) => toast.error(e.message))
+      specimensValidation.error.issues.forEach((e) => toast.error(e.message))
 
       throw new Error(specimensValidation.error.message)
     }

@@ -11,7 +11,7 @@ import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
-import { EditableOwnerSchema, TEditableOwner } from '../../schema/owner'
+import { EditableOwnerSchema, type TEditableOwner } from '../../schema/owner'
 import {
   useCreateOwnerMutation,
   useGetSiglaListMutation,
@@ -85,7 +85,7 @@ const Owners = () => {
     let ownerClone = clone(owner)
     const validation = EditableOwnerSchema.safeParse(ownerClone)
     if (!validation.success) {
-      validation.error.errors.map((e) => toast.error(e.message))
+      validation.error.issues.map((e) => toast.error(e.message))
       return
     }
 

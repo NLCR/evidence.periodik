@@ -1,6 +1,6 @@
 package cz.incad.nkp.inprove.permonikapi.volume.mapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumePeriodicityDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
