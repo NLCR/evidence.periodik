@@ -4,25 +4,6 @@ import { type TEdition } from '../schema/edition'
 import { copyAuditable } from '../schema/common'
 import { type TEditableSpecimen, type TSpecimen } from '../schema/specimen'
 import { emptyMutationMark, repairMutationMark } from './mutationMark'
-import dayjs from 'dayjs'
-
-/**
- * Normalizes specimen publication day to YYYYMMDD.
- *
- * Uses `publicationDateString` when present, otherwise falls back to
- * formatting `publicationDate` via dayjs. Returns empty string if date
- * cannot be resolved.
- */
-export const getPublicationDay = (
-  specimen: Partial<TEditableSpecimen>
-): string => {
-  if (specimen.publicationDateString) {
-    return specimen.publicationDateString
-  }
-
-  const parsedDate = dayjs(specimen.publicationDate)
-  return parsedDate.isValid() ? parsedDate.format('YYYYMMDD') : ''
-}
 
 export const isAttachmentSpecimen = (
   specimen: Partial<TEditableSpecimen>,
@@ -46,12 +27,12 @@ export const isAttachmentSpecimen = (
 export const canUseAttachmentOnDate = ({
   editions,
   specimens,
-  publicationDateString,
+  publicationDate,
   candidateRowId,
 }: {
   editions: TEdition[]
   specimens: TEditableSpecimen[]
-  publicationDateString: string
+  publicationDate: string
   candidateRowId?: string
 }): boolean => {
   const attachmentEditions = editions.filter(
@@ -61,7 +42,7 @@ export const canUseAttachmentOnDate = ({
   return specimens.some((specimen) => {
     if (!specimen.numExists) return false
     if (candidateRowId && specimen.id === candidateRowId) return false
-    if (getPublicationDay(specimen) !== publicationDateString) return false
+    if (specimen.publicationDate !== publicationDate) return false
 
     return !isAttachmentSpecimen(specimen, attachmentEditions)
   })
@@ -86,7 +67,7 @@ export const canDeleteSpecimen = ({
     return true
   }
 
-  const publicationDay = getPublicationDay(candidateRow)
+  const publicationDay = candidateRow.publicationDate
   const specimensOnSameDay = specimens.filter((specimen) => {
     if (
       specimen.deleted ||
@@ -96,7 +77,7 @@ export const canDeleteSpecimen = ({
       return false
     }
 
-    return getPublicationDay(specimen) === publicationDay
+    return specimen.publicationDate === publicationDay
   })
 
   const hasRegularIssue = specimensOnSameDay.some(

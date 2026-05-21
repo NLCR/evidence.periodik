@@ -40,7 +40,6 @@ import {
   canUseAttachmentOnDate,
   checkAttachmentChange,
   filterSpecimen,
-  getPublicationDay,
 } from '../../../utils/specimen'
 import { validate as uuidValidate } from 'uuid'
 import TableHeader from './TableHeader'
@@ -57,7 +56,6 @@ import {
   isUnmarkedMutationMark,
 } from '../../../utils/mutationMark'
 import { useMeQuery } from '../../../api/user'
-import dayjs from 'dayjs'
 import { toast } from 'react-toastify'
 
 const ODD_OPACITY = 0.2
@@ -522,7 +520,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
             canUseAttachmentOnDate({
               editions,
               specimens: specimensState,
-              publicationDateString: getPublicationDay(row),
+              publicationDate: row.publicationDate,
               candidateRowId: row.id,
             })
 
@@ -988,6 +986,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       canUseAttachmentOnDate({
         editions,
         specimens: specimensState,
+        publicationDate: row.publicationDate,
         candidateRowId: row.id,
       })
 

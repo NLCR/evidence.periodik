@@ -76,6 +76,7 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({
     }
 
     // update fields that are not in the table
+    // TODO: deleted and deletedBy is assigned on BE from user session
     api.updateRows([
       {
         ...row,

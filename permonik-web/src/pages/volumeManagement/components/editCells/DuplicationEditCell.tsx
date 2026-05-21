@@ -56,6 +56,7 @@ const DuplicationEditCell: FC<DuplicationCellProps> = ({
       canUseAttachmentOnDate({
         editions,
         specimens: specimensState,
+        publicationDate: duplicatedSpecimen.publicationDate,
         candidateRowId: duplicatedSpecimen.id,
       })
 
