@@ -53,16 +53,30 @@ const useVolumeManagementActions = (
     useVolumeManagementStore.getState().specimensActions.setSpecimensState
 
   const doValidation = (useMinSpecimensCount = true) => {
+    const unflushedRows: TEditableSpecimen[] = []
     // flush unflushed updates
     apiRef.current?.getAllRowIds().forEach((rowId) => {
       if (apiRef.current?.getRowMode(rowId) === 'edit') {
         apiRef.current?.stopRowEditMode({ id: rowId })
+        const row =
+          apiRef.current.getRowWithUpdatedValues(rowId, '') ??
+          apiRef.current.getRow(rowId)
+        if (row) unflushedRows.push(row as TEditableSpecimen)
       }
     })
+    const unflushedRowIds = unflushedRows.map((i) => i.id)
 
     //get state when is necessary → this approach doesn't cause rerender of functions and whole hook
     const volumeState = useVolumeManagementStore.getState().volumeState
-    const specimensState = useVolumeManagementStore.getState().specimensState
+    const specimensState = useVolumeManagementStore
+      .getState()
+      .specimensState.map((specimen) => {
+        if (unflushedRowIds.includes(specimen.id)) {
+          const newRow = unflushedRows.find((row) => row.id === specimen.id)
+          if (newRow) return newRow
+        }
+        return specimen
+      })
 
     const volumeClone = clone(volumeState)
     const specimensClone = clone(specimensState)
@@ -133,7 +147,6 @@ const useVolumeManagementActions = (
         // toast.error(t('volume_overview.volume_update_error'))
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }
@@ -161,7 +174,6 @@ const useVolumeManagementActions = (
         // toast.error(t('volume_overview.volume_update_error'))
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }
@@ -193,7 +205,6 @@ const useVolumeManagementActions = (
         // toast.error(t('volume_overview.volume_create_error'))
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }
@@ -222,7 +233,6 @@ const useVolumeManagementActions = (
         // toast.error(t('volume_overview.volume_deletion_error'))
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }
@@ -255,7 +265,6 @@ const useVolumeManagementActions = (
       specimensActions.setSpecimensState(duplicatedSpecimens, true)
       volumeActions.setVolumeState(duplicatedVolume, true)
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }
