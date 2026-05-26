@@ -46,19 +46,21 @@ const Field = ({
         onClick={() => setIsModalOpened(true)}
       />
 
-      <MutationMarkSelectorModal
-        row={{
-          ...volumeState,
-          mutationMark: mutationMark ?? volumeState.mutationMark,
-        }}
-        open={isModalOpened}
-        onClose={() => setIsModalOpened(false)}
-        onSave={(data) => {
-          setValue(fieldName, data.mutationMark, {
-            shouldDirty: true,
-          })
-        }}
-      />
+      {isModalOpened && (
+        <MutationMarkSelectorModal
+          row={{
+            ...volumeState,
+            mutationMark: mutationMark ?? volumeState.mutationMark,
+          }}
+          open={isModalOpened}
+          onClose={() => setIsModalOpened(false)}
+          onSave={(data) => {
+            setValue(fieldName, data.mutationMark, {
+              shouldDirty: true,
+            })
+          }}
+        />
+      )}
     </>
   )
 }

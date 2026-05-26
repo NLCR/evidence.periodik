@@ -30,12 +30,14 @@ const MutationMarkSelectorModalContainer = (
           <EditIcon />
         </IconButton>
       </Box>
-      <MutationMarkSelectorModal
-        row={row}
-        open={modalOpened}
-        onClose={() => setModalOpened(false)}
-        onSave={(data) => handleSave(data as TEditableSpecimen)}
-      />
+      {modalOpened && (
+        <MutationMarkSelectorModal
+          row={row}
+          open={modalOpened}
+          onClose={() => setModalOpened(false)}
+          onSave={(data) => handleSave(data as TEditableSpecimen)}
+        />
+      )}
     </>
   )
 }

@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react'
+import { type FC, useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -39,14 +39,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
     inputMarkState.mark === '?'
   )
 
-  useEffect(() => {
-    if (open) {
-      setInputMarkState(row.mutationMark ?? emptyMutationMark)
-    }
-  }, [open, row.mutationMark])
-
   const doClose = () => {
-    // setInputMarks('')
     onClose()
   }
 
@@ -68,20 +61,16 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
   }
 
   const handleSymbolSelect = (symbol: TMarks) => {
-    // if (inputMarks === '' || inputMarks.includes(symbol)) {
     setInputMarkState((prevState) => ({
       ...prevState,
       mark: prevState.mark + symbol,
     }))
-    // }
   }
 
   const handleInputChange = (value: string) => {
     if (
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      marks.includes(value) ||
       value === '' ||
+      (marks as readonly string[]).includes(value) ||
       (inputMarkState.mark && value.length < inputMarkState.mark.length)
     )
       setInputMarkState((prev) => ({ ...prev, mark: value.trim() }))

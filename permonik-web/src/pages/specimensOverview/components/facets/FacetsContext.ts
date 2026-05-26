@@ -23,6 +23,7 @@ type TFacetsContext = {
   isError: boolean
   isFetching: boolean
   specimens: TSpecimensOverview | undefined
+  specimensIsPlaceholderData: boolean | undefined
   calendarDateFromQuery: number | undefined
 }
 

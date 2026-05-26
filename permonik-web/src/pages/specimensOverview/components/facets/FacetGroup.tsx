@@ -83,7 +83,7 @@ const FacetGroup: FC<TInput> = ({
                   width: '100%',
                 },
               }}
-              key={f.name}
+              key={`${f.name}-${f.count}`}
               control={
                 <Checkbox
                   value={f.name}

@@ -25,6 +25,7 @@ export const useFacetsData = (metaTitle: TMetaTitle) => {
     data: specimens,
     isError: specimensError,
     isFetching: specimensFetching,
+    isPlaceholderData: specimensIsPlaceholderData,
   } = useSpecimenListQuery(metaTitle.id)
 
   const {
@@ -40,6 +41,7 @@ export const useFacetsData = (metaTitle: TMetaTitle) => {
     languageCode,
     facets,
     specimens,
+    specimensIsPlaceholderData,
     calendarDateFromQuery,
     isFetching:
       facetsFetching || specimensFetching || calendarStartDateFetching,
