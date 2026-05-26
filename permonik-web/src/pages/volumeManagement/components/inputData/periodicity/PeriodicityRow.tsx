@@ -15,6 +15,7 @@ import {
   type UseFieldArrayInsert,
   type UseFieldArrayRemove,
   useFormContext,
+  useWatch,
 } from 'react-hook-form'
 import useSortedSpecimensNamesAndSubNames from '../../../../../hooks/useSortedSpecimensNamesAndSubNames'
 import { useLanguageCode } from '../../../../../hooks/useLanguageCode'
@@ -36,7 +37,7 @@ const PeriodicityRow = ({
   editions,
   metaTitle,
 }: Props) => {
-  const { watch, getValues, resetField, setValue } = useFormContext()
+  const { control, getValues, resetField, setValue } = useFormContext()
   const { disabled, locked } = useInputDataEditabilityContext()
   const { names, subNames } = useSortedSpecimensNamesAndSubNames()
   const { languageCode } = useLanguageCode()
@@ -44,8 +45,11 @@ const PeriodicityRow = ({
   // The attachment must be a duplicated line as there cannot be an attachment without its specimen
   const canBeAttachment = getValues(`periodicity.${index}.duplicated`)
 
-  const disabledRow = !watch(`periodicity.${index}.numExists`)
-  const subname = watch('subName')
+  const disabledRow = !useWatch({
+    name: `periodicity.${index}.numExists`,
+    control,
+  })
+  const subname = useWatch({ name: 'subName', control })
 
   return (
     <TableRow>

@@ -5,7 +5,7 @@ import InputDataSelect from './InputDataSelect'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { type TMutation } from '../../../../schema/mutation'
 import { useLanguageCode } from '../../../../hooks/useLanguageCode'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
 
 type Props = { mutations: TMutation[] }
@@ -24,9 +24,9 @@ const InputDataMutation = ({ mutations }: Props) => {
     (state) => state.specimensActions.setSpecimensState
   )
 
-  const { watch } = useFormContext()
+  const { control } = useFormContext()
   const isDuplicated = location.href.includes('duplicated')
-  const isEmpty = !watch('mutationId')
+  const isEmpty = !useWatch({ name: 'mutationId', control })
 
   return (
     <TableRow

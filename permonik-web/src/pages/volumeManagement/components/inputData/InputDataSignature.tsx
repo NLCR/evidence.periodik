@@ -3,7 +3,7 @@ import TableRow from '@mui/material/TableRow'
 import InputDataTextField from './InputDataTextField'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { useTranslation } from 'react-i18next'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
 
 const InputDataSignature = () => {
@@ -19,9 +19,9 @@ const InputDataSignature = () => {
     (state) => state.specimensActions.setSpecimensState
   )
 
-  const { watch } = useFormContext()
+  const { control } = useFormContext()
   const isDuplicated = location.href.includes('duplicated')
-  const isEmpty = !watch('signature')
+  const isEmpty = !useWatch({ name: 'signature', control })
 
   return (
     <TableRow

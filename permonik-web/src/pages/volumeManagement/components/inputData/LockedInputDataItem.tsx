@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton'
 import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import { useTranslation } from 'react-i18next'
 import { type ReactElement } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { useFormatDate } from '../../../../utils/date'
 
 type Props = {
@@ -30,8 +30,9 @@ const LockedInputDataItem = ({
 }: Props) => {
   const { t } = useTranslation()
   const { formatDate } = useFormatDate()
-  const { getValues, watch } = useFormContext()
-  const value = props.value ?? watch(name)
+  const { getValues, control } = useFormContext()
+  const watchedValue = useWatch({ name, control })
+  const value = props.value ?? watchedValue
 
   if (type === 'SELECT' && !selectOptions) {
     throw new Error('Type SELECT must have selectOptions filled')

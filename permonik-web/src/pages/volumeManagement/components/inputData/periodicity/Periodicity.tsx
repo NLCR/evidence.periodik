@@ -11,7 +11,7 @@ import { type TEdition } from '../../../../../schema/edition'
 import ModalContainer from '../../../../../components/ModalContainer'
 import InputDataSelect from '../InputDataSelect'
 import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { useGenerateVolume } from './useGenerateVolume'
 import PeriodicityRow from './PeriodicityRow'
 import { type TMetaTitle } from '../../../../../schema/metaTitle'
@@ -28,9 +28,9 @@ const Periodicity: FC<PeriodicityProps> = ({ editions, metaTitles }) => {
   const { t } = useTranslation()
 
   const { disabled, locked, setLocked } = useInputDataEditabilityContext()
-  const { control, watch } = useFormContext()
+  const { control } = useFormContext()
 
-  const metatitleId = watch('metaTitleId')
+  const metatitleId = useWatch({ name: 'metaTitleId', control })
   const metaTitle = useMemo(
     () => metaTitles.find((value) => value.id === metatitleId)?.name,
     [metaTitles, metatitleId] // metatitles is reference-stable array from useQuery

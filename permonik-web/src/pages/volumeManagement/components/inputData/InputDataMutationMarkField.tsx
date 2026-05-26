@@ -4,7 +4,7 @@ import { useInputDataEditabilityContext } from './InputDataEditabilityContextPro
 import { useState } from 'react'
 import MutationMarkSelectorModal from '../editCells/MutationMarkSelectorModal'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
   getMutationMarkCompoundValue,
@@ -24,11 +24,11 @@ const Field = ({
 }: FieldProps & TextFieldProps) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
   const volumeState = useVolumeManagementStore((state) => state.volumeState)
-  const { setValue, watch } = useFormContext()
+  const { setValue, control } = useFormContext()
 
   const fieldName = avoidInternal ? 'mutationMark' : 'mutationMark_internal'
 
-  const mutationMark = watch(fieldName)
+  const mutationMark = useWatch({ name: fieldName, control })
   const value = getMutationMarkCompoundValue(mutationMark)
 
   return (
@@ -65,7 +65,7 @@ const Field = ({
 
 const InputDataMutationMarkField = (props: TextFieldProps) => {
   const { locked, disabled } = useInputDataEditabilityContext()
-  const { getValues, watch, setValue } = useFormContext()
+  const { getValues, control, setValue } = useFormContext()
 
   const setMutationMark = useVolumeManagementStore(
     (state) => state.volumeActions.setMutationMark
@@ -79,7 +79,10 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
     (state) => state.specimensActions.setSpecimensState
   )
 
-  const mutationMark = watch('mutationMark') as TMutationMark
+  const mutationMark = useWatch({
+    name: 'mutationMark',
+    control,
+  }) as TMutationMark
   const value = getMutationMarkCompoundValue(mutationMark)
 
   return locked ? (
