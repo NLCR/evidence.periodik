@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { create } from 'zustand'
 import { produce } from 'immer'
 import { devtools } from 'zustand/middleware'

@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import { type FC, useMemo, useState } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -34,8 +33,7 @@ const Periodicity: FC<PeriodicityProps> = ({ editions, metaTitles }) => {
   const metatitleId = watch('metaTitleId')
   const metaTitle = useMemo(
     () => metaTitles.find((value) => value.id === metatitleId)?.name,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [JSON.stringify(metaTitles.map((metatitle) => metatitle.id)), metatitleId]
+    [metaTitles, metatitleId] // metatitles is reference-stable array from useQuery
   )
 
   const { fields, remove, insert } = useFieldArray({

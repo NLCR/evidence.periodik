@@ -43,13 +43,14 @@ const InputData: FC<InputDataProps> = ({
   const { languageCode } = useLanguageCode()
 
   const [searchParams] = useSearchParams()
+  const backMetaTitleId = searchParams.get(BACK_META_TITLE_ID)
 
   const backMetaTitle = useMemo(
     () =>
-      uuidValidate(searchParams.get(BACK_META_TITLE_ID) || '')
-        ? searchParams.get(BACK_META_TITLE_ID)
+      uuidValidate(backMetaTitleId || '')
+        ? backMetaTitleId
         : volume?.volume.metaTitleId,
-    [searchParams, volume?.volume.metaTitleId]
+    [backMetaTitleId, volume.volume.metaTitleId]
   )
 
   const [modalOpened, setModalOpened] = useState(false)

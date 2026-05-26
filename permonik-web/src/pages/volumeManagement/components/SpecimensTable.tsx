@@ -629,7 +629,9 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
               title={
                 isUnmarked
                   ? t('volume_overview.mutation_mark_tab_unmarked')
-                  : (row.mutationMark.description ?? row.mutationMark.mark)
+                  : (row.mutationMark?.description ??
+                    row.mutationMark?.mark ??
+                    '')
               }
             >
               {renderValue(
