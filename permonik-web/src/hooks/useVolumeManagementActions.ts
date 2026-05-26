@@ -45,6 +45,9 @@ const useVolumeManagementActions = (
   const specimensActions = useVolumeManagementStore(
     (state) => state.specimensActions
   )
+  const volumePeriodicityActions = useVolumeManagementStore(
+    (state) => state.volumePeriodicityActions
+  )
   const setStateHasUnsavedData = useVolumeManagementStore(
     (state) => state.setStateHasUnsavedData
   )
@@ -167,6 +170,7 @@ const useVolumeManagementActions = (
 
         toast.success(t('volume_overview.volume_updated_successfully'))
         setStateHasUnsavedData(false)
+        volumePeriodicityActions.setPeriodicityGenerationUsed(false)
 
         setSpecimensState(newSpecimens, false)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
