@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
-import { type FC, useEffect } from 'react'
+import { type FC, useCallback, useEffect } from 'react'
 import { useManagedVolumeDetailQuery } from '../../api/volume'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
@@ -12,12 +12,18 @@ import { useEditionListQuery } from '../../api/edition'
 import { useMeQuery } from '../../api/user'
 import SpecimensTable from './components/SpecimensTable'
 import { useMetaTitleListQuery } from '../../api/metaTitle'
-import { useVolumeManagementStore } from '../../slices/useVolumeManagementStore'
+import {
+  initialState,
+  useVolumeManagementStore,
+} from '../../slices/useVolumeManagementStore'
 import InputData from './components/inputData/InputData'
 import { InputDataEditabilityContextProvider } from './components/inputData/InputDataEditabilityContextProvider'
 import SpecimensActions from './components/SpecimensActions'
 import useVolumeManagementActions from '../../hooks/useVolumeManagementActions'
 import { useGridApiRef } from '@mui/x-data-grid-pro'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { EditableVolumeSchema, type TEditableVolume } from '../../schema/volume'
 
 type TVolumeManagementProps = {
   duplicated?: boolean
@@ -65,6 +71,15 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
     isError: metaTitlesError,
   } = useMetaTitleListQuery()
 
+  const formMethods = useForm<TEditableVolume>({
+    defaultValues: volume?.volume ?? initialState.volumeState,
+    resolver: zodResolver(EditableVolumeSchema),
+  })
+
+  const markVolumeFormSaved = useCallback(() => {
+    formMethods.reset(formMethods.getValues())
+  }, [formMethods])
+
   useEffect(() => {
     if (!volumeId && !duplicated) {
       setInitialState()
@@ -87,7 +102,7 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
     doCreate,
     doDelete,
     pendingActions,
-  } = useVolumeManagementActions(apiRef, editions || [])
+  } = useVolumeManagementActions(apiRef, editions || [], markVolumeFormSaved)
 
   if (
     volumeLoading ||
@@ -169,6 +184,7 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
           metaTitles={metaTitles}
           editions={editions}
           duplicated={duplicated}
+          formMethods={formMethods}
         />
         <Box
           sx={{

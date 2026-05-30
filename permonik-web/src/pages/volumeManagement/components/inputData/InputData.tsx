@@ -12,8 +12,9 @@ import { useInputDataEditabilityContext } from './InputDataEditabilityContextPro
 import { useParams } from 'react-router-dom'
 import Loader from '../../../../components/Loader'
 import InputDataForm from './InputDataForm'
-import { type TVolume } from '../../../../schema/volume'
+import { type TEditableVolume, type TVolume } from '../../../../schema/volume'
 import theme from '../../../../theme'
+import { type UseFormReturn } from 'react-hook-form'
 
 export interface InputDataProps {
   me: TMe
@@ -24,6 +25,7 @@ export interface InputDataProps {
   metaTitles: TMetaTitle[]
   editions: TEdition[]
   duplicated?: boolean
+  formMethods: UseFormReturn<TEditableVolume>
 }
 
 const InputData: FC<InputDataProps> = ({ isVolumeLoading, ...props }) => {

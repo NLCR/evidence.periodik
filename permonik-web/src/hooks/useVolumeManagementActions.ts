@@ -25,7 +25,8 @@ import { type FieldsToReset } from '../utils/duplicateVolume/types'
 
 const useVolumeManagementActions = (
   apiRef: RefObject<GridApiPro | null>,
-  editions: TEdition[]
+  editions: TEdition[],
+  markVolumeFormSaved: () => void
 ) => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
@@ -143,6 +144,7 @@ const useVolumeManagementActions = (
         })
         toast.success(t('volume_overview.volume_updated_successfully'))
         setStateHasUnsavedData(false)
+        markVolumeFormSaved()
 
         setSpecimensState(newSpecimens, false)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -170,6 +172,7 @@ const useVolumeManagementActions = (
 
         toast.success(t('volume_overview.volume_updated_successfully'))
         setStateHasUnsavedData(false)
+        markVolumeFormSaved()
         volumePeriodicityActions.setPeriodicityGenerationUsed(false)
 
         setSpecimensState(newSpecimens, false)
@@ -197,6 +200,7 @@ const useVolumeManagementActions = (
             : data.repairedSpecimens,
         })
         setStateHasUnsavedData(false)
+        markVolumeFormSaved()
         await waitFor(
           () => !useVolumeManagementStore.getState().stateHasUnsavedData
         )
