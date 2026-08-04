@@ -101,6 +101,10 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+tasks.named('bootJar') {
+    archiveFileName = 'permonik-api.jar'
+}
+
 def isNonStable = { version ->
     def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { keyword ->
         version.toUpperCase().contains(keyword)
