@@ -18,7 +18,7 @@ RUN \
     cp -rT /host/permonik-api ./permonik-api && \
     echo "config.stopBubbling = true" >> ./permonik-api/lombok.config && \
     gradle -g /gradle-home --no-daemon :permonik-api:build -x :permonik-api:test && \
-    java -Djarmode=layertools -jar ./permonik-api/build/libs/permonik-api.jar extract --destination /extracted
+    java -Djarmode=tools -jar ./permonik-api/build/libs/permonik-api.jar extract --layers --destination /extracted
 
 ## RUN Image ##
 FROM eclipse-temurin:25-jre
