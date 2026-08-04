@@ -1,8 +1,8 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.6'
+    id 'org.springframework.boot' version '4.1.0'
     id 'io.spring.dependency-management' version '1.1.7'
-    id "com.github.ben-manes.versions" version "0.54.0"
+    id "io.github.ben-manes.versions" version "0.59.0"
 //    id "io.sentry.jvm.gradle" version "5.12.2"
 }
 
@@ -50,11 +50,9 @@ configurations {
 
 ext {
     lombok = '1.18.46'
-    openapi = "3.0.3"
+    openapi = "3.1.0"
     solrj = '10.0.0'
     mapstruct = '1.6.3'
-    slf4j = '2.0.18'
-    logback = '1.5.32'
     testSolr = '2.0.5'
     testRedis = '2.2.4'
 }
@@ -68,7 +66,6 @@ dependencies {
     // SPRING BOOT
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-
 
     // SOLR
     implementation "org.apache.solr:solr-solrj:${solrj}"
@@ -87,10 +84,6 @@ dependencies {
 
     // SWAGGER / OpenAPI
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapi}"
-
-    // LOGGING
-    implementation "ch.qos.logback:logback-classic:${logback}"
-    implementation "org.slf4j:slf4j-api:${slf4j}"
 
     // DEVELOPMENT
     developmentOnly "org.springframework.boot:spring-boot-devtools"
