@@ -1,5 +1,6 @@
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
+  JAVA_VERSION: "25"
 
 stages:
   - test
@@ -69,6 +70,9 @@ test_permonik_api:
     - if: '$CI_COMMIT_BRANCH == "test" || $CI_COMMIT_BRANCH == "prod"'
       when: manual
   script:
+    - export JAVA_HOME=/usr/lib/jvm/java-$JAVA_VERSION-openjdk-amd64
+    - export PATH="$JAVA_HOME/bin:$PATH"
+    - java --version
     - ./gradlew :permonik-api:test
   artifacts:
     when: always
@@ -89,6 +93,7 @@ build_permonik_api_test:
 
 build_permonik_gateway_test:
   extends: .build
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "test"'
       when: manual
@@ -98,6 +103,7 @@ build_permonik_gateway_test:
 
 build_permonik_web_admin_test:
   extends: .buildWeb
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "test"'
       when: manual
@@ -108,6 +114,7 @@ build_permonik_web_admin_test:
 
 build_permonik_web_public_test:
   extends: .buildWeb
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "test"'
       when: manual
@@ -129,6 +136,7 @@ build_permonik_api_prod:
 
 build_permonik_gateway_prod:
   extends: .buildProd
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
@@ -138,6 +146,7 @@ build_permonik_gateway_prod:
 
 build_permonik_web_admin_prod:
   extends: .buildWebProd
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
@@ -148,6 +157,7 @@ build_permonik_web_admin_prod:
 
 build_permonik_web_public_prod:
   extends: .buildWebProd
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
