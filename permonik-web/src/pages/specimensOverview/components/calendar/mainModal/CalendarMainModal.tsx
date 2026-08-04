@@ -1,17 +1,17 @@
 import Box from '@mui/material/Box'
 import TableBody from '@mui/material/TableBody'
 import Typography from '@mui/material/Typography'
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { type Dispatch, type SetStateAction, useState } from 'react'
 import ModalContainer from '../../../../../components/ModalContainer'
 import Table from '@mui/material/Table'
-import { TMainModalData } from '../models'
+import { type TMainModalData } from '../models'
 import { useEditionListQuery } from '../../../../../api/edition'
 import { useOwnerListQuery } from '../../../../../api/owner'
-import { TSpecimen } from '../../../../../schema/specimen'
+import { type TSpecimenOverview } from '../../../../../schema/specimen'
 import { useTranslation } from 'react-i18next'
-import { TMetaTitle } from '../../../../../schema/metaTitle'
+import { type TMetaTitle } from '../../../../../schema/metaTitle'
 import CalendarSubModal from '../CalendarSubModal'
-import { TMutation } from '../../../../../schema/mutation'
+import { type TMutation } from '../../../../../schema/mutation'
 import CalendarMainModalTableHead from './CalendarMainModalTableHead'
 import CalendarMainModalTableRow from './CalendarMainModalTableRow'
 import { useFormatDate } from '../../../../../utils/date'
@@ -29,7 +29,9 @@ const CalendarMainModal = ({
   metaTitle,
   mutations,
 }: Props) => {
-  const [subModalData, setSubModalData] = useState<TSpecimen | null>(null)
+  const [subModalData, setSubModalData] = useState<TSpecimenOverview | null>(
+    null
+  )
 
   const { data: editions } = useEditionListQuery()
   const { data: owners } = useOwnerListQuery()

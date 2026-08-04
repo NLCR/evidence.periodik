@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography'
 import React from 'react'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
-import { TOwner } from '../../../../../schema/owner'
+import { type TOwner } from '../../../../../schema/owner'
 import Loader from '../../../../../components/Loader'
 import WarningIcon from '@mui/icons-material/Warning'
 import theme from '../../../../../theme'

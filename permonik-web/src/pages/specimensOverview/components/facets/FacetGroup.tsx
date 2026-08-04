@@ -1,4 +1,4 @@
-import { ChangeEvent, FC } from 'react'
+import { type ChangeEvent, type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
@@ -83,7 +83,7 @@ const FacetGroup: FC<TInput> = ({
                   width: '100%',
                 },
               }}
-              key={f.name}
+              key={`${f.name}-${f.count}`}
               control={
                 <Checkbox
                   value={f.name}

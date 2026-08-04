@@ -1,7 +1,7 @@
-import { GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
-import { ChangeEvent } from 'react'
+import { type GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
+import { type ChangeEvent } from 'react'
 import Checkbox from '@mui/material/Checkbox'
-import { TEditableSpecimen } from '../../../../schema/specimen'
+import { type TEditableSpecimen } from '../../../../schema/specimen'
 
 const NumExistsEditCell = (
   props: GridRenderEditCellParams<TEditableSpecimen>

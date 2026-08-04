@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import React, { FC, ReactNode } from 'react'
+import React, { type FC, type ReactNode } from 'react'
 import Modal from '@mui/material/Modal'
 import Backdrop from '@mui/material/Backdrop'
 import Typography from '@mui/material/Typography'

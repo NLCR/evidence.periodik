@@ -1,11 +1,12 @@
 /// <reference types="vite/client" />
 import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react-swc'
-import eslintPlugin from 'vite-plugin-eslint'
+import checker from 'vite-plugin-checker'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
+import react, { reactCompilerPreset } from '@vitejs/plugin-react'
+import babel from '@rolldown/plugin-babel'
 // import { visualizer } from 'rollup-plugin-visualizer'
 
-// https://vitejs.dev/config/
+// https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
@@ -14,7 +15,17 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       react({ jsxImportSource: '@welldone-software/why-did-you-render' }),
-      eslintPlugin(),
+      babel({
+        presets: [reactCompilerPreset()],
+      }),
+      checker({
+        eslint: {
+          lintCommand: 'eslint "./src/**/*.{ts,tsx}"',
+        },
+        overlay: {
+          initialIsOpen: false,
+        },
+      }),
       sentryVitePlugin({
         url: process.env.SENTRY_URL,
         authToken: process.env.SENTRY_AUTH_TOKEN,

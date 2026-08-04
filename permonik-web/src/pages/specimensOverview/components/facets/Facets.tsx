@@ -1,13 +1,13 @@
-import { FC, useEffect, useState } from 'react'
+import { type FC, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { type Dayjs } from 'dayjs'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
 import { DateCalendar } from '@mui/x-date-pickers-pro'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
-import { TMetaTitle } from '../../../../schema/metaTitle'
+import { type TMetaTitle } from '../../../../schema/metaTitle'
 import ShowError from '../../../../components/ShowError'
 import Loader from '../../../../components/Loader'
 import ControlledSliderAndDateInput from '../ControlledSliderAndDateInput'
@@ -24,8 +24,13 @@ type TProps = {
 
 const Facets: FC<TProps> = ({ metaTitle }) => {
   const { t } = useTranslation()
-  const { specimens, calendarDateFromQuery, isError, isFetching } =
-    useFacetsContext()
+  const {
+    specimens,
+    specimensIsPlaceholderData,
+    calendarDateFromQuery,
+    isError,
+    isFetching,
+  } = useFacetsContext()
   const {
     view,
     calendarDate,
@@ -36,39 +41,33 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
     setSliderRange,
   } = useFacetsStoreData()
 
-  const [metaTitleIdChanged, setMetaTitleIdChanged] = useState(false)
-  const [calendarDateInitialized, setCalendarDateInitialized] = useState(false)
-  const [sliderRangeInitialized, setSliderRangeInitialized] = useState(false)
+  const metaTitleChanged = useRef(false)
+  const calendarInitialized = useRef(false)
+  const sliderInitialized = useRef(false)
 
   // track if metaTitle changed
   useEffect(() => {
     if (lastViewedMetaTitleId !== metaTitle.id) {
+      metaTitleChanged.current = true
+      sliderInitialized.current = false
+      calendarInitialized.current = false
       resetAll()
       setLastViewedMetaTitleId(metaTitle.id)
-      setMetaTitleIdChanged(true)
     }
   }, [lastViewedMetaTitleId, metaTitle, resetAll, setLastViewedMetaTitleId])
 
-  // Initialize calendar date
   useEffect(() => {
-    if (
-      calendarDateFromQuery &&
-      metaTitleIdChanged &&
-      !calendarDateInitialized
-    ) {
+    if (!metaTitleChanged.current) return
+    if (calendarDateFromQuery && !calendarInitialized.current) {
       setCalendarDate(dayjs(calendarDateFromQuery.toString()))
-      setCalendarDateInitialized(true)
+      calendarInitialized.current = true
     }
-  }, [
-    calendarDateFromQuery,
-    calendarDateInitialized,
-    metaTitleIdChanged,
-    setCalendarDate,
-  ])
 
-  // Initialize date range slider
-  useEffect(() => {
-    if (specimens && metaTitleIdChanged && !sliderRangeInitialized) {
+    if (
+      !specimensIsPlaceholderData &&
+      specimens &&
+      !sliderInitialized.current
+    ) {
       setSliderRange([
         dayjs(
           new Date(
@@ -85,22 +84,18 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
           )
         ),
       ])
-      setSliderRangeInitialized(true)
+      sliderInitialized.current = true
     }
-  }, [metaTitleIdChanged, setSliderRange, sliderRangeInitialized, specimens])
 
-  // Reset initialization indicators after initialization is done
-  useEffect(() => {
-    if (
-      sliderRangeInitialized &&
-      calendarDateInitialized &&
-      metaTitleIdChanged
-    ) {
-      setMetaTitleIdChanged(false)
-      setCalendarDateInitialized(false)
-      setSliderRangeInitialized(false)
-    }
-  }, [calendarDateInitialized, metaTitleIdChanged, sliderRangeInitialized])
+    if (calendarInitialized.current && sliderInitialized.current)
+      metaTitleChanged.current = false
+  }, [
+    specimens,
+    specimensIsPlaceholderData,
+    calendarDateFromQuery,
+    setCalendarDate,
+    setSliderRange,
+  ])
 
   const publicationDateMin = dayjs(specimens?.publicationDayMin)
   const publicationDateMax = dayjs(specimens?.publicationDayMax)

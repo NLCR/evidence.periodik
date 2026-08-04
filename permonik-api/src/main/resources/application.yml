@@ -8,6 +8,13 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: 6379
+  web:
+    error:
+      path: /error
+      whitelabel:
+        enabled: true
+      include-exception: true
+      include-message: always
 
 #sentry:
 #  dsn: ${SENTRY_DSN}
@@ -20,12 +27,6 @@ solr:
 server:
   port: 8080
   forward-headers-strategy: FRAMEWORK
-  error:
-    path: /error
-    whitelabel:
-      enabled: true
-    include-exception: true
-    include-message: always
   servlet:
     session:
       cookie:

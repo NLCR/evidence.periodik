@@ -2,12 +2,12 @@ import {
   createContext,
   useContext,
   useState,
-  ReactNode,
+  type ReactNode,
   useMemo,
   useEffect,
 } from 'react'
-import { TMe } from '../../../../schema/user'
-import { TUpdatableVolume } from '../../../../api/volume'
+import { type TMe } from '../../../../schema/user'
+import { type TUpdatableVolume } from '../../../../api/volume'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 
 type InputDataEditabilityContextType = {
@@ -48,11 +48,15 @@ export function InputDataEditabilityContextProvider({
   const setSpeciemnsState = useVolumeManagementStore(
     (state) => state.specimensActions.setSpecimensState
   )
+  const setPeriodicityGenerationUsed = useVolumeManagementStore(
+    (state) => state.volumePeriodicityActions.setPeriodicityGenerationUsed
+  )
 
   useEffect(() => {
     if (volume) {
       setVolumeState({ ...volume.volume, isLoading: false }, false)
       setSpeciemnsState(volume.specimens, false)
+      setPeriodicityGenerationUsed(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

@@ -1,7 +1,10 @@
 package cz.incad.nkp.inprove.permonikapi.volume;
 
+import cz.incad.nkp.inprove.permonikapi.common.ReferenceDataService;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitle;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitleService;
+import cz.incad.nkp.inprove.permonikapi.mutation.model.Mutation;
+import cz.incad.nkp.inprove.permonikapi.owner.Owner;
 import cz.incad.nkp.inprove.permonikapi.specimen.SpecimenService;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.SpecimensForVolumeOverviewStatsDTO;
 import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDTO;
@@ -10,12 +13,14 @@ import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeDetailDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.dto.VolumeOverviewStatsDTO;
 import cz.incad.nkp.inprove.permonikapi.volume.model.Volume;
 import cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDTO;
+import cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition;
 import cz.incad.nkp.inprove.permonikapi.volume.model.VolumeMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.request.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -37,11 +42,12 @@ public class VolumeService implements VolumeDefinition {
     private final SpecimenService specimenService;
     private final SolrClient solrClient;
     private final VolumeMapper volumeMapper;
+    private final ReferenceDataService referenceDataService;
 
 
     public VolumeDTO getVolumeDTOById(String volumeId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + volumeId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(volumeId) + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(1);
         QueryResponse response = solrClient.query(VOLUME_CORE_NAME, solrQuery);
@@ -63,7 +69,7 @@ public class VolumeService implements VolumeDefinition {
 
     public Volume checkVolumeExistsById(String volumeId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + volumeId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(volumeId) + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(1);
 
@@ -84,7 +90,7 @@ public class VolumeService implements VolumeDefinition {
         VolumeDTO volumeDTO = getVolumeDTOById(volumeId);
 
         try {
-            List<SpecimenDTO> specimenList = specimenService.getSpecimensForVolumeDetail(volumeDTO.getId(), onlyPublic, volumeDTO.getShowAttachmentsAtTheEnd());
+            List<SpecimenDTO> specimenList = specimenService.getSpecimensForVolumeDetail(volumeDTO.getId(), onlyPublic, volumeDTO.getAttachmentsSort());
 
             return new VolumeDetailDTO(
                 volumeDTO,
@@ -122,12 +128,14 @@ public class VolumeService implements VolumeDefinition {
 
     }
 
-    private void createVolume(VolumeDTO volumeDTO) {
+    private void createVolume(VolumeDTO volumeDTO) throws SolrServerException, IOException {
         try {
             volumeDTO.prePersist();
 
+            Volume volume = volumeMapper.toModel(volumeDTO);
+            resolveVolumeReferenceNames(volume, volumeDTO);
 
-            solrClient.addBean(VOLUME_CORE_NAME, volumeMapper.toModel(volumeDTO));
+            solrClient.addBean(VOLUME_CORE_NAME, volume);
             solrClient.commit(VOLUME_CORE_NAME);
             logger.info("volume {} successfully created", volumeDTO.getId());
         } catch (Exception e) {
@@ -137,7 +145,7 @@ public class VolumeService implements VolumeDefinition {
 
     private void updateVolume(VolumeDTO volumeDTO) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(BAR_CODE_FIELD + ":\"" + volumeDTO.getBarCode() + "\"");
+        solrQuery.addFilterQuery(BAR_CODE_FIELD + ":\"" + ClientUtils.escapeQueryChars(volumeDTO.getBarCode()) + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(1);
 
@@ -154,12 +162,30 @@ public class VolumeService implements VolumeDefinition {
         try {
             volumeDTO.preUpdate();
 
-            solrClient.addBean(VOLUME_CORE_NAME, volumeMapper.toModel(volumeDTO));
+            Volume volume = volumeMapper.toModel(volumeDTO);
+            resolveVolumeReferenceNames(volume, volumeDTO);
+
+            solrClient.addBean(VOLUME_CORE_NAME, volume);
             solrClient.commit(VOLUME_CORE_NAME);
             logger.info("volume {} successfully updated", volumeDTO.getId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to update volume", e);
         }
+    }
+
+    private void resolveVolumeReferenceNames(Volume volume, VolumeDTO volumeDTO) throws SolrServerException, IOException {
+        MetaTitle metaTitle = referenceDataService.resolveMetaTitle(volumeDTO.getMetaTitleId());
+        volume.setMetaTitleName(metaTitle.getName());
+
+        Mutation mutation = referenceDataService.resolveMutation(volumeDTO.getMutationId());
+        volume.setMutationCsName(mutation.getNameCs());
+        volume.setMutationSkName(mutation.getNameSk());
+        volume.setMutationEnName(mutation.getNameEn());
+
+        Owner owner = referenceDataService.resolveOwner(volumeDTO.getOwnerId());
+        volume.setOwnerName(owner.getName());
+        volume.setOwnerShorthand(owner.getShorthand());
+        volume.setOwnerSigla(owner.getSigla());
     }
 
     private void deleteVolume(Volume volume) {
@@ -176,7 +202,7 @@ public class VolumeService implements VolumeDefinition {
 
     public String createVolumeWithSpecimens(EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(BAR_CODE_FIELD + ":\"" + editableVolumeWithSpecimensDTO.volume().getBarCode() + "\"");
+        solrQuery.addFilterQuery(BAR_CODE_FIELD + ":\"" + ClientUtils.escapeQueryChars(editableVolumeWithSpecimensDTO.volume().getBarCode()) + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(1);
 

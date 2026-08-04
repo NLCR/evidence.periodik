@@ -1,14 +1,16 @@
 package cz.incad.nkp.inprove.permonikapi.metaTitle;
 
+import cz.incad.nkp.inprove.permonikapi.common.DenormalizationService;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.dto.CreatableMetaTitleDTO;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.dto.MetaTitleOverviewDTO;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.mapper.CreatableMetaTitleMapper;
 import cz.incad.nkp.inprove.permonikapi.specimen.SpecimenService;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.request.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,11 +32,12 @@ public class MetaTitleService implements MetaTitleDefinition {
     private final SpecimenService specimenService;
     private final SolrClient solrClient;
     private final CreatableMetaTitleMapper creatableMetaTitleMapper;
+    private final DenormalizationService denormalizationService;
 
 
     public MetaTitle getMetaTitleById(String metaTitleId) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + metaTitleId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitleId) + "\"");
 
         if (getCurrentUser() == null) {
             solrQuery.addFilterQuery(IS_PUBLIC_FIELD + ":true");
@@ -95,7 +98,7 @@ public class MetaTitleService implements MetaTitleDefinition {
 
     public void updateMetaTitle(String metaTitleId, MetaTitle metaTitle) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + metaTitleId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitleId) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(META_TITLE_CORE_NAME, solrQuery);
@@ -111,6 +114,10 @@ public class MetaTitleService implements MetaTitleDefinition {
         try {
             solrClient.addBean(META_TITLE_CORE_NAME, metaTitle);
             solrClient.commit(META_TITLE_CORE_NAME);
+
+            denormalizationService.updateMetaTitleInVolumes(metaTitleId, metaTitle.getName());
+            denormalizationService.updateMetaTitleInSpecimens(metaTitleId, metaTitle.getName());
+
             logger.info("MetaTitle {} successfully updated", metaTitle.getId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to update metaTitle", e);
@@ -121,7 +128,7 @@ public class MetaTitleService implements MetaTitleDefinition {
 
     public void createMetaTitle(CreatableMetaTitleDTO metaTitle) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + metaTitle.name() + "\"");
+        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitle.name()) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(META_TITLE_CORE_NAME, solrQuery);

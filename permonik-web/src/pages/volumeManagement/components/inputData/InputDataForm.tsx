@@ -1,11 +1,10 @@
-import { InputDataProps } from './InputData'
+import { type InputDataProps } from './InputData'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider } from 'react-hook-form'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import Table from '@mui/material/Table'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import TableBody from '@mui/material/TableBody'
 import InputDataSelect from './InputDataSelect'
@@ -24,14 +23,11 @@ import {
   useVolumeManagementStore,
 } from '../../../../slices/useVolumeManagementStore'
 import { useEffect } from 'react'
-import {
-  EditableVolumeSchema,
-  TEditableVolume,
-} from '../../../../schema/volume'
+import { type TEditableVolume } from '../../../../schema/volume'
 import InputDataBarCode from './InputDataBarCode'
 import InputDataSignature from './InputDataSignature'
 import { api } from '../../../../api'
-import { TSpecimen } from '../../../../schema/specimen'
+import { type TSpecimen } from '../../../../schema/specimen'
 import InputDataOwner from './InputDataOwner'
 import InputDataNote from './InputDataNote'
 import { duplicateVolume } from '../../../../utils/duplicateVolume/duplicateVolume'
@@ -49,6 +45,7 @@ const InputDataForm = ({
   mutations,
   owners,
   duplicated,
+  formMethods,
 }: Omit<InputDataProps, 'isVolumeLoading'>) => {
   const { volumeId } = useParams()
   const { locked, setLocked } = useInputDataEditabilityContext()
@@ -57,11 +54,6 @@ const InputDataForm = ({
   const setHasUnsavedData = useVolumeManagementStore(
     (state) => state.setStateHasUnsavedData
   )
-
-  const methods = useForm<TEditableVolume>({
-    defaultValues: volume ?? initialState.volumeState,
-    resolver: zodResolver(EditableVolumeSchema),
-  })
 
   const [searchParams] = useSearchParams()
   const fieldsToReset =
@@ -80,7 +72,7 @@ const InputDataForm = ({
 
   useEffect(() => {
     const preLoadDuplicateSource = async () => {
-      if (!volume && duplicated && !methods.getValues('metaTitleId')) {
+      if (!volume && duplicated && !formMethods.getValues('metaTitleId')) {
         const volumeDuplicateSourceId = searchParams.get(
           'volumeDuplicateSourceId'
         )
@@ -98,7 +90,7 @@ const InputDataForm = ({
             fieldsToReset
           )
 
-        methods.reset(duplicatedVolume)
+        formMethods.reset(duplicatedVolume)
         setVolumeState(duplicatedVolume, true)
         setSpecimensState(duplicatedSpecimens, true)
       }
@@ -110,7 +102,7 @@ const InputDataForm = ({
 
   useEffect(() => {
     if (!duplicated) {
-      methods.reset(
+      formMethods.reset(
         volumeId
           ? (volume ?? initialState.volumeState)
           : initialState.volumeState
@@ -125,22 +117,25 @@ const InputDataForm = ({
         basicFieldsToReset.includes(f)
       )) {
         if (field === FieldsToReset.mutationMark) {
-          methods.setValue('mutationMark', emptyMutationMark)
+          formMethods.setValue('mutationMark', emptyMutationMark)
         } else {
-          methods.setValue(FieldsToReset[field] as keyof TEditableVolume, '')
+          formMethods.setValue(
+            FieldsToReset[field] as keyof TEditableVolume,
+            ''
+          )
         }
       }
-      methods.setValue('created', null)
-      methods.setValue('createdBy', null)
-      methods.setValue('updated', null)
-      methods.setValue('updatedBy', null)
-      methods.setValue('id', '')
+      formMethods.setValue('created', null)
+      formMethods.setValue('createdBy', null)
+      formMethods.setValue('updated', null)
+      formMethods.setValue('updatedBy', null)
+      formMethods.setValue('id', '')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duplicated, volumeId, fieldsToReset.toString()])
 
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...formMethods}>
       <Table
         size="small"
         sx={{
@@ -173,10 +168,10 @@ const InputDataForm = ({
                     (metatitle) => metatitle.id === value
                   )?.name
 
-                  const periodicity = methods.getValues('periodicity')
+                  const periodicity = formMethods.getValues('periodicity')
                   periodicity.forEach((day, index) => {
                     if (day.numExists) {
-                      methods.setValue(
+                      formMethods.setValue(
                         `periodicity.${index}.name`,
                         metaTitle ?? ''
                       )
@@ -241,7 +236,7 @@ const InputDataForm = ({
           onConfirm={() => {
             // cancel editing
             if (!locked) {
-              methods.reset()
+              formMethods.reset()
               setHasUnsavedData(false)
             }
             setLocked(!locked)

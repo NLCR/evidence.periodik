@@ -1,29 +1,29 @@
-import { FC, RefObject, useEffect, useMemo, useRef } from 'react'
+import { type FC, type RefObject, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  gridClasses,
-  GridColDef,
-  GridRenderCellParams,
   DataGridPro,
-  GridColumnHeaderParams,
-  GridApiPro,
-  GridAlignment,
+  type GridAlignment,
+  type GridApiPro,
+  gridClasses,
+  type GridColDef,
+  type GridColumnHeaderParams,
+  type GridRenderCellParams,
 } from '@mui/x-data-grid-pro'
 import Box from '@mui/material/Box'
 import { alpha, styled } from '@mui/material/styles'
 import Checkbox from '@mui/material/Checkbox'
 import {
-  GridCellParams,
-  GridRenderEditCellParams,
+  type GridCellParams,
+  type GridRenderEditCellParams,
 } from '@mui/x-data-grid/models/params/gridCellParams'
 import { blue, pink } from '@mui/material/colors'
 import {
-  TEditableSpecimen,
-  TSpecimenDamageTypes,
+  type TEditableSpecimen,
+  type TSpecimenDamageTypes,
 } from '../../../schema/specimen'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { TMutation } from '../../../schema/mutation'
-import { TEdition } from '../../../schema/edition'
+import { type TMutation } from '../../../schema/mutation'
+import { type TEdition } from '../../../schema/edition'
 import DamagedAndMissingPagesEditCell from './editCells/DamagedAndMissingPagesEditCell'
 import DamageTypesEditCell from './editCells/DamageTypesEditCell'
 import MutationMarkSelectorModalContainer from './editCells/MutationMarkSelectorModalContainer'
@@ -40,7 +40,6 @@ import {
   canUseAttachmentOnDate,
   checkAttachmentChange,
   filterSpecimen,
-  getPublicationDay,
 } from '../../../utils/specimen'
 import { validate as uuidValidate } from 'uuid'
 import TableHeader from './TableHeader'
@@ -50,13 +49,13 @@ import DeletionEditCell from './editCells/DeletionEditCell'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
-import { GridApiCommunity } from '@mui/x-data-grid/internals'
+import { type GridApiCommunity } from '@mui/x-data-grid/internals'
 import { useFormatDate } from '../../../utils/date'
 import {
   getMutationMarkLabel,
   isUnmarkedMutationMark,
 } from '../../../utils/mutationMark'
-import dayjs from 'dayjs'
+import { useMeQuery } from '../../../api/user'
 import { toast } from 'react-toastify'
 
 const ODD_OPACITY = 0.2
@@ -221,9 +220,17 @@ const renderDuplicationEditCell = (
 const renderDeletionEditCell = (
   row: TEditableSpecimen,
   api: GridApiCommunity,
-  canEdit: boolean
+  canEdit: boolean,
+  currentUserId: string | undefined
 ) => {
-  return <DeletionEditCell row={row} api={api} canEdit={canEdit} />
+  return (
+    <DeletionEditCell
+      row={row}
+      api={api}
+      canEdit={canEdit}
+      currentUserId={currentUserId}
+    />
+  )
 }
 
 interface TableProps {
@@ -239,6 +246,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
   const { formatDate } = useFormatDate()
   const { disabled, locked: isInputDataLocked } =
     useInputDataEditabilityContext()
+  const me = useMeQuery()
 
   const [searchParams] = useSearchParams()
 
@@ -344,7 +352,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
               headerAlign: 'center' as GridAlignment,
               renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
                 const { api, row } = params
-                return renderDeletionEditCell(row, api, !disabled)
+                return renderDeletionEditCell(row, api, !disabled, me.data?.id)
               },
             },
           ]
@@ -512,7 +520,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
             canUseAttachmentOnDate({
               editions,
               specimens: specimensState,
-              publicationDateString: getPublicationDay(row),
+              publicationDate: row.publicationDate,
               candidateRowId: row.id,
             })
 
@@ -621,7 +629,9 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
               title={
                 isUnmarked
                   ? t('volume_overview.mutation_mark_tab_unmarked')
-                  : (row.mutationMark.description ?? row.mutationMark.mark)
+                  : (row.mutationMark?.description ??
+                    row.mutationMark?.mark ??
+                    '')
               }
             >
               {renderValue(
@@ -948,14 +958,15 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       },
     ],
     [
-      apiRef,
-      disabled,
-      editions,
-      languageCode,
-      mutations,
-      specimensState,
       t,
+      disabled,
+      mutations,
+      editions,
+      specimensState,
       formatDate,
+      me.data?.id,
+      apiRef,
+      languageCode,
     ]
   )
 
@@ -977,9 +988,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       canUseAttachmentOnDate({
         editions,
         specimens: specimensState,
-        publicationDateString:
-          row.publicationDateString ||
-          dayjs(row.publicationDate).format('YYYYMMDD'),
+        publicationDate: row.publicationDate,
         candidateRowId: row.id,
       })
 

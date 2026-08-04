@@ -1,18 +1,18 @@
-import { FC, useEffect, useState } from 'react'
+import { type FC, useState } from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { useTranslation } from 'react-i18next'
-import { TEditableSpecimen } from '../../../../schema/specimen'
-import { TEditableVolume } from '../../../../schema/volume'
+import { type TEditableSpecimen } from '../../../../schema/specimen'
+import { type TEditableVolume } from '../../../../schema/volume'
 import ModalContainer from '../../../../components/ModalContainer'
 import { TabSelect } from '../../../../components/TabSelect'
 import Checkbox from '@mui/material/Checkbox'
 import { toast } from 'react-toastify'
 import {
   emptyMutationMark,
-  TMutationMark,
-  TMutationMarkType,
+  type TMutationMark,
+  type TMutationMarkType,
 } from '../../../../utils/mutationMark'
 
 const marks = ['●', '○', '■', '□', '★', '☆', '△', '▲', '✶'] as const
@@ -39,14 +39,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
     inputMarkState.mark === '?'
   )
 
-  useEffect(() => {
-    if (open) {
-      setInputMarkState(row.mutationMark ?? emptyMutationMark)
-    }
-  }, [open, row.mutationMark])
-
   const doClose = () => {
-    // setInputMarks('')
     onClose()
   }
 
@@ -68,20 +61,16 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
   }
 
   const handleSymbolSelect = (symbol: TMarks) => {
-    // if (inputMarks === '' || inputMarks.includes(symbol)) {
     setInputMarkState((prevState) => ({
       ...prevState,
       mark: prevState.mark + symbol,
     }))
-    // }
   }
 
   const handleInputChange = (value: string) => {
     if (
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      marks.includes(value) ||
       value === '' ||
+      (marks as readonly string[]).includes(value) ||
       (inputMarkState.mark && value.length < inputMarkState.mark.length)
     )
       setInputMarkState((prev) => ({ ...prev, mark: value.trim() }))

@@ -1,28 +1,28 @@
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { type Dispatch, type SetStateAction } from 'react'
 import { generateVolumeUrlWithParams } from '../../../../../utils/generateVolumeUrlWithParams'
-import { TSpecimen } from '../../../../../schema/specimen'
-import { TMutation } from '../../../../../schema/mutation'
-import { TEdition } from '../../../../../schema/edition'
+import { type TSpecimenOverview } from '../../../../../schema/specimen'
+import { type TMutation } from '../../../../../schema/mutation'
+import { type TEdition } from '../../../../../schema/edition'
 import { useLanguageCode } from '../../../../../hooks/useLanguageCode'
 import { useTranslation } from 'react-i18next'
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined'
-import { TOwner } from '../../../../../schema/owner'
+import { type TOwner } from '../../../../../schema/owner'
 import { Link as ReactLink, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { TLibrarySpecimenIds } from '../models'
+import { type TLibrarySpecimenIds } from '../models'
 import ky from 'ky'
 import LibraryExternalLink from './LibraryExternalLink'
 import theme from '../../../../../theme'
 
 type Props = {
-  specimen: TSpecimen
+  specimen: TSpecimenOverview
   mutations: TMutation[] | undefined
   editions: TEdition[] | undefined
   owners: TOwner[] | undefined
-  setSubModalData: Dispatch<SetStateAction<TSpecimen | null>>
+  setSubModalData: Dispatch<SetStateAction<TSpecimenOverview | null>>
 }
 
 const CalendarMainModalTableRow = ({

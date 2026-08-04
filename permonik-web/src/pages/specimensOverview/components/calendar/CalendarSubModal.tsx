@@ -1,17 +1,17 @@
 import { t } from 'i18next'
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { type Dispatch, type SetStateAction } from 'react'
 import ModalContainer from '../../../../components/ModalContainer'
 import VolumeStatsModalContent from '../../../../components/VolumeStatsModalContent'
 import { generateVolumeUrlWithParams } from '../../../../utils/generateVolumeUrlWithParams'
 import { useNavigate, useParams } from 'react-router-dom'
-import { TSpecimen } from '../../../../schema/specimen'
+import { type TSpecimenOverview } from '../../../../schema/specimen'
 import { useTranslation } from 'react-i18next'
 import DuplicateVolumeButton from '../../../../components/DuplicateVolumeButton'
 import { useMeQuery } from '../../../../api/user'
 
 type Props = {
-  subModalData: TSpecimen | null
-  setSubModalData: Dispatch<SetStateAction<TSpecimen | null>>
+  subModalData: TSpecimenOverview | null
+  setSubModalData: Dispatch<SetStateAction<TSpecimenOverview | null>>
 }
 
 const CalendarSubModal = ({ setSubModalData, subModalData }: Props) => {

@@ -1,22 +1,22 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import React, { FC, useState } from 'react'
+import React, { type FC, useState } from 'react'
 import flow from 'lodash/flow'
 import groupBy from 'lodash/groupBy'
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import { TSpecimen } from '../../../../schema/specimen'
+import { type TSpecimenOverview } from '../../../../schema/specimen'
 import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
-import { TMetaTitle } from '../../../../schema/metaTitle'
+import { type TMetaTitle } from '../../../../schema/metaTitle'
 import ShowInfoMessage from '../../../../components/ShowInfoMessage'
 import { useMutationListQuery } from '../../../../api/mutation'
 import Loader from '../../../../components/Loader'
 import { useSpecimenListQuery } from '../../../../api/specimen'
 import ShowError from '../../../../components/ShowError'
 import { useLanguageCode } from '../../../../hooks/useLanguageCode'
-import { TMainModalData } from './models'
+import { type TMainModalData } from './models'
 import CalendarMainModal from './mainModal/CalendarMainModal'
 import theme from '../../../../theme'
 import Button from '@mui/material/Button'
@@ -33,7 +33,7 @@ type TProps = {
 type TSpecimensDay = {
   day: string
   isPreviousMonth: boolean
-  specimens: TSpecimen[][]
+  specimens: TSpecimenOverview[][]
 }[]
 
 const getFirstMondayOfMonth = (date: Date | null) => {
@@ -81,7 +81,7 @@ const Calendar: FC<TProps> = ({ metaTitle, switchToTable }) => {
   }
 
   const groupedSpecimensByDay = flow(
-    (rawSpecimens: TSpecimen[]) =>
+    (rawSpecimens: TSpecimenOverview[]) =>
       groupBy(rawSpecimens, (s) => s.publicationDate),
     (groupedSpecimens) =>
       map(groupedSpecimens, (value, key) => ({ day: key, specimens: value }))

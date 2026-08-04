@@ -1,28 +1,9 @@
 import type { TVolume } from '../schema/volume'
 import { v4 as uuid } from 'uuid'
-import { TEdition } from '../schema/edition'
+import { type TEdition } from '../schema/edition'
 import { copyAuditable } from '../schema/common'
-import { TEditableSpecimen, TSpecimen } from '../schema/specimen'
+import { type TEditableSpecimen, type TSpecimen } from '../schema/specimen'
 import { emptyMutationMark, repairMutationMark } from './mutationMark'
-import dayjs from 'dayjs'
-
-/**
- * Normalizes specimen publication day to YYYYMMDD.
- *
- * Uses `publicationDateString` when present, otherwise falls back to
- * formatting `publicationDate` via dayjs. Returns empty string if date
- * cannot be resolved.
- */
-export const getPublicationDay = (
-  specimen: Partial<TEditableSpecimen>
-): string => {
-  if (specimen.publicationDateString) {
-    return specimen.publicationDateString
-  }
-
-  const parsedDate = dayjs(specimen.publicationDate)
-  return parsedDate.isValid() ? parsedDate.format('YYYYMMDD') : ''
-}
 
 export const isAttachmentSpecimen = (
   specimen: Partial<TEditableSpecimen>,
@@ -46,12 +27,12 @@ export const isAttachmentSpecimen = (
 export const canUseAttachmentOnDate = ({
   editions,
   specimens,
-  publicationDateString,
+  publicationDate,
   candidateRowId,
 }: {
   editions: TEdition[]
   specimens: TEditableSpecimen[]
-  publicationDateString: string
+  publicationDate: string
   candidateRowId?: string
 }): boolean => {
   const attachmentEditions = editions.filter(
@@ -61,7 +42,7 @@ export const canUseAttachmentOnDate = ({
   return specimens.some((specimen) => {
     if (!specimen.numExists) return false
     if (candidateRowId && specimen.id === candidateRowId) return false
-    if (getPublicationDay(specimen) !== publicationDateString) return false
+    if (specimen.publicationDate !== publicationDate) return false
 
     return !isAttachmentSpecimen(specimen, attachmentEditions)
   })
@@ -86,7 +67,7 @@ export const canDeleteSpecimen = ({
     return true
   }
 
-  const publicationDay = getPublicationDay(candidateRow)
+  const publicationDay = candidateRow.publicationDate
   const specimensOnSameDay = specimens.filter((specimen) => {
     if (
       specimen.deleted ||
@@ -96,7 +77,7 @@ export const canDeleteSpecimen = ({
       return false
     }
 
-    return getPublicationDay(specimen) === publicationDay
+    return specimen.publicationDate === publicationDay
   })
 
   const hasRegularIssue = specimensOnSameDay.some(
@@ -115,12 +96,9 @@ export const filterSpecimen = (
   return {
     ...copyAuditable(specimen),
     id: specimen.id,
-    metaTitleId: specimen.metaTitleId,
     volumeId: specimen.volumeId,
-    barCode: specimen.barCode.trim(),
     numExists: specimen.numExists,
     numMissing: specimen.numMissing,
-    ownerId: specimen.ownerId,
     damageTypes: specimen.damageTypes,
     damagedPages: specimen.damagedPages,
     missingPages: specimen.missingPages,
@@ -131,7 +109,6 @@ export const filterSpecimen = (
     mutationId: specimen.mutationId,
     mutationMark: repairMutationMark(specimen.mutationMark),
     publicationDate: specimen.publicationDate,
-    publicationDateString: specimen.publicationDateString,
     number: specimen.number.trim(),
     attachmentNumber: specimen.attachmentNumber.trim(),
     pagesCount: Number(
@@ -149,12 +126,9 @@ export const repairOrCreateSpecimen = (
   return {
     ...copyAuditable(specimen),
     id: specimen.id ?? uuid(),
-    metaTitleId: volume.metaTitleId,
     volumeId: volume.id,
-    barCode: volume.barCode.trim(),
     numExists: specimen.numExists ?? false,
     numMissing: specimen.numMissing ?? false,
-    ownerId: volume.ownerId,
     damageTypes: specimen.damageTypes ?? [],
     damagedPages: specimen.damagedPages ?? [],
     missingPages: specimen.missingPages ?? [],
@@ -165,7 +139,6 @@ export const repairOrCreateSpecimen = (
     mutationId: specimen.mutationId ?? '',
     mutationMark: repairMutationMark(specimen.mutationMark),
     publicationDate: specimen.publicationDate ?? '',
-    publicationDateString: specimen.publicationDateString ?? '',
     number: specimen.number?.trim() ?? '',
     attachmentNumber: specimen.attachmentNumber?.trim() ?? '',
     pagesCount: specimen.pagesCount ?? 0,
@@ -178,12 +151,9 @@ export const duplicatePartialSpecimen = (
 ): TEditableSpecimen => {
   return {
     id: uuid(),
-    metaTitleId: specimen.metaTitleId ?? '',
     volumeId: specimen.volumeId ?? '',
-    barCode: specimen.barCode ?? '',
     numExists: specimen.numExists ?? false,
     numMissing: specimen.numMissing ?? false,
-    ownerId: specimen.ownerId ?? '',
     damageTypes: specimen.damageTypes ?? [],
     damagedPages: specimen.damagedPages ?? [],
     missingPages: specimen.missingPages ?? [],
@@ -194,7 +164,6 @@ export const duplicatePartialSpecimen = (
     mutationId: specimen.mutationId ?? '',
     mutationMark: specimen.mutationMark ?? emptyMutationMark,
     publicationDate: specimen.publicationDate ?? '',
-    publicationDateString: specimen.publicationDateString ?? '',
     number: specimen.number ?? '',
     attachmentNumber: specimen.attachmentNumber ?? '',
     pagesCount: specimen.pagesCount ?? 0,

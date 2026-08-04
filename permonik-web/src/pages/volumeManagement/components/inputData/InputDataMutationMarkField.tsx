@@ -1,15 +1,15 @@
 import LockedInputDataItem from './LockedInputDataItem'
-import TextField, { TextFieldProps } from '@mui/material/TextField'
+import TextField, { type TextFieldProps } from '@mui/material/TextField'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import { useState } from 'react'
 import MutationMarkSelectorModal from '../editCells/MutationMarkSelectorModal'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
   getMutationMarkCompoundValue,
   hasMutationMark,
-  TMutationMark,
+  type TMutationMark,
 } from '../../../../utils/mutationMark'
 
 type FieldProps = {
@@ -24,11 +24,11 @@ const Field = ({
 }: FieldProps & TextFieldProps) => {
   const [isModalOpened, setIsModalOpened] = useState(false)
   const volumeState = useVolumeManagementStore((state) => state.volumeState)
-  const { setValue, watch } = useFormContext()
+  const { setValue, control } = useFormContext()
 
   const fieldName = avoidInternal ? 'mutationMark' : 'mutationMark_internal'
 
-  const mutationMark = watch(fieldName)
+  const mutationMark = useWatch({ name: fieldName, control })
   const value = getMutationMarkCompoundValue(mutationMark)
 
   return (
@@ -46,26 +46,28 @@ const Field = ({
         onClick={() => setIsModalOpened(true)}
       />
 
-      <MutationMarkSelectorModal
-        row={{
-          ...volumeState,
-          mutationMark: mutationMark ?? volumeState.mutationMark,
-        }}
-        open={isModalOpened}
-        onClose={() => setIsModalOpened(false)}
-        onSave={(data) => {
-          setValue(fieldName, data.mutationMark, {
-            shouldDirty: true,
-          })
-        }}
-      />
+      {isModalOpened && (
+        <MutationMarkSelectorModal
+          row={{
+            ...volumeState,
+            mutationMark: mutationMark ?? volumeState.mutationMark,
+          }}
+          open={isModalOpened}
+          onClose={() => setIsModalOpened(false)}
+          onSave={(data) => {
+            setValue(fieldName, data.mutationMark, {
+              shouldDirty: true,
+            })
+          }}
+        />
+      )}
     </>
   )
 }
 
 const InputDataMutationMarkField = (props: TextFieldProps) => {
   const { locked, disabled } = useInputDataEditabilityContext()
-  const { getValues, watch, setValue } = useFormContext()
+  const { getValues, control, setValue } = useFormContext()
 
   const setMutationMark = useVolumeManagementStore(
     (state) => state.volumeActions.setMutationMark
@@ -79,7 +81,10 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
     (state) => state.specimensActions.setSpecimensState
   )
 
-  const mutationMark = watch('mutationMark') as TMutationMark
+  const mutationMark = useWatch({
+    name: 'mutationMark',
+    control,
+  }) as TMutationMark
   const value = getMutationMarkCompoundValue(mutationMark)
 
   return locked ? (

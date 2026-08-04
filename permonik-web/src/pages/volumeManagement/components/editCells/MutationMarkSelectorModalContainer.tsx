@@ -1,6 +1,6 @@
-import { GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
+import { type GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
 import React, { useState } from 'react'
-import { TEditableSpecimen } from '../../../../schema/specimen'
+import { type TEditableSpecimen } from '../../../../schema/specimen'
 import MutationMarkSelectorModal from './MutationMarkSelectorModal'
 import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
@@ -30,12 +30,14 @@ const MutationMarkSelectorModalContainer = (
           <EditIcon />
         </IconButton>
       </Box>
-      <MutationMarkSelectorModal
-        row={row}
-        open={modalOpened}
-        onClose={() => setModalOpened(false)}
-        onSave={(data) => handleSave(data as TEditableSpecimen)}
-      />
+      {modalOpened && (
+        <MutationMarkSelectorModal
+          row={row}
+          open={modalOpened}
+          onClose={() => setModalOpened(false)}
+          onSave={(data) => handleSave(data as TEditableSpecimen)}
+        />
+      )}
     </>
   )
 }

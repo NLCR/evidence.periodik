@@ -4,28 +4,29 @@ import clone from 'lodash/clone'
 import { useTranslation } from 'react-i18next'
 import { useVolumeManagementStore } from '../slices/useVolumeManagementStore'
 import { VolumeSchema } from '../schema/volume'
-import { SpecimenSchema, TEditableSpecimen } from '../schema/specimen'
+import { SpecimenSchema, type TEditableSpecimen } from '../schema/specimen'
 import {
   useCreateVolumeWithSpecimensMutation,
   useDeleteVolumeWithSpecimensMutation,
   useUpdateOvergeneratedVolumeWithSpecimensMutation,
   useUpdateVolumeWithSpecimensMutation,
 } from '../api/volume'
-import { TEdition } from '../schema/edition'
+import { type TEdition } from '../schema/edition'
 import { BACK_META_TITLE_ID } from '../utils/constants'
 import { generateVolumeUrlWithParams } from '../utils/generateVolumeUrlWithParams'
 import { repairOrCreateSpecimen } from '../utils/specimen'
 import { repairVolume } from '../utils/volume'
 import { waitFor } from '../utils/waitFor'
 import i18next from '../i18next'
-import { RefObject } from 'react'
-import { GridApiPro } from '@mui/x-data-grid-pro/models'
+import { type RefObject } from 'react'
+import { type GridApiPro } from '@mui/x-data-grid-pro/models'
 import { duplicateVolume } from '../utils/duplicateVolume/duplicateVolume'
-import { FieldsToReset } from '../utils/duplicateVolume/types'
+import { type FieldsToReset } from '../utils/duplicateVolume/types'
 
 const useVolumeManagementActions = (
   apiRef: RefObject<GridApiPro | null>,
-  editions: TEdition[]
+  editions: TEdition[],
+  markVolumeFormSaved: () => void
 ) => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
@@ -45,6 +46,9 @@ const useVolumeManagementActions = (
   const specimensActions = useVolumeManagementStore(
     (state) => state.specimensActions
   )
+  const volumePeriodicityActions = useVolumeManagementStore(
+    (state) => state.volumePeriodicityActions
+  )
   const setStateHasUnsavedData = useVolumeManagementStore(
     (state) => state.setStateHasUnsavedData
   )
@@ -53,16 +57,30 @@ const useVolumeManagementActions = (
     useVolumeManagementStore.getState().specimensActions.setSpecimensState
 
   const doValidation = (useMinSpecimensCount = true) => {
+    const unflushedRows: TEditableSpecimen[] = []
     // flush unflushed updates
     apiRef.current?.getAllRowIds().forEach((rowId) => {
       if (apiRef.current?.getRowMode(rowId) === 'edit') {
         apiRef.current?.stopRowEditMode({ id: rowId })
+        const row =
+          apiRef.current.getRowWithUpdatedValues(rowId, '') ??
+          apiRef.current.getRow(rowId)
+        if (row) unflushedRows.push(row as TEditableSpecimen)
       }
     })
+    const unflushedRowIds = unflushedRows.map((i) => i.id)
 
     //get state when is necessary → this approach doesn't cause rerender of functions and whole hook
     const volumeState = useVolumeManagementStore.getState().volumeState
-    const specimensState = useVolumeManagementStore.getState().specimensState
+    const specimensState = useVolumeManagementStore
+      .getState()
+      .specimensState.map((specimen) => {
+        if (unflushedRowIds.includes(specimen.id)) {
+          const newRow = unflushedRows.find((row) => row.id === specimen.id)
+          if (newRow) return newRow
+        }
+        return specimen
+      })
 
     const volumeClone = clone(volumeState)
     const specimensClone = clone(specimensState)
@@ -79,13 +97,13 @@ const useVolumeManagementActions = (
 
     if (!volumeValidation.success) {
       // toast.error(t('volume_overview.volume_input_data_validation_error'))
-      volumeValidation.error.errors.forEach((e) => toast.error(e.message))
+      volumeValidation.error.issues.forEach((e) => toast.error(e.message))
 
       throw new Error(volumeValidation.error.message)
     }
     if (!specimensValidation.success) {
       // toast.error(t('volume_overview.specimens_validation_error'))
-      specimensValidation.error.errors.forEach((e) => toast.error(e.message))
+      specimensValidation.error.issues.forEach((e) => toast.error(e.message))
 
       throw new Error(specimensValidation.error.message)
     }
@@ -126,6 +144,7 @@ const useVolumeManagementActions = (
         })
         toast.success(t('volume_overview.volume_updated_successfully'))
         setStateHasUnsavedData(false)
+        markVolumeFormSaved()
 
         setSpecimensState(newSpecimens, false)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -133,7 +152,6 @@ const useVolumeManagementActions = (
         // toast.error(t('volume_overview.volume_update_error'))
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }
@@ -154,6 +172,8 @@ const useVolumeManagementActions = (
 
         toast.success(t('volume_overview.volume_updated_successfully'))
         setStateHasUnsavedData(false)
+        markVolumeFormSaved()
+        volumePeriodicityActions.setPeriodicityGenerationUsed(false)
 
         setSpecimensState(newSpecimens, false)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -161,7 +181,6 @@ const useVolumeManagementActions = (
         // toast.error(t('volume_overview.volume_update_error'))
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }
@@ -181,6 +200,7 @@ const useVolumeManagementActions = (
             : data.repairedSpecimens,
         })
         setStateHasUnsavedData(false)
+        markVolumeFormSaved()
         await waitFor(
           () => !useVolumeManagementStore.getState().stateHasUnsavedData
         )
@@ -193,7 +213,6 @@ const useVolumeManagementActions = (
         // toast.error(t('volume_overview.volume_create_error'))
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }
@@ -222,7 +241,6 @@ const useVolumeManagementActions = (
         // toast.error(t('volume_overview.volume_deletion_error'))
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }
@@ -255,7 +273,6 @@ const useVolumeManagementActions = (
       specimensActions.setSpecimensState(duplicatedSpecimens, true)
       volumeActions.setVolumeState(duplicatedVolume, true)
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e)
     }
   }

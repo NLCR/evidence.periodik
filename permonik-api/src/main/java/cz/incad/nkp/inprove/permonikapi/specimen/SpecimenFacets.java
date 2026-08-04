@@ -1,10 +1,13 @@
 package cz.incad.nkp.inprove.permonikapi.specimen;
 
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.SpecimenStateDTO;
+import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDefinition;
 import lombok.*;
+import org.apache.solr.client.solrj.util.ClientUtils;
 
-import java.time.Instant;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,8 +20,8 @@ import java.util.stream.Collectors;
 @Getter
 public class SpecimenFacets implements SpecimenDefinition {
 
-    private Instant dateStart;
-    private Instant dateEnd;
+    private Date dateStart;
+    private Date dateEnd;
     private String calendarDateStart;
     private String calendarDateEnd;
     private List<String> names;
@@ -33,13 +36,13 @@ public class SpecimenFacets implements SpecimenDefinition {
 
     private String doUUIDListCollection(List<String> facetList, String field) {
         return facetList.stream()
-            .map(facet -> field + ":\"" + facet + "\"")
+            .map(facet -> field + ":\"" + ClientUtils.escapeQueryChars(facet) + "\"")
             .collect(Collectors.joining(" AND "));
     }
 
     private String doTextListCollection(List<String> namesList, String field, Boolean valueCanBeNull) {
         return namesList.stream()
-            .map(text -> text.isEmpty() ? valueCanBeNull ? "-" + field + ":[* TO *]" : field + ":\"\"" : field + ":\"" + text + "\"")
+            .map(text -> text.isEmpty() ? valueCanBeNull ? "-" + field + ":[* TO *]" : field + ":\"\"" : field + ":\"" + ClientUtils.escapeQueryChars(text) + "\"")
             .collect(Collectors.joining(" AND "));
     }
 
@@ -72,7 +75,7 @@ public class SpecimenFacets implements SpecimenDefinition {
     }
 
     String getBarCodeQueryString() {
-        return BAR_CODE_FIELD + ":*" + barCode + "*";
+        return BAR_CODE_FIELD + ":*" + ClientUtils.escapeQueryChars(barCode) + "*";
     }
 
     String getSpecimenStatesQueryString() {

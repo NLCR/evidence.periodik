@@ -1,21 +1,17 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { api, queryClient } from './index'
-import { TVolume, TVolumeDetail, TVolumeOverviewStats } from '../schema/volume'
-import { TSpecimen } from '../schema/specimen'
+import {
+  type TVolume,
+  type TVolumeDetail,
+  type TVolumeOverviewStats,
+} from '../schema/volume'
+import { type TSpecimen } from '../schema/specimen'
 
 export const useManagedVolumeDetailQuery = (id?: string) =>
   useQuery({
     queryKey: ['volume', 'detail', id],
     queryFn: () =>
       api().get(`volume/${id}/detail`).json<TVolumeDetail | null>(),
-    enabled: !!id,
-  })
-
-export const usePublicVolumeDetailQuery = (id?: string) =>
-  useQuery({
-    queryKey: ['volume', 'detail', id, 'public'],
-    queryFn: () =>
-      api().get(`volume/${id}/detail/public`).json<TVolumeDetail | null>(),
     enabled: !!id,
   })
 

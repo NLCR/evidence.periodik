@@ -1,7 +1,10 @@
-import { TEditableVolume } from '../../schema/volume'
+import { type TEditableVolume } from '../../schema/volume'
 import { v4 as uuid } from 'uuid'
 import { emptyMutationMark } from '../mutationMark'
-import { TEditableSpecimen, TSpecimenDamageTypes } from '../../schema/specimen'
+import {
+  type TEditableSpecimen,
+  type TSpecimenDamageTypes,
+} from '../../schema/specimen'
 import { FieldsToReset } from './types'
 
 const resetDamageTypes = (
@@ -67,7 +70,7 @@ export function duplicateVolume(
     firstNumber: volumeData.firstNumber,
     lastNumber: volumeData.lastNumber,
     note: fieldsToReset.includes(FieldsToReset.note) ? '' : volumeData.note,
-    showAttachmentsAtTheEnd: volumeData.showAttachmentsAtTheEnd,
+    attachmentsSort: volumeData.attachmentsSort,
     signature: fieldsToReset.includes(FieldsToReset.signature)
       ? ''
       : volumeData.signature,
@@ -82,9 +85,7 @@ export function duplicateVolume(
   const duplicatedSpecimens: TEditableSpecimen[] = specimensData.map(
     (specimen: TEditableSpecimen) => ({
       id: uuid(),
-      metaTitleId: specimen.metaTitleId,
       volumeId: duplicatedVolume.id,
-      barCode: specimen.barCode,
       numExists: specimen.numExists,
       numMissing: specimen.numMissing,
       ownerId: duplicatedVolume.ownerId,
@@ -102,7 +103,6 @@ export function duplicateVolume(
       mutationId: specimen.mutationId,
       mutationMark: specimen.mutationMark,
       publicationDate: specimen.publicationDate,
-      publicationDateString: specimen.publicationDateString,
       number: specimen.number,
       attachmentNumber: specimen.attachmentNumber,
       pagesCount: specimen.pagesCount,

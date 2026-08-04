@@ -1,10 +1,16 @@
-import { FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid-pro'
+import {
+  type GridColDef,
+  type GridRenderCellParams,
+} from '@mui/x-data-grid-pro'
 import CheckIcon from '@mui/icons-material/Check'
 import Box from '@mui/material/Box'
-import { TEditableSpecimen, TSpecimen } from '../../../schema/specimen'
-import { TVolumeDetail } from '../../../schema/volume'
+import {
+  type TEditableSpecimen,
+  type TSpecimen,
+} from '../../../schema/specimen'
+import { type TVolumeDetail } from '../../../schema/volume'
 import { useMutationListQuery } from '../../../api/mutation'
 import { useEditionListQuery } from '../../../api/edition'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
