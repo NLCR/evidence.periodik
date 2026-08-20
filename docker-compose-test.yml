@@ -91,6 +91,9 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
       SOLR_MODULES: analysis-extras
+    command:
+      - solr-fg
+      - --user-managed
     volumes:
       - /data/solr:/var/solr
 

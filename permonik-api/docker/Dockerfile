@@ -32,4 +32,4 @@ COPY --from=builder /extracted/dependencies /app
 COPY --from=builder /extracted/snapshot-dependencies /app
 COPY --from=builder /extracted/spring-boot-loader /app
 COPY --from=builder /extracted/application /app
-ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
+ENTRYPOINT ["java", "-jar", "permonik-api.jar"]
