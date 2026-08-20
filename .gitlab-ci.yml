@@ -11,7 +11,7 @@ stages:
   when: manual
   allow_failure: false
   tags:
-    - docker
+    - runner-8
   script:
     - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
@@ -24,7 +24,7 @@ stages:
   when: manual
   allow_failure: false
   tags:
-    - docker
+    - runner-8
   script:
     - cp "$ENV_FILE" permonik-web/.env
     - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
@@ -38,7 +38,7 @@ stages:
   when: manual
   allow_failure: false
   tags:
-    - docker
+    - runner-8
   script:
     - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
@@ -51,7 +51,7 @@ stages:
   when: manual
   allow_failure: false
   tags:
-    - docker
+    - runner-8
   script:
     - cp "$ENV_FILE" permonik-web/.env
     - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
@@ -65,7 +65,7 @@ test_permonik_api:
   stage: test
   allow_failure: false
   tags:
-    - docker
+    - runner-8
   rules:
     - if: '$CI_COMMIT_BRANCH == "test" || $CI_COMMIT_BRANCH == "prod"'
       when: manual
