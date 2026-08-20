@@ -8,6 +8,7 @@ from xml.etree import ElementTree as ET
 DEFAULT_OLD_URL = "http://localhost:8983/solr"
 DEFAULT_NEW_URL = "http://localhost:8990/solr"
 DEFAULT_BATCH_SIZE = 2000
+MAX_SKIPPED_LOG_MESSAGES = 20
 
 # Ordered by dependencies (references first, then denormalized entities)
 CORE_ORDER = ["metatitle", "edition", "mutation", "owner", "volume", "specimen", "user"]
@@ -16,6 +17,18 @@ CORE_DEPENDENCIES = {
     "specimen": ["metatitle", "edition", "mutation", "owner", "volume"],
 }
 SPECIMEN_DIGIT_RUN = re.compile(r"\d+")
+EXCLUDED_CONTENT_METATITLES = {
+    "2dd007b3-25ad-4402-b548-b86396189004": "Mladá fronta",
+    "04bd6ca1-cd25-40fc-be87-dad2b21ddbd0": "Mladá fronta (TESTOVACÍ DATA)",
+}
+
+
+class SkippedDocumentError(ValueError):
+    pass
+
+
+class OrphanedDocumentError(SkippedDocumentError):
+    pass
 
 
 def pick(doc, *keys):
@@ -266,21 +279,33 @@ def transform_volume(doc, cache):
     mutation_id = out.get("mutation_id", "")
     owner_id = out.get("owner_id", "")
 
+    if metatitle_id in EXCLUDED_CONTENT_METATITLES:
+        raise SkippedDocumentError(
+            f"Volume '{out.get('id', '<no-id>')}' belongs to excluded metatitle "
+            f"'{EXCLUDED_CONTENT_METATITLES[metatitle_id]}'"
+        )
+
     metatitle = cache["metatitle"].get(metatitle_id)
     if not metatitle:
-        raise ValueError(f"Volume '{out.get('id', '<no-id>')}' references unknown metatitle '{metatitle_id}'")
+        raise OrphanedDocumentError(
+            f"Volume '{out.get('id', '<no-id>')}' references unknown metatitle '{metatitle_id}'"
+        )
     out["metatitle_name"] = metatitle.get("name")
 
     mutation = cache["mutation"].get(mutation_id)
     if not mutation:
-        raise ValueError(f"Volume '{out.get('id', '<no-id>')}' references unknown mutation '{mutation_id}'")
+        raise OrphanedDocumentError(
+            f"Volume '{out.get('id', '<no-id>')}' references unknown mutation '{mutation_id}'"
+        )
     out["mutation_name_cs"] = mutation.get("name_cs")
     out["mutation_name_sk"] = mutation.get("name_sk")
     out["mutation_name_en"] = mutation.get("name_en")
 
     owner = cache["owner"].get(owner_id)
     if not owner:
-        raise ValueError(f"Volume '{out.get('id', '<no-id>')}' references unknown owner '{owner_id}'")
+        raise OrphanedDocumentError(
+            f"Volume '{out.get('id', '<no-id>')}' references unknown owner '{owner_id}'"
+        )
     out["owner_name"] = owner.get("name")
     out["owner_shorthand"] = owner.get("shorthand")
     out["owner_sigla"] = owner.get("sigla")
@@ -327,7 +352,9 @@ def transform_specimen(doc, cache):
     volume_id = out.get("volume_id", "")
     volume = cache["volume"].get(volume_id)
     if not volume:
-        raise ValueError(f"Specimen '{out.get('id', '<no-id>')}' references unknown volume '{volume_id}'")
+        raise OrphanedDocumentError(
+            f"Specimen '{out.get('id', '<no-id>')}' references unknown volume '{volume_id}'"
+        )
 
     # Mirrors BE: these fields are always taken from referenced volume, not from input document.
     out["metatitle_id"] = volume.get("metatitle_id")
@@ -338,7 +365,9 @@ def transform_specimen(doc, cache):
     owner_id = out.get("owner_id", "")
     owner = cache["owner"].get(owner_id)
     if not owner:
-        raise ValueError(f"Specimen '{out.get('id', '<no-id>')}' references unknown owner '{owner_id}'")
+        raise OrphanedDocumentError(
+            f"Specimen '{out.get('id', '<no-id>')}' references unknown owner '{owner_id}'"
+        )
     out["owner_name"] = owner.get("name")
     out["owner_shorthand"] = owner.get("shorthand")
     out["owner_sigla"] = owner.get("sigla")
@@ -346,7 +375,9 @@ def transform_specimen(doc, cache):
     edition_id = out.get("edition_id", "")
     edition = cache["edition"].get(edition_id)
     if not edition:
-        raise ValueError(f"Specimen '{out.get('id', '<no-id>')}' references unknown edition '{edition_id}'")
+        raise OrphanedDocumentError(
+            f"Specimen '{out.get('id', '<no-id>')}' references unknown edition '{edition_id}'"
+        )
     out["edition_name_cs"] = edition.get("name_cs")
     out["edition_name_sk"] = edition.get("name_sk")
     out["edition_name_en"] = edition.get("name_en")
@@ -354,7 +385,9 @@ def transform_specimen(doc, cache):
     mutation_id = out.get("mutation_id", "")
     mutation = cache["mutation"].get(mutation_id)
     if not mutation:
-        raise ValueError(f"Specimen '{out.get('id', '<no-id>')}' references unknown mutation '{mutation_id}'")
+        raise OrphanedDocumentError(
+            f"Specimen '{out.get('id', '<no-id>')}' references unknown mutation '{mutation_id}'"
+        )
     out["mutation_name_cs"] = mutation.get("name_cs")
     out["mutation_name_sk"] = mutation.get("name_sk")
     out["mutation_name_en"] = mutation.get("name_en")
@@ -451,6 +484,79 @@ def validate_required(core, doc, required_fields):
         raise ValueError(f"Core '{core}', doc '{doc_id}' missing required fields: {', '.join(missing)}")
 
 
+def fetch_docs(solr, fields, batch_size):
+    cursor_mark = "*"
+    docs = []
+
+    while True:
+        results = solr.search(
+            "*:*",
+            fl=",".join(fields),
+            rows=batch_size,
+            sort="id asc",
+            cursorMark=cursor_mark,
+        )
+        docs.extend(results.docs)
+        next_cursor_mark = results.raw_response.get("nextCursorMark")
+        if cursor_mark == next_cursor_mark:
+            return docs
+        cursor_mark = next_cursor_mark
+
+
+def delete_ids(solr, ids, batch_size):
+    ids = list(ids)
+    for start in range(0, len(ids), batch_size):
+        solr.delete(id=ids[start:start + batch_size])
+
+
+def find_orphan_ids(metatitle_ids, volumes, specimens):
+    volume_ids = {doc["id"] for doc in volumes}
+    referenced_volume_ids = {
+        doc.get("volume_id") for doc in specimens if doc.get("volume_id") in volume_ids
+    }
+    orphan_volume_ids = {
+        doc["id"]
+        for doc in volumes
+        if doc.get("metatitle_id") not in metatitle_ids or doc["id"] not in referenced_volume_ids
+    }
+    valid_volume_ids = volume_ids - orphan_volume_ids
+    orphan_specimen_ids = {
+        doc["id"] for doc in specimens if doc.get("volume_id") not in valid_volume_ids
+    }
+    return orphan_volume_ids, orphan_specimen_ids
+
+
+def cleanup_target(new_base_url, cores, batch_size, dry_run):
+    print("--- Cleaning target data ---")
+
+    if dry_run:
+        print("  skipped (dry run does not modify the target)")
+        return
+
+    if "specimen" not in cores:
+        print("  orphan cleanup skipped (specimen core was not migrated)")
+        return
+
+    metatitle_solr = pysolr.Solr(f"{new_base_url}/metatitle", timeout=120)
+    volume_solr = pysolr.Solr(f"{new_base_url}/volume", always_commit=False, timeout=120)
+    specimen_solr = pysolr.Solr(f"{new_base_url}/specimen", always_commit=False, timeout=120)
+
+    metatitle_ids = {doc["id"] for doc in fetch_docs(metatitle_solr, ["id"], batch_size)}
+    volumes = fetch_docs(volume_solr, ["id", "metatitle_id"], batch_size)
+    specimens = fetch_docs(specimen_solr, ["id", "volume_id"], batch_size)
+    orphan_volume_ids, orphan_specimen_ids = find_orphan_ids(metatitle_ids, volumes, specimens)
+
+    if orphan_specimen_ids:
+        delete_ids(specimen_solr, orphan_specimen_ids, batch_size)
+        specimen_solr.commit()
+    if orphan_volume_ids:
+        delete_ids(volume_solr, orphan_volume_ids, batch_size)
+        volume_solr.commit()
+
+    print(f"  specimen: removed {len(orphan_specimen_ids)} orphan docs")
+    print(f"  volume: removed {len(orphan_volume_ids)} orphan docs")
+
+
 def reindex_core(core, old_base_url, new_base_url, batch_size, schema_info, cache, dry_run, delete_target):
     print(f"--- Migrating core '{core}' ---")
     old_solr = pysolr.Solr(f"{old_base_url}/{core}", timeout=120)
@@ -463,16 +569,22 @@ def reindex_core(core, old_base_url, new_base_url, batch_size, schema_info, cach
 
     target_fields = schema_info[core]["fields"]
     required_fields = schema_info[core]["required"]
+    search_params = {
+        "rows": batch_size,
+        "sort": "id asc",
+    }
+    if "deleted" in target_fields:
+        search_params["fq"] = "-deleted:[* TO *]"
 
     cursor_mark = "*"
     total = 0
+    skipped_documents = 0
 
     while True:
         results = old_solr.search(
             "*:*",
-            rows=batch_size,
-            sort="id asc",
             cursorMark=cursor_mark,
+            **search_params,
         )
         # Important: iterating over `results` auto-fetches all cursor pages in pysolr.
         # We only want the current page here, otherwise outer cursor loop duplicates work.
@@ -486,11 +598,22 @@ def reindex_core(core, old_base_url, new_base_url, batch_size, schema_info, cach
             )
 
         prepared_docs = []
+        skipped_ids = []
         for doc in docs:
             doc.pop("_version_", None)
             doc.pop("_text_", None)
 
-            transformed = transform_doc(core, doc, cache)
+            try:
+                transformed = transform_doc(core, doc, cache)
+            except SkippedDocumentError as error:
+                skipped_documents += 1
+                if doc.get("id"):
+                    skipped_ids.append(doc["id"])
+                if skipped_documents <= MAX_SKIPPED_LOG_MESSAGES:
+                    print(f"\n  skipping document: {error}")
+                elif skipped_documents == MAX_SKIPPED_LOG_MESSAGES + 1:
+                    print("\n  additional skipped-document messages omitted")
+                continue
             transformed = cleanup_doc(transformed, target_fields)
             validate_required(core, transformed, required_fields)
 
@@ -499,6 +622,8 @@ def reindex_core(core, old_base_url, new_base_url, batch_size, schema_info, cach
 
         if prepared_docs and not dry_run:
             new_solr.add(prepared_docs)
+        if skipped_ids and not dry_run:
+            new_solr.delete(id=skipped_ids)
 
         total += len(prepared_docs)
         print(f"  ... processed {total} docs", end="\r")
@@ -509,7 +634,7 @@ def reindex_core(core, old_base_url, new_base_url, batch_size, schema_info, cach
 
     if not dry_run:
         new_solr.commit()
-    print(f"\nCore '{core}': done, total {total} docs.")
+    print(f"\nCore '{core}': done, total {total} docs, skipped {skipped_documents} docs.")
 
 
 def parse_args():
@@ -561,6 +686,13 @@ def main():
             dry_run=args.dry_run,
             delete_target=args.delete_target,
         )
+
+    cleanup_target(
+        new_base_url=args.new_url.rstrip("/"),
+        cores=cores,
+        batch_size=args.batch_size,
+        dry_run=args.dry_run,
+    )
 
     print("Migration finished.")
 

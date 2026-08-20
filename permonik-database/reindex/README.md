@@ -9,6 +9,9 @@ This folder contains a migration script for moving data from the old Solr schema
 - fills required denormalized fields for `volume` and `specimen`
 - validates transformed docs against target `managed-schema.xml`
 - writes transformed docs to the new Solr instance
+- filters out soft-deleted documents while reading every migrated core
+- removes specimens without a valid volume and volumes without a valid metatitle or specimen
+- keeps the `Mladá fronta` metatitles but excludes their volumes and specimens
 
 ## Default ports
 
@@ -36,3 +39,5 @@ cd permonik-database/reindex
   --old-url http://localhost:8983/solr \
   --new-url http://localhost:8990/solr
 ```
+
+The final orphan cleanup runs against the target Solr. It is skipped in `--dry-run` mode.
