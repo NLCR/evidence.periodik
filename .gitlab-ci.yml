@@ -12,7 +12,7 @@ stages:
   when: manual
   allow_failure: false
   tags:
-    - runner-8
+    - docker
   script:
     - 'docker build $DOCKER_BUILD_ARGS --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
@@ -26,9 +26,9 @@ stages:
   when: manual
   allow_failure: false
   tags:
-    - runner-8
+    - docker
   script:
-    - 'docker build --secret id=sentry-auth-token,env=SENTRY_AUTH_TOKEN --secret id=mui-license-key,env=VITE_MUI_LICENCE_KEY --build-arg VITE_SENTRY_DSN --build-arg SENTRY_URL --build-arg SENTRY_ENVIRONMENT --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
+    - 'docker build --secret id=sentry-auth-token,env=SENTRY_AUTH_TOKEN --secret id=mui-license-key,env=VITE_MUI_LICENCE_KEY --build-arg VITE_SENTRY_DSN --build-arg SENTRY_URL --build-arg SENTRY_ENVIRONMENT --build-arg SENTRY_RELEASE --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
     - 'docker push eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest'
   variables:
@@ -40,7 +40,7 @@ stages:
   when: manual
   allow_failure: false
   tags:
-    - runner-8
+    - docker
   script:
     - 'docker build $DOCKER_BUILD_ARGS --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
@@ -54,9 +54,9 @@ stages:
   when: manual
   allow_failure: false
   tags:
-    - runner-8
+    - docker
   script:
-    - 'docker build --secret id=sentry-auth-token,env=SENTRY_AUTH_TOKEN --secret id=mui-license-key,env=VITE_MUI_LICENCE_KEY --build-arg VITE_SENTRY_DSN --build-arg SENTRY_URL --build-arg SENTRY_ENVIRONMENT --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
+    - 'docker build --secret id=sentry-auth-token,env=SENTRY_AUTH_TOKEN --secret id=mui-license-key,env=VITE_MUI_LICENCE_KEY --build-arg VITE_SENTRY_DSN --build-arg SENTRY_URL --build-arg SENTRY_ENVIRONMENT --build-arg SENTRY_RELEASE --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest'
   variables:
@@ -87,6 +87,8 @@ test_permonik_api:
 
 build_permonik_api_test:
   extends: .build
+  tags:
+    - runner-8
   rules:
     - if: '$CI_COMMIT_BRANCH == "test"'
       when: manual
@@ -132,6 +134,8 @@ build_permonik_web_public_test:
 
 build_permonik_api_prod:
   extends: .buildProd
+  tags:
+    - runner-8
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual

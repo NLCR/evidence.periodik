@@ -24,6 +24,7 @@ const {
   MODE,
   VITE_SENTRY_DSN,
   VITE_SENTRY_ENVIRONMENT = 'localhost',
+  VITE_SENTRY_RELEASE,
   VITE_MUI_LICENCE_KEY,
 } = import.meta.env
 
@@ -35,6 +36,7 @@ SentryInit({
   integrations: [browserTracingIntegration(), extraErrorDataIntegration()],
   tracesSampleRate: 0.5,
   environment: VITE_SENTRY_ENVIRONMENT,
+  release: VITE_SENTRY_RELEASE,
   beforeSend(event) {
     return VITE_SENTRY_ENVIRONMENT === 'localhost' ? null : event
   },

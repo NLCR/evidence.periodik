@@ -1,6 +1,7 @@
 services:
   permonik-api:
     image: eu.gcr.io/inqool-1301/permonik/prod/permonik-api:${PERMONIK_TAG}
+    restart: unless-stopped
     depends_on:
       - permonik-database
       - permonik-redis
@@ -25,6 +26,7 @@ services:
 
   permonik-web-admin:
     image: eu.gcr.io/inqool-1301/permonik/prod/permonik-web-admin:${PERMONIK_TAG}
+    restart: unless-stopped
     build:
       context: .
       dockerfile: permonik-web/docker/admin/Dockerfile
@@ -41,6 +43,7 @@ services:
 
   permonik-web-public:
     image: eu.gcr.io/inqool-1301/permonik/prod/permonik-web-public:${PERMONIK_TAG}
+    restart: unless-stopped
     build:
       context: .
       dockerfile: permonik-web/docker/public/Dockerfile
@@ -57,6 +60,7 @@ services:
 
   permonik-gateway:
     image: eu.gcr.io/inqool-1301/permonik/prod/permonik-gateway:${PERMONIK_TAG}
+    restart: unless-stopped
     build:
       context: .
       dockerfile: permonik-gateway/Dockerfile
@@ -78,6 +82,7 @@ services:
 
   permonik-database:
     image: solr:9.10.0
+    restart: unless-stopped
     networks:
       - permonik
     ports:
@@ -96,6 +101,7 @@ services:
 
   permonik-redis:
     image: redis:8-alpine
+    restart: unless-stopped
     networks:
       - permonik
     ports:
