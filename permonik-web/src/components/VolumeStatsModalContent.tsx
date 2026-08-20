@@ -488,6 +488,38 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
           marginBottom: '10px',
         }}
       >
+        <Typography sx={bolderTextStyle}>{t('facet_states.ChS')}:</Typography>
+        {volumeStats.specimens
+          .filter((s) => s.numExists && s.damageTypes?.includes('ChS'))
+          .map((s) => (
+            <Box key={`missingPages-${s.id}`}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  width: '9rem',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
+                  {t('volume_overview.number_super_short').toLowerCase()}{' '}
+                  {s.isAttachment ? s.attachmentNumber : s.number}
+                </Typography>
+                <Typography variant="body2">—</Typography>
+                <Typography variant="body2">
+                  {formatDate(s.publicationDate, { includeDayName: true })}
+                </Typography>
+              </Box>
+              <Typography variant="body2" sx={{ marginLeft: 3 }}>
+                {[...s.missingPages].sort((a, b) => a - b).join(', ')}
+              </Typography>
+            </Box>
+          ))}
+      </Box>
+      <Box
+        sx={{
+          marginBottom: '10px',
+        }}
+      >
         <Typography sx={bolderTextStyle}>
           {t('volume_overview.notes')}:
         </Typography>
