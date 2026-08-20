@@ -1,14 +1,23 @@
-# syntax = docker/dockerfile:experimental
+# syntax = docker/dockerfile:1
 
 ## BUILD Image ##
 FROM node:24-slim AS builder
+ARG VITE_SENTRY_DSN=""
+ARG SENTRY_URL=""
+ARG SENTRY_ENVIRONMENT=""
+ENV VITE_SENTRY_DSN="$VITE_SENTRY_DSN" \
+    SENTRY_URL="$SENTRY_URL" \
+    SENTRY_ENVIRONMENT="$SENTRY_ENVIRONMENT" \
+    VITE_SENTRY_ENVIRONMENT="$SENTRY_ENVIRONMENT"
 RUN corepack enable
 RUN yarn set version latest
 
 COPY ./permonik-web/ /usr/src/app
 WORKDIR /usr/src/app
 RUN --mount=type=cache,id=yarn-cache,target=.yarn/cache yarn install --immutable
-RUN yarn build
+RUN --mount=type=secret,id=sentry-auth-token,env=SENTRY_AUTH_TOKEN \
+    --mount=type=secret,id=mui-license-key,env=VITE_MUI_LICENCE_KEY \
+    yarn build
 
 ## RUN Image ##
 FROM httpd:alpine

@@ -4,10 +4,15 @@
 FROM gradle:9.6.1-jdk25 AS builder
 WORKDIR /build
 
+ARG SENTRY_URL=""
+
+ENV SENTRY_URL="$SENTRY_URL"
+
 # Run build
 RUN \
     --mount=type=cache,id="permonik-api-gradle-home",target="/gradle-home" \
     --mount=type=cache,id="permonik",target="/build" \
+    --mount=type=secret,id=sentry-auth-token,env=SENTRY_AUTH_TOKEN \
     --mount=type=bind,source="settings.gradle",target="/host/settings.gradle" \
     --mount=type=bind,source="gradle.properties",target="/host/gradle.properties" \
     --mount=type=bind,source="lombok.config",target="/host/lombok.config" \
@@ -22,6 +27,14 @@ RUN \
 
 ## RUN Image ##
 FROM eclipse-temurin:25-jre
+
+ARG SENTRY_DSN=""
+ARG SENTRY_ENVIRONMENT=""
+ARG SENTRY_RELEASE=""
+
+ENV SENTRY_DSN="$SENTRY_DSN" \
+    SENTRY_ENVIRONMENT="$SENTRY_ENVIRONMENT" \
+    SENTRY_RELEASE="$SENTRY_RELEASE"
 
 RUN apt update
 RUN apt install nano mc -y
