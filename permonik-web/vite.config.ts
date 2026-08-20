@@ -32,6 +32,7 @@ export default defineConfig(({ mode }) => {
         org: 'inqool',
         project: 'permonik-frontend',
         release: {
+          name: process.env.SENTRY_RELEASE,
           create: !!process.env.SENTRY_ENVIRONMENT,
           deploy: {
             env: process.env.SENTRY_ENVIRONMENT || 'Not specified',
