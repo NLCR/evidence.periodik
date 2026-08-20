@@ -47,3 +47,7 @@ springdoc:
 #    org:
 #      springframework:
 #        security: "DEBUG"
+
+sentry:
+  dsn: ""
+  enabled: false

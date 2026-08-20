@@ -43,9 +43,9 @@ logging:
   file:
     name: "permonik-api.log"
 
-#sentry:
-#  dsn: https://9f91a75be26765d75c01ff9930b2f38f@newsentry.inqool.cz/17
-#  logging:
-#    minimum-event-level: info
-#    minimum-breadcrumb-level: info
-#    enabled: true
+sentry:
+  dsn: ${SENTRY_DSN:}
+  enabled: true
+  send-default-pii: false
+  environment: ${SENTRY_ENVIRONMENT:}
+  release: ${SENTRY_RELEASE:}

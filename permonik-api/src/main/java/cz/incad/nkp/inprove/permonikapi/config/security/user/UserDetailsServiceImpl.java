@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,7 +21,7 @@ import java.util.Set;
 
 @Service
 @Primary
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl {
 
     private final UserService userService;
 
@@ -36,7 +35,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     @SneakyThrows
-    @Override
     public UserDetails loadUserByUsername(String userName) {
 
         User user = userService.findUserByUserName(userName);

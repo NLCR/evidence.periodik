@@ -29,12 +29,12 @@ export default defineConfig(({ mode }) => {
       sentryVitePlugin({
         url: process.env.SENTRY_URL,
         authToken: process.env.SENTRY_AUTH_TOKEN,
-        org: process.env.SENTRY_ORG,
-        project: process.env.SENTRY_PROJECT,
+        org: 'inqool',
+        project: 'permonik-frontend',
         release: {
-          create: !!process.env.SENTRY_DEPLOY_ENV,
+          create: !!process.env.SENTRY_ENVIRONMENT,
           deploy: {
-            env: process.env.SENTRY_DEPLOY_ENV || 'Not specified',
+            env: process.env.SENTRY_ENVIRONMENT || 'Not specified',
           },
           setCommits: {
             auto: true,
