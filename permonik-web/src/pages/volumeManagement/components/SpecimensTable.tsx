@@ -1,13 +1,13 @@
-import { FC, RefObject, useEffect, useMemo, useRef } from 'react'
+import { type FC, type RefObject, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  gridClasses,
-  GridColDef,
-  GridRenderCellParams,
   DataGridPro,
-  GridColumnHeaderParams,
-  GridApiPro,
-  GridAlignment,
+  type GridAlignment,
+  type GridApiPro,
+  gridClasses,
+  type GridColDef,
+  type GridColumnHeaderParams,
+  type GridRenderCellParams,
   GridCellParams,
   GridRenderEditCellParams,
 } from '@mui/x-data-grid-pro'
@@ -15,10 +15,10 @@ import Box from '@mui/material/Box'
 import { alpha, styled } from '@mui/material/styles'
 import Checkbox from '@mui/material/Checkbox'
 import { blue, pink } from '@mui/material/colors'
-import { TEditableSpecimen, TSpecimenDamageTypes } from '@/schema/specimen'
+import {type TEditableSpecimen,type TSpecimenDamageTypes } from '@/schema/specimen'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { TMutation } from '../../../schema/mutation'
-import { TEdition } from '../../../schema/edition'
+import { type TMutation } from '../../../schema/mutation'
+import { type TEdition } from '../../../schema/edition'
 import DamagedAndMissingPagesEditCell from './editCells/DamagedAndMissingPagesEditCell'
 import DamageTypesEditCell from './editCells/DamageTypesEditCell'
 import MutationMarkSelectorModalContainer from './editCells/MutationMarkSelectorModalContainer'
@@ -31,7 +31,11 @@ import {
 } from '@/utils/constants'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
 import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
-import { checkAttachmentChange, filterSpecimen } from '../../../utils/specimen'
+import {
+  canUseAttachmentOnDate,
+  checkAttachmentChange,
+  filterSpecimen,
+} from '../../../utils/specimen'
 import { validate as uuidValidate } from 'uuid'
 import TableHeader from './TableHeader'
 import Tooltip from '@mui/material/Tooltip'
@@ -40,12 +44,14 @@ import DeletionEditCell from './editCells/DeletionEditCell'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
-import { GridApiCommunity } from '@mui/x-data-grid/internals'
+import { type GridApiCommunity } from '@mui/x-data-grid/internals'
 import { useFormatDate } from '../../../utils/date'
 import {
   getMutationMarkLabel,
   isUnmarkedMutationMark,
 } from '@/utils/mutationMark'
+import { useMeQuery } from '../../../api/user'
+import { toast } from 'react-toastify'
 
 const ODD_OPACITY = 0.2
 
@@ -200,17 +206,26 @@ const renderMutationMarkEditCell = (
 
 const renderDuplicationEditCell = (
   row: TEditableSpecimen,
-  canEdit: boolean
+  canEdit: boolean,
+  editions: TEdition[]
 ) => {
-  return <DuplicationEditCell row={row} canEdit={canEdit} />
+  return <DuplicationEditCell row={row} canEdit={canEdit} editions={editions} />
 }
 
 const renderDeletionEditCell = (
   row: TEditableSpecimen,
   api: GridApiCommunity,
-  canEdit: boolean
+  canEdit: boolean,
+  currentUserId: string | undefined
 ) => {
-  return <DeletionEditCell row={row} api={api} canEdit={canEdit} />
+  return (
+    <DeletionEditCell
+      row={row}
+      api={api}
+      canEdit={canEdit}
+      currentUserId={currentUserId}
+    />
+  )
 }
 
 interface TableProps {
@@ -226,6 +241,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
   const { formatDate } = useFormatDate()
   const { disabled, locked: isInputDataLocked } =
     useInputDataEditabilityContext()
+  const me = useMeQuery()
 
   const [searchParams] = useSearchParams()
 
@@ -240,6 +256,12 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
   const specimensState = useVolumeManagementStore(
     (state) => state.specimensState
   )
+  const specimensStateRef = useRef(specimensState)
+  const hasSpecimens = specimensState.length > 0
+
+  useEffect(() => {
+    specimensStateRef.current = specimensState
+  }, [specimensState])
 
   useEffect(() => {
     const timeout = undefined
@@ -303,11 +325,11 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          return renderDuplicationEditCell(row, !disabled)
+          return renderDuplicationEditCell(row, !disabled, editions)
         },
       },
       ...// !stateHasUnsavedData &&
-      (specimensState.length
+      (hasSpecimens
         ? [
             {
               field: 'deleteRow',
@@ -331,7 +353,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
               headerAlign: 'center' as GridAlignment,
               renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
                 const { api, row } = params
-                return renderDeletionEditCell(row, api, !disabled)
+                return renderDeletionEditCell(row, api, !disabled, me.data?.id)
               },
             },
           ]
@@ -489,10 +511,34 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
             !disabled
           )
         },
-        valueOptions: editions.map((v) => ({
-          value: v.id,
-          label: v.name[languageCode],
-        })),
+        valueOptions: (params) => {
+          const row = params.row
+          // for internal MUI table purposes, fallback without provided row must return all items
+          const allowAll = !row
+
+          const canUseAttachments =
+            !!row?.id &&
+            canUseAttachmentOnDate({
+              editions,
+              specimens: specimensStateRef.current,
+              publicationDate: row.publicationDate,
+              candidateRowId: row.id,
+            })
+
+          return editions
+            .filter((edition) => {
+              if (allowAll) return true
+
+              if (edition.isAttachment || edition.isPeriodicAttachment) {
+                return canUseAttachments
+              }
+              return true
+            })
+            .map((edition) => ({
+              value: edition.id,
+              label: edition.name[languageCode],
+            }))
+        },
         type: 'singleSelect',
       },
       {
@@ -584,7 +630,9 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
               title={
                 isUnmarked
                   ? t('volume_overview.mutation_mark_tab_unmarked')
-                  : (row.mutationMark.description ?? row.mutationMark.mark)
+                  : (row.mutationMark?.description ??
+                    row.mutationMark?.mark ??
+                    '')
               }
             >
               {renderValue(
@@ -648,7 +696,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           const damageExists =
-            !!row.damageTypes?.includes('PP') && row.numExists
+            row.damageTypes?.includes('PP') && row.numExists
 
           const damagedPages = row.damagedPages
           if (damagedPages.length > 0) {
@@ -684,7 +732,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('Deg'),
+            row.damageTypes?.includes('Deg'),
             row.numExists,
             !disabled
           )
@@ -712,7 +760,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           const damageExists =
-            !!row.damageTypes?.includes('ChS') && row.numExists
+            row.damageTypes?.includes('ChS') && row.numExists
 
           const missingPages = row.missingPages
           if (missingPages.length > 0) {
@@ -747,7 +795,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('ChPag'),
+            row.damageTypes?.includes('ChPag'),
             row.numExists,
             !disabled
           )
@@ -775,7 +823,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('ChDatum'),
+            row.damageTypes?.includes('ChDatum'),
             row.numExists,
             !disabled
           )
@@ -803,7 +851,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('ChCis'),
+            row.damageTypes?.includes('ChCis'),
             row.numExists,
             !disabled
           )
@@ -831,7 +879,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('ChSv'),
+            row.damageTypes?.includes('ChSv'),
             row.numExists,
             !disabled
           )
@@ -860,7 +908,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('NS'),
+            row.damageTypes?.includes('NS'),
             row.numExists,
             !disabled
           )
@@ -888,7 +936,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('Cz'),
+            row.damageTypes?.includes('Cz'),
             row.numExists,
             !disabled
           )
@@ -911,19 +959,45 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       },
     ],
     [
-      apiRef,
-      disabled,
-      editions,
-      languageCode,
-      mutations,
-      specimensState.length,
       t,
+      disabled,
+      mutations,
+      editions,
+      hasSpecimens,
       formatDate,
+      me.data?.id,
+      apiRef,
+      languageCode,
     ]
   )
 
-  const handleUpdate = (newRow: TEditableSpecimen) => {
+  /**
+   * Commits edited row and enforces attachment-day rule.
+   *
+   * If user tries to save an attachment edition on a day without another
+   * regular issue, the update is rejected and old row is kept.
+   */
+  const handleUpdate = (
+    newRow: TEditableSpecimen,
+    oldRow: TEditableSpecimen
+  ) => {
     const row = checkAttachmentChange(editions, newRow)
+    const edition = editions.find((e) => e.id === row.editionId)
+    const isAttachment = edition?.isAttachment || edition?.isPeriodicAttachment
+    const canUseEdition =
+      !isAttachment ||
+      canUseAttachmentOnDate({
+        editions,
+        specimens: specimensState,
+        publicationDate: row.publicationDate,
+        candidateRowId: row.id,
+      })
+
+    if (!canUseEdition) {
+      toast.error(t('specimens_overview.duplicate_attachment_requires_regular'))
+      return filterSpecimen(oldRow)
+    }
+
     specimenActions.setSpecimen(row)
     return filterSpecimen(row)
   }

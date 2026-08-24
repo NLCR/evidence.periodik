@@ -1,67 +1,58 @@
 package cz.incad.nkp.inprove.permonikapi.audit;
 
 import cz.incad.nkp.inprove.permonikapi.user.User;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreRemove;
-import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.solr.client.solrj.beans.Field;
-import org.hibernate.envers.Audited;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 import static cz.incad.nkp.inprove.permonikapi.config.security.user.UserProducer.getCurrentUser;
 
-@MappedSuperclass
-@Audited
+
 @Getter
 @Setter
 @ToString
-public class Auditable {
+public class Auditable implements AuditableDefinition {
 
-    @Field
-    private String created;
+    @Field(CREATED_FIELD)
+    private Date created;
 
-    @Field
+    @Field(CREATED_BY_FIELD)
     private String createdBy;
 
-    @Field
-    private String updated;
+    @Field(UPDATED_FIELD)
+    private Date updated;
 
-    @Field
+    @Field(UPDATED_BY_FIELD)
     private String updatedBy;
 
-    @Field
-    private String deleted;
+    @Field(DELETED_FIELD)
+    private Date deleted;
 
-    @Field
+    @Field(DELETED_BY_FIELD)
     private String deletedBy;
 
-    @PrePersist
     public void prePersist() {
         User currentUser = Objects.requireNonNull(getCurrentUser(), "User must be logged in");
 
-        created = LocalDateTime.now().toString();
+        created = new Date();
         createdBy = currentUser.getId();
     }
 
-    @PreUpdate
     public void preUpdate() {
         User currentUser = Objects.requireNonNull(getCurrentUser(), "User must be logged in");
 
-        updated = LocalDateTime.now().toString();
+        updated = new Date();
         updatedBy = currentUser.getId();
     }
 
-    @PreRemove
     public void preRemove() {
         User currentUser = Objects.requireNonNull(getCurrentUser(), "User must be logged in");
 
-        deleted = LocalDateTime.now().toString();
+        deleted = new Date();
         deletedBy = currentUser.getId();
     }
 }

@@ -1,7 +1,7 @@
-import { TEdition } from '../schema/edition'
+import { type TEdition } from '../schema/edition'
 import { copyAuditable } from '../schema/common'
 import { v4 as uuid } from 'uuid'
-import { TEditableVolume, TVolume } from '../schema/volume'
+import { type TEditableVolume, type TVolume } from '../schema/volume'
 import { repairMutationMark } from './mutationMark'
 
 export const repairVolume = (
@@ -31,7 +31,7 @@ export const repairVolume = (
     firstNumber: Number(volume.firstNumber) ?? -1,
     lastNumber: Number(volume.lastNumber),
     note: volume.note?.trim() ?? '',
-    showAttachmentsAtTheEnd: volume.showAttachmentsAtTheEnd ?? false,
+    attachmentsSort: volume.attachmentsSort ?? 'NONE',
     signature: volume.signature?.trim() ?? '',
     ownerId: volume.ownerId ?? '',
     year: Number(volume.year) ?? -1,

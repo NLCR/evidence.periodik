@@ -13,7 +13,4 @@ import lombok.*;
 public class MutationDTO extends Auditable {
     private String id;
     private MutationNameDTO name;
-    private Boolean isDefault;
-    private Boolean isAttachment;
-    private Boolean isPeriodicAttachment;
 }

@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import clone from 'lodash/clone'
 import { api, queryClient } from './index'
-import { TMe, TUser } from '../schema/user'
+import { type TBasicLogin, type TMe, type TUser } from '../schema/user'
 // import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
 
 // const { MODE } = import.meta.env
@@ -37,7 +37,23 @@ export const useMeQuery = () => {
 export const useLogoutMutation = () =>
   useMutation({
     mutationFn: () => {
-      return api().post(`auth/logout`)
+      return api({ throwErrorFromKy: false }).post(`auth/logout`, {
+        redirect: 'manual',
+      })
+    },
+  })
+
+export const useBasicLoginMutation = () =>
+  useMutation({
+    mutationFn: (payload: TBasicLogin) => {
+      return api({ throwErrorFromKy: false }).post(`auth/login/basic`, {
+        json: payload,
+      })
+    },
+    onSuccess: (response) => {
+      if (response.ok) {
+        queryClient.invalidateQueries({ queryKey: ['me'] })
+      }
     },
   })
 

@@ -1,34 +1,65 @@
-import { SpecimenSchema, TEditableSpecimen } from '../../../../schema/specimen'
-import { FC, useState } from 'react'
+import {
+  SpecimenSchema,
+  type TEditableSpecimen,
+} from '../../../../schema/specimen'
+import { type FC, useState } from 'react'
 import Box from '@mui/material/Box'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
 import ModalContainer from '../../../../components/ModalContainer'
 import theme from '../../../../theme'
-import { GridApiCommunity } from '@mui/x-data-grid/internals'
-import { useMeQuery } from '../../../../api/user'
+import { type GridApiCommunity } from '@mui/x-data-grid/internals'
+import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
+import { canDeleteSpecimen } from '../../../../utils/specimen'
+import { useEditionListQuery } from '../../../../api/edition'
 
 type DuplicationCellProps = {
   row: TEditableSpecimen
   api: GridApiCommunity
   canEdit: boolean
+  currentUserId: string | undefined
 }
 
-const DeletionEditCell: FC<DuplicationCellProps> = ({ row, api, canEdit }) => {
+const DeletionEditCell: FC<DuplicationCellProps> = ({
+  row,
+  api,
+  canEdit,
+  currentUserId,
+}) => {
   // const { mutateAsync: doDelete, status } = useDeleteSpecimenById()
   const { t } = useTranslation()
-  const me = useMeQuery()
+  const { data: editions } = useEditionListQuery()
 
   const [confirmDeletionModalOpened, setConfirmDeletionModalOpened] =
     useState(false)
 
+  /**
+   * Deletes row through DataGrid row-edit lifecycle.
+   *
+   * Deletion is blocked when it would remove the last regular issue for the day
+   * while attachments on that same day still exist.
+   */
   const deleteRow = async () => {
+    const specimensState = useVolumeManagementStore.getState().specimensState
+    if (
+      !canDeleteSpecimen({
+        editions,
+        specimens: specimensState,
+        candidateRow: row,
+      })
+    ) {
+      toast.error(
+        t('specimens_overview.cannot_delete_last_regular_with_attachments')
+      )
+      return
+    }
+
     const specimenValidation = SpecimenSchema.safeParse(row)
 
     if (!specimenValidation.success) {
       // toast.error(t('volume_overview.specimens_validation_error'))
-      specimenValidation.error.errors.forEach((e) => toast.error(e.message))
+      specimenValidation.error.issues.forEach((e) => toast.error(e.message))
 
       throw new Error(specimenValidation.error.message)
     }
@@ -45,11 +76,12 @@ const DeletionEditCell: FC<DuplicationCellProps> = ({ row, api, canEdit }) => {
     }
 
     // update fields that are not in the table
+    // TODO: deleted and deletedBy is assigned on BE from user session
     api.updateRows([
       {
         ...row,
         deleted: new Date().toISOString(),
-        deletedBy: me.data?.id,
+        deletedBy: currentUserId,
       },
     ])
 

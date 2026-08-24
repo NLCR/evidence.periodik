@@ -24,6 +24,13 @@ public interface VolumeMapper {
 
     @InheritInverseConfiguration
     @Mapping(target = "periodicity", source = "periodicity", qualifiedBy = PeriodicityToString.class)
+    @Mapping(target = "metaTitleName", ignore = true)
+    @Mapping(target = "mutationCsName", ignore = true)
+    @Mapping(target = "mutationSkName", ignore = true)
+    @Mapping(target = "mutationEnName", ignore = true)
+    @Mapping(target = "ownerName", ignore = true)
+    @Mapping(target = "ownerShorthand", ignore = true)
+    @Mapping(target = "ownerSigla", ignore = true)
     Volume toModel(VolumeDTO dto);
 
 }

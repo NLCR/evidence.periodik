@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import clone from 'lodash/clone'
 import { api, queryClient } from './index'
-import { TEditableOwner, TOwner } from '../schema/owner'
+import { type TEditableOwner, type TOwner } from '../schema/owner'
 import ky from 'ky'
 
 export const useOwnerListQuery = () => {

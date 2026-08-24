@@ -1,12 +1,12 @@
 import Box from '@mui/material/Box'
-import { FC, RefObject } from 'react'
+import { type FC, type RefObject } from 'react'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import IconButton from '@mui/material/IconButton'
 import clone from 'lodash/clone'
-import { TEditableSpecimen, TSpecimenDamageTypes } from '@/schema/specimen'
+import {type TEditableSpecimen,type TSpecimenDamageTypes } from '@/schema/specimen'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import {
-  GridApiPro,
+  type GridApiPro,
   gridExpandedSortedRowEntriesSelector,
 } from '@mui/x-data-grid-pro'
 import Tooltip from '@mui/material/Tooltip'

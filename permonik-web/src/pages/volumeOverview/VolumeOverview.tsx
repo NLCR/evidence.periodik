@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { usePublicVolumeDetailQuery } from '../../api/volume'
+import { useManagedVolumeDetailQuery } from '../../api/volume'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
 import ShowInfoMessage from '../../components/ShowInfoMessage'
@@ -32,7 +32,7 @@ const VolumeOverview = () => {
     data: volume,
     isLoading: volumeLoading,
     isError: volumeError,
-  } = usePublicVolumeDetailQuery(volumeId)
+  } = useManagedVolumeDetailQuery(volumeId)
   const {
     data: metaTitles,
     isLoading: metaTitlesLoading,

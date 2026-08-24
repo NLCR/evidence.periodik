@@ -1,4 +1,4 @@
-import dayjs, { isDayjs, Dayjs } from 'dayjs'
+import dayjs, { isDayjs, type Dayjs } from 'dayjs'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 

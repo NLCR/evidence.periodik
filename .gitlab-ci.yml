@@ -1,7 +1,10 @@
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
+  JAVA_VERSION: "25"
+  SENTRY_RELEASE: "$CI_COMMIT_SHA"
 
 stages:
+  - test
   - build
 
 .build:
@@ -11,11 +14,12 @@ stages:
   tags:
     - docker
   script:
-    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
+    - 'docker build $DOCKER_BUILD_ARGS --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
     - 'docker push eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest'
   variables:
     DOCKERFILE: Dockerfile
+    DOCKER_BUILD_ARGS: ""
 
 .buildWeb:
   stage: build
@@ -24,12 +28,12 @@ stages:
   tags:
     - docker
   script:
-    - cp "$ENV_FILE" permonik-web/.env
-    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
+    - 'docker build --secret id=sentry-auth-token,env=SENTRY_AUTH_TOKEN --secret id=mui-license-key,env=VITE_MUI_LICENCE_KEY --build-arg VITE_SENTRY_DSN --build-arg SENTRY_URL --build-arg SENTRY_ENVIRONMENT --build-arg SENTRY_RELEASE --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
     - 'docker push eu.gcr.io/inqool-1301/permonik/test/$COMPONENT_NAME:latest'
   variables:
     DOCKERFILE: Dockerfile
+    SENTRY_ENVIRONMENT: test
 
 .buildProd:
   stage: build
@@ -38,11 +42,12 @@ stages:
   tags:
     - docker
   script:
-    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
+    - 'docker build $DOCKER_BUILD_ARGS --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest'
   variables:
     DOCKERFILE: Dockerfile
+    DOCKER_BUILD_ARGS: ""
 
 .buildWebProd:
   stage: build
@@ -51,25 +56,51 @@ stages:
   tags:
     - docker
   script:
-    - cp "$ENV_FILE" permonik-web/.env
-    - 'docker build --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
+    - 'docker build --secret id=sentry-auth-token,env=SENTRY_AUTH_TOKEN --secret id=mui-license-key,env=VITE_MUI_LICENCE_KEY --build-arg VITE_SENTRY_DSN --build-arg SENTRY_URL --build-arg SENTRY_ENVIRONMENT --build-arg SENTRY_RELEASE --no-cache -f $COMPONENT/docker/$DOCKERFILE -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -t eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest .'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA'
     - 'docker push eu.gcr.io/inqool-1301/permonik/prod/$COMPONENT_NAME:latest'
   variables:
     DOCKERFILE: Dockerfile
+    SENTRY_ENVIRONMENT: production
 
+
+test_permonik_api:
+  stage: test
+  allow_failure: false
+  tags:
+    - runner-8
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "test" || $CI_COMMIT_BRANCH == "prod"'
+      when: manual
+  script:
+    - export JAVA_HOME=/usr/lib/jvm/java-$JAVA_VERSION-openjdk-amd64
+    - export PATH="$JAVA_HOME/bin:$PATH"
+    - java --version
+    - ./gradlew :permonik-api:test
+  artifacts:
+    when: always
+    reports:
+      junit: permonik-api/build/test-results/test/*.xml
+    paths:
+      - permonik-api/build/reports/tests/
+    expire_in: 7 days
 
 build_permonik_api_test:
   extends: .build
+  tags:
+    - runner-8
   rules:
     - if: '$CI_COMMIT_BRANCH == "test"'
       when: manual
   variables:
     COMPONENT: permonik-api
     COMPONENT_NAME: permonik-api
+    DOCKER_BUILD_ARGS: "--secret id=sentry-auth-token,env=SENTRY_AUTH_TOKEN --build-arg SENTRY_DSN --build-arg SENTRY_ENVIRONMENT --build-arg SENTRY_RELEASE --build-arg SENTRY_URL"
+    SENTRY_ENVIRONMENT: test
 
 build_permonik_gateway_test:
   extends: .build
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "test"'
       when: manual
@@ -79,6 +110,7 @@ build_permonik_gateway_test:
 
 build_permonik_web_admin_test:
   extends: .buildWeb
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "test"'
       when: manual
@@ -89,6 +121,7 @@ build_permonik_web_admin_test:
 
 build_permonik_web_public_test:
   extends: .buildWeb
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "test"'
       when: manual
@@ -101,15 +134,20 @@ build_permonik_web_public_test:
 
 build_permonik_api_prod:
   extends: .buildProd
+  tags:
+    - runner-8
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
   variables:
     COMPONENT: permonik-api
     COMPONENT_NAME: permonik-api
+    DOCKER_BUILD_ARGS: "--secret id=sentry-auth-token,env=SENTRY_AUTH_TOKEN --build-arg SENTRY_DSN --build-arg SENTRY_ENVIRONMENT --build-arg SENTRY_RELEASE --build-arg SENTRY_URL"
+    SENTRY_ENVIRONMENT: production
 
 build_permonik_gateway_prod:
   extends: .buildProd
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
@@ -119,6 +157,7 @@ build_permonik_gateway_prod:
 
 build_permonik_web_admin_prod:
   extends: .buildWebProd
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
@@ -129,6 +168,7 @@ build_permonik_web_admin_prod:
 
 build_permonik_web_public_prod:
   extends: .buildWebProd
+  needs: []
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual

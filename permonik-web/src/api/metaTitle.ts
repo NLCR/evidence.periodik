@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import clone from 'lodash/clone'
 import { api, queryClient } from './index'
-import { TMetaTitle, TEditableMetaTitle } from '../schema/metaTitle'
-import { TSpecimensPublicationDays } from '../schema/specimen'
+import { type TMetaTitle, type TEditableMetaTitle } from '../schema/metaTitle'
+import { type TSpecimensPublicationDays } from '../schema/specimen'
 
 export const useMetaTitleQuery = (metaTitleId?: string) =>
   useQuery({

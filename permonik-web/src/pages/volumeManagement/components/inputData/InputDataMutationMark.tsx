@@ -1,15 +1,15 @@
 import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import { useTranslation } from 'react-i18next'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
 import InputDataMutationMarkField from './InputDataMutationMarkField'
 import { hasMutationMark } from '../../../../utils/mutationMark'
 
 const InputDataMutationMark = () => {
-  const { watch } = useFormContext()
+  const { control } = useFormContext()
   const isDuplicated = location.href.includes('duplicated')
-  const isEmpty = !hasMutationMark(watch('mutationMark'))
+  const isEmpty = !hasMutationMark(useWatch({ name: 'mutationMark', control }))
   const { t } = useTranslation()
 
   return (

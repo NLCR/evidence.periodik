@@ -4,7 +4,7 @@ import InputDataTextField from './InputDataTextField'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
-import { TEditableVolume } from '../../../../schema/volume'
+import { type TEditableVolume } from '../../../../schema/volume'
 
 const InputDataSubName = () => {
   const setSubName = useVolumeManagementStore(

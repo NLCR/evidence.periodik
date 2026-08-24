@@ -3,11 +3,10 @@ import dayjs from 'dayjs'
 import { api, queryClient } from './index'
 import {
   SpecimenStateEnum,
-  TSpecimen,
-  TSpecimenDamageTypesFacet,
-  TSpecimenFacet,
-  TSpecimensPublicationDays,
-  TSpecimenState,
+  type TSpecimenDamageTypesFacet,
+  type TSpecimenFacet,
+  type TSpecimensOverview,
+  type TSpecimenState,
 } from '../schema/specimen'
 import { useSpecimensOverviewStore } from '../slices/useSpecimensOverviewStore'
 
@@ -80,12 +79,6 @@ export const useSpecimenFacetsQuery = (metaTitleId?: string) => {
   })
 }
 
-export interface TSpecimenList extends TSpecimensPublicationDays {
-  specimens: TSpecimen[]
-  count: number
-  owners: string[]
-}
-
 export const useSpecimenListQuery = (metaTitleId?: string) => {
   const params = useSpecimensOverviewStore((state) => state.params)
   const pagination = useSpecimensOverviewStore((state) => state.pagination)
@@ -155,7 +148,7 @@ export const useSpecimenListQuery = (metaTitleId?: string) => {
         .post(`specimen/${metaTitleId}/list`, {
           body: formData,
         })
-        .json<TSpecimenList>()
+        .json<TSpecimensOverview>()
     },
     placeholderData: keepPreviousData,
     enabled: !!metaTitleId,

@@ -3,8 +3,8 @@ import EditIcon from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import { useTranslation } from 'react-i18next'
-import { ReactElement } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { type ReactElement } from 'react'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { useFormatDate } from '../../../../utils/date'
 
 type Props = {
@@ -13,7 +13,8 @@ type Props = {
   editableData?: {
     DialogContent: ReactElement
     fieldName: string
-    saveChange: (value: string) => void
+    saveChange: () => boolean | Promise<boolean>
+    onOpen?: () => void
     isMutationMark?: boolean
     changeShouldNotAffectSpecimen?: boolean
   }
@@ -30,8 +31,9 @@ const LockedInputDataItem = ({
 }: Props) => {
   const { t } = useTranslation()
   const { formatDate } = useFormatDate()
-  const { getValues, watch } = useFormContext()
-  const value = props.value ?? watch(name)
+  const { control } = useFormContext()
+  const watchedValue = useWatch({ name, control })
+  const value = props.value ?? watchedValue
 
   if (type === 'SELECT' && !selectOptions) {
     throw new Error('Type SELECT must have selectOptions filled')
@@ -81,8 +83,9 @@ const LockedInputDataItem = ({
               </Box>
             }
             onConfirm={() => {
-              editableData.saveChange(getValues(name))
+              return editableData.saveChange()
             }}
+            onOpen={editableData.onOpen}
             TriggerButton={
               <IconButton sx={{ marginY: -1 }}>
                 <EditIcon />

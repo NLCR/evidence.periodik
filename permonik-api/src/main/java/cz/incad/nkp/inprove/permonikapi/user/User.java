@@ -7,6 +7,8 @@ import org.apache.solr.client.solrj.beans.Field;
 import java.io.Serializable;
 import java.util.List;
 
+import static cz.incad.nkp.inprove.permonikapi.user.UserDefinition.*;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -16,31 +18,31 @@ import java.util.List;
 @SuperBuilder
 public class User implements Serializable {
 
-    @Field()
+    @Field(ID_FIELD)
     private String id;
 
-    @Field()
+    @Field(EMAIL_FIELD)
     private String email;
 
-    @Field()
+    @Field(USERNAME_FIELD)
     private String userName;
 
-    @Field()
+    @Field(FIRST_NAME_FIELD)
     private String firstName;
 
-    @Field()
+    @Field(LAST_NAME_FIELD)
     private String lastName;
 
-    @Field()
+    @Field(ROLE_FIELD)
     private String role;
 
-    @Field()
+    @Field(ACTIVE_FIELD)
     private Boolean active;
 
-    @Field()
+    @Field(OWNERS_FIELD)
     private List<String> owners;
 
-    @Field()
+    @Field(PASSWORD_FIELD)
     private String password;
 
 }

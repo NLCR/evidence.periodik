@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import Box from '@mui/material/Box'
 import { keyframes } from '@emotion/react'
 

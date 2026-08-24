@@ -1,5 +1,4 @@
-/* eslint-disable no-nested-ternary */
-import { FC, useMemo, useState } from 'react'
+import { type FC, useMemo, useState } from 'react'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -8,14 +7,16 @@ import TableRow from '@mui/material/TableRow'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
-import { TEdition } from '../../../../../schema/edition'
+import { type TEdition } from '../../../../../schema/edition'
 import ModalContainer from '../../../../../components/ModalContainer'
-import InputDataCheckbox from '../InputDataCheckbox'
+import InputDataSelect from '../InputDataSelect'
 import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { useGenerateVolume } from './useGenerateVolume'
 import PeriodicityRow from './PeriodicityRow'
-import { TMetaTitle } from '../../../../../schema/metaTitle'
+import { type TMetaTitle } from '../../../../../schema/metaTitle'
+import theme from '../../../../../theme'
+import { Typography } from '@mui/material'
 
 interface PeriodicityProps {
   editions: TEdition[]
@@ -27,13 +28,12 @@ const Periodicity: FC<PeriodicityProps> = ({ editions, metaTitles }) => {
   const { t } = useTranslation()
 
   const { disabled, locked, setLocked } = useInputDataEditabilityContext()
-  const { control, watch } = useFormContext()
+  const { control } = useFormContext()
 
-  const metatitleId = watch('metaTitleId')
+  const metatitleId = useWatch({ name: 'metaTitleId', control })
   const metaTitle = useMemo(
     () => metaTitles.find((value) => value.id === metatitleId)?.name,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [JSON.stringify(metaTitles.map((metatitle) => metatitle.id)), metatitleId]
+    [metaTitles, metatitleId] // metatitles is reference-stable array from useQuery
   )
 
   const { fields, remove, insert } = useFieldArray({
@@ -98,11 +98,38 @@ const Periodicity: FC<PeriodicityProps> = ({ editions, metaTitles }) => {
         <Box
           sx={{
             marginTop: '10px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            alignItems: 'flex-start',
+            width: 'fit-content',
           }}
         >
-          <InputDataCheckbox
-            name={`showAttachmentsAtTheEnd`}
-            label={t('volume_overview.show_attachments_at_the_end')}
+          <Typography
+            sx={{
+              color: theme.palette.primary.main,
+              fontSize: '16px',
+              fontWeight: 'bold',
+            }}
+          >
+            {t('volume_overview.attachments_sort')}
+          </Typography>
+          <InputDataSelect
+            name="attachmentsSort"
+            options={[
+              {
+                key: 'ASC',
+                value: t('volume_overview.attachments_sort_asc'),
+              },
+              {
+                key: 'DESC',
+                value: t('volume_overview.attachments_sort_desc'),
+              },
+              {
+                key: 'NONE',
+                value: t('volume_overview.attachments_sort_none'),
+              },
+            ]}
           />
         </Box>
       </ModalContainer>

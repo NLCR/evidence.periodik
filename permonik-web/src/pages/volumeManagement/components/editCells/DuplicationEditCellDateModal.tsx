@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography'
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { type Dayjs } from 'dayjs'
 import { useTranslation } from 'react-i18next'
 
 type Props = { date: Dayjs; setDate: (value: Dayjs) => void }

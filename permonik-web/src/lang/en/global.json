@@ -247,6 +247,8 @@
     "detailed_volume_overview": "Detailed volume overview",
     "duplicate_dialog_title": "Duplicate entry",
     "duplicate_dialog_description": "Select the date for which a new record will be entered",
+    "duplicate_attachment_requires_regular": "Supplements can be entered only on dates where at least one other regular issue already exists.",
+    "cannot_delete_last_regular_with_attachments": "Cannot delete the last regular issue for this date while supplements still exist.",
     "field_names": {
       "note": "Note",
       "damage_types": "Damage (wrong date, degradation, binding, etc.)",
@@ -282,6 +284,7 @@
     "date_from": "Date from",
     "first_number": "First issue No.",
     "date_to": "Date to",
+    "date_range_excludes_active_specimen": "The start date must not be after the end date, and the volume date range must include all active specimens.",
     "last_number": "Last issue No.",
     "note": "Note",
     "unlock_edit": "Unlock editing",
@@ -337,6 +340,10 @@
     "periodicity": "Daily issues table",
     "edit_periodicity": "Daily issues table",
     "show_attachments_at_the_end": "Show supplements at the end of the volume",
+    "attachments_sort": "Supplements order",
+    "attachments_sort_asc": "At the end of the volume",
+    "attachments_sort_desc": "At the beginning of the volume",
+    "attachments_sort_none": "No special ordering",
     "volume_input_data_validation_error": "The input data of the volume is incorrect (validation error)",
     "specimens_validation_error": "Specimens contain invalid data (validation error)",
     "volume_updated_successfully": "Volume updated successfully",
@@ -445,7 +452,11 @@
     "login": "Login",
     "administration": "Administration",
     "logout": "Logout",
-    "volume": "Volume"
+    "volume": "Volume",
+    "dev_login_title": "Login (local development)",
+    "dev_login_username": "Username",
+    "dev_login_password": "Password",
+    "dev_login_error": "Login failed"
   },
   "not_found": {
     "page_dont_exists": "This page does not exist"
@@ -493,6 +504,8 @@
     "first_name_min_length": "Please fill out the 'First name' field",
     "last_name_min_length": "Please fill out the 'Last name' field",
     "email": "Please fill out the 'Email' field correctly",
+    "username_required": "Please fill out the 'Username' field",
+    "password_required": "Please fill out the 'Password' field",
     "cs_name_min_length": "Please fill out the 'Czech name' field",
     "sk_name_min_length": "Please fill out the 'Slovak name' field",
     "en_name_min_length": "Please fill out the 'English name' field",

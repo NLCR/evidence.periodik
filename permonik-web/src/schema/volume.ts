@@ -18,6 +18,8 @@ export const VolumePeriodicityDaysSchema = z.enum([
   'Sunday',
 ])
 
+export const VolumeAttachmentsSortSchema = z.enum(['ASC', 'DESC', 'NONE'])
+
 export const VolumePeriodicitySchema = z.object({
   numExists: z.boolean(),
   isAttachment: z.boolean(),
@@ -51,7 +53,7 @@ export const VolumeSchema = AuditableSchema.extend({
   firstNumber: z.number().min(0, i18next.t('schema.first_number_min')),
   lastNumber: z.number().min(0, i18next.t('schema.last_number_min')),
   note: z.string(),
-  showAttachmentsAtTheEnd: z.boolean(),
+  attachmentsSort: VolumeAttachmentsSortSchema,
   signature: z.string(),
   ownerId: z.string().length(36, i18next.t('schema.owner_empty')),
   year: z.number().min(0, i18next.t('schema.year_min')),
@@ -71,7 +73,7 @@ export const EditableVolumeSchema = AuditableSchema.extend({
   firstNumber: z.string().or(z.number()).optional(),
   lastNumber: z.string().or(z.number()).optional(),
   note: z.string(),
-  showAttachmentsAtTheEnd: z.boolean(),
+  attachmentsSort: VolumeAttachmentsSortSchema,
   signature: z.string(),
   ownerId: z.string(),
   year: z.string().or(z.number()).optional(),
@@ -106,6 +108,7 @@ export type TVolumePeriodicity = z.infer<typeof VolumePeriodicitySchema>
 export type TEditableVolumePeriodicity = z.infer<
   typeof EditableVolumePeriodicitySchema
 >
+export type TVolumeAttachmentsSort = z.infer<typeof VolumeAttachmentsSortSchema>
 export type TVolume = z.infer<typeof VolumeSchema>
 export type TEditableVolume = z.infer<typeof EditableVolumeSchema>
 export type TVolumeDetail = z.infer<typeof VolumeDetailSchema>

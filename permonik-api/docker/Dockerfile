@@ -1,13 +1,18 @@
 # syntax = docker/dockerfile:1
 
 ## BUILD image ##
-FROM gradle:9.1.0-jdk25 AS builder
+FROM gradle:9.6.1-jdk25 AS builder
 WORKDIR /build
+
+ARG SENTRY_URL=""
+
+ENV SENTRY_URL="$SENTRY_URL"
 
 # Run build
 RUN \
     --mount=type=cache,id="permonik-api-gradle-home",target="/gradle-home" \
     --mount=type=cache,id="permonik",target="/build" \
+    --mount=type=secret,id=sentry-auth-token,env=SENTRY_AUTH_TOKEN \
     --mount=type=bind,source="settings.gradle",target="/host/settings.gradle" \
     --mount=type=bind,source="gradle.properties",target="/host/gradle.properties" \
     --mount=type=bind,source="lombok.config",target="/host/lombok.config" \
@@ -18,10 +23,18 @@ RUN \
     cp -rT /host/permonik-api ./permonik-api && \
     echo "config.stopBubbling = true" >> ./permonik-api/lombok.config && \
     gradle -g /gradle-home --no-daemon :permonik-api:build -x :permonik-api:test && \
-    java -Djarmode=layertools -jar ./permonik-api/build/libs/permonik-api.jar extract --destination /extracted
+    java -Djarmode=tools -jar ./permonik-api/build/libs/permonik-api.jar extract --layers --destination /extracted
 
 ## RUN Image ##
 FROM eclipse-temurin:25-jre
+
+ARG SENTRY_DSN=""
+ARG SENTRY_ENVIRONMENT=""
+ARG SENTRY_RELEASE=""
+
+ENV SENTRY_DSN="$SENTRY_DSN" \
+    SENTRY_ENVIRONMENT="$SENTRY_ENVIRONMENT" \
+    SENTRY_RELEASE="$SENTRY_RELEASE"
 
 RUN apt update
 RUN apt install nano mc -y
@@ -32,4 +45,4 @@ COPY --from=builder /extracted/dependencies /app
 COPY --from=builder /extracted/snapshot-dependencies /app
 COPY --from=builder /extracted/spring-boot-loader /app
 COPY --from=builder /extracted/application /app
-ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
+ENTRYPOINT ["java", "-jar", "permonik-api.jar"]

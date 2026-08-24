@@ -1,13 +1,13 @@
-import './wdyr'
+// import './wdyr'
 import { createRoot } from 'react-dom/client'
 import { I18nextProvider } from 'react-i18next'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClientProvider } from '@tanstack/react-query'
 import {
-  setTag,
-  init as SentryInit,
   browserTracingIntegration,
   extraErrorDataIntegration,
+  init as SentryInit,
+  setTag,
 } from '@sentry/react'
 import { ToastContainer } from 'react-toastify'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -20,35 +20,25 @@ import './styles.css'
 import { LicenseInfo } from '@mui/x-license'
 import { StrictMode } from 'react'
 
-const { MODE, VITE_SENTRY_DNS, VITE_MUI_LICENCE_KEY } = import.meta.env
-
-const getEnvironment = () => {
-  let environment = 'unknown'
-  const hostname = window.location.hostname
-
-  if (hostname.includes('permonik')) {
-    environment = 'prod'
-  }
-  if (hostname.includes('permonik-test')) {
-    environment = 'test'
-  }
-  if (hostname.includes('localhost')) {
-    environment = 'localhost'
-  }
-
-  return environment
-}
+const {
+  MODE,
+  VITE_SENTRY_DSN,
+  VITE_SENTRY_ENVIRONMENT = 'localhost',
+  VITE_SENTRY_RELEASE,
+  VITE_MUI_LICENCE_KEY,
+} = import.meta.env
 
 // Setup Sentry for errors reporting in production
 setTag('APP_TYPE', MODE) // public or admin
 SentryInit({
-  dsn: VITE_SENTRY_DNS,
+  dsn: VITE_SENTRY_DSN,
   tracePropagationTargets: ['permonik.nkp.cz', 'permonik-test.nkp.cz', /^\//],
   integrations: [browserTracingIntegration(), extraErrorDataIntegration()],
   tracesSampleRate: 0.5,
-  environment: getEnvironment(),
+  environment: VITE_SENTRY_ENVIRONMENT,
+  release: VITE_SENTRY_RELEASE,
   beforeSend(event) {
-    return getEnvironment() === 'localhost' ? null : event
+    return VITE_SENTRY_ENVIRONMENT === 'localhost' ? null : event
   },
 })
 
@@ -63,7 +53,7 @@ createRoot(document.getElementById('root') as HTMLElement).render(
           <App />
         </ThemeProvider>
       </I18nextProvider>
-      <ReactQueryDevtools buttonPosition="bottom-left" />
+      <ReactQueryDevtools buttonPosition="bottom-right" />
     </QueryClientProvider>
     <ToastContainer
       position="bottom-left"

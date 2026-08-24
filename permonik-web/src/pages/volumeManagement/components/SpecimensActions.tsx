@@ -1,10 +1,10 @@
 import ScannerIcon from '@mui/icons-material/AdfScanner'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { TEdition } from '../../../schema/edition'
-import { TUpdatableVolume } from '../../../api/volume'
+import { type TEdition } from '../../../schema/edition'
+import { type TUpdatableVolume } from '../../../api/volume'
 import Box from '@mui/material/Box'
 import SaveIcon from '@mui/icons-material/Save'
 import SaveAsIcon from '@mui/icons-material/SaveAs'
@@ -19,7 +19,7 @@ import { BACK_META_TITLE_ID } from '../../../utils/constants'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
 import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
 import PrepareScanModal from '../../../components/prepare-scan-modal/PrepareScanModal'
-import { FieldsToReset } from '../../../utils/duplicateVolume/types'
+import { type FieldsToReset } from '../../../utils/duplicateVolume/types'
 import DuplicateVolumeModal from '../../../components/DuplicateVolumeModal'
 
 type Props = {
@@ -45,6 +45,7 @@ const SpecimensActions = ({
 }: Props) => {
   const { volumeId } = useParams()
   const [searchParams] = useSearchParams()
+  const searchParamsBackMetaTitleId = searchParams.get(BACK_META_TITLE_ID)
   const { t, i18n } = useTranslation()
 
   const { locked: isInputDataLocked, disabled } =
@@ -72,12 +73,13 @@ const SpecimensActions = ({
     (state) => state.periodicityGenerationUsed
   )
 
-  const backMetaTitle = useMemo(
+  const volumeMetaTitleId = volume?.volume.metaTitleId
+  const backMetaTitleId = useMemo(
     () =>
-      uuidValidate(searchParams.get(BACK_META_TITLE_ID) || '')
-        ? searchParams.get(BACK_META_TITLE_ID)
-        : volume?.volume.metaTitleId,
-    [searchParams, volume?.volume.metaTitleId]
+      uuidValidate(searchParamsBackMetaTitleId || '')
+        ? searchParamsBackMetaTitleId
+        : volumeMetaTitleId,
+    [searchParamsBackMetaTitleId, volumeMetaTitleId]
   )
 
   // useEffect(() => {
@@ -219,11 +221,11 @@ const SpecimensActions = ({
             alignItems: 'center',
           }}
         >
-          {backMetaTitle?.length ? (
+          {backMetaTitleId?.length ? (
             <Button
               component={Link}
               variant="outlined"
-              to={`/${i18n.resolvedLanguage}/${t('urls.specimens_overview')}/${backMetaTitle}`}
+              to={`/${i18n.resolvedLanguage}/${t('urls.specimens_overview')}/${backMetaTitleId}`}
             >
               {t('volume_overview.back_to_specimens_overview')}
             </Button>

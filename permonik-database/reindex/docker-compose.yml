@@ -1,7 +1,7 @@
 services:
   # used for precreating new solr version
   permonik-database-precreate:
-    image: solr:9.10.0
+    image: solr:10.0.0
     ports:
       - "8991:8983"
     deploy:
@@ -16,7 +16,7 @@ services:
 
   # used for reindexing new solr version
   permonik-database-new:
-    image: solr:9.10.0
+    image: solr:10.0.0
     ports:
       - "8990:8983"
     deploy:
@@ -26,6 +26,9 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms1g -Xmx1g"
       SOLR_MODULES: analysis-extras
+    command:
+      - solr-fg
+      - --user-managed
     volumes:
       - ./new-solr-data:/var/solr
 

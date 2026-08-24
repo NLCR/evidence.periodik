@@ -3,7 +3,7 @@ import i18next from '../i18next'
 
 export const EditableUserSchema = z.object({
   id: z.string(),
-  email: z.string().email(i18next.t('schema.email')),
+  email: z.email(i18next.t('schema.email')),
   userName: z.string(),
   firstName: z.string().min(1, i18next.t('schema.first_name_min_length')),
   lastName: z.string().min(1, i18next.t('schema.last_name_min_length')),
@@ -15,7 +15,7 @@ export const EditableUserSchema = z.object({
 export const MeSchema = z.object({
   id: z.string(),
   name: z.string(),
-  email: z.string().email(i18next.t('schema.email')),
+  email: z.email(i18next.t('schema.email')),
   authorities: z.string().array(),
   owners: z.string().array().nullable(),
   enabled: z.boolean(),
@@ -26,5 +26,11 @@ export const MeSchema = z.object({
   credentialsNonExpired: z.boolean(),
 })
 
+export const BasicLoginSchema = z.object({
+  username: z.string().trim().min(1, i18next.t('schema.username_required')),
+  password: z.string().min(1, i18next.t('schema.password_required')),
+})
+
 export type TUser = z.infer<typeof EditableUserSchema>
 export type TMe = z.infer<typeof MeSchema>
+export type TBasicLogin = z.infer<typeof BasicLoginSchema>

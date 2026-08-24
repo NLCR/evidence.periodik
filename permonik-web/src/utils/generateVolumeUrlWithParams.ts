@@ -3,7 +3,7 @@ import {
   JUMP_TO_SPECIMEN_WITH_ID,
   VOLUME_DUPLICATE_SOURCE_ID,
 } from './constants'
-import { FieldsToReset } from './duplicateVolume/types'
+import { type FieldsToReset } from './duplicateVolume/types'
 
 export const generateVolumeUrlWithParams = (
   url: string,

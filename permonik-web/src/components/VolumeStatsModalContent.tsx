@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import { useVolumeOverviewStatsQuery } from '../api/volume'
@@ -460,7 +460,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
           .filter(
             (s) =>
               s.damageTypes?.includes('PP') &&
-              Number(s.number) >= 0 &&
+              Number(s.isAttachment ? s.attachmentNumber : s.number) >= 0 &&
               s.numExists
           )
           .map((s) => (
@@ -488,6 +488,38 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
           marginBottom: '10px',
         }}
       >
+        <Typography sx={bolderTextStyle}>{t('facet_states.ChS')}:</Typography>
+        {volumeStats.specimens
+          .filter((s) => s.numExists && s.damageTypes?.includes('ChS'))
+          .map((s) => (
+            <Box key={`missingPages-${s.id}`}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  width: '9rem',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
+                  {t('volume_overview.number_super_short').toLowerCase()}{' '}
+                  {s.isAttachment ? s.attachmentNumber : s.number}
+                </Typography>
+                <Typography variant="body2">—</Typography>
+                <Typography variant="body2">
+                  {formatDate(s.publicationDate, { includeDayName: true })}
+                </Typography>
+              </Box>
+              <Typography variant="body2" sx={{ marginLeft: 3 }}>
+                {[...s.missingPages].sort((a, b) => a - b).join(', ')}
+              </Typography>
+            </Box>
+          ))}
+      </Box>
+      <Box
+        sx={{
+          marginBottom: '10px',
+        }}
+      >
         <Typography sx={bolderTextStyle}>
           {t('volume_overview.notes')}:
         </Typography>
@@ -504,7 +536,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
               >
                 <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
                   {t('volume_overview.number_super_short').toLowerCase()}{' '}
-                  {s.number}
+                  {s.isAttachment ? s.attachmentNumber : s.number}
                 </Typography>
                 <Typography variant="body2">—</Typography>
                 <Typography variant="body2">

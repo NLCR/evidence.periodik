@@ -5,7 +5,10 @@ import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+
+import static cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenDefinition.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,53 +18,73 @@ import java.util.List;
 @Getter
 public class Specimen extends Auditable {
 
-    @Field
+    @Field(ID_FIELD)
     private String id; // UUID
-    @Field
+    @Field(META_TITLE_ID_FIELD)
     private String metaTitleId; // UUID of metaTitle
-    @Field
+    @Field(META_TITLE_NAME_FIELD)
+    private String metaTitleName; // Name of metaTitle
+    @Field(VOLUME_ID_FIELD)
     private String volumeId;
-    @Field
+    @Field(BAR_CODE_FIELD)
     private String barCode;
-    @Field
+    @Field(NUM_EXISTS_FIELD)
     private Boolean numExists;
-    @Field
+    @Field(NUM_MISSING_FIELD)
     private Boolean numMissing;
-    @Field
-    private String ownerId; // UUID of owner
-    @Field
+    @Field(OWNER_ID_FIELD)
+    private String ownerId; // UUID of an owner
+    @Field(OWNER_NAME_FIELD)
+    private String ownerName;
+    @Field(OWNER_SHORTHAND_FIELD)
+    private String ownerShorthand;
+    @Field(OWNER_SIGLA_FIELD)
+    private String ownerSigla;
+    @Field(DAMAGE_TYPES_FIELD)
     private List<String> damageTypes;
-    @Field
+    @Field(DAMAGED_PAGES_FIELD)
     private List<Integer> damagedPages; // stored by real pages, so first page = 1, second page = 2 etc. Starting from 1, not 0
-    @Field
+    @Field(MISSING_PAGES_FIELD)
     private List<Integer> missingPages; // stored by real pages, so first page = 1, second page = 2 etc. Starting from 1, not 0
-    @Field
+    @Field(NOTE_FIELD)
     private String note;
-    @Field
+    @Field(NAME_FIELD)
     private String name;
-    @Field
+    @Field(SUB_NAME_FIELD)
     private String subName;
-    @Field
+    @Field(EDITION_ID_FIELD)
     private String editionId; // UUID of edition
-    @Field
+    @Field(EDITION_CS_NAME_FIELD)
+    private String editionCsName; // Name of an edition
+    @Field(EDITION_SK_NAME_FIELD)
+    private String editionSkName; // Name of an edition
+    @Field(EDITION_EN_NAME_FIELD)
+    private String editionEnName; // Name of an edition
+    @Field(MUTATION_ID_FIELD)
     private String mutationId; // UUID of mutation
-    @Field
+    @Field(MUTATION_CS_NAME_FIELD)
+    private String mutationCsName; // Name of a mutation
+    @Field(MUTATION_SK_NAME_FIELD)
+    private String mutationSkName; // Name of a mutation
+    @Field(MUTATION_EN_NAME_FIELD)
+    private String mutationEnName; // Name of a mutation
+    @Field(MUTATION_MARK_FIELD)
     private String mutationMark;
-    @Field
+    @Field(MUTATION_MARK_TYPE_FIELD)
     private String mutationMarkType;
-    @Field
+    @Field(MUTATION_MARK_DESCRIPTION_FIELD)
     private String mutationMarkDescription;
-    @Field
-    private String publicationDate;
-    @Field
-    private String publicationDateString;
-    @Field
+    @Field(PUBLICATION_DATE_FIELD)
+    private Date publicationDate;
+    @Field(NUMBER_FIELD)
     private String number; // filled if specimen is not attachment
-    @Field
-    private String attachmentNumber; // filled if specimen is attachment
-    @Field
+    @Field(ATTACHMENT_NUMBER_FIELD)
+    private String attachmentNumber; // filled if specimen is an attachment
+    @Field(NUMBER_SORT_KEY_FIELD)
+    private String numberSortKey; // normalized key used for natural sorting of number/attachmentNumber
+    @Field(PAGES_COUNT_FIELD)
     private Integer pagesCount;
-    @Field
+    @Field(IS_ATTACHMENT_FIELD)
     private Boolean isAttachment;
 
     // Custom getter for `note`

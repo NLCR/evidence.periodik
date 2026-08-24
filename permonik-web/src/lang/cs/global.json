@@ -247,6 +247,8 @@
     "detailed_volume_overview": "Detailní popis svazku",
     "duplicate_dialog_title": "Duplikovat záznam",
     "duplicate_dialog_description": "Vyberte datum, ke kterému bude zadán nový záznam",
+    "duplicate_attachment_requires_regular": "Přílohu lze zadat jen k datu, kde už existuje jiné nepřílohové číslo.",
+    "cannot_delete_last_regular_with_attachments": "Nelze smazat poslední nepřílohové číslo k tomuto datu, dokud zde existují přílohy.",
     "field_names": {
       "note": "Poznámka",
       "damage_types": "Poškození (chybné datum, degradace, svázání atd.)",
@@ -282,6 +284,7 @@
     "date_from": "Datum od",
     "first_number": "První číslo",
     "date_to": "Datum do",
+    "date_range_excludes_active_specimen": "Datum od nesmí být po datu do a rozsah svazku musí obsahovat data všech aktivních exemplářů.",
     "last_number": "Poslední číslo",
     "note": "Poznámka",
     "unlock_edit": "Odemknout editaci",
@@ -337,6 +340,10 @@
     "periodicity": "Tabulka denních vydání",
     "edit_periodicity": "Tabulka denních vydání",
     "show_attachments_at_the_end": "Zobrazit přílohy na konci svazku",
+    "attachments_sort": "Řazení příloh",
+    "attachments_sort_asc": "Na konci svazku",
+    "attachments_sort_desc": "Na začátku svazku",
+    "attachments_sort_none": "Bez zvláštního řazení",
     "volume_input_data_validation_error": "Vstupní data svazku jsou nesprávná (chyba validace)",
     "specimens_validation_error": "Exempáře obsahují neplatná data (chyba validace)",
     "volume_updated_successfully": "Svazek byl úspěšně upraven",
@@ -445,7 +452,11 @@
     "login": "Přihlášení",
     "administration": "Administrace",
     "logout": "Odhlásit se",
-    "volume": "Svazek"
+    "volume": "Svazek",
+    "dev_login_title": "Přihlášení (lokální vývoj)",
+    "dev_login_username": "Uživatelské jméno",
+    "dev_login_password": "Heslo",
+    "dev_login_error": "Přihlášení se nezdařilo"
   },
   "not_found": {
     "page_dont_exists": "Tato stránka neexistuje"
@@ -493,6 +504,8 @@
     "first_name_min_length": "Vyplňte prosím pole 'Jméno'",
     "last_name_min_length": "Vyplňte prosím pole 'Příjmení'",
     "email": "Vyplňte prosím správně pole 'Email'",
+    "username_required": "Vyplňte prosím pole 'Uživatelské jméno'",
+    "password_required": "Vyplňte prosím pole 'Heslo'",
     "cs_name_min_length": "Vyplňte prosím pole 'Český název'",
     "sk_name_min_length": "Vyplňte prosím pole 'Slovenský název'",
     "en_name_min_length": "Vyplňte prosím pole 'Anglický název'",

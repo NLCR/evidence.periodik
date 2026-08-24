@@ -1,5 +1,6 @@
 package cz.incad.nkp.inprove.permonikapi.edition;
 
+import cz.incad.nkp.inprove.permonikapi.common.LanguageResolver;
 import cz.incad.nkp.inprove.permonikapi.edition.model.EditionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,8 +22,10 @@ public class EditionController {
 
     @Operation(summary = "Lists all editions")
     @GetMapping("/list/all")
-    public List<EditionDTO> getEditions() throws SolrServerException, IOException {
-        return editionService.getEditions();
+    public List<EditionDTO> getEditions(
+        @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage
+    ) throws SolrServerException, IOException {
+        return editionService.getEditions(LanguageResolver.resolve(acceptLanguage));
     }
 
     @Operation(summary = "Updates existing edition")

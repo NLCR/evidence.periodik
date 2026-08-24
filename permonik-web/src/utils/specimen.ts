@@ -1,9 +1,94 @@
 import type { TVolume } from '../schema/volume'
 import { v4 as uuid } from 'uuid'
-import { TEdition } from '../schema/edition'
+import { type TEdition } from '../schema/edition'
 import { copyAuditable } from '../schema/common'
-import { TEditableSpecimen, TSpecimen } from '../schema/specimen'
+import { type TEditableSpecimen, type TSpecimen } from '../schema/specimen'
 import { createEmptyMutationMark, repairMutationMark } from './mutationMark'
+
+export const isAttachmentSpecimen = (
+  specimen: Partial<TEditableSpecimen>,
+  editions?: TEdition[]
+): boolean => {
+  const edition = editions?.find((item) => item.id === specimen.editionId)
+  return !!(
+    edition?.isAttachment ||
+    edition?.isPeriodicAttachment ||
+    specimen.isAttachment
+  )
+}
+
+/**
+ * Checks whether an attachment issue can be used on a specific day.
+ *
+ * Rule: on the target day there must already exist at least one other
+ * non-attachment issue. The currently validated row can be excluded via
+ * `candidateRowId`.
+ */
+export const canUseAttachmentOnDate = ({
+  editions,
+  specimens,
+  publicationDate,
+  candidateRowId,
+}: {
+  editions: TEdition[]
+  specimens: TEditableSpecimen[]
+  publicationDate: string
+  candidateRowId?: string
+}): boolean => {
+  const attachmentEditions = editions.filter(
+    (e) => e.isAttachment || e.isPeriodicAttachment
+  )
+
+  return specimens.some((specimen) => {
+    if (!specimen.numExists) return false
+    if (candidateRowId && specimen.id === candidateRowId) return false
+    if (specimen.publicationDate !== publicationDate) return false
+
+    return !isAttachmentSpecimen(specimen, attachmentEditions)
+  })
+}
+
+/**
+ * Checks whether deleting the candidate row would violate attachment rule.
+ *
+ * Rule: it is forbidden to delete the last non-attachment issue for a day
+ * when attachments for that same day would remain.
+ */
+export const canDeleteSpecimen = ({
+  editions,
+  specimens,
+  candidateRow,
+}: {
+  editions?: TEdition[]
+  specimens: TEditableSpecimen[]
+  candidateRow: TEditableSpecimen
+}): boolean => {
+  if (isAttachmentSpecimen(candidateRow, editions) || !candidateRow.numExists) {
+    return true
+  }
+
+  const publicationDay = candidateRow.publicationDate
+  const specimensOnSameDay = specimens.filter((specimen) => {
+    if (
+      specimen.deleted ||
+      specimen.id === candidateRow.id ||
+      !specimen.numExists
+    ) {
+      return false
+    }
+
+    return specimen.publicationDate === publicationDay
+  })
+
+  const hasRegularIssue = specimensOnSameDay.some(
+    (specimen) => !isAttachmentSpecimen(specimen, editions)
+  )
+  const hasAttachmentIssue = specimensOnSameDay.some((specimen) =>
+    isAttachmentSpecimen(specimen, editions)
+  )
+
+  return hasRegularIssue || !hasAttachmentIssue
+}
 
 export const filterSpecimen = (
   specimen: TEditableSpecimen
@@ -11,12 +96,9 @@ export const filterSpecimen = (
   return {
     ...copyAuditable(specimen),
     id: specimen.id,
-    metaTitleId: specimen.metaTitleId,
     volumeId: specimen.volumeId,
-    barCode: specimen.barCode.trim(),
     numExists: specimen.numExists,
     numMissing: specimen.numMissing,
-    ownerId: specimen.ownerId,
     damageTypes: specimen.damageTypes,
     damagedPages: specimen.damagedPages,
     missingPages: specimen.missingPages,
@@ -27,7 +109,6 @@ export const filterSpecimen = (
     mutationId: specimen.mutationId,
     mutationMark: repairMutationMark(specimen.mutationMark),
     publicationDate: specimen.publicationDate,
-    publicationDateString: specimen.publicationDateString,
     number: specimen.number.trim(),
     attachmentNumber: specimen.attachmentNumber.trim(),
     pagesCount: Number(
@@ -45,12 +126,9 @@ export const repairOrCreateSpecimen = (
   return {
     ...copyAuditable(specimen),
     id: specimen.id ?? uuid(),
-    metaTitleId: volume.metaTitleId,
     volumeId: volume.id,
-    barCode: volume.barCode.trim(),
     numExists: specimen.numExists ?? false,
     numMissing: specimen.numMissing ?? false,
-    ownerId: volume.ownerId,
     damageTypes: specimen.damageTypes ?? [],
     damagedPages: specimen.damagedPages ?? [],
     missingPages: specimen.missingPages ?? [],
@@ -61,7 +139,6 @@ export const repairOrCreateSpecimen = (
     mutationId: specimen.mutationId ?? '',
     mutationMark: repairMutationMark(specimen.mutationMark),
     publicationDate: specimen.publicationDate ?? '',
-    publicationDateString: specimen.publicationDateString ?? '',
     number: specimen.number?.trim() ?? '',
     attachmentNumber: specimen.attachmentNumber?.trim() ?? '',
     pagesCount: specimen.pagesCount ?? 0,
@@ -74,12 +151,9 @@ export const duplicatePartialSpecimen = (
 ): TEditableSpecimen => {
   return {
     id: uuid(),
-    metaTitleId: specimen.metaTitleId ?? '',
     volumeId: specimen.volumeId ?? '',
-    barCode: specimen.barCode ?? '',
     numExists: specimen.numExists ?? false,
     numMissing: specimen.numMissing ?? false,
-    ownerId: specimen.ownerId ?? '',
     damageTypes: specimen.damageTypes ?? [],
     damagedPages: specimen.damagedPages ?? [],
     missingPages: specimen.missingPages ?? [],
@@ -90,7 +164,6 @@ export const duplicatePartialSpecimen = (
     mutationId: specimen.mutationId ?? '',
     mutationMark: specimen.mutationMark ?? createEmptyMutationMark(),
     publicationDate: specimen.publicationDate ?? '',
-    publicationDateString: specimen.publicationDateString ?? '',
     number: specimen.number ?? '',
     attachmentNumber: specimen.attachmentNumber ?? '',
     pagesCount: specimen.pagesCount ?? 0,

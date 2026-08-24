@@ -64,6 +64,13 @@ const processError = (error: SpringError) => {
     // queryClient.invalidateQueries({ queryKey: ['me'] })
   } else if (error.status === 500) {
     toast.error(`${error.status}: ${error.message}`)
+  } else if (
+    error.status === 422 &&
+    error.message === 'VOLUME_DATE_RANGE_EXCLUDES_ACTIVE_SPECIMEN'
+  ) {
+    toast.error(
+      i18next.t('volume_overview.date_range_excludes_active_specimen')
+    )
   }
 }
 
@@ -79,6 +86,14 @@ const baseApi = ({ handledCodes, throwErrorFromKy = true }: BaseOptions) =>
     throwHttpErrors: throwErrorFromKy,
     retry: 0,
     hooks: {
+      beforeRequest: [
+        (request) => {
+          request.headers.set(
+            'Accept-Language',
+            i18next.resolvedLanguage ?? i18next.language ?? 'cs'
+          )
+        },
+      ],
       afterResponse: [
         // Handle errors
         async (_request, _options, response) => {
