@@ -1,15 +1,8 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { VariableSizeList } from 'react-window'
+import { List, useDynamicRowHeight } from 'react-window'
 import type {
   TReplacementSource,
   TTemplateItem,
@@ -35,21 +28,7 @@ export type TVirtualizedSpecimenRowData = {
   viewOnly: boolean
   showOnlyRescans: boolean
   replacementSourceCandidates: TReplacementSource[]
-  setRowHeight: (index: number, height: number) => void
   disabled?: boolean
-}
-
-const hasListCompositionChanged = (
-  previousItemIds: string[],
-  nextItemIds: string[]
-) => {
-  if (previousItemIds.length !== nextItemIds.length) return true
-
-  for (let index = 0; index < previousItemIds.length; index += 1) {
-    if (previousItemIds[index] !== nextItemIds[index]) return true
-  }
-
-  return false
 }
 
 const VirtualizedSpecimenList = ({
@@ -75,27 +54,10 @@ const VirtualizedSpecimenList = ({
   )
 
   const { t } = useTranslation()
-  const listRef = useRef<VariableSizeList<TVirtualizedSpecimenRowData> | null>(
-    null
-  )
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const rowHeightsRef = useRef<Record<number, number>>({})
-  const previousVisibleItemIdsRef = useRef<string[] | null>(null)
-  const [listHeight, setListHeight] = useState(ESTIMATED_ROW_HEIGHT * 2)
-
-  const setRowHeight = useCallback((index: number, height: number) => {
-    const currentHeight = rowHeightsRef.current[index]
-
-    if (currentHeight === height) return
-
-    rowHeightsRef.current[index] = height
-    listRef.current?.resetAfterIndex(index)
-  }, [])
-
-  const getItemSize = useCallback(
-    (index: number) => rowHeightsRef.current[index] ?? ESTIMATED_ROW_HEIGHT,
-    []
-  )
+  const dynamicRowHeight = useDynamicRowHeight({
+    defaultRowHeight: ESTIMATED_ROW_HEIGHT,
+    key: visibleItemIds.join(','),
+  })
 
   const itemData = useMemo<TVirtualizedSpecimenRowData>(
     () => ({
@@ -103,12 +65,10 @@ const VirtualizedSpecimenList = ({
       viewOnly,
       showOnlyRescans,
       replacementSourceCandidates,
-      setRowHeight,
       disabled,
     }),
     [
       replacementSourceCandidates,
-      setRowHeight,
       showOnlyRescans,
       viewOnly,
       visibleItems,
@@ -116,41 +76,11 @@ const VirtualizedSpecimenList = ({
     ]
   )
 
-  useEffect(() => {
-    const previousVisibleItemIds = previousVisibleItemIdsRef.current
-    const shouldResetCache =
-      previousVisibleItemIds === null ||
-      hasListCompositionChanged(previousVisibleItemIds, visibleItemIds)
-
-    if (shouldResetCache) {
-      rowHeightsRef.current = {}
-      listRef.current?.resetAfterIndex(0, true)
-    }
-
-    previousVisibleItemIdsRef.current = visibleItemIds
-  }, [visibleItemIds])
-
-  useLayoutEffect(() => {
-    const element = containerRef.current
-
-    if (!element) return
-
-    const updateHeight = () => {
-      const measuredHeight = Math.floor(element.getBoundingClientRect().height)
-
-      if (measuredHeight <= 0) return
-      setListHeight((currentHeight) =>
-        currentHeight === measuredHeight ? currentHeight : measuredHeight
-      )
-    }
-
-    updateHeight()
-
-    const observer = new ResizeObserver(updateHeight)
-    observer.observe(element)
-
-    return () => observer.disconnect()
-  }, [])
+  const getRowKey = useCallback(
+    (index: number, data: TVirtualizedSpecimenRowData) =>
+      data.items[index].item.specimen.id,
+    []
+  )
 
   if (visibleItems.length === 0) {
     return (
@@ -161,20 +91,17 @@ const VirtualizedSpecimenList = ({
   }
 
   return (
-    <Box ref={containerRef} sx={{ height: '100%', minHeight: 0 }}>
-      <VariableSizeList
-        ref={listRef}
-        height={listHeight}
-        width="100%"
-        itemCount={visibleItems.length}
-        itemData={itemData}
-        itemSize={getItemSize}
-        estimatedItemSize={ESTIMATED_ROW_HEIGHT}
+    <Box sx={{ height: '100%', minHeight: 0 }}>
+      <List
+        rowComponent={VirtualizedSpecimenRow}
+        rowCount={visibleItems.length}
+        rowHeight={dynamicRowHeight}
+        rowProps={itemData}
+        rowKey={getRowKey}
+        defaultHeight={ESTIMATED_ROW_HEIGHT * 2}
         overscanCount={OVERSCAN_COUNT}
-        itemKey={(index, data) => data.items[index].item.specimen.id}
-      >
-        {VirtualizedSpecimenRow}
-      </VariableSizeList>
+        style={{ height: '100%', width: '100%' }}
+      />
     </Box>
   )
 }

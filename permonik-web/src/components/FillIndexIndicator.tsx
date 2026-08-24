@@ -3,7 +3,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
-import { FC } from 'react'
+import { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type FillIndexIndicatorProps = {

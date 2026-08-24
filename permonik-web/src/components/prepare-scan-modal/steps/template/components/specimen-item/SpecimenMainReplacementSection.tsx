@@ -1,13 +1,13 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { Controller, Control } from 'react-hook-form'
+import { Controller, type Control } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
   createEmptyReplacementSource,
-  TMainReplacement,
-  TReplacementSource,
-  TTemplate,
-  TTemplateSpecimenRef,
+  type TMainReplacement,
+  type TReplacementSource,
+  type TTemplate,
+  type TTemplateSpecimenRef,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import FormCheckbox from '../../../../../form/FormCheckbox'
 import ReplacementSourceInput from '../../../common/ReplacementSourceInput'

@@ -1,10 +1,10 @@
-import Checkbox, { CheckboxProps } from '@mui/material/Checkbox'
+import Checkbox, { type CheckboxProps } from '@mui/material/Checkbox'
 import { noop } from 'lodash'
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import {
   Controller,
-  FieldPath,
-  FieldValues,
+  type FieldPath,
+  type FieldValues,
   useFormContext,
 } from 'react-hook-form'
 

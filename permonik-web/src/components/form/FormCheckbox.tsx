@@ -1,10 +1,10 @@
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import {
   Controller,
-  FieldPath,
-  FieldValues,
+  type FieldPath,
+  type FieldValues,
   useFormContext,
 } from 'react-hook-form'
 

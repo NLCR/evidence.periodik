@@ -11,14 +11,17 @@ import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
-import { EditableMutationSchema,type TEditableMutation } from '@/schema/mutation'
+import {
+  EditableMutationSchema,
+  type TEditableMutation,
+} from '@/schema/mutation'
 import {
   useCreateMutationMutation,
   useMutationListQuery,
   useUpdateMutationMutation,
 } from '@/api/mutation'
 
-import { useLanguageCode } from '../../hooks/useLanguageCode'
+import { useLanguageCode } from '@/hooks/useLanguageCode'
 
 const Container = styled('div')(() => ({
   position: 'relative',

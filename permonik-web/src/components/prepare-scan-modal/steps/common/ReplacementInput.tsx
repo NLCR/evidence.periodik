@@ -6,8 +6,8 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import FormCheckbox from '../../../form/FormCheckbox'
 import {
-  TReplacementSource,
-  TTemplate,
+  type TReplacementSource,
+  type TTemplate,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
 import { isLockingEnabled } from '../template/utils/templateItemLocking'
@@ -39,7 +39,7 @@ const ReplacementInput = ({
   const templateState = useWatch({ control, name: 'state' })
 
   const isLockingAllowed = isLockingEnabled(templateState)
-  const isLocked = !!item?.locked
+  const isLocked = item?.locked
   const isReadOnly = disabled || isLocked
 
   return (

@@ -7,12 +7,12 @@ import SyncRoundedIcon from '@mui/icons-material/SyncRounded'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { FC } from 'react'
+import { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import ConfirmDialog from '@/pages/specimensOverview/components/dialogs/ConfirmDialog'
 import { TemplateState } from '@/components/prepare-scan-modal/schemas/templateStateSchema'
 import ResponsiveActionButton from '@/components/prepare-scan-modal/steps/template/components/ResponsiveActionButton'
-import { TTransitionDialogConfig } from '@/components/prepare-scan-modal/steps/template/hooks/useTransitionDialogConfig'
+import { type TTransitionDialogConfig } from '@/components/prepare-scan-modal/steps/template/hooks/useTransitionDialogConfig'
 
 type TProps = {
   watchedState: TemplateState

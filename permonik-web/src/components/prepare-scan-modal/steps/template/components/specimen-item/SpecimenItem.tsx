@@ -5,10 +5,10 @@ import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import SpecimenItemViewOnly from './SpecimenItemViewOnly'
 import {
   createEmptyMainReplacement,
-  TReplacement,
-  TReplacementSource,
-  TTemplate,
-  TTemplateSpecimenRef,
+  type TReplacement,
+  type TReplacementSource,
+  type TTemplate,
+  type TTemplateSpecimenRef,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import SpecimenItemHeader from './SpecimenItemHeader'
 import SpecimenMainReplacementSection from './SpecimenMainReplacementSection'

@@ -4,16 +4,16 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import {
-  FieldArrayWithId,
-  UseFieldArrayAppend,
-  UseFieldArrayRemove,
+  type FieldArrayWithId,
+  type UseFieldArrayAppend,
+  type UseFieldArrayRemove,
 } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
   createEmptyReplacement,
-  TReplacement,
-  TReplacementSource,
-  TTemplate,
+  type TReplacement,
+  type TReplacementSource,
+  type TTemplate,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import ReplacementInput from '../../../common/ReplacementInput'
 

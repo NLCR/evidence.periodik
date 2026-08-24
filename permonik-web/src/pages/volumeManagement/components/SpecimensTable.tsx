@@ -8,17 +8,20 @@ import {
   type GridColDef,
   type GridColumnHeaderParams,
   type GridRenderCellParams,
-  GridCellParams,
-  GridRenderEditCellParams,
+  type GridCellParams,
+  type GridRenderEditCellParams,
 } from '@mui/x-data-grid-pro'
 import Box from '@mui/material/Box'
 import { alpha, styled } from '@mui/material/styles'
 import Checkbox from '@mui/material/Checkbox'
 import { blue, pink } from '@mui/material/colors'
-import {type TEditableSpecimen,type TSpecimenDamageTypes } from '@/schema/specimen'
-import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { type TMutation } from '../../../schema/mutation'
-import { type TEdition } from '../../../schema/edition'
+import {
+  type TEditableSpecimen,
+  type TSpecimenDamageTypes,
+} from '@/schema/specimen'
+import { useVolumeManagementStore } from '@/slices/useVolumeManagementStore'
+import { type TMutation } from '@/schema/mutation'
+import { type TEdition } from '@/schema/edition'
 import DamagedAndMissingPagesEditCell from './editCells/DamagedAndMissingPagesEditCell'
 import DamageTypesEditCell from './editCells/DamageTypesEditCell'
 import MutationMarkSelectorModalContainer from './editCells/MutationMarkSelectorModalContainer'
@@ -29,13 +32,13 @@ import {
   APP_WITH_EDITING_ENABLED,
   JUMP_TO_SPECIMEN_WITH_ID,
 } from '@/utils/constants'
-import { useLanguageCode } from '../../../hooks/useLanguageCode'
-import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
+import { useLanguageCode } from '@/hooks/useLanguageCode'
+import { useMuiTableLang } from '@/hooks/useMuiTableLang'
 import {
   canUseAttachmentOnDate,
   checkAttachmentChange,
   filterSpecimen,
-} from '../../../utils/specimen'
+} from '@/utils/specimen'
 import { validate as uuidValidate } from 'uuid'
 import TableHeader from './TableHeader'
 import Tooltip from '@mui/material/Tooltip'
@@ -45,12 +48,12 @@ import { useInputDataEditabilityContext } from './inputData/InputDataEditability
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
 import { type GridApiCommunity } from '@mui/x-data-grid/internals'
-import { useFormatDate } from '../../../utils/date'
+import { useFormatDate } from '@/utils/date'
 import {
   getMutationMarkLabel,
   isUnmarkedMutationMark,
 } from '@/utils/mutationMark'
-import { useMeQuery } from '../../../api/user'
+import { useMeQuery } from '@/api/user'
 import { toast } from 'react-toastify'
 
 const ODD_OPACITY = 0.2
@@ -667,7 +670,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('OK'),
+            row.damageTypes?.includes('OK'),
             row.numExists,
             !disabled,
             'success'
@@ -695,8 +698,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          const damageExists =
-            row.damageTypes?.includes('PP') && row.numExists
+          const damageExists = row.damageTypes?.includes('PP') && row.numExists
 
           const damagedPages = row.damagedPages
           if (damagedPages.length > 0) {
@@ -759,8 +761,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          const damageExists =
-            row.damageTypes?.includes('ChS') && row.numExists
+          const damageExists = row.damageTypes?.includes('ChS') && row.numExists
 
           const missingPages = row.missingPages
           if (missingPages.length > 0) {

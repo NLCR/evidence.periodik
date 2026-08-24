@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
-import { TFunction } from 'i18next'
-import { TTemplateSpecimenRef } from '@/components/prepare-scan-modal/schemas/schemas'
+import { type TFunction } from 'i18next'
+import { type TTemplateSpecimenRef } from '@/components/prepare-scan-modal/schemas/schemas'
 
 export const getNumberLabel = (
   specimen: TTemplateSpecimenRef,

@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TTemplateItem } from '../../../schemas/schemas'
+import { type TTemplateItem } from '../../../schemas/schemas'
 import { buildGroupedScanSections } from '../templateGrouping'
 import GroupedSectionCard from './GroupedSectionCard'
 

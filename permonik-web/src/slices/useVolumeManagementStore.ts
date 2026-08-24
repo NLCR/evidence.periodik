@@ -7,12 +7,15 @@ import {
   type TEditableVolumePeriodicity,
   type TVolumeAttachmentsSort,
   type TVolumePeriodicityDays,
-} from '../schema/volume'
-import { type TEditableSpecimen } from '../schema/specimen'
-import { type TEdition } from '../schema/edition'
-import { filterSpecimen } from '../utils/specimen'
+} from '@/schema/volume'
+import { type TEditableSpecimen } from '@/schema/specimen'
+import { type TEdition } from '@/schema/edition'
+import { filterSpecimen } from '@/utils/specimen'
 import clone from 'lodash/clone'
-import { createEmptyMutationMark, type TMutationMark } from '../utils/mutationMark'
+import {
+  createEmptyMutationMark,
+  type TMutationMark,
+} from '@/utils/mutationMark'
 
 const periodicityDays: TVolumePeriodicityDays[] = [
   'Monday',

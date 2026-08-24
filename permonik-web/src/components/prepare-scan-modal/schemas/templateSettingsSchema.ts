@@ -1,7 +1,7 @@
 import {
-  TReplacementSourceParameters,
-  TTemplateIssues,
-  TReplacementSource,
+  type TReplacementSourceParameters,
+  type TTemplateIssues,
+  type TReplacementSource,
   createEmptyReplacementSource,
 } from './commonSchemas'
 

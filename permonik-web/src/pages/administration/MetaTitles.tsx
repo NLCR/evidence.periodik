@@ -13,7 +13,10 @@ import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
-import { EditableMetaTitleSchema,type TEditableMetaTitle } from '@/schema/metaTitle'
+import {
+  EditableMetaTitleSchema,
+  type TEditableMetaTitle,
+} from '@/schema/metaTitle'
 import {
   useCreateMetaTitleMutation,
   useMetaTitleListQuery,

@@ -1,6 +1,6 @@
 import {
   TemplateState,
-  TTemplate,
+  type TTemplate,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 
 export const hasWaitingReplacement = (item: TTemplate['items'][number]) =>

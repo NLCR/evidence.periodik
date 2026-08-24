@@ -8,11 +8,11 @@ import Button from '@mui/material/Button'
 import {
   createDefaultScanSettings,
   TemplateState,
-  TScanTemplateSettings,
-  TTemplate,
+  type TScanTemplateSettings,
+  type TTemplate,
 } from './schemas/schemas'
 import Typography from '@mui/material/Typography'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import Loader from '../Loader'
 import ShowError from '../ShowError'
@@ -41,12 +41,8 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
   })
   const templateMethods = useForm<TTemplate>()
   const { reset: resetSettings } = settingsMethods
-  const {
-    watch: watchTemplate,
-    reset: resetTemplate,
-    getValues: getTemplateValues,
-  } = templateMethods
-  const state = watchTemplate('state')
+  const { reset: resetTemplate, getValues: getTemplateValues } = templateMethods
+  const state = useWatch({ control: templateMethods.control, name: 'state' })
 
   const {
     data: volumeTemplateSettings,
@@ -62,7 +58,10 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
     useSavePrepareScanTemplateSettingsMutation(volumeId)
   const saveTemplateMutation = useSavePrepareScanTemplateMutation(volumeId)
 
-  const replacementSources = settingsMethods.watch('replacementSources')
+  const replacementSources = useWatch({
+    control: settingsMethods.control,
+    name: 'replacementSources',
+  })
 
   useEffect(() => {
     if (!volumeTemplateSettings) return

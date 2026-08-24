@@ -1,7 +1,7 @@
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import ActionsMenu from '../../../../../ActionsMenu'
-import { TTemplate } from '@/components/prepare-scan-modal/schemas/schemas'
+import { type TTemplate } from '@/components/prepare-scan-modal/schemas/schemas'
 import {
   applyItemVisibility,
   hasVisibleScanTask,

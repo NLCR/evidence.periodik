@@ -7,10 +7,10 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import { FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import FillIndexIndicator from '../FillIndexIndicator'
-import { PlanDigitalizationResponse } from './schemas'
+import { type PlanDigitalizationResponse } from './schemas'
 
 type Props = {
   data: PlanDigitalizationResponse

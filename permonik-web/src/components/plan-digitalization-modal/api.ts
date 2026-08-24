@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 // import { api } from '../../api'
 import {
-  PlanDigitalizationFilters,
-  PlanDigitalizationResponse,
+  type PlanDigitalizationFilters,
+  type PlanDigitalizationResponse,
 } from './schemas'
 
 const MOCK_PLAN_DIGITALIZATION_RESPONSE: PlanDigitalizationResponse = [

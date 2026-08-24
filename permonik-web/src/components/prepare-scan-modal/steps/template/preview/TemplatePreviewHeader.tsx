@@ -2,15 +2,15 @@ import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { FC } from 'react'
+import { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   getTemplateStateIcon,
   getTemplateStateLabel,
-  TemplateState,
+  type TemplateState,
 } from '@/components/prepare-scan-modal/schemas/templateStateSchema'
-import { TVolume } from '@/schema/volume'
-import { TTemplateItem } from '@/components/prepare-scan-modal/schemas/templateSchema'
+import { type TVolume } from '@/schema/volume'
+import { type TTemplateItem } from '@/components/prepare-scan-modal/schemas/templateSchema'
 
 export type TTemplatePreviewHeaderProps = {
   primaryVolume: TVolume
@@ -26,9 +26,6 @@ const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
   currentState = undefined,
 }) => {
   const { t } = useTranslation()
-  const StateIconComponent = currentState
-    ? getTemplateStateIcon(currentState)
-    : undefined
 
   const title = primaryVolume.metaTitleId ?? '-'
   const signature = primaryVolume.signature
@@ -57,11 +54,7 @@ const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
         </Typography>
         {displayCurrentState && currentState && (
           <Chip
-            icon={
-              StateIconComponent ? (
-                <StateIconComponent fontSize="small" />
-              ) : undefined
-            }
+            icon={getTemplateStateIcon(currentState)}
             label={getTemplateStateLabel(currentState)}
             color="primary"
             variant="outlined"

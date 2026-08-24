@@ -1,7 +1,10 @@
 import { type GridRenderEditCellParams } from '@mui/x-data-grid-pro'
 import { type ChangeEvent } from 'react'
 import Checkbox from '@mui/material/Checkbox'
-import {type TEditableSpecimen,type TSpecimenDamageTypes } from '@/schema/specimen'
+import {
+  type TEditableSpecimen,
+  type TSpecimenDamageTypes,
+} from '@/schema/specimen'
 
 const DamageTypesEditCell = (
   props: GridRenderEditCellParams<TEditableSpecimen>

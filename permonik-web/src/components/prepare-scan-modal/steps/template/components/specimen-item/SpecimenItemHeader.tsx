@@ -9,8 +9,8 @@ import Typography from '@mui/material/Typography'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
-  TTemplate,
-  TTemplateSpecimenRef,
+  type TTemplate,
+  type TTemplateSpecimenRef,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import { getDateLabel, getNumberLabel } from '../../utils/specimenLabels'
 import {

@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   createDefaultScanSettings,
-  TScanTemplateSettings,
-  TTemplate,
-  TTemplateItem,
+  type TScanTemplateSettings,
+  type TTemplate,
+  type TTemplateItem,
   TemplateState,
 } from '../components/prepare-scan-modal/schemas/schemas'
-import { TVolumeDetail } from '../schema/volume'
+import { type TVolumeDetail } from '@/schema/volume'
 import { api, queryClient } from './index'
 
 const MOCK_TEMPLATE_ITEMS: TTemplateItem[] = [

@@ -7,11 +7,11 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
-import { ReactNode, useId, useState } from 'react'
+import { type ReactNode, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   createEmptyReplacementSource,
-  TReplacementSource,
+  type TReplacementSource,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import ReplacementSourceInputComponent from './ReplacementSourceInputComponent'
 

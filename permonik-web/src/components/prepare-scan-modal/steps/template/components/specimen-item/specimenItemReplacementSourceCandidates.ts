@@ -1,7 +1,7 @@
 import {
-  TMainReplacement,
-  TReplacement,
-  TReplacementSource,
+  type TMainReplacement,
+  type TReplacement,
+  type TReplacementSource,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 
 type TFilterReplacementSourcesInput = {

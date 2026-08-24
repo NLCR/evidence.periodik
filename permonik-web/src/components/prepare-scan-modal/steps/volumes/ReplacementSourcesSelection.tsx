@@ -4,12 +4,12 @@ import Button from '@mui/material/Button'
 import DeleteIcon from '@mui/icons-material/Delete'
 import Loader from '../../../Loader'
 import ShowError from '../../../ShowError'
-import { useReplacementSourceCandidatesQuery } from '../../../../api/replacementSourceCandidates'
+import { useReplacementSourceCandidatesQuery } from '@/api/replacementSourceCandidates'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import {
   createEmptyReplacementSource,
-  TReplacementSource,
-  TScanTemplateSettings,
+  type TReplacementSource,
+  type TScanTemplateSettings,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
 import { useTranslation } from 'react-i18next'

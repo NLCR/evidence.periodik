@@ -2,7 +2,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { ReactNode, useState } from 'react'
+import { type ReactNode, useState } from 'react'
 
 type TAction = {
   disabled?: boolean
@@ -32,7 +32,6 @@ const ActionsMenu = ({ actions, disabled = false }: Props) => {
       <Menu anchorEl={anchorElement} open={!!anchorElement} onClose={closeMenu}>
         {actions.map((action, index) => (
           <MenuItem
-            // eslint-disable-next-line react/no-array-index-key -- actions are static per render and have no stable ids
             key={index}
             disabled={action.disabled}
             onClick={() => {

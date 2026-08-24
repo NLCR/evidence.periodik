@@ -6,10 +6,10 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import { FC } from 'react'
+import { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getDateLabel, getNumberLabel } from '../utils/specimenLabels'
-import { TGroupedScanSection } from '../templateGrouping'
+import { type TGroupedScanSection } from '../templateGrouping'
 
 type Props = {
   compact: boolean

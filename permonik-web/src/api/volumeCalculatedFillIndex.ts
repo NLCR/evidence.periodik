@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { TTemplateIssues } from '../components/prepare-scan-modal/schemas/schemas'
+import { type TTemplateIssues } from '../components/prepare-scan-modal/schemas/schemas'
 
 type TCalculateFillIndexRequest = {
   issues: TTemplateIssues

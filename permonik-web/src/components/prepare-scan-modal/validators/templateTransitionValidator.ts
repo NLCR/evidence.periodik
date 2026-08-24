@@ -1,16 +1,16 @@
 import i18next from '@/i18next'
 import {
-  FieldPath,
-  UseFormClearErrors,
-  UseFormGetValues,
-  UseFormSetError,
-  UseFormTrigger,
+  type FieldPath,
+  type UseFormClearErrors,
+  type UseFormGetValues,
+  type UseFormSetError,
+  type UseFormTrigger,
 } from 'react-hook-form'
 import {
   TemplateState,
-  TMainReplacement,
-  TReplacement,
-  TTemplate,
+  type TMainReplacement,
+  type TReplacement,
+  type TTemplate,
 } from '../schemas/schemas'
 
 export type TTemplateTransitionState =

@@ -1,9 +1,9 @@
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { Control, Controller } from 'react-hook-form'
+import { type Control, Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { TTemplate } from '@/components/prepare-scan-modal/schemas/schemas'
+import { type TTemplate } from '@/components/prepare-scan-modal/schemas/schemas'
 
 type Props = {
   control: Control<TTemplate>

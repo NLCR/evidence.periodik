@@ -53,10 +53,10 @@ type TSectionDescriptor = {
 const hasVolumeIdentity = (volume: TReplacementSource): boolean =>
   Boolean(
     volume.signature ||
-      volume.owner ||
-      volume.barcode ||
-      volume.mutation ||
-      volume.mutationEdition
+    volume.owner ||
+    volume.barcode ||
+    volume.mutation ||
+    volume.mutationEdition
   )
 
 const getVolumeKey = (

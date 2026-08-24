@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query'
-import { UseFormGetValues, UseFormSetValue } from 'react-hook-form'
+import { type UseFormGetValues, type UseFormSetValue } from 'react-hook-form'
 import {
   useSavePrepareScanTemplateMutation,
   useUpdatePrepareScanTemplateStateMutation,
 } from '@/api/prepareScanModal'
-import { TTemplate, TemplateState } from './schemas/schemas'
+import { type TTemplate, TemplateState } from './schemas/schemas'
 import { applyItemLock } from '@/components/prepare-scan-modal/steps/template/utils/templateItemLocking'
 
 type TTransitionTemplateStatePayload = {

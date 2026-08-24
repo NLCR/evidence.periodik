@@ -3,11 +3,11 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { FC } from 'react'
+import { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import GroupedSectionItemsTable from './GroupedSectionItemsTable'
 import { getSectionMetadata, getSectionTitle } from './groupedSectionViewModel'
-import { TGroupedScanSection } from '../templateGrouping'
+import { type TGroupedScanSection } from '../templateGrouping'
 
 type Props = {
   compact: boolean

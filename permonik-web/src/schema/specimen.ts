@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { AuditableSchema } from './common'
-import { MutationMarkSchema } from '../utils/mutationMark'
+import { MutationMarkSchema } from '@/utils/mutationMark'
 
 export const SpecimenDamageTypesSchema = z.enum([
   'OK', // overeno
@@ -59,7 +59,7 @@ const SpecimenOverviewSchema = z.object({
   subName: z.string(),
   editionId: z.string().length(36),
   mutationId: z.string().length(36),
-  mutationMark: mutationMarkSchema,
+  mutationMark: MutationMarkSchema,
   publicationDate: z.string().min(1),
   number: z.string(),
   attachmentNumber: z.string(),

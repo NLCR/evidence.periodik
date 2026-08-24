@@ -3,6 +3,7 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import AutorenewRoundedIcon from '@mui/icons-material/AutorenewRounded'
 import EditRoundedIcon from '@mui/icons-material/EditRounded'
 import BuildRoundedIcon from '@mui/icons-material/BuildRounded'
+import { createElement } from 'react'
 
 export enum TemplateState {
   CREATED = 'CREATED',
@@ -63,14 +64,14 @@ export const getTemplateStateLabel = (state: TemplateState) => {
 export const getTemplateStateIcon = (state: TemplateState) => {
   switch (state) {
     case TemplateState.CREATED:
-      return EditRoundedIcon
+      return createElement(EditRoundedIcon, { fontSize: 'small' })
     case TemplateState.WAITING_FOR_RESCAN:
-      return AutorenewRoundedIcon
+      return createElement(AutorenewRoundedIcon, { fontSize: 'small' })
     case TemplateState.FINALIZED:
-      return CheckCircleRoundedIcon
+      return createElement(CheckCircleRoundedIcon, { fontSize: 'small' })
     case TemplateState.LATE_FIXES:
-      return BuildRoundedIcon
+      return createElement(BuildRoundedIcon, { fontSize: 'small' })
     default:
-      return CheckCircleRoundedIcon
+      return createElement(CheckCircleRoundedIcon, { fontSize: 'small' })
   }
 }

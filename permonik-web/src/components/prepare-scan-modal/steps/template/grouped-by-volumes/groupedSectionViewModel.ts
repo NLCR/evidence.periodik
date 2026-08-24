@@ -1,5 +1,5 @@
-import { TFunction } from 'i18next'
-import { TGroupedScanSection } from '../templateGrouping'
+import { type TFunction } from 'i18next'
+import { type TGroupedScanSection } from '../templateGrouping'
 
 export type SectionMetadataItem = {
   label: string

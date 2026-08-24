@@ -1,6 +1,6 @@
 import {
-  TTemplateItem,
-  TTemplateItemWithFormIndex,
+  type TTemplateItem,
+  type TTemplateItemWithFormIndex,
 } from '@/components/prepare-scan-modal/schemas/templateSchema'
 import {
   getVisiblePageReplacements,

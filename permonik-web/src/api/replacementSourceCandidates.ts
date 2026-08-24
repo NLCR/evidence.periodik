@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import {
-  TReplacementSource,
-  TScanTemplateSettings,
+  type TReplacementSource,
+  type TScanTemplateSettings,
 } from '../components/prepare-scan-modal/schemas/schemas'
 
 export type TReplacementSourceCandidatesRequest = Pick<

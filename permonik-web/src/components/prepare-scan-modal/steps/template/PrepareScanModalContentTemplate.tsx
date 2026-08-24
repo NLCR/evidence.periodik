@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box'
-import { FC, useMemo, useState } from 'react'
+import { type FC, useMemo, useState } from 'react'
 import {
-  TReplacementSource,
-  TTemplate,
+  type TReplacementSource,
+  type TTemplate,
   TemplateState,
   getNextTemplateState,
   shouldValidateTemplateForNextState,

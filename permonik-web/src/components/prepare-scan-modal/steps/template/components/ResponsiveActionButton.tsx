@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
-import Button, { ButtonProps } from '@mui/material/Button'
-import { ReactElement, ReactNode } from 'react'
+import Button, { type ButtonProps } from '@mui/material/Button'
+import { type ReactElement, type ReactNode } from 'react'
 
 type ResponsiveActionButtonProps = ButtonProps & {
   label: ReactNode
