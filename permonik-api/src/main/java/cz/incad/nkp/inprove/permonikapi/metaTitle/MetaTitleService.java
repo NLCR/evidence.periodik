@@ -21,13 +21,13 @@ import java.io.IOException;
 import java.util.List;
 
 import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED_FIELD;
-import static cz.incad.nkp.inprove.permonikapi.config.security.CurrentIdentity.get;
+import cz.incad.nkp.inprove.permonikapi.config.security.CurrentIdentity;
 
 @Service
 @RequiredArgsConstructor
 public class MetaTitleService implements MetaTitleDefinition {
 
-    private static final Logger logger = LoggerFactory.getLogger(SpecimenService.class);
+    private static final Logger logger = LoggerFactory.getLogger(MetaTitleService.class);
 
     private final SpecimenService specimenService;
     private final SolrClient solrClient;
@@ -39,7 +39,7 @@ public class MetaTitleService implements MetaTitleDefinition {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(metaTitleId) + "\"");
 
-        if (get() == null) {
+        if (CurrentIdentity.get() == null) {
             solrQuery.addFilterQuery(IS_PUBLIC_FIELD + ":true");
         }
 
@@ -80,7 +80,7 @@ public class MetaTitleService implements MetaTitleDefinition {
     }
 
     public List<MetaTitleOverviewDTO> getMetaTitleOverview() throws SolrServerException, IOException {
-        List<MetaTitle> metaTitles = get() != null ? getMetaTitles() : getAllPublicMetaTitles();
+        List<MetaTitle> metaTitles = CurrentIdentity.get() != null ? getMetaTitles() : getAllPublicMetaTitles();
         return metaTitles
             .stream()
             .map(metaTitle -> {

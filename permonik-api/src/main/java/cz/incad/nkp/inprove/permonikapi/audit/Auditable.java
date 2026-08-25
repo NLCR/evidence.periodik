@@ -9,7 +9,7 @@ import org.apache.solr.client.solrj.beans.Field;
 import java.util.Date;
 import java.util.Objects;
 
-import static cz.incad.nkp.inprove.permonikapi.config.security.CurrentIdentity.get;
+import cz.incad.nkp.inprove.permonikapi.config.security.CurrentIdentity;
 
 
 @Getter
@@ -36,21 +36,21 @@ public class Auditable implements AuditableDefinition {
     private String deletedBy;
 
     public void prePersist() {
-        InternalPrincipal currentUser = Objects.requireNonNull(get(), "User must be logged in");
+        InternalPrincipal currentUser = Objects.requireNonNull(CurrentIdentity.get(), "User must be logged in");
 
         created = new Date();
         createdBy = currentUser.id();
     }
 
     public void preUpdate() {
-        InternalPrincipal currentUser = Objects.requireNonNull(get(), "User must be logged in");
+        InternalPrincipal currentUser = Objects.requireNonNull(CurrentIdentity.get(), "User must be logged in");
 
         updated = new Date();
         updatedBy = currentUser.id();
     }
 
     public void preRemove() {
-        InternalPrincipal currentUser = Objects.requireNonNull(get(), "User must be logged in");
+        InternalPrincipal currentUser = Objects.requireNonNull(CurrentIdentity.get(), "User must be logged in");
 
         deleted = new Date();
         deletedBy = currentUser.id();

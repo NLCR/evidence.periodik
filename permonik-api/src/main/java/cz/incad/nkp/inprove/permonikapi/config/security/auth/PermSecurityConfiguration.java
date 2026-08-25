@@ -24,6 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.beans.factory.annotation.Value;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 @Configuration
 @EnableWebSecurity
@@ -42,8 +43,7 @@ public class PermSecurityConfiguration {
                     authz
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/swagger-resources/**").permitAll()
-                        .requestMatchers("/swagger-resources").permitAll();
+                        .requestMatchers("/swagger-resources/**").permitAll();
                 }
                 authz
                     .requestMatchers(HttpMethod.GET, "/api/metatitle/**").permitAll()
@@ -88,7 +88,7 @@ public class PermSecurityConfiguration {
         NimbusJwtDecoder decoder = NimbusJwtDecoder.withSecretKey(new SecretKeySpec(key, "HmacSHA256"))
                 .macAlgorithm(MacAlgorithm.HS256)
                 .build();
-        OAuth2TokenValidator<Jwt> audienceValidator = jwt -> jwt.getAudience().contains("permonik-core")
+        OAuth2TokenValidator<Jwt> audienceValidator = jwt -> Objects.requireNonNull(jwt.getAudience()).contains("permonik-core")
                 ? OAuth2TokenValidatorResult.success()
                 : OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_token", "Invalid JWT audience", null));
         decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(
