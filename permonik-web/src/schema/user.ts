@@ -1,13 +1,27 @@
 import { z } from 'zod'
 import i18next from '../i18next'
 
+export const PermissionSchema = z.enum([
+  'VOLUME_WRITE',
+  'VOLUME_DELETE',
+  'SPECIMEN_DELETE',
+  'REFERENCE_WRITE',
+  'USER_READ',
+  'USER_WRITE',
+  'TEMPLATE_READ',
+  'TEMPLATE_WRITE',
+  'TEMPLATE_FINALIZE',
+  'TEMPLATE_DELETE',
+  'TEMPLATE_PLAN',
+])
+
 export const EditableUserSchema = z.object({
   id: z.string(),
   email: z.email(i18next.t('schema.email')),
   userName: z.string(),
   firstName: z.string().min(1, i18next.t('schema.first_name_min_length')),
   lastName: z.string().min(1, i18next.t('schema.last_name_min_length')),
-  role: z.enum(['user', 'admin', 'super_admin']),
+  role: z.enum(['user', 'admin', 'digitalization']),
   active: z.boolean(),
   owners: z.string().array().nullable(),
 })
@@ -20,7 +34,7 @@ export const MeSchema = z.object({
   owners: z.string().array().nullable(),
   enabled: z.boolean(),
   username: z.string(),
-  role: z.enum(['user', 'admin', 'super_admin']),
+  role: z.enum(['user', 'admin', 'digitalization']),
   accountNonExpired: z.boolean(),
   accountNonLocked: z.boolean(),
   credentialsNonExpired: z.boolean(),
@@ -34,3 +48,9 @@ export const BasicLoginSchema = z.object({
 export type TUser = z.infer<typeof EditableUserSchema>
 export type TMe = z.infer<typeof MeSchema>
 export type TBasicLogin = z.infer<typeof BasicLoginSchema>
+export type TPermission = z.infer<typeof PermissionSchema>
+
+export const hasPermission = (
+  me: TMe | null | undefined,
+  permission: TPermission
+) => me?.authorities?.includes(permission) ?? false

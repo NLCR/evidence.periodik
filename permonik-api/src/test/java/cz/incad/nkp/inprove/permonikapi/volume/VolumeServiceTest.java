@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -87,6 +88,16 @@ class VolumeServiceTest extends AbstractSolrIntegrationTest {
         var specimenResult = solrClient.query(SpecimenDefinition.SPECIMEN_CORE_NAME, new SolrQuery(SpecimenDefinition.ID_FIELD + ":\"" + specimenId + "\""));
         assertThat(specimenResult.getResults()).hasSize(1);
         assertThat(specimenResult.getResults().getFirst().getFieldValue(SpecimenDefinition.OWNER_NAME_FIELD)).isEqualTo("Owner Name");
+    }
+
+    @Test
+    void createVolumeWithSpecimens_rejectsUnassignedOwner() {
+        TestSecuritySupport.setAuthenticationContextForOwners("different-owner");
+        EditableVolumeWithSpecimensDTO dto = VolumeSpecimenDtoFactory.editableVolume(
+            UUID.randomUUID().toString(), "BAR-FORBIDDEN", List.of());
+
+        assertThatThrownBy(() -> volumeService.createVolumeWithSpecimens(dto))
+            .isInstanceOf(AccessDeniedException.class);
     }
 
     @Test

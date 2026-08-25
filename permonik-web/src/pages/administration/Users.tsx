@@ -17,9 +17,14 @@ import { styled } from '@mui/material/styles'
 import { LoadingButton } from '@mui/lab'
 import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
-import { EditableUserSchema, type TMe, type TUser } from '../../schema/user'
-import { useOwnerListQuery } from '../../api/owner'
-import { useUpdateUserMutation, useUserListQuery } from '../../api/user'
+import {
+  EditableUserSchema,
+  hasPermission,
+  type TMe,
+  type TUser,
+} from '@/schema/user'
+import { useOwnerListQuery } from '@/api/owner'
+import { useUpdateUserMutation, useUserListQuery } from '@/api/user'
 
 const Container = styled('div')(() => ({
   position: 'relative',
@@ -60,6 +65,7 @@ const SaveButton = styled(LoadingButton)(() => ({
 const Users = ({ me }: { me: TMe }) => {
   const theme = useTheme()
   const { t } = useTranslation()
+  const canWriteUsers = hasPermission(me, 'USER_WRITE')
   const [user, setUser] = useState<TUser>({
     active: false,
     email: '',
@@ -173,7 +179,7 @@ const Users = ({ me }: { me: TMe }) => {
                   size="small"
                   label={t('administration.first_name')}
                   value={user.firstName}
-                  // disabled={savingUser}
+                  disabled={!canWriteUsers || savingUser}
                   onChange={(event) =>
                     setUser((prevState) => ({
                       ...prevState,
@@ -185,7 +191,7 @@ const Users = ({ me }: { me: TMe }) => {
                   size="small"
                   label={t('administration.last_name')}
                   value={user.lastName}
-                  // disabled={savingUser}
+                  disabled={!canWriteUsers || savingUser}
                   onChange={(event) =>
                     setUser((prevState) => ({
                       ...prevState,
@@ -197,7 +203,7 @@ const Users = ({ me }: { me: TMe }) => {
                   size="small"
                   label={t('administration.email')}
                   value={user.email}
-                  // disabled={savingUser}
+                  disabled={!canWriteUsers || savingUser}
                   onChange={(event) =>
                     setUser((prevState) => ({
                       ...prevState,
@@ -225,7 +231,7 @@ const Users = ({ me }: { me: TMe }) => {
                       minWidth: '218px',
                     }}
                     value={user.owners ? user.owners : []}
-                    // disabled={savingUser}
+                    disabled={!canWriteUsers || savingUser}
                     onChange={(event) =>
                       setUser((prevState) => ({
                         ...prevState,
@@ -249,12 +255,12 @@ const Users = ({ me }: { me: TMe }) => {
                     labelId="user-role-select-label"
                     size="small"
                     value={user.role}
-                    // disabled={savingUser}
+                    disabled={!canWriteUsers || savingUser}
                     onChange={(event) => {
                       if (event) {
                         setUser((prevState) => ({
                           ...prevState,
-                          role: event.target.value as 'user' | 'admin',
+                          role: event.target.value as TUser['role'],
                         }))
                       }
                     }}
@@ -263,6 +269,9 @@ const Users = ({ me }: { me: TMe }) => {
                     <MenuItem value="admin">
                       {t('administration.admin')}
                     </MenuItem>
+                    <MenuItem value="digitalization">
+                      {t('administration.digitalization')}
+                    </MenuItem>
                   </Select>
                 </FormControl>
               </Box>
@@ -270,6 +279,7 @@ const Users = ({ me }: { me: TMe }) => {
                 control={
                   <Switch
                     checked={user.active}
+                    disabled={!canWriteUsers || savingUser}
                     onChange={(event) =>
                       setUser((prevState) => ({
                         ...prevState,
@@ -284,6 +294,7 @@ const Users = ({ me }: { me: TMe }) => {
                 variant="contained"
                 onClick={() => handleUpdate()}
                 loading={savingUser}
+                disabled={!canWriteUsers}
               >
                 {t('administration.update')}
               </SaveButton>

@@ -1,6 +1,6 @@
 package cz.incad.nkp.inprove.permonikapi.audit;
 
-import cz.incad.nkp.inprove.permonikapi.user.User;
+import cz.incad.nkp.inprove.permonikapi.config.security.InternalPrincipal;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,7 +9,7 @@ import org.apache.solr.client.solrj.beans.Field;
 import java.util.Date;
 import java.util.Objects;
 
-import static cz.incad.nkp.inprove.permonikapi.config.security.user.UserProducer.getCurrentUser;
+import static cz.incad.nkp.inprove.permonikapi.config.security.CurrentIdentity.get;
 
 
 @Getter
@@ -36,23 +36,23 @@ public class Auditable implements AuditableDefinition {
     private String deletedBy;
 
     public void prePersist() {
-        User currentUser = Objects.requireNonNull(getCurrentUser(), "User must be logged in");
+        InternalPrincipal currentUser = Objects.requireNonNull(get(), "User must be logged in");
 
         created = new Date();
-        createdBy = currentUser.getId();
+        createdBy = currentUser.id();
     }
 
     public void preUpdate() {
-        User currentUser = Objects.requireNonNull(getCurrentUser(), "User must be logged in");
+        InternalPrincipal currentUser = Objects.requireNonNull(get(), "User must be logged in");
 
         updated = new Date();
-        updatedBy = currentUser.getId();
+        updatedBy = currentUser.id();
     }
 
     public void preRemove() {
-        User currentUser = Objects.requireNonNull(getCurrentUser(), "User must be logged in");
+        InternalPrincipal currentUser = Objects.requireNonNull(get(), "User must be logged in");
 
         deleted = new Date();
-        deletedBy = currentUser.getId();
+        deletedBy = currentUser.id();
     }
 }

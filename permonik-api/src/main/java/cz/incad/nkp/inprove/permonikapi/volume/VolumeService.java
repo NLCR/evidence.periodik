@@ -1,6 +1,7 @@
 package cz.incad.nkp.inprove.permonikapi.volume;
 
 import cz.incad.nkp.inprove.permonikapi.common.ReferenceDataService;
+import cz.incad.nkp.inprove.permonikapi.config.security.OwnerAuthorizationService;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitle;
 import cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitleService;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.Mutation;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.Objects;
 
 import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED_FIELD;
 
@@ -48,6 +50,7 @@ public class VolumeService implements VolumeDefinition {
     private final SolrClient solrClient;
     private final VolumeMapper volumeMapper;
     private final ReferenceDataService referenceDataService;
+    private final OwnerAuthorizationService ownerAuthorization;
 
 
     public VolumeDTO getVolumeDTOById(String volumeId) throws SolrServerException, IOException {
@@ -206,6 +209,7 @@ public class VolumeService implements VolumeDefinition {
     }
 
     public String createVolumeWithSpecimens(EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
+        ownerAuthorization.requireAccess(editableVolumeWithSpecimensDTO.volume().getOwnerId());
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(BAR_CODE_FIELD + ":\"" + ClientUtils.escapeQueryChars(editableVolumeWithSpecimensDTO.volume().getBarCode()) + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
@@ -230,7 +234,8 @@ public class VolumeService implements VolumeDefinition {
 
 
     public void updateVolumeWithSpecimens(String volumeId, EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
-        checkVolumeExistsById(volumeId);
+        Volume existing = checkVolumeExistsById(volumeId);
+        requireUpdateAccess(volumeId, editableVolumeWithSpecimensDTO, existing);
 
         List<SpecimenDTO> activeSpecimens = validateVolumeDateRange(volumeId, editableVolumeWithSpecimensDTO);
         updateVolume(editableVolumeWithSpecimensDTO.volume());
@@ -247,9 +252,8 @@ public class VolumeService implements VolumeDefinition {
     }
 
     public void updateOvergeneratedVolumeWithSpecimens(String volumeId, EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
-        if (getVolumeDTOById(volumeId) == null) {
-            throw new RuntimeException("Volume " + volumeId + " not found");
-        }
+        Volume existing = checkVolumeExistsById(volumeId);
+        requireUpdateAccess(volumeId, editableVolumeWithSpecimensDTO, existing);
 
         validateVolumeDateRange(volumeId, editableVolumeWithSpecimensDTO);
 
@@ -265,6 +269,7 @@ public class VolumeService implements VolumeDefinition {
 
     public void deleteVolumeWithSpecimens(String volumeId) throws SolrServerException, IOException {
         Volume volume = checkVolumeExistsById(volumeId);
+        ownerAuthorization.requireAccess(volume.getOwnerId());
 
         List<SpecimenDTO> specimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
         specimenService.deleteSpecimens(specimens);
@@ -309,5 +314,13 @@ public class VolumeService implements VolumeDefinition {
 
     private LocalDate toUtcLocalDate(java.util.Date date) {
         return date == null ? null : date.toInstant().atZone(ZoneOffset.UTC).toLocalDate();
+    }
+
+    private void requireUpdateAccess(String volumeId, EditableVolumeWithSpecimensDTO payload, Volume existing) {
+        if (!Objects.equals(volumeId, payload.volume().getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Path and payload volume IDs differ");
+        }
+        ownerAuthorization.requireAccess(existing.getOwnerId());
+        ownerAuthorization.requireAccess(payload.volume().getOwnerId());
     }
 }

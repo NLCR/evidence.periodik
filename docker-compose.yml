@@ -1,11 +1,8 @@
 services:
   permonik-api:
+    image: periodik-permonik-api:latest
     depends_on:
       - permonik-database
-      - permonik-redis
-    build:
-      context: .
-      dockerfile: permonik-api/docker/Dockerfile
     networks:
       - permonik
     ports:
@@ -16,9 +13,56 @@ services:
           memory: '1024M'
     environment:
       SOLR_URL: http://permonik-database:8983/solr
-      REDIS_HOST: permonik-redis
+      IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
       SPRING_PROFILES_ACTIVE: dev
       TZ: "Europe/Prague"
+
+  permonik-identity-gateway:
+    image: periodik-permonik-identity-gateway:latest
+    depends_on:
+      - permonik-api
+      - permonik-identity-database
+      - permonik-identity-redis
+    networks:
+      - permonik
+    ports:
+      - "8081:8080"
+    deploy:
+      resources:
+        limits:
+          memory: '512M'
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_PORT: "8080"
+      IDENTITY_DATABASE_URL: jdbc:postgresql://permonik-identity-database:5432/permonik_identity
+      IDENTITY_DATABASE_PASSWORD: ${IDENTITY_DATABASE_PASSWORD:?IDENTITY_DATABASE_PASSWORD is required}
+      SPRING_DATA_REDIS_HOST: permonik-identity-redis
+      PERMONIK_CORE_URL: http://permonik-api:8080
+      PERMONIK_EXPORT_URL: http://permonik-export-api:8080
+      PERMONIK_ADMIN_WEB_URL: http://host.docker.internal:3000
+      PERMONIK_PUBLIC_WEB_URL: http://host.docker.internal:3000
+      PERMONIK_ADMIN_HOSTS: localhost
+      PERMONIK_PUBLIC_HOSTS: localhost
+      IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
+      IDENTITY_DEV_PASSWORD: ${IDENTITY_DEV_PASSWORD:?IDENTITY_DEV_PASSWORD is required}
+      TZ: "Europe/Prague"
+
+  permonik-identity-database:
+    image: postgres:18.6-alpine
+    networks:
+      - permonik
+    ports:
+      - "5433:5432"
+    deploy:
+      resources:
+        limits:
+          memory: '512M'
+    environment:
+      POSTGRES_DB: permonik_identity
+      POSTGRES_USER: permonik
+      POSTGRES_PASSWORD: ${IDENTITY_DATABASE_PASSWORD:?IDENTITY_DATABASE_PASSWORD is required}
+    volumes:
+      - identity-database-volume:/var/lib/postgresql
 
   permonik-database:
     image: solr:10.0.0
@@ -39,7 +83,7 @@ services:
     volumes:
       - ./solr-data:/var/solr
 
-  permonik-redis:
+  permonik-identity-redis:
     image: redis:8.10-alpine
     networks:
       - permonik
@@ -50,11 +94,12 @@ services:
         limits:
           memory: 100m
     volumes:
-      - redis-volume:/data
+      - identity-session-volume:/data
     command: [ "redis-server", "--appendonly", "yes" ]
 
 networks:
   permonik:
 
 volumes:
-  redis-volume:
+  identity-session-volume:
+  identity-database-volume:

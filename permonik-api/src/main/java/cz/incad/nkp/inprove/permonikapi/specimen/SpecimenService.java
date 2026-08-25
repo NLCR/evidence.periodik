@@ -1,6 +1,7 @@
 package cz.incad.nkp.inprove.permonikapi.specimen;
 
 import cz.incad.nkp.inprove.permonikapi.common.ReferenceDataService;
+import cz.incad.nkp.inprove.permonikapi.config.security.OwnerAuthorizationService;
 import cz.incad.nkp.inprove.permonikapi.edition.model.Edition;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.Mutation;
 import cz.incad.nkp.inprove.permonikapi.owner.Owner;
@@ -44,6 +45,7 @@ public class SpecimenService implements SpecimenDefinition {
     private final SpecimenMapper specimenMapper;
     private final ObjectMapper objectMapper;
     private final ReferenceDataService referenceDataService;
+    private final OwnerAuthorizationService ownerAuthorization;
 
 
     public StatsForMetaTitleOverviewDTO getStatsForMetaTitleOverview(String metaTitleId) throws SolrServerException, IOException {
@@ -595,6 +597,7 @@ public class SpecimenService implements SpecimenDefinition {
 
     public void deleteSpecimenById(String id) throws SolrServerException, IOException {
         Specimen specimen = getSpecimenById(id);
+        ownerAuthorization.requireAccess(specimen.getOwnerId());
 
         try {
             specimen.preRemove();

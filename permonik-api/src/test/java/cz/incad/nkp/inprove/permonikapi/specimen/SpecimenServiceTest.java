@@ -13,11 +13,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Date;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SpecimenServiceTest extends AbstractSolrIntegrationTest {
 
@@ -84,6 +86,19 @@ class SpecimenServiceTest extends AbstractSolrIntegrationTest {
         );
         assertThat(response.getResults()).hasSize(1);
         assertThat(response.getResults().getFirst().getFieldValue(AuditableDefinition.DELETED_FIELD)).isNotNull();
+    }
+
+    @Test
+    void deleteSpecimenById_rejectsUnassignedOwner() throws Exception {
+        String id = UUID.randomUUID().toString();
+        solrClient.add(SpecimenDefinition.SPECIMEN_CORE_NAME,
+            SolrFixtureFactory.specimenForListing(id, SolrFixtureFactory.LISTING_META_TITLE_ID,
+                new Date(), "Name", "Sub", true));
+        solrClient.commit(SpecimenDefinition.SPECIMEN_CORE_NAME);
+        TestSecuritySupport.setAuthenticationContextForOwners("different-owner");
+
+        assertThatThrownBy(() -> specimenService.deleteSpecimenById(id))
+            .isInstanceOf(AccessDeniedException.class);
     }
 
 }

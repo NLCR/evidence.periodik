@@ -8,13 +8,24 @@
 .DS_Store
 
 ### Env ###
+.env
 .env.local
+*.key
+*-key.pem
+**/secrets/
 
 ### Development ###
 solr-data/*
 permonik-database/reindex/new-solr-data/*
+__pycache__/
+*.pyc
 
-.gradle/*
+**/.gradle/
 
 build
 docs/
+
+.playwright-mcp/
+
+__pycache__/
+*.pyc

@@ -1,0 +1,80 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'com.google.cloud.tools.jib'
+}
+
+group = 'cz.incad.nkp.inprove'
+version = '0.0.1'
+
+def hostArchitecture = System.getProperty('os.arch').toLowerCase() in ['aarch64', 'arm64'] ? 'arm64' : 'amd64'
+def jibArchitecture = providers.gradleProperty('jibArchitecture').getOrElse(hostArchitecture)
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url = uri('https://build.shibboleth.net/maven/releases/') }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${versions.springCloud}"
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway-server-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.security:spring-security-saml2-service-provider'
+    implementation 'org.springframework.security:spring-security-oauth2-jose'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-session-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-liquibase'
+    runtimeOnly 'org.postgresql:postgresql'
+    compileOnly "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'com.h2database:h2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('bootJar') {
+    archiveFileName = 'permonik-identity-gateway.jar'
+}
+
+jib {
+    from {
+        image = 'gcr.io/distroless/java25-debian13:nonroot'
+        platforms {
+            platform {
+                architecture = jibArchitecture
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = providers.gradleProperty('jibImage').getOrElse('periodik-permonik-identity-gateway:latest')
+        tags = providers.gradleProperty('jibTags')
+                .map { it.split(',').findAll { tag -> !tag.isBlank() } as Set }
+                .getOrElse([] as Set)
+    }
+    container {
+        mainClass = 'cz.incad.nkp.inprove.permonikidentitygateway.PermonikIdentityGatewayApplication'
+        user = '65532:65532'
+        ports = ['8080']
+    }
+}

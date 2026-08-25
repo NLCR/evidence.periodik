@@ -1,6 +1,5 @@
 package cz.incad.nkp.inprove.permonikapi;
 
-import com.redis.testcontainers.RedisContainer;
 import org.apache.solr.client.solrj.impl.HttpJdkSolrClient;
 import org.apache.solr.client.solrj.request.CollectionAdminRequest;
 import org.apache.solr.client.solrj.request.ConfigSetAdminRequest;
@@ -11,7 +10,6 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.lifecycle.Startables;
 import org.testcontainers.solr.SolrContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.w3c.dom.Element;
@@ -34,22 +32,18 @@ public abstract class AbstractSolrIntegrationTest {
     // analysis-extras module enables ICUCollationField (icu_cs_sort) used in production schemas
     static final SolrContainer SOLR = new SolrContainer(DockerImageName.parse("solr:10.0.0"))
         .withEnv("SOLR_MODULES", "analysis-extras");
-    static final RedisContainer REDIS = new RedisContainer(DockerImageName.parse("redis:8.6-alpine"))
-        .withExposedPorts(6379);
     private static final Logger log = LoggerFactory.getLogger(AbstractSolrIntegrationTest.class);
     private static final List<String> CORES =
-        List.of("owner", "edition", "mutation", "metatitle", "user", "volume", "specimen");
+        List.of("owner", "edition", "mutation", "metatitle", "volume", "specimen");
 
     static {
-        Startables.deepStart(SOLR, REDIS).join();
+        SOLR.start();
         setupCores();
     }
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
         registry.add("solr.host", () -> "http://" + SOLR.getHost() + ":" + SOLR.getSolrPort() + "/solr");
-        registry.add("spring.data.redis.host", REDIS::getHost);
-        registry.add("spring.data.redis.port", () -> REDIS.getMappedPort(6379));
     }
 
     private static void setupCores() {

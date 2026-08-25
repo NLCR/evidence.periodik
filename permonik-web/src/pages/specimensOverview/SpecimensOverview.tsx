@@ -27,6 +27,8 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import theme from '../../theme'
 import PlanDigitalizationModal from '@/components/plan-digitalization-modal/PlanDigitalizationModal'
 import ResponsiveActionButton from '@/components/prepare-scan-modal/steps/template/components/ResponsiveActionButton'
+import { useMeQuery } from '@/api/user'
+import { hasPermission } from '@/schema/user'
 
 const Table = lazy(() => import('./components/Table'))
 
@@ -37,6 +39,7 @@ const SpecimensOverview = () => {
   const view = useSpecimensOverviewStore((state) => state.view)
   const setView = useSpecimensOverviewStore((state) => state.setView)
   const [isPlanModalOpen, setIsPlanModalOpen] = useState(false)
+  const { data: me } = useMeQuery()
 
   const {
     data: metaTitle,
@@ -189,17 +192,21 @@ const SpecimensOverview = () => {
               alignItems: 'center',
             }}
           >
-            <ResponsiveActionButton
-              variant="contained"
-              icon={<ChecklistIcon />}
-              label={'Naplánovat digitalizaci'}
-              onClick={() => setIsPlanModalOpen(true)}
-            />
-            <PlanDigitalizationModal
-              isOpen={isPlanModalOpen}
-              setIsOpen={setIsPlanModalOpen}
-              metatitle={metaTitle.name}
-            />
+            {hasPermission(me, 'TEMPLATE_PLAN') ? (
+              <>
+                <ResponsiveActionButton
+                  variant="contained"
+                  icon={<ChecklistIcon />}
+                  label={t('plan_digitalization_modal.title')}
+                  onClick={() => setIsPlanModalOpen(true)}
+                />
+                <PlanDigitalizationModal
+                  isOpen={isPlanModalOpen}
+                  setIsOpen={setIsPlanModalOpen}
+                  metatitle={metaTitle.name}
+                />
+              </>
+            ) : null}
             {view === 'CALENDAR' && (
               <IconButton onClick={() => setModalOpened(true)}>
                 <HelpOutlineIcon />

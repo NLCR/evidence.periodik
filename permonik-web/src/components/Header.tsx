@@ -34,7 +34,11 @@ import {
   useLogoutMutation,
   useMeQuery,
 } from '@/api/user'
-import { BasicLoginSchema, type TBasicLogin } from '@/schema/user'
+import {
+  BasicLoginSchema,
+  hasPermission,
+  type TBasicLogin,
+} from '@/schema/user'
 import { queryClient } from '@/api'
 import { APP_WITH_EDITING_ENABLED, LOGIN_URL } from '@/utils/constants'
 
@@ -223,7 +227,9 @@ const Header = () => {
               >
                 {t('header.home')}
               </NavLinkStyled>
-              {APP_WITH_EDITING_ENABLED && me?.role?.includes('admin') ? (
+              {APP_WITH_EDITING_ENABLED &&
+              (hasPermission(me, 'USER_READ') ||
+                hasPermission(me, 'REFERENCE_WRITE')) ? (
                 <NavLinkStyled
                   sx={{
                     marginRight: 0,
@@ -251,14 +257,16 @@ const Header = () => {
               )}
               {me && APP_WITH_EDITING_ENABLED && (
                 <>
-                  <NavLinkStyled
-                    sx={{
-                      marginRight: 0,
-                    }}
-                    to={`/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/`}
-                  >
-                    {t('header.volume')}
-                  </NavLinkStyled>
+                  {hasPermission(me, 'VOLUME_WRITE') ? (
+                    <NavLinkStyled
+                      sx={{
+                        marginRight: 0,
+                      }}
+                      to={`/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/`}
+                    >
+                      {t('header.volume')}
+                    </NavLinkStyled>
+                  ) : null}
                   <Divider
                     orientation="vertical"
                     flexItem

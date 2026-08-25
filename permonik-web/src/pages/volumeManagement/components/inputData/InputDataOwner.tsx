@@ -2,11 +2,11 @@ import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import { useTranslation } from 'react-i18next'
 import InputDataSelect from './InputDataSelect'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
+import { useVolumeManagementStore } from '@/slices/useVolumeManagementStore'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
-import { type TOwner } from '../../../../schema/owner'
-import { type TMe } from '../../../../schema/user'
+import { type TOwner } from '@/schema/owner'
+import { type TMe } from '@/schema/user'
 
 type Props = { owners: TOwner[]; me: TMe }
 
@@ -53,9 +53,7 @@ const InputDataOwner = ({ owners, me }: Props) => {
           }}
           name="ownerId"
           options={owners
-            .filter(
-              (o) => me.role === 'super_admin' || me.owners?.includes(o.id)
-            )
+            .filter((o) => me.owners?.includes(o.id))
             .map((o) => ({ key: o.id, value: o.shorthand }))}
         />
       </TableCell>

@@ -25,6 +25,6 @@ public class SwaggerConfig {
             .info(new Info()
                 .title("Permonik API")
                 .version("1.0.0")
-                .description("On localhost development log-in by using POST /api/auth/login/basic (username, password)"));
+                .description("Core resource API authenticated by internal JWTs from the identity gateway"));
     }
 }

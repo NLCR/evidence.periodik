@@ -476,6 +476,7 @@
     "role": "Role",
     "user": "User",
     "admin": "Administrator",
+    "digitalization": "Digitization",
     "save": "Save",
     "user_active": "User is active",
     "create": "Create",

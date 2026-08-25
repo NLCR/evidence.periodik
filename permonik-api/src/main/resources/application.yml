@@ -4,10 +4,6 @@ spring:
   threads:
     virtual:
       enabled: true
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost}
-      port: 6379
   web:
     error:
       path: /error
@@ -24,18 +20,14 @@ spring:
 solr:
   host: ${SOLR_URL:http://localhost:8983/solr}
 
+permonik:
+  security:
+    internal-jwt:
+      secret: ${IDENTITY_JWT_SECRET}
+
 server:
   port: 8080
   forward-headers-strategy: FRAMEWORK
-  servlet:
-    session:
-      cookie:
-        path: /
-        name: "SESSION"
-        secure: false
-        http-only: true
-        same-site: strict
-      timeout: 480m
 
 springdoc:
   api-docs:
