@@ -14,7 +14,7 @@ import {
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
 import { useTranslation } from 'react-i18next'
 
-const ReplacementSourcesSelection = () => {
+const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
   const { t } = useTranslation()
   const { control, watch } = useFormContext<TScanTemplateSettings>()
 
@@ -31,7 +31,7 @@ const ReplacementSourcesSelection = () => {
     data: replacementSourceCandidates,
     isLoading: replacementSourceCandidatesLoading,
     isError: replacementSourceCandidatesError,
-  } = useReplacementSourceCandidatesQuery({
+  } = useReplacementSourceCandidatesQuery(volumeId, {
     issues,
     replacementSourcesParameters,
   })
@@ -73,7 +73,8 @@ const ReplacementSourcesSelection = () => {
                     (candidate) =>
                       !fields.some(
                         (src, srcIndex) =>
-                          src.id === candidate.id && srcIndex !== index
+                          src.volumeId === candidate.volumeId &&
+                          srcIndex !== index
                       )
                   )}
                   onChange={fieldProps.onChange}

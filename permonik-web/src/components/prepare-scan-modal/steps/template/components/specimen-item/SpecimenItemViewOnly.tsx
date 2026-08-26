@@ -11,7 +11,7 @@ import type {
   TTemplate,
   TMainReplacement,
   TReplacement,
-  TTemplateSpecimenRef,
+  TTemplateSpecimen,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import {
   getDateLabel,
@@ -26,7 +26,7 @@ type TSpecimenReplacementViewOnlyRow = {
 }
 
 type Props = {
-  specimen: TTemplateSpecimenRef
+  specimen: TTemplateSpecimen
   replacementRows: TSpecimenReplacementViewOnlyRow[]
   mainReplacement: TMainReplacement | null
   allowVisibilityChanges?: boolean
@@ -168,7 +168,7 @@ const SpecimenItemViewOnly = ({
                           <td>{replacement.volume.owner || '-'}</td>
                           <td>{replacement.volume.barcode || '-'}</td>
                           <td>{replacement.volume.mutation || '-'}</td>
-                          <td>{replacement.pages || '-'}</td>
+                          <td>{replacement.pages.join(', ') || '-'}</td>
                           {allowVisibilityChanges && itemPath ? (
                             <td>
                               <IconCheckbox

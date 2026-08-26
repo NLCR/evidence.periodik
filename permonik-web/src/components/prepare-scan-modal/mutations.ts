@@ -1,11 +1,7 @@
-import { useMutation } from '@tanstack/react-query'
-import { type UseFormGetValues, type UseFormSetValue } from 'react-hook-form'
-import {
-  useSavePrepareScanTemplateMutation,
-  useUpdatePrepareScanTemplateStateMutation,
-} from '@/api/prepareScanModal'
-import { type TTemplate, TemplateState } from './schemas/schemas'
-import { applyItemLock } from '@/components/prepare-scan-modal/steps/template/utils/templateItemLocking'
+import { useFormContext } from 'react-hook-form'
+import type { UseFormGetValues } from 'react-hook-form'
+import { useTransitionPrepareScanTemplateMutation } from '@/api/prepareScanModal'
+import type { TTemplate, TemplateState } from './schemas/schemas'
 
 type TTransitionTemplateStatePayload = {
   template: TTemplate
@@ -13,50 +9,31 @@ type TTransitionTemplateStatePayload = {
 }
 
 export const useTransitionTemplateStateMutation = (volumeId?: string) => {
-  const saveTemplateMutation = useSavePrepareScanTemplateMutation(volumeId)
-  const updateTemplateStateMutation =
-    useUpdatePrepareScanTemplateStateMutation(volumeId)
-
-  const transitionMutation = useMutation({
-    mutationFn: async ({
-      template,
-      nextState,
-    }: TTransitionTemplateStatePayload) => {
-      await saveTemplateMutation.mutateAsync(template)
-      await updateTemplateStateMutation.mutateAsync(nextState)
-    },
-  })
+  const transitionMutation = useTransitionPrepareScanTemplateMutation(volumeId)
 
   return {
-    mutate: transitionMutation.mutateAsync,
-    isPending:
-      transitionMutation.isPending ||
-      saveTemplateMutation.isPending ||
-      updateTemplateStateMutation.isPending,
-    error:
-      transitionMutation.error ||
-      saveTemplateMutation.error ||
-      updateTemplateStateMutation.error,
+    mutate: ({ template, nextState }: TTransitionTemplateStatePayload) =>
+      transitionMutation.mutateAsync({ template, targetState: nextState }),
+    isPending: transitionMutation.isPending,
+    error: transitionMutation.error,
   }
 }
 
 type TUseCloseToRescanOrFinalizeMutationArgs = {
   volumeId?: string
   getValues: UseFormGetValues<TTemplate>
-  setValue: UseFormSetValue<TTemplate>
   validateTemplateForNextState: (
     nextTemplateState: TemplateState
   ) => Promise<boolean>
 }
 
-export const useCloseToRescanOrFinalizeMutation = ({
-  volumeId,
-  getValues,
-  setValue,
-  validateTemplateForNextState,
-}: TUseCloseToRescanOrFinalizeMutationArgs) => {
-  const transitionTemplateStateMutation =
-    useTransitionTemplateStateMutation(volumeId)
+export const useCloseToRescanOrFinalizeMutation = (
+  args: TUseCloseToRescanOrFinalizeMutationArgs
+) => {
+  const { reset } = useFormContext<TTemplate>()
+  const transitionTemplateStateMutation = useTransitionTemplateStateMutation(
+    args.volumeId
+  )
 
   const mutate = async ({
     nextState,
@@ -66,31 +43,21 @@ export const useCloseToRescanOrFinalizeMutation = ({
     shouldValidate: boolean
   }) => {
     const isValid = shouldValidate
-      ? await validateTemplateForNextState(nextState)
+      ? await args.validateTemplateForNextState(nextState)
       : true
 
     if (!isValid) return
 
-    const payload = getValues()
-
-    // TODO delete, BE will handle this
-    if (nextState === TemplateState.FINALIZED) {
-      payload.items = payload.items.map((item) => applyItemLock(item, true))
-    }
+    const payload = args.getValues()
 
     try {
-      await transitionTemplateStateMutation.mutate({
+      const template = await transitionTemplateStateMutation.mutate({
         template: payload,
         nextState,
       })
+      reset(template)
     } catch {
       return
-    }
-
-    setValue('state', nextState)
-
-    if (nextState === TemplateState.FINALIZED) {
-      setValue('items', payload.items)
     }
   }
 

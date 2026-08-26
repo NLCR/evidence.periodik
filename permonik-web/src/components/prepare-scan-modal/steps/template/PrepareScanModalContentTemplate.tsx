@@ -66,7 +66,6 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
   const closeToRescanOrFinalizeMutation = useCloseToRescanOrFinalizeMutation({
     volumeId,
     getValues,
-    setValue,
     validateTemplateForNextState: (targetState) =>
       validateTemplateForNextState({
         trigger,
@@ -167,7 +166,9 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             onOpenPreview={() => setIsPreviewOpen(true)}
             onValidate={handleValidate}
             onSyncFromVolume={() =>
-              synchronizeVolumeMutation.mutate({ state: watchedState })
+              synchronizeVolumeMutation.mutate({
+                version: getValues('version')!,
+              })
             }
             onCloseToRescanOrFinalize={handleCloseToRescanOrFinalize}
             onLockAll={handleLockAll}

@@ -203,6 +203,7 @@ const SpecimensOverview = () => {
                 <PlanDigitalizationModal
                   isOpen={isPlanModalOpen}
                   setIsOpen={setIsPlanModalOpen}
+                  metaTitleId={metaTitle.id}
                   metatitle={metaTitle.name}
                 />
               </>

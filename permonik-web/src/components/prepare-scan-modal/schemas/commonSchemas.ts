@@ -1,5 +1,12 @@
 import { z } from 'zod'
 
+export enum ResolutionStatus {
+  UNRESOLVED = 'UNRESOLVED',
+  ASSIGNED = 'ASSIGNED',
+  UNREPLACEABLE = 'UNREPLACEABLE',
+  WAITING_FOR_RESCAN = 'WAITING_FOR_RESCAN',
+}
+
 export type TTemplateIssues = {
   missingPages: boolean // Chybějící strany
   damagedPages: boolean // Poškozené strany
@@ -18,7 +25,7 @@ export type TReplacementSourceParameters = {
 }
 
 export const replacementSourceSchema = z.object({
-  id: z.string().nullish(),
+  volumeId: z.string().nullish(),
   priority: z.number().int().positive().nullish(),
   signature: z.string().nullish(),
   owner: z.string().nullish(),
@@ -29,9 +36,8 @@ export const replacementSourceSchema = z.object({
 
 export const mainReplacementSchema = z.object({
   volume: replacementSourceSchema,
-  pages: z.string(),
-  isUnreplaceable: z.boolean(),
-  isWaitingForRescan: z.boolean(),
+  pages: z.array(z.number().int().positive()),
+  status: z.nativeEnum(ResolutionStatus),
 })
 
 export const replacementSchema = mainReplacementSchema.extend({
@@ -46,7 +52,7 @@ export type TMainReplacement = z.infer<typeof mainReplacementSchema>
 export type TReplacement = z.infer<typeof replacementSchema>
 
 export const createEmptyReplacementSource = (): TReplacementSource => ({
-  id: undefined,
+  volumeId: undefined,
   priority: undefined,
   barcode: '',
   mutation: '',
@@ -57,9 +63,8 @@ export const createEmptyReplacementSource = (): TReplacementSource => ({
 
 export const createEmptyMainReplacement = (): TMainReplacement => ({
   volume: createEmptyReplacementSource(),
-  pages: 'všechny',
-  isUnreplaceable: false,
-  isWaitingForRescan: false,
+  pages: [],
+  status: ResolutionStatus.UNRESOLVED,
 })
 
 export const createEmptyReplacement = (): TReplacement => ({

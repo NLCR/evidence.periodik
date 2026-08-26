@@ -20,10 +20,9 @@ import ConfirmDialog from '../../pages/specimensOverview/components/dialogs/Conf
 import {
   useSavePrepareScanTemplateMutation,
   usePrepareScanTemplateQuery,
-  usePrepareScanTemplateSettingsQuery,
-  useSavePrepareScanTemplateSettingsMutation,
+  useGeneratePrepareScanTemplateMutation,
+  withVisible,
 } from '@/api/prepareScanModal'
-import { initItemVisibility } from './steps/template/utils/templateItemLocking'
 
 type Props = {
   isOpen: boolean
@@ -40,22 +39,16 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
     defaultValues: createDefaultScanSettings(),
   })
   const templateMethods = useForm<TTemplate>()
-  const { reset: resetSettings } = settingsMethods
   const { reset: resetTemplate, getValues: getTemplateValues } = templateMethods
   const state = useWatch({ control: templateMethods.control, name: 'state' })
 
   const {
-    data: volumeTemplateSettings,
-    isLoading: settingsLoading,
-    isError: settingsError,
-  } = usePrepareScanTemplateSettingsQuery(volumeId)
-  const {
     data: volumeTemplate,
     isLoading: templateLoading,
     isError: templateError,
-  } = usePrepareScanTemplateQuery(volumeId, { enabled: step === 2 })
-  const saveSettingsMutation =
-    useSavePrepareScanTemplateSettingsMutation(volumeId)
+  } = usePrepareScanTemplateQuery(volumeId, { enabled: isOpen })
+  const generateTemplateMutation =
+    useGeneratePrepareScanTemplateMutation(volumeId)
   const saveTemplateMutation = useSavePrepareScanTemplateMutation(volumeId)
 
   const replacementSources = useWatch({
@@ -64,22 +57,19 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
   })
 
   useEffect(() => {
-    if (!volumeTemplateSettings) return
-    resetSettings(volumeTemplateSettings)
-  }, [resetSettings, volumeTemplateSettings])
-
-  useEffect(() => {
     if (!volumeTemplate) return
-    resetTemplate({
-      ...volumeTemplate,
-      items: volumeTemplate.items.map(initItemVisibility),
-    })
-  }, [resetTemplate, volumeTemplate])
+    resetTemplate(withVisible(volumeTemplate, getTemplateValues()))
+  }, [getTemplateValues, resetTemplate, volumeTemplate])
 
   const nextStep = async () => {
     if (step === 1) {
       try {
-        await saveSettingsMutation.mutateAsync(settingsMethods.getValues())
+        const template = await generateTemplateMutation.mutateAsync({
+          ...settingsMethods.getValues(),
+          version: volumeTemplate?.version ?? null,
+          previousTemplate: volumeTemplate ?? undefined,
+        })
+        resetTemplate(template)
       } catch {
         return
       }
@@ -92,8 +82,8 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
     setStep((prev) => prev - 1)
   }
 
-  if (settingsLoading || templateLoading) return <Loader />
-  if (settingsError || templateError) return <ShowError />
+  if (templateLoading) return <Loader />
+  if (templateError) return <ShowError />
 
   const stepTitle =
     step === 0
@@ -164,7 +154,7 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
                 fullWidth
                 variant="outlined"
                 onClick={nextStep}
-                disabled={step === 1 && saveSettingsMutation.isPending}
+                disabled={step === 1 && generateTemplateMutation.isPending}
               >
                 {t('prepare_scan_modal.wizard.next_step')}
               </Button>

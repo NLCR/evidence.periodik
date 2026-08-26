@@ -51,7 +51,9 @@
     "year": "Year",
     "select_filters": "Set filters and start the search",
     "no_results": "Nothing was found",
-    "fill_index_sum": "Fill index total"
+    "combined_fill_index": "Combined fill index",
+    "year_invalid": "Enter a valid numeric year",
+    "year_range_invalid": "Year from must not be greater than year to"
   },
   "prepare_scan_modal": {
     "content_preparation": {
@@ -74,12 +76,15 @@
     },
     "content_template": {
       "no_items": "No items are available for the selected filter.",
+      "no_template": "No template is available for this volume.",
       "preview_dialog_title": "Template preview",
       "export_button": "Export",
       "export_visibility_column": "Export",
       "add_replacement_button": "Add replacement",
       "scan_from_volume": "Scan from volume",
       "replace_label": "Replace",
+      "resolution_unresolved": "Unresolved",
+      "resolution_assigned": "Assigned source",
       "replacements_label": "Replacements",
       "replacement_unavailable": "Replacement is unavailable",
       "waiting_for_rescan_label": "Waiting for rescan",
@@ -145,7 +150,9 @@
     },
     "validation": {
       "waiting_for_rescan": "Before closing for rescan, each replacement must have a filled source, or be marked as unavailable, or marked as waiting for rescan.",
-      "finalized": "To finalize, each replacement must have a filled source or be marked as unavailable and must not be marked as waiting for rescan."
+      "finalized": "To finalize, each replacement must have a filled source or be marked as unavailable and must not be marked as waiting for rescan.",
+      "invalid_pages": "Pages must be non-empty, positive, unique numbers in ascending order.",
+      "overlapping_pages": "Pages must not overlap another replacement in this item."
     },
     "transition_confirm": {
       "to_waiting": {

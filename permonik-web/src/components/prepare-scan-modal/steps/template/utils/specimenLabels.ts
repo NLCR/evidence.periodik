@@ -1,11 +1,8 @@
 import dayjs from 'dayjs'
 import { type TFunction } from 'i18next'
-import { type TTemplateSpecimenRef } from '@/components/prepare-scan-modal/schemas/schemas'
+import { type TTemplateSpecimen } from '@/components/prepare-scan-modal/schemas/schemas'
 
-export const getNumberLabel = (
-  specimen: TTemplateSpecimenRef,
-  t: TFunction
-) => {
+export const getNumberLabel = (specimen: TTemplateSpecimen, t: TFunction) => {
   if (specimen.number)
     return t('prepare_scan_modal.content_template.issue_number_label', {
       number: specimen.number,

@@ -3,8 +3,9 @@ import type {
   TReplacement,
   TReplacementSource,
   TTemplateItem,
-  TTemplateSpecimenRef,
+  TTemplateSpecimen,
 } from '@/components/prepare-scan-modal/schemas/schemas'
+import { ResolutionStatus } from '@/components/prepare-scan-modal/schemas/schemas'
 import { getFilteredTemplateItems } from './utils/filters'
 import {
   getMainReplacement,
@@ -21,8 +22,8 @@ export type TGroupedScanSection = {
     | 'notFilled'
   volume: TReplacementSource | null
   items: Array<{
-    specimen: TTemplateSpecimenRef
-    pages: string | null
+    specimen: TTemplateSpecimen
+    pages: number[] | null
   }>
 }
 
@@ -64,7 +65,7 @@ const getVolumeKey = (
   fallbackKey: string
 ) => {
   if (!volume) return fallbackKey
-  if (volume.id) return volume.id
+  if (volume.volumeId) return volume.volumeId
   if (!hasVolumeIdentity(volume)) return fallbackKey
 
   return [
@@ -129,9 +130,10 @@ const getTemplateItemSectionDescriptor = (
   const mainReplacement = getMainReplacement(item)
 
   if (item.mainScan.type === 'PRIMARY') return PRIMARY_SECTION_DESCRIPTOR
-  if (mainReplacement?.isWaitingForRescan)
+  if (mainReplacement?.status === ResolutionStatus.WAITING_FOR_RESCAN)
     return WAITING_FOR_RESCAN_SECTION_DESCRIPTOR
-  if (mainReplacement?.isUnreplaceable) return UNREPLACEABLE_SECTION_DESCRIPTOR
+  if (mainReplacement?.status === ResolutionStatus.UNREPLACEABLE)
+    return UNREPLACEABLE_SECTION_DESCRIPTOR
   if (!mainReplacement || !hasReplacementSource(mainReplacement))
     return NOT_FILLED_SECTION_DESCRIPTOR
 

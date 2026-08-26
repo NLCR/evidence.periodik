@@ -10,7 +10,7 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
   type TTemplate,
-  type TTemplateSpecimenRef,
+  type TTemplateSpecimen,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import { getDateLabel, getNumberLabel } from '../../utils/specimenLabels'
 import {
@@ -20,7 +20,7 @@ import {
 import ActionsMenu from '../../../../../ActionsMenu'
 
 type Props = {
-  specimen: TTemplateSpecimenRef
+  specimen: TTemplateSpecimen
   itemPath: `items.${number}`
   canManageLocks: boolean
 }

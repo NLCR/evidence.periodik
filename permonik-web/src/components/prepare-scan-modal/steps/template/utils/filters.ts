@@ -1,6 +1,7 @@
-import {
-  type TTemplateItem,
-  type TTemplateItemWithFormIndex,
+import { ResolutionStatus } from '@/components/prepare-scan-modal/schemas/commonSchemas'
+import type {
+  TTemplateItem,
+  TTemplateItemWithFormIndex,
 } from '@/components/prepare-scan-modal/schemas/templateSchema'
 import {
   getVisiblePageReplacements,
@@ -11,9 +12,11 @@ export const includesWaitingForRescan = (items: TTemplateItem[]) =>
   items.some(
     (item) =>
       (item.mainScan.type === 'REPLACEMENT' &&
-        item.mainScan.replacement.isWaitingForRescan) ||
+        item.mainScan.replacement.status ===
+          ResolutionStatus.WAITING_FOR_RESCAN) ||
       item.pageReplacements.some(
-        (replacement) => replacement.isWaitingForRescan
+        (replacement) =>
+          replacement.status === ResolutionStatus.WAITING_FOR_RESCAN
       )
   )
 
@@ -54,9 +57,11 @@ export const shouldIncludeTemplateItem = (
 ) =>
   (!showOnlyRescans ||
     (item.mainScan.type === 'REPLACEMENT' &&
-      item.mainScan.replacement.isWaitingForRescan) ||
+      item.mainScan.replacement.status ===
+        ResolutionStatus.WAITING_FOR_RESCAN) ||
     item.pageReplacements.some(
-      (replacement) => replacement.isWaitingForRescan
+      (replacement) =>
+        replacement.status === ResolutionStatus.WAITING_FOR_RESCAN
     )) &&
   (!showOnlyUnlocked || !getMainScanLockedForFilter(item))
 

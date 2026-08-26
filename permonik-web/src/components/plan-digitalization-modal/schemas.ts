@@ -26,6 +26,7 @@ export type PlanDigitalizationResponse = z.infer<
 >
 
 export const PlanDigitalizationFiltersSchema = z.object({
+  metaTitleId: z.string(),
   yearFrom: z.string(),
   yearTo: z.string(),
   mutation: MutationSchema.nullable(),

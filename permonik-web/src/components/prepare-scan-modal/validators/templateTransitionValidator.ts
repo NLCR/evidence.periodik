@@ -8,6 +8,7 @@ import {
 } from 'react-hook-form'
 import {
   TemplateState,
+  ResolutionStatus,
   type TMainReplacement,
   type TReplacement,
   type TTemplate,
@@ -30,40 +31,66 @@ type TValidationMessageKey =
   | 'prepare_scan_modal.validation.waiting_for_rescan'
   | 'prepare_scan_modal.validation.finalized'
 
-const hasAnyText = (value: string | null | undefined) =>
-  !!value && value.trim().length > 0
+const hasReplacementSource = (replacement: TMainReplacement | TReplacement) =>
+  !!(
+    replacement.volume.volumeId ||
+    replacement.volume.signature?.trim() ||
+    replacement.volume.owner?.trim() ||
+    replacement.volume.barcode?.trim() ||
+    replacement.volume.mutation?.trim() ||
+    replacement.volume.mutationEdition?.trim()
+  )
+
+const hasValidPages = (pages: number[]) =>
+  pages.length > 0 &&
+  pages.every(
+    (pageNumber, index) =>
+      Number.isInteger(pageNumber) &&
+      pageNumber > 0 &&
+      (index === 0 || pages[index - 1] < pageNumber)
+  )
 
 const isReplacementFilled = (
   replacement: TMainReplacement | TReplacement,
   options: TReplacementValidationOptions
 ) => {
-  const hasVolumeData =
-    hasAnyText(replacement.volume.id) ||
-    hasAnyText(replacement.volume.signature) ||
-    hasAnyText(replacement.volume.owner) ||
-    hasAnyText(replacement.volume.barcode) ||
-    hasAnyText(replacement.volume.mutation) ||
-    hasAnyText(replacement.volume.mutationEdition)
+  if (!hasReplacementSource(replacement)) return false
 
-  if (!options.requirePages) return hasVolumeData
+  if (!options.requirePages) return true
 
-  return hasVolumeData && hasAnyText(replacement.pages)
+  return hasValidPages(replacement.pages)
+}
+
+const hasOverlappingAssignedPages = (replacements: TReplacement[]) => {
+  const assignedPages = new Set<number>()
+
+  return replacements.some((replacement) => {
+    if (replacement.status !== ResolutionStatus.ASSIGNED) return false
+
+    return replacement.pages.some((pageNumber) => {
+      if (assignedPages.has(pageNumber)) return true
+      assignedPages.add(pageNumber)
+      return false
+    })
+  })
 }
 
 const isValidForWaitingForRescan = (
   replacement: TMainReplacement | TReplacement,
   options: TReplacementValidationOptions
 ) =>
-  isReplacementFilled(replacement, options) ||
-  replacement.isUnreplaceable ||
-  replacement.isWaitingForRescan
+  replacement.status === ResolutionStatus.UNREPLACEABLE ||
+  replacement.status === ResolutionStatus.WAITING_FOR_RESCAN ||
+  (replacement.status === ResolutionStatus.ASSIGNED &&
+    isReplacementFilled(replacement, options))
 
 const isValidForFinalized = (
   replacement: TMainReplacement | TReplacement,
   options: TReplacementValidationOptions
 ) =>
-  (isReplacementFilled(replacement, options) || replacement.isUnreplaceable) &&
-  !replacement.isWaitingForRescan
+  replacement.status === ResolutionStatus.UNREPLACEABLE ||
+  (replacement.status === ResolutionStatus.ASSIGNED &&
+    isReplacementFilled(replacement, options))
 
 const transitionStateConfig: Record<
   TTemplateTransitionState,
@@ -124,6 +151,16 @@ export const validateTemplateForTransition = (
         { requirePages: true }
       )
     })
+
+    if (hasOverlappingAssignedPages(item.pageReplacements)) {
+      item.pageReplacements.forEach((replacement, pageReplacementIndex) => {
+        if (replacement.status !== ResolutionStatus.ASSIGNED) return
+        issues.push({
+          path: `items.${itemIndex}.pageReplacements.${pageReplacementIndex}.pages`,
+          message: i18next.t(messageKey),
+        })
+      })
+    }
   })
 
   return issues

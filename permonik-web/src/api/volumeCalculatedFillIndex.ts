@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { type TTemplateIssues } from '../components/prepare-scan-modal/schemas/schemas'
+import { api } from './index'
 
 type TCalculateFillIndexRequest = {
   issues: TTemplateIssues
@@ -12,15 +13,9 @@ export const useCalculatedFillIndexQuery = (
 ) =>
   useQuery<number>({
     queryKey: ['volume-calculated-fill-index', volumeId, payload],
-    queryFn: async () => {
-      // TODO: Odkomentovat realny API call po priprave backend endpointu.
-      return Math.floor(Math.random() * (100000 - 90000 + 1)) + 90000
-
-      // return api()
-      //   .post(`volume/${volumeId}/template/calculate-fill-index`, {
-      //     json: payload,
-      //   })
-      //   .json<number>()
-    },
+    queryFn: () =>
+      api()
+        .post(`volume/${volumeId}/template/fill-index`, { json: payload })
+        .json<number>(),
     enabled: !!volumeId,
   })

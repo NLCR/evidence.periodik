@@ -45,7 +45,9 @@ const ReplacementSourceInput = ({
   }
 
   const handleSelectChange = (selectedId: string) => {
-    const selectedOption = candidates.find((option) => option.id === selectedId)
+    const selectedOption = candidates.find(
+      (option) => option.volumeId === selectedId
+    )
     if (!selectedOption) return
 
     setSelectedOptionId(selectedId)
@@ -142,9 +144,9 @@ const ReplacementSourceInput = ({
                 disabled={disabled}
               >
                 {candidates
-                  .filter((option) => !!option.id)
+                  .filter((option) => !!option.volumeId)
                   .map((option) => (
-                    <MenuItem key={option.id} value={option.id!}>
+                    <MenuItem key={option.volumeId} value={option.volumeId!}>
                       <Box
                         sx={{
                           display: 'flex',

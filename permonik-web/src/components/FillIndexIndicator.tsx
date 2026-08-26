@@ -12,7 +12,7 @@ type FillIndexIndicatorProps = {
 }
 
 const SCALE_MIN = 50000
-const SCALE_MAX = 100000
+const SCALE_MAX = 100999
 
 const DARK_RED = { r: 139, g: 0, b: 0 }
 const ORANGE = { r: 255, g: 165, b: 0 }

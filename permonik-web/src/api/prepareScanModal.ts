@@ -1,144 +1,169 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { HTTPError } from 'ky'
 import {
-  createDefaultScanSettings,
   type TScanTemplateSettings,
   type TTemplate,
-  type TTemplateItem,
-  TemplateState,
+  type TemplateState,
 } from '../components/prepare-scan-modal/schemas/schemas'
-import { type TVolumeDetail } from '@/schema/volume'
 import { api, queryClient } from './index'
 
-const MOCK_TEMPLATE_ITEMS: TTemplateItem[] = [
-  {
-    specimen: {
-      id: 'mock-specimen-1',
-      number: '1',
-      attachmentNumber: null,
-      publicationDate: '2024-01-01',
-      numExists: true,
-      numMissing: false,
-    },
-    mainScan: { type: 'PRIMARY', locked: false, visible: true },
-    pageReplacements: [],
-    note: undefined,
-  },
-  {
-    specimen: {
-      id: 'mock-specimen-2',
-      number: '2',
-      attachmentNumber: null,
-      publicationDate: '2024-01-02',
-      numExists: false,
-      numMissing: true,
-    },
-    mainScan: {
-      type: 'REPLACEMENT',
-      locked: false,
-      visible: true,
-      replacement: {
-        volume: {
-          id: null,
-          signature: null,
-          owner: null,
-          barcode: null,
-          mutation: null,
-          mutationEdition: null,
-        },
-        pages: 'vsechny',
-        isUnreplaceable: false,
-        isWaitingForRescan: true,
+const templateQueryKey = (volumeId?: string) => ['volume', volumeId, 'template']
+
+const requireVolumeId = (volumeId?: string) => {
+  if (!volumeId) throw new Error('Volume ID is required')
+  return volumeId
+}
+
+export const withVisible = (
+  template: TTemplate,
+  previous?: TTemplate | null
+) => ({
+  ...template,
+  items: template.items.map((item) => {
+    const previousItem = previous?.items.find(
+      (current) => current.specimen.id === item.specimen.id
+    )
+
+    return {
+      ...item,
+      mainScan: {
+        ...item.mainScan,
+        visible: previousItem?.mainScan.visible ?? true,
       },
-    },
-    pageReplacements: [],
-    note: 'Mock replacement item',
-  },
-]
+      pageReplacements: item.pageReplacements.map((replacement) => {
+        const previousReplacement = previousItem?.pageReplacements.find(
+          (current) =>
+            current.pages.length === replacement.pages.length &&
+            current.pages.every(
+              (pageNumber, index) => pageNumber === replacement.pages[index]
+            )
+        )
+
+        return {
+          ...replacement,
+          visible: previousReplacement?.visible ?? true,
+        }
+      }),
+    }
+  }),
+})
 
 export const usePrepareScanTemplateQuery = (
   volumeId?: string,
   options: { enabled?: boolean } = {}
 ) =>
   useQuery<TTemplate | null>({
-    queryKey: [`/volume/${volumeId}/template`],
+    queryKey: templateQueryKey(volumeId),
     queryFn: async () => {
-      const detail = await api()
-        .get(`volume/${volumeId}/detail`)
-        .json<TVolumeDetail>()
-
-      return {
-        state: TemplateState.CREATED,
-        primaryVolume: detail.volume,
-        items: MOCK_TEMPLATE_ITEMS,
+      const id = requireVolumeId(volumeId)
+      try {
+        return withVisible(
+          await api().get(`volume/${id}/template`).json<TTemplate>(),
+          queryClient.getQueryData<TTemplate>(templateQueryKey(id))
+        )
+      } catch (error) {
+        if (error instanceof HTTPError && error.response.status === 404)
+          return null
+        throw error
       }
     },
     enabled: (options.enabled ?? true) && !!volumeId,
   })
 
+export const useGeneratePrepareScanTemplateMutation = (volumeId?: string) =>
+  useMutation<
+    TTemplate,
+    unknown,
+    TScanTemplateSettings & {
+      version: number | null
+      previousTemplate?: TTemplate
+    }
+  >({
+    mutationFn: async ({ previousTemplate, ...settings }) => {
+      const id = requireVolumeId(volumeId)
+      const template = await api()
+        .post(`volume/${id}/template/generate`, { json: settings })
+        .json<TTemplate>()
+      return withVisible(
+        template,
+        previousTemplate ??
+          queryClient.getQueryData<TTemplate>(templateQueryKey(id))
+      )
+    },
+    onSuccess: (template) =>
+      queryClient.setQueryData(
+        templateQueryKey(requireVolumeId(volumeId)),
+        template
+      ),
+  })
+
 export const useSavePrepareScanTemplateMutation = (volumeId?: string) =>
-  useMutation({
-    mutationFn: async (payload: TTemplate) => {
-      if (!volumeId) return
-      await Promise.resolve(payload)
+  useMutation<TTemplate, unknown, TTemplate>({
+    mutationFn: async (template) => {
+      const id = requireVolumeId(volumeId)
+      const response = await api()
+        .put(`volume/${id}/template`, { json: template })
+        .json<TTemplate>()
+      return withVisible(response, template)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`/volume/${volumeId}/template`],
-      })
-    },
+    onSuccess: (template) =>
+      queryClient.setQueryData(
+        templateQueryKey(requireVolumeId(volumeId)),
+        template
+      ),
   })
 
-export const useUpdatePrepareScanTemplateStateMutation = (volumeId?: string) =>
-  useMutation({
-    mutationFn: async (state: TemplateState) => {
-      if (!volumeId) return
-      await Promise.resolve({ status: 200, state })
+export const useTransitionPrepareScanTemplateMutation = (volumeId?: string) =>
+  useMutation<
+    TTemplate,
+    unknown,
+    { template: TTemplate; targetState: TemplateState }
+  >({
+    mutationFn: async ({ template, targetState }) => {
+      const id = requireVolumeId(volumeId)
+      const { version, ...changes } = template
+      if (version === null) throw new Error('Template version is required')
+      const response = await api()
+        .post(`volume/${id}/template/transition`, {
+          json: { targetState, version, changes },
+        })
+        .json<TTemplate>()
+      return withVisible(response, template)
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`/volume/${volumeId}/template`],
-      })
-    },
+    onSuccess: (template) =>
+      queryClient.setQueryData(
+        templateQueryKey(requireVolumeId(volumeId)),
+        template
+      ),
   })
-
-export const usePrepareScanTemplateSettingsQuery = (volumeId?: string) =>
-  useQuery<TScanTemplateSettings | null>({
-    queryKey: [`/volume/${volumeId}/template/settings`],
-    queryFn: async () => createDefaultScanSettings(),
-    enabled: !!volumeId,
-  })
-
-export const useSavePrepareScanTemplateSettingsMutation = (volumeId?: string) =>
-  useMutation({
-    mutationFn: async (payload: TScanTemplateSettings) => {
-      if (!volumeId) return
-      await Promise.resolve(payload)
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [`/volume/${volumeId}/template/settings`],
-      })
-    },
-  })
-
-type TSynchronizeVolumePayload = {
-  state: TemplateState
-}
 
 export const useSynchronizePrepareScanTemplateMutation = (volumeId?: string) =>
-  useMutation({
-    mutationFn: async ({ state }: TSynchronizeVolumePayload) => {
-      if (!volumeId) return
-      // TODO: zapojit BE endpoint pro synchronizaci template z volume
-      await Promise.resolve({ volumeId, state, synchronized: true })
+  useMutation<TTemplate, unknown, { version: number }>({
+    mutationFn: async ({ version }) => {
+      const id = requireVolumeId(volumeId)
+      const template = await api()
+        .post(`volume/${id}/template/synchronize`, { json: { version } })
+        .json<TTemplate>()
+      return withVisible(
+        template,
+        queryClient.getQueryData<TTemplate>(templateQueryKey(id))
+      )
     },
+    onSuccess: (template) =>
+      queryClient.setQueryData(
+        templateQueryKey(requireVolumeId(volumeId)),
+        template
+      ),
   })
 
 export const useDeletePrepareScanTemplateMutation = (volumeId?: string) =>
-  useMutation({
+  useMutation<void, unknown, void>({
     mutationFn: async () => {
-      if (!volumeId) return
-      // TODO: zapojit BE endpoint pro smazani template
-      await Promise.resolve({ volumeId, deleted: true })
+      await api().delete(`volume/${requireVolumeId(volumeId)}/template`)
     },
+    onSuccess: () =>
+      queryClient.removeQueries({
+        queryKey: templateQueryKey(requireVolumeId(volumeId)),
+        exact: true,
+      }),
   })

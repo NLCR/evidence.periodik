@@ -51,7 +51,9 @@
     "year": "Ročník",
     "select_filters": "Nastavte filtry a spusťte vyhledávání",
     "no_results": "Nic nebylo nalezeno",
-    "fill_index_sum": "Součet indexů vyplnění"
+    "combined_fill_index": "Kombinovaný index vyplnění",
+    "year_invalid": "Zadejte platný číselný rok",
+    "year_range_invalid": "Rok od nesmí být vyšší než rok do"
   },
   "prepare_scan_modal": {
     "content_preparation": {
@@ -74,12 +76,15 @@
     },
     "content_template": {
       "no_items": "Pro zvolený filtr nejsou dostupné žádné položky.",
+      "no_template": "Pro tento svazek není dostupná žádná předloha.",
       "preview_dialog_title": "Náhled předlohy",
       "export_button": "Export",
       "export_visibility_column": "Export",
       "add_replacement_button": "Přidat náhradu",
       "scan_from_volume": "Skenovat ze svazku",
       "replace_label": "Nahradit",
+      "resolution_unresolved": "Nevyřešeno",
+      "resolution_assigned": "Přiřazený zdroj",
       "replacements_label": "Náhrady",
       "replacement_unavailable": "Náhrada není dostupná",
       "waiting_for_rescan_label": "Čeká na dosken",
@@ -145,7 +150,9 @@
     },
     "validation": {
       "waiting_for_rescan": "Před uzavřením k doskenování musí mít každá náhrada vyplněný zdroj, nebo být označená jako nedostupná, nebo čekající na dosken.",
-      "finalized": "Pro finalizaci musí mít každá náhrada vyplněný zdroj nebo být označená jako nedostupná a nesmí být čekající na dosken."
+      "finalized": "Pro finalizaci musí mít každá náhrada vyplněný zdroj nebo být označená jako nedostupná a nesmí být čekající na dosken.",
+      "invalid_pages": "Strany musí být neprázdná, kladná, unikátní a vzestupně seřazená čísla.",
+      "overlapping_pages": "Strany se nesmí překrývat s jinou náhradou této položky."
     },
     "transition_confirm": {
       "to_waiting": {

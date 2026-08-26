@@ -16,6 +16,7 @@ import { createEmptyMutationMark } from '@/utils/mutationMark'
 type Props = {
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
+  metaTitleId: string
   metatitle: string
 }
 
@@ -37,13 +38,19 @@ const EmptyState = ({ children }: PropsWithChildren) => (
   </Box>
 )
 
-const PlanDigitalizationModal = ({ isOpen, setIsOpen, metatitle }: Props) => {
+const PlanDigitalizationModal = ({
+  isOpen,
+  setIsOpen,
+  metaTitleId,
+  metatitle,
+}: Props) => {
   const { t } = useTranslation()
   const [submittedFilters, setSubmittedFilters] =
     useState<PlanDigitalizationFilters | null>(null)
 
   const form = useForm<PlanDigitalizationFilters>({
     defaultValues: {
+      metaTitleId,
       yearFrom: '',
       yearTo: '',
       mutation: null,

@@ -8,7 +8,8 @@ import {
   type TReplacement,
   type TReplacementSource,
   type TTemplate,
-  type TTemplateSpecimenRef,
+  type TTemplateSpecimen,
+  ResolutionStatus,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import SpecimenItemHeader from './SpecimenItemHeader'
 import SpecimenMainReplacementSection from './SpecimenMainReplacementSection'
@@ -18,7 +19,7 @@ import { getReplacementSourceCandidatesForField } from './specimenItemReplacemen
 import { isLockingEnabled } from '@/components/prepare-scan-modal/steps/template/utils/templateItemLocking'
 
 type Props = {
-  specimen: TTemplateSpecimenRef
+  specimen: TTemplateSpecimen
   itemPath: `items.${number}`
   viewOnly?: boolean
   showOnlyRescans?: boolean
@@ -69,7 +70,10 @@ const SpecimenItem = ({
     () =>
       replacementRowsOverride ??
       pageReplacements.reduce<TReplacementRow[]>((acc, replacement, index) => {
-        if (showOnlyRescans && !replacement?.isWaitingForRescan) {
+        if (
+          showOnlyRescans &&
+          replacement?.status !== ResolutionStatus.WAITING_FOR_RESCAN
+        ) {
           return acc
         }
 

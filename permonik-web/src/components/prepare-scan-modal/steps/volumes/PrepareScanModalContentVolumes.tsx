@@ -24,8 +24,8 @@ const PrepareScanModalContentVolumes = ({ volumeId }: Props) => {
   const { data: calculatedFillIndex } = useCalculatedFillIndexQuery(volumeId, {
     issues,
     replacementSourcesIds: replacementSources
-      .filter((src) => !!src.id)
-      .map((src) => src.id!),
+      .filter((src) => !!src.volumeId)
+      .map((src) => src.volumeId!),
   })
 
   return (
@@ -75,7 +75,7 @@ const PrepareScanModalContentVolumes = ({ volumeId }: Props) => {
         <Typography variant="h6">
           {t('prepare_scan_modal.content_volumes.replacement_sources_title')}
         </Typography>
-        <ReplacementSourcesSelection />
+        <ReplacementSourcesSelection volumeId={volumeId} />
       </Box>
     </Box>
   )

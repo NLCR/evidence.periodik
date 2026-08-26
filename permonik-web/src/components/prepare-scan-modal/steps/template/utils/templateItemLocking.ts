@@ -1,12 +1,15 @@
 import {
+  ResolutionStatus,
   TemplateState,
   type TTemplate,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 
 export const hasWaitingReplacement = (item: TTemplate['items'][number]) =>
   (item.mainScan.type === 'REPLACEMENT' &&
-    item.mainScan.replacement.isWaitingForRescan) ||
-  item.pageReplacements.some((replacement) => replacement.isWaitingForRescan)
+    item.mainScan.replacement.status === ResolutionStatus.WAITING_FOR_RESCAN) ||
+  item.pageReplacements.some(
+    (replacement) => replacement.status === ResolutionStatus.WAITING_FOR_RESCAN
+  )
 
 export const getMainReplacement = (item: TTemplate['items'][number]) =>
   item.mainScan.type === 'REPLACEMENT' ? item.mainScan.replacement : null
