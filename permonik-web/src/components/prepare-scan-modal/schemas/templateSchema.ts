@@ -43,7 +43,6 @@ export const TemplateItemSchema = z.object({
 export const TemplateSchema = z.object({
   id: z.string(),
   version: z.number().int().nullable(),
-  metaTitleId: z.string(),
   state: z.nativeEnum(TemplateState),
   primaryVolume: VolumeSchema,
   replacementSourcesParameters: z.object({
