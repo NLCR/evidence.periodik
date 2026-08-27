@@ -13,6 +13,7 @@ import {
   createEmptyReplacementSource,
   type TReplacementSource,
 } from '@/components/prepare-scan-modal/schemas/schemas'
+import FillIndexIndicator from '@/components/FillIndexIndicator'
 import ReplacementSourceInputComponent from './ReplacementSourceInputComponent'
 
 type Props = {
@@ -155,6 +156,11 @@ const ReplacementSourceInput = ({
                         }}
                       >
                         <Box>{buildReplacementOptionLabel(option)}</Box>
+                        {option.dependentFillIndex != null && (
+                          <FillIndexIndicator
+                            value={option.dependentFillIndex}
+                          />
+                        )}
                       </Box>
                     </MenuItem>
                   ))}

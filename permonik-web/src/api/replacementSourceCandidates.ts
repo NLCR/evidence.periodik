@@ -7,7 +7,7 @@ import { api } from './index'
 
 export type TReplacementSourceCandidatesRequest = Pick<
   TScanTemplateSettings,
-  'issues' | 'replacementSourcesParameters'
+  'issues' | 'replacementSourcesParameters' | 'replacementSources'
 >
 
 export const useReplacementSourceCandidatesQuery = (
@@ -20,6 +20,7 @@ export const useReplacementSourceCandidatesQuery = (
       volumeId,
       payload.issues,
       payload.replacementSourcesParameters,
+      payload.replacementSources,
     ],
     queryFn: () =>
       api()

@@ -32,6 +32,7 @@ export const replacementSourceSchema = z.object({
   barcode: z.string().nullish(),
   mutation: z.string().nullish(),
   mutationEdition: z.string().nullish(),
+  dependentFillIndex: z.number().nullish(),
 })
 
 export const mainReplacementSchema = z.object({
@@ -57,6 +58,7 @@ export const createEmptyReplacementSource = (): TReplacementSource => ({
   barcode: '',
   mutation: '',
   mutationEdition: '',
+  dependentFillIndex: undefined,
   owner: '',
   signature: '',
 })

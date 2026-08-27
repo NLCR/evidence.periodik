@@ -34,6 +34,7 @@ const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
   } = useReplacementSourceCandidatesQuery(volumeId, {
     issues,
     replacementSourcesParameters,
+    replacementSources,
   })
 
   const buildReplacementSource = (priority: number): TReplacementSource => ({
@@ -71,7 +72,7 @@ const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
                   value={fieldProps.value}
                   candidates={replacementSourceCandidates?.filter(
                     (candidate) =>
-                      !fields.some(
+                      !replacementSources.some(
                         (src, srcIndex) =>
                           src.volumeId === candidate.volumeId &&
                           srcIndex !== index
