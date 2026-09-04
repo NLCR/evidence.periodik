@@ -14,7 +14,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [
-      react({ jsxImportSource: '@welldone-software/why-did-you-render' }),
+      react({
+        // jsxImportSource: '@welldone-software/why-did-you-render',
+      }),
       babel({
         presets: [reactCompilerPreset()],
       }),

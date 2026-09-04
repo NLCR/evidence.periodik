@@ -13,7 +13,8 @@ type Props = {
   editableData?: {
     DialogContent: ReactElement
     fieldName: string
-    saveChange: (value: string) => void
+    saveChange: () => boolean | Promise<boolean>
+    onOpen?: () => void
     isMutationMark?: boolean
     changeShouldNotAffectSpecimen?: boolean
   }
@@ -30,7 +31,7 @@ const LockedInputDataItem = ({
 }: Props) => {
   const { t } = useTranslation()
   const { formatDate } = useFormatDate()
-  const { getValues, control } = useFormContext()
+  const { control } = useFormContext()
   const watchedValue = useWatch({ name, control })
   const value = props.value ?? watchedValue
 
@@ -82,8 +83,9 @@ const LockedInputDataItem = ({
               </Box>
             }
             onConfirm={() => {
-              editableData.saveChange(getValues(name))
+              return editableData.saveChange()
             }}
+            onOpen={editableData.onOpen}
             TriggerButton={
               <IconButton sx={{ marginY: -1 }}>
                 <EditIcon />

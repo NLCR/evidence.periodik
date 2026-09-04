@@ -112,6 +112,7 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
             ),
             true
           )
+          return true
         },
       }}
     />

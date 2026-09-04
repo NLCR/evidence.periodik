@@ -22,6 +22,7 @@ import { type RefObject } from 'react'
 import { type GridApiPro } from '@mui/x-data-grid-pro/models'
 import { duplicateVolume } from '../utils/duplicateVolume/duplicateVolume'
 import { type FieldsToReset } from '../utils/duplicateVolume/types'
+import { isVolumeDateRangeValid } from '../utils/volumeDateRange'
 
 const useVolumeManagementActions = (
   apiRef: RefObject<GridApiPro | null>,
@@ -106,6 +107,16 @@ const useVolumeManagementActions = (
       specimensValidation.error.issues.forEach((e) => toast.error(e.message))
 
       throw new Error(specimensValidation.error.message)
+    }
+    if (
+      !isVolumeDateRangeValid(
+        repairedVolume.dateFrom,
+        repairedVolume.dateTo,
+        repairedSpecimens
+      )
+    ) {
+      toast.error(t('volume_overview.date_range_excludes_active_specimen'))
+      throw new Error('VOLUME_DATE_RANGE_EXCLUDES_ACTIVE_SPECIMEN')
     }
 
     return {

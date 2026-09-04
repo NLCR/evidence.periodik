@@ -196,13 +196,9 @@ export const useVolumeManagementStore = create<TState>()(
           produce((state: TState) => {
             if (value?.isValid()) {
               state.volumeState.dateFrom = value.format('YYYY-MM-DD')
-              state.volumeState.dateTo = value
-                .endOf('month')
-                .format('YYYY-MM-DD')
               state.stateHasUnsavedData = true
             } else {
               state.volumeState.dateFrom = ''
-              state.volumeState.dateTo = ''
             }
           })
         ),

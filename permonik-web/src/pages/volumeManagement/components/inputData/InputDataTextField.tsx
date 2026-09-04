@@ -93,6 +93,7 @@ const InputDataTextField = ({
               saveChange: () => {
                 setValue(name, getValues(name + '_internal'))
                 editableData.saveChange(getValues(name))
+                return true
               },
               changeShouldNotAffectSpecimen:
                 editableData.changeShouldNotAffectSpecimen,
