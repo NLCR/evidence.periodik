@@ -6,14 +6,13 @@ spring:
   threads:
     virtual:
       enabled: true
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true
   datasource:
     url: ${IDENTITY_DATABASE_URL}
     username: permonik
     password: ${IDENTITY_DATABASE_PASSWORD}
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: validate
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.sql
   session:

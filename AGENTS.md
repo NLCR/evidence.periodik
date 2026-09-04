@@ -11,18 +11,20 @@ This file provides guidance to coding agents working in this repository.
 
 PerMonik is a tool for comparing copies of regional newspaper mutations, part of the Czech IN-PROVE project. It includes:
 
-- a Spring Boot API backend
+- a Spring Boot Solr API backend
+- a Kotlin export and integration API
 - a React/TypeScript frontend
 - Apache Solr for data storage
 
 ## Architecture
 
 - `permonik-api/` - Spring Boot 4.1 REST API (Java 25, virtual threads enabled)
+- `permonik-export-api/` - Spring Boot 4.1 export and integration API (Kotlin, PostgreSQL, Liquibase)
 - `permonik-identity-gateway/` - Spring identity gateway/BFF (PostgreSQL users, Redis sessions, SAML, internal JWT)
 - `permonik-web/` - React 19 + TypeScript frontend (Vite, MUI, Zustand, TanStack Query)
 - `permonik-database/` - Solr 9.10 core configurations (`volume`, `specimen`, `edition`, `mutation`, `owner`, `metatitle`, `user`)
 
-Backend pattern:
+Core API pattern:
 - Controller -> Service -> Solr (`HttpSolrClient`)
 - MapStruct for DTO mapping
 - Lombok for boilerplate
@@ -40,7 +42,7 @@ Auth:
 - basic login exists only in the `dev` profile; test/prod use Spring Security SAML with eduID discovery
 - browser authentication uses an 8h Redis session and CSRF protection
 - the gateway emits short-lived, audience-specific internal JWTs
-- `permonik-api` is a stateless OAuth2 Resource Server and never reads browser sessions
+- `permonik-api` and `permonik-export-api` are stateless OAuth2 Resource Servers and never read browser sessions
 
 ## Code Style And Configuration
 
@@ -71,6 +73,9 @@ Backend:
 ./gradlew :permonik-api:build
 ./gradlew :permonik-api:bootRun
 ./gradlew :permonik-api:test
+./gradlew :permonik-export-api:test
+./gradlew :permonik-export-api:bootRun
+./gradlew :permonik-export-api:bootJar
 ./gradlew :permonik-identity-gateway:test
 ./gradlew :permonik-identity-gateway:bootRun
 ./gradlew :permonik-identity-gateway:bootJar
@@ -92,10 +97,26 @@ yarn test
 
 Docker:
 ```bash
+docker compose --env-file .env up --build --watch
+
+# Deployment images
 ./gradlew --no-configuration-cache :permonik-api:jibDockerBuild
+./gradlew --no-configuration-cache :permonik-export-api:jibDockerBuild
 ./gradlew --no-configuration-cache :permonik-identity-gateway:jibDockerBuild
-docker-compose up
 ```
+
+Local Docker development:
+- requires Docker Compose 2.32+ because backend reload uses `sync+exec`
+- `./start-local.sh` is the convenience entry point and reads `.env` by default
+- all Spring services run Gradle `bootRun` from the shared Java 25 development image in `infra/development/backend.Dockerfile`
+- source changes are synchronized into the container, compiled with the affected module's `classes` task, and applied by Spring DevTools through `.reloadtrigger`
+- `initial_sync` intentionally reconciles host sources with reused containers before watch begins; do not remove it unless `docker compose watch --no-up` is no longer supported
+- Gradle configuration changes use `sync+restart`; development Dockerfile changes require `up --build --watch`
+- each Spring service has a separate Gradle cache volume to avoid concurrent cache contention
+- the admin frontend runs through Vite in a Node 24 Alpine development container from `infra/development/frontend.Dockerfile`; the public frontend is not started locally
+- frontend files are synchronized for Vite HMR, while changes to `package.json`, `yarn.lock` or `.yarnrc.yml` rebuild the frontend image
+- the gateway reaches the frontend directly through the Compose service name `permonik-web`
+- local development images are not deployment artifacts; deployment images must continue to use Jib and Distroless Java 25
 
 ## API Notes
 
@@ -162,16 +183,14 @@ Separate Docker builds exist for each mode.
 
 ## Verification Integrity
 
-When considering a large number of mechanical tests around a change, treat that instinct as a failure signal. Discard the proposed tests and work through this reasoning loop instead:
+Source: <https://gist.github.com/vetteforspam-dot/b5bab1e567d318496ae9cbcfa2590c79>
+
+When you catch yourself considering a large number of mechanical tests around the code, treat that instinct as a failure signal. Discard the proposed tests and work through the following reasoning loop instead:
 
 1. To the best of your understanding, what is the desired outcome that needs to be proven?
 2. Do the prior direction and context of the session refine, narrow, or simplify that outcome?
-3. More broadly, what is the user trying to make work? Does that understanding further change or simplify the desired outcome?
+3. More broadly, what is the user trying to make work here? Does that understanding further change or simplify the desired outcome?
 4. What must be true for a verification method to faithfully demonstrate the integrity of that outcome?
-5. What different verification ideas would you consider with fresh eyes, without being anchored to the current implementation?
+5. What different verification ideas would you consider if asked to look at it with fresh eyes, without being anchored to the current implementation?
 
-Designing valuable verification is an expensive, careful, and intellectually demanding process. A test is only as valuable as its integrity with respect to the desired outcome. Fixtures and assertions that merely restate the implementation are unnecessary and wasteful by default. Proving that code behaves like itself should remain a narrow, justified exception only when it adds real value.
-
-## Legacy Claude Migration
-
-Legacy Claude-specific config has been migrated to this file.
+Designing valuable verification is an expensive, careful, and intellectually demanding process. A test is only as valuable as its integrity with respect to the desired outcome. Fixtures and assertions that merely restate the implementation should be treated as unnecessary and wasteful by default. Proving that the code behaves like itself should remain a narrow, justified exception only when it adds real value.

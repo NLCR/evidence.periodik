@@ -1,9 +1,20 @@
 spring:
+  application:
+    name: permonik-export-api
   profiles:
     active: dev
   threads:
     virtual:
       enabled: true
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true
+  datasource:
+    url: ${EXPORT_API_DATABASE_URL}
+    username: permonik
+    password: ${EXPORT_API_DATABASE_PASSWORD}
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.sql
   web:
     error:
       path: /error
@@ -12,9 +23,6 @@ spring:
       include-exception: true
       include-message: always
 
-solr:
-  host: ${SOLR_URL:http://localhost:8983/solr}
-
 permonik:
   security:
     internal-jwt:
@@ -22,7 +30,7 @@ permonik:
 
 server:
   port: 8080
-  forward-headers-strategy: FRAMEWORK
+  forward-headers-strategy: framework
 
 springdoc:
   api-docs:

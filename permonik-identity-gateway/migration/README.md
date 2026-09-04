@@ -7,7 +7,7 @@
 - Solr is reachable at `http://localhost:8983/solr`.
 - The identity schema has already been created by Liquibase.
 - `curl`, `jq` and `psql` are installed.
-- The repository root contains `.env.local` with `IDENTITY_DATABASE_PASSWORD`, or PostgreSQL authentication is available through another standard mechanism such as `.pgpass`.
+- The repository root contains `../../.env` with `IDENTITY_DATABASE_PASSWORD`, or PostgreSQL authentication is available through another standard mechanism such as `.pgpass`.
 
 ## Run
 

@@ -70,9 +70,10 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3000,
       host: true,
+      allowedHosts: ['permonik-web'],
       proxy: {
         '/api': {
-          target: 'http://localhost:8081/',
+          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8081/',
           changeOrigin: true,
           secure: false,
         },

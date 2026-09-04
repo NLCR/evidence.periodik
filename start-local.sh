@@ -2,10 +2,10 @@
 
 set -eu
 
-ENV_FILE="${ENV_FILE:-.env.local}"
+ENV_FILE="${ENV_FILE:-.env}"
 
 if [ ! -f "$ENV_FILE" ]; then
-    echo "Missing $ENV_FILE. Copy .env.local.example and fill in its values." >&2
+    echo "Missing $ENV_FILE. Copy .env.example and fill in its values." >&2
     exit 1
 fi
 
@@ -19,8 +19,4 @@ if ! docker info >/dev/null 2>&1; then
     exit 1
 fi
 
-./gradlew --no-daemon --no-configuration-cache \
-    :permonik-api:jibDockerBuild \
-    :permonik-identity-gateway:jibDockerBuild
-
-docker compose --env-file "$ENV_FILE" up "$@"
+docker compose --env-file "$ENV_FILE" up --build --watch "$@"
