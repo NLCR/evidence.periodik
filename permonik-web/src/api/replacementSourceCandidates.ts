@@ -24,7 +24,7 @@ export const useReplacementSourceCandidatesQuery = (
     ],
     queryFn: () =>
       api()
-        .post(`volume/${volumeId}/template/replacement-candidates`, {
+        .post(`export/volume/${volumeId}/template/replacement-candidates`, {
           json: payload,
         })
         .json<TReplacementSource[]>(),

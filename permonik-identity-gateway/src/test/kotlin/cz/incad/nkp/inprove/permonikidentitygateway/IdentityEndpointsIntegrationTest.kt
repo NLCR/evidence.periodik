@@ -62,7 +62,7 @@ class IdentityEndpointsIntegrationTest @Autowired constructor(
             jsonPath("\$.role") { value("admin") }
             jsonPath("\$.authorities", hasItem("USER_WRITE"))
             jsonPath("\$.authorities", hasItem("REFERENCE_WRITE"))
-            jsonPath("\$.authorities", hasItem("TEMPLATE_PLAN"))
+            jsonPath("\$.authorities", hasItem("TEMPLATE_MANAGE"))
             jsonPath("\$.authorities", not(hasItem("VOLUME_READ")))
         }
 
@@ -135,8 +135,7 @@ class IdentityEndpointsIntegrationTest @Autowired constructor(
         val session = login("digitizer", "digitizer-password")
         mvc.get("/api/me") { this.session = session }.andExpect {
             status { isOk() }
-            jsonPath("\$.authorities", hasItem("TEMPLATE_READ"))
-            jsonPath("\$.authorities", hasItem("TEMPLATE_FINALIZE"))
+            jsonPath("\$.authorities", hasItem("TEMPLATE_MANAGE"))
             jsonPath("\$.authorities", not(hasItem("VOLUME_WRITE")))
             jsonPath("\$.authorities", not(hasItem("USER_READ")))
         }
@@ -185,7 +184,7 @@ class IdentityEndpointsIntegrationTest @Autowired constructor(
             UserRole.DIGITALIZATION,
             emptyList(),
             true,
-            listOf("TEMPLATE_WRITE"),
+            listOf("TEMPLATE_MANAGE"),
         )
 
         val core = SignedJWT.parse(jwtService.create(principal, "permonik-core"))

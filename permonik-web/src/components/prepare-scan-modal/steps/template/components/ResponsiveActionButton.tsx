@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box'
 import Button, { type ButtonProps } from '@mui/material/Button'
-import { type ReactElement, type ReactNode } from 'react'
+import { type ReactElement } from 'react'
 
 type ResponsiveActionButtonProps = ButtonProps & {
-  label: ReactNode
+  label: string
   icon: ReactElement
 }
 
@@ -16,6 +16,7 @@ const ResponsiveActionButton = ({
   return (
     <Button
       {...buttonProps}
+      aria-label={label}
       startIcon={
         <Box sx={{ display: { xs: 'none', sm: 'inline-flex' } }}>{icon}</Box>
       }

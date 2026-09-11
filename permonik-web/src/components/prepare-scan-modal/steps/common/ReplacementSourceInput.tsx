@@ -35,7 +35,6 @@ const ReplacementSourceInput = ({
 }: Props) => {
   const { t } = useTranslation()
   const [mode, setMode] = useState<'SELECT' | 'MANUAL'>('SELECT')
-  const [selectedOptionId, setSelectedOptionId] = useState<string>('')
   const selectId = useId()
 
   const safeSetReplacement = (nextPartial: Partial<TReplacementSource>) => {
@@ -51,7 +50,6 @@ const ReplacementSourceInput = ({
     )
     if (!selectedOption) return
 
-    setSelectedOptionId(selectedId)
     onChange({
       ...selectedOption,
       priority: value.priority,
@@ -135,7 +133,7 @@ const ReplacementSourceInput = ({
                 fullWidth
                 labelId={`${selectId}-label`}
                 id={selectId}
-                value={selectedOptionId}
+                value={value.volumeId ?? ''}
                 label={t(
                   'prepare_scan_modal.content_template.select_replacement_volume'
                 )}

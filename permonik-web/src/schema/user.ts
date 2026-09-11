@@ -8,11 +8,7 @@ export const PermissionSchema = z.enum([
   'REFERENCE_WRITE',
   'USER_READ',
   'USER_WRITE',
-  'TEMPLATE_READ',
-  'TEMPLATE_WRITE',
-  'TEMPLATE_FINALIZE',
-  'TEMPLATE_DELETE',
-  'TEMPLATE_PLAN',
+  'TEMPLATE_MANAGE',
 ])
 
 export const EditableUserSchema = z.object({

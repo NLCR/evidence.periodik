@@ -4,7 +4,6 @@ import javax.crypto.spec.SecretKeySpec
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
@@ -25,8 +24,8 @@ import org.springframework.security.web.savedrequest.NullRequestCache
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 class SecurityConfiguration(private val properties: InternalJwtProperties) {
+    /** Configures a stateless JWT resource server with public integration and protected export routes. */
     @Bean
     fun securityFilterChain(
         http: HttpSecurity,
@@ -37,9 +36,8 @@ class SecurityConfiguration(private val properties: InternalJwtProperties) {
             sessionManagement { sessionCreationPolicy = SessionCreationPolicy.STATELESS }
             requestCache { requestCache = NullRequestCache() }
             authorizeHttpRequests {
-                authorize("/api/integration/v1/**", permitAll)
-                authorize("/api/export/v1/public/**", permitAll)
-                authorize("/api/export/v1/**", authenticated)
+                authorize("/api/integration/**", permitAll)
+                authorize("/api/export/**", hasAuthority("TEMPLATE_MANAGE"))
                 authorize(anyRequest, denyAll)
             }
             oauth2ResourceServer {
@@ -52,6 +50,7 @@ class SecurityConfiguration(private val properties: InternalJwtProperties) {
         return http.build()
     }
 
+    /** Maps the gateway's `authorities` claim directly to Spring Security authorities without a prefix. */
     @Bean
     fun jwtAuthenticationConverter() = JwtAuthenticationConverter().apply {
         setJwtGrantedAuthoritiesConverter(
@@ -62,6 +61,7 @@ class SecurityConfiguration(private val properties: InternalJwtProperties) {
         )
     }
 
+    /** Creates the HMAC decoder and validates the internal token issuer and export-service audience. */
     @Bean
     fun jwtDecoder(): JwtDecoder {
         val key = properties.secret.encodeToByteArray()

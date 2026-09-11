@@ -1,5 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
+    id 'org.jetbrains.kotlin.kapt'
     id 'org.jetbrains.kotlin.plugin.spring'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
@@ -31,20 +32,31 @@ repositories {
 }
 
 dependencies {
+    implementation project(':permonik-domain')
+    implementation project(':permonik-core-contract')
+    kapt 'org.springframework.boot:spring-boot-configuration-processor'
+
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-grpc-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-liquibase'
+
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.openapi}"
+
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
+
     implementation 'tools.jackson.module:jackson-module-kotlin'
-    runtimeOnly 'org.postgresql:postgresql'
+
+    implementation 'org.postgresql:postgresql'
+
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation "org.testcontainers:testcontainers-postgresql:${versions.testcontainersPostgresql}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

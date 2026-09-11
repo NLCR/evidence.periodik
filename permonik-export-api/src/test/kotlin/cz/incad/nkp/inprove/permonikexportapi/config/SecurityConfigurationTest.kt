@@ -16,12 +16,14 @@ import org.springframework.security.oauth2.jwt.JwtValidationException
 class SecurityConfigurationTest {
     private val decoder = SecurityConfiguration(InternalJwtProperties(SECRET)).jwtDecoder()
 
+    /** Verifies that only tokens carrying the export-service audience pass decoder validation. */
     @Test
     fun acceptsOnlyExportAudience() {
         assertDoesNotThrow { decoder.decode(token("permonik-export")) }
         assertThrows(JwtValidationException::class.java) { decoder.decode(token("permonik-core")) }
     }
 
+    /** Creates a signed internal token for decoder validation scenarios. */
     private fun token(audience: String): String {
         val now = Instant.now()
         val claims = JWTClaimsSet.Builder()

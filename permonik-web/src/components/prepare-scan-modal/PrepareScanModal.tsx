@@ -82,6 +82,13 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
     setStep((prev) => prev - 1)
   }
 
+  const closeAfterDelete = () => {
+    setStep(0)
+    settingsMethods.reset(createDefaultScanSettings())
+    resetTemplate()
+    setIsOpen(false)
+  }
+
   if (templateLoading) return <Loader />
   if (templateError) return <ShowError />
 
@@ -186,6 +193,7 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
           <PrepareScanModalContentTemplate
             volumeId={volumeId}
             replacementSources={replacementSources}
+            onDeleted={closeAfterDelete}
           />
         </FormProvider>
       )}

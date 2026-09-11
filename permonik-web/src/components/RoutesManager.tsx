@@ -51,7 +51,7 @@ const RoutesManager = () => {
     APP_WITH_EDITING_ENABLED && hasPermission(me, 'VOLUME_WRITE')
   const canOpenExistingVolume =
     APP_WITH_EDITING_ENABLED &&
-    (canWriteVolumes || hasPermission(me, 'TEMPLATE_READ'))
+    (canWriteVolumes || hasPermission(me, 'TEMPLATE_MANAGE'))
   const canReadUsers =
     APP_WITH_EDITING_ENABLED && hasPermission(me, 'USER_READ')
   const canWriteReferences =

@@ -81,6 +81,7 @@ services:
       - "8080:8080"
     environment:
       SOLR_URL: http://permonik-database:8983/solr
+      CORE_EXPORT_GRPC_TOKEN: ${CORE_EXPORT_GRPC_TOKEN:?CORE_EXPORT_GRPC_TOKEN is required}
       IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
       SPRING_DEVTOOLS_RESTART_TRIGGER_FILE: .reloadtrigger
       SPRING_PROFILES_ACTIVE: dev
@@ -94,6 +95,19 @@ services:
           target: /workspace/permonik-api/src
           initial_sync: true
           exec: *permonik-api-reload
+        - action: sync+restart
+          path: ./permonik-core-contract
+          target: /workspace/permonik-core-contract
+          initial_sync: true
+          ignore:
+            - build/
+        - action: sync+restart
+          path: ./permonik-domain/src
+          target: /workspace/permonik-domain/src
+          initial_sync: true
+        - action: sync+restart
+          path: ./permonik-domain/build.gradle
+          target: /workspace/permonik-domain/build.gradle
         - action: sync+restart
           path: ./permonik-api
           target: /workspace/permonik-api
@@ -127,6 +141,8 @@ services:
       - "8082:8080"
     environment:
       EXPORT_API_DATABASE_URL: jdbc:postgresql://permonik-export-api-database:5432/permonik_export
+      CORE_EXPORT_GRPC_TOKEN: ${CORE_EXPORT_GRPC_TOKEN:?CORE_EXPORT_GRPC_TOKEN is required}
+      CORE_EXPORT_GRPC_TARGET: static://permonik-api:9090
       EXPORT_API_DATABASE_PASSWORD: ${EXPORT_API_DATABASE_PASSWORD:?EXPORT_API_DATABASE_PASSWORD is required}
       IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
       SPRING_DEVTOOLS_RESTART_TRIGGER_FILE: .reloadtrigger
@@ -141,6 +157,19 @@ services:
           target: /workspace/permonik-export-api/src
           initial_sync: true
           exec: *permonik-export-api-reload
+        - action: sync+restart
+          path: ./permonik-core-contract
+          target: /workspace/permonik-core-contract
+          initial_sync: true
+          ignore:
+            - build/
+        - action: sync+restart
+          path: ./permonik-domain/src
+          target: /workspace/permonik-domain/src
+          initial_sync: true
+        - action: sync+restart
+          path: ./permonik-domain/build.gradle
+          target: /workspace/permonik-domain/build.gradle
         - action: sync+restart
           path: ./permonik-export-api
           target: /workspace/permonik-export-api
@@ -205,6 +234,12 @@ services:
           target: /workspace/permonik-identity-gateway/src
           initial_sync: true
           exec: *permonik-identity-gateway-reload
+        - action: sync+restart
+          path: ./permonik-core-contract
+          target: /workspace/permonik-core-contract
+          initial_sync: true
+          ignore:
+            - build/
         - action: sync+restart
           path: ./permonik-identity-gateway
           target: /workspace/permonik-identity-gateway

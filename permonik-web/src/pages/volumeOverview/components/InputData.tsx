@@ -205,7 +205,10 @@ const InputData: FC<InputDataProps> = ({
             callback: () => setModalOpened(false),
           }}
         >
-          <VolumeStatsModalContent volumeId={volumeId} />
+          <VolumeStatsModalContent
+            volumeId={volumeId}
+            onDeleted={() => setModalOpened(false)}
+          />
         </ModalContainer>
       </Box>
     </CollapsableSidebar>

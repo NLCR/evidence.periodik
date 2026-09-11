@@ -192,7 +192,7 @@ const SpecimensOverview = () => {
               alignItems: 'center',
             }}
           >
-            {hasPermission(me, 'TEMPLATE_PLAN') ? (
+            {hasPermission(me, 'TEMPLATE_MANAGE') ? (
               <>
                 <ResponsiveActionButton
                   variant="contained"

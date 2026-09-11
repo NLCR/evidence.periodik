@@ -34,11 +34,13 @@ import { includesWaitingForRescan } from './utils/filters'
 type TProps = {
   volumeId?: string
   replacementSources?: TReplacementSource[]
+  onDeleted: () => void
 }
 
 const PrepareScanModalContentTemplate: FC<TProps> = ({
   volumeId = undefined,
   replacementSources = [],
+  onDeleted,
 }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [showOnlyRescans, setShowOnlyRescans] = useState(false)
@@ -110,6 +112,9 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
     setValue('items', nextItems, { shouldDirty: true })
   }
 
+  const handleDelete = () =>
+    deleteTemplateMutation.mutate(undefined, { onSuccess: onDeleted })
+
   const canSyncFromVolume =
     watchedState === TemplateState.WAITING_FOR_RESCAN ||
     watchedState === TemplateState.LATE_FIXES
@@ -173,7 +178,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             onCloseToRescanOrFinalize={handleCloseToRescanOrFinalize}
             onLockAll={handleLockAll}
             onUnlockAll={handleUnlockAll}
-            onDeleteTemplate={deleteTemplateMutation.mutate}
+            onDeleteTemplate={handleDelete}
           />
         </Box>
       </Box>

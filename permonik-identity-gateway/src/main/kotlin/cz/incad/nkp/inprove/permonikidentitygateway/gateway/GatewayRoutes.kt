@@ -39,6 +39,7 @@ class GatewayRoutes(
     @Bean
     fun exportRoutes(): RouterFunction<ServerResponse> {
         val exportPaths = RequestPredicates.path("/api/export/**")
+            .or(RequestPredicates.path("/api/integration/**"))
 
         return GatewayRouterFunctions.route("permonik-export")
             .route(exportPaths, HandlerFunctions.http())

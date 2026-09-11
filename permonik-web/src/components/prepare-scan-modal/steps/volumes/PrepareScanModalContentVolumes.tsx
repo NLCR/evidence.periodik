@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useTranslation } from 'react-i18next'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { useCalculatedFillIndexQuery } from '@/api/volumeCalculatedFillIndex'
 import { type TScanTemplateSettings } from '../../schemas/schemas'
 import FillIndexIndicator from '../../../FillIndexIndicator'
@@ -15,11 +15,14 @@ type Props = {
 
 const PrepareScanModalContentVolumes = ({ volumeId }: Props) => {
   const { t } = useTranslation()
-  const { watch } = useFormContext<TScanTemplateSettings>()
+  const { control } = useFormContext<TScanTemplateSettings>()
 
-  const primaryVolumeFillIndex = watch('primaryVolumeFillIndex')
-  const issues = watch('issues')
-  const replacementSources = watch('replacementSources')
+  const primaryVolumeFillIndex = useWatch({
+    control,
+    name: 'primaryVolumeFillIndex',
+  })
+  const issues = useWatch({ control, name: 'issues' })
+  const replacementSources = useWatch({ control, name: 'replacementSources' })
 
   const { data: calculatedFillIndex } = useCalculatedFillIndexQuery(volumeId, {
     issues,

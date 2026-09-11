@@ -16,6 +16,10 @@ Vytvořte lokální `.env` podle `.env.example` a vyplňte všechny hodnoty. Ná
 openssl rand -base64 48
 ```
 
+For `CORE_EXPORT_GRPC_TOKEN`, use `openssl rand -hex 32` instead. This separate,
+mandatory credential is supplied only to core and export. Never commit the populated
+`.env` or reuse the identity JWT secret.
+
 Celý backendový stack se spustí příkazem:
 
 ```bash
@@ -83,3 +87,21 @@ Lokální development image není určený k nasazení. Deployment image použí
 ./gradlew --no-configuration-cache :permonik-export-api:jibDockerBuild
 ./gradlew --no-configuration-cache :permonik-identity-gateway:jibDockerBuild
 ```
+
+## Export API mock
+
+The real internal `BatchGetVolumeContents` gRPC service and export stored-snapshot
+client are available separately from the mock. Compose supplies the explicit target
+`static://permonik-api:9090`; the gRPC port is not published to the host. Authentication
+uses the shared service token, not browser JWTs. Traffic is plaintext and must remain
+on the trusted internal network. See [the contract README](permonik-core-contract/README.md)
+for configuration, cross-owner service authorization, limits and Docker-free tests.
+The real adapter is not connected to any mock endpoint and does not infer an ideal list.
+
+`permonik-export-api` zatim poskytuje stavovy in-memory mock kontraktu pro admin frontend. Chranene endpointy jsou pod `/api/export/**`, verejna finalizovana predloha pod `/api/integration/**`. Mock umoznuje vyzkouset zakladni lifecycle predlohy, ale po restartu ztrati data a nepouziva PostgreSQL ani core API pro nacitani svazku.
+
+Kandidati nahrad, fill indexy, plan digitalizace a obsah svazku v mock endpointu jsou deterministicka ukazkova data. Skutecne gRPC dotazy a vypocty existuji oddelene a zatim nejsou napojene do REST workflow.
+
+Zaklad persistence je v `template/persistence`: PostgreSQL tabulka `export_template`, JSONB snapshot bez `visible`, Spring Data JDBC verzovani, automaticky audit z uzivatelskeho JWT a unikatnost aktivni predlohy. `TemplateWorkflowService` nad nim poskytuje transakcni editaci a stavove prechody se zamcenim pri finalizaci; `TemplateRules` sdili domenova pravidla s mockem. REST stale pouziva mock. Produkcni generovani, synchronizace a prepocet indexu po rucnich nahradach stale chybi. `./gradlew :permonik-export-api:test` pro persistence testy vyzaduje dostupny Docker a spousti izolovany PostgreSQL 18.6, nikoli vyvojovou databazi.
+
+Vsechny `/api/export/**` operace vyzaduji jedinou permission `TEMPLATE_MANAGE`, kterou maji role `admin` a `digitalization`. Pristup je napric vsemi knihovnami bez owner kontrol; verejna integrace zustava bez autentizace. Owner omezeni core zapisu svazku a exemplaru tim nejsou zmenena. Po prechodu ze starych granularnich exportnich permissions je potreba nove prihlaseni, protoze session uchovava seznam authorities z okamziku prihlaseni.

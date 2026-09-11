@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { api } from '../../api'
+import { api } from '@/api'
 import {
   type PlanDigitalizationFilters,
   type PlanDigitalizationResponse,
@@ -13,7 +13,7 @@ export const usePlanDigitalizationQuery = (
     enabled: !!params,
     queryFn: () =>
       api()
-        .post('template-planning/query', { json: params })
+        .post('export/template-planning/query', { json: params })
         .json<PlanDigitalizationResponse>(),
   })
 }

@@ -3,6 +3,8 @@ package cz.incad.nkp.inprove.permonikapi.metaTitle;
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
+import jakarta.validation.constraints.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import static cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitleDefinition.*;
 
@@ -15,12 +17,15 @@ import static cz.incad.nkp.inprove.permonikapi.metaTitle.MetaTitleDefinition.*;
 public class MetaTitle extends Auditable {
 
     @Field(ID_FIELD)
+    @NotNull
     private String id; // UUID
     @Field(NAME_FIELD)
+    @NotNull
     private String name;
     @Field(NOTE_FIELD)
-    private String note;
+    private @Nullable String note;
     @Field(IS_PUBLIC_FIELD)
+    @NotNull
     private Boolean isPublic;
 
     // Custom getter for `note`

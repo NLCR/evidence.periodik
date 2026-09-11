@@ -102,6 +102,9 @@ const PrepareScanTemplateActionBar: FC<TProps> = ({
             variant="outlined"
             sx={{ minWidth: 0 }}
             disabled={!canManageLocks}
+            aria-label={t(
+              'prepare_scan_modal.content_template.lock_all_confirm_title'
+            )}
           >
             <LockIcon />
           </Button>
@@ -121,6 +124,9 @@ const PrepareScanTemplateActionBar: FC<TProps> = ({
             variant="outlined"
             sx={{ minWidth: 0 }}
             disabled={!canManageLocks}
+            aria-label={t(
+              'prepare_scan_modal.content_template.unlock_all_confirm_title'
+            )}
           >
             <LockOpenIcon />
           </Button>
@@ -138,7 +144,13 @@ const PrepareScanTemplateActionBar: FC<TProps> = ({
 
       <ConfirmDialog
         TriggerButton={
-          <Button variant="outlined" sx={{ minWidth: 0 }}>
+          <Button
+            variant="outlined"
+            sx={{ minWidth: 0 }}
+            aria-label={t(
+              'prepare_scan_modal.content_template.delete_template_confirm_title'
+            )}
+          >
             <DeleteIcon />
           </Button>
         }

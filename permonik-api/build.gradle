@@ -40,8 +40,12 @@ repositories {
 
 
 dependencies {
+    implementation project(':permonik-domain')
+    implementation project(':permonik-core-contract')
+
     // SPRING BOOT
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-grpc-server'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server'
 
@@ -51,6 +55,7 @@ dependencies {
     // LOMBOK
     compileOnly "org.projectlombok:lombok:${versions.lombok}"
     annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     // MAPSTRUCT
     implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
@@ -65,6 +70,11 @@ dependencies {
     // TESTING
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    // Exercise the real export client without importing its JDBC/Liquibase application runtime.
+    testImplementation(project(':permonik-export-api')) { transitive = false }
+    testImplementation 'org.jetbrains.kotlin:kotlin-reflect'
+    testImplementation 'org.springframework.boot:spring-boot-starter-grpc-client'
+    testImplementation 'io.grpc:grpc-inprocess'
     testImplementation "org.testcontainers:testcontainers-solr:${versions.testcontainersSolr}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
@@ -73,6 +83,8 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
     systemProperty 'IDENTITY_JWT_SECRET', 'permonik-api-test-jwt-secret-at-least-32-bytes'
+    systemProperty 'CORE_EXPORT_GRPC_TOKEN', UUID.randomUUID().toString().replace('-', '') + UUID.randomUUID().toString().replace('-', '')
+    systemProperty 'spring.grpc.server.port', '0'
 }
 
 tasks.named('bootJar') {

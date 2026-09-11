@@ -210,6 +210,7 @@ public class VolumeService implements VolumeDefinition {
 
     public String createVolumeWithSpecimens(EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
         ownerAuthorization.requireAccess(editableVolumeWithSpecimensDTO.volume().getOwnerId());
+        specimenService.validateDamageTypes(editableVolumeWithSpecimensDTO.specimens());
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery(BAR_CODE_FIELD + ":\"" + ClientUtils.escapeQueryChars(editableVolumeWithSpecimensDTO.volume().getBarCode()) + "\"");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
@@ -236,6 +237,7 @@ public class VolumeService implements VolumeDefinition {
     public void updateVolumeWithSpecimens(String volumeId, EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
         Volume existing = checkVolumeExistsById(volumeId);
         requireUpdateAccess(volumeId, editableVolumeWithSpecimensDTO, existing);
+        specimenService.validateDamageTypes(editableVolumeWithSpecimensDTO.specimens());
 
         List<SpecimenDTO> activeSpecimens = validateVolumeDateRange(volumeId, editableVolumeWithSpecimensDTO);
         updateVolume(editableVolumeWithSpecimensDTO.volume());
@@ -254,6 +256,7 @@ public class VolumeService implements VolumeDefinition {
     public void updateOvergeneratedVolumeWithSpecimens(String volumeId, EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
         Volume existing = checkVolumeExistsById(volumeId);
         requireUpdateAccess(volumeId, editableVolumeWithSpecimensDTO, existing);
+        specimenService.validateDamageTypes(editableVolumeWithSpecimensDTO.specimens());
 
         validateVolumeDateRange(volumeId, editableVolumeWithSpecimensDTO);
 

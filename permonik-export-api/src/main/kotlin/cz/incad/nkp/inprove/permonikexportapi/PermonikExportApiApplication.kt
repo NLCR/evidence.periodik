@@ -8,6 +8,7 @@ import org.springframework.boot.runApplication
 @ConfigurationPropertiesScan
 class PermonikExportApiApplication
 
+/** Starts the PerMonik export API Spring Boot application. */
 fun main(args: Array<String>) {
     runApplication<PermonikExportApiApplication>(*args)
 }

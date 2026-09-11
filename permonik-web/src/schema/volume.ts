@@ -6,7 +6,7 @@ import {
 } from './specimen'
 import { AuditableSchema } from './common'
 import i18next from '../i18next'
-import { MutationMarkSchema } from '../utils/mutationMark'
+import { MutationMarkSchema } from '@/utils/mutationMark'
 
 export const VolumePeriodicityDaysSchema = z.enum([
   'Monday',

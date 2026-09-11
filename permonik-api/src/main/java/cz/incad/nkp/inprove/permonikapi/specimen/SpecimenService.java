@@ -1,6 +1,7 @@
 package cz.incad.nkp.inprove.permonikapi.specimen;
 
 import cz.incad.nkp.inprove.permonikapi.common.ReferenceDataService;
+import cz.incad.nkp.inprove.permonikdomain.SpecimenDamageType;
 import cz.incad.nkp.inprove.permonikapi.config.security.OwnerAuthorizationService;
 import cz.incad.nkp.inprove.permonikapi.edition.model.Edition;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.Mutation;
@@ -46,6 +47,39 @@ public class SpecimenService implements SpecimenDefinition {
     private final ObjectMapper objectMapper;
     private final ReferenceDataService referenceDataService;
     private final OwnerAuthorizationService ownerAuthorization;
+
+    /** Visits every active stored specimen in ID order, without existence filtering or a total row cap. */
+    public void forEachSpecimenByVolumeIds(List<String> volumeIds, java.util.function.Consumer<Specimen> consumer)
+            throws SolrServerException, IOException {
+        SolrQuery query = new SolrQuery("*:*");
+        query.addFilterQuery(VOLUME_ID_FIELD + ":(" + volumeIds.stream()
+                .map(id -> "\"" + ClientUtils.escapeQueryChars(id) + "\"").collect(Collectors.joining(" OR ")) + ")");
+        query.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        query.setSort(ID_FIELD, SolrQuery.ORDER.asc);
+        query.setRows(1000);
+        String cursor = "*";
+        long visited = 0;
+        do {
+            query.set("cursorMark", cursor);
+            QueryResponse response = solrClient.query(SPECIMEN_CORE_NAME, query);
+            if (response.getHeader() != null && response.getHeader().get("partialResults") != null &&
+                    !"false".equals(response.getHeader().get("partialResults").toString())) {
+                throw new SolrServerException("Incomplete specimen query response");
+            }
+            List<Specimen> specimens = response.getBeans(Specimen.class);
+            specimens.forEach(consumer);
+            visited += specimens.size();
+            String next = response.getNextCursorMark();
+            if (next == null) throw new SolrServerException("Missing specimen cursor");
+            if (cursor.equals(next)) {
+                if (visited != response.getResults().getNumFound()) {
+                    throw new SolrServerException("Incomplete specimen contents");
+                }
+                return;
+            }
+            cursor = next;
+        } while (true);
+    }
 
 
     public StatsForMetaTitleOverviewDTO getStatsForMetaTitleOverview(String metaTitleId) throws SolrServerException, IOException {
@@ -442,6 +476,7 @@ public class SpecimenService implements SpecimenDefinition {
 
 
     public void createSpecimens(List<SpecimenDTO> specimens) {
+        validateDamageTypes(specimens);
         try {
             List<Specimen> specimenList = specimens.stream()
                 .peek(SpecimenDTO::prePersist)
@@ -457,6 +492,7 @@ public class SpecimenService implements SpecimenDefinition {
     }
 
     public void updateSpecimens(List<SpecimenDTO> specimens) {
+        validateDamageTypes(specimens);
         try {
             List<Specimen> specimenList = specimens.stream()
                 .peek(specimen -> {
@@ -475,6 +511,20 @@ public class SpecimenService implements SpecimenDefinition {
             logger.info("specimens successfully updated");
         } catch (Exception e) {
             throw new RuntimeException("Failed to update specimens", e);
+        }
+    }
+
+    /** Rejects unknown request codes before any part of a volume or specimen batch is written. */
+    public void validateDamageTypes(List<SpecimenDTO> specimens) {
+        for (SpecimenDTO specimen : specimens) {
+            if (specimen.getDamageTypes() == null) {
+                continue;
+            }
+            for (String code : specimen.getDamageTypes()) {
+                if (SpecimenDamageType.fromCode(code) == null) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown specimen damage code: " + code);
+                }
+            }
         }
     }
 

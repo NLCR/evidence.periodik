@@ -50,6 +50,7 @@ class SecurityConfiguration {
                         "/api/owner/**",
                         "/api/edition/**",
                         "/api/export/**",
+                        "/api/integration/**",
                     ).permitAll()
                     .requestMatchers("/api/**").denyAll()
                     .anyRequest().permitAll()

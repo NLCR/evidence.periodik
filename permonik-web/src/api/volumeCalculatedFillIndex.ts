@@ -12,10 +12,17 @@ export const useCalculatedFillIndexQuery = (
   payload: TCalculateFillIndexRequest
 ) =>
   useQuery<number>({
-    queryKey: ['volume-calculated-fill-index', volumeId, payload],
+    queryKey: [
+      'volume-calculated-fill-index',
+      volumeId,
+      { ...payload.issues },
+      [...payload.replacementSourcesIds],
+    ],
     queryFn: () =>
       api()
-        .post(`volume/${volumeId}/template/fill-index`, { json: payload })
+        .post(`export/volume/${volumeId}/template/fill-index`, {
+          json: payload,
+        })
         .json<number>(),
     enabled: !!volumeId,
   })

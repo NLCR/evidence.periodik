@@ -1,4 +1,13 @@
 spring:
+  grpc:
+    server:
+      port: 9090
+      servlet:
+        enabled: false
+      reflection:
+        enabled: false
+      health:
+        enabled: false
   profiles:
     active: dev
   threads:
@@ -16,6 +25,10 @@ solr:
   host: ${SOLR_URL:http://localhost:8983/solr}
 
 permonik:
+  core-export:
+    grpc:
+      token: ${CORE_EXPORT_GRPC_TOKEN}
+      max-response-bytes: 4194304
   security:
     internal-jwt:
       secret: ${IDENTITY_JWT_SECRET}

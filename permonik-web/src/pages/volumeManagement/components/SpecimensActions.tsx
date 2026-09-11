@@ -52,7 +52,7 @@ const SpecimensActions = ({
   const { data: me } = useMeQuery()
   const canWriteVolume = hasPermission(me, 'VOLUME_WRITE')
   const canDeleteVolume = hasPermission(me, 'VOLUME_DELETE')
-  const canReadTemplate = hasPermission(me, 'TEMPLATE_READ')
+  const canReadTemplate = hasPermission(me, 'TEMPLATE_MANAGE')
 
   const { locked: isInputDataLocked, disabled } =
     useInputDataEditabilityContext()

@@ -1,4 +1,14 @@
 spring:
+  grpc:
+    client:
+      channel:
+        core:
+          target: ${permonik.core-export.grpc.target}
+          ssl:
+            enabled: false
+          inbound:
+            message:
+              max-size: 4MB
   application:
     name: permonik-export-api
   profiles:
@@ -24,6 +34,11 @@ spring:
       include-message: always
 
 permonik:
+  core-export:
+    grpc:
+      token: ${CORE_EXPORT_GRPC_TOKEN}
+      target: ${CORE_EXPORT_GRPC_TARGET}
+      deadline: 10s
   security:
     internal-jwt:
       secret: ${IDENTITY_JWT_SECRET}

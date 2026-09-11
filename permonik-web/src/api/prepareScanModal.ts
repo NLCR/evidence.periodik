@@ -58,7 +58,7 @@ export const usePrepareScanTemplateQuery = (
       const id = requireVolumeId(volumeId)
       try {
         return withVisible(
-          await api().get(`volume/${id}/template`).json<TTemplate>(),
+          await api().get(`export/volume/${id}/template`).json<TTemplate>(),
           queryClient.getQueryData<TTemplate>(templateQueryKey(id))
         )
       } catch (error) {
@@ -82,7 +82,7 @@ export const useGeneratePrepareScanTemplateMutation = (volumeId?: string) =>
     mutationFn: async ({ previousTemplate, ...settings }) => {
       const id = requireVolumeId(volumeId)
       const template = await api()
-        .post(`volume/${id}/template/generate`, { json: settings })
+        .post(`export/volume/${id}/template/generate`, { json: settings })
         .json<TTemplate>()
       return withVisible(
         template,
@@ -102,7 +102,7 @@ export const useSavePrepareScanTemplateMutation = (volumeId?: string) =>
     mutationFn: async (template) => {
       const id = requireVolumeId(volumeId)
       const response = await api()
-        .put(`volume/${id}/template`, { json: template })
+        .put(`export/volume/${id}/template`, { json: template })
         .json<TTemplate>()
       return withVisible(response, template)
     },
@@ -124,7 +124,7 @@ export const useTransitionPrepareScanTemplateMutation = (volumeId?: string) =>
       const { version, ...changes } = template
       if (version === null) throw new Error('Template version is required')
       const response = await api()
-        .post(`volume/${id}/template/transition`, {
+        .post(`export/volume/${id}/template/transition`, {
           json: { targetState, version, changes },
         })
         .json<TTemplate>()
@@ -142,7 +142,9 @@ export const useSynchronizePrepareScanTemplateMutation = (volumeId?: string) =>
     mutationFn: async ({ version }) => {
       const id = requireVolumeId(volumeId)
       const template = await api()
-        .post(`volume/${id}/template/synchronize`, { json: { version } })
+        .post(`export/volume/${id}/template/synchronize`, {
+          json: { version },
+        })
         .json<TTemplate>()
       return withVisible(
         template,
@@ -159,7 +161,7 @@ export const useSynchronizePrepareScanTemplateMutation = (volumeId?: string) =>
 export const useDeletePrepareScanTemplateMutation = (volumeId?: string) =>
   useMutation<void, unknown, void>({
     mutationFn: async () => {
-      await api().delete(`volume/${requireVolumeId(volumeId)}/template`)
+      await api().delete(`export/volume/${requireVolumeId(volumeId)}/template`)
     },
     onSuccess: () =>
       queryClient.removeQueries({
