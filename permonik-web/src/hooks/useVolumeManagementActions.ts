@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 import clone from 'lodash/clone'
 import { useTranslation } from 'react-i18next'
 import { useVolumeManagementStore } from '../slices/useVolumeManagementStore'
-import { VolumeSchema } from '../schema/volume'
+import { VolumeSchema, type TEditableVolume } from '../schema/volume'
 import { SpecimenSchema, type TEditableSpecimen } from '../schema/specimen'
 import {
   useCreateVolumeWithSpecimensMutation,
@@ -27,7 +27,8 @@ import { isVolumeDateRangeValid } from '../utils/volumeDateRange'
 const useVolumeManagementActions = (
   apiRef: RefObject<GridApiPro | null>,
   editions: TEdition[],
-  markVolumeFormSaved: () => void
+  markVolumeFormSaved: () => void,
+  getVolumeValues: () => TEditableVolume
 ) => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
@@ -72,7 +73,6 @@ const useVolumeManagementActions = (
     const unflushedRowIds = unflushedRows.map((i) => i.id)
 
     //get state when is necessary → this approach doesn't cause rerender of functions and whole hook
-    const volumeState = useVolumeManagementStore.getState().volumeState
     const specimensState = useVolumeManagementStore
       .getState()
       .specimensState.map((specimen) => {
@@ -83,7 +83,7 @@ const useVolumeManagementActions = (
         return specimen
       })
 
-    const volumeClone = clone(volumeState)
+    const volumeClone = clone(getVolumeValues())
     const specimensClone = clone(specimensState)
 
     const repairedVolume = repairVolume(volumeClone, editions || [])

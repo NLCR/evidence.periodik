@@ -60,7 +60,6 @@ const InputDataDateTo = ({ editions }: { editions: TEdition[] }) => {
             fieldName: t('volume_overview.date_to'),
             saveChange,
           }}
-          onDateChange={saveChange}
         />
       </TableCell>
     </TableRow>

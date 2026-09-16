@@ -102,7 +102,12 @@ const VolumeManagement: FC<TVolumeManagementProps> = ({
     doCreate,
     doDelete,
     pendingActions,
-  } = useVolumeManagementActions(apiRef, editions || [], markVolumeFormSaved)
+  } = useVolumeManagementActions(
+    apiRef,
+    editions || [],
+    markVolumeFormSaved,
+    () => formMethods.getValues()
+  )
 
   if (
     volumeLoading ||

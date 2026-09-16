@@ -17,7 +17,6 @@ type Props = {
   /* form key containing field to limit the date selection by from above*/
   maxDateName?: string
   editableData?: EditableData
-  onDateChange?: (value: Dayjs | null) => void
 }
 
 const InputDataDatePicker = ({
@@ -25,7 +24,6 @@ const InputDataDatePicker = ({
   minDateName = undefined,
   maxDateName = undefined,
   editableData = undefined,
-  onDateChange = undefined,
   ...props
 }: Props & DatePickerProps) => {
   const { locked, disabled } = useInputDataEditabilityContext()
@@ -88,11 +86,6 @@ const InputDataDatePicker = ({
             value={field.value ? dayjs(field.value) : null}
             // Preserve the selected calendar day instead of converting local midnight to the previous UTC day.
             onChange={(date) => {
-              if (onDateChange) {
-                onDateChange(date)
-                return
-              }
-
               field.onChange(
                 date ? `${date.format('YYYY-MM-DD')}T00:00:00.000Z` : null
               )
