@@ -127,6 +127,7 @@
     "date_from": "Date from",
     "first_number": "First issue No.",
     "date_to": "Date to",
+    "date_range_excludes_active_specimen": "The start date must not be after the end date, and the volume date range must include all active specimens.",
     "last_number": "Last issue No.",
     "owner": "Owner",
     "note": "Note",

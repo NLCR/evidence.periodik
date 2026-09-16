@@ -11,7 +11,8 @@ import ModalContainer from '../../../../components/ModalContainer'
 type Props = {
   title: string
   description?: ReactNode
-  onConfirm: () => void
+  onConfirm: () => boolean | Promise<boolean>
+  onOpen?: () => void
   TriggerButton: ReactElement<ButtonProps>
   confirmLabel?: string
   refuseLabel?: string
@@ -22,6 +23,7 @@ const ConfirmDialog = ({
   onConfirm,
   title,
   description = null,
+  onOpen = undefined,
   confirmLabel = undefined,
   refuseLabel = undefined,
 }: Props) => {
@@ -31,7 +33,10 @@ const ConfirmDialog = ({
   return (
     <>
       {cloneElement(TriggerButton, {
-        onClick: () => setIsOpen(true),
+        onClick: () => {
+          onOpen?.()
+          setIsOpen(true)
+        },
       })}
 
       <ModalContainer
@@ -44,9 +49,10 @@ const ConfirmDialog = ({
           text: refuseLabel ?? t('common.no'),
         }}
         acceptButton={{
-          callback: () => {
-            onConfirm()
-            setIsOpen(false)
+          callback: async () => {
+            if (await onConfirm()) {
+              setIsOpen(false)
+            }
           },
           text: confirmLabel ?? t('common.yes'),
         }}

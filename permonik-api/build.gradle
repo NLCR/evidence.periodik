@@ -21,12 +21,14 @@ configurations {
     }
 }
 
+def sentryAuthToken = System.getenv("SENTRY_AUTH_TOKEN")
+
 sentry {
-    includeSourceContext = true
+    includeSourceContext = sentryAuthToken != null && !sentryAuthToken.isBlank()
 
     org = "inqool"
     projectName = "permonik-api"
-    authToken = System.getenv("SENTRY_AUTH_TOKEN")
+    authToken = sentryAuthToken
 }
 
 ext {

@@ -12,7 +12,6 @@ import InputDataMutation from './InputDataMutation'
 import InputDataSubName from './InputDataSubName'
 import InputDataMutationMark from './InputDataMutationMark'
 import InputDataTextField from './InputDataTextField'
-import InputDataDatePicker from './InputDataDatePicker'
 import Periodicity from './periodicity/Periodicity'
 import ConfirmDialog from '../../../specimensOverview/components/dialogs/ConfirmDialog'
 import Button from '@mui/material/Button'
@@ -26,6 +25,8 @@ import { useEffect } from 'react'
 import { type TEditableVolume } from '../../../../schema/volume'
 import InputDataBarCode from './InputDataBarCode'
 import InputDataSignature from './InputDataSignature'
+import InputDataDateFrom from './InputDataDateFrom'
+import InputDataDateTo from './InputDataDateTo'
 import { api } from '../../../../api'
 import { type TSpecimen } from '../../../../schema/specimen'
 import InputDataOwner from './InputDataOwner'
@@ -194,24 +195,14 @@ const InputDataForm = ({
               <InputDataTextField inputMode="decimal" name="year" />
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell>{t('volume_overview.date_from')}</TableCell>
-            <TableCell>
-              <InputDataDatePicker name="dateFrom" />
-            </TableCell>
-          </TableRow>
+          <InputDataDateFrom editions={editions} />
           <TableRow>
             <TableCell>{t('volume_overview.first_number')}</TableCell>
             <TableCell>
               <InputDataTextField inputMode="decimal" name="firstNumber" />
             </TableCell>
           </TableRow>
-          <TableRow>
-            <TableCell>{t('volume_overview.date_to')}</TableCell>
-            <TableCell>
-              <InputDataDatePicker minDateName="dateFrom" name="dateTo" />
-            </TableCell>
-          </TableRow>
+          <InputDataDateTo editions={editions} />
           <TableRow>
             <TableCell>{t('volume_overview.last_number')}</TableCell>
             <TableCell>
@@ -240,6 +231,7 @@ const InputDataForm = ({
               setHasUnsavedData(false)
             }
             setLocked(!locked)
+            return true
           }}
           title={
             locked

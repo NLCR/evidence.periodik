@@ -28,7 +28,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static cz.incad.nkp.inprove.permonikapi.audit.AuditableDefinition.DELETED_FIELD;
 
@@ -214,6 +219,7 @@ public class VolumeService implements VolumeDefinition {
             throw new RuntimeException("Volume with barcode " + editableVolumeWithSpecimensDTO.volume().getBarCode() + " already exists");
         }
 
+        validateVolumeDateRange(editableVolumeWithSpecimensDTO.volume().getId(), editableVolumeWithSpecimensDTO);
         createVolume(editableVolumeWithSpecimensDTO.volume());
 
         specimenService.createSpecimens(editableVolumeWithSpecimensDTO.specimens());
@@ -226,9 +232,17 @@ public class VolumeService implements VolumeDefinition {
     public void updateVolumeWithSpecimens(String volumeId, EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
         checkVolumeExistsById(volumeId);
 
+        List<SpecimenDTO> activeSpecimens = validateVolumeDateRange(volumeId, editableVolumeWithSpecimensDTO);
         updateVolume(editableVolumeWithSpecimensDTO.volume());
 
         specimenService.updateSpecimens(editableVolumeWithSpecimensDTO.specimens());
+        List<SpecimenDTO> unnumberedSpecimensOutsideDateRange = activeSpecimens.stream()
+            .filter(specimen -> !Boolean.TRUE.equals(specimen.getNumExists()))
+            .filter(specimen -> isOutsideDateRange(specimen.getPublicationDate(), editableVolumeWithSpecimensDTO.volume()))
+            .toList();
+        if (!unnumberedSpecimensOutsideDateRange.isEmpty()) {
+            specimenService.deleteSpecimens(unnumberedSpecimensOutsideDateRange);
+        }
 
     }
 
@@ -236,6 +250,8 @@ public class VolumeService implements VolumeDefinition {
         if (getVolumeDTOById(volumeId) == null) {
             throw new RuntimeException("Volume " + volumeId + " not found");
         }
+
+        validateVolumeDateRange(volumeId, editableVolumeWithSpecimensDTO);
 
         // delete old specimens
         List<SpecimenDTO> oldSpecimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
@@ -255,5 +271,43 @@ public class VolumeService implements VolumeDefinition {
 
         deleteVolume(volume);
 
+    }
+
+    private List<SpecimenDTO> validateVolumeDateRange(String volumeId, EditableVolumeWithSpecimensDTO editableVolumeWithSpecimensDTO) throws SolrServerException, IOException {
+        LocalDate dateFrom = toUtcLocalDate(editableVolumeWithSpecimensDTO.volume().getDateFrom());
+        LocalDate dateTo = toUtcLocalDate(editableVolumeWithSpecimensDTO.volume().getDateTo());
+        if (dateFrom == null || dateTo == null || dateFrom.isAfter(dateTo)) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "VOLUME_DATE_RANGE_EXCLUDES_ACTIVE_SPECIMEN");
+        }
+
+        List<SpecimenDTO> activeSpecimens = specimenService.getSpecimensForVolumeDetail(volumeId, false);
+        Set<String> payloadSpecimenIds = editableVolumeWithSpecimensDTO.specimens().stream()
+            .map(SpecimenDTO::getId)
+            .collect(Collectors.toSet());
+        boolean excludesActiveSpecimen = Stream.concat(
+            activeSpecimens.stream().filter(specimen -> Boolean.TRUE.equals(specimen.getNumExists()) && !payloadSpecimenIds.contains(specimen.getId())),
+            editableVolumeWithSpecimensDTO.specimens().stream()
+                .filter(specimen -> Boolean.TRUE.equals(specimen.getNumExists()) && specimen.getDeleted() == null)
+        )
+            .map(SpecimenDTO::getPublicationDate)
+            .map(this::toUtcLocalDate)
+            .anyMatch(publicationDate -> publicationDate == null || publicationDate.isBefore(dateFrom) || publicationDate.isAfter(dateTo));
+
+        if (excludesActiveSpecimen) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "VOLUME_DATE_RANGE_EXCLUDES_ACTIVE_SPECIMEN");
+        }
+
+        return activeSpecimens;
+    }
+
+    private boolean isOutsideDateRange(java.util.Date publicationDate, VolumeDTO volume) {
+        LocalDate date = toUtcLocalDate(publicationDate);
+        LocalDate dateFrom = toUtcLocalDate(volume.getDateFrom());
+        LocalDate dateTo = toUtcLocalDate(volume.getDateTo());
+        return date == null || date.isBefore(dateFrom) || date.isAfter(dateTo);
+    }
+
+    private LocalDate toUtcLocalDate(java.util.Date date) {
+        return date == null ? null : date.toInstant().atZone(ZoneOffset.UTC).toLocalDate();
     }
 }

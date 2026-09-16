@@ -127,6 +127,7 @@
     "date_from": "Datum od",
     "first_number": "První číslo",
     "date_to": "Datum do",
+    "date_range_excludes_active_specimen": "Datum od nesmí být po datu do a rozsah svazku musí obsahovat data všech aktivních exemplářů.",
     "last_number": "Poslední číslo",
     "owner": "Vlastník",
     "note": "Poznámka",

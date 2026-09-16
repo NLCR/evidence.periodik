@@ -261,6 +261,12 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
   const specimensState = useVolumeManagementStore(
     (state) => state.specimensState
   )
+  const specimensStateRef = useRef(specimensState)
+  const hasSpecimens = specimensState.length > 0
+
+  useEffect(() => {
+    specimensStateRef.current = specimensState
+  }, [specimensState])
 
   useEffect(() => {
     const timeout = undefined
@@ -328,7 +334,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         },
       },
       ...// !stateHasUnsavedData &&
-      (specimensState.length
+      (hasSpecimens
         ? [
             {
               field: 'deleteRow',
@@ -519,7 +525,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
             !!row?.id &&
             canUseAttachmentOnDate({
               editions,
-              specimens: specimensState,
+              specimens: specimensStateRef.current,
               publicationDate: row.publicationDate,
               candidateRowId: row.id,
             })
@@ -962,7 +968,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       disabled,
       mutations,
       editions,
-      specimensState,
+      hasSpecimens,
       formatDate,
       me.data?.id,
       apiRef,
