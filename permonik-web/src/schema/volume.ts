@@ -41,6 +41,19 @@ export const EditableVolumePeriodicitySchema = z.object({
   duplicated: z.boolean().optional(),
 })
 
+const dateRangeRefinement = {
+  path: ['dateTo'],
+  message: i18next.t('volume_overview.date_range_excludes_active_specimen'),
+}
+
+const hasValidDateRange = ({
+  dateFrom,
+  dateTo,
+}: {
+  dateFrom: string
+  dateTo: string
+}) => !dateFrom || !dateTo || dateFrom.slice(0, 10) <= dateTo.slice(0, 10)
+
 export const VolumeSchema = AuditableSchema.extend({
   id: z.string().length(36),
   barCode: z.string().min(1, i18next.t('schema.bar_code_min_length')),
@@ -58,7 +71,7 @@ export const VolumeSchema = AuditableSchema.extend({
   ownerId: z.string().length(36, i18next.t('schema.owner_empty')),
   year: z.number().min(0, i18next.t('schema.year_min')),
   mutationMark: MutationMarkSchema,
-})
+}).refine(hasValidDateRange, dateRangeRefinement)
 
 export const EditableVolumeSchema = AuditableSchema.extend({
   id: z.string(),
@@ -78,7 +91,7 @@ export const EditableVolumeSchema = AuditableSchema.extend({
   ownerId: z.string(),
   year: z.string().or(z.number()).optional(),
   mutationMark: MutationMarkSchema,
-})
+}).refine(hasValidDateRange, dateRangeRefinement)
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const VolumeDetailSchema = z.object({

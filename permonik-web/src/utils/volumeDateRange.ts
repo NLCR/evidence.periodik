@@ -18,7 +18,10 @@ export const isVolumeDateRangeValid = (
   return (
     from <= to &&
     specimens
-      .filter((specimen) => specimen.numExists && !specimen.deleted)
+      .filter(
+        (specimen) =>
+          (specimen.numExists || specimen.numMissing) && !specimen.deleted
+      )
       .every((specimen) => {
         const publicationDate = toCalendarDate(specimen.publicationDate)
         return publicationDate >= from && publicationDate <= to
