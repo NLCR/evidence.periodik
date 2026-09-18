@@ -24,8 +24,7 @@ class UserController(
     private val identities: IdentityService,
     private val securityContexts: SecurityContextRepository,
 ) {
-    @GetMapping("/list/all")
-    fun list(): List<UserDto> = identities.list()
+    @GetMapping("/list/all") fun list(): List<UserDto> = identities.list()
 
     @PutMapping("/{id}")
     fun update(
@@ -35,8 +34,9 @@ class UserController(
         request: HttpServletRequest,
         response: HttpServletResponse,
     ) {
-        val actor = authentication.principal as? IdentityPrincipal
-            ?: throw IllegalStateException("Authenticated identity principal is missing")
+        val actor =
+            authentication.principal as? IdentityPrincipal
+                ?: throw IllegalStateException("Authenticated identity principal is missing")
         val updated = identities.update(id, input)
         if (id == actor.id) {
             if (!updated.active) {
@@ -44,11 +44,12 @@ class UserController(
                 request.getSession(false)?.invalidate()
                 return
             }
-            val refreshed = UsernamePasswordAuthenticationToken.authenticated(
-                updated,
-                authentication.credentials,
-                updated.authorities,
-            )
+            val refreshed =
+                UsernamePasswordAuthenticationToken.authenticated(
+                    updated,
+                    authentication.credentials,
+                    updated.authorities,
+                )
             refreshed.details = authentication.details
             val context = SecurityContextHolder.createEmptyContext()
             context.authentication = refreshed

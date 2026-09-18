@@ -32,7 +32,12 @@ class AuthController(
     ): ResponseEntity<Void> {
         val principal = identities.authenticate(request.username, request.password)
         val context = SecurityContextHolder.createEmptyContext()
-        val authentication = UsernamePasswordAuthenticationToken.authenticated(principal, null, principal.authorities)
+        val authentication =
+            UsernamePasswordAuthenticationToken.authenticated(
+                principal,
+                null,
+                principal.authorities,
+            )
         sessions.onAuthentication(authentication, servletRequest, servletResponse)
         servletRequest.getSession(true)
         context.authentication = authentication

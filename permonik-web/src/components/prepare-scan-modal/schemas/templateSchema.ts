@@ -4,6 +4,12 @@ import { TemplateState } from './templateStateSchema'
 import { mainReplacementSchema, replacementSchema } from './commonSchemas'
 import { VolumeSchema } from '@/schema/volume'
 
+const TemplateVolumeSchema = VolumeSchema.extend({
+  metaTitleName: z.string(),
+  mutationName: z.string(),
+  ownerName: z.string(),
+})
+
 export const TemplateSpecimenSchema = z.object({
   id: z.string(),
   number: z.string().nullish(),
@@ -44,7 +50,7 @@ export const TemplateSchema = z.object({
   id: z.string(),
   version: z.number().int().nullable(),
   state: z.nativeEnum(TemplateState),
-  primaryVolume: VolumeSchema,
+  primaryVolume: TemplateVolumeSchema,
   replacementSourcesParameters: z.object({
     metatitle: z.boolean(),
     mutation: z.boolean(),
@@ -60,6 +66,7 @@ export const TemplateSchema = z.object({
 })
 
 export type TTemplateSpecimen = z.infer<typeof TemplateSpecimenSchema>
+export type TTemplateVolume = z.infer<typeof TemplateVolumeSchema>
 export type PrimaryMainScan = z.infer<typeof PrimaryMainScanSchema>
 export type ReplacementMainScan = z.infer<typeof ReplacementMainScanSchema>
 export type MainScan = z.infer<typeof MainScanSchema>

@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/export/volume/{volumeId}/template")
 class TemplateController(private val templates: TemplateService) {
     /** Serves the active template for a primary volume. */
-    @GetMapping
-    fun get(@PathVariable volumeId: String) = templates.get(volumeId)
+    @GetMapping fun get(@PathVariable volumeId: String) = templates.get(volumeId)
 
     /** Creates or regenerates a template from the current frontend settings. */
     @PostMapping("/generate")

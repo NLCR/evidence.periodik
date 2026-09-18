@@ -24,6 +24,13 @@ const PrepareScanModalContentVolumes = ({ volumeId }: Props) => {
   const issues = useWatch({ control, name: 'issues' })
   const replacementSources = useWatch({ control, name: 'replacementSources' })
 
+  const { data: calculatedPrimaryFillIndex } = useCalculatedFillIndexQuery(
+    volumeId,
+    {
+      issues,
+      replacementSourcesIds: [],
+    }
+  )
   const { data: calculatedFillIndex } = useCalculatedFillIndexQuery(volumeId, {
     issues,
     replacementSourcesIds: replacementSources
@@ -35,7 +42,10 @@ const PrepareScanModalContentVolumes = ({ volumeId }: Props) => {
     <Box gap={2} display={'flex'} flexDirection={'column'}>
       <Typography>
         {t('prepare_scan_modal.content_volumes.primary_fill_index')}{' '}
-        <FillIndexIndicator value={primaryVolumeFillIndex} displayHint />
+        <FillIndexIndicator
+          value={calculatedPrimaryFillIndex ?? primaryVolumeFillIndex}
+          displayHint
+        />
       </Typography>
       <Typography>
         {t('prepare_scan_modal.content_volumes.result_fill_index')}{' '}

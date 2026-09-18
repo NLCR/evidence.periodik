@@ -58,7 +58,13 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
 
   useEffect(() => {
     if (!volumeTemplate) return
-    resetTemplate(withVisible(volumeTemplate, getTemplateValues()))
+    const currentTemplate = getTemplateValues()
+    resetTemplate(
+      withVisible(
+        volumeTemplate,
+        Array.isArray(currentTemplate.items) ? currentTemplate : undefined
+      )
+    )
   }, [getTemplateValues, resetTemplate, volumeTemplate])
 
   const nextStep = async () => {
@@ -170,7 +176,10 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
                 fullWidth
                 variant="contained"
                 onClick={() => saveTemplateMutation.mutate(getTemplateValues())}
-                disabled={saveTemplateMutation.isPending}
+                disabled={
+                  saveTemplateMutation.isPending ||
+                  state === TemplateState.FINALIZED
+                }
               >
                 {t('prepare_scan_modal.wizard.save_template')}
               </Button>

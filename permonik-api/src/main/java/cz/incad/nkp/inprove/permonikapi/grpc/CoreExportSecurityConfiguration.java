@@ -18,7 +18,7 @@ import org.springframework.security.oauth2.server.resource.authentication.Bearer
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(CoreExportGrpcProperties.class)
 public class CoreExportSecurityConfiguration {
-    /** Authenticates export independently of HTTP JWTs and permits only stored-volume reads and candidate search. */
+    /** Authenticates export independently of HTTP JWTs and permits only the read-only export queries. */
     @Bean
     @GlobalServerInterceptor
     AuthenticationProcessInterceptor coreExportAuthentication(GrpcSecurity grpc, CoreExportGrpcProperties properties)
@@ -41,7 +41,8 @@ public class CoreExportSecurityConfiguration {
         });
         grpc.authorizeRequests(requests -> requests
                 .methods(CoreExportServiceGrpc.getBatchGetVolumeContentsMethod().getFullMethodName(),
-                        CoreExportServiceGrpc.getSearchReplacementVolumesMethod().getFullMethodName()).authenticated()
+                        CoreExportServiceGrpc.getSearchReplacementVolumesMethod().getFullMethodName(),
+                        CoreExportServiceGrpc.getQueryPlanningVolumesMethod().getFullMethodName()).authenticated()
                 .allRequests().denyAll());
         return grpc.build();
     }

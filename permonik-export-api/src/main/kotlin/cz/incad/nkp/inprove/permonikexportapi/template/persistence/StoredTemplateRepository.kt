@@ -5,7 +5,26 @@ import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.repository.CrudRepository
 
 interface StoredTemplateRepository : CrudRepository<StoredTemplate, UUID> {
-    /** Returns only the active template; historical soft-deleted records remain stored but are not selected. */
-    @Query("SELECT * FROM export_template WHERE primary_volume_id = :volumeId AND deleted_date IS NULL")
+    /**
+     * Returns only the active template; historical soft-deleted records remain stored but are not
+     * selected.
+     */
+    @Query(
+        "SELECT * FROM export_template WHERE primary_volume_id = :volumeId AND deleted_date IS NULL"
+    )
     fun findActiveByVolumeId(volumeId: String): StoredTemplate?
+
+    /**
+     * Returns only an active finalized template whose persisted primary volume has the requested
+     * barcode.
+     */
+    @Query(
+        """
+        SELECT * FROM export_template
+        WHERE deleted_date IS NULL
+          AND state = 'FINALIZED'
+          AND content #>> '{primaryVolume,barCode}' = :barcode
+    """
+    )
+    fun findActiveFinalizedByBarcode(barcode: String): StoredTemplate?
 }

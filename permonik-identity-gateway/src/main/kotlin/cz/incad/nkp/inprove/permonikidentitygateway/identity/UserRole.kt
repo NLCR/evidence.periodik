@@ -8,12 +8,14 @@ enum class UserRole(@get:JsonValue val value: String) {
     DIGITALIZATION("digitalization");
 
     val permissions: Set<Permission>
-        get() = when (this) {
-            USER -> emptySet()
-            ADMIN -> Permission.entries.toSet()
-            DIGITALIZATION -> setOf(Permission.TEMPLATE_MANAGE)
-        }
+        get() =
+            when (this) {
+                USER -> emptySet()
+                ADMIN -> Permission.entries.toSet()
+                DIGITALIZATION -> setOf(Permission.TEMPLATE_MANAGE)
+            }
 }
 
-fun String.toUserRole(): UserRole = UserRole.entries.firstOrNull { it.value.equals(this, ignoreCase = true) }
-    ?: throw IllegalArgumentException("Unsupported role: $this")
+fun String.toUserRole(): UserRole =
+    UserRole.entries.firstOrNull { it.value.equals(this, ignoreCase = true) }
+        ?: throw IllegalArgumentException("Unsupported role: $this")

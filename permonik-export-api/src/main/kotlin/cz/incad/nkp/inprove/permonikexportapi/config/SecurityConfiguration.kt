@@ -25,7 +25,10 @@ import org.springframework.security.web.savedrequest.NullRequestCache
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(private val properties: InternalJwtProperties) {
-    /** Configures a stateless JWT resource server with public integration and protected export routes. */
+    /**
+     * Configures a stateless JWT resource server with public integration and protected export
+     * routes.
+     */
     @Bean
     fun securityFilterChain(
         http: HttpSecurity,
@@ -50,37 +53,47 @@ class SecurityConfiguration(private val properties: InternalJwtProperties) {
         return http.build()
     }
 
-    /** Maps the gateway's `authorities` claim directly to Spring Security authorities without a prefix. */
+    /**
+     * Maps the gateway's `authorities` claim directly to Spring Security authorities without a
+     * prefix.
+     */
     @Bean
-    fun jwtAuthenticationConverter() = JwtAuthenticationConverter().apply {
-        setJwtGrantedAuthoritiesConverter(
-            JwtGrantedAuthoritiesConverter().apply {
-                setAuthoritiesClaimName("authorities")
-                setAuthorityPrefix("")
-            },
-        )
-    }
+    fun jwtAuthenticationConverter() =
+        JwtAuthenticationConverter().apply {
+            setJwtGrantedAuthoritiesConverter(
+                JwtGrantedAuthoritiesConverter().apply {
+                    setAuthoritiesClaimName("authorities")
+                    setAuthorityPrefix("")
+                }
+            )
+        }
 
-    /** Creates the HMAC decoder and validates the internal token issuer and export-service audience. */
+    /**
+     * Creates the HMAC decoder and validates the internal token issuer and export-service audience.
+     */
     @Bean
     fun jwtDecoder(): JwtDecoder {
         val key = properties.secret.encodeToByteArray()
-        val decoder = NimbusJwtDecoder.withSecretKey(SecretKeySpec(key, "HmacSHA256"))
-            .macAlgorithm(MacAlgorithm.HS256)
-            .build()
+        val decoder =
+            NimbusJwtDecoder.withSecretKey(SecretKeySpec(key, "HmacSHA256"))
+                .macAlgorithm(MacAlgorithm.HS256)
+                .build()
 
-        val audienceValidator = OAuth2TokenValidator<Jwt> { jwt ->
-            if (jwt.audience?.contains(EXPECTED_AUDIENCE) == true) {
-                OAuth2TokenValidatorResult.success()
-            } else {
-                OAuth2TokenValidatorResult.failure(OAuth2Error("invalid_token", "Invalid JWT audience", null))
+        val audienceValidator =
+            OAuth2TokenValidator<Jwt> { jwt ->
+                if (jwt.audience?.contains(EXPECTED_AUDIENCE) == true) {
+                    OAuth2TokenValidatorResult.success()
+                } else {
+                    OAuth2TokenValidatorResult.failure(
+                        OAuth2Error("invalid_token", "Invalid JWT audience", null)
+                    )
+                }
             }
-        }
         decoder.setJwtValidator(
             DelegatingOAuth2TokenValidator(
                 JwtValidators.createDefaultWithIssuer(EXPECTED_ISSUER),
                 audienceValidator,
-            ),
+            )
         )
         return decoder
     }

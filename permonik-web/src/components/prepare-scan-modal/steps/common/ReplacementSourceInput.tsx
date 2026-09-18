@@ -25,6 +25,16 @@ type Props = {
   disabled?: boolean
 }
 
+const hasReplacementSource = (source: TReplacementSource) =>
+  !!(
+    source.volumeId ||
+    source.signature?.trim() ||
+    source.owner?.trim() ||
+    source.barcode?.trim() ||
+    source.mutation?.trim() ||
+    source.mutationEdition?.trim()
+  )
+
 const ReplacementSourceInput = ({
   viewOnly = false,
   value,
@@ -34,7 +44,9 @@ const ReplacementSourceInput = ({
   disabled = false,
 }: Props) => {
   const { t } = useTranslation()
-  const [mode, setMode] = useState<'SELECT' | 'MANUAL'>('SELECT')
+  const [mode, setMode] = useState<'SELECT' | 'MANUAL'>(() =>
+    !value.volumeId && hasReplacementSource(value) ? 'MANUAL' : 'SELECT'
+  )
   const selectId = useId()
 
   const safeSetReplacement = (nextPartial: Partial<TReplacementSource>) => {

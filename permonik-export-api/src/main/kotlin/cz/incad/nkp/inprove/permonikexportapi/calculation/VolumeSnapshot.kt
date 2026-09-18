@@ -88,10 +88,42 @@ data class SpecimenMatchingRules(
 
 data class CombinedVolume(
     val snapshot: VolumeSnapshot,
+    val primaryFillIndex: FillIndex,
     val fillIndex: FillIndex,
     val requiredUnits: Int,
     val remainingUnits: Int,
     val warnings: List<CalculationWarning>,
+    val replacementPlan: ReplacementPlan = ReplacementPlan(),
+)
+
+/** Records the source decisions made while building one projected volume. */
+data class ReplacementPlan(
+    val items: List<ReplacementPlanItem> = emptyList(),
+    val unresolved: List<UnresolvedReplacement> = emptyList(),
+    val dependentFillIndexes: Map<String, Int> = emptyMap(),
+)
+
+/** Groups whole-specimen and page decisions for one primary specimen. */
+data class ReplacementPlanItem(
+    val targetSpecimenId: String,
+    val mainReplacement: ReplacementDecision? = null,
+    val pageReplacements: List<ReplacementDecision> = emptyList(),
+)
+
+/**
+ * Identifies the source specimen and the pages it supplied; an empty page list means whole
+ * replacement.
+ */
+data class ReplacementDecision(
+    val sourceVolumeId: String,
+    val sourceSpecimenId: String,
+    val pages: List<Int> = emptyList(),
+)
+
+/** Identifies one whole specimen or page requirement that no selected source resolved. */
+data class UnresolvedReplacement(
+    val targetSpecimenId: String,
+    val page: Int? = null,
 )
 
 data class CandidateEvaluation(
@@ -109,13 +141,20 @@ internal data class NormalizedPages(
     val hasDuplicates: Boolean,
 )
 
-/** Reports unrecognized damage codes without modifying the specimen or assigning an invented penalty. */
+/**
+ * Reports unrecognized damage codes without modifying the specimen or assigning an invented
+ * penalty.
+ */
 internal fun SpecimenSnapshot.unknownDamageWarnings(): List<CalculationWarning> =
-    damageTypes.filter { SpecimenDamageType.fromCode(it) == null }.map { code ->
-        CalculationWarning(CalculationWarningCode.UNKNOWN_DAMAGE_TYPE, id, code)
-    }
+    damageTypes
+        .filter { SpecimenDamageType.fromCode(it) == null }
+        .map { code ->
+            CalculationWarning(CalculationWarningCode.UNKNOWN_DAMAGE_TYPE, id, code)
+        }
 
-/** Normalizes page numbers and preserves malformed input warnings for fill indexes and replacements. */
+/**
+ * Normalizes page numbers and preserves malformed input warnings for fill indexes and replacements.
+ */
 internal fun validPages(
     specimenId: String,
     pages: List<Int>,
@@ -127,17 +166,26 @@ internal fun validPages(
         warnings += CalculationWarning(CalculationWarningCode.DUPLICATE_PAGE_NUMBER, specimenId)
     }
     normalized.invalid.forEach { page ->
-        warnings += CalculationWarning(CalculationWarningCode.INVALID_PAGE_NUMBER, specimenId, page.toString())
+        warnings +=
+            CalculationWarning(
+                CalculationWarningCode.INVALID_PAGE_NUMBER,
+                specimenId,
+                page.toString(),
+            )
     }
     return normalized.values
 }
 
-/** Normalizes page numbers before calculations while retaining information about malformed source data. */
+/**
+ * Normalizes page numbers before calculations while retaining information about malformed source
+ * data.
+ */
 internal fun normalizePages(pages: List<Int>, pageCount: Int?): NormalizedPages {
     val distinct = pages.distinct()
-    val (valid, invalid) = distinct.partition { page ->
-        page > 0 && (pageCount == null || page <= pageCount)
-    }
+    val (valid, invalid) =
+        distinct.partition { page ->
+            page > 0 && (pageCount == null || page <= pageCount)
+        }
     return NormalizedPages(
         values = valid.toCollection(linkedSetOf()),
         invalid = invalid.toSet(),

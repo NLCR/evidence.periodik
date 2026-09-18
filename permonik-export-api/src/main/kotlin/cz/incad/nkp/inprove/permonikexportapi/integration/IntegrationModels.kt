@@ -1,7 +1,7 @@
 package cz.incad.nkp.inprove.permonikexportapi.integration
 
-import cz.incad.nkp.inprove.permonikexportapi.template.MutationMarkType
 import com.fasterxml.jackson.annotation.JsonProperty
+import cz.incad.nkp.inprove.permonikexportapi.template.MutationMarkType
 
 data class IntegrationTemplate(
     val barcode: String,

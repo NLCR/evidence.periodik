@@ -12,16 +12,23 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 @Configuration(proxyBeanMethods = false)
 @EnableJdbcAuditing(auditorAwareRef = "templateAuditor")
 class TemplateAuditingConfiguration {
-    /** Uses the authenticated user JWT subject for writes; missing or service-only identities cannot author templates. */
+    /**
+     * Uses the authenticated user JWT subject for writes; missing or service-only identities cannot
+     * author templates.
+     */
     @Bean
     fun templateAuditor(): AuditorAware<String> = AuditorAware {
         val authentication = SecurityContextHolder.getContext().authentication
         if (authentication !is JwtAuthenticationToken || !authentication.isAuthenticated) {
-            throw AuthenticationCredentialsNotFoundException("Template writes require an authenticated user JWT")
+            throw AuthenticationCredentialsNotFoundException(
+                "Template writes require an authenticated user JWT"
+            )
         }
         val subject = authentication.token.subject
         if (subject.isNullOrBlank()) {
-            throw AuthenticationCredentialsNotFoundException("Template writes require a user JWT subject")
+            throw AuthenticationCredentialsNotFoundException(
+                "Template writes require a user JWT subject"
+            )
         }
         Optional.of(subject)
     }

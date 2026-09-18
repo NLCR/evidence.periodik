@@ -26,19 +26,22 @@ class SecurityConfigurationTest {
     /** Creates a signed internal token for decoder validation scenarios. */
     private fun token(audience: String): String {
         val now = Instant.now()
-        val claims = JWTClaimsSet.Builder()
-            .issuer("permonik-identity-gateway")
-            .subject("test-user")
-            .audience(audience)
-            .issueTime(Date.from(now))
-            .expirationTime(Date.from(now.plusSeconds(60)))
-            .build()
+        val claims =
+            JWTClaimsSet.Builder()
+                .issuer("permonik-identity-gateway")
+                .subject("test-user")
+                .audience(audience)
+                .issueTime(Date.from(now))
+                .expirationTime(Date.from(now.plusSeconds(60)))
+                .build()
         return SignedJWT(
-            JWSHeader.Builder(JWSAlgorithm.HS256).type(JOSEObjectType.JWT).build(),
-            claims,
-        ).apply {
-            sign(MACSigner(SECRET.encodeToByteArray()))
-        }.serialize()
+                JWSHeader.Builder(JWSAlgorithm.HS256).type(JOSEObjectType.JWT).build(),
+                claims,
+            )
+            .apply {
+                sign(MACSigner(SECRET.encodeToByteArray()))
+            }
+            .serialize()
     }
 }
 

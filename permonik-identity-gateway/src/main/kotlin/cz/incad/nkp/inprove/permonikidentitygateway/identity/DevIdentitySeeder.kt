@@ -17,17 +17,19 @@ class DevIdentitySeeder(
     @Transactional
     override fun run(args: ApplicationArguments) {
         val existing = users.findByUsernameIgnoreCase(properties.username)
-        val user = existing
-            ?: UserEntity(
-                username = properties.username,
-                email = properties.email,
-                firstName = "Development",
-                lastName = "Administrator",
-                role = UserRole.ADMIN,
-                active = true,
-            )
-        val passwordHash = user.passwordHash?.takeIf { encoder.matches(properties.password, it) }
-            ?: encoder.encode(properties.password)
+        val user =
+            existing
+                ?: UserEntity(
+                    username = properties.username,
+                    email = properties.email,
+                    firstName = "Development",
+                    lastName = "Administrator",
+                    role = UserRole.ADMIN,
+                    active = true,
+                )
+        val passwordHash =
+            user.passwordHash?.takeIf { encoder.matches(properties.password, it) }
+                ?: encoder.encode(properties.password)
         users.save(user.copy(passwordHash = passwordHash))
     }
 }

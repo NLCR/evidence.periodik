@@ -17,8 +17,6 @@ service CoreExportService {
   rpc SearchReplacementVolumes(SearchReplacementVolumesRequest) returns (GrpcVolumePage);
   // Lists volumes across owners by stored year, mutation and mutational edition.
   rpc QueryPlanningVolumes(QueryPlanningVolumesRequest) returns (GrpcVolumePage);
-  // Resolves an exact barcode without exposing template state or choosing a duplicate.
-  rpc ResolveVolumeBarcode(ResolveVolumeBarcodeRequest) returns (ResolveVolumeBarcodeResponse);
 }
 
 message BatchGetVolumeContentsRequest {
@@ -49,9 +47,9 @@ message SearchReplacementVolumesRequest {
 
 message QueryPlanningVolumesRequest {
   string meta_title_id = 1;
-  // Inclusive stored Volume.year range, 1..9999, from <= to.
-  int32 year_from = 2;
-  int32 year_to = 3;
+  // Optional inclusive stored Volume.year bounds; absent bounds are not filtered.
+  optional int32 year_from = 2;
+  optional int32 year_to = 3;
   // Absent means no filter; a present value must be nonblank.
   optional string mutation_id = 4;
   GrpcMutationalEditionFilter mutational_edition = 5;
@@ -77,15 +75,6 @@ message GrpcVolumePage {
   repeated GrpcVolume volumes = 1;
   // Empty only when the query is exhausted.
   string next_page_token = 2;
-}
-
-message ResolveVolumeBarcodeRequest {
-  // Nonblank exact value; no case folding, wildcard matching or numeric conversion.
-  string barcode = 1;
-}
-
-message ResolveVolumeBarcodeResponse {
-  string volume_id = 1;
 }
 
 // Source metadata needed for primaryVolume, replacement labels and planning.

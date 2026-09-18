@@ -32,16 +32,19 @@ class SecurityConfiguration {
             .csrf { it.spa().csrfTokenRepository(csrf) }
             .authorizeHttpRequests {
                 it.requestMatchers(
-                    "/api/auth/**",
-                    "/api/me",
-                    "/error",
-                    "/Shibboleth.sso/**",
-                    "/login/shibboleth",
-                    "/saml2/**",
-                    "/login/saml2/**",
-                ).permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/user/**").hasAuthority("USER_READ")
-                    .requestMatchers(HttpMethod.PUT, "/api/user/**").hasAuthority("USER_WRITE")
+                        "/api/auth/**",
+                        "/api/me",
+                        "/error",
+                        "/Shibboleth.sso/**",
+                        "/login/shibboleth",
+                        "/saml2/**",
+                        "/login/saml2/**",
+                    )
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/user/**")
+                    .hasAuthority("USER_READ")
+                    .requestMatchers(HttpMethod.PUT, "/api/user/**")
+                    .hasAuthority("USER_WRITE")
                     .requestMatchers(
                         "/api/volume/**",
                         "/api/specimen/**",
@@ -51,11 +54,18 @@ class SecurityConfiguration {
                         "/api/edition/**",
                         "/api/export/**",
                         "/api/integration/**",
-                    ).permitAll()
-                    .requestMatchers("/api/**").denyAll()
-                    .anyRequest().permitAll()
+                    )
+                    .permitAll()
+                    .requestMatchers("/api/**")
+                    .denyAll()
+                    .anyRequest()
+                    .permitAll()
             }
-            .logout { it.logoutUrl("/api/auth/logout").logoutSuccessHandler { _, response, _ -> response.status = 200 } }
+            .logout {
+                it.logoutUrl("/api/auth/logout").logoutSuccessHandler { _, response, _ ->
+                    response.status = 200
+                }
+            }
 
         if (relyingParties != null && samlSuccessHandler != null) {
             http.saml2Login {
@@ -68,17 +78,20 @@ class SecurityConfiguration {
     }
 
     @Bean
-    fun securityContextRepository(): SecurityContextRepository = HttpSessionSecurityContextRepository()
+    fun securityContextRepository(): SecurityContextRepository =
+        HttpSessionSecurityContextRepository()
 
     @Bean
-    fun csrfTokenRepository(): CookieCsrfTokenRepository = CookieCsrfTokenRepository.withHttpOnlyFalse()
+    fun csrfTokenRepository(): CookieCsrfTokenRepository =
+        CookieCsrfTokenRepository.withHttpOnlyFalse()
 
     @Bean
-    fun sessionAuthenticationStrategy(csrf: CookieCsrfTokenRepository): SessionAuthenticationStrategy =
+    fun sessionAuthenticationStrategy(
+        csrf: CookieCsrfTokenRepository
+    ): SessionAuthenticationStrategy =
         CompositeSessionAuthenticationStrategy(
-            listOf(ChangeSessionIdAuthenticationStrategy(), CsrfAuthenticationStrategy(csrf)),
+            listOf(ChangeSessionIdAuthenticationStrategy(), CsrfAuthenticationStrategy(csrf))
         )
 
-    @Bean
-    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+    @Bean fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 }

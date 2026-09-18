@@ -5,7 +5,9 @@
 from core to export; RPC requests flow in the opposite direction. This module
 contains generated Java messages and gRPC stubs usable from both Java and Kotlin.
 It has no Spring runtime, transport, handlers, client beans, Solr access or domain
-calculations. The existing HTTP contract and export mock are unchanged.
+calculations. The HTTP contract is implemented by the export service; barcode lookup
+is intentionally kept in the public integration repository rather than added as an
+internal core RPC.
 
 ## Build and Spring Integration
 
@@ -164,8 +166,9 @@ Alpine requires `gcompat` for the Maven-distributed native code generators.
 
 ## RPC Semantics
 
-Batch reads and replacement search are implemented. Planning and barcode RPC descriptions specify
-future semantics, not callable implementations.
+Batch reads, replacement search and planning are implemented. Public integration resolves
+the requested barcode against finalized PostgreSQL template snapshots, so the core/export
+boundary does not expose a separate barcode-to-volume-ID RPC.
 All IDs are opaque nonblank strings, not parsed integers. All reads exclude soft
 deletes. References are server-owned; callers cannot provide authoritative volume,
 owner or specimen data. No RPC accepts arbitrary Solr queries or field masks.
@@ -174,8 +177,7 @@ owner or specimen data. No RPC accepts arbitrary Solr queries or field masks.
 | --- | --- |
 | `BatchGetVolumeContents` | Load 1..20 distinct volume IDs, including a single primary ID. Return complete metadata and all stored non-deleted specimens in request volume order. Missing or deleted IDs fail the entire RPC with `NOT_FOUND`; no silent omission or partial success. |
 | `SearchReplacementVolumes` | Load the primary by ID, exclude it, require equal metatitle and inclusive overlap, then apply enabled owner/mutation/mutational-edition equality filters. Return paged metadata, never scores. |
-| `QueryPlanningVolumes` | Filter by exact metatitle ID and inclusive stored `Volume.year` range (1..9999, from <= to), optionally mutation ID and mutational edition. No owner filter. Return paged metadata for export-side grouping and calculation. Stored year is required. |
-| `ResolveVolumeBarcode` | Exact, case-sensitive barcode lookup with no trimming, numeric conversion or wildcard expansion. Blank input is invalid. No match returns `NOT_FOUND`; multiple active matches return `FAILED_PRECONDITION`, never the first match. Success returns only the internal volume ID. Export owns the finalized-template check and public response. |
+| `QueryPlanningVolumes` | Filter by exact metatitle ID and optional inclusive stored `Volume.year` bounds, optionally mutation ID and mutational edition. An absent year bound is not filtered. No owner filter. Return paged metadata for export-side grouping and calculation. Stored year is required in returned volumes. |
 
 Batch reads deliberately replace separate primary-volume, owner-lookup and
 single-volume-content APIs. `Volume.owner` includes ID, name, shorthand and sigla;
@@ -219,10 +221,8 @@ absence before calling core. Invalid combinations return `INVALID_ARGUMENT`.
 
 Export drains the query, batch-loads contents, computes each volume's own fill index
 and groups by stored year and owner ID. Core neither sums indexes nor returns a
-combined index. `Volume` has first/last issue numbers, year and signature, but **no
-volume `number` field**. The display rule for public planning `volumes[].number`
-still needs clarification before a production planning adapter is written; this
-contract does not invent a mapping from signature or first issue number.
+combined index. Public planning exposes the stored `Volume.barCode` as `barCode`;
+it is not a specimen number, first/last issue number, signature or computed ordinal.
 
 ### Pagination and Completeness
 

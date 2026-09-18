@@ -33,9 +33,8 @@ class ApiExceptionHandler {
     /** Returns stable violation codes and paths when a requested target state cannot be reached. */
     @ExceptionHandler(TemplateValidationException::class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_CONTENT)
-    fun validation(exception: TemplateValidationException) = TemplateValidationFailure(
-        violations = exception.violations,
-    )
+    fun validation(exception: TemplateValidationException) =
+        TemplateValidationFailure(violations = exception.violations)
 }
 
 data class TemplateValidationFailure(

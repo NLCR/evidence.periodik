@@ -24,17 +24,19 @@ data class IdentityPrincipal(
     }
 }
 
-fun UserEntity.toPrincipal() = IdentityPrincipal(
-    id = requireNotNull(id),
-    username = username,
-    firstName = firstName,
-    lastName = lastName,
-    email = email,
-    role = role,
-    owners = owners.toList(),
-    active = active,
-    authorityNames = buildList {
-        add("ROLE_${role.name}")
-        addAll(role.permissions.map(Enum<*>::name))
-    },
-)
+fun UserEntity.toPrincipal() =
+    IdentityPrincipal(
+        id = requireNotNull(id),
+        username = username,
+        firstName = firstName,
+        lastName = lastName,
+        email = email,
+        role = role,
+        owners = owners.toList(),
+        active = active,
+        authorityNames =
+            buildList {
+                add("ROLE_${role.name}")
+                addAll(role.permissions.map(Enum<*>::name))
+            },
+    )

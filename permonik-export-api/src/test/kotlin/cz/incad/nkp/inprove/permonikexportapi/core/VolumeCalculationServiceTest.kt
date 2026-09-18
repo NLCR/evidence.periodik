@@ -24,42 +24,66 @@ class VolumeCalculationServiceTest {
     /** Ranks real candidate contents after prior sources and excludes already selected IDs. */
     @Test
     fun ranksCandidatesByTheirAdditionalCoverage() {
-        val primary = volume("primary").let {
-            it.copy(specimens = listOf(it.specimens.single().copy(missingPages = listOf(1, 2))))
-        }
-        val selected = volume("selected").let {
-            it.copy(specimens = listOf(it.specimens.single().copy(missingPages = listOf(2))))
-        }
+        val primary =
+            volume("primary").let {
+                it.copy(specimens = listOf(it.specimens.single().copy(missingPages = listOf(1, 2))))
+            }
+        val selected =
+            volume("selected").let {
+                it.copy(specimens = listOf(it.specimens.single().copy(missingPages = listOf(2))))
+            }
         val redundant = selected.copy(id = "redundant")
         val useful = volume("useful")
-        doReturn(listOf(primary, selected)).`when`(core).batchGetVolumeContents(listOf("primary", "selected"))
-        doReturn(listOf("selected", "redundant", "useful")).`when`(core).searchReplacementVolumeIds("primary", rules)
-        doReturn(listOf(redundant, useful)).`when`(core).batchGetVolumeContents(listOf("redundant", "useful"))
+        doReturn(listOf(primary, selected))
+            .`when`(core)
+            .batchGetVolumeContents(listOf("primary", "selected"))
+        doReturn(listOf("selected", "redundant", "useful"))
+            .`when`(core)
+            .searchReplacementVolumeIds("primary", rules)
+        doReturn(listOf(redundant, useful))
+            .`when`(core)
+            .batchGetVolumeContents(listOf("redundant", "useful"))
 
-        val candidates = service.findReplacementCandidates("primary", listOf("selected"), issues, rules)
+        val candidates =
+            service.findReplacementCandidates("primary", listOf("selected"), issues, rules)
 
         assertEquals(listOf("useful", "redundant"), candidates.map { it.volumeId })
         assertEquals(listOf(1, 0), candidates.map { it.coveredRequiredUnits })
         assertEquals(100999, candidates.first().dependentFillIndex)
     }
 
-    /** Uses source priority across batches while retaining source dates, raw flags and data warnings. */
+    /**
+     * Uses source priority across batches while retaining source dates, raw flags and data
+     * warnings.
+     */
     @Test
     fun calculatesRecordedStateFromPrioritizedBatches() {
-        val primary = volume("primary").let {
-            it.copy(specimens = listOf(it.specimens.single().copy(
-                numExists = false,
-                numMissing = true,
-                damageTypes = listOf("UnknownDamage"),
-            )))
-        }
+        val primary =
+            volume("primary").let {
+                it.copy(
+                    specimens =
+                        listOf(
+                            it.specimens
+                                .single()
+                                .copy(
+                                    numExists = false,
+                                    numMissing = true,
+                                    damageTypes = listOf("UnknownDamage"),
+                                )
+                        )
+                )
+            }
         val ids = listOf(primary.id) + (1..20).map { "source-$it" }
         val sources = ids.drop(1).map(::volume)
-        val preferred = sources.first().let {
-            it.copy(specimens = listOf(it.specimens.single().copy(damageTypes = listOf("ChDatum"))))
-        }
+        val preferred =
+            sources.first().let {
+                it.copy(
+                    specimens = listOf(it.specimens.single().copy(damageTypes = listOf("ChDatum")))
+                )
+            }
         doReturn(listOf(primary, preferred) + sources.drop(1).take(18))
-            .`when`(core).batchGetVolumeContents(ids.take(20))
+            .`when`(core)
+            .batchGetVolumeContents(ids.take(20))
         doReturn(listOf(sources.last())).`when`(core).batchGetVolumeContents(ids.drop(20))
 
         val result = service.calculate(primary.id, ids.drop(1), issues, rules)
@@ -73,20 +97,27 @@ class VolumeCalculationServiceTest {
         assertEquals(true, primary.specimens.single().numMissing)
     }
 
-    /** Rejects unsupported matching data and propagates unavailable source reads instead of calculating partial results. */
+    /**
+     * Rejects unsupported matching data and propagates unavailable source reads instead of
+     * calculating partial results.
+     */
     @Test
     fun refusesInvalidOrUnavailableSourceData() {
         val primary = volume("primary")
         doReturn(listOf(primary.copy(mutationMark = StoredMutationMark(null, "UNKNOWN", null))))
-            .`when`(core).batchGetVolumeContents(listOf(primary.id))
+            .`when`(core)
+            .batchGetVolumeContents(listOf(primary.id))
         assertThrows(IllegalArgumentException::class.java) {
             service.calculate(primary.id, emptyList(), issues, rules)
         }
 
-        doThrow(Status.UNAVAILABLE.asRuntimeException()).`when`(core).batchGetVolumeContents(listOf(primary.id))
-        val failure = assertThrows(StatusRuntimeException::class.java) {
-            service.calculate(primary.id, emptyList(), issues, rules)
-        }
+        doThrow(Status.UNAVAILABLE.asRuntimeException())
+            .`when`(core)
+            .batchGetVolumeContents(listOf(primary.id))
+        val failure =
+            assertThrows(StatusRuntimeException::class.java) {
+                service.calculate(primary.id, emptyList(), issues, rules)
+            }
         assertEquals(Status.Code.UNAVAILABLE, failure.status.code)
     }
 
@@ -116,24 +147,27 @@ class VolumeCalculationServiceTest {
             createdBy = "test",
             updated = null,
             updatedBy = null,
-            specimens = listOf(StoredSpecimenSnapshot(
-                id = "$id-specimen",
-                publicationDate = Instant.parse("2025-01-01T23:30:00Z"),
-                isAttachment = false,
-                number = "1",
-                attachmentNumber = null,
-                editionId = "edition",
-                mutationId = "mutation",
-                mutationMark = mark,
-                name = null,
-                subName = null,
-                numExists = true,
-                numMissing = false,
-                pagesCount = 4,
-                missingPages = emptyList(),
-                damagedPages = emptyList(),
-                damageTypes = emptyList(),
-            )),
+            specimens =
+                listOf(
+                    StoredSpecimenSnapshot(
+                        id = "$id-specimen",
+                        publicationDate = Instant.parse("2025-01-01T23:30:00Z"),
+                        isAttachment = false,
+                        number = "1",
+                        attachmentNumber = null,
+                        editionId = "edition",
+                        mutationId = "mutation",
+                        mutationMark = mark,
+                        name = null,
+                        subName = null,
+                        numExists = true,
+                        numMissing = false,
+                        pagesCount = 4,
+                        missingPages = emptyList(),
+                        damagedPages = emptyList(),
+                        damageTypes = emptyList(),
+                    )
+                ),
         )
     }
 }

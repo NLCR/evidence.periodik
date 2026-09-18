@@ -12,7 +12,7 @@ export const PlanDigitalizationResponseSchema = z.array(
         volumes: z.array(
           z.object({
             id: z.string(),
-            number: z.string(),
+            barCode: z.string(),
             fillIndex: z.number(),
           })
         ),

@@ -4,6 +4,9 @@ plugins {
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
     id 'com.google.cloud.tools.jib'
+    id 'dev.detekt'
+    id 'com.diffplug.spotless'
+    id 'io.github.ben-manes.versions'
 }
 
 group = 'cz.incad.nkp.inprove'
@@ -14,6 +17,26 @@ def jibArchitecture = providers.gradleProperty('jibArchitecture').getOrElse(host
 
 kotlin {
     jvmToolchain(25)
+}
+
+detekt {
+    toolVersion = '2.0.0-alpha.3'
+    config.setFrom(rootProject.file('config/detekt/detekt.yml'))
+    baseline = rootProject.file("config/detekt/baseline/${project.name}.xml")
+    buildUponDefaultConfig = false
+    ignoreFailures = false
+    basePath.set(rootProject.projectDir)
+}
+
+spotless {
+    ratchetFrom('origin/main')
+
+    kotlin {
+        target('src/**/*.kt')
+        ktfmt('0.64').kotlinlangStyle().configure { options ->
+            options.setRemoveUnusedImports(true)
+        }
+    }
 }
 
 repositories {
@@ -49,6 +72,20 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+def isNonStable = { version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { keyword ->
+        version.toUpperCase().contains(keyword)
+    }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+
+tasks.named('dependencyUpdates').configure {
+    rejectVersionIf {
+        isNonStable(it.candidate.version)
+    }
 }
 
 tasks.named('bootJar') {

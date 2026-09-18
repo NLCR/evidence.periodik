@@ -6,13 +6,13 @@ import Barcode from 'react-barcode'
 import type { TTemplateItem } from '@/components/prepare-scan-modal/schemas/schemas'
 import SpecimenItemViewOnly from '../components/specimen-item/SpecimenItemViewOnly'
 import GroupedTemplateSections from '../grouped-by-volumes/GroupedTemplateSections'
-import { type TVolume } from '@/schema/volume'
+import { type TTemplateVolume } from '../../../schemas/templateSchema'
 import TemplatePreviewHeader from './TemplatePreviewHeader'
 import { filterTemplateItemsForPrint } from '../utils/filters'
 import { getMainReplacement } from '../utils/templateItemLocking'
 
 type Props = {
-  primaryVolume: TVolume
+  primaryVolume: TTemplateVolume
   barCode?: string
   items: TTemplateItem[]
   showOnlyRescans: boolean

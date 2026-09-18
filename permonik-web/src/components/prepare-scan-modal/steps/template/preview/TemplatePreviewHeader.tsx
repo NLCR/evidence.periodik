@@ -9,11 +9,13 @@ import {
   getTemplateStateLabel,
   type TemplateState,
 } from '@/components/prepare-scan-modal/schemas/templateStateSchema'
-import { type TVolume } from '@/schema/volume'
-import { type TTemplateItem } from '@/components/prepare-scan-modal/schemas/templateSchema'
+import {
+  type TTemplateItem,
+  type TTemplateVolume,
+} from '@/components/prepare-scan-modal/schemas/templateSchema'
 
 export type TTemplatePreviewHeaderProps = {
-  primaryVolume: TVolume
+  primaryVolume: TTemplateVolume
   items: TTemplateItem[]
   displayCurrentState?: boolean
   currentState?: TemplateState
@@ -27,11 +29,11 @@ const TemplatePreviewHeader: FC<TTemplatePreviewHeaderProps> = ({
 }) => {
   const { t } = useTranslation()
 
-  const title = primaryVolume.metaTitleId ?? '-'
+  const title = primaryVolume.metaTitleName
   const signature = primaryVolume.signature
   const subTitle = primaryVolume.subName
-  const owner = primaryVolume.ownerId
-  const mutation = primaryVolume.mutationId
+  const owner = primaryVolume.ownerName
+  const mutation = primaryVolume.mutationName
   const mutationEdition = primaryVolume.mutationMark?.mark ?? undefined
   const dateFrom = primaryVolume.dateFrom
     ? new Date(primaryVolume.dateFrom).toLocaleDateString()

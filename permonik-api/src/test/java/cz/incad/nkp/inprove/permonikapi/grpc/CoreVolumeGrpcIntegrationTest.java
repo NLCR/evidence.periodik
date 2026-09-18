@@ -236,6 +236,36 @@ class CoreVolumeGrpcIntegrationTest {
         verify(solr, never()).query(eq("specimen"), any(SolrQuery.class));
     }
 
+    /** Verifies planning filters, stored-year bounds and the authenticated metadata page response. */
+    @Test
+    void planningQueryUsesStoredFiltersAndReturnsVolumeMetadata() throws Exception {
+        first.setMetaTitleId("title");
+        first.setYear(1960);
+        second.setYear(1961);
+        var searches = new ArrayList<SolrQuery>();
+        doAnswer(invocation -> {
+            SolrQuery query = invocation.getArgument(1);
+            searches.add(query);
+            return response(Volume.class, List.of(first, second), 2, "*");
+        }).when(solr).query(eq("volume"), any(SolrQuery.class));
+
+        var request = QueryPlanningVolumesRequest.newBuilder()
+                .setMetaTitleId("title")
+                .setYearFrom(1960)
+                .setYearTo(1965)
+                .setMutationalEdition(GrpcMutationalEditionFilter.newBuilder().setType("UNMARKED"))
+                .build();
+        var page = authenticated.queryPlanningVolumes(request);
+
+        assertEquals(List.of(FIRST, SECOND), page.getVolumesList().stream().map(GrpcVolume::getId).toList());
+        var filters = Arrays.asList(searches.getFirst().getFilterQueries());
+        assertTrue(filters.contains("metatitle_id:\"title\""), filters.toString());
+        assertTrue(filters.contains("year:[1960 TO 1965]"), filters.toString());
+        assertTrue(filters.contains("mutation_mark_type:\"UNMARKED\""), filters.toString());
+        assertTrue(filters.contains("-mutation_mark:[* TO *]"), filters.toString());
+        assertEquals("id asc", searches.getFirst().getSortField());
+    }
+
     /** Proves that missing/wrong credentials and browser JWTs cannot reach data, and other RPCs fail closed. */
     @Test
     void authenticationAndMethodAllowlistProtectTheActualServer() throws Exception {
@@ -251,10 +281,8 @@ class CoreVolumeGrpcIntegrationTest {
         }
         assertStatus(Status.Code.INVALID_ARGUMENT, () -> authenticated.searchReplacementVolumes(
                 SearchReplacementVolumesRequest.getDefaultInstance()));
-        assertStatus(Status.Code.PERMISSION_DENIED, () -> authenticated.queryPlanningVolumes(
+        assertStatus(Status.Code.INVALID_ARGUMENT, () -> authenticated.queryPlanningVolumes(
                 QueryPlanningVolumesRequest.getDefaultInstance()));
-        assertStatus(Status.Code.PERMISSION_DENIED, () -> authenticated.resolveVolumeBarcode(
-                ResolveVolumeBarcodeRequest.getDefaultInstance()));
         verifyNoInteractions(solr);
     }
 

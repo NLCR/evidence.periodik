@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RestController
 class SessionController {
     @GetMapping("/me")
     fun me(authentication: Authentication?): ResponseEntity<MeResponse> {
-        val principal = authentication?.principal as? IdentityPrincipal ?: return ResponseEntity.ok().build()
+        val principal =
+            authentication?.principal as? IdentityPrincipal ?: return ResponseEntity.ok().build()
         return ResponseEntity.ok(principal.toMeResponse())
     }
 
@@ -22,7 +23,6 @@ class SessionController {
     fun csrf(token: CsrfToken) {
         token.token
     }
-
 }
 
 data class MeResponse(
@@ -39,16 +39,17 @@ data class MeResponse(
     val credentialsNonExpired: Boolean,
 )
 
-private fun IdentityPrincipal.toMeResponse() = MeResponse(
-    id = id,
-    name = "$firstName $lastName".trim(),
-    email = email,
-    authorities = authorityNames,
-    owners = owners,
-    enabled = active,
-    username = username,
-    role = role.value,
-    accountNonExpired = true,
-    accountNonLocked = true,
-    credentialsNonExpired = true,
-)
+private fun IdentityPrincipal.toMeResponse() =
+    MeResponse(
+        id = id,
+        name = "$firstName $lastName".trim(),
+        email = email,
+        authorities = authorityNames,
+        owners = owners,
+        enabled = active,
+        username = username,
+        role = role.value,
+        accountNonExpired = true,
+        accountNonLocked = true,
+        credentialsNonExpired = true,
+    )

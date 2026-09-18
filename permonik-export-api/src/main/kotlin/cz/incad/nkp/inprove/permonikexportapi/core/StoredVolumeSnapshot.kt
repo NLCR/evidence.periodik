@@ -2,7 +2,10 @@ package cz.incad.nkp.inprove.permonikexportapi.core
 
 import java.time.Instant
 
-/** Stored source data, not a certified theoretical ideal list. No transport or framework dependencies. */
+/**
+ * Stored source data, not a certified theoretical ideal list. No transport or framework
+ * dependencies.
+ */
 data class StoredVolumeSnapshot(
     val id: String,
     val barcode: String,
@@ -49,7 +52,9 @@ data class StoredSpecimenSnapshot(
 )
 
 data class StoredOwner(val id: String, val name: String, val shorthand: String, val sigla: String)
+
 data class StoredLocalizedName(val cs: String, val sk: String, val en: String)
+
 data class StoredMutationMark(val mark: String?, val type: String, val description: String?)
 
 data class StoredPeriodicityItem(

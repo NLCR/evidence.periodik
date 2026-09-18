@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/export/template-planning")
 class TemplatePlanningController(private val templates: TemplatePlanningService) {
-    /** Returns the cross-owner digitalization plan for the supplied title, years, and mutation filters. */
+    /**
+     * Returns the cross-owner digitalization plan for the supplied title, years, and mutation
+     * filters.
+     */
     @PostMapping("/query")
     fun query(@Valid @RequestBody query: TemplatePlanningQuery) = templates.plan(query)
 }

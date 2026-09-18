@@ -2,7 +2,6 @@ package cz.incad.nkp.inprove.permonikidentitygateway.identity
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotNull
 import java.util.UUID
 
 data class UserDto(
@@ -16,13 +15,14 @@ data class UserDto(
     val owners: List<String>?,
 )
 
-fun UserEntity.toDto() = UserDto(
-    id = requireNotNull(id),
-    email = email,
-    userName = username,
-    firstName = firstName,
-    lastName = lastName,
-    role = role,
-    active = active,
-    owners = owners.toList(),
-)
+fun UserEntity.toDto() =
+    UserDto(
+        id = requireNotNull(id),
+        email = email,
+        userName = username,
+        firstName = firstName,
+        lastName = lastName,
+        role = role,
+        active = active,
+        owners = owners.toList(),
+    )

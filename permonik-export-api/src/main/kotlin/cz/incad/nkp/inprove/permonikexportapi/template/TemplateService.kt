@@ -20,7 +20,10 @@ interface TemplateService {
     fun delete(volumeId: String)
 
     /** Finds ordered replacement volume candidates for the unresolved template issues. */
-    fun replacementCandidates(volumeId: String, query: ReplacementCandidateQuery): List<ReplacementSource>
+    fun replacementCandidates(
+        volumeId: String,
+        query: ReplacementCandidateQuery,
+    ): List<ReplacementSource>
 
     /** Calculates the combined fill index for the selected replacement volumes. */
     fun fillIndex(volumeId: String, query: FillIndexQuery): Int

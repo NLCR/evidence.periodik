@@ -16,6 +16,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.SolrQuery;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrException;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,6 +39,7 @@ import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.MUT
 import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.MUTATION_MARK_TYPE_FIELD;
 import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.OWNER_ID_FIELD;
 import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.VOLUME_CORE_NAME;
+import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.YEAR_FIELD;
 
 @Service
 @RequiredArgsConstructor
@@ -96,6 +98,52 @@ public class ReferenceDataService {
         String token = cursor.equals(next) ? "" : Base64.getUrlEncoder().withoutPadding()
                 .encodeToString((prefix + next).getBytes(StandardCharsets.UTF_8));
         return new ReplacementPage(response.getBeans(Volume.class), token);
+    }
+
+    /** Searches active volumes for planning with exact metadata filters and cursor-bound pagination. */
+    public PlanningPage searchPlanningVolumes(String metaTitleId, @Nullable Integer yearFrom, @Nullable Integer yearTo,
+                                              String mutationId, String mutationMark, String mutationMarkType,
+                                              int pageSize, String pageToken)
+            throws SolrServerException, IOException {
+        SolrQuery query = new SolrQuery("*:*");
+        query.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        query.addFilterQuery(exact(META_TITLE_ID_FIELD, metaTitleId));
+        if (yearFrom != null || yearTo != null) {
+            String lowerYear = yearFrom == null ? "*" : yearFrom.toString();
+            String upperYear = yearTo == null ? "*" : yearTo.toString();
+            query.addFilterQuery(YEAR_FIELD + ":[" + lowerYear + " TO " + upperYear + "]");
+        }
+        if (mutationId != null) query.addFilterQuery(exact(MUTATION_ID_FIELD, mutationId));
+        if (mutationMarkType != null) query.addFilterQuery(exact(MUTATION_MARK_TYPE_FIELD, mutationMarkType));
+        if (mutationMark != null) query.addFilterQuery(exact(MUTATION_MARK_FIELD, mutationMark));
+        else if ("UNMARKED".equals(mutationMarkType)) query.addFilterQuery("-" + MUTATION_MARK_FIELD + ":[* TO *]");
+        query.setRows(pageSize);
+        query.setSort(ID_FIELD, SolrQuery.ORDER.asc);
+        String prefix = query + "\n";
+        String cursor = "*";
+        if (!pageToken.isEmpty()) {
+            String decoded = new String(Base64.getUrlDecoder().decode(pageToken), StandardCharsets.UTF_8);
+            if (!decoded.startsWith(prefix) || decoded.length() == prefix.length()) {
+                throw new IllegalArgumentException("Page token does not match planning query");
+            }
+            cursor = decoded.substring(prefix.length());
+        }
+        query.set("cursorMark", cursor);
+        QueryResponse response;
+        try {
+            response = solrClient.query(VOLUME_CORE_NAME, query);
+        } catch (SolrException exception) {
+            if (exception.code() == 400) throw new IllegalArgumentException("Invalid planning page token", exception);
+            throw exception;
+        }
+        String next = response.getNextCursorMark();
+        if (next == null || (response.getHeader() != null && response.getHeader().get("partialResults") != null
+                && !"false".equals(response.getHeader().get("partialResults").toString()))) {
+            throw new SolrServerException("Incomplete planning response");
+        }
+        String token = cursor.equals(next) ? "" : Base64.getUrlEncoder().withoutPadding()
+                .encodeToString((prefix + next).getBytes(StandardCharsets.UTF_8));
+        return new PlanningPage(response.getBeans(Volume.class), token);
     }
 
     /** Loads complete active volumes in one escaped ID query and rejects incomplete Solr responses. */
@@ -164,4 +212,6 @@ public class ReferenceDataService {
     }
 
     public record ReplacementPage(List<Volume> volumes, String nextPageToken) {}
+
+    public record PlanningPage(List<Volume> volumes, String nextPageToken) {}
 }

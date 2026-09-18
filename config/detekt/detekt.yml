@@ -1,0 +1,25 @@
+config:
+  validation: true
+  warningsAsErrors: true
+
+complexity:
+  active: true
+  LongParameterList:
+    active: true
+    allowedFunctionParameters: 8
+    allowedConstructorParameters: 8
+    ignoreDefaultParameters: false
+    ignoreDataClasses: false
+    ignoreAnnotatedParameter: []
+  NestedBlockDepth:
+    active: true
+    allowedDepth: 4
+
+style:
+  active: true
+  BracesOnIfStatements:
+    active: true
+    singleLine: always
+    multiLine: always
+  MandatoryBracesLoops:
+    active: true

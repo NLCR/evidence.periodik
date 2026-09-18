@@ -100,7 +100,7 @@ const LibrariesTable: FC<Props> = ({ data }) => {
                             alignItems="center"
                           >
                             <Typography variant="body2">
-                              {volume.number}
+                              {volume.barCode}
                             </Typography>
                             <FillIndexIndicator value={volume.fillIndex} />
                           </Stack>

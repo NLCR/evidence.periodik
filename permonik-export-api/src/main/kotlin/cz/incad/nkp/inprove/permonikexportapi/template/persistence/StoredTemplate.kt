@@ -8,15 +8,17 @@ import cz.incad.nkp.inprove.permonikexportapi.template.TemplateState
 import cz.incad.nkp.inprove.permonikexportapi.template.Volume
 import java.time.Instant
 import java.util.UUID
-import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.annotation.Version
 import org.springframework.data.relational.core.mapping.Table
 
-/** Persistence aggregate; identity, concurrency and audit live outside the versioned JSON content. */
+/**
+ * Persistence aggregate; identity, concurrency and audit live outside the versioned JSON content.
+ */
 @Table("export_template")
 data class StoredTemplate(
     @Id val id: UUID,
@@ -33,9 +35,13 @@ data class StoredTemplate(
     val deletedBy: String? = null,
 )
 
-/** Captures displayed source data and editable decisions plus the inputs needed for later regeneration. */
+/**
+ * Captures displayed source data and editable decisions plus the inputs needed for later
+ * regeneration.
+ */
 data class TemplateContent(
     val primaryVolume: Volume,
+    val primaryOwnerSigla: String,
     val replacementSourcesParameters: ReplacementSourcesParameters,
     val primaryVolumeFillIndex: Int,
     val combinedFillIndex: Int,

@@ -1,10 +1,5 @@
 package cz.incad.nkp.inprove.permonikexportapi.template
 
-import jakarta.validation.Valid
-import jakarta.validation.constraints.Max
-import jakarta.validation.constraints.Min
-import jakarta.validation.constraints.NotBlank
-import java.time.Instant
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -12,6 +7,11 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
 import com.fasterxml.jackson.annotation.JsonValue
+import jakarta.validation.Valid
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
+import java.time.Instant
 
 data class Template(
     val id: String,
@@ -156,8 +156,10 @@ data class Volume(
     val dateFrom: String,
     val dateTo: String,
     val metaTitleId: String,
+    val metaTitleName: String,
     val subName: String?,
     val mutationId: String,
+    val mutationName: String,
     @field:Valid val periodicity: List<VolumePeriodicity>,
     val firstNumber: Int,
     val lastNumber: Int,
@@ -165,6 +167,7 @@ data class Volume(
     val attachmentsSort: VolumeAttachmentsSort,
     val signature: String?,
     val ownerId: String,
+    val ownerName: String,
     val year: Int,
     @field:Valid val mutationMark: MutationMark,
     val created: String,
@@ -198,8 +201,9 @@ enum class VolumePeriodicityDay(@get:JsonValue val value: String) {
         /** Parses the title-cased weekday representation used by the frontend volume schema. */
         @JvmStatic
         @JsonCreator
-        fun fromValue(value: String) = entries.firstOrNull { it.value == value }
-            ?: throw IllegalArgumentException("Unknown volume periodicity day: $value")
+        fun fromValue(value: String) =
+            entries.firstOrNull { it.value == value }
+                ?: throw IllegalArgumentException("Unknown volume periodicity day: $value")
     }
 }
 

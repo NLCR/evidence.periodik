@@ -12,6 +12,5 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/integration/volume/template")
 class IntegrationController(private val templates: IntegrationTemplateService) {
     /** Serves the public simplified view of a finalized template selected by volume barcode. */
-    @GetMapping
-    fun get(@RequestParam @NotBlank barcode: String) = templates.getByBarcode(barcode)
+    @GetMapping fun get(@RequestParam @NotBlank barcode: String) = templates.getByBarcode(barcode)
 }

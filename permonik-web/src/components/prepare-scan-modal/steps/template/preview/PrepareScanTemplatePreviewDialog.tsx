@@ -12,14 +12,14 @@ import ModalContainer from '@/components/ModalContainer'
 import VirtualizedSpecimenList from '../VirtualizedSpecimenList'
 import PrepareScanTemplatePrintContent from './PrepareScanTemplatePrintContent'
 import GroupedTemplateSections from '../grouped-by-volumes/GroupedTemplateSections'
-import { type TVolume } from '@/schema/volume'
+import { type TTemplateVolume } from '../../../schemas/templateSchema'
 import { type TTemplateItem } from '@/components/prepare-scan-modal/schemas/templateSchema'
 import TemplatePreviewHeader from './TemplatePreviewHeader'
 
 type Props = {
   opened: boolean
   onClose: () => void
-  primaryVolume: TVolume
+  primaryVolume: TTemplateVolume
   barCode?: string
   items: TTemplateItem[]
   showOnlyRescans: boolean
@@ -41,7 +41,7 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
 
   const handlePrint = useReactToPrint({
     contentRef: printContentRef,
-    documentTitle: primaryVolume?.metaTitleId ?? '-',
+    documentTitle: primaryVolume?.metaTitleName ?? '-',
   })
 
   return (

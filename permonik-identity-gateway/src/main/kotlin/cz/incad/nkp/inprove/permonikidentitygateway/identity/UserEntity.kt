@@ -21,14 +21,14 @@ data class UserEntity(
     val passwordHash: String? = null,
     val samlIdpEntityId: String? = null,
     val samlEppn: String? = null,
-    @MappedCollection(idColumn = "user_id")
-    private val ownerEntries: Set<UserOwner> = emptySet(),
+    @MappedCollection(idColumn = "user_id") private val ownerEntries: Set<UserOwner> = emptySet(),
 ) {
     @get:Transient
     val owners: Set<String>
         get() = ownerEntries.mapTo(linkedSetOf()) { it.ownerId }
 
-    fun withOwners(owners: Collection<String>) = copy(ownerEntries = owners.mapTo(linkedSetOf(), ::UserOwner))
+    fun withOwners(owners: Collection<String>) =
+        copy(ownerEntries = owners.mapTo(linkedSetOf(), ::UserOwner))
 
     override fun toString() = "UserEntity(id=$id, username=$username, role=$role, active=$active)"
 }
@@ -36,12 +36,11 @@ data class UserEntity(
 @Component
 class UserIdGenerator : BeforeConvertCallback<UserEntity> {
     override fun onBeforeConvert(entity: UserEntity): UserEntity =
-        if (entity.id == null) entity.copy(id = UUID.randomUUID()) else entity
+        if (entity.id == null) {
+            entity.copy(id = UUID.randomUUID())
+        } else {
+            entity
+        }
 }
 
-@Table("identity_user_owner")
-data class UserOwner(
-    @Id
-    @Column("owner_id")
-    val ownerId: String,
-)
+@Table("identity_user_owner") data class UserOwner(@Id @Column("owner_id") val ownerId: String)

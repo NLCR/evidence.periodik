@@ -19,6 +19,7 @@ import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcSpecimen;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolume;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolumeContents;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolumePage;
+import cz.incad.nkp.inprove.permonikcorecontract.v1.QueryPlanningVolumesRequest;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.SearchReplacementVolumesRequest;
 import io.grpc.Context;
 import io.grpc.Status;
@@ -77,6 +78,55 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
             observer.onError(Status.UNAVAILABLE.withDescription("Core data store unavailable or incomplete").asRuntimeException());
         } catch (Exception exception) {
             observer.onError(Status.INTERNAL.withDescription("Cannot search replacement volumes").asRuntimeException());
+        }
+    }
+
+    /** Returns filtered planning metadata; export owns content loading, fill indexes and grouping. */
+    @Override
+    public void queryPlanningVolumes(QueryPlanningVolumesRequest request, StreamObserver<GrpcVolumePage> observer) {
+        try {
+            int pageSize = request.getPage().getPageSize();
+            Integer yearFrom = request.hasYearFrom() ? request.getYearFrom() : null;
+            Integer yearTo = request.hasYearTo() ? request.getYearTo() : null;
+            if (request.getMetaTitleId().isBlank() || (yearFrom != null && yearTo != null && yearFrom > yearTo)
+                    || pageSize < 0 || pageSize > 100) {
+                throw Status.INVALID_ARGUMENT.withDescription("Invalid planning filters or page size").asRuntimeException();
+            }
+            String mutationId = request.hasMutationId() ? nonBlank(request.getMutationId(), "mutation ID") : null;
+            String mutationMark = null;
+            String mutationMarkType = null;
+            if (request.hasMutationalEdition()) {
+                var filter = request.getMutationalEdition();
+                mutationMark = filter.hasMark() && !filter.getMark().isBlank() ? filter.getMark() : null;
+                mutationMarkType = filter.hasType() ? nonBlank(filter.getType(), "mutation mark type") : null;
+                if (mutationMarkType != null && !List.of("MARK", "NUMBER", "UNMARKED").contains(mutationMarkType)) {
+                    throw Status.INVALID_ARGUMENT.withDescription("Unknown mutation mark type").asRuntimeException();
+                }
+                if (mutationMark == null && !"UNMARKED".equals(mutationMarkType)) {
+                    throw Status.INVALID_ARGUMENT.withDescription("A blank mutation mark requires UNMARKED type")
+                            .asRuntimeException();
+                }
+            }
+            var page = references.searchPlanningVolumes(request.getMetaTitleId(), yearFrom, yearTo,
+                    mutationId, mutationMark, mutationMarkType, pageSize == 0 ? 20 : pageSize,
+                    request.getPage().getPageToken());
+            var response = GrpcVolumePage.newBuilder().setNextPageToken(page.nextPageToken());
+            for (var volume : page.volumes()) {
+                response.addVolumes(toVolumeMessage(volume));
+                checkBudget(response.build().getSerializedSize());
+            }
+            var result = response.build();
+            checkBudget(result.getSerializedSize());
+            observer.onNext(result);
+            observer.onCompleted();
+        } catch (StatusRuntimeException exception) {
+            observer.onError(exception);
+        } catch (IllegalArgumentException exception) {
+            observer.onError(Status.INVALID_ARGUMENT.withDescription("Invalid planning filters or page token").asRuntimeException());
+        } catch (SolrServerException | IOException exception) {
+            observer.onError(Status.UNAVAILABLE.withDescription("Core data store unavailable or incomplete").asRuntimeException());
+        } catch (Exception exception) {
+            observer.onError(Status.INTERNAL.withDescription("Cannot query planning volumes").asRuntimeException());
         }
     }
 
@@ -235,6 +285,12 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
         if (value == null) {
             throw Status.DATA_LOSS.withDescription("Missing required Solr field: " + field).asRuntimeException();
         }
+        return value;
+    }
+
+    /** Rejects blank optional planning filter values without changing the stored query semantics. */
+    private static String nonBlank(String value, String field) {
+        if (value.isBlank()) throw Status.INVALID_ARGUMENT.withDescription(field + " must not be blank").asRuntimeException();
         return value;
     }
 

@@ -7,8 +7,8 @@ import jakarta.validation.constraints.NotBlank
 
 data class TemplatePlanningQuery(
     @field:NotBlank val metaTitleId: String,
-    @field:NotBlank val yearFrom: String,
-    @field:NotBlank val yearTo: String,
+    val yearFrom: String,
+    val yearTo: String,
     @field:Valid val mutation: MutationFilter? = null,
     @field:Valid val mutationalEdition: MutationalEditionFilter,
 )
@@ -39,6 +39,6 @@ data class TemplatePlanningLibrary(
 
 data class TemplatePlanningVolume(
     val id: String,
-    val number: String,
+    val barCode: String,
     val fillIndex: Int,
 )

@@ -6,44 +6,68 @@ class ReplacementProjectionCalculator(
     private val fillIndexCalculator: FillIndexCalculator = FillIndexCalculator(),
     private val specimenMatcher: SpecimenMatcher = SpecimenMatcher(),
 ) {
-    /** Applies prioritized source snapshots and calculates the resulting virtual volume and fill index. */
+    /**
+     * Applies prioritized source snapshots and calculates the resulting virtual volume and fill
+     * index.
+     */
     fun combine(
         primary: VolumeSnapshot,
         sources: List<VolumeSnapshot>,
         issues: IssueSelection,
         rules: SpecimenMatchingRules,
     ): CombinedVolume {
-        val warnings = fillIndexCalculator.calculate(primary).warnings.toMutableList()
+        val primaryFillIndex = fillIndexCalculator.calculate(primary)
+        val warnings = primaryFillIndex.warnings.toMutableList()
         val requiredUnits = requirements(primary, issues).size
-        val combined = sources.fold(primary) { current, source ->
-            if (!isEligible(primary, source, rules)) {
-                current
-            } else {
-                applySource(current, source, issues, rules, warnings)
+        var projection = AppliedProjection(primary)
+        val dependentFillIndexes = linkedMapOf<String, Int>()
+        sources.forEach { source ->
+            if (isEligible(primary, source, rules)) {
+                projection = applySource(projection, source, issues, rules, warnings)
+                dependentFillIndexes[source.id] =
+                    fillIndexCalculator.calculate(projection.snapshot).value
             }
         }
-        val fillIndex = fillIndexCalculator.calculate(combined)
+        val fillIndex = fillIndexCalculator.calculate(projection.snapshot)
+        val remaining = requirements(projection.snapshot, issues)
         return CombinedVolume(
-            snapshot = combined,
+            snapshot = projection.snapshot,
+            primaryFillIndex = primaryFillIndex,
             fillIndex = fillIndex,
             requiredUnits = requiredUnits,
-            remainingUnits = requirements(combined, issues).size,
+            remainingUnits = remaining.size,
             warnings = (warnings + fillIndex.warnings).distinct(),
+            replacementPlan =
+                projection.plan.copy(
+                    unresolved = remaining.map { UnresolvedReplacement(it.specimenId, it.page) },
+                    dependentFillIndexes = dependentFillIndexes,
+                ),
         )
     }
 
-    /** Evaluates one candidate relative to the primary volume and sources already selected before it. */
+    /**
+     * Evaluates one candidate relative to the primary volume and sources already selected before
+     * it.
+     */
     fun evaluateCandidate(
         primary: VolumeSnapshot,
         selectedSources: List<VolumeSnapshot>,
         candidate: VolumeSnapshot,
         issues: IssueSelection,
         rules: SpecimenMatchingRules,
-    ): CandidateEvaluation = evaluateCandidate(
-        primary, combine(primary, selectedSources, issues, rules), candidate, issues, rules,
-    )
+    ): CandidateEvaluation =
+        evaluateCandidate(
+            primary,
+            combine(primary, selectedSources, issues, rules),
+            candidate,
+            issues,
+            rules,
+        )
 
-    /** Projects one candidate onto an already calculated baseline without replaying selected sources. */
+    /**
+     * Projects one candidate onto an already calculated baseline without replaying selected
+     * sources.
+     */
     private fun evaluateCandidate(
         primary: VolumeSnapshot,
         baseline: CombinedVolume,
@@ -53,12 +77,25 @@ class ReplacementProjectionCalculator(
     ): CandidateEvaluation {
         val eligible = isEligible(primary, candidate, rules)
         val warnings = baseline.warnings.toMutableList()
-        val projected = if (eligible) {
-            applySource(baseline.snapshot, candidate, issues, rules, warnings)
-        } else {
-            baseline.snapshot
-        }
-        val fillIndex = if (eligible) fillIndexCalculator.calculate(projected) else baseline.fillIndex
+        val projected =
+            if (eligible) {
+                applySource(
+                        AppliedProjection(baseline.snapshot, baseline.replacementPlan),
+                        candidate,
+                        issues,
+                        rules,
+                        warnings,
+                    )
+                    .snapshot
+            } else {
+                baseline.snapshot
+            }
+        val fillIndex =
+            if (eligible) {
+                fillIndexCalculator.calculate(projected)
+            } else {
+                baseline.fillIndex
+            }
         val baselineRequirements = requirements(baseline.snapshot, issues)
         val projectedRequirements = requirements(projected, issues)
         return CandidateEvaluation(
@@ -71,7 +108,10 @@ class ReplacementProjectionCalculator(
         )
     }
 
-    /** Evaluates candidates independently and returns eligible candidates by projected index and stable ID. */
+    /**
+     * Evaluates candidates independently and returns eligible candidates by projected index and
+     * stable ID.
+     */
     fun evaluateCandidates(
         primary: VolumeSnapshot,
         selectedSources: List<VolumeSnapshot>,
@@ -83,128 +123,212 @@ class ReplacementProjectionCalculator(
         return candidates
             .map { evaluateCandidate(primary, baseline, it, issues, rules) }
             .filter(CandidateEvaluation::eligible)
-            .sortedWith(compareByDescending(CandidateEvaluation::dependentFillIndex).thenBy(CandidateEvaluation::volumeId))
+            .sortedWith(
+                compareByDescending(CandidateEvaluation::dependentFillIndex)
+                    .thenBy(CandidateEvaluation::volumeId)
+            )
     }
 
-    /** Checks mandatory title and overlap constraints plus optional owner and mutation constraints. */
+    /**
+     * Checks mandatory title and overlap constraints plus optional owner and mutation constraints.
+     */
     fun isEligible(
         primary: VolumeSnapshot,
         candidate: VolumeSnapshot,
         rules: SpecimenMatchingRules,
-    ): Boolean = candidate.id != primary.id &&
-        candidate.metaTitleId == primary.metaTitleId &&
-        overlaps(primary, candidate) &&
-        (!rules.matchOwner || candidate.ownerId == primary.ownerId) &&
-        (!rules.matchMutation || candidate.mutationId == primary.mutationId) &&
-        (!rules.matchMutationalEdition || candidate.mutationMark == primary.mutationMark)
+    ): Boolean =
+        candidate.id != primary.id &&
+            candidate.metaTitleId == primary.metaTitleId &&
+            overlaps(primary, candidate) &&
+            (!rules.matchOwner || candidate.ownerId == primary.ownerId) &&
+            (!rules.matchMutation || candidate.mutationId == primary.mutationId) &&
+            (!rules.matchMutationalEdition || candidate.mutationMark == primary.mutationMark)
 
-    /** Applies all usable whole and page replacements from one source snapshot to a virtual volume. */
+    /**
+     * Applies all usable whole and page replacements from one source snapshot to a virtual volume.
+     */
     private fun applySource(
-        current: VolumeSnapshot,
+        current: AppliedProjection,
         source: VolumeSnapshot,
         issues: IssueSelection,
         rules: SpecimenMatchingRules,
         warnings: MutableList<CalculationWarning>,
-    ): VolumeSnapshot = current.copy(
-        specimens = current.specimens.map { target ->
-            if (!hasWholeRequirement(target, issues) && requiredPages(target, issues).isEmpty()) return@map target
-            val matches = source.specimens.filter { specimenMatcher.matches(target, it, rules) }
-            matches.forEach { specimen ->
-                warnings += specimen.unknownDamageWarnings()
-                if (specimen.pagesCount <= 0) {
-                    warnings += CalculationWarning(CalculationWarningCode.UNKNOWN_PAGE_COUNT, specimen.id)
+    ): AppliedProjection {
+        val plan = current.plan.items.associateBy { it.targetSpecimenId }.toMutableMap()
+        val specimens =
+            current.snapshot.specimens.map { target ->
+                if (
+                    !hasWholeRequirement(target, issues) && requiredPages(target, issues).isEmpty()
+                ) {
+                    return@map target
                 }
-                validPages(specimen.id, specimen.missingPages, specimen.pagesCount, warnings)
-                validPages(specimen.id, specimen.damagedPages, specimen.pagesCount, warnings)
+                val matches = source.specimens.filter { specimenMatcher.matches(target, it, rules) }
+                matches.forEach { specimen ->
+                    warnings += specimen.unknownDamageWarnings()
+                    if (specimen.pagesCount <= 0) {
+                        warnings +=
+                            CalculationWarning(
+                                CalculationWarningCode.UNKNOWN_PAGE_COUNT,
+                                specimen.id,
+                            )
+                    }
+                    validPages(specimen.id, specimen.missingPages, specimen.pagesCount, warnings)
+                    validPages(specimen.id, specimen.damagedPages, specimen.pagesCount, warnings)
+                }
+                if (matches.size > 1) {
+                    warnings +=
+                        CalculationWarning(
+                            CalculationWarningCode.AMBIGUOUS_SPECIMEN_MATCH,
+                            target.id,
+                            source.id,
+                        )
+                    return@map target
+                }
+                val candidate = matches.singleOrNull() ?: return@map target
+                val applied = applySpecimenSource(target, candidate, issues) ?: return@map target
+                val previous = plan[target.id] ?: ReplacementPlanItem(target.id)
+                plan[target.id] =
+                    if (applied.pages.isEmpty()) {
+                        previous.copy(
+                            mainReplacement = ReplacementDecision(source.id, candidate.id)
+                        )
+                    } else {
+                        previous.copy(
+                            pageReplacements =
+                                previous.pageReplacements +
+                                    ReplacementDecision(source.id, candidate.id, applied.pages)
+                        )
+                    }
+                applied.snapshot
             }
-            if (matches.size > 1) {
-                warnings += CalculationWarning(
-                    CalculationWarningCode.AMBIGUOUS_SPECIMEN_MATCH,
-                    target.id,
-                    source.id,
-                )
-                return@map target
-            }
-            val candidate = matches.singleOrNull() ?: return@map target
-            applySpecimenSource(target, candidate, issues)
-        },
-    )
+        return AppliedProjection(
+            snapshot = current.snapshot.copy(specimens = specimens),
+            plan = current.plan.copy(items = current.snapshot.specimens.mapNotNull { plan[it.id] }),
+        )
+    }
 
-    /** Replaces a whole deficient specimen or only the deficient pages available in the source specimen. */
+    /**
+     * Replaces a whole deficient specimen or only the deficient pages available in the source
+     * specimen.
+     */
     private fun applySpecimenSource(
         target: SpecimenSnapshot,
         source: SpecimenSnapshot,
         issues: IssueSelection,
-    ): SpecimenSnapshot {
-        if (!source.numExists || source.numMissing || hasWholeRequirement(source, issues)) return target
+    ): AppliedSpecimen? {
+        if (!source.numExists || source.numMissing || hasWholeRequirement(source, issues)) {
+            return null
+        }
         if (hasWholeRequirement(target, issues)) {
-            return target.copy(
-                numExists = source.numExists,
-                numMissing = source.numMissing,
-                pagesCount = source.pagesCount,
-                missingPages = source.missingPages,
-                damagedPages = source.damagedPages,
-                damageTypes = source.damageTypes,
+            return AppliedSpecimen(
+                target.copy(
+                    numExists = source.numExists,
+                    numMissing = source.numMissing,
+                    pagesCount = source.pagesCount,
+                    missingPages = source.missingPages,
+                    damagedPages = source.damagedPages,
+                    damageTypes = source.damageTypes,
+                )
             )
         }
 
         val sourceMissingPages = normalizePages(source.missingPages, source.pagesCount).values
         val sourceDamagedPages = normalizePages(source.damagedPages, source.pagesCount).values
-        if (DAMAGED_DOCUMENT.code in source.damageTypes && sourceDamagedPages.isEmpty()) return target
-        val availablePages = requiredPages(target, issues).filterTo(mutableSetOf()) { page ->
-            page in 1..source.pagesCount &&
-                page !in sourceMissingPages && page !in sourceDamagedPages
+        if (DAMAGED_DOCUMENT.code in source.damageTypes && sourceDamagedPages.isEmpty()) {
+            return null
         }
-        if (availablePages.isEmpty()) return target
-        val missingPages = if (issues.missingPages) {
-            target.missingPages.filterNot(availablePages::contains)
-        } else {
-            target.missingPages
+        val availablePages =
+            requiredPages(target, issues).filterTo(mutableSetOf()) { page ->
+                page in 1..source.pagesCount &&
+                    page !in sourceMissingPages &&
+                    page !in sourceDamagedPages
+            }
+        if (availablePages.isEmpty()) {
+            return null
         }
-        val damagedPages = if (issues.damagedPages) {
-            target.damagedPages.filterNot(availablePages::contains)
-        } else {
-            target.damagedPages
-        }
+        val missingPages =
+            if (issues.missingPages) {
+                target.missingPages.filterNot(availablePages::contains)
+            } else {
+                target.missingPages
+            }
+        val damagedPages =
+            if (issues.damagedPages) {
+                target.damagedPages.filterNot(availablePages::contains)
+            } else {
+                target.damagedPages
+            }
         val resolvedDamageTypes = target.damageTypes.toMutableSet()
-        if (issues.missingPages && missingPages.isEmpty()) resolvedDamageTypes.remove(MISSING_PAGES.code)
-        if (issues.damagedPages && damagedPages.isEmpty()) resolvedDamageTypes.remove(DAMAGED_DOCUMENT.code)
-        return target.copy(
-            missingPages = missingPages,
-            damagedPages = damagedPages,
-            damageTypes = resolvedDamageTypes,
+        if (issues.missingPages && missingPages.isEmpty()) {
+            resolvedDamageTypes.remove(MISSING_PAGES.code)
+        }
+        if (issues.damagedPages && damagedPages.isEmpty()) {
+            resolvedDamageTypes.remove(DAMAGED_DOCUMENT.code)
+        }
+        return AppliedSpecimen(
+            target.copy(
+                missingPages = missingPages,
+                damagedPages = damagedPages,
+                damageTypes = resolvedDamageTypes,
+            ),
+            availablePages.sorted(),
         )
     }
 
     /** Identifies unresolved units by stable target specimen ID and whole or page scope. */
-    private fun requirements(volume: VolumeSnapshot, issues: IssueSelection): Set<RequiredUnit> = buildSet {
-        volume.specimens.forEach { specimen ->
-            if (hasWholeRequirement(specimen, issues)) add(RequiredUnit(specimen.id))
-            requiredPages(specimen, issues).forEach { page -> add(RequiredUnit(specimen.id, page)) }
+    private fun requirements(volume: VolumeSnapshot, issues: IssueSelection): Set<RequiredUnit> =
+        buildSet {
+            volume.specimens.forEach { specimen ->
+                if (hasWholeRequirement(specimen, issues)) {
+                    add(RequiredUnit(specimen.id))
+                }
+                requiredPages(specimen, issues).forEach { page ->
+                    add(RequiredUnit(specimen.id, page))
+                }
+            }
         }
-    }
 
     /** Determines whether selected issue categories require replacing an entire specimen. */
     private fun hasWholeRequirement(specimen: SpecimenSnapshot, issues: IssueSelection): Boolean =
         (issues.missingSpecimen && specimen.numMissing) ||
-            (issues.missingPages && MISSING_PAGES.code in specimen.damageTypes &&
+            (issues.missingPages &&
+                MISSING_PAGES.code in specimen.damageTypes &&
                 normalizePages(specimen.missingPages, specimen.pagesCount).values.isEmpty()) ||
-            (issues.damagedPages && DAMAGED_DOCUMENT.code in specimen.damageTypes &&
+            (issues.damagedPages &&
+                DAMAGED_DOCUMENT.code in specimen.damageTypes &&
                 normalizePages(specimen.damagedPages, specimen.pagesCount).values.isEmpty()) ||
             (issues.illegiblyBound && ILLEGIBLE_BINDING.code in specimen.damageTypes) ||
             (issues.censored && specimen.damageTypes.any(CENSORSHIP_TYPES::contains)) ||
             (issues.degradation && DEGRADATION.code in specimen.damageTypes)
 
-    /** Returns distinct positive page numbers requiring replacement under the selected issue categories. */
-    private fun requiredPages(specimen: SpecimenSnapshot, issues: IssueSelection): Set<Int> = buildSet {
-        if (issues.missingPages) addAll(normalizePages(specimen.missingPages, specimen.pagesCount).values)
-        if (issues.damagedPages) addAll(normalizePages(specimen.damagedPages, specimen.pagesCount).values)
-    }
+    /**
+     * Returns distinct positive page numbers requiring replacement under the selected issue
+     * categories.
+     */
+    private fun requiredPages(specimen: SpecimenSnapshot, issues: IssueSelection): Set<Int> =
+        buildSet {
+            if (issues.missingPages) {
+                addAll(normalizePages(specimen.missingPages, specimen.pagesCount).values)
+            }
+            if (issues.damagedPages) {
+                addAll(normalizePages(specimen.damagedPages, specimen.pagesCount).values)
+            }
+        }
 
     /** Checks inclusive overlap of the required stored date boundaries. */
     private fun overlaps(primary: VolumeSnapshot, candidate: VolumeSnapshot): Boolean =
         candidate.dateFrom <= primary.dateTo && candidate.dateTo >= primary.dateFrom
 }
+
+private data class AppliedProjection(
+    val snapshot: VolumeSnapshot,
+    val plan: ReplacementPlan = ReplacementPlan(),
+)
+
+private data class AppliedSpecimen(
+    val snapshot: SpecimenSnapshot,
+    val pages: List<Int> = emptyList(),
+)
 
 private data class RequiredUnit(val specimenId: String, val page: Int? = null)
 

@@ -1,7 +1,7 @@
 package cz.incad.nkp.inprove.permonikidentitygateway.identity
 
-import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.converter.Converter
 import org.springframework.data.convert.ReadingConverter
 import org.springframework.data.convert.WritingConverter
@@ -25,13 +25,16 @@ object UserRoleReadingConverter : Converter<String, UserRole> {
 class JdbcConfiguration {
     @Bean
     fun jdbcCustomConversions(dialect: JdbcDialect): JdbcCustomConversions =
-        JdbcCustomConversions.of(dialect, listOf(UserRoleWritingConverter, UserRoleReadingConverter))
+        JdbcCustomConversions.of(
+            dialect,
+            listOf(UserRoleWritingConverter, UserRoleReadingConverter),
+        )
 
     @Bean
     fun jdbcMappingContext(
         customConversions: JdbcCustomConversions,
         jdbcManagedTypes: RelationalManagedTypes,
-    ): JdbcMappingContext = SpringJdbcConfiguration
-        .createMappingContext(jdbcManagedTypes, customConversions, null)
-        .apply { isForceQuote = false }
+    ): JdbcMappingContext =
+        SpringJdbcConfiguration.createMappingContext(jdbcManagedTypes, customConversions, null)
+            .apply { isForceQuote = false }
 }

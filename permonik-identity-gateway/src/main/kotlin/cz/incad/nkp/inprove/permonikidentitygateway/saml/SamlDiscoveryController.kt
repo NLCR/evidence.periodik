@@ -19,13 +19,20 @@ class SamlDiscoveryController(private val settings: SamlSettings) {
     fun start(session: HttpSession): String {
         val state = UUID.randomUUID().toString()
         session.setAttribute(DISCOVERY_STATE, state)
-        val callback = ServletUriComponentsBuilder.fromCurrentContextPath()
-            .path("/api/auth/saml/discovery").queryParam("state", state).build().toUriString()
-        val wayf = UriComponentsBuilder.fromUriString(settings.wayfUrl)
-            .queryParam("entityID", settings.entityId)
-            .queryParam("return", callback)
-            .queryParam("returnIDParam", "entityID")
-            .build().encode().toUri()
+        val callback =
+            ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/auth/saml/discovery")
+                .queryParam("state", state)
+                .build()
+                .toUriString()
+        val wayf =
+            UriComponentsBuilder.fromUriString(settings.wayfUrl)
+                .queryParam("entityID", settings.entityId)
+                .queryParam("return", callback)
+                .queryParam("returnIDParam", "entityID")
+                .build()
+                .encode()
+                .toUri()
         return "redirect:$wayf"
     }
 
@@ -40,8 +47,12 @@ class SamlDiscoveryController(private val settings: SamlSettings) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid SAML discovery state")
         }
         session.removeAttribute(DISCOVERY_STATE)
-        val registrationId = settings.registrations[entityId]
-            ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Identity provider is not allowed")
+        val registrationId =
+            settings.registrations[entityId]
+                ?: throw ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Identity provider is not allowed",
+                )
         return "redirect:/saml2/authenticate/$registrationId"
     }
 }

@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class ApiExceptionHandler {
     @ExceptionHandler(BadCredentialsException::class)
-    fun unauthorized(): ResponseEntity<Void> = ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+    fun unauthorized(): ResponseEntity<Void> =
+        ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
     @ExceptionHandler(DataIntegrityViolationException::class)
     fun conflict(): ResponseEntity<Void> = ResponseEntity.status(HttpStatus.CONFLICT).build()
