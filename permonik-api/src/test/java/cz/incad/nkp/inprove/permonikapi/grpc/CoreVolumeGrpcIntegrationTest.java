@@ -15,6 +15,8 @@ import cz.incad.nkp.inprove.permonikapi.volume.mapper.PeriodicityMapper;
 import cz.incad.nkp.inprove.permonikapi.volume.model.Volume;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.*;
 import cz.incad.nkp.inprove.permonikexportapi.core.*;
+import cz.incad.nkp.inprove.permonikexportapi.planning.MutationalEditionFilter;
+import cz.incad.nkp.inprove.permonikexportapi.planning.TemplatePlanningQuery;
 import io.grpc.*;
 import io.grpc.stub.MetadataUtils;
 import java.io.IOException;
@@ -236,7 +238,7 @@ class CoreVolumeGrpcIntegrationTest {
         verify(solr, never()).query(eq("specimen"), any(SolrQuery.class));
     }
 
-    /** Verifies planning filters, stored-year bounds and the authenticated metadata page response. */
+    /** Verifies planning date bounds and UTC calendar-year grouping even when the stored year is zero. */
     @Test
     void planningQueryUsesStoredFiltersAndReturnsVolumeMetadata() throws Exception {
         first.setMetaTitleId("title");
@@ -258,9 +260,14 @@ class CoreVolumeGrpcIntegrationTest {
         var page = authenticated.queryPlanningVolumes(request);
 
         assertEquals(List.of(FIRST, SECOND), page.getVolumesList().stream().map(GrpcVolume::getId).toList());
+        var planning = client.queryPlanningVolumes(new TemplatePlanningQuery(
+                "title", "1960", "1965", null, new MutationalEditionFilter(null, null, null)));
+        assertEquals(1960, planning.stream().filter(volume -> volume.getId().equals(SECOND))
+                .findFirst().orElseThrow().getYear());
         var filters = Arrays.asList(searches.getFirst().getFilterQueries());
         assertTrue(filters.contains("metatitle_id:\"title\""), filters.toString());
-        assertTrue(filters.contains("year:[1960 TO 1965]"), filters.toString());
+        assertTrue(filters.contains("date_to:[1960-01-01T00:00:00Z TO *]"), filters.toString());
+        assertTrue(filters.contains("date_from:[* TO 1966-01-01T00:00:00Z}"), filters.toString());
         assertTrue(filters.contains("mutation_mark_type:\"UNMARKED\""), filters.toString());
         assertTrue(filters.contains("-mutation_mark:[* TO *]"), filters.toString());
         assertEquals("id asc", searches.getFirst().getSortField());

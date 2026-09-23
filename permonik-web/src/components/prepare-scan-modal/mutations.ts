@@ -41,24 +41,21 @@ export const useCloseToRescanOrFinalizeMutation = (
   }: {
     nextState: TemplateState
     shouldValidate: boolean
-  }) => {
+  }): Promise<boolean> => {
     const isValid = shouldValidate
       ? await args.validateTemplateForNextState(nextState)
       : true
 
-    if (!isValid) return
+    if (!isValid) return false
 
     const payload = args.getValues()
 
-    try {
-      const template = await transitionTemplateStateMutation.mutate({
-        template: payload,
-        nextState,
-      })
-      reset(template)
-    } catch {
-      return
-    }
+    const template = await transitionTemplateStateMutation.mutate({
+      template: payload,
+      nextState,
+    })
+    reset(template)
+    return true
   }
 
   return {

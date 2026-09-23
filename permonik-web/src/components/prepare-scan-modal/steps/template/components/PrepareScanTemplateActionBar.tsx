@@ -4,8 +4,10 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import LockIcon from '@mui/icons-material/Lock'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 import SyncRoundedIcon from '@mui/icons-material/SyncRounded'
+import UndoIcon from '@mui/icons-material/Undo'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -28,6 +30,8 @@ type TProps = {
   onLockAll: () => void
   onUnlockAll: () => void
   onDeleteTemplate: () => void
+  onDiscardChanges: () => Promise<void>
+  hasUnsavedChanges: boolean
 }
 
 const PrepareScanTemplateActionBar: FC<TProps> = ({
@@ -44,6 +48,8 @@ const PrepareScanTemplateActionBar: FC<TProps> = ({
   onLockAll,
   onUnlockAll,
   onDeleteTemplate,
+  onDiscardChanges,
+  hasUnsavedChanges,
 }) => {
   const { t } = useTranslation()
 
@@ -79,6 +85,36 @@ const PrepareScanTemplateActionBar: FC<TProps> = ({
 
       <ConfirmDialog
         TriggerButton={
+          <Tooltip
+            title={t(
+              'prepare_scan_modal.content_template.discard_changes_button'
+            )}
+          >
+            <Button
+              variant="outlined"
+              sx={{ minWidth: 0 }}
+              aria-label={t(
+                'prepare_scan_modal.content_template.discard_changes_button'
+              )}
+              disabled={!hasUnsavedChanges || isMutating}
+            >
+              <UndoIcon />
+            </Button>
+          </Tooltip>
+        }
+        title={t(
+          'prepare_scan_modal.content_template.discard_changes_confirm_title'
+        )}
+        description={t(
+          'prepare_scan_modal.content_template.discard_changes_confirm_description'
+        )}
+        confirmLabel={t('common.confirm')}
+        refuseLabel={t('common.cancel')}
+        onConfirm={onDiscardChanges}
+      />
+
+      <ConfirmDialog
+        TriggerButton={
           <Button
             variant="contained"
             onClick={onCloseToRescanOrFinalize}
@@ -98,16 +134,20 @@ const PrepareScanTemplateActionBar: FC<TProps> = ({
 
       <ConfirmDialog
         TriggerButton={
-          <Button
-            variant="outlined"
-            sx={{ minWidth: 0 }}
-            disabled={!canManageLocks}
-            aria-label={t(
-              'prepare_scan_modal.content_template.lock_all_confirm_title'
-            )}
+          <Tooltip
+            title={t('prepare_scan_modal.content_template.lock_all_tooltip')}
           >
-            <LockIcon />
-          </Button>
+            <Button
+              variant="outlined"
+              sx={{ minWidth: 0 }}
+              disabled={!canManageLocks}
+              aria-label={t(
+                'prepare_scan_modal.content_template.lock_all_tooltip'
+              )}
+            >
+              <LockIcon />
+            </Button>
+          </Tooltip>
         }
         title={t('prepare_scan_modal.content_template.lock_all_confirm_title')}
         description={t(
@@ -120,16 +160,20 @@ const PrepareScanTemplateActionBar: FC<TProps> = ({
 
       <ConfirmDialog
         TriggerButton={
-          <Button
-            variant="outlined"
-            sx={{ minWidth: 0 }}
-            disabled={!canManageLocks}
-            aria-label={t(
-              'prepare_scan_modal.content_template.unlock_all_confirm_title'
-            )}
+          <Tooltip
+            title={t('prepare_scan_modal.content_template.unlock_all_tooltip')}
           >
-            <LockOpenIcon />
-          </Button>
+            <Button
+              variant="outlined"
+              sx={{ minWidth: 0 }}
+              disabled={!canManageLocks}
+              aria-label={t(
+                'prepare_scan_modal.content_template.unlock_all_tooltip'
+              )}
+            >
+              <LockOpenIcon />
+            </Button>
+          </Tooltip>
         }
         title={t(
           'prepare_scan_modal.content_template.unlock_all_confirm_title'
@@ -144,15 +188,21 @@ const PrepareScanTemplateActionBar: FC<TProps> = ({
 
       <ConfirmDialog
         TriggerButton={
-          <Button
-            variant="outlined"
-            sx={{ minWidth: 0 }}
-            aria-label={t(
-              'prepare_scan_modal.content_template.delete_template_confirm_title'
+          <Tooltip
+            title={t(
+              'prepare_scan_modal.content_template.delete_template_tooltip'
             )}
           >
-            <DeleteIcon />
-          </Button>
+            <Button
+              variant="outlined"
+              sx={{ minWidth: 0 }}
+              aria-label={t(
+                'prepare_scan_modal.content_template.delete_template_tooltip'
+              )}
+            >
+              <DeleteIcon />
+            </Button>
+          </Tooltip>
         }
         title={t(
           'prepare_scan_modal.content_template.delete_template_confirm_title'

@@ -134,7 +134,7 @@ export const validateTemplateForTransition = (
   }
 
   template.items.forEach((item, itemIndex) => {
-    if (item.specimen.numMissing && item.mainScan.type === 'REPLACEMENT') {
+    if (item.mainScan.type === 'REPLACEMENT') {
       validateReplacement(
         item.mainScan.replacement,
         `items.${itemIndex}.mainScan.replacement.volume`,

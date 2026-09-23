@@ -88,17 +88,7 @@ const SpecimenItem = ({
     [pageReplacements, replacementRowsOverride, showOnlyRescans]
   )
 
-  const getReplacementCandidates = (
-    currentPageReplacementIndex: number | null
-  ) =>
-    getReplacementSourceCandidatesForField({
-      replacementSources: replacementSourceCandidates,
-      mainReplacement,
-      pageReplacements: pageReplacements,
-      activePageReplacementIndex: currentPageReplacementIndex,
-    })
-
-  const filteredMainReplacementCandidates = getReplacementCandidates(null)
+  const filteredMainReplacementCandidates = replacementSourceCandidates
 
   if (viewOnly)
     return (
@@ -140,7 +130,7 @@ const SpecimenItem = ({
           replacementFields={replacementFields}
           appendReplacement={appendReplacement}
           removeReplacement={removeReplacement}
-          getReplacementCandidates={getReplacementCandidates}
+          getReplacementCandidates={() => replacementSourceCandidates}
         />
 
         <Box mt={1}>

@@ -5,7 +5,12 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import Loader from '../../../Loader'
 import ShowError from '../../../ShowError'
 import { useReplacementSourceCandidatesQuery } from '@/api/replacementSourceCandidates'
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import {
+  Controller,
+  useFieldArray,
+  useFormContext,
+  useWatch,
+} from 'react-hook-form'
 import {
   createEmptyReplacementSource,
   type TReplacementSource,
@@ -13,14 +18,18 @@ import {
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import ReplacementSourceInput from '../common/ReplacementSourceInput'
 import { useTranslation } from 'react-i18next'
+import { useEffect } from 'react'
 
 const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
   const { t } = useTranslation()
-  const { control, watch } = useFormContext<TScanTemplateSettings>()
+  const { control } = useFormContext<TScanTemplateSettings>()
 
-  const issues = watch('issues')
-  const replacementSourcesParameters = watch('replacementSourcesParameters')
-  const replacementSources = watch('replacementSources')
+  const issues = useWatch({ control, name: 'issues' })
+  const replacementSourcesParameters = useWatch({
+    control,
+    name: 'replacementSourcesParameters',
+  })
+  const replacementSources = useWatch({ control, name: 'replacementSources' })
   const { fields, append, replace } = useFieldArray({
     control,
     name: 'replacementSources',
@@ -29,12 +38,20 @@ const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
 
   const {
     data: replacementSourceCandidates,
-    isLoading: replacementSourceCandidatesLoading,
+    isPending: replacementSourceCandidatesPending,
     isError: replacementSourceCandidatesError,
   } = useReplacementSourceCandidatesQuery(volumeId, {
     issues,
     replacementSourcesParameters,
     replacementSources,
+  })
+  const {
+    data: validReplacementSourceCandidates,
+    isError: validReplacementSourceCandidatesError,
+  } = useReplacementSourceCandidatesQuery(volumeId, {
+    issues,
+    replacementSourcesParameters,
+    replacementSources: [],
   })
 
   const buildReplacementSource = (priority: number): TReplacementSource => ({
@@ -55,8 +72,46 @@ const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
     replace(nextSources)
   }
 
-  if (replacementSourceCandidatesLoading) return <Loader size="small" />
-  if (replacementSourceCandidatesError) return <ShowError />
+  useEffect(() => {
+    if (
+      validReplacementSourceCandidates == null ||
+      validReplacementSourceCandidatesError
+    ) {
+      return
+    }
+
+    const validVolumeIds = new Set(
+      validReplacementSourceCandidates
+        .map((candidate) => candidate.volumeId)
+        .filter((volumeId): volumeId is string => !!volumeId)
+    )
+    const nextSources = replacementSources.map((source) =>
+      source.volumeId && !validVolumeIds.has(source.volumeId)
+        ? {
+            ...createEmptyReplacementSource(),
+            priority: source.priority,
+          }
+        : source
+    )
+
+    if (
+      nextSources.some((source, index) => source !== replacementSources[index])
+    ) {
+      replace(nextSources)
+    }
+  }, [
+    replace,
+    replacementSources,
+    validReplacementSourceCandidates,
+    validReplacementSourceCandidatesError,
+  ])
+
+  if (replacementSourceCandidatesPending && !replacementSourceCandidates) {
+    return <Loader size="small" />
+  }
+  if (replacementSourceCandidatesError && !replacementSourceCandidates) {
+    return <ShowError />
+  }
 
   return (
     <>
@@ -70,12 +125,18 @@ const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
               render={({ field: fieldProps }) => (
                 <ReplacementSourceInput
                   value={fieldProps.value}
-                  candidates={replacementSourceCandidates?.filter(
-                    (candidate) =>
+                  candidates={[
+                    ...(fieldProps.value.volumeId ? [fieldProps.value] : []),
+                    ...(replacementSourceCandidates ?? []),
+                  ].filter(
+                    (candidate, candidateIndex, candidates) =>
+                      candidates.findIndex(
+                        (option) => option.volumeId === candidate.volumeId
+                      ) === candidateIndex &&
                       !replacementSources.some(
                         (src, srcIndex) =>
-                          src.volumeId === candidate.volumeId &&
-                          srcIndex !== index
+                          srcIndex !== index &&
+                          src.volumeId === candidate.volumeId
                       )
                   )}
                   onChange={fieldProps.onChange}

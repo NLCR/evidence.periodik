@@ -14,6 +14,7 @@ import {
 import Typography from '@mui/material/Typography'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 import Loader from '../Loader'
 import ShowError from '../ShowError'
 import ConfirmDialog from '../../pages/specimensOverview/components/dialogs/ConfirmDialog'
@@ -39,13 +40,18 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
     defaultValues: createDefaultScanSettings(),
   })
   const templateMethods = useForm<TTemplate>()
-  const { reset: resetTemplate, getValues: getTemplateValues } = templateMethods
+  const {
+    reset: resetTemplate,
+    getValues: getTemplateValues,
+    formState: { isDirty: templateIsDirty },
+  } = templateMethods
   const state = useWatch({ control: templateMethods.control, name: 'state' })
 
   const {
     data: volumeTemplate,
     isLoading: templateLoading,
     isError: templateError,
+    refetch: refetchTemplate,
   } = usePrepareScanTemplateQuery(volumeId, { enabled: isOpen })
   const generateTemplateMutation =
     useGeneratePrepareScanTemplateMutation(volumeId)
@@ -93,6 +99,11 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
     settingsMethods.reset(createDefaultScanSettings())
     resetTemplate()
     setIsOpen(false)
+  }
+
+  const discardTemplateChanges = async () => {
+    const result = await refetchTemplate()
+    resetTemplate(result.data ?? undefined)
   }
 
   if (templateLoading) return <Loader />
@@ -175,7 +186,12 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
               <Button
                 fullWidth
                 variant="contained"
-                onClick={() => saveTemplateMutation.mutate(getTemplateValues())}
+                onClick={() =>
+                  saveTemplateMutation.mutate(getTemplateValues(), {
+                    onSuccess: () =>
+                      toast.success(t('common.saved_successfully')),
+                  })
+                }
                 disabled={
                   saveTemplateMutation.isPending ||
                   state === TemplateState.FINALIZED
@@ -203,6 +219,8 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
             volumeId={volumeId}
             replacementSources={replacementSources}
             onDeleted={closeAfterDelete}
+            onDiscardChanges={discardTemplateChanges}
+            hasUnsavedChanges={templateIsDirty}
           />
         </FormProvider>
       )}

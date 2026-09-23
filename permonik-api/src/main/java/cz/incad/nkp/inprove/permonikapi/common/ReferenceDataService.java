@@ -39,7 +39,6 @@ import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.MUT
 import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.MUTATION_MARK_TYPE_FIELD;
 import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.OWNER_ID_FIELD;
 import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.VOLUME_CORE_NAME;
-import static cz.incad.nkp.inprove.permonikapi.volume.model.VolumeDefinition.YEAR_FIELD;
 
 @Service
 @RequiredArgsConstructor
@@ -108,10 +107,11 @@ public class ReferenceDataService {
         SolrQuery query = new SolrQuery("*:*");
         query.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         query.addFilterQuery(exact(META_TITLE_ID_FIELD, metaTitleId));
-        if (yearFrom != null || yearTo != null) {
-            String lowerYear = yearFrom == null ? "*" : yearFrom.toString();
-            String upperYear = yearTo == null ? "*" : yearTo.toString();
-            query.addFilterQuery(YEAR_FIELD + ":[" + lowerYear + " TO " + upperYear + "]");
+        if (yearFrom != null) {
+            query.addFilterQuery(DATE_TO_FIELD + ":[" + yearStart(yearFrom) + " TO *]");
+        }
+        if (yearTo != null) {
+            query.addFilterQuery(DATE_FROM_FIELD + ":[* TO " + yearStart(yearTo + 1) + "}");
         }
         if (mutationId != null) query.addFilterQuery(exact(MUTATION_ID_FIELD, mutationId));
         if (mutationMarkType != null) query.addFilterQuery(exact(MUTATION_MARK_TYPE_FIELD, mutationMarkType));
@@ -144,6 +144,11 @@ public class ReferenceDataService {
         String token = cursor.equals(next) ? "" : Base64.getUrlEncoder().withoutPadding()
                 .encodeToString((prefix + next).getBytes(StandardCharsets.UTF_8));
         return new PlanningPage(response.getBeans(Volume.class), token);
+    }
+
+    /** Returns the UTC start instant used for inclusive calendar-year overlap filtering. */
+    private static String yearStart(int year) {
+        return year + "-01-01T00:00:00Z";
     }
 
     /** Loads complete active volumes in one escaped ID query and rejects incomplete Solr responses. */

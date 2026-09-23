@@ -120,6 +120,7 @@ const SpecimenPageReplacementsSection = ({
                   replacementSourceCandidates={getReplacementCandidates(
                     replacementIndex
                   )}
+                  validationPath={`${itemPath}.pageReplacements.${replacementIndex}`}
                   onRemove={removeReplacement}
                   disabled={disabled}
                 />

@@ -7,6 +7,7 @@ import {
   IconButton,
   Stack,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
@@ -48,6 +49,7 @@ type Props = {
   replacementSourceCandidates: TReplacementSource[]
   onRemove: (index: number) => void
   disabled?: boolean
+  validationPath?: string
 }
 
 const ReplacementInput = ({
@@ -58,6 +60,7 @@ const ReplacementInput = ({
   replacementSourceCandidates,
   onRemove,
   disabled = false,
+  validationPath = undefined,
 }: Props) => {
   const { t } = useTranslation()
   const { clearErrors, control, setError, setValue } =
@@ -71,7 +74,7 @@ const ReplacementInput = ({
 
   return (
     <>
-      <Stack direction="row" alignItems="center" gap={1}>
+      <Stack direction="row" alignItems="flex-start" gap={1}>
         {includePageSelect && (
           <Controller
             control={control}
@@ -81,6 +84,7 @@ const ReplacementInput = ({
                 <Typography>{formatPages(field.value)}</Typography>
               ) : (
                 <TextField
+                  sx={{ mt: 2 }}
                   label={t('prepare_scan_modal.content_template.pages_label')}
                   value={pagesText}
                   onChange={(event) => {
@@ -104,6 +108,11 @@ const ReplacementInput = ({
                   }}
                   error={!!fieldState.error}
                   helperText={fieldState.error?.message}
+                  slotProps={{
+                    htmlInput: {
+                      'data-validation-path': `${name}.pages`,
+                    },
+                  }}
                   disabled={isReadOnly}
                 />
               )
@@ -127,6 +136,10 @@ const ReplacementInput = ({
                 )
               }}
               errorMessage={fieldState.error?.message}
+              validationPath={
+                validationPath ? `${validationPath}.volume` : undefined
+              }
+              alignWithPageSelect={includePageSelect}
               disabled={
                 isReadOnly ||
                 item?.status === ResolutionStatus.UNREPLACEABLE ||
@@ -135,15 +148,38 @@ const ReplacementInput = ({
             />
           )}
         />
-        <IconCheckbox
-          IconTrue={<LockIcon />}
-          IconFalse={<LockOpenIcon />}
-          name={`${name}.locked`}
-          disabled={!isLockingEnabled(templateState) || disabled}
-        />
-        <IconButton onClick={() => onRemove(index)} disabled={isReadOnly}>
-          <DeleteIcon />
-        </IconButton>
+        <Tooltip
+          title={t(
+            item?.locked
+              ? 'prepare_scan_modal.content_template.unlock_item'
+              : 'prepare_scan_modal.content_template.lock_item'
+          )}
+        >
+          <span>
+            <IconCheckbox
+              IconTrue={<LockIcon />}
+              IconFalse={<LockOpenIcon />}
+              name={`${name}.locked`}
+              sx={{ mt: 2 }}
+              disabled={!isLockingEnabled(templateState) || disabled}
+            />
+          </span>
+        </Tooltip>
+        <Tooltip
+          title={t(
+            'prepare_scan_modal.content_template.delete_replacement_source_aria'
+          )}
+        >
+          <span>
+            <IconButton
+              sx={{ mt: 2 }}
+              onClick={() => onRemove(index)}
+              disabled={isReadOnly}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </span>
+        </Tooltip>
       </Stack>
       <Stack direction="row" gap={8} paddingLeft={4}>
         <Controller

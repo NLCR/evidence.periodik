@@ -47,7 +47,7 @@ message SearchReplacementVolumesRequest {
 
 message QueryPlanningVolumesRequest {
   string meta_title_id = 1;
-  // Optional inclusive stored Volume.year bounds; absent bounds are not filtered.
+  // Optional inclusive calendar-year bounds matched against the volume date range.
   optional int32 year_from = 2;
   optional int32 year_to = 3;
   // Absent means no filter; a present value must be nonblank.

@@ -91,6 +91,14 @@ const Filters: FC<Props> = ({ form, onSubmit }) => {
                 label={t('plan_digitalization_modal.mutation', {
                   defaultValue: 'Mutace',
                 })}
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                  select: {
+                    displayEmpty: true,
+                  },
+                }}
               >
                 <MenuItem value="">
                   {t('common.all', { defaultValue: 'Vše' })}

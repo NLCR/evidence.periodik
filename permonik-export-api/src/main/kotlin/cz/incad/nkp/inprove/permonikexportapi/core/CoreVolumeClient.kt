@@ -15,6 +15,7 @@ import cz.incad.nkp.inprove.permonikexportapi.planning.TemplatePlanningQuery
 import cz.incad.nkp.inprove.permonikexportapi.template.MutationMarkType
 import io.grpc.Status
 import java.time.Instant
+import java.time.ZoneOffset
 import java.util.concurrent.TimeUnit
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -42,7 +43,7 @@ class CoreVolumeClient(
     private val stub: CoreExportServiceGrpc.CoreExportServiceBlockingStub,
     private val properties: CoreExportClientProperties,
 ) {
-    /** Stored metadata needed to group a planning result before its contents are loaded. */
+    /** Metadata needed to group planning volumes by their calendar start year and owner. */
     data class PlanningVolumeMetadata(
         val id: String,
         val year: Int,
@@ -199,17 +200,18 @@ private fun String.toOptionalInt(field: String): Int? =
         toIntOrNull() ?: throw IllegalArgumentException("$field must be an integer")
     }
 
-/** Validates the required planning projection without replacing absent values with defaults. */
+/** Validates planning metadata and groups by the UTC year of the volume's start date. */
 private fun GrpcVolume.toPlanningMetadata(): CoreVolumeClient.PlanningVolumeMetadata {
     require(
         id.isNotBlank() &&
             hasBarcode() &&
-            hasYear() &&
+            hasDateFrom() &&
             hasOwner() &&
             owner.hasId() &&
             owner.hasShorthand()
     )
-    return CoreVolumeClient.PlanningVolumeMetadata(id, year, barcode, owner.id, owner.shorthand)
+    val calendarYear = Instant.ofEpochSecond(dateFrom.seconds, dateFrom.nanos.toLong()).atZone(ZoneOffset.UTC).year
+    return CoreVolumeClient.PlanningVolumeMetadata(id, calendarYear, barcode, owner.id, owner.shorthand)
 }
 
 /** Preserves source presence and exact timestamps without inferring calculation inputs. */

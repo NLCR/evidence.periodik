@@ -23,6 +23,8 @@ type Props = {
   candidates?: TReplacementSource[]
   errorMessage?: string
   disabled?: boolean
+  validationPath?: string
+  alignWithPageSelect?: boolean
 }
 
 const hasReplacementSource = (source: TReplacementSource) =>
@@ -35,6 +37,21 @@ const hasReplacementSource = (source: TReplacementSource) =>
     source.mutationEdition?.trim()
   )
 
+const buildReplacementOptionLabel = (
+  option: TReplacementSource,
+  index: number,
+  t: (key: string, options?: { index: number }) => string
+): ReactNode => (
+  <>
+    <strong>
+      {t('prepare_scan_modal.content_template.replacement_section_title', {
+        index: index + 1,
+      })}
+    </strong>{' '}
+    ({option.signature} - {option.owner} ({option.barcode}))
+  </>
+)
+
 const ReplacementSourceInput = ({
   viewOnly = false,
   value,
@@ -42,13 +59,14 @@ const ReplacementSourceInput = ({
   candidates: candidates = [],
   errorMessage = undefined,
   disabled = false,
+  validationPath = undefined,
+  alignWithPageSelect = false,
 }: Props) => {
   const { t } = useTranslation()
   const [mode, setMode] = useState<'SELECT' | 'MANUAL'>(() =>
     !value.volumeId && hasReplacementSource(value) ? 'MANUAL' : 'SELECT'
   )
   const selectId = useId()
-
   const safeSetReplacement = (nextPartial: Partial<TReplacementSource>) => {
     onChange({
       ...value,
@@ -68,11 +86,8 @@ const ReplacementSourceInput = ({
     })
   }
 
-  const buildReplacementOptionLabel = (option: TReplacementSource): ReactNode =>
-    `${option.signature} - ${option.owner} (${option.barcode})`
-
   return (
-    <Box width="100%">
+    <Box width="100%" data-validation-path={validationPath}>
       <Stack
         direction="row"
         gap={1}
@@ -135,7 +150,11 @@ const ReplacementSourceInput = ({
           </Box>
         ) : (
           <>
-            <FormControl fullWidth error={!!errorMessage}>
+            <FormControl
+              fullWidth
+              error={!!errorMessage}
+              sx={alignWithPageSelect ? { mt: 2 } : undefined}
+            >
               <InputLabel id={`${selectId}-label`}>
                 {t(
                   'prepare_scan_modal.content_template.select_replacement_volume'
@@ -156,7 +175,7 @@ const ReplacementSourceInput = ({
               >
                 {candidates
                   .filter((option) => !!option.volumeId)
-                  .map((option) => (
+                  .map((option, index) => (
                     <MenuItem key={option.volumeId} value={option.volumeId!}>
                       <Box
                         sx={{
@@ -165,7 +184,9 @@ const ReplacementSourceInput = ({
                           width: '100%',
                         }}
                       >
-                        <Box>{buildReplacementOptionLabel(option)}</Box>
+                        <Box>
+                          {buildReplacementOptionLabel(option, index, t)}
+                        </Box>
                         {option.dependentFillIndex != null && (
                           <FillIndexIndicator
                             value={option.dependentFillIndex}

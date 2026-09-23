@@ -57,6 +57,7 @@ class TemplateGenerator {
             items =
                 primary.specimens
                     .filter { it.numExists || it.numMissing }
+                    .sortedWith(compareSpecimenOrder)
                     .map {
                         it.toTemplateItem(
                             plans[it.id],
@@ -83,22 +84,23 @@ class TemplateGenerator {
                 } else {
                     null
                 }
-        val pageReplacements = buildList {
-            plan?.pageReplacements?.forEach { add(it.toPageReplacement(sourceById)) }
-            unresolved
-                .filter { it.page != null }
-                .mapNotNullTo(this) {
-                    it.page?.let { page ->
-                        Replacement(
-                            ReplacementSource(),
-                            listOf(page),
-                            ReplacementStatus.UNRESOLVED,
-                            locked = false,
-                            visible = false,
-                        )
+        val pageReplacements =
+            buildList<Replacement> {
+                plan?.pageReplacements?.forEach { add(it.toPageReplacement(sourceById)) }
+                unresolved
+                    .filter { it.page != null }
+                    .mapNotNullTo(this) {
+                        it.page?.let { page ->
+                            Replacement(
+                                ReplacementSource(),
+                                listOf(page),
+                                ReplacementStatus.UNRESOLVED,
+                                locked = false,
+                                visible = false,
+                            )
+                        }
                     }
-                }
-        }
+            }.sortedWith(compareReplacementOrder)
 
         return TemplateItem(
             specimen = toTemplateSpecimen(),
@@ -210,3 +212,16 @@ class TemplateGenerator {
             numMissing = numMissing,
         )
 }
+
+/** Keeps generated template items in the chronological order used by the export workflow. */
+private val compareSpecimenOrder =
+    compareBy<StoredSpecimenSnapshot> { it.publicationDate }
+        .thenBy { it.isAttachment }
+        .thenBy { it.number ?: "" }
+        .thenBy { it.attachmentNumber ?: "" }
+        .thenBy { it.id }
+
+/** Groups page replacement rows by the configured replacement source priority. */
+private val compareReplacementOrder =
+    compareBy<Replacement> { it.volume.priority ?: Int.MAX_VALUE }
+        .thenBy { it.pages.firstOrNull() ?: Int.MAX_VALUE }

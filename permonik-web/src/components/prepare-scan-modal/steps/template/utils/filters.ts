@@ -4,6 +4,7 @@ import type {
   TTemplateItemWithFormIndex,
 } from '@/components/prepare-scan-modal/schemas/templateSchema'
 import {
+  areAllScanTasksLocked,
   getVisiblePageReplacements,
   hasVisibleScanTask,
 } from './templateItemLocking'
@@ -63,14 +64,4 @@ export const shouldIncludeTemplateItem = (
       (replacement) =>
         replacement.status === ResolutionStatus.WAITING_FOR_RESCAN
     )) &&
-  (!showOnlyUnlocked || !getMainScanLockedForFilter(item))
-
-const getMainScanLockedForFilter = (item: TTemplateItem) => {
-  const mainScanLocks = item.mainScan.visible ? [item.mainScan.locked] : []
-  const visibleReplacementLocks = getVisiblePageReplacements(item).map(
-    (replacement) => replacement.locked
-  )
-  const locks = [...mainScanLocks, ...visibleReplacementLocks]
-
-  return locks.length > 0 && locks.every(Boolean)
-}
+  (!showOnlyUnlocked || !areAllScanTasksLocked(item))

@@ -4,6 +4,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import WarningIcon from '@mui/icons-material/PriorityHigh'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
+import Tooltip from '@mui/material/Tooltip'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useFormContext, useWatch } from 'react-hook-form'
@@ -78,14 +79,24 @@ const SpecimenItemHeader = ({ specimen, itemPath, canManageLocks }: Props) => {
             </Typography>
           </Stack>
           <Stack direction="row" spacing={1} alignItems="center">
-            <Checkbox
-              name={`${itemPath}.mainScan.locked`}
-              icon={<LockOpenIcon />}
-              checkedIcon={<LockIcon />}
-              checked={item ? item.mainScan.locked : false}
-              disabled={!canManageLocks}
-              onChange={(_, value) => setMainScanLock(value)}
-            />
+            <Tooltip
+              title={t(
+                item?.mainScan.locked
+                  ? 'prepare_scan_modal.content_template.unlock_item'
+                  : 'prepare_scan_modal.content_template.lock_item'
+              )}
+            >
+              <span>
+                <Checkbox
+                  name={`${itemPath}.mainScan.locked`}
+                  icon={<LockOpenIcon />}
+                  checkedIcon={<LockIcon />}
+                  checked={item ? item.mainScan.locked : false}
+                  disabled={!canManageLocks}
+                  onChange={(_, value) => setMainScanLock(value)}
+                />
+              </span>
+            </Tooltip>
             <ActionsMenu
               actions={[
                 {

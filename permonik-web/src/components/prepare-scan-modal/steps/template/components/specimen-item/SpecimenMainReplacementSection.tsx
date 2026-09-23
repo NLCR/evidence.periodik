@@ -55,7 +55,10 @@ const SpecimenMainReplacementSection = ({
   const isReadOnly = disabled || isItemLocked
 
   return (
-    <Box mt={1}>
+    <Box
+      mt={1}
+      data-validation-path={`${itemPath}.mainScan.replacement.volume`}
+    >
       <Stack direction="row" spacing={1} alignItems="center">
         <Controller
           control={control}
@@ -74,6 +77,7 @@ const SpecimenMainReplacementSection = ({
                 )
               }}
               errorMessage={fieldState.error?.message}
+              validationPath={`${itemPath}.mainScan.replacement.volume`}
               disabled={
                 isReadOnly ||
                 mainReplacement?.status === ResolutionStatus.UNREPLACEABLE ||

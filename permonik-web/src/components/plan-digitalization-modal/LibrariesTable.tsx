@@ -16,6 +16,12 @@ type Props = {
   data: PlanDigitalizationResponse
 }
 
+type FillIndexSum = {
+  coverage: number
+  quality: number
+  count: number
+}
+
 const LibrariesTable: FC<Props> = ({ data }) => {
   const { t } = useTranslation()
 
@@ -34,17 +40,29 @@ const LibrariesTable: FC<Props> = ({ data }) => {
   }, [data])
 
   const fillIndexSums = useMemo(() => {
-    const sums = new Map<string, number>()
+    const sums = new Map<string, FillIndexSum>()
 
     data.forEach((yearItem) => {
       yearItem.libraries.forEach((library) => {
-        const currentSum = sums.get(library.id) ?? 0
-        const librarySum = library.volumes.reduce(
-          (sum, volume) => sum + volume.fillIndex,
-          0
+        const currentSum = sums.get(library.id) ?? {
+          coverage: 0,
+          quality: 0,
+          count: 0,
+        }
+        const librarySum = library.volumes.reduce<FillIndexSum>(
+          (sum, volume) => ({
+            coverage: sum.coverage + Math.floor(volume.fillIndex / 1000),
+            quality: sum.quality + (volume.fillIndex % 1000),
+            count: sum.count + 1,
+          }),
+          { coverage: 0, quality: 0, count: 0 }
         )
 
-        sums.set(library.id, currentSum + librarySum)
+        sums.set(library.id, {
+          coverage: currentSum.coverage + librarySum.coverage,
+          quality: currentSum.quality + librarySum.quality,
+          count: currentSum.count + librarySum.count,
+        })
       })
     })
 
@@ -72,7 +90,7 @@ const LibrariesTable: FC<Props> = ({ data }) => {
             }}
           >
             <TableCell>
-              {t('plan_digitalization_modal.year', { defaultValue: 'Ročník' })}
+              {t('plan_digitalization_modal.year', { defaultValue: 'Rok' })}
             </TableCell>
             {libraryColumns.map((library) => (
               <TableCell key={library.id}>{library.shorthand}</TableCell>
@@ -130,7 +148,14 @@ const LibrariesTable: FC<Props> = ({ data }) => {
             </TableCell>
             {libraryColumns.map((library) => (
               <TableCell key={`fill-index-sum-${library.id}`}>
-                {fillIndexSums.get(library.id) ?? 0}
+                {(() => {
+                  const sum = fillIndexSums.get(library.id)
+                  if (!sum || sum.count === 0) return '0–000'
+
+                  return `${sum.coverage}–${String(
+                    Math.round(sum.quality / sum.count)
+                  ).padStart(3, '0')}`
+                })()}
               </TableCell>
             ))}
           </TableRow>

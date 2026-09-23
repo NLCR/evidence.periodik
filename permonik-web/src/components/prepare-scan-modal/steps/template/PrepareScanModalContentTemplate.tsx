@@ -15,6 +15,7 @@ import PrepareScanTemplateActionBar from '@/components/prepare-scan-modal/steps/
 import { useSubmitButtonLabel } from './hooks/useSubmitButtonLabel'
 import { useTransitionDialogConfig } from './hooks/useTransitionDialogConfig'
 import { useFormContext, useWatch } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { validateTemplateForNextState } from '../../validators/templateTransitionValidator'
 import {
   hasWaitingReplacement,
@@ -30,23 +31,51 @@ import {
   useTransitionTemplateStateMutation,
 } from '../../mutations'
 import { includesWaitingForRescan } from './utils/filters'
+import { toast } from 'react-toastify'
 
 type TProps = {
   volumeId?: string
   replacementSources?: TReplacementSource[]
   onDeleted: () => void
+  onDiscardChanges: () => Promise<void>
+  hasUnsavedChanges: boolean
+}
+
+const findFirstErrorPath = (value: unknown, path = ''): string | undefined => {
+  if (!value || typeof value !== 'object') return undefined
+  if ('message' in value && typeof value.message === 'string') return path
+
+  for (const [key, child] of Object.entries(value)) {
+    if (key === 'ref' || key === 'types' || key === 'message') continue
+    const childPath = path ? `${path}.${key}` : key
+    const errorPath = findFirstErrorPath(child, childPath)
+    if (errorPath) return errorPath
+  }
+
+  return undefined
 }
 
 const PrepareScanModalContentTemplate: FC<TProps> = ({
   volumeId = undefined,
   replacementSources = [],
   onDeleted,
+  onDiscardChanges,
+  hasUnsavedChanges,
 }) => {
+  const { t } = useTranslation()
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   const [showOnlyRescans, setShowOnlyRescans] = useState(false)
   const [showOnlyUnlocked, setShowOnlyUnlocked] = useState(false)
-  const { control, getValues, setValue, trigger, clearErrors, setError } =
-    useFormContext<TTemplate>()
+  const [validationAttempt, setValidationAttempt] = useState(0)
+  const {
+    control,
+    getValues,
+    setValue,
+    trigger,
+    clearErrors,
+    setError,
+    formState: { errors },
+  } = useFormContext<TTemplate>()
 
   const transitionTemplateStateMutation =
     useTransitionTemplateStateMutation(volumeId)
@@ -68,8 +97,8 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
   const closeToRescanOrFinalizeMutation = useCloseToRescanOrFinalizeMutation({
     volumeId,
     getValues,
-    validateTemplateForNextState: (targetState) =>
-      validateTemplateForNextState({
+    validateTemplateForNextState: async (targetState) => {
+      const isValid = await validateTemplateForNextState({
         trigger,
         clearErrors,
         setError,
@@ -77,25 +106,46 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         nextTemplateState: targetState as
           | TemplateState.WAITING_FOR_RESCAN
           | TemplateState.FINALIZED,
-      }),
+      })
+      setValidationAttempt((attempt) => attempt + 1)
+      return isValid
+    },
   })
 
   const handleValidate = async () => {
     if (!shouldValidateTemplateForNextState(nextState)) return
-    await validateTemplateForNextState({
+    const isValid = await validateTemplateForNextState({
       trigger,
       clearErrors,
       setError,
       getValues,
       nextTemplateState: nextState,
     })
+    setValidationAttempt((attempt) => attempt + 1)
+    if (isValid) {
+      toast.success(
+        t('prepare_scan_modal.content_template.validation_successful')
+      )
+    } else {
+      toast.error(t('prepare_scan_modal.content_template.validation_failed'))
+    }
   }
 
+  const validationPath =
+    validationAttempt > 0 ? findFirstErrorPath(errors) : undefined
+
   const handleCloseToRescanOrFinalize = async () => {
-    await closeToRescanOrFinalizeMutation.mutate({
-      nextState,
-      shouldValidate: shouldValidateTemplateForNextState(nextState),
-    })
+    try {
+      const completed = await closeToRescanOrFinalizeMutation.mutate({
+        nextState,
+        shouldValidate: shouldValidateTemplateForNextState(nextState),
+      })
+      if (!completed) {
+        toast.error(t('prepare_scan_modal.content_template.validation_failed'))
+      }
+    } catch {
+      toast.error(t('common.error_occurred_somewhere'))
+    }
   }
 
   const handleLockAll = () => {
@@ -179,6 +229,8 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
             onLockAll={handleLockAll}
             onUnlockAll={handleUnlockAll}
             onDeleteTemplate={handleDelete}
+            onDiscardChanges={onDiscardChanges}
+            hasUnsavedChanges={hasUnsavedChanges}
           />
         </Box>
       </Box>
@@ -191,6 +243,8 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
           showOnlyRescans={showOnlyRescans}
           showOnlyUnlocked={showOnlyUnlocked}
           disabled={watchedState === TemplateState.FINALIZED}
+          validationPath={validationPath}
+          validationAttempt={validationAttempt}
         />
       </Box>
 
