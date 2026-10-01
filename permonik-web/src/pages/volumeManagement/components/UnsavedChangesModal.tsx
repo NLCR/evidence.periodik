@@ -4,7 +4,7 @@ import {
   useBeforeUnload,
   useBlocker,
 } from 'react-router-dom'
-import React, { useCallback, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import Typography from '@mui/material/Typography'
 import ModalContainer from '../../../components/ModalContainer'
 import { useTranslation } from 'react-i18next'

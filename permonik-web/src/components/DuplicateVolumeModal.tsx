@@ -30,13 +30,13 @@ const DuplicateVolumeModal: FC<TProps> = ({
   }[] = [
     {
       value: FieldsToReset.barCode,
-      label: t('specimens_overview.field_names.barcode'),
+      label: t('common.fields.bar_code'),
       defaultChecked: true,
       disabled: true,
     },
     {
       value: FieldsToReset.signature,
-      label: t('specimens_overview.field_names.signature'),
+      label: t('common.fields.signature'),
       defaultChecked: true,
       disabled: false,
     },
@@ -48,19 +48,19 @@ const DuplicateVolumeModal: FC<TProps> = ({
     },
     {
       value: FieldsToReset.mutationId,
-      label: t('specimens_overview.field_names.mutation'),
+      label: t('common.fields.mutation'),
       defaultChecked: false,
       disabled: false,
     },
     {
       value: FieldsToReset.mutationMark,
-      label: t('specimens_overview.field_names.mutation_mark'),
+      label: t('common.fields.mutation_mark'),
       defaultChecked: true,
       disabled: false,
     },
     {
       value: FieldsToReset.ownerId,
-      label: t('specimens_overview.field_names.owner'),
+      label: t('common.fields.owner'),
       defaultChecked: forceOwnerReset,
       disabled: forceOwnerReset,
     },

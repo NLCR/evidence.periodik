@@ -1,9 +1,12 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.1.0'
-    id 'io.spring.dependency-management' version '1.1.7'
-    id "io.github.ben-manes.versions" version "0.59.0"
-    id "io.sentry.jvm.gradle" version "6.19.0"
+    id 'pmd'
+    id 'com.diffplug.spotless'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'io.github.ben-manes.versions'
+    id 'io.sentry.jvm.gradle'
+    id 'com.google.cloud.tools.jib'
 }
 
 group = 'cz.incad.nkp.inprove'
@@ -21,7 +24,9 @@ configurations {
     }
 }
 
-def sentryAuthToken = System.getenv("SENTRY_AUTH_TOKEN")
+def sentryAuthToken = providers.environmentVariable("SENTRY_AUTH_TOKEN").orNull
+def hostArchitecture = System.getProperty('os.arch').toLowerCase() in ['aarch64', 'arm64'] ? 'arm64' : 'amd64'
+def jibArchitecture = providers.gradleProperty('jibArchitecture').getOrElse(hostArchitecture)
 
 sentry {
     includeSourceContext = sentryAuthToken != null && !sentryAuthToken.isBlank()
@@ -31,42 +36,60 @@ sentry {
     authToken = sentryAuthToken
 }
 
-ext {
-    lombok = '1.18.46'
-    openapi = "3.1.0"
-    solrj = '10.0.0'
-    mapstruct = '1.6.3'
-    testSolr = '2.0.5'
-    testRedis = '2.2.4'
-}
-
 repositories {
     mavenCentral()
 }
 
+pmd {
+    toolVersion = versions.pmd
+    ruleSets = []
+    ruleSetFiles = files(rootProject.file('config/pmd/pmd.xml'))
+    ignoreFailures = false
+}
+
+spotless {
+    ratchetFrom('origin/main')
+
+    java {
+        target('src/**/*.java')
+        googleJavaFormat(versions.googleJavaFormat).aosp()
+        removeUnusedImports()
+    }
+}
+
+tasks.withType(Pmd).configureEach {
+    classpath += files(javaLauncher.map { it.metadata.installationPath.file('lib/jrt-fs.jar') })
+    reports {
+        html.required = true
+        xml.required = true
+    }
+}
+
 
 dependencies {
+    implementation project(':permonik-domain')
+    implementation project(':permonik-core-contract')
+
     // SPRING BOOT
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-grpc-server'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server'
 
     // SOLR
-    implementation "org.apache.solr:solr-solrj:${solrj}"
-
-    // REDIS
-    implementation "org.springframework.session:spring-session-data-redis"
-    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation "org.apache.solr:solr-solrj:${versions.solrj}"
 
     // LOMBOK
-    compileOnly "org.projectlombok:lombok:${lombok}"
-    annotationProcessor "org.projectlombok:lombok:${lombok}"
+    compileOnly "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     // MAPSTRUCT
-    implementation "org.mapstruct:mapstruct:${mapstruct}"
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct}"
+    implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
 
     // SWAGGER / OpenAPI
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapi}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.openapi}"
 
     // DEVELOPMENT
     developmentOnly "org.springframework.boot:spring-boot-devtools"
@@ -74,18 +97,48 @@ dependencies {
     // TESTING
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation "org.testcontainers:testcontainers-solr:${testSolr}"
-    testImplementation "com.redis:testcontainers-redis:${testRedis}"
+    // Exercise the real export client without importing its JDBC/Liquibase application runtime.
+    testImplementation(project(':permonik-export-api')) { transitive = false }
+    testImplementation 'org.jetbrains.kotlin:kotlin-reflect'
+    testImplementation 'org.springframework.boot:spring-boot-starter-grpc-client'
+    testImplementation 'io.grpc:grpc-inprocess'
+    testImplementation "org.testcontainers:testcontainers-solr:${versions.testcontainersSolr}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 
 tasks.named('test') {
     useJUnitPlatform()
+    systemProperty 'IDENTITY_JWT_SECRET', 'permonik-api-test-jwt-secret-at-least-32-bytes'
+    systemProperty 'CORE_EXPORT_GRPC_TOKEN', UUID.randomUUID().toString().replace('-', '') + UUID.randomUUID().toString().replace('-', '')
+    systemProperty 'spring.grpc.server.port', '0'
 }
 
 tasks.named('bootJar') {
     archiveFileName = 'permonik-api.jar'
+}
+
+jib {
+    from {
+        image = 'gcr.io/distroless/java25-debian13:nonroot'
+        platforms {
+            platform {
+                architecture = jibArchitecture
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = providers.gradleProperty('jibImage').getOrElse('periodik-permonik-api:latest')
+        tags = providers.gradleProperty('jibTags')
+                .map { it.split(',').findAll { tag -> !tag.isBlank() } as Set }
+                .getOrElse([] as Set)
+    }
+    container {
+        mainClass = 'cz.incad.nkp.inprove.permonikapi.PermonikApiApplication'
+        user = '65532:65532'
+        ports = ['8080']
+    }
 }
 
 def isNonStable = { version ->

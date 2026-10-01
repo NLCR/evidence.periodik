@@ -1,4 +1,4 @@
-import React, { type PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
 import { type TMetaTitle } from '../../../../schema/metaTitle'
 import { useFacetsData } from './api'
 import { damageTypes } from '../../../../utils/constants'

@@ -20,7 +20,7 @@ const InputDataMutationMark = () => {
         ),
       }}
     >
-      <TableCell>{t('specimens_overview.mutation_mark')}</TableCell>
+      <TableCell>{t('common.fields.mutation_mark')}</TableCell>
       <TableCell>
         <InputDataMutationMarkField />
       </TableCell>

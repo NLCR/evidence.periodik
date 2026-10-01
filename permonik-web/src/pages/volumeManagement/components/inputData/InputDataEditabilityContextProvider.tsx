@@ -6,9 +6,9 @@ import {
   useMemo,
   useEffect,
 } from 'react'
-import { type TMe } from '../../../../schema/user'
-import { type TUpdatableVolume } from '../../../../api/volume'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
+import { hasPermission, type TMe } from '@/schema/user'
+import { type TUpdatableVolume } from '@/api/volume'
+import { useVolumeManagementStore } from '@/slices/useVolumeManagementStore'
 
 type InputDataEditabilityContextType = {
   disabled: boolean
@@ -35,9 +35,9 @@ export function InputDataEditabilityContextProvider({
 }) {
   const canEdit = useMemo(
     () =>
-      me?.owners?.some((o) => o === volume?.volume?.ownerId) ||
-      !volumeId?.length ||
-      me?.role === 'super_admin',
+      hasPermission(me, 'VOLUME_WRITE') &&
+      (!volumeId?.length ||
+        !!me.owners?.some((o) => o === volume?.volume?.ownerId)),
     [me, volume?.volume, volumeId?.length]
   )
   const [locked, setLocked] = useState(lockedInitial)

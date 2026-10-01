@@ -31,11 +31,11 @@ const InputDataBarCode = () => {
         ),
       }}
     >
-      <TableCell>{t('volume_overview.bar_code')}</TableCell>
+      <TableCell>{t('common.fields.bar_code')}</TableCell>
       <TableCell>
         <InputDataTextField
           editableData={{
-            fieldName: t('volume_overview.bar_code'),
+            fieldName: t('common.fields.bar_code'),
             saveChange: (value: string) => {
               setBarCode(value)
               setSpecimensState(

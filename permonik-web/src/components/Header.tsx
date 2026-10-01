@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { type MouseEvent, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
@@ -28,15 +28,19 @@ import Logo from '../assets/logo.png'
 import Czech from '../assets/images/czech-republic.png'
 import Slovakia from '../assets/images/slovakia.png'
 import English from '../assets/images/united-states.png'
-import { changeAppLanguage, type TSupportedLanguages } from '../i18next'
+import { changeAppLanguage, type TSupportedLanguages } from '@/i18next'
 import {
   useBasicLoginMutation,
   useLogoutMutation,
   useMeQuery,
-} from '../api/user'
-import { BasicLoginSchema, type TBasicLogin } from '../schema/user'
-import { queryClient } from '../api'
-import { APP_WITH_EDITING_ENABLED, LOGIN_URL } from '../utils/constants'
+} from '@/api/user'
+import {
+  BasicLoginSchema,
+  hasPermission,
+  type TBasicLogin,
+} from '@/schema/user'
+import { queryClient } from '@/api'
+import { APP_WITH_EDITING_ENABLED, LOGIN_URL } from '@/utils/constants'
 
 const HeaderContainer = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
@@ -134,7 +138,7 @@ const Header = () => {
   })
   const useDevBasicLogin = APP_WITH_EDITING_ENABLED && import.meta.env.DEV
 
-  const handleLangMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleLangMenuOpen = (event: MouseEvent<HTMLElement>) => {
     setLangAnchorEl(event.currentTarget)
   }
 
@@ -223,7 +227,9 @@ const Header = () => {
               >
                 {t('header.home')}
               </NavLinkStyled>
-              {APP_WITH_EDITING_ENABLED && me?.role?.includes('admin') ? (
+              {APP_WITH_EDITING_ENABLED &&
+              (hasPermission(me, 'USER_READ') ||
+                hasPermission(me, 'REFERENCE_WRITE')) ? (
                 <NavLinkStyled
                   sx={{
                     marginRight: 0,
@@ -251,14 +257,16 @@ const Header = () => {
               )}
               {me && APP_WITH_EDITING_ENABLED && (
                 <>
-                  <NavLinkStyled
-                    sx={{
-                      marginRight: 0,
-                    }}
-                    to={`/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/`}
-                  >
-                    {t('header.volume')}
-                  </NavLinkStyled>
+                  {hasPermission(me, 'VOLUME_WRITE') ? (
+                    <NavLinkStyled
+                      sx={{
+                        marginRight: 0,
+                      }}
+                      to={`/${i18n.resolvedLanguage}/${t('urls.volume_overview')}/`}
+                    >
+                      {t('header.volume')}
+                    </NavLinkStyled>
+                  ) : null}
                   <Divider
                     orientation="vertical"
                     flexItem
@@ -324,9 +332,11 @@ const Header = () => {
                 onClose={handleDevLoginClose}
                 fullWidth
                 maxWidth="xs"
-                PaperProps={{
-                  component: 'form',
-                  onSubmit: handleDevLoginSubmit,
+                slotProps={{
+                  paper: {
+                    component: 'form',
+                    onSubmit: handleDevLoginSubmit,
+                  },
                 }}
               >
                 <DialogTitle>{t('header.dev_login_title')}</DialogTitle>

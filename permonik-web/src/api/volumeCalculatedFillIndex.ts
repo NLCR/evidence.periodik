@@ -1,0 +1,28 @@
+import { useQuery } from '@tanstack/react-query'
+import { type TTemplateIssues } from '../components/prepare-scan-modal/schemas/schemas'
+import { api } from './index'
+
+type TCalculateFillIndexRequest = {
+  issues: TTemplateIssues
+  replacementSourcesIds: string[]
+}
+
+export const useCalculatedFillIndexQuery = (
+  volumeId: string | undefined,
+  payload: TCalculateFillIndexRequest
+) =>
+  useQuery<number>({
+    queryKey: [
+      'volume-calculated-fill-index',
+      volumeId,
+      { ...payload.issues },
+      [...payload.replacementSourcesIds],
+    ],
+    queryFn: () =>
+      api()
+        .post(`export/volume/${volumeId}/template/fill-index`, {
+          json: payload,
+        })
+        .json<number>(),
+    enabled: !!volumeId,
+  })

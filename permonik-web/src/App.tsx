@@ -2,7 +2,7 @@ import { Helmet, HelmetProvider } from '@dr.pogodin/react-helmet'
 import { useTranslation } from 'react-i18next'
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers-pro'
-import dayjs from 'dayjs'
+import { locale, extend, tz } from 'dayjs'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import weekday from 'dayjs/plugin/weekday'
 import localeData from 'dayjs/plugin/localeData'
@@ -18,13 +18,13 @@ import { APP_WITH_EDITING_ENABLED } from './utils/constants'
 const App = () => {
   const { t, i18n } = useTranslation()
 
-  dayjs.extend(localizedFormat)
-  dayjs.extend(weekday)
-  dayjs.extend(localeData)
-  dayjs.extend(utc)
-  dayjs.extend(timezone)
-  dayjs.tz.setDefault('Europe/Prague')
-  dayjs.locale(i18n.resolvedLanguage)
+  extend(localizedFormat)
+  extend(weekday)
+  extend(localeData)
+  extend(utc)
+  extend(timezone)
+  tz?.setDefault('Europe/Prague')
+  locale(i18n.resolvedLanguage)
 
   return (
     <LocalizationProvider

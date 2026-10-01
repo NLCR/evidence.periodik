@@ -1,0 +1,128 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'org.jetbrains.kotlin.plugin.spring'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'com.google.cloud.tools.jib'
+    id 'dev.detekt'
+    id 'com.diffplug.spotless'
+    id 'io.github.ben-manes.versions'
+}
+
+group = 'cz.incad.nkp.inprove'
+version = '0.0.1'
+
+def hostArchitecture = System.getProperty('os.arch').toLowerCase() in ['aarch64', 'arm64'] ? 'arm64' : 'amd64'
+def jibArchitecture = providers.gradleProperty('jibArchitecture').getOrElse(hostArchitecture)
+
+kotlin {
+    jvmToolchain(25)
+}
+
+detekt {
+    toolVersion = '2.0.0-alpha.3'
+    config.setFrom(rootProject.file('config/detekt/detekt.yml'))
+    baseline = rootProject.file("config/detekt/baseline/${project.name}.xml")
+    buildUponDefaultConfig = false
+    ignoreFailures = false
+    basePath.set(rootProject.projectDir)
+}
+
+tasks.named('detekt') {
+    dependsOn('detektMain', 'detektTest')
+}
+
+tasks.named('detektMain') {
+    setSource(files('src/main/kotlin', 'src/main/java'))
+}
+
+tasks.named('detektTest') {
+    setSource(files('src/test/kotlin', 'src/test/java'))
+}
+
+spotless {
+    ratchetFrom('origin/main')
+
+    kotlin {
+        target('src/**/*.kt')
+        ktfmt('0.64').kotlinlangStyle().configure { options ->
+            options.setRemoveUnusedImports(true)
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url = uri('https://build.shibboleth.net/maven/releases/') }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${versions.springCloud}"
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway-server-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.security:spring-security-saml2-service-provider'
+    implementation 'org.springframework.security:spring-security-oauth2-jose'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-session-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-liquibase'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation 'tools.jackson.module:jackson-module-kotlin'
+    runtimeOnly 'org.postgresql:postgresql'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'com.h2database:h2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+def isNonStable = { version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { keyword ->
+        version.toUpperCase().contains(keyword)
+    }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+
+tasks.named('dependencyUpdates').configure {
+    rejectVersionIf {
+        isNonStable(it.candidate.version)
+    }
+}
+
+tasks.named('bootJar') {
+    archiveFileName = 'permonik-identity-gateway.jar'
+}
+
+jib {
+    from {
+        image = 'gcr.io/distroless/java25-debian13:nonroot'
+        platforms {
+            platform {
+                architecture = jibArchitecture
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = providers.gradleProperty('jibImage').getOrElse('periodik-permonik-identity-gateway:latest')
+        tags = providers.gradleProperty('jibTags')
+                .map { it.split(',').findAll { tag -> !tag.isBlank() } as Set }
+                .getOrElse([] as Set)
+    }
+    container {
+        mainClass = 'cz.incad.nkp.inprove.permonikidentitygateway.PermonikIdentityGatewayApplicationKt'
+        user = '65532:65532'
+        ports = ['8080']
+    }
+}

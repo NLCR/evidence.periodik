@@ -5,7 +5,7 @@ import {
   type TEditableVolume,
   VolumeSchema,
 } from '../../../../../schema/volume'
-import dayjs from 'dayjs'
+import dayjs, { locale } from 'dayjs'
 import { t } from 'i18next'
 import { toast } from 'react-toastify'
 import { type TEditableSpecimen } from '../../../../../schema/specimen'
@@ -52,7 +52,7 @@ export const useGenerateVolume = (
   )
   return () => {
     // This ensures that `getDayName` will return english name of day
-    dayjs.locale('en')
+    locale('en')
     const volumeData = getValues() as TEditableVolume
     const volumeClone = cloneDeep(volumeData)
     const repairedVolume = repairVolume(volumeClone, editions)
@@ -135,7 +135,7 @@ export const useGenerateVolume = (
       }
     })
 
-    dayjs.locale(i18n.resolvedLanguage)
+    locale(i18n.resolvedLanguage)
     specimensActions.setSpecimensState(specimens, true)
     volumePeriodicityActions.setPeriodicityGenerationUsed(true)
     toast.success(t('volume_overview.specimens_generated_successfully'))

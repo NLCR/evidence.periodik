@@ -1,13 +1,18 @@
 spring:
+  grpc:
+    server:
+      port: 9090
+      servlet:
+        enabled: false
+      reflection:
+        enabled: false
+      health:
+        enabled: false
   profiles:
     active: dev
   threads:
     virtual:
       enabled: true
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost}
-      port: 6379
   web:
     error:
       path: /error
@@ -16,26 +21,21 @@ spring:
       include-exception: true
       include-message: always
 
-#sentry:
-#  dsn: ${SENTRY_DSN}
-#  send-default-pii: true
-#  exception-resolver-order: -2147483647
-
 solr:
   host: ${SOLR_URL:http://localhost:8983/solr}
+
+permonik:
+  core-export:
+    grpc:
+      token: ${CORE_EXPORT_GRPC_TOKEN}
+      max-response-bytes: 4194304
+  security:
+    internal-jwt:
+      secret: ${IDENTITY_JWT_SECRET}
 
 server:
   port: 8080
   forward-headers-strategy: FRAMEWORK
-  servlet:
-    session:
-      cookie:
-        path: /
-        name: "SESSION"
-        secure: false
-        http-only: true
-        same-site: strict
-      timeout: 480m
 
 springdoc:
   api-docs:

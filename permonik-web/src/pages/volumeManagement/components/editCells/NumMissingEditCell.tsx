@@ -1,5 +1,5 @@
-import { type GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
-import React, { type ChangeEvent } from 'react'
+import { type GridRenderEditCellParams } from '@mui/x-data-grid-pro'
+import { type ChangeEvent } from 'react'
 import Checkbox from '@mui/material/Checkbox'
 import { type TEditableSpecimen } from '../../../../schema/specimen'
 

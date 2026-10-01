@@ -36,7 +36,7 @@ const InputDataMutation = ({ mutations }: Props) => {
         ),
       }}
     >
-      <TableCell>{t('volume_overview.mutation')}</TableCell>
+      <TableCell>{t('common.fields.mutation')}</TableCell>
       <TableCell>
         <InputDataSelect
           editableData={{
@@ -50,7 +50,7 @@ const InputDataMutation = ({ mutations }: Props) => {
                 true
               )
             },
-            fieldName: t('volume_overview.mutation'),
+            fieldName: t('common.fields.mutation'),
           }}
           name={'mutationId'}
           options={mutations.map((mutation) => ({

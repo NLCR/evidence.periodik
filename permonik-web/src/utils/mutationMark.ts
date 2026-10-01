@@ -1,23 +1,23 @@
 import { z } from 'zod'
 
-export const mutationMarkTypeSchema = z.enum(['MARK', 'NUMBER', 'UNMARKED'])
-export type TMutationMarkType = z.infer<typeof mutationMarkTypeSchema>
+export const MutationMarkTypeSchema = z.enum(['MARK', 'NUMBER', 'UNMARKED'])
+export type TMutationMarkType = z.infer<typeof MutationMarkTypeSchema>
 
-export const mutationMarkSchema = z.object({
+export const MutationMarkSchema = z.object({
   mark: z.string().nullish(),
-  type: mutationMarkTypeSchema.nullish(),
+  type: MutationMarkTypeSchema.nullish(),
   description: z.string().nullish(),
 })
 
-export const MutationMarkTypeEnum = mutationMarkTypeSchema.enum
+export const MutationMarkTypeEnum = MutationMarkTypeSchema.enum
 
-export type TMutationMark = z.infer<typeof mutationMarkSchema>
+export type TMutationMark = z.infer<typeof MutationMarkSchema>
 
-export const emptyMutationMark: TMutationMark = {
+export const createEmptyMutationMark = (): TMutationMark => ({
   mark: '',
   type: MutationMarkTypeEnum.MARK,
   description: '',
-}
+})
 
 export const UNMARKED_MUTATION_MARK_SYMBOL = '✓'
 
@@ -55,7 +55,7 @@ export function getMutationMarkCompoundValue(
 export function repairMutationMark(
   value: TMutationMark | undefined
 ): TMutationMark {
-  if (!value) return emptyMutationMark
+  if (!value) return createEmptyMutationMark()
 
   return {
     ...value,

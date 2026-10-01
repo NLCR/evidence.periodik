@@ -1,4 +1,6 @@
 /// <reference types="vite/client" />
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import checker from 'vite-plugin-checker'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
@@ -8,11 +10,17 @@ import babel from '@rolldown/plugin-babel'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url))
   const env = loadEnv(mode, process.cwd(), '')
 
   process.env = { ...process.env, ...env }
 
   return {
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+      },
+    },
     plugins: [
       react({
         // jsxImportSource: '@welldone-software/why-did-you-render',
@@ -62,9 +70,10 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3000,
       host: true,
+      allowedHosts: ['permonik-web'],
       proxy: {
         '/api': {
-          target: 'http://localhost:8080/',
+          target: env.VITE_API_PROXY_TARGET || 'http://localhost:8081/',
           changeOrigin: true,
           secure: false,
         },

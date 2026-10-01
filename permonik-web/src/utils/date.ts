@@ -1,4 +1,4 @@
-import dayjs, { type Dayjs } from 'dayjs'
+import dayjs, { isDayjs, type Dayjs } from 'dayjs'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -26,7 +26,7 @@ export function useFormatDate() {
       if (
         !value ||
         (typeof value === 'string' && value.length === 0) ||
-        (dayjs.isDayjs(value) && !value.isValid())
+        (isDayjs(value) && !value.isValid())
       )
         return '-'
 

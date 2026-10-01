@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import React, { type FC, useState } from 'react'
+import { type FC, useState } from 'react'
 import flow from 'lodash/flow'
 import groupBy from 'lodash/groupBy'
 import map from 'lodash/map'
@@ -23,7 +23,7 @@ import Button from '@mui/material/Button'
 import {
   getMutationMarkLabel,
   isUnmarkedMutationMark,
-} from '../../../../utils/mutationMark'
+} from '@/utils/mutationMark'
 
 type TProps = {
   metaTitle: TMetaTitle

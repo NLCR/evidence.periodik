@@ -10,10 +10,10 @@ import { TabSelect } from '../../../../components/TabSelect'
 import Checkbox from '@mui/material/Checkbox'
 import { toast } from 'react-toastify'
 import {
-  emptyMutationMark,
+  createEmptyMutationMark,
   type TMutationMark,
   type TMutationMarkType,
-} from '../../../../utils/mutationMark'
+} from '@/utils/mutationMark'
 
 const marks = ['●', '○', '■', '□', '★', '☆', '△', '▲', '✶'] as const
 type TMarks = (typeof marks)[number]
@@ -33,7 +33,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
 }) => {
   const { t } = useTranslation()
   const [inputMarkState, setInputMarkState] = useState<TMutationMark>(
-    row.mutationMark ?? emptyMutationMark
+    row.mutationMark ?? createEmptyMutationMark()
   )
   const [inputNumberImpossible, setInputNumberImpossible] = useState(
     inputMarkState.mark === '?'
@@ -84,7 +84,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
 
   return (
     <ModalContainer
-      header={t('volume_overview.mutation_mark')}
+      header={t('common.fields.mutation_mark')}
       opened={open}
       onClose={doClose}
       closeButton={{
@@ -186,7 +186,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
           }}
         >
           <TextField
-            label={t('volume_overview.mutation_mark_label_number_decription')}
+            label={t('volume_overview.mutation_mark_label_number_description')}
             value={inputMarkState.mark}
             disabled={inputNumberImpossible}
             onChange={(e) => handleInputNumberChange(e.target.value)}
@@ -213,7 +213,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
             />
             <div style={{ marginTop: 8 }}>
               {t(
-                'volume_overview.mutation_mark_label_number_decription_impossible'
+                'volume_overview.mutation_mark_label_number_description_impossible'
               )}
             </div>
           </Box>

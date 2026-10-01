@@ -1,7 +1,7 @@
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import React, { type Dispatch, type SetStateAction } from 'react'
+import { type Dispatch, type SetStateAction } from 'react'
 import { generateVolumeUrlWithParams } from '../../../../../utils/generateVolumeUrlWithParams'
 import { type TSpecimenOverview } from '../../../../../schema/specimen'
 import { type TMutation } from '../../../../../schema/mutation'

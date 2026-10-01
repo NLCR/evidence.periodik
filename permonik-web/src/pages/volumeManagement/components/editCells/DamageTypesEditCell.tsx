@@ -1,10 +1,10 @@
-import { type GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
-import React, { type ChangeEvent } from 'react'
+import { type GridRenderEditCellParams } from '@mui/x-data-grid-pro'
+import { type ChangeEvent } from 'react'
 import Checkbox from '@mui/material/Checkbox'
 import {
   type TEditableSpecimen,
   type TSpecimenDamageTypes,
-} from '../../../../schema/specimen'
+} from '@/schema/specimen'
 
 const DamageTypesEditCell = (
   props: GridRenderEditCellParams<TEditableSpecimen>
@@ -27,7 +27,7 @@ const DamageTypesEditCell = (
     <Checkbox
       color={field === 'OK' ? 'success' : 'primary'}
       onChange={handleChange}
-      checked={!!row.damageTypes?.some((dt) => dt === field)}
+      checked={row.damageTypes?.some((dt) => dt === field)}
     />
   )
 }
