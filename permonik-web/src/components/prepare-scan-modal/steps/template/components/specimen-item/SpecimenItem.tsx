@@ -15,7 +15,6 @@ import SpecimenItemHeader from './SpecimenItemHeader'
 import SpecimenMainReplacementSection from './SpecimenMainReplacementSection'
 import SpecimenNoteField from './SpecimenNoteField'
 import SpecimenPageReplacementsSection from './SpecimenPageReplacementsSection'
-import { getReplacementSourceCandidatesForField } from './specimenItemReplacementSourceCandidates'
 import { isLockingEnabled } from '@/components/prepare-scan-modal/steps/template/utils/templateItemLocking'
 
 type Props = {

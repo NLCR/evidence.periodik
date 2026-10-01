@@ -5,7 +5,7 @@ import TableRow from '@mui/material/TableRow'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
 import ModalContainer from '../../../components/ModalContainer'
-import VolumeStatsModalContent from '../../../components/prepare-scan-modal/steps/template/PrepareScanModalContentTemplate'
+import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import { type FC, useMemo, useState } from 'react'
@@ -205,10 +205,7 @@ const InputData: FC<InputDataProps> = ({
             callback: () => setModalOpened(false),
           }}
         >
-          <VolumeStatsModalContent
-            volumeId={volumeId}
-            onDeleted={() => setModalOpened(false)}
-          />
+          <VolumeStatsModalContent volumeId={volumeId} />
         </ModalContainer>
       </Box>
     </CollapsableSidebar>

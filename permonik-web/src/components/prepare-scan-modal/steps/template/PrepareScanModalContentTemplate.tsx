@@ -37,7 +37,7 @@ type TProps = {
   volumeId?: string
   replacementSources?: TReplacementSource[]
   onDeleted: () => void
-  onDiscardChanges: () => Promise<void>
+  onDiscardChanges: () => Promise<boolean>
   hasUnsavedChanges: boolean
 }
 
@@ -143,8 +143,10 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
       if (!completed) {
         toast.error(t('prepare_scan_modal.content_template.validation_failed'))
       }
+      return completed
     } catch {
       toast.error(t('common.error_occurred_somewhere'))
+      return false
     }
   }
 
@@ -153,6 +155,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
       hasWaitingReplacement(item) ? item : applyItemLock(item, true)
     )
     setValue('items', nextItems, { shouldDirty: true })
+    return true
   }
 
   const handleUnlockAll = () => {
@@ -160,10 +163,19 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
       applyItemLock(item, false)
     )
     setValue('items', nextItems, { shouldDirty: true })
+    return true
   }
 
-  const handleDelete = () =>
-    deleteTemplateMutation.mutate(undefined, { onSuccess: onDeleted })
+  const handleDelete = async () => {
+    try {
+      await deleteTemplateMutation.mutateAsync(undefined, {
+        onSuccess: onDeleted,
+      })
+      return true
+    } catch {
+      return false
+    }
+  }
 
   const canSyncFromVolume =
     watchedState === TemplateState.WAITING_FOR_RESCAN ||

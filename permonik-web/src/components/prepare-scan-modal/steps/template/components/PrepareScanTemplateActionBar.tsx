@@ -26,11 +26,11 @@ type TProps = {
   onOpenPreview: () => void
   onValidate: () => void
   onSyncFromVolume: () => void
-  onCloseToRescanOrFinalize: () => void
-  onLockAll: () => void
-  onUnlockAll: () => void
-  onDeleteTemplate: () => void
-  onDiscardChanges: () => Promise<void>
+  onCloseToRescanOrFinalize: () => Promise<boolean>
+  onLockAll: () => boolean
+  onUnlockAll: () => boolean
+  onDeleteTemplate: () => Promise<boolean>
+  onDiscardChanges: () => Promise<boolean>
   hasUnsavedChanges: boolean
 }
 

@@ -9,6 +9,7 @@ import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import { type ReactNode, useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { type TFunction } from 'i18next'
 import {
   createEmptyReplacementSource,
   type TReplacementSource,
@@ -40,7 +41,7 @@ const hasReplacementSource = (source: TReplacementSource) =>
 const buildReplacementOptionLabel = (
   option: TReplacementSource,
   index: number,
-  t: (key: string, options?: { index: number }) => string
+  t: TFunction<'global'>
 ): ReactNode => (
   <>
     <strong>

@@ -92,6 +92,7 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
 
   const previousStep = () => {
     setStep((prev) => prev - 1)
+    return true
   }
 
   const closeAfterDelete = () => {
@@ -103,7 +104,9 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
 
   const discardTemplateChanges = async () => {
     const result = await refetchTemplate()
+    if (result.isError) return false
     resetTemplate(result.data ?? undefined)
+    return true
   }
 
   if (templateLoading) return <Loader />

@@ -62,7 +62,7 @@ const VirtualizedSpecimenList = ({
     defaultRowHeight: ESTIMATED_ROW_HEIGHT,
     key: visibleItemIds.join(','),
   })
-  const listRef = useListRef()
+  const listRef = useListRef(null)
   const pendingValidationPath = useRef<string | undefined>(undefined)
   const errorItemIndex = useMemo(() => {
     const match = validationPath?.match(/^items\.(\d+)(?:\.|$)/)

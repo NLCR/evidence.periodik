@@ -167,7 +167,7 @@ const ReplacementInput = ({
         </Tooltip>
         <Tooltip
           title={t(
-            'prepare_scan_modal.content_template.delete_replacement_source_aria'
+            'prepare_scan_modal.content_volumes.delete_replacement_source_aria'
           )}
         >
           <span>
