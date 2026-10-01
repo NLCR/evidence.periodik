@@ -13,18 +13,17 @@ public class SwaggerConfig {
 
     @Bean
     GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-            .group("public-apis")
-            .pathsToMatch("/api/**")
-            .build();
+        return GroupedOpenApi.builder().group("public-apis").pathsToMatch("/api/**").build();
     }
 
     @Bean
     OpenAPI customOpenAPI() {
         return new OpenAPI()
-            .info(new Info()
-                .title("Permonik API")
-                .version("1.0.0")
-                .description("Core resource API authenticated by internal JWTs from the identity gateway"));
+                .info(
+                        new Info()
+                                .title("Permonik API")
+                                .version("1.0.0")
+                                .description(
+                                        "Core resource API authenticated by internal JWTs from the identity gateway"));
     }
 }

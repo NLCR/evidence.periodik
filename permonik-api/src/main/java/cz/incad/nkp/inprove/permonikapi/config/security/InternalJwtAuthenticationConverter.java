@@ -9,13 +9,15 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
 import org.springframework.stereotype.Component;
 
 @Component
-public class InternalJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
+public class InternalJwtAuthenticationConverter
+        implements Converter<Jwt, AbstractAuthenticationToken> {
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
         String username = jwt.getClaimAsString("username");
         String role = jwt.getClaimAsString("role");
         List<String> owners = listClaim(jwt, "owners");
-        var authorities = listClaim(jwt, "authorities").stream().map(SimpleGrantedAuthority::new).toList();
+        var authorities =
+                listClaim(jwt, "authorities").stream().map(SimpleGrantedAuthority::new).toList();
         if (jwt.getSubject() == null || username == null || role == null || authorities.isEmpty()) {
             throw new IllegalArgumentException("Internal JWT is missing required identity claims");
         }

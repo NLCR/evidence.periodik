@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="PerMonik Java"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    <description>Focused Java checks for likely defects, unused code and explicit control flow.</description>
+
+    <rule ref="category/java/errorprone.xml/BrokenNullCheck"/>
+    <rule ref="category/java/errorprone.xml/EmptyCatchBlock"/>
+    <rule ref="category/java/errorprone.xml/ReturnFromFinallyBlock"/>
+    <rule ref="category/java/errorprone.xml/UnusedReturnValue"/>
+    <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
+    <rule ref="category/java/codestyle.xml/ControlStatementBraces"/>
+    <rule ref="category/java/codestyle.xml/UnnecessaryFullyQualifiedName"/>
+    <rule ref="category/java/design.xml/ExcessiveParameterList">
+        <properties>
+            <!-- PMD reports at the threshold, so nine means at most eight parameters. -->
+            <property name="minimum" value="9"/>
+            <property name="violationSuppressXPath" value="parent::ConstructorDeclaration[ancestor::RecordDeclaration]"/>
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
+        <properties>
+            <!-- PMD reports the fifth nested if; four levels remain allowed. -->
+            <property name="problemDepth" value="5"/>
+        </properties>
+    </rule>
+</ruleset>

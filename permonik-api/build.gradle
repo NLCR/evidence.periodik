@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'pmd'
+    id 'com.diffplug.spotless'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
     id 'io.github.ben-manes.versions'
@@ -36,6 +38,31 @@ sentry {
 
 repositories {
     mavenCentral()
+}
+
+pmd {
+    toolVersion = versions.pmd
+    ruleSets = []
+    ruleSetFiles = files(rootProject.file('config/pmd/pmd.xml'))
+    ignoreFailures = false
+}
+
+spotless {
+    ratchetFrom('origin/main')
+
+    java {
+        target('src/**/*.java')
+        googleJavaFormat(versions.googleJavaFormat).aosp()
+        removeUnusedImports()
+    }
+}
+
+tasks.withType(Pmd).configureEach {
+    classpath += files(javaLauncher.map { it.metadata.installationPath.file('lib/jrt-fs.jar') })
+    reports {
+        html.required = true
+        xml.required = true
+    }
 }
 
 

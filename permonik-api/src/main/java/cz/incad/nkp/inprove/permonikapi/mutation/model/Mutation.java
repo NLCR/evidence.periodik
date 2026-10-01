@@ -1,12 +1,11 @@
 package cz.incad.nkp.inprove.permonikapi.mutation.model;
 
+import static cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDefinition.*;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
-import jakarta.validation.constraints.NotNull;
-
-import static cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDefinition.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,6 +30,4 @@ public class Mutation extends Auditable {
     @Field(NAME_EN_FIELD)
     @NotNull
     private String nameEn;
-
-
 }

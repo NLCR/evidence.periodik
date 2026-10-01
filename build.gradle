@@ -21,6 +21,8 @@ ext.versions = [
         springCloud        : '2025.1.3',
         testcontainersSolr : '2.0.5',
         testcontainersPostgresql: '2.0.5',
+        pmd                : '7.28.0',
+        googleJavaFormat   : '1.36.1',
 ]
 
 java {

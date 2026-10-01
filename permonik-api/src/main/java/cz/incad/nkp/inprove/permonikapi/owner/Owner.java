@@ -1,12 +1,11 @@
 package cz.incad.nkp.inprove.permonikapi.owner;
 
+import static cz.incad.nkp.inprove.permonikapi.owner.OwnerDefinition.*;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
-import jakarta.validation.constraints.NotNull;
-
-import static cz.incad.nkp.inprove.permonikapi.owner.OwnerDefinition.*;
 
 @NoArgsConstructor
 @AllArgsConstructor

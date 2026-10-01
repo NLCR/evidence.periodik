@@ -1,12 +1,11 @@
 package cz.incad.nkp.inprove.permonikapi.edition.model;
 
+import static cz.incad.nkp.inprove.permonikapi.edition.model.EditionDefinition.*;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
-import jakarta.validation.constraints.NotNull;
-
-import static cz.incad.nkp.inprove.permonikapi.edition.model.EditionDefinition.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
