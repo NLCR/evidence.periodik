@@ -59,6 +59,7 @@ export default tseslint.config(
         { functions: 'defaultArguments' },
       ],
       'prettier/prettier': 'error',
+      'import/no-unresolved': ['error', { ignore: ['^@/'] }],
       'import/no-extraneous-dependencies': 0,
       'no-continue': 0,
       'no-constant-binary-expression': 0,

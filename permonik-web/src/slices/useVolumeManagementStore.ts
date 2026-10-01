@@ -7,12 +7,15 @@ import {
   type TEditableVolumePeriodicity,
   type TVolumeAttachmentsSort,
   type TVolumePeriodicityDays,
-} from '../schema/volume'
-import { type TEditableSpecimen } from '../schema/specimen'
-import { type TEdition } from '../schema/edition'
-import { filterSpecimen } from '../utils/specimen'
+} from '@/schema/volume'
+import { type TEditableSpecimen } from '@/schema/specimen'
+import { type TEdition } from '@/schema/edition'
+import { filterSpecimen } from '@/utils/specimen'
 import clone from 'lodash/clone'
-import { emptyMutationMark, type TMutationMark } from '../utils/mutationMark'
+import {
+  createEmptyMutationMark,
+  type TMutationMark,
+} from '@/utils/mutationMark'
 
 const periodicityDays: TVolumePeriodicityDays[] = [
   'Monday',
@@ -24,8 +27,8 @@ const periodicityDays: TVolumePeriodicityDays[] = [
   'Sunday',
 ]
 
-const initialPeriodicity: TEditableVolumePeriodicity[] = [
-  ...periodicityDays.map((d) => ({
+const createInitialPeriodicity = (): TEditableVolumePeriodicity[] =>
+  periodicityDays.map((d) => ({
     numExists: false,
     editionId: null,
     day: d,
@@ -33,36 +36,36 @@ const initialPeriodicity: TEditableVolumePeriodicity[] = [
     name: '',
     subName: '',
     isAttachment: false,
-  })),
-]
+  }))
 
-export const initialState: TVariablesState = {
+export const createInitialVolumeState = (): TEditableVolume => ({
+  id: '',
+  isLoading: false,
+  barCode: '',
+  dateFrom: dayjs().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'),
+  dateTo: dayjs().subtract(1, 'month').endOf('month').format('YYYY-MM-DD'),
+  firstNumber: '',
+  lastNumber: '',
+  metaTitleId: '',
+  subName: '',
+  mutationId: '',
+  note: '',
+  ownerId: '',
+  periodicity: createInitialPeriodicity(),
+  mutationMark: createEmptyMutationMark(),
+  attachmentsSort: 'NONE',
+  signature: '',
+  year: '',
+})
+
+export const createInitialVolumeManagementState = (): TVariablesState => ({
   volumeState: {
-    id: '',
-    isLoading: false,
-    barCode: '',
-    dateFrom: dayjs()
-      .subtract(1, 'month')
-      .startOf('month')
-      .format('YYYY-MM-DD'),
-    dateTo: dayjs().subtract(1, 'month').endOf('month').format('YYYY-MM-DD'),
-    firstNumber: '',
-    lastNumber: '',
-    metaTitleId: '',
-    subName: '',
-    mutationId: '',
-    note: '',
-    ownerId: '',
-    periodicity: initialPeriodicity,
-    mutationMark: emptyMutationMark,
-    attachmentsSort: 'NONE',
-    signature: '',
-    year: '',
+    ...createInitialVolumeState(),
   },
   specimensState: [],
   periodicityGenerationUsed: false,
   stateHasUnsavedData: false,
-}
+})
 
 interface TVariablesState {
   volumeState: TEditableVolume
@@ -117,15 +120,17 @@ interface TState extends TVariablesState {
 
 export const useVolumeManagementStore = create<TState>()(
   devtools((set) => ({
-    ...initialState,
+    ...createInitialVolumeManagementState(),
     setInitialState: () =>
       set(
         produce((state: TState) => {
+          const initialState = createInitialVolumeManagementState()
+
           state.volumeState = initialState.volumeState
           state.specimensState = initialState.specimensState
           state.periodicityGenerationUsed =
             initialState.periodicityGenerationUsed
-          state.stateHasUnsavedData = false
+          state.stateHasUnsavedData = initialState.stateHasUnsavedData
         })
       ),
     volumeActions: {

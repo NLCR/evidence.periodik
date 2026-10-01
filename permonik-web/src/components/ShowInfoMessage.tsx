@@ -1,4 +1,4 @@
-import React, { type FC } from 'react'
+import { type FC } from 'react'
 
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import Container from '@mui/material/Container'

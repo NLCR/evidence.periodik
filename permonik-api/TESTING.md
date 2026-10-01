@@ -1,5 +1,34 @@
 # Testing Plan
 
+## Java static analysis
+
+Run PMD from the repository root:
+
+```bash
+./gradlew :permonik-api:pmdMain :permonik-api:pmdTest
+```
+
+Both tasks also run as part of `:permonik-api:check`. The focused ruleset lives in
+`config/pmd/pmd.xml` and checks broken null conditions, empty catch blocks, returns
+from finally blocks, unused return values, unused local variables/private methods,
+missing control-flow braces, unnecessary fully qualified names, parameter lists
+over eight arguments, and if nesting beyond four levels. Record constructors are
+excluded from the parameter limit, matching Kotlin data-class handling. PMD's
+nesting rule counts if statements, unlike Detekt's broader block-depth rule.
+Violations fail the build; HTML and XML reports are written to
+`permonik-api/build/reports/pmd/`.
+
+Java formatting uses Spotless with Google Java Format in AOSP mode (four-space
+indentation) and unused-import removal:
+
+```bash
+./gradlew :permonik-api:spotlessCheck
+./gradlew :permonik-api:spotlessApply
+```
+
+Like the Kotlin modules, formatting is ratcheted from `origin/main` and checks
+handwritten sources under `src/`. `spotlessCheck` also runs as part of `check`.
+
 ## Infrastructure
 
 ### Shared Solr base class

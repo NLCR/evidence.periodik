@@ -1,5 +1,5 @@
-import { type GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
-import React, { useState } from 'react'
+import { type GridRenderEditCellParams } from '@mui/x-data-grid-pro'
+import { useState } from 'react'
 import { type TEditableSpecimen } from '../../../../schema/specimen'
 import MutationMarkSelectorModal from './MutationMarkSelectorModal'
 import EditIcon from '@mui/icons-material/Edit'

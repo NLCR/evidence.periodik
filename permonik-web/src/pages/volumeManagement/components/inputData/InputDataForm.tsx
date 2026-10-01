@@ -18,11 +18,11 @@ import Button from '@mui/material/Button'
 import { useParams, useSearchParams } from 'react-router-dom'
 import UnsavedChangesModal from '../UnsavedChangesModal'
 import {
-  initialState,
+  createInitialVolumeState,
   useVolumeManagementStore,
-} from '../../../../slices/useVolumeManagementStore'
+} from '@/slices/useVolumeManagementStore'
 import { useEffect } from 'react'
-import { type TEditableVolume } from '../../../../schema/volume'
+import { type TEditableVolume } from '@/schema/volume'
 import InputDataBarCode from './InputDataBarCode'
 import InputDataSignature from './InputDataSignature'
 import InputDataDateFrom from './InputDataDateFrom'
@@ -32,11 +32,11 @@ import { type TSpecimen } from '../../../../schema/specimen'
 import InputDataOwner from './InputDataOwner'
 import InputDataNote from './InputDataNote'
 import { duplicateVolume } from '../../../../utils/duplicateVolume/duplicateVolume'
-import { emptyMutationMark } from '../../../../utils/mutationMark'
+import { createEmptyMutationMark } from '../../../../utils/mutationMark'
 import {
   basicFieldsToReset,
   FieldsToReset,
-} from '../../../../utils/duplicateVolume/types'
+} from '@/utils/duplicateVolume/types'
 
 const InputDataForm = ({
   editions,
@@ -105,11 +105,11 @@ const InputDataForm = ({
     if (!duplicated) {
       formMethods.reset(
         volumeId
-          ? (volume ?? initialState.volumeState)
-          : initialState.volumeState
+          ? (volume ?? createInitialVolumeState())
+          : createInitialVolumeState()
       )
       setVolumeState(
-        { ...(volume ?? initialState.volumeState), isLoading: false },
+        { ...(volume ?? createInitialVolumeState()), isLoading: false },
         false
       )
     } else {
@@ -118,7 +118,7 @@ const InputDataForm = ({
         basicFieldsToReset.includes(f)
       )) {
         if (field === FieldsToReset.mutationMark) {
-          formMethods.setValue('mutationMark', emptyMutationMark)
+          formMethods.setValue('mutationMark', createEmptyMutationMark())
         } else {
           formMethods.setValue(
             FieldsToReset[field] as keyof TEditableVolume,
@@ -146,7 +146,7 @@ const InputDataForm = ({
         <TableHead>
           <TableRow>
             <TableCell sx={{ fontWeight: 'bold' }}>
-              {t('volume_overview.name')}
+              {t('common.fields.name')}
             </TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>
               {t('volume_overview.value')}
@@ -155,7 +155,7 @@ const InputDataForm = ({
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell>{t('volume_overview.meta_title')}</TableCell>
+            <TableCell>{t('common.fields.meta_title')}</TableCell>
             <TableCell>
               <InputDataSelect
                 name="metaTitleId"

@@ -1,100 +1,116 @@
 package cz.incad.nkp.inprove.permonikapi.auth;
 
-import cz.incad.nkp.inprove.permonikapi.AbstractSolrDevIntegrationTest;
-import cz.incad.nkp.inprove.permonikapi.support.SolrTestSupport;
-import cz.incad.nkp.inprove.permonikapi.user.User;
-import cz.incad.nkp.inprove.permonikapi.user.UserDefinition;
-import org.apache.solr.client.solrj.SolrClient;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AuthIntegrationTest extends AbstractSolrDevIntegrationTest {
+import com.nimbusds.jose.JOSEObjectType;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import cz.incad.nkp.inprove.permonikapi.AbstractSolrIntegrationTest;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MockMvc;
 
-    @Autowired
-    MockMvc mockMvc;
+class AuthIntegrationTest extends AbstractSolrIntegrationTest {
 
-    @Autowired
-    SolrClient solrClient;
+    @Autowired MockMvc mockMvc;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @BeforeEach
-    void setUp() throws Exception {
-        SolrTestSupport.clearCores(solrClient, UserDefinition.USER_CORE_NAME);
+    @Test
+    void internalJwtAuthenticatesCoreRequest() throws Exception {
+        mockMvc.perform(
+                        get("/api/owner/list/all")
+                                .header("Authorization", "Bearer " + token("permonik-core")))
+                .andExpect(status().isOk());
     }
 
     @Test
-        // Verifies successful form login creates HTTP session cookie.
-    void loginBasic_withValidCredentials_returnsSession() throws Exception {
-        createUser("login-user", "secret");
-
-        mockMvc.perform(post("/api/auth/login/basic")
-                .contentType("application/json")
-                .content("""
-                    {"username":"login-user","password":"secret"}
-                    """))
-            .andExpect(status().isOk())
-            .andExpect(header().string("Set-Cookie", org.hamcrest.Matchers.containsString("SESSION=")));
+    void internalJwtRejectsWrongAudience() throws Exception {
+        mockMvc.perform(
+                        get("/api/owner/list/all")
+                                .header("Authorization", "Bearer " + token("permonik-export")))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-        // Verifies invalid credentials are mapped to 401 Unauthorized.
-    void loginBasic_withInvalidCredentials_returns401() throws Exception {
-        createUser("login-user", "secret");
-
-        mockMvc.perform(post("/api/auth/login/basic")
-                .contentType("application/json")
-                .content("""
-                    {"username":"login-user","password":"wrong"}
-                    """))
-            .andExpect(status().isUnauthorized());
+    void internalJwtRejectsWrongIssuer() throws Exception {
+        mockMvc.perform(
+                        get("/api/owner/list/all")
+                                .header(
+                                        "Authorization",
+                                        "Bearer "
+                                                + token(
+                                                        "permonik-core",
+                                                        "untrusted-issuer",
+                                                        Instant.now().plusSeconds(60),
+                                                        "permonik-api-test-jwt-secret-at-least-32-bytes")))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
-        // Verifies logout invalidates session and triggers configured redirect.
-    void logout_clearsSessionAndRedirects() throws Exception {
-        createUser("login-user", "secret");
-        MvcResult loginResult = mockMvc.perform(post("/api/auth/login/basic")
-                .contentType("application/json")
-                .content("""
-                    {"username":"login-user","password":"secret"}
-                    """))
-            .andExpect(status().isOk())
-            .andReturn();
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/logout")
-                .cookie(Objects.requireNonNull(loginResult.getResponse().getCookie("SESSION"))))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(header().string("Location", "https://localhost/"));
+    void internalJwtRejectsExpiredToken() throws Exception {
+        mockMvc.perform(
+                        get("/api/owner/list/all")
+                                .header(
+                                        "Authorization",
+                                        "Bearer "
+                                                + token(
+                                                        "permonik-core",
+                                                        "permonik-identity-gateway",
+                                                        Instant.now().minusSeconds(120),
+                                                        "permonik-api-test-jwt-secret-at-least-32-bytes")))
+                .andExpect(status().isUnauthorized());
     }
 
-    private void createUser(String username, String rawPassword) throws Exception {
-        User user = User.builder()
-            .id(UUID.randomUUID().toString())
-            .email(username + "@example.com")
-            .userName(username)
-            .firstName("First")
-            .lastName("Last")
-            .role("user")
-            .active(true)
-            .owners(List.of())
-            .password(passwordEncoder.encode(rawPassword))
-            .build();
-        solrClient.addBean(UserDefinition.USER_CORE_NAME, user);
-        solrClient.commit(UserDefinition.USER_CORE_NAME);
+    @Test
+    void internalJwtRejectsWrongSignature() throws Exception {
+        mockMvc.perform(
+                        get("/api/owner/list/all")
+                                .header(
+                                        "Authorization",
+                                        "Bearer "
+                                                + token(
+                                                        "permonik-core",
+                                                        "permonik-identity-gateway",
+                                                        Instant.now().plusSeconds(60),
+                                                        "different-test-signing-secret-at-least-32-bytes")))
+                .andExpect(status().isUnauthorized());
+    }
+
+    private static String token(String audience) throws Exception {
+        return token(
+                audience,
+                "permonik-identity-gateway",
+                Instant.now().plusSeconds(60),
+                "permonik-api-test-jwt-secret-at-least-32-bytes");
+    }
+
+    private static String token(String audience, String issuer, Instant expiration, String secret)
+            throws Exception {
+        Instant now = Instant.now();
+        JWTClaimsSet claims =
+                new JWTClaimsSet.Builder()
+                        .issuer(issuer)
+                        .subject("407a3bc0-db76-4cce-aebc-4291ca5af0d3")
+                        .audience(audience)
+                        .issueTime(Date.from(now))
+                        .expirationTime(Date.from(expiration))
+                        .claim("username", "gateway-user")
+                        .claim("role", "admin")
+                        .claim("owners", List.of())
+                        .claim("authorities", List.of("ROLE_ADMIN", "USER_WRITE"))
+                        .build();
+        SignedJWT jwt =
+                new SignedJWT(
+                        new JWSHeader.Builder(JWSAlgorithm.HS256).type(JOSEObjectType.JWT).build(),
+                        claims);
+        jwt.sign(new MACSigner(secret.getBytes(StandardCharsets.UTF_8)));
+        return jwt.serialize();
     }
 }

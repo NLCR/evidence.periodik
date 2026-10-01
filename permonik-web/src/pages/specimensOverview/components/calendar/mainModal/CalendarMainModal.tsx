@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import TableBody from '@mui/material/TableBody'
 import Typography from '@mui/material/Typography'
-import React, { type Dispatch, type SetStateAction, useState } from 'react'
+import { type Dispatch, type SetStateAction, useState } from 'react'
 import ModalContainer from '../../../../../components/ModalContainer'
 import Table from '@mui/material/Table'
 import { type TMainModalData } from '../models'

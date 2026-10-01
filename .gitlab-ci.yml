@@ -49,6 +49,18 @@ stages:
     DOCKERFILE: Dockerfile
     DOCKER_BUILD_ARGS: ""
 
+.buildJib:
+  stage: build
+  when: manual
+  allow_failure: false
+  tags:
+    - runner-8
+  script:
+    - export JAVA_HOME=/usr/lib/jvm/java-$JAVA_VERSION-openjdk-amd64
+    - export PATH="$JAVA_HOME/bin:$PATH"
+    - java --version
+    - './gradlew --no-configuration-cache :$COMPONENT:assemble :$COMPONENT:jib -PjibArchitecture=amd64 -PjibImage=eu.gcr.io/inqool-1301/permonik/$DEPLOYMENT/$COMPONENT_NAME:$CI_COMMIT_SHORT_SHA -PjibTags=latest'
+
 .buildWebProd:
   stage: build
   when: manual
@@ -85,28 +97,46 @@ test_permonik_api:
       - permonik-api/build/reports/tests/
     expire_in: 7 days
 
-build_permonik_api_test:
-  extends: .build
+test_permonik_identity_gateway:
+  stage: test
+  allow_failure: false
   tags:
     - runner-8
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "test" || $CI_COMMIT_BRANCH == "prod"'
+      when: manual
+  script:
+    - export JAVA_HOME=/usr/lib/jvm/java-$JAVA_VERSION-openjdk-amd64
+    - export PATH="$JAVA_HOME/bin:$PATH"
+    - java --version
+    - ./gradlew :permonik-identity-gateway:test
+  artifacts:
+    when: always
+    reports:
+      junit: permonik-identity-gateway/build/test-results/test/*.xml
+    paths:
+      - permonik-identity-gateway/build/reports/tests/
+    expire_in: 7 days
+
+build_permonik_api_test:
+  extends: .buildJib
   rules:
     - if: '$CI_COMMIT_BRANCH == "test"'
       when: manual
   variables:
     COMPONENT: permonik-api
     COMPONENT_NAME: permonik-api
-    DOCKER_BUILD_ARGS: "--secret id=sentry-auth-token,env=SENTRY_AUTH_TOKEN --build-arg SENTRY_DSN --build-arg SENTRY_ENVIRONMENT --build-arg SENTRY_RELEASE --build-arg SENTRY_URL"
-    SENTRY_ENVIRONMENT: test
+    DEPLOYMENT: test
 
-build_permonik_gateway_test:
-  extends: .build
-  needs: []
+build_permonik_identity_gateway_test:
+  extends: .buildJib
   rules:
     - if: '$CI_COMMIT_BRANCH == "test"'
       when: manual
   variables:
-    COMPONENT: permonik-gateway
-    COMPONENT_NAME: permonik-gateway
+    COMPONENT: permonik-identity-gateway
+    COMPONENT_NAME: permonik-identity-gateway
+    DEPLOYMENT: test
 
 build_permonik_web_admin_test:
   extends: .buildWeb
@@ -133,27 +163,24 @@ build_permonik_web_public_test:
 ### PROD SECTION
 
 build_permonik_api_prod:
-  extends: .buildProd
-  tags:
-    - runner-8
+  extends: .buildJib
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
   variables:
     COMPONENT: permonik-api
     COMPONENT_NAME: permonik-api
-    DOCKER_BUILD_ARGS: "--secret id=sentry-auth-token,env=SENTRY_AUTH_TOKEN --build-arg SENTRY_DSN --build-arg SENTRY_ENVIRONMENT --build-arg SENTRY_RELEASE --build-arg SENTRY_URL"
-    SENTRY_ENVIRONMENT: production
+    DEPLOYMENT: prod
 
-build_permonik_gateway_prod:
-  extends: .buildProd
-  needs: []
+build_permonik_identity_gateway_prod:
+  extends: .buildJib
   rules:
     - if: '$CI_COMMIT_BRANCH == "prod"'
       when: manual
   variables:
-    COMPONENT: permonik-gateway
-    COMPONENT_NAME: permonik-gateway
+    COMPONENT: permonik-identity-gateway
+    COMPONENT_NAME: permonik-identity-gateway
+    DEPLOYMENT: prod
 
 build_permonik_web_admin_prod:
   extends: .buildWebProd

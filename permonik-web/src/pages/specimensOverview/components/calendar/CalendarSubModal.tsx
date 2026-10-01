@@ -1,13 +1,13 @@
 import { t } from 'i18next'
-import React, { type Dispatch, type SetStateAction } from 'react'
-import ModalContainer from '../../../../components/ModalContainer'
-import VolumeStatsModalContent from '../../../../components/VolumeStatsModalContent'
-import { generateVolumeUrlWithParams } from '../../../../utils/generateVolumeUrlWithParams'
+import { type Dispatch, type SetStateAction } from 'react'
+import ModalContainer from '@/components/ModalContainer'
+import VolumeStatsModalContent from '@/components/VolumeStatsModalContent'
+import { generateVolumeUrlWithParams } from '@/utils/generateVolumeUrlWithParams'
 import { useNavigate, useParams } from 'react-router-dom'
-import { type TSpecimenOverview } from '../../../../schema/specimen'
+import { type TSpecimenOverview } from '@/schema/specimen'
 import { useTranslation } from 'react-i18next'
-import DuplicateVolumeButton from '../../../../components/DuplicateVolumeButton'
-import { useMeQuery } from '../../../../api/user'
+import DuplicateVolumeButton from '@/components/DuplicateVolumeButton'
+import { useMeQuery } from '@/api/user'
 
 type Props = {
   subModalData: TSpecimenOverview | null

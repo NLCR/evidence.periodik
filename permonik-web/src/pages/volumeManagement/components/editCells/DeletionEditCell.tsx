@@ -2,7 +2,7 @@ import {
   SpecimenSchema,
   type TEditableSpecimen,
 } from '../../../../schema/specimen'
-import React, { type FC, useState } from 'react'
+import { type FC, useState } from 'react'
 import Box from '@mui/material/Box'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { toast } from 'react-toastify'

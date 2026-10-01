@@ -23,11 +23,11 @@ const InputDataSubName = () => {
 
   return (
     <TableRow>
-      <TableCell>{t('volume_overview.sub_name')}</TableCell>
+      <TableCell>{t('common.fields.sub_name')}</TableCell>
       <TableCell>
         <InputDataTextField
           editableData={{
-            fieldName: t('volume_overview.sub_name'),
+            fieldName: t('common.fields.sub_name'),
             saveChange: (value: string) => {
               setSubName(value)
               setSpecimensState(

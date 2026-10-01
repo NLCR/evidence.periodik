@@ -1,4 +1,8 @@
 rootProject.name = 'permonik'
 
 
-include 'permonik-api'
+['permonik-domain', 'permonik-core-contract', 'permonik-api', 'permonik-identity-gateway', "permonik-export-api"].each { module ->
+    if (file(module).isDirectory()) {
+        include module
+    }
+}

@@ -10,7 +10,7 @@ import {
   getMutationMarkCompoundValue,
   hasMutationMark,
   type TMutationMark,
-} from '../../../../utils/mutationMark'
+} from '@/utils/mutationMark'
 
 type FieldProps = {
   disabled?: boolean
@@ -94,7 +94,7 @@ const InputDataMutationMarkField = (props: TextFieldProps) => {
       editableData={{
         isMutationMark: true,
         DialogContent: <Field defaultValue={value} {...props} />,
-        fieldName: t('specimens_overview.mutation_mark'),
+        fieldName: t('common.fields.mutation_mark'),
         saveChange: () => {
           const mutationMark = getValues('mutationMark_internal')
 

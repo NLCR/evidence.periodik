@@ -1,7 +1,7 @@
 import TableCell from '@mui/material/TableCell'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import React from 'react'
+
 import { useTranslation } from 'react-i18next'
 
 const CalendarMainModalTableHead = () => {
@@ -9,11 +9,11 @@ const CalendarMainModalTableHead = () => {
   return (
     <TableHead>
       <TableRow>
-        <TableCell>{t('specimens_overview.mutation')}</TableCell>
+        <TableCell>{t('common.fields.mutation')}</TableCell>
         <TableCell>{t('specimens_overview.edition')}</TableCell>
         <TableCell>{t('specimens_overview.name')}</TableCell>
-        <TableCell>{t('specimens_overview.sub_name')}</TableCell>
-        <TableCell>{t('specimens_overview.owner')}</TableCell>
+        <TableCell>{t('common.fields.sub_name')}</TableCell>
+        <TableCell>{t('common.fields.owner')}</TableCell>
         <TableCell>{t('specimens_overview.digitization')}</TableCell>
         <TableCell>
           {t('specimens_overview.volume_overview_modal_link')}

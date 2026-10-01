@@ -1,0 +1,170 @@
+syntax = "proto3";
+
+package permonik.core.v1;
+
+option java_package = "cz.incad.nkp.inprove.permonikcorecontract.v1";
+option java_multiple_files = true;
+option java_outer_classname = "CoreExportProto";
+
+import "google/protobuf/timestamp.proto";
+
+// Read-only source data served by core to export. No template or fill-index logic.
+// See the module README for validation, completeness, date and error semantics.
+service CoreExportService {
+  // Loads primary, selected replacement or planning volumes with all stored specimens.
+  rpc BatchGetVolumeContents(BatchGetVolumeContentsRequest) returns (BatchGetVolumeContentsResponse);
+  // Finds same-title, overlapping volumes; export calculates and ranks their indexes.
+  rpc SearchReplacementVolumes(SearchReplacementVolumesRequest) returns (GrpcVolumePage);
+  // Lists volumes across owners by stored year, mutation and mutational edition.
+  rpc QueryPlanningVolumes(QueryPlanningVolumesRequest) returns (GrpcVolumePage);
+}
+
+message BatchGetVolumeContentsRequest {
+  // Required: 1..20 distinct nonblank IDs. A single ID also loads the primary volume.
+  repeated string volume_ids = 1;
+}
+
+message BatchGetVolumeContentsResponse {
+  // Complete contents in request order. Any missing/deleted volume fails the whole RPC.
+  repeated GrpcVolumeContents volumes = 1;
+}
+
+message GrpcVolumeContents {
+  GrpcVolume volume = 1;
+  // All non-deleted stored records, including missing and unknown-existence records.
+  // NOT a calculated theoretical ideal list; never silently truncate or synthesize IDs.
+  repeated GrpcSpecimen specimens = 2;
+}
+
+message SearchReplacementVolumesRequest {
+  string primary_volume_id = 1;
+  // False disables the corresponding equality filter. Title and overlap are mandatory.
+  bool match_owner = 2;
+  bool match_mutation = 3;
+  bool match_mutational_edition = 4;
+  GrpcPageRequest page = 5;
+}
+
+message QueryPlanningVolumesRequest {
+  string meta_title_id = 1;
+  // Optional inclusive calendar-year bounds matched against the volume date range.
+  optional int32 year_from = 2;
+  optional int32 year_to = 3;
+  // Absent means no filter; a present value must be nonblank.
+  optional string mutation_id = 4;
+  GrpcMutationalEditionFilter mutational_edition = 5;
+  GrpcPageRequest page = 6;
+}
+
+message GrpcMutationalEditionFilter {
+  // Match a nonblank mark exactly. Only UNMARKED permits an absent/blank mark.
+  optional string mark = 1;
+  // MARK, NUMBER or UNMARKED. Absent means match the mark regardless of type.
+  optional string type = 2;
+}
+
+message GrpcPageRequest {
+  // 0 (including absent page message) uses 20; allowed explicit sizes are 1..100.
+  int32 page_size = 1;
+  // Empty starts a query; otherwise an opaque continuation for the same filters.
+  string page_token = 2;
+}
+
+message GrpcVolumePage {
+  // Ascending volume ID, no fill indexes. Drain all pages before ranking/grouping.
+  repeated GrpcVolume volumes = 1;
+  // Empty only when the query is exhausted.
+  string next_page_token = 2;
+}
+
+// Source metadata needed for primaryVolume, replacement labels and planning.
+// Presence supports validation, not just nullability. Required Solr fields must be present.
+// Only sub_name, signature, note, updated and updated_by are optional volume metadata.
+message GrpcVolume {
+  string id = 1;
+  optional string barcode = 2;
+  google.protobuf.Timestamp date_from = 3;
+  google.protobuf.Timestamp date_to = 4;
+  optional string meta_title_id = 5;
+  optional string meta_title_name = 6;
+  optional string sub_name = 7;
+  optional string mutation_id = 8;
+  GrpcLocalizedName mutation_name = 9;
+  GrpcMutationMark mutation_mark = 10;
+  GrpcOwner owner = 11;
+  optional string signature = 12;
+  optional int32 year = 13;
+  optional int32 first_number = 14;
+  optional int32 last_number = 15;
+  optional string note = 16;
+  // ASC, DESC or NONE; retain unknown stored strings for adapter validation.
+  optional string attachments_sort = 17;
+  GrpcPeriodicity periodicity = 18;
+  google.protobuf.Timestamp created = 19;
+  optional string created_by = 20;
+  google.protobuf.Timestamp updated = 21;
+  optional string updated_by = 22;
+}
+
+message GrpcOwner {
+  // Required stored denormalized volume owner fields, not an optional live owner lookup.
+  optional string id = 1;
+  optional string name = 2;
+  optional string shorthand = 3;
+  optional string sigla = 4;
+}
+
+message GrpcLocalizedName {
+  // All three stored locales are required.
+  optional string cs = 1;
+  optional string sk = 2;
+  optional string en = 3;
+}
+
+message GrpcMutationMark {
+  optional string mark = 1;
+  // Required: MARK, NUMBER, UNMARKED, or a losslessly retained unrecognized stored value.
+  optional string type = 2;
+  optional string description = 3;
+}
+
+// Required wrapper: an empty list is valid, absence is invalid source data.
+message GrpcPeriodicity {
+  repeated GrpcPeriodicityItem items = 1;
+}
+
+message GrpcPeriodicityItem {
+  // All seven members are required by the application contract; optional preserves wire presence for validation.
+  // Solr requires the JSON field but does not constrain these nested members.
+  // Core title-cased weekday (Monday..Sunday), not a locale-dependent label.
+  optional string day = 1;
+  optional bool num_exists = 2;
+  optional string edition_id = 3;
+  optional int32 pages_count = 4;
+  optional string name = 5;
+  optional string sub_name = 6;
+  optional bool is_attachment = 7;
+}
+
+message GrpcSpecimen {
+  // Required except number, attachment_number, name, sub_name and optional mark text.
+  // Absent page/damage lists mean empty; absent scalar flags/page count are invalid.
+  string id = 1;
+  google.protobuf.Timestamp publication_date = 2;
+  optional bool is_attachment = 3;
+  optional string number = 4;
+  optional string attachment_number = 5;
+  optional string edition_id = 6;
+  optional string mutation_id = 7;
+  GrpcMutationMark mutation_mark = 8;
+  optional string name = 9;
+  optional string sub_name = 10;
+  optional bool num_exists = 11;
+  optional bool num_missing = 12;
+  optional int32 pages_count = 13;
+  // Raw 1-based page numbers; retain duplicates and invalid values for export warnings.
+  repeated int32 missing_pages = 14;
+  repeated int32 damaged_pages = 15;
+  // Exact SpecimenDamageType.code strings, NEVER enum names. Unknown codes survive.
+  repeated string damage_types = 16;
+}

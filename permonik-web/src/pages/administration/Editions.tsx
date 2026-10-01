@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
@@ -19,7 +19,7 @@ import {
   useCreateEditionMutation,
   useEditionListQuery,
   useUpdateEditionMutation,
-} from '../../api/edition'
+} from '@/api/edition'
 import { useLanguageCode } from '../../hooks/useLanguageCode'
 
 const Container = styled('div')(() => ({
@@ -58,7 +58,7 @@ const SaveButton = styled(LoadingButton)(() => ({
   width: 'fit-content',
 }))
 
-const initialState: TEditableEdition = {
+const createInitialEditionState = (): TEditableEdition => ({
   name: {
     cs: '',
     sk: '',
@@ -67,12 +67,14 @@ const initialState: TEditableEdition = {
   isDefault: false,
   isAttachment: false,
   isPeriodicAttachment: false,
-}
+})
 
 const Editions = () => {
   const theme = useTheme()
   const { t } = useTranslation()
-  const [edition, setEdition] = useState<TEditableEdition>(initialState)
+  const [edition, setEdition] = useState<TEditableEdition>(
+    createInitialEditionState()
+  )
   const { languageCode } = useLanguageCode()
 
   const {
@@ -124,7 +126,9 @@ const Editions = () => {
               component="div"
               className={clsx({ active: !edition.id })}
               onClick={() =>
-                !pendingMutation ? setEdition(initialState) : null
+                !pendingMutation
+                  ? setEdition(createInitialEditionState())
+                  : null
               }
               sx={{
                 marginTop: theme.spacing(0.875),

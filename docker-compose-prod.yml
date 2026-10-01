@@ -4,10 +4,6 @@ services:
     restart: unless-stopped
     depends_on:
       - permonik-database
-      - permonik-redis
-    build:
-      context: .
-      dockerfile: permonik-api/docker/Dockerfile
     networks:
       - permonik
     expose:
@@ -20,7 +16,10 @@ services:
           memory: '2048M'
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      REDIS_HOST: permonik-redis
+      IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_ENVIRONMENT: production
+      SENTRY_RELEASE: ${PERMONIK_TAG:?PERMONIK_TAG is required}
       TZ: "Europe/Prague"
       SERVER_PORT: "8080"
 
@@ -58,12 +57,15 @@ services:
         limits:
           memory: '24M'
 
-  permonik-gateway:
-    image: eu.gcr.io/inqool-1301/permonik/prod/permonik-gateway:${PERMONIK_TAG}
+  permonik-identity-gateway:
+    image: eu.gcr.io/inqool-1301/permonik/prod/permonik-identity-gateway:${PERMONIK_TAG}
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: permonik-gateway/Dockerfile
+    depends_on:
+      - permonik-api
+      - permonik-identity-database
+      - permonik-identity-redis
+      - permonik-web-admin
+      - permonik-web-public
     networks:
       - permonik
     ports:
@@ -73,12 +75,43 @@ services:
         reservations:
           memory: '96M'
         limits:
-          memory: '192M'
+          memory: '512M'
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SERVER_PORT: "8080"
+      IDENTITY_DATABASE_URL: jdbc:postgresql://permonik-identity-database:5432/permonik_identity
+      IDENTITY_DATABASE_PASSWORD: ${IDENTITY_DATABASE_PASSWORD:?IDENTITY_DATABASE_PASSWORD is required}
+      SPRING_DATA_REDIS_HOST: permonik-identity-redis
+      PERMONIK_CORE_URL: http://permonik-api:8080
+      PERMONIK_EXPORT_URL: http://permonik-export-api:8080
+      PERMONIK_ADMIN_WEB_URL: http://permonik-web-admin:8080
+      PERMONIK_PUBLIC_WEB_URL: http://permonik-web-public:8080
+      PERMONIK_ADMIN_HOSTS: app.permonik.nkp.cz
+      PERMONIK_PUBLIC_HOSTS: permonik.nkp.cz
+      IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
+      SAML_SP_ENTITY_ID: https://app.permonik.nkp.cz/shibboleth
+      SAML_SP_ACS: https://app.permonik.nkp.cz/Shibboleth.sso/SAML2/POST
+      TZ: "Europe/Prague"
     volumes:
-      - /opt/shibboleth-sp-config:/etc/shibboleth:ro
-      - /var/log/supervisor:/var/log/supervisor
-      - /var/log/apache2:/var/log/apache2
-      - /var/log/shibboleth:/var/log/shibboleth
+      - /opt/shibboleth-sp-config:/run/secrets/shibboleth:ro
+
+  permonik-identity-database:
+    image: postgres:18.6-alpine
+    restart: unless-stopped
+    networks:
+      - permonik
+    deploy:
+      resources:
+        reservations:
+          memory: '256M'
+        limits:
+          memory: '512M'
+    environment:
+      POSTGRES_DB: permonik_identity
+      POSTGRES_USER: permonik
+      POSTGRES_PASSWORD: ${IDENTITY_DATABASE_PASSWORD:?IDENTITY_DATABASE_PASSWORD is required}
+    volumes:
+      - identity-database-volume:/var/lib/postgresql
 
   permonik-database:
     image: solr:9.10.0
@@ -99,7 +132,7 @@ services:
     volumes:
       - /data/solr:/var/solr
 
-  permonik-redis:
+  permonik-identity-redis:
     image: redis:8-alpine
     restart: unless-stopped
     networks:
@@ -111,11 +144,12 @@ services:
         limits:
           memory: 100m
     volumes:
-      - redis-volume:/data
+      - identity-session-volume:/data
     command: [ "redis-server", "--appendonly", "yes" ]
 
 networks:
   permonik:
 
 volumes:
-  redis-volume:
+  identity-session-volume:
+  identity-database-volume:

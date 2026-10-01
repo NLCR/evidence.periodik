@@ -5,7 +5,7 @@ import {
   useSpecimenFacetsQuery,
   useSpecimenListQuery,
   useSpecimensStartDateForCalendar,
-} from '../../../../api/specimen'
+} from '@/api/specimen'
 import { useLanguageCode } from '../../../../hooks/useLanguageCode'
 import { type TMetaTitle } from '../../../../schema/metaTitle'
 

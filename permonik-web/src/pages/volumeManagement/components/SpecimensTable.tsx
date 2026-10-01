@@ -8,22 +8,20 @@ import {
   type GridColDef,
   type GridColumnHeaderParams,
   type GridRenderCellParams,
+  type GridCellParams,
+  type GridRenderEditCellParams,
 } from '@mui/x-data-grid-pro'
 import Box from '@mui/material/Box'
 import { alpha, styled } from '@mui/material/styles'
 import Checkbox from '@mui/material/Checkbox'
-import {
-  type GridCellParams,
-  type GridRenderEditCellParams,
-} from '@mui/x-data-grid/models/params/gridCellParams'
 import { blue, pink } from '@mui/material/colors'
 import {
   type TEditableSpecimen,
   type TSpecimenDamageTypes,
-} from '../../../schema/specimen'
-import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { type TMutation } from '../../../schema/mutation'
-import { type TEdition } from '../../../schema/edition'
+} from '@/schema/specimen'
+import { useVolumeManagementStore } from '@/slices/useVolumeManagementStore'
+import { type TMutation } from '@/schema/mutation'
+import { type TEdition } from '@/schema/edition'
 import DamagedAndMissingPagesEditCell from './editCells/DamagedAndMissingPagesEditCell'
 import DamageTypesEditCell from './editCells/DamageTypesEditCell'
 import MutationMarkSelectorModalContainer from './editCells/MutationMarkSelectorModalContainer'
@@ -33,14 +31,14 @@ import { useSearchParams } from 'react-router-dom'
 import {
   APP_WITH_EDITING_ENABLED,
   JUMP_TO_SPECIMEN_WITH_ID,
-} from '../../../utils/constants'
-import { useLanguageCode } from '../../../hooks/useLanguageCode'
-import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
+} from '@/utils/constants'
+import { useLanguageCode } from '@/hooks/useLanguageCode'
+import { useMuiTableLang } from '@/hooks/useMuiTableLang'
 import {
   canUseAttachmentOnDate,
   checkAttachmentChange,
   filterSpecimen,
-} from '../../../utils/specimen'
+} from '@/utils/specimen'
 import { validate as uuidValidate } from 'uuid'
 import TableHeader from './TableHeader'
 import Tooltip from '@mui/material/Tooltip'
@@ -50,12 +48,12 @@ import { useInputDataEditabilityContext } from './inputData/InputDataEditability
 import NumMissingEditCell from './editCells/NumMissingEditCell'
 import NumExistsEditCell from './editCells/NumExistsEditCell'
 import { type GridApiCommunity } from '@mui/x-data-grid/internals'
-import { useFormatDate } from '../../../utils/date'
+import { useFormatDate } from '@/utils/date'
 import {
   getMutationMarkLabel,
   isUnmarkedMutationMark,
-} from '../../../utils/mutationMark'
-import { useMeQuery } from '../../../api/user'
+} from '@/utils/mutationMark'
+import { useMeQuery } from '@/api/user'
 import { toast } from 'react-toastify'
 
 const ODD_OPACITY = 0.2
@@ -466,12 +464,12 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       },
       {
         field: 'mutationId',
-        headerName: t('volume_overview.mutation'),
+        headerName: t('common.fields.mutation'),
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.mutation')}>
+          <Tooltip title={t('common.fields.mutation')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.mutation_short'),
+                __html: t('common.fields_short.mutation'),
               }}
             />
           </Tooltip>
@@ -548,12 +546,12 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       },
       {
         field: 'name',
-        headerName: t('volume_overview.name'),
+        headerName: t('common.fields.name'),
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.name')}>
+          <Tooltip title={t('common.fields.name')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.name_short'),
+                __html: t('common.fields_short.name'),
               }}
             />
           </Tooltip>
@@ -569,12 +567,12 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       },
       {
         field: 'subName',
-        headerName: t('volume_overview.sub_name'),
+        headerName: t('common.fields.sub_name'),
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.sub_name')}>
+          <Tooltip title={t('common.fields.sub_name')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.sub_name_short'),
+                __html: t('common.fields_short.sub_name'),
               }}
             />
           </Tooltip>
@@ -613,12 +611,12 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
       {
         /* bug fix, with the right name it hasn't updated value */
         field: 'mutationMark2',
-        headerName: t('volume_overview.mutation_mark'),
+        headerName: t('common.fields.mutation_mark'),
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.mutation_mark')}>
+          <Tooltip title={t('common.fields.mutation_mark')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.mutation_mark_short'),
+                __html: t('common.fields_short.mutation_mark'),
               }}
             />
           </Tooltip>
@@ -672,7 +670,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('OK'),
+            row.damageTypes?.includes('OK'),
             row.numExists,
             !disabled,
             'success'
@@ -700,8 +698,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          const damageExists =
-            !!row.damageTypes?.includes('PP') && row.numExists
+          const damageExists = row.damageTypes?.includes('PP') && row.numExists
 
           const damagedPages = row.damagedPages
           if (damagedPages.length > 0) {
@@ -737,7 +734,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('Deg'),
+            row.damageTypes?.includes('Deg'),
             row.numExists,
             !disabled
           )
@@ -764,8 +761,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         headerAlign: 'center',
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
-          const damageExists =
-            !!row.damageTypes?.includes('ChS') && row.numExists
+          const damageExists = row.damageTypes?.includes('ChS') && row.numExists
 
           const missingPages = row.missingPages
           if (missingPages.length > 0) {
@@ -800,7 +796,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('ChPag'),
+            row.damageTypes?.includes('ChPag'),
             row.numExists,
             !disabled
           )
@@ -828,7 +824,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('ChDatum'),
+            row.damageTypes?.includes('ChDatum'),
             row.numExists,
             !disabled
           )
@@ -856,7 +852,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('ChCis'),
+            row.damageTypes?.includes('ChCis'),
             row.numExists,
             !disabled
           )
@@ -884,7 +880,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('ChSv'),
+            row.damageTypes?.includes('ChSv'),
             row.numExists,
             !disabled
           )
@@ -913,7 +909,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('NS'),
+            row.damageTypes?.includes('NS'),
             row.numExists,
             !disabled
           )
@@ -941,7 +937,7 @@ const Table: FC<TableProps> = ({ apiRef, mutations, editions }) => {
         renderCell: (params: GridRenderCellParams<TEditableSpecimen>) => {
           const { row } = params
           return renderCheckBox(
-            !!row.damageTypes?.includes('Cz'),
+            row.damageTypes?.includes('Cz'),
             row.numExists,
             !disabled
           )

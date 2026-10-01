@@ -77,8 +77,8 @@ const Periodicity: FC<PeriodicityProps> = ({ editions, metaTitles }) => {
               <TableCell>{t('volume_overview.is_in_volume')}</TableCell>
               <TableCell>{t('volume_overview.edition')}</TableCell>
               <TableCell>{t('volume_overview.pages_count')}</TableCell>
-              <TableCell>{t('volume_overview.name')}</TableCell>
-              <TableCell>{t('volume_overview.sub_name')}</TableCell>
+              <TableCell>{t('common.fields.name')}</TableCell>
+              <TableCell>{t('common.fields.sub_name')}</TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>

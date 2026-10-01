@@ -91,8 +91,8 @@ const LockedInputDataItem = ({
                 <EditIcon />
               </IconButton>
             }
-            confirmLabel={t('volume_overview.editing_dialog_yes')}
-            refuseLabel={t('volume_overview.editing_dialog_no')}
+            confirmLabel={t('common.confirm')}
+            refuseLabel={t('common.cancel')}
           />
         </>
       )}

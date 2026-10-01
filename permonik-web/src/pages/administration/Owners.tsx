@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
@@ -17,7 +17,7 @@ import {
   useGetSiglaListMutation,
   useOwnerListQuery,
   useUpdateOwnerMutation,
-} from '../../api/owner'
+} from '@/api/owner'
 import clone from 'lodash/clone'
 
 const Container = styled('div')(() => ({
@@ -56,16 +56,16 @@ const SaveButton = styled(LoadingButton)(() => ({
   width: 'fit-content',
 }))
 
-const initialState: TEditableOwner = {
+const createInitialOwnerState = (): TEditableOwner => ({
   name: '',
   shorthand: '',
   sigla: '',
-}
+})
 
 const Owners = () => {
   const { t } = useTranslation()
   const theme = useTheme()
-  const [owner, setOwner] = useState<TEditableOwner>(initialState)
+  const [owner, setOwner] = useState<TEditableOwner>(createInitialOwnerState())
 
   const {
     data: owners,
@@ -132,7 +132,9 @@ const Owners = () => {
             <Typography
               component="div"
               className={clsx({ active: !owner.id })}
-              onClick={() => (!pendingMutation ? setOwner(initialState) : null)}
+              onClick={() =>
+                !pendingMutation ? setOwner(createInitialOwnerState()) : null
+              }
               sx={{
                 marginTop: theme.spacing(0.875),
                 marginBottom: theme.spacing(0.875),

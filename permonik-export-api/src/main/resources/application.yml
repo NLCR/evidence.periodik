@@ -1,0 +1,63 @@
+spring:
+  grpc:
+    client:
+      channel:
+        core:
+          target: ${permonik.core-export.grpc.target}
+          ssl:
+            enabled: false
+          inbound:
+            message:
+              max-size: 4MB
+  application:
+    name: permonik-export-api
+  profiles:
+    active: dev
+  threads:
+    virtual:
+      enabled: true
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true
+  datasource:
+    url: ${EXPORT_API_DATABASE_URL}
+    username: permonik
+    password: ${EXPORT_API_DATABASE_PASSWORD}
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.sql
+  web:
+    error:
+      path: /error
+      whitelabel:
+        enabled: true
+      include-exception: true
+      include-message: always
+
+permonik:
+  core-export:
+    grpc:
+      token: ${CORE_EXPORT_GRPC_TOKEN}
+      target: ${CORE_EXPORT_GRPC_TARGET}
+      deadline: 10s
+  security:
+    internal-jwt:
+      secret: ${IDENTITY_JWT_SECRET}
+
+server:
+  port: 8080
+  forward-headers-strategy: framework
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: "DEBUG"
+
+sentry:
+  dsn: ""
+  enabled: false

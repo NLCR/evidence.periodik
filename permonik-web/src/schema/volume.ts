@@ -6,7 +6,7 @@ import {
 } from './specimen'
 import { AuditableSchema } from './common'
 import i18next from '../i18next'
-import { mutationMarkSchema } from '../utils/mutationMark'
+import { MutationMarkSchema } from '@/utils/mutationMark'
 
 export const VolumePeriodicityDaysSchema = z.enum([
   'Monday',
@@ -57,7 +57,7 @@ export const VolumeSchema = AuditableSchema.extend({
   signature: z.string(),
   ownerId: z.string().length(36, i18next.t('schema.owner_empty')),
   year: z.number().min(0, i18next.t('schema.year_min')),
-  mutationMark: mutationMarkSchema,
+  mutationMark: MutationMarkSchema,
 })
 
 export const EditableVolumeSchema = AuditableSchema.extend({
@@ -77,7 +77,7 @@ export const EditableVolumeSchema = AuditableSchema.extend({
   signature: z.string(),
   ownerId: z.string(),
   year: z.string().or(z.number()).optional(),
-  mutationMark: mutationMarkSchema,
+  mutationMark: MutationMarkSchema,
 })
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -31,11 +31,11 @@ const InputDataSignature = () => {
         ),
       }}
     >
-      <TableCell>{t('volume_overview.signature')}</TableCell>
+      <TableCell>{t('common.fields.signature')}</TableCell>
       <TableCell>
         <InputDataTextField
           editableData={{
-            fieldName: t('volume_overview.signature'),
+            fieldName: t('common.fields.signature'),
             saveChange: (value: string) => {
               setSignature(value)
               setSpecimensState(

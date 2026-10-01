@@ -4,11 +4,11 @@ import clone from 'lodash/clone'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
-import { type GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
+import { type GridRenderEditCellParams } from '@mui/x-data-grid-pro'
 import {
   type TEditableSpecimen,
   type TSpecimenDamageTypes,
-} from '../../../../schema/specimen'
+} from '@/schema/specimen'
 import ModalContainer from '../../../../components/ModalContainer'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'

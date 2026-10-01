@@ -20,7 +20,7 @@ const OwnerFacetGroup = () => {
               displayedName: owners?.find((mc) => mc.id === p)?.shorthand,
             }))
       }
-      header={t('specimens_overview.owner')}
+      header={t('common.fields.owner')}
       onChange={(value) =>
         setParams({
           ...params,

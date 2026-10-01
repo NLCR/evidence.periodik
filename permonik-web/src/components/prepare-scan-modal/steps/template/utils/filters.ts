@@ -1,0 +1,67 @@
+import { ResolutionStatus } from '@/components/prepare-scan-modal/schemas/commonSchemas'
+import type {
+  TTemplateItem,
+  TTemplateItemWithFormIndex,
+} from '@/components/prepare-scan-modal/schemas/templateSchema'
+import {
+  areAllScanTasksLocked,
+  getVisiblePageReplacements,
+  hasVisibleScanTask,
+} from './templateItemLocking'
+
+export const includesWaitingForRescan = (items: TTemplateItem[]) =>
+  items.some(
+    (item) =>
+      (item.mainScan.type === 'REPLACEMENT' &&
+        item.mainScan.replacement.status ===
+          ResolutionStatus.WAITING_FOR_RESCAN) ||
+      item.pageReplacements.some(
+        (replacement) =>
+          replacement.status === ResolutionStatus.WAITING_FOR_RESCAN
+      )
+  )
+
+export const filterTemplateItemsForPrint = (
+  items: TTemplateItem[],
+  showOnlyRescans: boolean,
+  showOnlyUnlocked: boolean
+) => {
+  const filteredItems = getFilteredTemplateItems(
+    items,
+    showOnlyRescans,
+    showOnlyUnlocked
+  )
+
+  return filteredItems
+    .map(({ item }) => ({
+      ...item,
+      pageReplacements: getVisiblePageReplacements(item),
+    }))
+    .filter(hasVisibleScanTask)
+}
+
+export const getFilteredTemplateItems = (
+  items: TTemplateItem[],
+  showOnlyRescans: boolean,
+  showOnlyUnlocked: boolean
+): TTemplateItemWithFormIndex[] =>
+  items
+    .map((item, formIndex) => ({ item, formIndex }))
+    .filter(({ item }) =>
+      shouldIncludeTemplateItem(item, showOnlyRescans, showOnlyUnlocked)
+    )
+
+export const shouldIncludeTemplateItem = (
+  item: TTemplateItem,
+  showOnlyRescans: boolean,
+  showOnlyUnlocked: boolean
+) =>
+  (!showOnlyRescans ||
+    (item.mainScan.type === 'REPLACEMENT' &&
+      item.mainScan.replacement.status ===
+        ResolutionStatus.WAITING_FOR_RESCAN) ||
+    item.pageReplacements.some(
+      (replacement) =>
+        replacement.status === ResolutionStatus.WAITING_FOR_RESCAN
+    )) &&
+  (!showOnlyUnlocked || !areAllScanTasksLocked(item))

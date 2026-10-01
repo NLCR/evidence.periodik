@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: permonik-identity-gateway
+  profiles:
+    active: dev
+  threads:
+    virtual:
+      enabled: true
+  jackson:
+    mapper:
+      accept-case-insensitive-enums: true
+  datasource:
+    url: ${IDENTITY_DATABASE_URL}
+    username: permonik
+    password: ${IDENTITY_DATABASE_PASSWORD}
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.sql
+  session:
+    timeout: 8h
+    data:
+      redis:
+        namespace: permonik:identity:session
+
+server:
+  forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        secure: true
+        same-site: none
+
+gateway:
+  core-url: ${PERMONIK_CORE_URL}
+  export-url: ${PERMONIK_EXPORT_URL}
+
+identity:
+  jwt:
+    secret: ${IDENTITY_JWT_SECRET}
+  saml:
+    entity-id: ${SAML_SP_ENTITY_ID}
+    acs: ${SAML_SP_ACS}
+    signing-key: file:/run/secrets/shibboleth/sp-key.pem
+    signing-certificate: file:/run/secrets/shibboleth/sp-cert.pem
+    metadata-url: https://metadata.eduid.cz/entities/eduid+idp
+    wayf-url: https://ds.eduid.cz/wayf.php
+
+  web:
+    admin-url: ${PERMONIK_ADMIN_WEB_URL}
+    public-url: ${PERMONIK_PUBLIC_WEB_URL}
+    admin-hosts: ${PERMONIK_ADMIN_HOSTS}
+    public-hosts: ${PERMONIK_PUBLIC_HOSTS}

@@ -13,12 +13,12 @@ import {
 import { type TVolumeDetail } from '../../../schema/volume'
 import { useMutationListQuery } from '../../../api/mutation'
 import { useEditionListQuery } from '../../../api/edition'
-import { useLanguageCode } from '../../../hooks/useLanguageCode'
-import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
 import Tooltip from '@mui/material/Tooltip'
+import { useMuiTableLang } from '../../../hooks/useMuiTableLang'
 import { StripedDataGrid } from '../../volumeManagement/components/SpecimensTable'
-import { getMutationMarkLabel } from '../../../utils/mutationMark'
-import { useFormatDate } from '../../../utils/date'
+import { useLanguageCode } from '@/hooks/useLanguageCode'
+import { useFormatDate } from '@/utils/date'
+import { getMutationMarkLabel } from '@/utils/mutationMark'
 
 type TProps = {
   volume?: TVolumeDetail
@@ -157,10 +157,10 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
         field: 'mutationId',
         headerAlign: 'center',
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.mutation')}>
+          <Tooltip title={t('common.fields.mutation')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.mutation_short'),
+                __html: t('common.fields_short.mutation'),
               }}
             />
           </Tooltip>
@@ -199,10 +199,10 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
         field: 'name',
         headerAlign: 'center',
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.name')}>
+          <Tooltip title={t('common.fields.name')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.name_short'),
+                __html: t('common.fields_short.name'),
               }}
             />
           </Tooltip>
@@ -216,10 +216,10 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
         field: 'subName',
         headerAlign: 'center',
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.sub_name')}>
+          <Tooltip title={t('common.fields.sub_name')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.sub_name_short'),
+                __html: t('common.fields_short.sub_name'),
               }}
             />
           </Tooltip>
@@ -253,10 +253,10 @@ const Table: FC<TProps> = ({ volume = undefined }) => {
         field: 'mutationMark',
         headerAlign: 'center',
         renderHeader: () => (
-          <Tooltip title={t('volume_overview.mutation_mark')}>
+          <Tooltip title={t('common.fields.mutation_mark')}>
             <Box
               dangerouslySetInnerHTML={{
-                __html: t('volume_overview.mutation_mark_short'),
+                __html: t('common.fields_short.mutation_mark'),
               }}
             />
           </Tooltip>

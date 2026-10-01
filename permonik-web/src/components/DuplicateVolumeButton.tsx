@@ -1,10 +1,12 @@
-import React, { type ReactNode, useState } from 'react'
+import { type FC, type ReactNode, useState } from 'react'
 import Button from '@mui/material/Button'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import DuplicateVolumeModal from './DuplicateVolumeModal'
-import { generateVolumeUrlWithParams } from '../utils/generateVolumeUrlWithParams'
-import { type FieldsToReset } from '../utils/duplicateVolume/types'
+import { generateVolumeUrlWithParams } from '@/utils/generateVolumeUrlWithParams'
+import { type FieldsToReset } from '@/utils/duplicateVolume/types'
+import { useMeQuery } from '@/api/user'
+import { hasPermission } from '@/schema/user'
 
 type Props = {
   volumeId?: string | null
@@ -19,7 +21,7 @@ type Props = {
   forceOwnerReset?: boolean
 }
 
-const DuplicateVolumeButton: React.FC<Props> = ({
+const DuplicateVolumeButton: FC<Props> = ({
   volumeId = null,
   metaTitleId = null,
   specimenId = null,
@@ -33,6 +35,7 @@ const DuplicateVolumeButton: React.FC<Props> = ({
 }) => {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
+  const { data: me } = useMeQuery()
   const [isOpen, setIsOpen] = useState(false)
 
   const handleDuplicate = async (fieldsToReset: FieldsToReset[]) => {
@@ -53,7 +56,7 @@ const DuplicateVolumeButton: React.FC<Props> = ({
     )
   }
 
-  return (
+  return hasPermission(me, 'VOLUME_WRITE') ? (
     <>
       <Button
         variant={variant}
@@ -71,7 +74,7 @@ const DuplicateVolumeButton: React.FC<Props> = ({
         forceOwnerReset={forceOwnerReset}
       />
     </>
-  )
+  ) : null
 }
 
 export default DuplicateVolumeButton
