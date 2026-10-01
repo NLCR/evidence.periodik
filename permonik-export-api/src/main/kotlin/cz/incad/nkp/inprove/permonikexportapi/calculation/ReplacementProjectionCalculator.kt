@@ -23,7 +23,7 @@ class ReplacementProjectionCalculator(
         val dependentFillIndexes = linkedMapOf<String, Int>()
         sources.forEach { source ->
             if (isEligible(primary, source, rules)) {
-                projection = applySource(projection, source, issues, rules, warnings)
+                projection = applySource(current = projection, source, issues, rules, warnings)
                 dependentFillIndexes[source.id] =
                     fillIndexCalculator.calculate(projection.snapshot).value
             }
@@ -58,7 +58,7 @@ class ReplacementProjectionCalculator(
     ): CandidateEvaluation =
         evaluateCandidate(
             primary,
-            combine(primary, selectedSources, issues, rules),
+            baseline = combine(primary, sources = selectedSources, issues, rules),
             candidate,
             issues,
             rules,
@@ -80,8 +80,8 @@ class ReplacementProjectionCalculator(
         val projected =
             if (eligible) {
                 applySource(
-                        AppliedProjection(baseline.snapshot, baseline.replacementPlan),
-                        candidate,
+                        current = AppliedProjection(baseline.snapshot, baseline.replacementPlan),
+                        source = candidate,
                         issues,
                         rules,
                         warnings,
@@ -119,9 +119,9 @@ class ReplacementProjectionCalculator(
         issues: IssueSelection,
         rules: SpecimenMatchingRules,
     ): List<CandidateEvaluation> {
-        val baseline = combine(primary, selectedSources, issues, rules)
+        val baseline = combine(primary, sources = selectedSources, issues, rules)
         return candidates
-            .map { evaluateCandidate(primary, baseline, it, issues, rules) }
+            .map { evaluateCandidate(primary, baseline, candidate = it, issues, rules) }
             .filter(CandidateEvaluation::eligible)
             .sortedWith(
                 compareByDescending(CandidateEvaluation::dependentFillIndex)
@@ -172,8 +172,18 @@ class ReplacementProjectionCalculator(
                                 specimen.id,
                             )
                     }
-                    validPages(specimen.id, specimen.missingPages, specimen.pagesCount, warnings)
-                    validPages(specimen.id, specimen.damagedPages, specimen.pagesCount, warnings)
+                    validPages(
+                        specimenId = specimen.id,
+                        pages = specimen.missingPages,
+                        pageCount = specimen.pagesCount,
+                        warnings,
+                    )
+                    validPages(
+                        specimenId = specimen.id,
+                        pages = specimen.damagedPages,
+                        pageCount = specimen.pagesCount,
+                        warnings,
+                    )
                 }
                 if (matches.size > 1) {
                     warnings +=

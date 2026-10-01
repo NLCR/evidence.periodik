@@ -26,6 +26,7 @@ build
 docs/
 
 .playwright-mcp/
+.cortexkit/
 
 __pycache__/
 *.pyc

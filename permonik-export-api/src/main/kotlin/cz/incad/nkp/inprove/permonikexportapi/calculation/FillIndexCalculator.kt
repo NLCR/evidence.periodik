@@ -50,8 +50,20 @@ class FillIndexCalculator {
                 warnings +=
                     CalculationWarning(CalculationWarningCode.UNKNOWN_PAGE_COUNT, specimen.id)
             }
-            val missingPages = validPages(specimen.id, specimen.missingPages, pageCount, warnings)
-            val damagedPages = validPages(specimen.id, specimen.damagedPages, pageCount, warnings)
+            val missingPages =
+                validPages(
+                    specimenId = specimen.id,
+                    pages = specimen.missingPages,
+                    pageCount,
+                    warnings,
+                )
+            val damagedPages =
+                validPages(
+                    specimenId = specimen.id,
+                    pages = specimen.damagedPages,
+                    pageCount,
+                    warnings,
+                )
 
             if (pageCount != null) {
                 pageQuality += 1.0 - missingPages.size.toDouble() / pageCount

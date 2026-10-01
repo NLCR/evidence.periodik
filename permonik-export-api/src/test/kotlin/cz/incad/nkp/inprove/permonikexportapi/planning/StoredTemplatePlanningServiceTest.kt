@@ -22,40 +22,47 @@ class StoredTemplatePlanningServiceTest {
      */
     @Test
     fun groupsVolumesAndCalculatesIndividualIndexes() {
-        val first = volume("first", 1960, "owner-a", "BARCODE-1")
-        val second = volume("second", 1960, "owner-a", "BARCODE-2")
-        val third = volume("third", 1960, "owner-b", "BARCODE-3")
-        val fourth = volume("fourth", 1961, "owner-b", "BARCODE-4")
-        val query = TemplatePlanningQuery("title", "1960", "1961", null, MutationalEditionFilter())
+        val first = volume(id = "first", year = 1960, ownerId = "owner-a", barcode = "BARCODE-1")
+        val second = volume(id = "second", year = 1960, ownerId = "owner-a", barcode = "BARCODE-2")
+        val third = volume(id = "third", year = 1960, ownerId = "owner-b", barcode = "BARCODE-3")
+        val fourth = volume(id = "fourth", year = 1961, ownerId = "owner-b", barcode = "BARCODE-4")
+        val query =
+            TemplatePlanningQuery(
+                metaTitleId = "title",
+                yearFrom = "1960",
+                yearTo = "1961",
+                mutation = null,
+                mutationalEdition = MutationalEditionFilter(),
+            )
         doReturn(
                 listOf(
                     CoreVolumeClient.PlanningVolumeMetadata(
-                        "first",
-                        1960,
-                        "BARCODE-1",
-                        "owner-a",
-                        "A",
+                        id = "first",
+                        year = 1960,
+                        barCode = "BARCODE-1",
+                        ownerId = "owner-a",
+                        ownerShorthand = "A",
                     ),
                     CoreVolumeClient.PlanningVolumeMetadata(
-                        "second",
-                        1960,
-                        "BARCODE-2",
-                        "owner-a",
-                        "A",
+                        id = "second",
+                        year = 1960,
+                        barCode = "BARCODE-2",
+                        ownerId = "owner-a",
+                        ownerShorthand = "A",
                     ),
                     CoreVolumeClient.PlanningVolumeMetadata(
-                        "third",
-                        1960,
-                        "BARCODE-3",
-                        "owner-b",
-                        "B",
+                        id = "third",
+                        year = 1960,
+                        barCode = "BARCODE-3",
+                        ownerId = "owner-b",
+                        ownerShorthand = "B",
                     ),
                     CoreVolumeClient.PlanningVolumeMetadata(
-                        "fourth",
-                        1961,
-                        "BARCODE-4",
-                        "owner-b",
-                        "B",
+                        id = "fourth",
+                        year = 1961,
+                        barCode = "BARCODE-4",
+                        ownerId = "owner-b",
+                        ownerShorthand = "B",
                     ),
                 )
             )
@@ -95,7 +102,7 @@ class StoredTemplatePlanningServiceTest {
             mutationId = "mutation",
             mutationName = StoredLocalizedName("CS", "SK", "EN"),
             mutationMark = StoredMutationMark(null, "UNMARKED", null),
-            owner = StoredOwner(ownerId, "Owner", ownerId, ownerId),
+            owner = StoredOwner(id = ownerId, name = "Owner", shorthand = ownerId, sigla = ownerId),
             signature = null,
             year = year,
             firstNumber = 1,

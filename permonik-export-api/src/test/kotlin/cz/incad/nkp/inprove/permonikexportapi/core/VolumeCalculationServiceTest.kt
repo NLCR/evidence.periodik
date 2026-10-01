@@ -18,7 +18,15 @@ import org.mockito.Mockito.mock
 class VolumeCalculationServiceTest {
     private val core = mock(CoreVolumeClient::class.java)
     private val service = VolumeCalculationService(core)
-    private val issues = IssueSelection(true, false, false, true, false, false)
+    private val issues =
+        IssueSelection(
+            missingPages = true,
+            damagedPages = false,
+            illegiblyBound = false,
+            missingSpecimen = true,
+            censored = false,
+            degradation = false,
+        )
     private val rules = SpecimenMatchingRules(false, false, false)
 
     /** Ranks real candidate contents after prior sources and excludes already selected IDs. */
@@ -45,7 +53,12 @@ class VolumeCalculationServiceTest {
             .batchGetVolumeContents(listOf("redundant", "useful"))
 
         val candidates =
-            service.findReplacementCandidates("primary", listOf("selected"), issues, rules)
+            service.findReplacementCandidates(
+                primaryVolumeId = "primary",
+                replacementVolumeIds = listOf("selected"),
+                issues,
+                rules,
+            )
 
         assertEquals(listOf("useful", "redundant"), candidates.map { it.volumeId })
         assertEquals(listOf(1, 0), candidates.map { it.coveredRequiredUnits })
@@ -86,7 +99,13 @@ class VolumeCalculationServiceTest {
             .batchGetVolumeContents(ids.take(20))
         doReturn(listOf(sources.last())).`when`(core).batchGetVolumeContents(ids.drop(20))
 
-        val result = service.calculate(primary.id, ids.drop(1), issues, rules)
+        val result =
+            service.calculate(
+                primaryVolumeId = primary.id,
+                replacementVolumeIds = ids.drop(1),
+                issues,
+                rules,
+            )
 
         assertEquals(100998, result.fillIndex.value)
         assertEquals(0, result.remainingUnits)
@@ -108,7 +127,12 @@ class VolumeCalculationServiceTest {
             .`when`(core)
             .batchGetVolumeContents(listOf(primary.id))
         assertThrows(IllegalArgumentException::class.java) {
-            service.calculate(primary.id, emptyList(), issues, rules)
+            service.calculate(
+                primaryVolumeId = primary.id,
+                replacementVolumeIds = emptyList(),
+                issues,
+                rules,
+            )
         }
 
         doThrow(Status.UNAVAILABLE.asRuntimeException())
@@ -116,7 +140,12 @@ class VolumeCalculationServiceTest {
             .batchGetVolumeContents(listOf(primary.id))
         val failure =
             assertThrows(StatusRuntimeException::class.java) {
-                service.calculate(primary.id, emptyList(), issues, rules)
+                service.calculate(
+                    primaryVolumeId = primary.id,
+                    replacementVolumeIds = emptyList(),
+                    issues,
+                    rules,
+                )
             }
         assertEquals(Status.Code.UNAVAILABLE, failure.status.code)
     }
@@ -135,7 +164,7 @@ class VolumeCalculationServiceTest {
             mutationId = "mutation",
             mutationName = StoredLocalizedName("Mutation", "Mutation", "Mutation"),
             mutationMark = mark,
-            owner = StoredOwner("owner", "Owner", "O", "SIG"),
+            owner = StoredOwner(id = "owner", name = "Owner", shorthand = "O", sigla = "SIG"),
             signature = null,
             year = 2025,
             firstNumber = 1,

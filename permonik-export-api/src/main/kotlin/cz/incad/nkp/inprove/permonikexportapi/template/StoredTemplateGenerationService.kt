@@ -32,27 +32,29 @@ class StoredTemplateGenerationService(
                 .mapNotNull { it.volumeId }
         val calculation =
             calculations.calculateDetailed(
-                volumeId,
-                sourceIds,
-                settings.issues.toIssueSelection(),
-                settings.replacementSourcesParameters.toMatchingRules(),
+                primaryVolumeId = volumeId,
+                replacementVolumeIds = sourceIds,
+                issues = settings.issues.toIssueSelection(),
+                rules = settings.replacementSourcesParameters.toMatchingRules(),
             )
         val generatedContent =
             generator.generate(
-                calculation.primary,
-                calculation.sources,
-                calculation.combined,
+                primary = calculation.primary,
+                sources = calculation.sources,
+                calculation = calculation.combined,
                 settings,
             )
-        val current = templates.findActiveByVolumeId(volumeId) ?: return save(
-            StoredTemplate(
-                id = UUID.randomUUID(),
-                primaryVolumeId = volumeId,
-                ownerId = calculation.primary.owner.id,
-                state = TemplateState.CREATED,
-                content = generatedContent,
-            )
-        )
+        val current =
+            templates.findActiveByVolumeId(volumeId)
+                ?: return save(
+                    StoredTemplate(
+                        id = UUID.randomUUID(),
+                        primaryVolumeId = volumeId,
+                        ownerId = calculation.primary.owner.id,
+                        state = TemplateState.CREATED,
+                        content = generatedContent,
+                    )
+                )
 
         TemplateRules.checkVersion(current.version, settings.version)
         TemplateRules.checkEditable(current.state)

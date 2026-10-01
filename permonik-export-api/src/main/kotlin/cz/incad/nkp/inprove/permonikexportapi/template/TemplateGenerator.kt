@@ -86,21 +86,22 @@ class TemplateGenerator {
                 }
         val pageReplacements =
             buildList<Replacement> {
-                plan?.pageReplacements?.forEach { add(it.toPageReplacement(sourceById)) }
-                unresolved
-                    .filter { it.page != null }
-                    .mapNotNullTo(this) {
-                        it.page?.let { page ->
-                            Replacement(
-                                ReplacementSource(),
-                                listOf(page),
-                                ReplacementStatus.UNRESOLVED,
-                                locked = false,
-                                visible = false,
-                            )
+                    plan?.pageReplacements?.forEach { add(it.toPageReplacement(sourceById)) }
+                    unresolved
+                        .filter { it.page != null }
+                        .mapNotNullTo(this) {
+                            it.page?.let { page ->
+                                Replacement(
+                                    volume = ReplacementSource(),
+                                    pages = listOf(page),
+                                    status = ReplacementStatus.UNRESOLVED,
+                                    locked = false,
+                                    visible = false,
+                                )
+                            }
                         }
-                    }
-            }.sortedWith(compareReplacementOrder)
+                }
+                .sortedWith(compareReplacementOrder)
 
         return TemplateItem(
             specimen = toTemplateSpecimen(),

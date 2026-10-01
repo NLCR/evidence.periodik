@@ -210,8 +210,15 @@ private fun GrpcVolume.toPlanningMetadata(): CoreVolumeClient.PlanningVolumeMeta
             owner.hasId() &&
             owner.hasShorthand()
     )
-    val calendarYear = Instant.ofEpochSecond(dateFrom.seconds, dateFrom.nanos.toLong()).atZone(ZoneOffset.UTC).year
-    return CoreVolumeClient.PlanningVolumeMetadata(id, calendarYear, barcode, owner.id, owner.shorthand)
+    val calendarYear =
+        Instant.ofEpochSecond(dateFrom.seconds, dateFrom.nanos.toLong()).atZone(ZoneOffset.UTC).year
+    return CoreVolumeClient.PlanningVolumeMetadata(
+        id,
+        year = calendarYear,
+        barCode = barcode,
+        ownerId = owner.id,
+        ownerShorthand = owner.shorthand,
+    )
 }
 
 /** Preserves source presence and exact timestamps without inferring calculation inputs. */
@@ -259,7 +266,7 @@ private fun GrpcVolumeContents.toSnapshot(): StoredVolumeSnapshot = volume.let {
         mutationMark = source.mutationMark.toSnapshot(),
         owner =
             source.owner.let {
-                StoredOwner(it.id, it.name, it.shorthand, it.sigla)
+                StoredOwner(id = it.id, name = it.name, shorthand = it.shorthand, sigla = it.sigla)
             },
         signature = source.signature.takeIf { source.hasSignature() },
         year = source.year,
@@ -279,13 +286,13 @@ private fun GrpcVolumeContents.toSnapshot(): StoredVolumeSnapshot = volume.let {
                         item.hasIsAttachment()
                 )
                 StoredPeriodicityItem(
-                    item.day,
-                    item.numExists,
-                    item.editionId,
-                    item.pagesCount,
-                    item.name,
-                    item.subName,
-                    item.isAttachment,
+                    day = item.day,
+                    numExists = item.numExists,
+                    editionId = item.editionId,
+                    pagesCount = item.pagesCount,
+                    name = item.name,
+                    subName = item.subName,
+                    isAttachment = item.isAttachment,
                 )
             },
         created = source.created.toInstant(),

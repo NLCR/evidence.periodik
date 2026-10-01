@@ -4,12 +4,16 @@ config:
 
 complexity:
   active: true
+  NamedArguments:
+    active: true
+    allowedArguments: 3
+    ignoreArgumentsMatchingNames: true
   LongParameterList:
     active: true
     allowedFunctionParameters: 8
     allowedConstructorParameters: 8
     ignoreDefaultParameters: false
-    ignoreDataClasses: false
+    ignoreDataClasses: true
     ignoreAnnotatedParameter: []
   NestedBlockDepth:
     active: true
@@ -17,9 +21,11 @@ complexity:
 
 style:
   active: true
+  UnnecessaryFullyQualifiedName:
+    active: true
   BracesOnIfStatements:
     active: true
-    singleLine: always
-    multiLine: always
+    singleLine: 'always'
+    multiLine: 'always'
   MandatoryBracesLoops:
     active: true

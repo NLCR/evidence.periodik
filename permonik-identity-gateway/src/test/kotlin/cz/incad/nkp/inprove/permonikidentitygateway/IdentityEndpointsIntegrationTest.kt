@@ -166,11 +166,11 @@ constructor(
 
         val principal =
             identities.provisionSaml(
-                idp,
-                "MIGRATED@NKP.CZ",
-                "Migrated",
-                "User",
-                "new@nkp.cz",
+                idpEntityId = idp,
+                eppn = "MIGRATED@NKP.CZ",
+                firstName = "Migrated",
+                lastName = "User",
+                email = "new@nkp.cz",
             )
 
         assertEquals(migrated.id, principal.id)
@@ -191,15 +191,15 @@ constructor(
     fun jwtUsesRequestedAudience() {
         val principal =
             IdentityPrincipal(
-                UUID.randomUUID(),
-                "jwt-user",
-                "JWT",
-                "User",
-                "jwt-user@example.test",
-                UserRole.DIGITALIZATION,
-                emptyList(),
-                true,
-                listOf("TEMPLATE_MANAGE"),
+                id = UUID.randomUUID(),
+                username = "jwt-user",
+                firstName = "JWT",
+                lastName = "User",
+                email = "jwt-user@example.test",
+                role = UserRole.DIGITALIZATION,
+                owners = emptyList(),
+                active = true,
+                authorityNames = listOf("TEMPLATE_MANAGE"),
             )
 
         val core = SignedJWT.parse(jwtService.create(principal, "permonik-core"))

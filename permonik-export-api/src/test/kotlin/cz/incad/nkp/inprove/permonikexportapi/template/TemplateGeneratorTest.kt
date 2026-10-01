@@ -1,5 +1,6 @@
 package cz.incad.nkp.inprove.permonikexportapi.template
 
+import cz.incad.nkp.inprove.permonikexportapi.calculation.IssueSelection
 import cz.incad.nkp.inprove.permonikexportapi.calculation.ReplacementProjectionCalculator
 import cz.incad.nkp.inprove.permonikexportapi.calculation.SpecimenMatchingRules
 import cz.incad.nkp.inprove.permonikexportapi.calculation.specimen
@@ -29,55 +30,67 @@ class TemplateGeneratorTest {
         val calculation =
             ReplacementProjectionCalculator()
                 .combine(
-                    volume(
-                        specimens =
-                            listOf(
-                                specimen(
-                                    pagesCount = 2,
-                                    missingPages = listOf(1, 2),
-                                    damageTypes = setOf("ChS"),
-                                )
-                            )
-                    ),
-                    listOf(
+                    primary =
                         volume(
-                            id = "source",
-                            specimens = listOf(specimen(id = "source-specimen", pagesCount = 2)),
-                        )
-                    ),
+                            specimens =
+                                listOf(
+                                    specimen(
+                                        pagesCount = 2,
+                                        missingPages = listOf(1, 2),
+                                        damageTypes = setOf("ChS"),
+                                    )
+                                )
+                        ),
+                    sources =
+                        listOf(
+                            volume(
+                                id = "source",
+                                specimens =
+                                    listOf(specimen(id = "source-specimen", pagesCount = 2)),
+                            )
+                        ),
+                    issues =
+                        TemplateIssues(
+                                missingPages = true,
+                                damagedPages = false,
+                                illegiblyBound = false,
+                                missingSpecimen = false,
+                                censored = false,
+                                degradation = false,
+                            )
+                            .toIssues(),
+                    rules =
+                        SpecimenMatchingRules(
+                            matchOwner = false,
+                            matchMutation = false,
+                            matchMutationalEdition = false,
+                        ),
+                )
+        val settings =
+            ScanTemplateSettings(
+                issues =
                     TemplateIssues(
                         missingPages = true,
                         damagedPages = false,
                         illegiblyBound = false,
                         missingSpecimen = false,
                         censored = false,
-                        degradation = false
-                    ).toIssues(),
-                    SpecimenMatchingRules(matchOwner = false, matchMutation = false, matchMutationalEdition = false),
-                )
-        val settings =
-            ScanTemplateSettings(
-                issues = TemplateIssues(
-                    missingPages = true,
-                    damagedPages = false,
-                    illegiblyBound = false,
-                    missingSpecimen = false,
-                    censored = false,
-                    degradation = false
-                ),
+                        degradation = false,
+                    ),
                 replacementSourcesParameters =
                     ReplacementSourcesParameters(
                         metatitle = true,
                         mutation = false,
                         mutationalEdition = false,
                         owner = false,
-                        timeOverlap = true
+                        timeOverlap = true,
                     ),
                 replacementSources = listOf(ReplacementSource("source", 1, 90000)),
                 primaryVolumeFillIndex = 0,
             )
 
-        val content = TemplateGenerator().generate(primary, listOf(source), calculation, settings)
+        val content =
+            TemplateGenerator().generate(primary, sources = listOf(source), calculation, settings)
 
         assertEquals("PRIMARY-BARCODE", content.primaryVolume.barCode)
         assertEquals(
@@ -93,7 +106,7 @@ class TemplateGeneratorTest {
 
     /** Converts the FE issue switches for the calculation used by this focused generator test. */
     private fun TemplateIssues.toIssues() =
-        cz.incad.nkp.inprove.permonikexportapi.calculation.IssueSelection(
+        IssueSelection(
             missingPages = missingPages,
             damagedPages = damagedPages,
             illegiblyBound = illegiblyBound,
@@ -116,7 +129,7 @@ private fun storedVolume(id: String, barcode: String, specimen: StoredSpecimenSn
         mutationId = "mutation",
         mutationName = StoredLocalizedName("Mutation", "Mutacia", "Mutation"),
         mutationMark = StoredMutationMark("A", "MARK", null),
-        owner = StoredOwner("owner", "Library", "LIB", "LIB"),
+        owner = StoredOwner(id = "owner", name = "Library", shorthand = "LIB", sigla = "LIB"),
         signature = "SIGNATURE-$id",
         year = 2025,
         firstNumber = 1,
@@ -124,7 +137,17 @@ private fun storedVolume(id: String, barcode: String, specimen: StoredSpecimenSn
         note = null,
         attachmentsSort = "NONE",
         periodicity =
-            listOf(StoredPeriodicityItem("Monday", true, "edition", 2, "Daily", "", false)),
+            listOf(
+                StoredPeriodicityItem(
+                    day = "Monday",
+                    numExists = true,
+                    editionId = "edition",
+                    pagesCount = 2,
+                    name = "Daily",
+                    subName = "",
+                    isAttachment = false,
+                )
+            ),
         created = Instant.parse("2025-01-01T00:00:00Z"),
         createdBy = "source-user",
         updated = null,

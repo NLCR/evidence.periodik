@@ -510,13 +510,13 @@ constructor(
                 periodicity =
                     listOf(
                         VolumePeriodicity(
-                            false,
-                            false,
-                            "f5a78ed4-e565-4833-9157-d5153435620c",
-                            VolumePeriodicityDay.MONDAY,
-                            0,
-                            "",
-                            "",
+                            numExists = false,
+                            isAttachment = false,
+                            editionId = "f5a78ed4-e565-4833-9157-d5153435620c",
+                            day = VolumePeriodicityDay.MONDAY,
+                            pagesCount = 0,
+                            name = "",
+                            subName = "",
                         )
                     ),
                 firstNumber = 1,
@@ -536,10 +536,24 @@ constructor(
                 primaryVolume = volume,
                 primaryOwnerSigla = "OWNER",
                 replacementSourcesParameters =
-                    ReplacementSourcesParameters(true, false, false, false, true),
+                    ReplacementSourcesParameters(
+                        metatitle = true,
+                        mutation = false,
+                        mutationalEdition = false,
+                        owner = false,
+                        timeOverlap = true,
+                    ),
                 primaryVolumeFillIndex = 50999,
                 combinedFillIndex = 100999,
-                issues = TemplateIssues(true, true, true, true, true, true),
+                issues =
+                    TemplateIssues(
+                        missingPages = true,
+                        damagedPages = true,
+                        illegiblyBound = true,
+                        missingSpecimen = true,
+                        censored = true,
+                        degradation = true,
+                    ),
                 replacementSources = listOf(source),
                 items =
                     listOf(
@@ -548,9 +562,9 @@ constructor(
                             PrimaryMainScan(locked = true, visible = false),
                             listOf(
                                 Replacement(
-                                    source,
-                                    listOf(1, 2),
-                                    ReplacementStatus.ASSIGNED,
+                                    volume = source,
+                                    pages = listOf(1, 2),
+                                    status = ReplacementStatus.ASSIGNED,
                                     locked = true,
                                     visible = false,
                                 )

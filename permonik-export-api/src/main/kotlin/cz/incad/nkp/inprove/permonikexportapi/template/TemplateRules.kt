@@ -144,18 +144,18 @@ object TemplateRules {
                 val main = (item.mainScan as? ReplacementMainScan)?.replacement
                 if (main != null) {
                     violation(
-                            "items[$index].mainScan.replacement",
-                            main.status,
-                            main.volume,
+                            path = "items[$index].mainScan.replacement",
+                            status = main.status,
+                            source = main.volume,
                             target,
                         )
                         ?.let(::add)
                 }
                 item.pageReplacements.forEachIndexed { replacementIndex, replacement ->
                     violation(
-                            "items[$index].pageReplacements[$replacementIndex]",
-                            replacement.status,
-                            replacement.volume,
+                            path = "items[$index].pageReplacements[$replacementIndex]",
+                            status = replacement.status,
+                            source = replacement.volume,
                             target,
                         )
                         ?.let(::add)

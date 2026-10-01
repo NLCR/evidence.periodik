@@ -53,10 +53,10 @@ class StoredTemplateService(
                 .mapNotNull { it.volumeId }
         val candidates =
             calculations.findReplacementCandidatesDetailed(
-                volumeId,
-                selectedIds,
-                query.issues.toIssueSelection(),
-                query.replacementSourcesParameters.toMatchingRules(),
+                primaryVolumeId = volumeId,
+                replacementVolumeIds = selectedIds,
+                issues = query.issues.toIssueSelection(),
+                rules = query.replacementSourcesParameters.toMatchingRules(),
             )
         val nextPriority =
             (query.replacementSources.mapNotNull { it.priority }.maxOrNull() ?: 0) + 1
@@ -72,10 +72,15 @@ class StoredTemplateService(
     override fun fillIndex(volumeId: String, query: FillIndexQuery): Int =
         calculations
             .calculate(
-                volumeId,
-                query.replacementSourcesIds,
-                query.issues.toIssueSelection(),
-                SpecimenMatchingRules(matchOwner = false, matchMutation = false, matchMutationalEdition = false),
+                primaryVolumeId = volumeId,
+                replacementVolumeIds = query.replacementSourcesIds,
+                issues = query.issues.toIssueSelection(),
+                rules =
+                    SpecimenMatchingRules(
+                        matchOwner = false,
+                        matchMutation = false,
+                        matchMutationalEdition = false,
+                    ),
             )
             .fillIndex
             .value

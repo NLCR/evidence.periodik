@@ -39,6 +39,18 @@ detekt {
     basePath.set(rootProject.projectDir)
 }
 
+tasks.named('detekt') {
+    dependsOn('detektMain', 'detektTest')
+}
+
+tasks.named('detektMain') {
+    setSource(files('src/main/kotlin', 'src/main/java'))
+}
+
+tasks.named('detektTest') {
+    setSource(files('src/test/kotlin', 'src/test/java'))
+}
+
 spotless {
     ratchetFrom('origin/main')
 

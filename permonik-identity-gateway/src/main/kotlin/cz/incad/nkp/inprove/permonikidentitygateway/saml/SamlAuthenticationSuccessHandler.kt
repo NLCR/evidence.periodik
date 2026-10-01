@@ -49,8 +49,8 @@ class SamlAuthenticationSuccessHandler(
                 ?: throw IllegalArgumentException("Unknown SAML relying party registration")
         val principal =
             identities.provisionSaml(
-                registration.assertingPartyMetadata.entityId,
-                username,
+                idpEntityId = registration.assertingPartyMetadata.entityId,
+                eppn = username,
                 firstName,
                 lastName,
                 email,

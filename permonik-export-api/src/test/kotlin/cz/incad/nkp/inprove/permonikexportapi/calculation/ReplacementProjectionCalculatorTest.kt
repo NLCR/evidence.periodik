@@ -89,9 +89,9 @@ class ReplacementProjectionCalculatorTest {
         val result =
             calculator.combine(
                 primary,
-                listOf(firstSource, secondSource),
-                missingPagesOnly,
-                noOptionalMatching,
+                sources = listOf(firstSource, secondSource),
+                issues = missingPagesOnly,
+                rules = noOptionalMatching,
             )
 
         assertEquals(
@@ -115,9 +115,9 @@ class ReplacementProjectionCalculatorTest {
         val result =
             calculator.combine(
                 primary,
-                listOf(source),
-                missingSpecimenOnly,
-                noOptionalMatching,
+                sources = listOf(source),
+                issues = missingSpecimenOnly,
+                rules = noOptionalMatching,
             )
 
         assertEquals(
@@ -149,7 +149,12 @@ class ReplacementProjectionCalculatorTest {
             )
 
         val result =
-            calculator.combine(primary, emptyList(), missingSpecimenAndPages, noOptionalMatching)
+            calculator.combine(
+                primary,
+                sources = emptyList(),
+                issues = missingSpecimenAndPages,
+                rules = noOptionalMatching,
+            )
 
         assertEquals(
             listOf(
@@ -217,10 +222,10 @@ class ReplacementProjectionCalculatorTest {
             val result =
                 calculator.evaluateCandidate(
                     primary,
-                    emptyList(),
-                    volume(id = "source", specimens = listOf(source)),
+                    selectedSources = emptyList(),
+                    candidate = volume(id = "source", specimens = listOf(source)),
                     issues,
-                    noOptionalMatching,
+                    rules = noOptionalMatching,
                 )
             assertEquals(0, result.coveredRequiredUnits, source.toString())
             assertEquals(1, result.remainingRequiredUnits, source.toString())
@@ -248,14 +253,20 @@ class ReplacementProjectionCalculatorTest {
             volume(id = "b", specimens = listOf(specimen(id = "damaged", damagedPages = listOf(2))))
         val issues = missingPagesOnly.copy(damagedPages = true)
 
-        val baseline = calculator.combine(primary, listOf(selected), issues, noOptionalMatching)
+        val baseline =
+            calculator.combine(
+                primary,
+                sources = listOf(selected),
+                issues,
+                rules = noOptionalMatching,
+            )
         val results =
             calculator.evaluateCandidates(
                 primary,
-                listOf(selected),
-                listOf(damaged, healthy),
+                selectedSources = listOf(selected),
+                candidates = listOf(damaged, healthy),
                 issues,
-                noOptionalMatching,
+                rules = noOptionalMatching,
             )
 
         assertEquals(2, baseline.requiredUnits)

@@ -61,8 +61,8 @@ class VolumeCalculationService(private val core: CoreVolumeClient) {
         val candidates = storedCandidates.map(StoredVolumeSnapshot::toCalculationSnapshot)
         val evaluations =
             calculator.evaluateCandidates(
-                selected.first(),
-                selected.drop(1),
+                primary = selected.first(),
+                selectedSources = selected.drop(1),
                 candidates,
                 issues,
                 rules,
@@ -103,7 +103,13 @@ class VolumeCalculationService(private val core: CoreVolumeClient) {
         return VolumeCalculation(
             primary = storedVolumes.first(),
             sources = storedVolumes.drop(1),
-            combined = calculator.combine(volumes.first(), volumes.drop(1), issues, rules),
+            combined =
+                calculator.combine(
+                    primary = volumes.first(),
+                    sources = volumes.drop(1),
+                    issues,
+                    rules,
+                ),
         )
     }
 
