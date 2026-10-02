@@ -1,5 +1,6 @@
 package cz.incad.nkp.inprove.permonikexportapi.config
 
+import jakarta.servlet.DispatcherType
 import javax.crypto.spec.SecretKeySpec
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -21,6 +22,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.savedrequest.NullRequestCache
+import org.springframework.security.web.util.matcher.DispatcherTypeRequestMatcher
 
 @Configuration
 @EnableWebSecurity
@@ -39,6 +41,7 @@ class SecurityConfiguration(private val properties: InternalJwtProperties) {
             sessionManagement { sessionCreationPolicy = SessionCreationPolicy.STATELESS }
             requestCache { requestCache = NullRequestCache() }
             authorizeHttpRequests {
+                authorize(DispatcherTypeRequestMatcher(DispatcherType.ERROR), permitAll)
                 authorize("/api/integration/**", permitAll)
                 authorize("/api/export/**", hasAuthority("TEMPLATE_MANAGE"))
                 authorize(anyRequest, denyAll)
