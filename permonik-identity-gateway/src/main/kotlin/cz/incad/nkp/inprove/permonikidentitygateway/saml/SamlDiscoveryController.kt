@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.server.ResponseStatusException
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import org.springframework.web.util.UriComponentsBuilder
 
 @Controller
@@ -20,8 +19,7 @@ class SamlDiscoveryController(private val settings: SamlSettings) {
         val state = UUID.randomUUID().toString()
         session.setAttribute(DISCOVERY_STATE, state)
         val callback =
-            ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/auth/saml/discovery")
+            UriComponentsBuilder.fromUriString(settings.discoveryResponseUrl)
                 .queryParam("state", state)
                 .build()
                 .toUriString()
@@ -36,7 +34,7 @@ class SamlDiscoveryController(private val settings: SamlSettings) {
         return "redirect:$wayf"
     }
 
-    @GetMapping("/api/auth/saml/discovery")
+    @GetMapping(SAML_DISCOVERY_PATH)
     fun callback(
         @RequestParam state: String,
         @RequestParam("entityID") entityId: String,
@@ -56,6 +54,8 @@ class SamlDiscoveryController(private val settings: SamlSettings) {
         return "redirect:/saml2/authenticate/$registrationId"
     }
 }
+
+internal const val SAML_DISCOVERY_PATH = "/Shibboleth.sso/Login"
 
 private const val DISCOVERY_STATE =
     "cz.incad.nkp.inprove.permonikidentitygateway.saml.SamlDiscoveryController.STATE"
