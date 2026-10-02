@@ -10,7 +10,7 @@ Lokální stack vyžaduje Docker Desktop s Docker Compose 2.32 nebo novějším.
 docker compose version
 ```
 
-Vytvořte lokální `.env` podle `.env.example` a vyplňte všechny hodnoty. Náhodné secrets lze vygenerovat například pomocí:
+Vytvořte lokální `.env.local` podle `.env.example` a vyplňte všechny hodnoty. Náhodné secrets lze vygenerovat například pomocí:
 
 ```bash
 openssl rand -base64 48
@@ -18,12 +18,12 @@ openssl rand -base64 48
 
 For `CORE_EXPORT_GRPC_TOKEN`, use `openssl rand -hex 32` instead. This separate,
 mandatory credential is supplied only to core and export. Never commit the populated
-`.env` or reuse the identity JWT secret.
+`.env.local` or reuse the identity JWT secret.
 
 Celý backendový stack se spustí příkazem:
 
 ```bash
-docker compose --env-file .env up --build --watch
+docker compose --env-file .env.local up --build --watch
 ```
 
 Stejný příkaz včetně kontroly dostupnosti Dockeru poskytuje skript:
@@ -45,7 +45,37 @@ První build vytvoří společný Java 25 development image a naplní oddělené
 | Redis | `localhost:6379` |
 | Solr | `http://localhost:8983` |
 
+### Local memory limits
+
+Each backend development container is limited to 2 GiB, including the application,
+Gradle and hot-reload compilation. `JAVA_TOOL_OPTIONS` caps each JVM heap at
+512 MiB; this also applies to processes started by Compose Watch.
+
+The frontend container is limited to 2 GiB, with Node old-space capped at 1 GiB
+per process. Solr remains limited to 2 GiB with a 1 GiB heap, PostgreSQL to
+512 MiB per database and Redis to 100 MiB. Container limits are ceilings, not
+reserved memory; the Docker Desktop VM memory limit still bounds the whole stack.
+Restart Compose Watch through `./start-local.sh` to apply changed limits and env.
+
 Admin varianta frontendu je součástí lokálního Compose stacku a běží přes Vite. Gateway ji načítá přímo z kontejneru `permonik-web`. Public varianta se v lokálním Compose nespouští.
+
+### Solr authentication
+
+Set `SOLR_USERNAME` and `SOLR_PASSWORD` in the ignored `.env.local` file. The username
+accepts letters, digits, `_`, `.`, `@` and `-`; generate a password with
+`openssl rand -hex 32`. Compose supplies the same account to Solr and core API.
+The Solr Admin UI at `http://localhost:8983` requires these credentials too.
+
+Solr stays in user-managed mode and keeps its existing indexes in `solr-data/`.
+Its startup command generates `solr-data/data/security.json` from the env values,
+storing only a salted password hash. Restarting replaces that authentication file;
+rotate the account in `.env.local`, not through the Solr user-management API.
+
+After adding or changing credentials, restart Compose Watch through
+`./start-local.sh` so both containers receive the updated environment. Backend
+source changes continue to use Watch sync and DevTools; no manual image rebuild
+is needed. If running core API directly from an IDE, supply the same credentials
+in its run environment.
 
 Frontend lze v případě potřeby spustit také samostatně mimo Compose:
 

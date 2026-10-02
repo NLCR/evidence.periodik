@@ -9,13 +9,14 @@ import cz.incad.nkp.inprove.permonikexportapi.template.TemplateItem
  * complete.
  */
 fun StoredTemplate.toHttpTemplate(): Template {
+    val persistedId = requireNotNull(id) { "Stored template ID is missing" }
     val persistedVersion = requireNotNull(version) { "Stored template version is missing" }
     val persistedCreatedDate =
         requireNotNull(createdDate) { "Stored template creation date is missing" }
     val persistedModifiedDate =
         requireNotNull(modifiedDate) { "Stored template modification date is missing" }
     return Template(
-        id = id.toString(),
+        id = persistedId.toString(),
         version = persistedVersion,
         state = state,
         primaryVolume = content.primaryVolume,

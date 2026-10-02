@@ -118,6 +118,27 @@ test_permonik_identity_gateway:
       - permonik-identity-gateway/build/reports/tests/
     expire_in: 7 days
 
+test_permonik_export_api:
+  stage: test
+  allow_failure: false
+  tags:
+    - runner-8
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "test"'
+      when: manual
+  script:
+    - export JAVA_HOME=/usr/lib/jvm/java-$JAVA_VERSION-openjdk-amd64
+    - export PATH="$JAVA_HOME/bin:$PATH"
+    - java --version
+    - ./gradlew :permonik-export-api:test
+  artifacts:
+    when: always
+    reports:
+      junit: permonik-export-api/build/test-results/test/*.xml
+    paths:
+      - permonik-export-api/build/reports/tests/
+    expire_in: 7 days
+
 build_permonik_api_test:
   extends: .buildJib
   rules:
@@ -126,6 +147,16 @@ build_permonik_api_test:
   variables:
     COMPONENT: permonik-api
     COMPONENT_NAME: permonik-api
+    DEPLOYMENT: test
+
+build_permonik_export_api_test:
+  extends: .buildJib
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "test"'
+      when: manual
+  variables:
+    COMPONENT: permonik-export-api
+    COMPONENT_NAME: permonik-export-api
     DEPLOYMENT: test
 
 build_permonik_identity_gateway_test:

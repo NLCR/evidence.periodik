@@ -106,6 +106,7 @@ constructor(
     @Test
     fun storesDecisionsWithoutPreviewStateAndRejectsStaleUpdates() {
         val saved = templates.save(template())
+        assertEquals(7, requireNotNull(saved.id).version())
         val loaded = requireNotNull(templates.findActiveByVolumeId(saved.primaryVolumeId))
         assertEquals(0L, loaded.version)
         assertEquals("editor", loaded.createdBy)
@@ -151,6 +152,7 @@ constructor(
             )
         authenticate("reviewer")
         val updated = templates.save(changed)
+        assertEquals(saved.id, updated.id)
         assertEquals(requireNotNull(loaded.version) + 1, updated.version)
         assertThrows(OptimisticLockingFailureException::class.java) {
             templates.save(loaded.copy(state = TemplateState.LATE_FIXES))
@@ -186,7 +188,7 @@ constructor(
         val original = template()
         val saved = templates.save(original)
         assertThrows(DataIntegrityViolationException::class.java) {
-            templates.save(original.copy(id = UUID.randomUUID()))
+            templates.save(original)
         }
         val deleted =
             templates.save(
@@ -196,8 +198,10 @@ constructor(
                 )
             )
         assertNull(templates.findActiveByVolumeId(saved.primaryVolumeId))
-        assertTrue(templates.findById(deleted.id).isPresent)
-        val recreated = templates.save(original.copy(id = UUID.randomUUID()))
+        assertTrue(templates.findById(requireNotNull(deleted.id)).isPresent)
+        val recreated = templates.save(original)
+        assertEquals(7, requireNotNull(recreated.id).version())
+        assertFalse(saved.id == recreated.id)
         assertEquals(recreated.id, templates.findActiveByVolumeId(saved.primaryVolumeId)?.id)
         assertThrows(OptimisticLockingFailureException::class.java) { templates.save(saved) }
     }
@@ -229,7 +233,7 @@ constructor(
         assertThrows(AuthenticationCredentialsNotFoundException::class.java) {
             templates.save(original)
         }
-        assertFalse(templates.findById(original.id).isPresent)
+        assertNull(templates.findActiveByVolumeId(original.primaryVolumeId))
     }
 
     /**
@@ -583,7 +587,6 @@ constructor(
                     ),
             )
         return StoredTemplate(
-            id = UUID.randomUUID(),
             primaryVolumeId = volumeId,
             ownerId = volume.ownerId,
             state = TemplateState.CREATED,

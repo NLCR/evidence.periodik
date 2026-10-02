@@ -21,7 +21,7 @@ import org.springframework.data.relational.core.mapping.Table
  */
 @Table("export_template")
 data class StoredTemplate(
-    @Id val id: UUID,
+    @Id val id: UUID? = null,
     val primaryVolumeId: String,
     val ownerId: String,
     @Version val version: Long? = null,

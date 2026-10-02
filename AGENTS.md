@@ -132,7 +132,7 @@ yarn test
 
 Docker:
 ```bash
-docker compose --env-file .env up --build --watch
+docker compose --env-file .env.local up --build --watch
 
 # Deployment images
 ./gradlew --no-configuration-cache :permonik-api:jibDockerBuild
@@ -142,7 +142,7 @@ docker compose --env-file .env up --build --watch
 
 Local Docker development:
 - requires Docker Compose 2.32+ because backend reload uses `sync+exec`
-- `./start-local.sh` is the convenience entry point and reads `.env` by default
+- `./start-local.sh` is the convenience entry point and reads `.env.local` by default
 - all Spring services run Gradle `bootRun` from the shared Java 25 development image in `infra/development/backend.Dockerfile`
 - source changes are synchronized into the container, compiled with the affected module's `classes` task, and applied by Spring DevTools through `.reloadtrigger`
 - `initial_sync` intentionally reconciles host sources with reused containers before watch begins; do not remove it unless `docker compose watch --no-up` is no longer supported

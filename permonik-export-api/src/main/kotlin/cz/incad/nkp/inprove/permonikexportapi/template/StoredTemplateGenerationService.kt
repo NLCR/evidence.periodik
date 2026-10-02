@@ -5,7 +5,6 @@ import cz.incad.nkp.inprove.permonikexportapi.calculation.SpecimenMatchingRules
 import cz.incad.nkp.inprove.permonikexportapi.core.VolumeCalculationService
 import cz.incad.nkp.inprove.permonikexportapi.template.persistence.StoredTemplate
 import cz.incad.nkp.inprove.permonikexportapi.template.persistence.StoredTemplateRepository
-import java.util.UUID
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -48,7 +47,6 @@ class StoredTemplateGenerationService(
             templates.findActiveByVolumeId(volumeId)
                 ?: return save(
                     StoredTemplate(
-                        id = UUID.randomUUID(),
                         primaryVolumeId = volumeId,
                         ownerId = calculation.primary.owner.id,
                         state = TemplateState.CREATED,

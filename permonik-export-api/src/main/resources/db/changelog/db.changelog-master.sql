@@ -21,3 +21,6 @@ CREATE TABLE export_template (
 
 CREATE UNIQUE INDEX uq_export_template_active_volume
     ON export_template (primary_volume_id) WHERE deleted_date IS NULL;
+
+--changeset permonik:2
+ALTER TABLE export_template ALTER COLUMN id SET DEFAULT uuidv7();

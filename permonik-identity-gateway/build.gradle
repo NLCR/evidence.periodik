@@ -78,7 +78,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    testRuntimeOnly 'com.h2database:h2'
+    testImplementation "org.testcontainers:testcontainers-postgresql:${versions.testcontainersPostgresql}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

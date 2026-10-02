@@ -30,7 +30,15 @@ json_file=$temp_dir/users.json
 csv_file=$temp_dir/users.csv
 trap 'rm -rf "$temp_dir"' EXIT HUP INT TERM
 
-curl --fail --silent --show-error --get "$solr_url" \
+if [ -n "${SOLR_USERNAME:-}" ] || [ -n "${SOLR_PASSWORD:-}" ]; then
+    : "${SOLR_USERNAME:?SOLR_USERNAME is required with SOLR_PASSWORD}"
+    : "${SOLR_PASSWORD:?SOLR_PASSWORD is required with SOLR_USERNAME}"
+    set -- --user "$SOLR_USERNAME:$SOLR_PASSWORD"
+else
+    set --
+fi
+
+curl "$@" --fail --silent --show-error --get "$solr_url" \
     --data-urlencode 'q=*:*' \
     --data-urlencode 'fl=id,email,username,first_name,last_name,role,active,password,owners' \
     --data-urlencode 'rows=100000' \
