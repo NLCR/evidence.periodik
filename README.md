@@ -67,9 +67,13 @@ accepts letters, digits, `_`, `.`, `@` and `-`; generate a password with
 The Solr Admin UI at `http://localhost:8983` requires these credentials too.
 
 Solr stays in user-managed mode and keeps its existing indexes in `solr-data/`.
-Its startup command generates `solr-data/data/security.json` from the env values,
-storing only a salted password hash. Restarting replaces that authentication file;
+The shared `scripts/start-solr.sh` generates `solr-data/data/security.json` from
+the env values, storing only a salted password hash. Restarting replaces that authentication file;
 rotate the account in `.env.local`, not through the Solr user-management API.
+
+Both local and test Compose mount this same script read-only. When copying the
+test Compose file to a server, also copy `scripts/start-solr.sh` into a `scripts/`
+directory next to it. Credentials remain in the server-local environment settings.
 
 After adding or changing credentials, restart Compose Watch through
 `./start-local.sh` so both containers receive the updated environment. Backend
