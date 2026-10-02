@@ -21,7 +21,6 @@ import cz.incad.nkp.inprove.permonikapi.specimen.model.SpecimenMapper;
 import cz.incad.nkp.inprove.permonikapi.volume.mapper.PeriodicityMapper;
 import cz.incad.nkp.inprove.permonikapi.volume.model.Volume;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.*;
-import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcPageRequest;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcPeriodicityItem;
 import cz.incad.nkp.inprove.permonikexportapi.calculation.SpecimenMatchingRules;
 import cz.incad.nkp.inprove.permonikexportapi.core.*;
@@ -239,8 +238,8 @@ class CoreVolumeGrpcIntegrationTest {
     }
 
     /**
-     * Verifies stored search filters, full client pagination and rejection of mismatched
-     * continuation tokens.
+     * Verifies stored search filters, cursor traversal within one stream and late failure
+     * propagation.
      */
     @Test
     void replacementSearchUsesStoredFiltersAndDrainsCursorPages() throws Exception {
@@ -248,6 +247,8 @@ class CoreVolumeGrpcIntegrationTest {
         first.setDateTo(Date.from(Instant.parse("1960-06-30T01:00:00Z")));
         first.setMutationMark(null);
         var third = volume("volume:3");
+        second.setNote("s".repeat(70000));
+        third.setNote("t".repeat(70000));
         var searches = new ArrayList<SolrQuery>();
         doAnswer(
                         invocation -> {
@@ -306,21 +307,29 @@ class CoreVolumeGrpcIntegrationTest {
                         .setMatchMutation(true)
                         .setMatchMutationalEdition(true)
                         .build();
-        var page = authenticated.searchReplacementVolumes(request);
-        var continuation =
-                request.toBuilder()
-                        .setPage(
-                                GrpcPageRequest.newBuilder()
-                                        .setPageSize(10)
-                                        .setPageToken(page.getNextPageToken()))
-                        .build();
-        assertStatus(
-                Status.Code.INVALID_ARGUMENT,
-                () -> authenticated.searchReplacementVolumes(continuation));
+        var streamed = new ArrayList<GrpcVolume>();
+        authenticated.searchReplacementVolumes(request).forEachRemaining(streamed::add);
+        assertEquals(
+                List.of(SECOND, "volume:3"), streamed.stream().map(GrpcVolume::getId).toList());
         var anonymous = CoreExportServiceGrpc.newBlockingStub(channels.createChannel("core"));
         assertStatus(
                 Status.Code.UNAUTHENTICATED, () -> anonymous.searchReplacementVolumes(request));
         verify(solr, never()).query(eq("specimen"), any(SolrQuery.class));
+        doAnswer(
+                        invocation -> {
+                            SolrQuery current = invocation.getArgument(1);
+                            if (current.get("cursorMark") == null) {
+                                return response(Volume.class, List.of(first), 1, null);
+                            }
+                            if ("*".equals(current.get("cursorMark"))) {
+                                return response(Volume.class, List.of(second), 2, "next-1");
+                            }
+                            throw new IOException("late search failure");
+                        })
+                .when(solr)
+                .query(eq("volume"), any(SolrQuery.class));
+        assertStatus(
+                Status.Code.UNAVAILABLE, () -> client.searchReplacementVolumeIds(FIRST, rules));
     }
 
     /**
@@ -332,12 +341,19 @@ class CoreVolumeGrpcIntegrationTest {
         first.setMetaTitleId("title");
         first.setYear(1960);
         second.setYear(1961);
+        first.setNote("f".repeat(70000));
+        second.setNote("s".repeat(70000));
         var searches = new ArrayList<SolrQuery>();
         doAnswer(
                         invocation -> {
                             SolrQuery query = invocation.getArgument(1);
                             searches.add(query);
-                            return response(Volume.class, List.of(first, second), 2, "*");
+                            return switch (query.get("cursorMark")) {
+                                case "*" -> response(Volume.class, List.of(first), 2, "next-1");
+                                case "next-1" ->
+                                        response(Volume.class, List.of(second), 2, "next-2");
+                                default -> response(Volume.class, List.of(), 2, "next-2");
+                            };
                         })
                 .when(solr)
                 .query(eq("volume"), any(SolrQuery.class));
@@ -350,11 +366,10 @@ class CoreVolumeGrpcIntegrationTest {
                         .setMutationalEdition(
                                 GrpcMutationalEditionFilter.newBuilder().setType("UNMARKED"))
                         .build();
-        var page = authenticated.queryPlanningVolumes(request);
+        var streamed = new ArrayList<GrpcVolume>();
+        authenticated.queryPlanningVolumes(request).forEachRemaining(streamed::add);
 
-        assertEquals(
-                List.of(FIRST, SECOND),
-                page.getVolumesList().stream().map(GrpcVolume::getId).toList());
+        assertEquals(List.of(FIRST, SECOND), streamed.stream().map(GrpcVolume::getId).toList());
         var planning =
                 client.queryPlanningVolumes(
                         new TemplatePlanningQuery(
@@ -377,6 +392,26 @@ class CoreVolumeGrpcIntegrationTest {
         assertTrue(filters.contains("mutation_mark_type:\"UNMARKED\""), filters.toString());
         assertTrue(filters.contains("-mutation_mark:[* TO *]"), filters.toString());
         assertEquals("id asc", searches.getFirst().getSortField());
+        doAnswer(
+                        invocation -> {
+                            SolrQuery current = invocation.getArgument(1);
+                            if ("*".equals(current.get("cursorMark"))) {
+                                return response(Volume.class, List.of(first), 2, "next-1");
+                            }
+                            throw new IOException("late planning failure");
+                        })
+                .when(solr)
+                .query(eq("volume"), any(SolrQuery.class));
+        assertStatus(
+                Status.Code.UNAVAILABLE,
+                () ->
+                        client.queryPlanningVolumes(
+                                new TemplatePlanningQuery(
+                                        "title",
+                                        "1960",
+                                        "1965",
+                                        null,
+                                        new MutationalEditionFilter(null, null, null))));
     }
 
     /**
@@ -443,6 +478,8 @@ class CoreVolumeGrpcIntegrationTest {
      */
     @Test
     void loopbackTransportUsesTheSameSecurityBoundary() {
+        first.setNote("x".repeat(70000));
+        stored.forEach(specimen -> specimen.setName("n".repeat(300)));
         int port =
                 servers.stream()
                         .mapToInt(it -> it.getPort())
@@ -579,6 +616,44 @@ class CoreVolumeGrpcIntegrationTest {
         assertTrue(finished.await(2, TimeUnit.SECONDS));
     }
 
+    /** Streams a batch and a single volume exceeding the message limit without truncation. */
+    @Test
+    void oversizedContentsUseBoundedStreamMessages() throws Exception {
+        first.setNote("x".repeat(70000));
+        second.setNote("y".repeat(70000));
+        stored.forEach(specimen -> specimen.setName("n".repeat(300)));
+        var frames =
+                authenticated
+                        .withDeadlineAfter(2, TimeUnit.SECONDS)
+                        .batchGetVolumeContents(
+                                BatchGetVolumeContentsRequest.newBuilder()
+                                        .addAllVolumeIds(List.of(FIRST, SECOND))
+                                        .build());
+        long bytes = 0;
+        int specimenCount = 0;
+        while (frames.hasNext()) {
+            var frame = frames.next();
+            assertTrue(frame.getSerializedSize() <= 131072);
+            bytes += frame.getSerializedSize();
+            if (frame.hasSpecimen()) {
+                specimenCount++;
+            }
+        }
+        assertTrue(bytes > 131072);
+        assertEquals(1001, specimenCount);
+        var loaded = client.batchGetVolumeContents(List.of(FIRST, SECOND));
+        assertEquals(List.of(FIRST, SECOND), loaded.stream().map(it -> it.getId()).toList());
+        assertEquals(first.getNote(), loaded.getFirst().getNote());
+        assertEquals(second.getNote(), loaded.getLast().getNote());
+        assertEquals(1000, loaded.getFirst().getSpecimens().size());
+        assertEquals("n".repeat(300), loaded.getFirst().getSpecimens().getLast().getName());
+
+        second.setNote("y".repeat(131072));
+        assertStatus(
+                Status.Code.RESOURCE_EXHAUSTED,
+                () -> client.batchGetVolumeContents(List.of(FIRST, SECOND)));
+    }
+
     /** Rejects absent required stored fields while keeping explicit zero and false valid. */
     @Test
     void missingRequiredSourceFieldsFailClearly() {
@@ -637,18 +712,21 @@ class CoreVolumeGrpcIntegrationTest {
     @Test
     void missingRequiredWireFieldsAreDataLoss() throws Exception {
         var valid =
-                authenticated
-                        .withDeadlineAfter(2, TimeUnit.SECONDS)
-                        .batchGetVolumeContents(
-                                BatchGetVolumeContentsRequest.newBuilder()
-                                        .addVolumeIds(FIRST)
-                                        .addVolumeIds(SECOND)
-                                        .build())
-                        .getVolumes(0)
+                collectContents(
+                        authenticated
+                                .withDeadlineAfter(2, TimeUnit.SECONDS)
+                                .batchGetVolumeContents(
+                                        BatchGetVolumeContentsRequest.newBuilder()
+                                                .addVolumeIds(FIRST)
+                                                .addVolumeIds(SECOND)
+                                                .build()))
+                        .get(0)
                         .toBuilder();
         var source = valid.getSpecimens(1).toBuilder();
         valid.clearSpecimens().addSpecimens(source);
         var reply = new java.util.concurrent.atomic.AtomicReference<>(valid.build());
+        var sendData = new java.util.concurrent.atomic.AtomicBoolean(true);
+        var failure = new java.util.concurrent.atomic.AtomicReference<Status>();
         String name = io.grpc.inprocess.InProcessServerBuilder.generateName();
         var server =
                 io.grpc.inprocess.InProcessServerBuilder.forName(name)
@@ -661,10 +739,30 @@ class CoreVolumeGrpcIntegrationTest {
                                             io.grpc.stub.StreamObserver<
                                                             BatchGetVolumeContentsResponse>
                                                     observer) {
-                                        observer.onNext(
-                                                BatchGetVolumeContentsResponse.newBuilder()
-                                                        .addVolumes(reply.get())
-                                                        .build());
+                                        if (sendData.get()) {
+                                            observer.onNext(
+                                                    BatchGetVolumeContentsResponse.newBuilder()
+                                                            .setVolume(reply.get().getVolume())
+                                                            .build());
+                                            for (var specimen : reply.get().getSpecimensList()) {
+                                                observer.onNext(
+                                                        BatchGetVolumeContentsResponse.newBuilder()
+                                                                .setSpecimen(
+                                                                        GrpcVolumeSpecimen
+                                                                                .newBuilder()
+                                                                                .setVolumeId(
+                                                                                        reply.get()
+                                                                                                .getVolume()
+                                                                                                .getId())
+                                                                                .setSpecimen(
+                                                                                        specimen))
+                                                                .build());
+                                            }
+                                        }
+                                        if (failure.get() != null) {
+                                            observer.onError(failure.get().asRuntimeException());
+                                            return;
+                                        }
                                         observer.onCompleted();
                                     }
                                 })
@@ -726,6 +824,15 @@ class CoreVolumeGrpcIntegrationTest {
                 assertStatus(
                         Status.Code.DATA_LOSS, () -> peer.batchGetVolumeContents(List.of(FIRST)));
             }
+            reply.set(valid.build());
+            sendData.set(false);
+            assertStatus(Status.Code.DATA_LOSS, () -> peer.batchGetVolumeContents(List.of(FIRST)));
+            failure.set(Status.UNAVAILABLE);
+            assertStatus(
+                    Status.Code.UNAVAILABLE, () -> peer.batchGetVolumeContents(List.of(FIRST)));
+            sendData.set(true);
+            assertStatus(
+                    Status.Code.UNAVAILABLE, () -> peer.batchGetVolumeContents(List.of(FIRST)));
         } finally {
             channel.shutdownNow().awaitTermination(2, TimeUnit.SECONDS);
             server.shutdownNow().awaitTermination(2, TimeUnit.SECONDS);
@@ -806,8 +913,37 @@ class CoreVolumeGrpcIntegrationTest {
 
     /** Asserts native gRPC failure codes without depending on implementation exception text. */
     private static void assertStatus(
-            Status.Code code, org.junit.jupiter.api.function.Executable call) {
-        assertEquals(code, assertThrows(StatusRuntimeException.class, call).getStatus().getCode());
+            Status.Code code, org.junit.jupiter.api.function.ThrowingSupplier<?> call) {
+        assertEquals(
+                code,
+                assertThrows(
+                                StatusRuntimeException.class,
+                                () -> {
+                                    var result = call.get();
+                                    if (result instanceof Iterator<?> stream) {
+                                        stream.forEachRemaining(ignored -> {});
+                                    }
+                                })
+                        .getStatus()
+                        .getCode());
+    }
+
+    /** Assembles raw frames for malformed-peer fixtures without using the export converter. */
+    private static List<GrpcVolumeContents> collectContents(
+            Iterator<BatchGetVolumeContentsResponse> stream) {
+        var contents = new LinkedHashMap<String, GrpcVolumeContents.Builder>();
+        stream.forEachRemaining(
+                frame -> {
+                    if (frame.hasVolume()) {
+                        contents.put(
+                                frame.getVolume().getId(),
+                                GrpcVolumeContents.newBuilder().setVolume(frame.getVolume()));
+                    } else {
+                        contents.get(frame.getSpecimen().getVolumeId())
+                                .addSpecimens(frame.getSpecimen().getSpecimen());
+                    }
+                });
+        return contents.values().stream().map(GrpcVolumeContents.Builder::build).toList();
     }
 
     /** Produces ephemeral test credentials, never deployment credentials. */

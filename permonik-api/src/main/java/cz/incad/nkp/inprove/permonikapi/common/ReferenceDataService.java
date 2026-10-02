@@ -21,9 +21,7 @@ import cz.incad.nkp.inprove.permonikapi.owner.Owner;
 import cz.incad.nkp.inprove.permonikapi.owner.OwnerDefinition;
 import cz.incad.nkp.inprove.permonikapi.volume.model.Volume;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,7 +58,7 @@ public class ReferenceDataService {
             boolean matchMutation,
             boolean matchEdition,
             int pageSize,
-            String pageToken)
+            String cursorMark)
             throws SolrServerException, IOException {
         var from = primary.getDateFrom().toInstant().atZone(ZoneOffset.UTC).toLocalDate();
         var to = primary.getDateTo().toInstant().atZone(ZoneOffset.UTC).toLocalDate();
@@ -90,23 +88,14 @@ public class ReferenceDataService {
         }
         query.setRows(pageSize);
         query.setSort(ID_FIELD, SolrQuery.ORDER.asc);
-        String prefix = query + "\n";
-        String cursor = "*";
-        if (!pageToken.isEmpty()) {
-            String decoded =
-                    new String(Base64.getUrlDecoder().decode(pageToken), StandardCharsets.UTF_8);
-            if (!decoded.startsWith(prefix) || decoded.length() == prefix.length()) {
-                throw new IllegalArgumentException("Page token does not match the search");
-            }
-            cursor = decoded.substring(prefix.length());
-        }
+        String cursor = cursorMark.isEmpty() ? "*" : cursorMark;
         query.set("cursorMark", cursor);
         QueryResponse response;
         try {
             response = solrClient.query(VOLUME_CORE_NAME, query);
         } catch (SolrException exception) {
             if (exception.code() == 400) {
-                throw new IllegalArgumentException("Invalid search page token", exception);
+                throw new SolrServerException("Invalid replacement cursor", exception);
             }
             throw exception;
         }
@@ -118,12 +107,7 @@ public class ReferenceDataService {
                                 .equals(response.getHeader().get("partialResults").toString()))) {
             throw new SolrServerException("Incomplete replacement search response");
         }
-        String token =
-                cursor.equals(next)
-                        ? ""
-                        : Base64.getUrlEncoder()
-                                .withoutPadding()
-                                .encodeToString((prefix + next).getBytes(StandardCharsets.UTF_8));
+        String token = cursor.equals(next) ? "" : next;
         return new ReplacementPage(response.getBeans(Volume.class), token);
     }
 
@@ -138,7 +122,7 @@ public class ReferenceDataService {
             String mutationMark,
             String mutationMarkType,
             int pageSize,
-            String pageToken)
+            String cursorMark)
             throws SolrServerException, IOException {
         SolrQuery query = new SolrQuery("*:*");
         query.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
@@ -162,23 +146,14 @@ public class ReferenceDataService {
         }
         query.setRows(pageSize);
         query.setSort(ID_FIELD, SolrQuery.ORDER.asc);
-        String prefix = query + "\n";
-        String cursor = "*";
-        if (!pageToken.isEmpty()) {
-            String decoded =
-                    new String(Base64.getUrlDecoder().decode(pageToken), StandardCharsets.UTF_8);
-            if (!decoded.startsWith(prefix) || decoded.length() == prefix.length()) {
-                throw new IllegalArgumentException("Page token does not match planning query");
-            }
-            cursor = decoded.substring(prefix.length());
-        }
+        String cursor = cursorMark.isEmpty() ? "*" : cursorMark;
         query.set("cursorMark", cursor);
         QueryResponse response;
         try {
             response = solrClient.query(VOLUME_CORE_NAME, query);
         } catch (SolrException exception) {
             if (exception.code() == 400) {
-                throw new IllegalArgumentException("Invalid planning page token", exception);
+                throw new SolrServerException("Invalid planning cursor", exception);
             }
             throw exception;
         }
@@ -190,12 +165,7 @@ public class ReferenceDataService {
                                 .equals(response.getHeader().get("partialResults").toString()))) {
             throw new SolrServerException("Incomplete planning response");
         }
-        String token =
-                cursor.equals(next)
-                        ? ""
-                        : Base64.getUrlEncoder()
-                                .withoutPadding()
-                                .encodeToString((prefix + next).getBytes(StandardCharsets.UTF_8));
+        String token = cursor.equals(next) ? "" : next;
         return new PlanningPage(response.getBeans(Volume.class), token);
     }
 
@@ -283,7 +253,7 @@ public class ReferenceDataService {
         return solrClient.query(coreName, query).getBeans(clazz);
     }
 
-    public record ReplacementPage(List<Volume> volumes, String nextPageToken) {}
+    public record ReplacementPage(List<Volume> volumes, String nextCursorMark) {}
 
-    public record PlanningPage(List<Volume> volumes, String nextPageToken) {}
+    public record PlanningPage(List<Volume> volumes, String nextCursorMark) {}
 }

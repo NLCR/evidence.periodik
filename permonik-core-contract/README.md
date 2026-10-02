@@ -39,7 +39,7 @@ Core now includes `org.springframework.boot:spring-boot-starter-grpc-server` and
 export includes `org.springframework.boot:spring-boot-starter-grpc-client`, both
 resolved to 4.1.1 by existing Boot dependency management. Neither starter belongs
 in this contract-only library. `CoreExportGrpcService` implements
-`BatchGetVolumeContents` and `SearchReplacementVolumes`; the other declared RPCs are denied by the global
+`BatchGetVolumeContents`, `SearchReplacementVolumes` and `QueryPlanningVolumes`; other RPCs are denied by the global
 `CoreExportSecurityConfiguration` native Spring gRPC security chain, including for authenticated callers.
 Reflection and health services are explicitly disabled. Netty listens on 9090,
 separate from HTTP 8080; servlet gRPC is disabled and Compose does not publish 9090.
@@ -72,7 +72,7 @@ damage codes as a set for calculation. Unsupported mutation-mark types fail expl
 rather than changing matching semantics. The result contains recorded coverage and
 data warnings, not a certified ideal-list coverage. This internal service performs no
 end-user authorization; export HTTP entry points require the global `TEMPLATE_MANAGE` permission, not an owner check.
-Its `findReplacementCandidates` operation drains all search pages, excludes selected
+Its `findReplacementCandidates` operation drains the metadata stream, excludes selected
 source IDs, loads candidate contents and invokes the existing `evaluateCandidates`
 calculation once. Candidates are ranked against the same prioritized baseline, not
 independently against the untouched primary volume. Failures propagate rather than
@@ -92,7 +92,7 @@ the configuration together; old and new tokens are not accepted simultaneously.
 
 The client sends `authorization: Bearer <token>`, parsed by Spring's standard bearer
 extractor. The global server interceptor uses `MessageDigest.isEqual` and permits only
-the exact batch and replacement-search methods. Missing, wrong or user-JWT credentials return `UNAUTHENTICATED`;
+the exact batch, replacement-search and planning methods. Missing, wrong or user-JWT credentials return `UNAUTHENTICATED`;
 other declared RPCs with valid credentials return `PERMISSION_DENIED`. There is no
 service JWT issuer, audience or user-role claim here. Existing audience-specific
 HTTP JWT security is unchanged and its tokens are not service credentials.
@@ -115,13 +115,22 @@ This service credential must never be treated as an end-user permission grant.
 | `CORE_EXPORT_GRPC_TOKEN` | Mandatory shared credential in core and export only. |
 | `CORE_EXPORT_GRPC_TARGET` | Mandatory export target; Compose sets `static://permonik-api:9090`. Standalone callers must explicitly supply their reachable target. |
 | `permonik.core-export.grpc.deadline` | Export per-call timeout, 10s by default; positive and at most 5 minutes. |
-| `permonik.core-export.grpc.max-response-bytes` | Core protobuf response budget, 4194304 bytes by default. |
+| `permonik.core-export.grpc.max-response-bytes` | Core per-message protobuf budget, 4194304 bytes by default; not a total stream limit. |
 | `spring.grpc.client.channel.core.inbound.message.max-size` | Export receive limit, 4MB by default; align with the server if increased. |
 
-The server counts retained protobuf payloads during collection and checks the exact
-final response size before sending any data. Oversized batches fail atomically with
-`RESOURCE_EXHAUSTED`; a smaller batch may work, but a single oversized volume still
-fails. Cursor exhaustion and result counts are checked; partial or incomplete Solr
+`BatchGetVolumeContents` uses native gRPC server streaming: one metadata message per
+volume in request order, then one message per specimen with its `volume_id`.
+Each message fits the configured budget, including its protobuf envelope. The batch
+and an individual volume's total specimen contents may exceed that budget. A single
+indivisible metadata record or specimen that cannot fit still fails with
+`RESOURCE_EXHAUSTED`. The server sends records with `StreamObserver.onNext`, ends
+successful reads with `onCompleted` and failures with `onError`. The generated blocking
+stub returns an iterator; only successful exhaustion permits returning assembled
+snapshots. There is no application-level completion marker or custom send scheduler.
+The client cancels rejected streams through the standard gRPC context.
+There are no failed-request retries or adaptive batch splitting.
+Core and export must be deployed together for this unary-to-streaming contract change.
+Cursor exhaustion and result counts are checked; partial or incomplete Solr
 responses fail with `UNAVAILABLE`, not `NOT_FOUND` or an empty list. Malformed source
 periodicity/timestamps fail visibly with `INTERNAL`. Cross-core transactional or
 immutable snapshot guarantees are not provided.
@@ -176,8 +185,8 @@ owner or specimen data. No RPC accepts arbitrary Solr queries or field masks.
 | RPC | Purpose and result |
 | --- | --- |
 | `BatchGetVolumeContents` | Load 1..20 distinct volume IDs, including a single primary ID. Return complete metadata and all stored non-deleted specimens in request volume order. Missing or deleted IDs fail the entire RPC with `NOT_FOUND`; no silent omission or partial success. |
-| `SearchReplacementVolumes` | Load the primary by ID, exclude it, require equal metatitle and inclusive overlap, then apply enabled owner/mutation/mutational-edition equality filters. Return paged metadata, never scores. |
-| `QueryPlanningVolumes` | Filter by exact metatitle ID and optional inclusive stored `Volume.year` bounds, optionally mutation ID and mutational edition. An absent year bound is not filtered. No owner filter. Return paged metadata for export-side grouping and calculation. Stored year is required in returned volumes. |
+| `SearchReplacementVolumes` | Load the primary by ID, exclude it, require equal metatitle and inclusive overlap, then apply enabled owner/mutation/mutational-edition equality filters. Stream individual volume metadata records, never scores. |
+| `QueryPlanningVolumes` | Filter by exact metatitle ID and optional inclusive calendar-year overlap bounds, optionally mutation ID and mutational edition. An absent year bound is not filtered. No owner filter. Stream individual metadata records for export-side grouping and calculation. Stored year is required in returned volumes. |
 
 Batch reads deliberately replace separate primary-volume, owner-lookup and
 single-volume-content APIs. `Volume.owner` includes ID, name, shorthand and sigla;
@@ -204,7 +213,7 @@ interval is invalid source data, not something to repair silently.
 
 Search intentionally does not accept issues, source priorities or previously
 computed indexes: core cannot rank a projected combined volume. Export drains all
-pages, excludes already selected internal IDs, batch-loads contents and evaluates
+streamed metadata, excludes already selected internal IDs, batch-loads contents and evaluates
 each remaining candidate against the primary plus prior sources in priority order.
 Only then does it sort by `dependentFillIndex` descending and volume ID ascending.
 Specimen-level natural-number/attachment matching and ambiguity detection remain
@@ -224,24 +233,24 @@ and groups by stored year and owner ID. Core neither sums indexes nor returns a
 combined index. Public planning exposes the stored `Volume.barCode` as `barCode`;
 it is not a specimen number, first/last issue number, signature or computed ordinal.
 
-### Pagination and Completeness
+### Streaming and Completeness
 
-Both queries sort by unique volume ID ascending. Page size defaults to 20 and is
-bounded at 100; negative or larger values are invalid. Empty page token starts a
-query. Subsequent requests retain the same filters and page size and use the opaque
-returned token. Invalid/mismatched tokens return `INVALID_ARGUMENT`. Only an empty
-next token means exhaustion. No total count is needed for existing export workflows.
-Replacement search uses Solr cursor pagination. The opaque token carries the cursor
-bound to the normalized query and page size; it is not a client-supplied Solr expression
-or an authorization credential. Pagination is not an immutable cross-request snapshot.
+Both queries use native server streaming and send one `GrpcVolume` per message in
+ascending unique volume ID order. Requests contain only search criteria; there is
+no gRPC page size, continuation token or page envelope. Core traverses Solr cursor
+pages of 100 records internally and checks cursor progress and incomplete responses.
+Each outgoing metadata record is checked against the per-message size limit.
+Export drains the generated iterator and accepts results only after successful RPC
+completion; a failure after some records never becomes partial planning or ranking.
+The configured deadline covers the whole RPC, including internal cursor traversal.
+The client cancels rejected streams. Solr traversal is not an immutable snapshot.
 
 Within each volume, return all stored specimens in ascending specimen ID order;
 export applies presentation ordering from volume metadata and specimen identity.
 Do not reuse the existing `rows=100000` read without checking completeness. Batch
-size bounds the ID query, not the byte size. Handlers must check their
-configured response-size limit and fail with `RESOURCE_EXHAUSTED` rather than
-truncate. A caller may reduce a multi-volume batch; a single oversized volume
-remains an explicit failure and would require a later paged-content contract.
+size bounds the ID query, not the total byte size. The content stream sends individual
+records without truncation or repeated Solr reads. An indivisible record
+that exceeds the per-message budget fails with `RESOURCE_EXHAUSTED`.
 There is no fabricated Solr revision, cross-core transaction or snapshot guarantee.
 
 ## Source Data and the Ideal List Gap

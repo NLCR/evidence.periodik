@@ -5,7 +5,6 @@ import cz.incad.nkp.inprove.permonikcorecontract.v1.BatchGetVolumeContentsReques
 import cz.incad.nkp.inprove.permonikcorecontract.v1.CoreExportServiceGrpc
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcMutationMark
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcMutationalEditionFilter
-import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcPageRequest
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolume
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolumeContents
 import cz.incad.nkp.inprove.permonikcorecontract.v1.QueryPlanningVolumesRequest
@@ -13,6 +12,7 @@ import cz.incad.nkp.inprove.permonikcorecontract.v1.SearchReplacementVolumesRequ
 import cz.incad.nkp.inprove.permonikexportapi.calculation.SpecimenMatchingRules
 import cz.incad.nkp.inprove.permonikexportapi.planning.TemplatePlanningQuery
 import cz.incad.nkp.inprove.permonikexportapi.template.MutationMarkType
+import io.grpc.Context
 import io.grpc.Status
 import java.time.Instant
 import java.time.ZoneOffset
@@ -52,82 +52,106 @@ class CoreVolumeClient(
         val ownerShorthand: String,
     )
 
-    /**
-     * Drains candidate metadata pages before ranking; never turns a failed or repeated page into
-     * partial results.
-     */
+    /** Drains the candidate metadata stream before ranking without exposing partial results. */
     fun searchReplacementVolumeIds(
         primaryVolumeId: String,
         rules: SpecimenMatchingRules,
     ): List<String> {
         require(primaryVolumeId.isNotBlank()) { "Primary volume ID is required" }
-        val ids = linkedSetOf<String>()
-        val tokens = mutableSetOf<String>()
-        var token = ""
-        do {
-            val request =
-                SearchReplacementVolumesRequest.newBuilder()
-                    .setPrimaryVolumeId(primaryVolumeId)
-                    .setMatchOwner(rules.matchOwner)
-                    .setMatchMutation(rules.matchMutation)
-                    .setMatchMutationalEdition(rules.matchMutationalEdition)
-                    .setPage(GrpcPageRequest.newBuilder().setPageSize(100).setPageToken(token))
-                    .build()
-            val page =
-                stub
-                    .withDeadlineAfter(properties.deadline.toNanos(), TimeUnit.NANOSECONDS)
-                    .searchReplacementVolumes(request)
-            for (volume in page.volumesList) {
-                if (volume.id.isBlank() || volume.id == primaryVolumeId || !ids.add(volume.id)) {
-                    throw Status.DATA_LOSS.withDescription("Invalid replacement search page")
-                        .asRuntimeException()
+        val context = Context.current().withCancellation()
+        return try {
+            context.call {
+                val ids = linkedSetOf<String>()
+                val request =
+                    SearchReplacementVolumesRequest.newBuilder()
+                        .setPrimaryVolumeId(primaryVolumeId)
+                        .setMatchOwner(rules.matchOwner)
+                        .setMatchMutation(rules.matchMutation)
+                        .setMatchMutationalEdition(rules.matchMutationalEdition)
+                        .build()
+                val stream =
+                    stub
+                        .withDeadlineAfter(properties.deadline.toNanos(), TimeUnit.NANOSECONDS)
+                        .searchReplacementVolumes(request)
+                for (volume in stream) {
+                    if (
+                        volume.id.isBlank() || volume.id == primaryVolumeId || !ids.add(volume.id)
+                    ) {
+                        throw Status.DATA_LOSS.withDescription(
+                                "Invalid replacement search response"
+                            )
+                            .asRuntimeException()
+                    }
                 }
+                ids.toList()
             }
-            token = page.nextPageToken
-            if (token.isNotEmpty() && !tokens.add(token)) {
-                throw Status.DATA_LOSS.withDescription("Repeated replacement search page")
-                    .asRuntimeException()
-            }
-        } while (token.isNotEmpty())
-        return ids.toList()
+        } finally {
+            context.cancel(null)
+        }
     }
 
     /**
-     * Loads exactly one contract-sized batch in request order; errors never become empty source
-     * lists.
+     * Assembles streamed records and returns ordered snapshots only after successful gRPC
+     * completion.
      */
     fun batchGetVolumeContents(ids: List<String>): List<StoredVolumeSnapshot> {
         require(ids.size in 1..20 && ids.none(String::isBlank) && ids.distinct().size == ids.size) {
             "Expected 1..20 distinct nonblank volume IDs"
         }
-        val response =
-            stub
-                .withDeadlineAfter(properties.deadline.toNanos(), TimeUnit.NANOSECONDS)
-                .batchGetVolumeContents(
-                    BatchGetVolumeContentsRequest.newBuilder().addAllVolumeIds(ids).build()
-                )
+        val context = Context.current().withCancellation()
         return try {
-            require(
-                response.volumesList.all { it.hasVolume() } &&
-                    response.volumesList.map { it.volume.id } == ids
-            )
-            response.volumesList.map { contents ->
-                val specimenIds = contents.specimensList.map { it.id }
-                require(
-                    specimenIds.none(String::isBlank) &&
-                        specimenIds.distinct().size == specimenIds.size
-                )
-                contents.toSnapshot()
+            context.call {
+                val stream =
+                    stub
+                        .withDeadlineAfter(properties.deadline.toNanos(), TimeUnit.NANOSECONDS)
+                        .batchGetVolumeContents(
+                            BatchGetVolumeContentsRequest.newBuilder().addAllVolumeIds(ids).build()
+                        )
+                try {
+                    val contentsById = linkedMapOf<String, GrpcVolumeContents.Builder>()
+                    val specimenIds = mutableSetOf<String>()
+                    while (stream.hasNext()) {
+                        val frame = stream.next()
+                        when {
+                            frame.hasVolume() -> {
+                                require(
+                                    contentsById.size < ids.size &&
+                                        frame.volume.id == ids[contentsById.size]
+                                )
+                                contentsById[frame.volume.id] =
+                                    GrpcVolumeContents.newBuilder().setVolume(frame.volume)
+                            }
+                            frame.hasSpecimen() -> {
+                                require(
+                                    contentsById.keys.toList() == ids &&
+                                        frame.specimen.hasSpecimen()
+                                )
+                                val target = requireNotNull(contentsById[frame.specimen.volumeId])
+                                val specimen = frame.specimen.specimen
+                                require(specimen.id.isNotBlank() && specimenIds.add(specimen.id))
+                                target.addSpecimens(specimen)
+                            }
+                            else -> throw IllegalArgumentException("Missing stream record")
+                        }
+                    }
+                    require(contentsById.keys.toList() == ids)
+                    contentsById.values.map { builder ->
+                        val contents = builder.build()
+                        contents.toSnapshot()
+                    }
+                } catch (_: IllegalArgumentException) {
+                    throw Status.DATA_LOSS.withDescription("Invalid core volume response")
+                        .asRuntimeException()
+                }
             }
-        } catch (_: IllegalArgumentException) {
-            throw Status.DATA_LOSS.withDescription("Invalid core volume response")
-                .asRuntimeException()
+        } finally {
+            context.cancel(null)
         }
     }
 
     /**
-     * Drains all core planning pages and validates the required stored metadata without calculating
-     * indexes.
+     * Drains the core planning stream and validates the required stored metadata without
+     * calculating indexes.
      */
     fun queryPlanningVolumes(query: TemplatePlanningQuery): List<PlanningVolumeMetadata> {
         val yearFrom = query.yearFrom.toOptionalInt("yearFrom")
@@ -136,10 +160,7 @@ class CoreVolumeClient(
             "yearFrom must be less than or equal to yearTo"
         }
         require(query.metaTitleId.isNotBlank()) { "metaTitleId is required" }
-        val request =
-            QueryPlanningVolumesRequest.newBuilder()
-                .setMetaTitleId(query.metaTitleId)
-                .setPage(GrpcPageRequest.newBuilder().setPageSize(100))
+        val request = QueryPlanningVolumesRequest.newBuilder().setMetaTitleId(query.metaTitleId)
         yearFrom?.let(request::setYearFrom)
         yearTo?.let(request::setYearTo)
         query.mutation?.id?.let {
@@ -157,38 +178,33 @@ class CoreVolumeClient(
                 .build()
                 .also(request::setMutationalEdition)
         }
-        val result = mutableListOf<PlanningVolumeMetadata>()
-        val ids = mutableSetOf<String>()
-        val tokens = mutableSetOf<String>()
-        var token = ""
-        do {
-            request.setPage(
-                GrpcPageRequest.newBuilder().setPageSize(100).setPageToken(token).build()
-            )
-            val page =
-                stub
-                    .withDeadlineAfter(properties.deadline.toNanos(), TimeUnit.NANOSECONDS)
-                    .queryPlanningVolumes(request.build())
-            try {
-                for (volume in page.volumesList) {
-                    val metadata = volume.toPlanningMetadata()
-                    if (!ids.add(metadata.id)) {
-                        throw Status.DATA_LOSS.withDescription("Duplicate planning volume")
-                            .asRuntimeException()
+        val context = Context.current().withCancellation()
+        return try {
+            context.call {
+                val result = mutableListOf<PlanningVolumeMetadata>()
+                val ids = mutableSetOf<String>()
+                val stream =
+                    stub
+                        .withDeadlineAfter(properties.deadline.toNanos(), TimeUnit.NANOSECONDS)
+                        .queryPlanningVolumes(request.build())
+                try {
+                    for (volume in stream) {
+                        val metadata = volume.toPlanningMetadata()
+                        if (!ids.add(metadata.id)) {
+                            throw Status.DATA_LOSS.withDescription("Duplicate planning volume")
+                                .asRuntimeException()
+                        }
+                        result += metadata
                     }
-                    result += metadata
+                } catch (_: IllegalArgumentException) {
+                    throw Status.DATA_LOSS.withDescription("Invalid planning volume response")
+                        .asRuntimeException()
                 }
-            } catch (_: IllegalArgumentException) {
-                throw Status.DATA_LOSS.withDescription("Invalid planning volume response")
-                    .asRuntimeException()
+                result
             }
-            token = page.nextPageToken
-            if (token.isNotEmpty() && !tokens.add(token)) {
-                throw Status.DATA_LOSS.withDescription("Repeated planning page")
-                    .asRuntimeException()
-            }
-        } while (token.isNotEmpty())
-        return result
+        } finally {
+            context.cancel(null)
+        }
     }
 }
 

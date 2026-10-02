@@ -1,6 +1,10 @@
 spring:
   application:
     name: permonik-identity-gateway
+  data:
+    redis:
+      repositories:
+        enabled: false
   profiles:
     active: dev
   threads:
