@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.spring'
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
+    id 'io.sentry.jvm.gradle'
     id 'com.google.cloud.tools.jib'
     id 'dev.detekt'
     id 'com.diffplug.spotless'
@@ -12,8 +13,17 @@ plugins {
 group = 'cz.incad.nkp.inprove'
 version = '0.0.1'
 
+def sentryAuthToken = providers.environmentVariable("SENTRY_AUTH_TOKEN").orNull
 def hostArchitecture = System.getProperty('os.arch').toLowerCase() in ['aarch64', 'arm64'] ? 'arm64' : 'amd64'
 def jibArchitecture = providers.gradleProperty('jibArchitecture').getOrElse(hostArchitecture)
+
+sentry {
+    includeSourceContext = sentryAuthToken != null && !sentryAuthToken.isBlank()
+
+    org = "inqool"
+    projectName = "permonik-api"
+    authToken = sentryAuthToken
+}
 
 kotlin {
     jvmToolchain(25)

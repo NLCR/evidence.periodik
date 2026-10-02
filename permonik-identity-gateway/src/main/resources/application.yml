@@ -49,3 +49,9 @@ identity:
     public-url: ${PERMONIK_PUBLIC_WEB_URL}
     admin-hosts: ${PERMONIK_ADMIN_HOSTS}
     public-hosts: ${PERMONIK_PUBLIC_HOSTS}
+
+sentry:
+  dsn: ""
+  enabled: false
+  tags:
+    service: ${spring.application.name}

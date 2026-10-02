@@ -22,7 +22,7 @@ sentry {
     includeSourceContext = sentryAuthToken != null && !sentryAuthToken.isBlank()
 
     org = "inqool"
-    projectName = "permonik-export-api"
+    projectName = "permonik-api"
     authToken = sentryAuthToken
 }
 

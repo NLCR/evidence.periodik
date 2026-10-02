@@ -49,5 +49,7 @@ springdoc:
 #        security: "DEBUG"
 
 sentry:
+  tags:
+    service: ${spring.application.name}
   dsn: ""
   enabled: false
