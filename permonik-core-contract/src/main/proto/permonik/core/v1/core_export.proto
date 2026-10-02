@@ -12,11 +12,11 @@ import "google/protobuf/timestamp.proto";
 // See the module README for validation, completeness, date and error semantics.
 service CoreExportService {
   // Loads primary, selected replacement or planning volumes with all stored specimens.
-  rpc BatchGetVolumeContents(BatchGetVolumeContentsRequest) returns (BatchGetVolumeContentsResponse);
+  rpc BatchGetVolumeContents(BatchGetVolumeContentsRequest) returns (stream BatchGetVolumeContentsResponse);
   // Finds same-title, overlapping volumes; export calculates and ranks their indexes.
-  rpc SearchReplacementVolumes(SearchReplacementVolumesRequest) returns (GrpcVolumePage);
+  rpc SearchReplacementVolumes(SearchReplacementVolumesRequest) returns (stream GrpcVolume);
   // Lists volumes across owners by stored year, mutation and mutational edition.
-  rpc QueryPlanningVolumes(QueryPlanningVolumesRequest) returns (GrpcVolumePage);
+  rpc QueryPlanningVolumes(QueryPlanningVolumesRequest) returns (stream GrpcVolume);
 }
 
 message BatchGetVolumeContentsRequest {
@@ -25,8 +25,17 @@ message BatchGetVolumeContentsRequest {
 }
 
 message BatchGetVolumeContentsResponse {
-  // Complete contents in request order. Any missing/deleted volume fails the whole RPC.
-  repeated GrpcVolumeContents volumes = 1;
+  // Metadata in request order, then one stored specimen per message.
+  // Successful gRPC completion is required before using the assembled contents.
+  oneof payload {
+    GrpcVolume volume = 1;
+    GrpcVolumeSpecimen specimen = 2;
+  }
+}
+
+message GrpcVolumeSpecimen {
+  string volume_id = 1;
+  GrpcSpecimen specimen = 2;
 }
 
 message GrpcVolumeContents {
@@ -42,7 +51,6 @@ message SearchReplacementVolumesRequest {
   bool match_owner = 2;
   bool match_mutation = 3;
   bool match_mutational_edition = 4;
-  GrpcPageRequest page = 5;
 }
 
 message QueryPlanningVolumesRequest {
@@ -53,7 +61,6 @@ message QueryPlanningVolumesRequest {
   // Absent means no filter; a present value must be nonblank.
   optional string mutation_id = 4;
   GrpcMutationalEditionFilter mutational_edition = 5;
-  GrpcPageRequest page = 6;
 }
 
 message GrpcMutationalEditionFilter {
@@ -61,20 +68,6 @@ message GrpcMutationalEditionFilter {
   optional string mark = 1;
   // MARK, NUMBER or UNMARKED. Absent means match the mark regardless of type.
   optional string type = 2;
-}
-
-message GrpcPageRequest {
-  // 0 (including absent page message) uses 20; allowed explicit sizes are 1..100.
-  int32 page_size = 1;
-  // Empty starts a query; otherwise an opaque continuation for the same filters.
-  string page_token = 2;
-}
-
-message GrpcVolumePage {
-  // Ascending volume ID, no fill indexes. Drain all pages before ranking/grouping.
-  repeated GrpcVolume volumes = 1;
-  // Empty only when the query is exhausted.
-  string next_page_token = 2;
 }
 
 // Source metadata needed for primaryVolume, replacement labels and planning.

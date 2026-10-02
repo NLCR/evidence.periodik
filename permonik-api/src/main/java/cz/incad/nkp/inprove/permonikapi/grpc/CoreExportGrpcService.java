@@ -1,6 +1,5 @@
 package cz.incad.nkp.inprove.permonikapi.grpc;
 
-import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.Timestamp;
 import cz.incad.nkp.inprove.permonikapi.common.ReferenceDataService;
 import cz.incad.nkp.inprove.permonikapi.specimen.SpecimenService;
@@ -17,8 +16,7 @@ import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcPeriodicity;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcPeriodicityItem;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcSpecimen;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolume;
-import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolumeContents;
-import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolumePage;
+import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolumeSpecimen;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.QueryPlanningVolumesRequest;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.SearchReplacementVolumesRequest;
 import io.grpc.Context;
@@ -28,7 +26,6 @@ import io.grpc.stub.StreamObserver;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -50,12 +47,11 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
     /** Returns candidate metadata only; projected coverage and source ranking belong to export. */
     @Override
     public void searchReplacementVolumes(
-            SearchReplacementVolumesRequest request, StreamObserver<GrpcVolumePage> observer) {
+            SearchReplacementVolumesRequest request, StreamObserver<GrpcVolume> observer) {
         try {
-            int pageSize = request.getPage().getPageSize();
-            if (request.getPrimaryVolumeId().isBlank() || pageSize < 0 || pageSize > 100) {
+            if (request.getPrimaryVolumeId().isBlank()) {
                 throw Status.INVALID_ARGUMENT
-                        .withDescription("Expected primary ID and page size 0..100")
+                        .withDescription("Expected nonblank primary ID")
                         .asRuntimeException();
             }
             var primary = references.getVolumesByIds(List.of(request.getPrimaryVolumeId()));
@@ -65,29 +61,39 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
                         .asRuntimeException();
             }
             toVolumeMessage(primary.getFirst());
-            var page =
-                    references.searchReplacementVolumes(
-                            primary.getFirst(),
-                            request.getMatchOwner(),
-                            request.getMatchMutation(),
-                            request.getMatchMutationalEdition(),
-                            pageSize == 0 ? 20 : pageSize,
-                            request.getPage().getPageToken());
-            var response = GrpcVolumePage.newBuilder().setNextPageToken(page.nextPageToken());
-            for (var volume : page.volumes()) {
-                response.addVolumes(toVolumeMessage(volume));
-                checkBudget(response.build().getSerializedSize());
-            }
-            var result = response.build();
-            checkBudget(result.getSerializedSize());
-            observer.onNext(result);
+            String token = "";
+            var tokens = new HashSet<String>();
+            do {
+                if (Context.current().isCancelled()) {
+                    throw Status.CANCELLED.asRuntimeException();
+                }
+                var page =
+                        references.searchReplacementVolumes(
+                                primary.getFirst(),
+                                request.getMatchOwner(),
+                                request.getMatchMutation(),
+                                request.getMatchMutationalEdition(),
+                                100,
+                                token);
+                for (var volume : page.volumes()) {
+                    var message = toVolumeMessage(volume);
+                    checkBudget(message.getSerializedSize());
+                    observer.onNext(message);
+                }
+                token = page.nextCursorMark();
+                if (!token.isEmpty() && !tokens.add(token)) {
+                    throw Status.UNAVAILABLE
+                            .withDescription("Repeated replacement cursor")
+                            .asRuntimeException();
+                }
+            } while (!token.isEmpty());
             observer.onCompleted();
         } catch (StatusRuntimeException exception) {
             observer.onError(exception);
         } catch (IllegalArgumentException exception) {
             observer.onError(
                     Status.INVALID_ARGUMENT
-                            .withDescription("Invalid replacement search or page token")
+                            .withDescription("Invalid replacement search")
                             .asRuntimeException());
         } catch (SolrServerException | IOException exception) {
             observer.onError(
@@ -107,17 +113,14 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
      */
     @Override
     public void queryPlanningVolumes(
-            QueryPlanningVolumesRequest request, StreamObserver<GrpcVolumePage> observer) {
+            QueryPlanningVolumesRequest request, StreamObserver<GrpcVolume> observer) {
         try {
-            int pageSize = request.getPage().getPageSize();
             Integer yearFrom = request.hasYearFrom() ? request.getYearFrom() : null;
             Integer yearTo = request.hasYearTo() ? request.getYearTo() : null;
             if (request.getMetaTitleId().isBlank()
-                    || (yearFrom != null && yearTo != null && yearFrom > yearTo)
-                    || pageSize < 0
-                    || pageSize > 100) {
+                    || (yearFrom != null && yearTo != null && yearFrom > yearTo)) {
                 throw Status.INVALID_ARGUMENT
-                        .withDescription("Invalid planning filters or page size")
+                        .withDescription("Invalid planning filters")
                         .asRuntimeException();
             }
             String mutationId =
@@ -144,31 +147,41 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
                             .asRuntimeException();
                 }
             }
-            var page =
-                    references.searchPlanningVolumes(
-                            request.getMetaTitleId(),
-                            yearFrom,
-                            yearTo,
-                            mutationId,
-                            mutationMark,
-                            mutationMarkType,
-                            pageSize == 0 ? 20 : pageSize,
-                            request.getPage().getPageToken());
-            var response = GrpcVolumePage.newBuilder().setNextPageToken(page.nextPageToken());
-            for (var volume : page.volumes()) {
-                response.addVolumes(toVolumeMessage(volume));
-                checkBudget(response.build().getSerializedSize());
-            }
-            var result = response.build();
-            checkBudget(result.getSerializedSize());
-            observer.onNext(result);
+            String token = "";
+            var tokens = new HashSet<String>();
+            do {
+                if (Context.current().isCancelled()) {
+                    throw Status.CANCELLED.asRuntimeException();
+                }
+                var page =
+                        references.searchPlanningVolumes(
+                                request.getMetaTitleId(),
+                                yearFrom,
+                                yearTo,
+                                mutationId,
+                                mutationMark,
+                                mutationMarkType,
+                                100,
+                                token);
+                for (var volume : page.volumes()) {
+                    var message = toVolumeMessage(volume);
+                    checkBudget(message.getSerializedSize());
+                    observer.onNext(message);
+                }
+                token = page.nextCursorMark();
+                if (!token.isEmpty() && !tokens.add(token)) {
+                    throw Status.UNAVAILABLE
+                            .withDescription("Repeated planning cursor")
+                            .asRuntimeException();
+                }
+            } while (!token.isEmpty());
             observer.onCompleted();
         } catch (StatusRuntimeException exception) {
             observer.onError(exception);
         } catch (IllegalArgumentException exception) {
             observer.onError(
                     Status.INVALID_ARGUMENT
-                            .withDescription("Invalid planning filters or page token")
+                            .withDescription("Invalid planning filters")
                             .asRuntimeException());
         } catch (SolrServerException | IOException exception) {
             observer.onError(
@@ -183,16 +196,13 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
         }
     }
 
-    /**
-     * Loads a complete ordered batch or fails the whole call; no ideal-list inference or partial
-     * success.
-     */
+    /** Streams stored records using native gRPC completion and error signaling. */
     @Override
     public void batchGetVolumeContents(
             BatchGetVolumeContentsRequest request,
             StreamObserver<BatchGetVolumeContentsResponse> observer) {
         try {
-            observer.onNext(loadVolumeContents(request.getVolumeIdsList()));
+            streamVolumeContents(request.getVolumeIdsList(), observer::onNext);
             observer.onCompleted();
         } catch (StatusRuntimeException exception) {
             observer.onError(exception);
@@ -209,11 +219,9 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
         }
     }
 
-    /**
-     * Collects stored volumes and specimens in request order while enforcing the response size
-     * limit.
-     */
-    private BatchGetVolumeContentsResponse loadVolumeContents(List<String> ids)
+    /** Emits metadata followed by individual specimens, checking each protobuf message limit. */
+    private void streamVolumeContents(
+            List<String> ids, Consumer<BatchGetVolumeContentsResponse> send)
             throws SolrServerException, IOException {
         if (ids.isEmpty()
                 || ids.size() > 20
@@ -235,29 +243,32 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
                     .asRuntimeException();
         }
 
-        Map<String, GrpcVolumeContents.Builder> contents = new LinkedHashMap<>();
-        long[] bytes = {0};
         for (String id : ids) {
             var message = toVolumeMessage(found.get(id));
-            contents.put(id, GrpcVolumeContents.newBuilder().setVolume(message));
-            bytes[0] += CodedOutputStream.computeMessageSize(1, message);
-            checkBudget(bytes[0]);
+            var frame = BatchGetVolumeContentsResponse.newBuilder().setVolume(message).build();
+            checkBudget(frame.getSerializedSize());
+            send.accept(frame);
         }
         specimens.forEachSpecimenByVolumeIds(
                 ids,
                 source -> {
                     var message = toSpecimenMessage(source);
-                    bytes[0] += CodedOutputStream.computeMessageSize(2, message);
-                    checkBudget(bytes[0]);
-                    contents.get(required(source.getVolumeId(), "specimen.volume_id"))
-                            .addSpecimens(message);
+                    String id = required(source.getVolumeId(), "specimen.volume_id");
+                    if (!found.containsKey(id)) {
+                        throw Status.DATA_LOSS
+                                .withDescription("Unexpected specimen volume")
+                                .asRuntimeException();
+                    }
+                    var frame =
+                            BatchGetVolumeContentsResponse.newBuilder()
+                                    .setSpecimen(
+                                            GrpcVolumeSpecimen.newBuilder()
+                                                    .setVolumeId(id)
+                                                    .setSpecimen(message))
+                                    .build();
+                    checkBudget(frame.getSerializedSize());
+                    send.accept(frame);
                 });
-
-        var response = BatchGetVolumeContentsResponse.newBuilder();
-        contents.values().forEach(response::addVolumes);
-        var result = response.build();
-        checkBudget(result.getSerializedSize());
-        return result;
     }
 
     /** Maps stored metadata without REST normalization or date rounding. */
@@ -440,14 +451,14 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
         return value;
     }
 
-    /** Bounds retained response data during collection and checks the exact final protobuf size. */
+    /** Checks the serialized record limit and stops reading when the caller cancels the RPC. */
     private void checkBudget(long bytes) {
         if (Context.current().isCancelled()) {
             throw Status.CANCELLED.asRuntimeException();
         }
         if (bytes > properties.maxResponseBytes()) {
             throw Status.RESOURCE_EXHAUSTED
-                    .withDescription("Volume contents exceed response limit; reduce batch size")
+                    .withDescription("Core message exceeds configured response limit")
                     .asRuntimeException();
         }
     }

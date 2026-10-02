@@ -20,7 +20,9 @@ PerMonik is a tool for comparing copies of regional newspaper mutations, part of
 ## Architecture
 
 - `permonik-api/` - Spring Boot 4.1 REST API (Java 25, virtual threads enabled)
-- `permonik-core-contract/` - internal core/export protobuf schema and generated Java gRPC stubs; core implements `BatchGetVolumeContents` and `SearchReplacementVolumes`, export has a stored-snapshot client; see its README for authentication, semantics and source-data gaps
+- `permonik-core-contract/` - internal core/export protobuf schema and generated Java gRPC stubs; core implements `BatchGetVolumeContents`, `SearchReplacementVolumes` and `QueryPlanningVolumes`, export has a stored-snapshot client; see its README for authentication, semantics and source-data gaps
+- `BatchGetVolumeContents` uses native server streaming with one metadata/specimen record per message and per-message size limits. Standard gRPC `onCompleted`/`onError` signal completion; there is no application-level completion marker or custom send scheduler. Export accepts results only after successful RPC termination and cancels invalid streams. Core and export must be deployed together when this contract changes.
+- `SearchReplacementVolumes` and `QueryPlanningVolumes` also use native server streaming, one `GrpcVolume` per message. Solr cursor pages stay internal to core; the gRPC contract has no page sizes, page tokens or page envelopes. Export drains each stream successfully before using its results.
 - `permonik-export-api/` - Spring Boot 4.1 export and integration API (Kotlin, PostgreSQL, Liquibase)
 - `permonik-identity-gateway/` - Spring identity gateway/BFF (PostgreSQL users, Redis sessions, SAML, internal JWT)
 - `permonik-web/` - React 19 + TypeScript frontend (Vite, MUI, Zustand, TanStack Query)
@@ -48,7 +50,7 @@ Auth:
 - browser authentication uses an 8h Redis session and CSRF protection
 - the gateway emits short-lived, audience-specific internal JWTs
 - `permonik-api` and `permonik-export-api` are stateless OAuth2 Resource Servers and never read browser sessions
-- internal gRPC uses a separate mandatory `CORE_EXPORT_GRPC_TOKEN`, not user JWTs; only `BatchGetVolumeContents` and `SearchReplacementVolumes` are permitted, with explicitly trusted cross-owner reads on the private Compose network
+- internal gRPC uses a separate mandatory `CORE_EXPORT_GRPC_TOKEN`, not user JWTs; only `BatchGetVolumeContents`, `SearchReplacementVolumes` and `QueryPlanningVolumes` are permitted, with explicitly trusted cross-owner reads on the private Compose network
 - configure gRPC security through `GrpcSecurity` and an explicitly typed `AuthenticationProcessInterceptor` bean; this makes Boot's gRPC JWT auto-configuration back off without excluding it or changing HTTP JWT security
 - use the standard bearer-token extractor instead of manually parsing metadata; retain only handling justified by observed library behavior (currently its empty-token `IllegalArgumentException` must become an authentication failure)
 - deployment currently assumes the trusted NKP internal network and an unpublished Compose gRPC port; plaintext plus the shared token is an accepted limitation, not transport encryption. Do not introduce mTLS or a service mesh without an explicit deployment requirement
