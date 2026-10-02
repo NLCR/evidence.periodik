@@ -6,8 +6,6 @@ import org.springframework.data.annotation.Transient
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.MappedCollection
 import org.springframework.data.relational.core.mapping.Table
-import org.springframework.data.relational.core.mapping.event.BeforeConvertCallback
-import org.springframework.stereotype.Component
 
 @Table("identity_user")
 data class UserEntity(
@@ -31,16 +29,6 @@ data class UserEntity(
         copy(ownerEntries = owners.mapTo(linkedSetOf(), ::UserOwner))
 
     override fun toString() = "UserEntity(id=$id, username=$username, role=$role, active=$active)"
-}
-
-@Component
-class UserIdGenerator : BeforeConvertCallback<UserEntity> {
-    override fun onBeforeConvert(entity: UserEntity): UserEntity =
-        if (entity.id == null) {
-            entity.copy(id = UUID.randomUUID())
-        } else {
-            entity
-        }
 }
 
 @Table("identity_user_owner") data class UserOwner(@Id @Column("owner_id") val ownerId: String)

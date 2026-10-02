@@ -2,7 +2,7 @@
 
 set -eu
 
-ENV_FILE="${ENV_FILE:-.env}"
+ENV_FILE="${ENV_FILE:-.env.local}"
 
 if [ ! -f "$ENV_FILE" ]; then
     echo "Missing $ENV_FILE. Copy .env.example and fill in its values." >&2

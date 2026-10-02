@@ -1,6 +1,8 @@
+# Public deployment template. Replace variable references with concrete values only
+# in the server-local copy, or supply them through the shell/an external env file.
 services:
   permonik-api:
-    image: eu.gcr.io/inqool-1301/permonik/test/permonik-api:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/test/permonik-api:latest
     restart: unless-stopped
     depends_on:
       - permonik-database
@@ -17,18 +19,71 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: test
       IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
+      SOLR_USERNAME: ${SOLR_USERNAME:?SOLR_USERNAME is required}
+      SOLR_PASSWORD: ${SOLR_PASSWORD:?SOLR_PASSWORD is required}
+      CORE_EXPORT_GRPC_TOKEN: ${CORE_EXPORT_GRPC_TOKEN:?CORE_EXPORT_GRPC_TOKEN is required}
+      LOGGING_FILE_NAME: /tmp/permonik-api.log
       SENTRY_DSN: ${SENTRY_DSN:-}
       SENTRY_ENVIRONMENT: test
-      SENTRY_RELEASE: ${PERMONIK_TAG:?PERMONIK_TAG is required}
+      SENTRY_RELEASE: ${SENTRY_RELEASE:-}
       TZ: "Europe/Prague"
       SERVER_PORT: "8080"
 
-  permonik-web-admin:
-    image: eu.gcr.io/inqool-1301/permonik/test/permonik-web-admin:${PERMONIK_TAG}
+  permonik-export-api:
+    image: eu.gcr.io/inqool-1301/permonik/test/permonik-export-api:latest
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: permonik-web/docker/admin/Dockerfile
+    depends_on:
+      permonik-api:
+        condition: service_started
+      permonik-export-api-database:
+        condition: service_healthy
+    networks:
+      - permonik
+    expose:
+      - 8080
+    deploy:
+      resources:
+        reservations:
+          memory: '256M'
+        limits:
+          memory: '1024M'
+    environment:
+      SPRING_PROFILES_ACTIVE: test
+      SERVER_PORT: "8080"
+      EXPORT_API_DATABASE_URL: jdbc:postgresql://permonik-export-api-database:5432/permonik_export
+      EXPORT_API_DATABASE_PASSWORD: ${EXPORT_API_DATABASE_PASSWORD:?EXPORT_API_DATABASE_PASSWORD is required}
+      IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
+      CORE_EXPORT_GRPC_TOKEN: ${CORE_EXPORT_GRPC_TOKEN:?CORE_EXPORT_GRPC_TOKEN is required}
+      CORE_EXPORT_GRPC_TARGET: static://permonik-api:9090
+      TZ: "Europe/Prague"
+
+  permonik-export-api-database:
+    image: postgres:18.6-alpine
+    restart: unless-stopped
+    networks:
+      - permonik
+    deploy:
+      resources:
+        reservations:
+          memory: '256M'
+        limits:
+          memory: '512M'
+    environment:
+      POSTGRES_DB: permonik_export
+      POSTGRES_USER: permonik
+      POSTGRES_PASSWORD: ${EXPORT_API_DATABASE_PASSWORD:?EXPORT_API_DATABASE_PASSWORD is required}
+    volumes:
+      - /data/postgresql/export:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U permonik -d permonik_export" ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  permonik-web-admin:
+    image: eu.gcr.io/inqool-1301/permonik/test/permonik-web-admin:latest
+    restart: unless-stopped
     networks:
       - permonik
     expose:
@@ -41,11 +96,8 @@ services:
           memory: '24M'
 
   permonik-web-public:
-    image: eu.gcr.io/inqool-1301/permonik/test/permonik-web-public:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/test/permonik-web-public:latest
     restart: unless-stopped
-    build:
-      context: .
-      dockerfile: permonik-web/docker/public/Dockerfile
     networks:
       - permonik
     expose:
@@ -58,10 +110,11 @@ services:
           memory: '24M'
 
   permonik-identity-gateway:
-    image: eu.gcr.io/inqool-1301/permonik/test/permonik-identity-gateway:${PERMONIK_TAG}
+    image: eu.gcr.io/inqool-1301/permonik/test/permonik-identity-gateway:latest
     restart: unless-stopped
     depends_on:
       - permonik-api
+      - permonik-export-api
       - permonik-identity-database
       - permonik-identity-redis
       - permonik-web-admin
@@ -111,7 +164,7 @@ services:
       POSTGRES_USER: permonik
       POSTGRES_PASSWORD: ${IDENTITY_DATABASE_PASSWORD:?IDENTITY_DATABASE_PASSWORD is required}
     volumes:
-      - identity-database-volume:/var/lib/postgresql
+      - /data/postgresql/identity:/var/lib/postgresql
 
   permonik-database:
     image: solr:10.0.0
@@ -129,9 +182,30 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
       SOLR_MODULES: analysis-extras
+      SOLR_USERNAME: ${SOLR_USERNAME:?SOLR_USERNAME is required}
+      SOLR_PASSWORD: ${SOLR_PASSWORD:?SOLR_PASSWORD is required}
     command:
-      - solr-fg
-      - --user-managed
+      - bash
+      - -ec
+      - |
+        set -o pipefail
+        : "$${SOLR_PASSWORD:?SOLR_PASSWORD is required}"
+        if [[ ! "$$SOLR_USERNAME" =~ ^[A-Za-z0-9_.@-]+$$ ]]; then
+          printf '%s\n' 'SOLR_USERNAME must contain only letters, digits, _, ., @ or -' >&2
+          exit 1
+        fi
+        umask 077
+        salt="$$(openssl rand -base64 32)"
+        hash="$$(
+          { printf '%s' "$$salt" | openssl base64 -d -A; printf '%s' "$$SOLR_PASSWORD"; } |
+          openssl dgst -sha256 -binary | openssl dgst -sha256 -binary | openssl base64 -A
+        )"
+        security_file="$$(mktemp "$$SOLR_HOME/security.json.XXXXXX")"
+        trap 'rm -f "$$security_file"' EXIT
+        printf '{"authentication":{"class":"solr.BasicAuthPlugin","blockUnknown":true,"credentials":{"%s":"%s %s"}}}\n' \
+          "$$SOLR_USERNAME" "$$hash" "$$salt" > "$$security_file"
+        mv "$$security_file" "$$SOLR_HOME/security.json"
+        exec solr-fg --user-managed
     volumes:
       - /data/solr:/var/solr
 
@@ -155,4 +229,3 @@ networks:
 
 volumes:
   identity-session-volume:
-  identity-database-volume:

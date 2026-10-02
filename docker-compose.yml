@@ -6,6 +6,11 @@ x-frontend-build: &frontend-build
   context: .
   dockerfile: infra/development/frontend.Dockerfile
 
+x-backend-deploy: &backend-deploy
+  resources:
+    limits:
+      memory: '2048M'
+
 x-permonik-api-reload: &permonik-api-reload
   command:
     - sh
@@ -37,6 +42,10 @@ services:
   permonik-web:
     build: *frontend-build
     image: periodik-permonik-web-dev:local
+    deploy:
+      resources:
+        limits:
+          memory: '2048M'
     networks:
       - permonik
     ports:
@@ -44,6 +53,7 @@ services:
     environment:
       VITE_API_PROXY_TARGET: http://permonik-identity-gateway:8080
       VITE_APP_MODE: admin
+      NODE_OPTIONS: "--max-old-space-size=1024"
       TZ: "Europe/Prague"
     develop:
       watch:
@@ -67,6 +77,7 @@ services:
   permonik-api:
     build: *backend-build
     image: periodik-backend-dev:local
+    deploy: *backend-deploy
     command:
       - ./gradlew
       - --no-daemon
@@ -81,6 +92,9 @@ services:
       - "8080:8080"
     environment:
       SOLR_URL: http://permonik-database:8983/solr
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx512m"
+      SOLR_USERNAME: ${SOLR_USERNAME:?SOLR_USERNAME is required}
+      SOLR_PASSWORD: ${SOLR_PASSWORD:?SOLR_PASSWORD is required}
       CORE_EXPORT_GRPC_TOKEN: ${CORE_EXPORT_GRPC_TOKEN:?CORE_EXPORT_GRPC_TOKEN is required}
       IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
       SPRING_DEVTOOLS_RESTART_TRIGGER_FILE: .reloadtrigger
@@ -126,6 +140,7 @@ services:
 
   permonik-export-api:
     image: periodik-backend-dev:local
+    deploy: *backend-deploy
     command:
       - ./gradlew
       - --no-daemon
@@ -141,6 +156,7 @@ services:
       - "8082:8080"
     environment:
       EXPORT_API_DATABASE_URL: jdbc:postgresql://permonik-export-api-database:5432/permonik_export
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx512m"
       CORE_EXPORT_GRPC_TOKEN: ${CORE_EXPORT_GRPC_TOKEN:?CORE_EXPORT_GRPC_TOKEN is required}
       CORE_EXPORT_GRPC_TARGET: static://permonik-api:9090
       EXPORT_API_DATABASE_PASSWORD: ${EXPORT_API_DATABASE_PASSWORD:?EXPORT_API_DATABASE_PASSWORD is required}
@@ -188,6 +204,7 @@ services:
 
   permonik-identity-gateway:
     image: periodik-backend-dev:local
+    deploy: *backend-deploy
     command:
       - ./gradlew
       - --no-daemon
@@ -212,6 +229,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: "8080"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx512m"
       IDENTITY_DATABASE_URL: jdbc:postgresql://permonik-identity-database:5432/permonik_identity
       IDENTITY_DATABASE_PASSWORD: ${IDENTITY_DATABASE_PASSWORD:?IDENTITY_DATABASE_PASSWORD is required}
       SPRING_DATA_REDIS_HOST: permonik-identity-redis
@@ -292,9 +310,30 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms1g -Xmx1g"
       SOLR_MODULES: analysis-extras
+      SOLR_USERNAME: ${SOLR_USERNAME:?SOLR_USERNAME is required}
+      SOLR_PASSWORD: ${SOLR_PASSWORD:?SOLR_PASSWORD is required}
     command:
-      - solr-fg
-      - --user-managed
+      - bash
+      - -ec
+      - |
+        set -o pipefail
+        : "$${SOLR_PASSWORD:?SOLR_PASSWORD is required}"
+        if [[ ! "$$SOLR_USERNAME" =~ ^[A-Za-z0-9_.@-]+$$ ]]; then
+          printf '%s\n' 'SOLR_USERNAME must contain only letters, digits, _, ., @ or -' >&2
+          exit 1
+        fi
+        umask 077
+        salt="$$(openssl rand -base64 32)"
+        hash="$$(
+          { printf '%s' "$$salt" | openssl base64 -d -A; printf '%s' "$$SOLR_PASSWORD"; } |
+          openssl dgst -sha256 -binary | openssl dgst -sha256 -binary | openssl base64 -A
+        )"
+        security_file="$$(mktemp "$$SOLR_HOME/security.json.XXXXXX")"
+        trap 'rm -f "$$security_file"' EXIT
+        printf '{"authentication":{"class":"solr.BasicAuthPlugin","blockUnknown":true,"credentials":{"%s":"%s %s"}}}\n' \
+          "$$SOLR_USERNAME" "$$hash" "$$salt" > "$$security_file"
+        mv "$$security_file" "$$SOLR_HOME/security.json"
+        exec solr-fg --user-managed
     volumes:
       - ./solr-data:/var/solr
 

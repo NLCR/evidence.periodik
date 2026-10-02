@@ -28,3 +28,6 @@ CREATE TABLE identity_user_owner (
 
 --changeset permonik:2
 ALTER TABLE identity_user DROP CONSTRAINT IF EXISTS identity_user_email_key;
+
+--changeset permonik:3
+ALTER TABLE identity_user ALTER COLUMN id SET DEFAULT uuidv7();

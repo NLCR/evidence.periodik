@@ -11,6 +11,7 @@ import java.util.UUID
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.hasItem
 import org.hamcrest.Matchers.not
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -24,18 +25,17 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.put
+import org.testcontainers.postgresql.PostgreSQLContainer
 
 @SpringBootTest(
     properties =
         [
-            "spring.datasource.url=jdbc:h2:mem:identity;MODE=PostgreSQL;DB_CLOSE_DELAY=-1",
-            "spring.datasource.driver-class-name=org.h2.Driver",
-            "spring.datasource.username=sa",
-            "spring.datasource.password=",
             "spring.autoconfigure.exclude=org.springframework.boot.session.data.redis.autoconfigure.SessionDataRedisAutoConfiguration",
             "identity.jwt.secret=test-secret-with-at-least-thirty-two-bytes",
             "identity.dev-user.password=admin",
@@ -53,6 +53,30 @@ constructor(
     private val jwtService: JwtService,
 ) {
     @AfterEach fun clearSecurityContext() = SecurityContextHolder.clearContext()
+
+    /** Verifies database-generated identity survives owner writes and subsequent updates. */
+    @Test
+    fun databaseGeneratesUuidV7AndPreservesItOnUpdate() {
+        val saved =
+            users.save(
+                UserEntity(
+                        username = "uuid-v7-user",
+                        email = "uuid-v7@example.test",
+                        firstName = "Database",
+                        lastName = "Identity",
+                        role = UserRole.USER,
+                        active = true,
+                    )
+                    .withOwners(listOf("owner"))
+            )
+        val id = requireNotNull(saved.id)
+        assertEquals(7, id.version())
+        val updated = users.save(saved.copy(firstName = "Updated"))
+        assertEquals(id, updated.id)
+        val loaded = requireNotNull(users.findByIdOrNull(id))
+        assertEquals("Updated", loaded.firstName)
+        assertEquals(setOf("owner"), loaded.owners)
+    }
 
     @Test
     fun basicLoginCreatesSessionAndMeResponse() {
@@ -234,4 +258,23 @@ constructor(
                     active = true,
                 )
             )
+
+    companion object {
+        private val postgres =
+            PostgreSQLContainer("postgres:18.6").withPassword(UUID.randomUUID().toString()).apply {
+                start()
+            }
+
+        /** Applies production migrations to an isolated PostgreSQL database. */
+        @JvmStatic
+        @DynamicPropertySource
+        fun databaseProperties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.datasource.url", postgres::getJdbcUrl)
+            registry.add("spring.datasource.username", postgres::getUsername)
+            registry.add("spring.datasource.password", postgres::getPassword)
+        }
+
+        /** Releases the isolated database after the identity tests. */
+        @JvmStatic @AfterAll fun stopDatabase() = postgres.stop()
+    }
 }
