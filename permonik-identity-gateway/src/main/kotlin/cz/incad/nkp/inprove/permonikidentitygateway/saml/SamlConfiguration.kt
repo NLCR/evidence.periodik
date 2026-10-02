@@ -14,6 +14,7 @@ import org.springframework.security.saml2.core.Saml2X509Credential
 import org.springframework.security.saml2.provider.service.registration.InMemoryRelyingPartyRegistrationRepository
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrations
+import org.springframework.web.util.UriComponentsBuilder
 
 @Configuration
 @Profile("test", "prod")
@@ -28,9 +29,17 @@ class SamlConfiguration(private val properties: SamlProperties) {
                 "https://shibo.vkol.cz/idp/shibboleth",
             )
         return SamlSettings(
-            properties.entityId,
-            properties.wayfUrl,
-            identityProviders.mapIndexed { index, idp -> idp to "idp-${index + 1}" }.toMap(),
+            entityId = properties.entityId,
+            wayfUrl = properties.wayfUrl,
+            discoveryResponseUrl =
+                UriComponentsBuilder.fromUriString(properties.acs)
+                    .replacePath(SAML_DISCOVERY_PATH)
+                    .replaceQuery(null)
+                    .fragment(null)
+                    .build()
+                    .toUriString(),
+            registrations =
+                identityProviders.mapIndexed { index, idp -> idp to "idp-${index + 1}" }.toMap(),
         )
     }
 
@@ -63,6 +72,7 @@ class SamlConfiguration(private val properties: SamlProperties) {
 data class SamlSettings(
     val entityId: String,
     val wayfUrl: String,
+    val discoveryResponseUrl: String,
     val registrations: Map<String, String>,
 )
 
