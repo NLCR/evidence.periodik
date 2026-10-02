@@ -35,7 +35,7 @@ const Filters: FC<Props> = ({ form, onSubmit }) => {
         direction={{ xs: 'column', md: 'row' }}
         spacing={2}
         paddingTop={1}
-        sx={{ mb: 2, alignItems: { xs: 'stretch', md: 'flex-end' } }}
+        sx={{ mb: 2, alignItems: { xs: 'stretch', md: 'center' } }}
       >
         <Box sx={{ width: '100%' }}>
           <Controller
@@ -140,12 +140,12 @@ const Filters: FC<Props> = ({ form, onSubmit }) => {
             )}
           />
         </Box>
+        <Box sx={{ width: { xs: '100%', md: 'auto' } }}>
+          <Button type="submit" variant="contained" fullWidth>
+            {t('common.confirm', { defaultValue: 'Potvrdit' })}
+          </Button>
+        </Box>
       </Stack>
-      <Box sx={{ width: { xs: '100%', md: 'auto' } }}>
-        <Button type="submit" variant="contained" fullWidth>
-          {t('common.confirm', { defaultValue: 'Potvrdit' })}
-        </Button>
-      </Box>
     </Stack>
   )
 }
