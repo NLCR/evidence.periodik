@@ -57,6 +57,11 @@ per process. Solr remains limited to 2 GiB with a 1 GiB heap, PostgreSQL to
 reserved memory; the Docker Desktop VM memory limit still bounds the whole stack.
 Restart Compose Watch through `./start-local.sh` to apply changed limits and env.
 
+Deployment images use Jib's `configurationName` set to Spring Boot's standard
+`productionRuntimeClasspath`, excluding development-only dependencies such as
+DevTools without an extra extension. Local `bootRun` and Compose Watch retain
+DevTools for hot reload.
+
 Admin varianta frontendu je součástí lokálního Compose stacku a běží přes Vite. Gateway ji načítá přímo z kontejneru `permonik-web`. Public varianta se v lokálním Compose nespouští.
 
 ### Solr authentication
