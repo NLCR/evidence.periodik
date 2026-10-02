@@ -61,3 +61,5 @@ springdoc:
 sentry:
   dsn: ""
   enabled: false
+  tags:
+    service: ${spring.application.name}

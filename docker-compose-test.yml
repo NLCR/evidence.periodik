@@ -55,6 +55,9 @@ services:
       IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
       CORE_EXPORT_GRPC_TOKEN: ${CORE_EXPORT_GRPC_TOKEN:?CORE_EXPORT_GRPC_TOKEN is required}
       CORE_EXPORT_GRPC_TARGET: static://permonik-api:9090
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_ENVIRONMENT: test
+      SENTRY_RELEASE: ${SENTRY_RELEASE:-}
       TZ: "Europe/Prague"
 
   permonik-export-api-database:
@@ -144,6 +147,9 @@ services:
       IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
       SAML_SP_ENTITY_ID: https://app.permonik-test.nkp.cz/shibboleth
       SAML_SP_ACS: https://app.permonik-test.nkp.cz/Shibboleth.sso/SAML2/POST
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_ENVIRONMENT: test
+      SENTRY_RELEASE: ${SENTRY_RELEASE:-}
       TZ: "Europe/Prague"
     volumes:
       - /opt/shibboleth-sp-config:/run/secrets/shibboleth:ro
