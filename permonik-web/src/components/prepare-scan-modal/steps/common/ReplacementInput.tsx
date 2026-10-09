@@ -125,6 +125,7 @@ const ReplacementInput = ({
           render={({ field, fieldState }) => (
             <ReplacementSourceInput
               viewOnly={viewOnly}
+              showReplacementOrderLabel
               value={field.value ?? createEmptyReplacementSource()}
               candidates={replacementSourceCandidates}
               onChange={(source) => {

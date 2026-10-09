@@ -143,7 +143,7 @@ const LibrariesTable: FC<Props> = ({ data }) => {
           >
             <TableCell>
               {t('plan_digitalization_modal.fill_index_sum', {
-                defaultValue: 'Součet indexů vyplnění',
+                defaultValue: 'Souhrnný index vyplnění',
               })}
             </TableCell>
             {libraryColumns.map((library) => (

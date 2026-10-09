@@ -52,6 +52,7 @@
     "select_filters": "Set filters and start the search",
     "no_results": "Nothing was found",
     "combined_fill_index": "Combined fill index",
+    "year_required": "Enter a year",
     "year_invalid": "Enter a valid numeric year",
     "year_range_invalid": "Year from must not be greater than year to"
   },

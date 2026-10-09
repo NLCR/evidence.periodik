@@ -124,6 +124,7 @@ const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
               name={`replacementSources.${index}`}
               render={({ field: fieldProps }) => (
                 <ReplacementSourceInput
+                  showReplacementOrderLabel={false}
                   value={fieldProps.value}
                   candidates={[
                     ...(fieldProps.value.volumeId ? [fieldProps.value] : []),

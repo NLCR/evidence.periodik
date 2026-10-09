@@ -66,6 +66,7 @@ const SpecimenMainReplacementSection = ({
           render={({ field, fieldState }) => (
             <ReplacementSourceInput
               viewOnly={false}
+              showReplacementOrderLabel
               value={field.value ?? createEmptyReplacementSource()}
               candidates={replacementSourceCandidates}
               onChange={(source) => {
