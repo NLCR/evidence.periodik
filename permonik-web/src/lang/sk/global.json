@@ -52,6 +52,7 @@
     "select_filters": "Nastavte filtre a spustite vyhľadávanie",
     "no_results": "Nič sa nenašlo",
     "combined_fill_index": "Kombinovaný index vyplnenia",
+    "year_required": "Zadajte rok",
     "year_invalid": "Zadajte platný číselný rok",
     "year_range_invalid": "Rok od nesmie byť vyšší ako rok do"
   },

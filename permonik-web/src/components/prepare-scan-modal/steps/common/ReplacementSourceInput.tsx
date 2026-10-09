@@ -19,6 +19,7 @@ import ReplacementSourceInputComponent from './ReplacementSourceInputComponent'
 
 type Props = {
   viewOnly?: boolean
+  showReplacementOrderLabel?: boolean
   value: TReplacementSource
   onChange: (value: TReplacementSource) => void
   candidates?: TReplacementSource[]
@@ -41,20 +42,27 @@ const hasReplacementSource = (source: TReplacementSource) =>
 const buildReplacementOptionLabel = (
   option: TReplacementSource,
   index: number,
+  showReplacementOrderLabel: boolean,
   t: TFunction<'global'>
 ): ReactNode => (
   <>
-    <strong>
-      {t('prepare_scan_modal.content_template.replacement_section_title', {
-        index: index + 1,
-      })}
-    </strong>{' '}
-    ({option.signature} - {option.owner} ({option.barcode}))
+    {showReplacementOrderLabel && (
+      <>
+        <strong>
+          {t('prepare_scan_modal.content_template.replacement_section_title', {
+            index: index + 1,
+          })}
+        </strong>
+        {' - '}
+      </>
+    )}
+    {option.signature} - {option.owner} ({option.barcode})
   </>
 )
 
 const ReplacementSourceInput = ({
   viewOnly = false,
+  showReplacementOrderLabel = false,
   value,
   onChange,
   candidates: candidates = [],
@@ -186,7 +194,12 @@ const ReplacementSourceInput = ({
                         }}
                       >
                         <Box>
-                          {buildReplacementOptionLabel(option, index, t)}
+                          {buildReplacementOptionLabel(
+                            option,
+                            index,
+                            showReplacementOrderLabel,
+                            t
+                          )}
                         </Box>
                         {option.dependentFillIndex != null && (
                           <FillIndexIndicator

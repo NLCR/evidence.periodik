@@ -20,7 +20,7 @@ type Props = {
 
 const Filters: FC<Props> = ({ form, onSubmit }) => {
   const { t } = useTranslation()
-  const { control, handleSubmit } = form
+  const { control, formState, handleSubmit } = form
   const { data: mutations = [] } = useMutationListQuery()
   const { languageCode } = useLanguageCode()
   const [mutationMarkModalOpened, setMutationMarkModalOpened] = useState(false)
@@ -41,10 +41,17 @@ const Filters: FC<Props> = ({ form, onSubmit }) => {
           <Controller
             name="yearFrom"
             control={control}
+            rules={{
+              required: t('plan_digitalization_modal.year_required', {
+                defaultValue: 'Zadejte rok od',
+              }),
+            }}
             render={({ field }) => (
               <TextField
                 {...field}
                 fullWidth
+                error={!!formState.errors.yearFrom}
+                helperText={formState.errors.yearFrom?.message}
                 label={t('plan_digitalization_modal.year_from', {
                   defaultValue: 'Rok od',
                 })}
@@ -57,10 +64,17 @@ const Filters: FC<Props> = ({ form, onSubmit }) => {
           <Controller
             name="yearTo"
             control={control}
+            rules={{
+              required: t('plan_digitalization_modal.year_required', {
+                defaultValue: 'Zadejte rok do',
+              }),
+            }}
             render={({ field }) => (
               <TextField
                 {...field}
                 fullWidth
+                error={!!formState.errors.yearTo}
+                helperText={formState.errors.yearTo?.message}
                 label={t('plan_digitalization_modal.year_to', {
                   defaultValue: 'Rok do',
                 })}
