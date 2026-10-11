@@ -27,6 +27,7 @@ type Props = {
   itemPath: `items.${number}`
   viewOnly: boolean
   showOnlyRescans: boolean
+  showOnlyUnlocked: boolean
   disabled: boolean
   replacementRows: TVisibleReplacementRow[]
   replacementFields: FieldArrayWithId<
@@ -67,6 +68,7 @@ const SpecimenPageReplacementsSection = ({
   itemPath,
   viewOnly,
   showOnlyRescans,
+  showOnlyUnlocked,
   disabled,
   replacementRows,
   replacementFields,
@@ -85,7 +87,9 @@ const SpecimenPageReplacementsSection = ({
   )
 
   if (replacementRows.length === 0) {
-    return showOnlyRescans ? null : <Box mt={1}>{addButton}</Box>
+    return showOnlyRescans || showOnlyUnlocked ? null : (
+      <Box mt={1}>{addButton}</Box>
+    )
   }
 
   return (

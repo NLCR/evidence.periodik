@@ -2,7 +2,7 @@ import LockedInputDataItem from './LockedInputDataItem'
 import TextField, { type TextFieldProps } from '@mui/material/TextField'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
 import { useState } from 'react'
-import MutationMarkSelectorModal from '../editCells/MutationMarkSelectorModal'
+import MutationMarkSelectorModal from '@/components/MutationMarkSelectorModal'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -48,14 +48,11 @@ const Field = ({
 
       {isModalOpened && (
         <MutationMarkSelectorModal
-          row={{
-            ...volumeState,
-            mutationMark: mutationMark ?? volumeState.mutationMark,
-          }}
+          value={mutationMark ?? volumeState.mutationMark}
           open={isModalOpened}
           onClose={() => setIsModalOpened(false)}
-          onSave={(data) => {
-            setValue(fieldName, data.mutationMark, {
+          onSave={(nextMutationMark) => {
+            setValue(fieldName, nextMutationMark, {
               shouldDirty: true,
             })
           }}

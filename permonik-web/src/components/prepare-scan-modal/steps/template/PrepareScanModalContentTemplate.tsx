@@ -16,11 +16,14 @@ import { useSubmitButtonLabel } from './hooks/useSubmitButtonLabel'
 import { useTransitionDialogConfig } from './hooks/useTransitionDialogConfig'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { validateTemplateForNextState } from '../../validators/templateTransitionValidator'
 import {
-  hasWaitingReplacement,
+  validateTemplateForNextState,
+  type TTemplateTransitionIssue,
+} from '../../validators/templateTransitionValidator'
+import {
   isLockingEnabled,
   applyItemLock,
+  unlockWaitingForRescanTasks,
 } from './utils/templateItemLocking'
 import {
   useDeletePrepareScanTemplateMutation,
@@ -30,7 +33,10 @@ import {
   useCloseToRescanOrFinalizeMutation,
   useTransitionTemplateStateMutation,
 } from '../../mutations'
-import { includesWaitingForRescan } from './utils/filters'
+import {
+  getFilteredTemplateItems,
+  includesWaitingForRescan,
+} from './utils/filters'
 import { toast } from 'react-toastify'
 
 type TProps = {
@@ -94,6 +100,19 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
 
   const nextState = getNextTemplateState(watchedState, hasWaitingForRescan)
 
+  const revealFirstInvalidItem = (issues: TTemplateTransitionIssue[]) => {
+    const itemIndex = Number(issues[0]?.path.match(/^items\.(\d+)/)?.[1])
+    if (
+      Number.isInteger(itemIndex) &&
+      !getFilteredTemplateItems(items, showOnlyRescans, showOnlyUnlocked).some(
+        ({ formIndex }) => formIndex === itemIndex
+      )
+    ) {
+      setShowOnlyRescans(false)
+      setShowOnlyUnlocked(false)
+    }
+  }
+
   const closeToRescanOrFinalizeMutation = useCloseToRescanOrFinalizeMutation({
     volumeId,
     getValues,
@@ -103,6 +122,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         clearErrors,
         setError,
         getValues,
+        onIssues: revealFirstInvalidItem,
         nextTemplateState: targetState as
           | TemplateState.WAITING_FOR_RESCAN
           | TemplateState.FINALIZED,
@@ -114,11 +134,16 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
 
   const handleValidate = async () => {
     if (!shouldValidateTemplateForNextState(nextState)) return
+    let firstIssue: TTemplateTransitionIssue | undefined
     const isValid = await validateTemplateForNextState({
       trigger,
       clearErrors,
       setError,
       getValues,
+      onIssues: (issues) => {
+        firstIssue = issues[0]
+        revealFirstInvalidItem(issues)
+      },
       nextTemplateState: nextState,
     })
     setValidationAttempt((attempt) => attempt + 1)
@@ -127,7 +152,14 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         t('prepare_scan_modal.content_template.validation_successful')
       )
     } else {
-      toast.error(t('prepare_scan_modal.content_template.validation_failed'))
+      const itemIndex = Number(firstIssue?.path.match(/^items\.(\d+)/)?.[1])
+      toast.error(
+        firstIssue && Number.isInteger(itemIndex)
+          ? `${t('prepare_scan_modal.content_template.issue_number_label', {
+              number: items[itemIndex]?.specimen.number ?? itemIndex + 1,
+            })}: ${firstIssue.message}`
+          : t('prepare_scan_modal.content_template.validation_failed')
+      )
     }
   }
 
@@ -136,6 +168,12 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
 
   const handleCloseToRescanOrFinalize = async () => {
     try {
+      if (nextState === TemplateState.WAITING_FOR_RESCAN) {
+        setValue('items', getValues('items').map(unlockWaitingForRescanTasks), {
+          shouldDirty: true,
+        })
+      }
+
       const completed = await closeToRescanOrFinalizeMutation.mutate({
         nextState,
         shouldValidate: shouldValidateTemplateForNextState(nextState),
@@ -152,7 +190,7 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
 
   const handleLockAll = () => {
     const nextItems = getValues('items').map((item) =>
-      hasWaitingReplacement(item) ? item : applyItemLock(item, true)
+      applyItemLock(item, true)
     )
     setValue('items', nextItems, { shouldDirty: true })
     return true
@@ -267,7 +305,6 @@ const PrepareScanModalContentTemplate: FC<TProps> = ({
         barCode={primaryVolume?.barCode}
         items={items}
         showOnlyRescans={showOnlyRescans}
-        showOnlyUnlocked={showOnlyUnlocked}
       />
     </Box>
   )

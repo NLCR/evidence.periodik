@@ -4,13 +4,6 @@ import {
   type TTemplate,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 
-export const hasWaitingReplacement = (item: TTemplate['items'][number]) =>
-  (item.mainScan.type === 'REPLACEMENT' &&
-    item.mainScan.replacement.status === ResolutionStatus.WAITING_FOR_RESCAN) ||
-  item.pageReplacements.some(
-    (replacement) => replacement.status === ResolutionStatus.WAITING_FOR_RESCAN
-  )
-
 export const getMainReplacement = (item: TTemplate['items'][number]) =>
   item.mainScan.type === 'REPLACEMENT' ? item.mainScan.replacement : null
 
@@ -50,6 +43,22 @@ export const applyItemLock = (
     })),
   }
 }
+
+export const unlockWaitingForRescanTasks = (
+  item: TTemplate['items'][number]
+): TTemplate['items'][number] => ({
+  ...item,
+  mainScan:
+    item.mainScan.type === 'REPLACEMENT' &&
+    item.mainScan.replacement.status === ResolutionStatus.WAITING_FOR_RESCAN
+      ? { ...item.mainScan, locked: false, visible: true }
+      : item.mainScan,
+  pageReplacements: item.pageReplacements.map((replacement) =>
+    replacement.status === ResolutionStatus.WAITING_FOR_RESCAN
+      ? { ...replacement, locked: false, visible: true }
+      : replacement
+  ),
+})
 
 export const applyItemVisibility = (
   item: TTemplate['items'][number],

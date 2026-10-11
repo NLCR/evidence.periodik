@@ -3,10 +3,8 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { useTranslation } from 'react-i18next'
-import { type TEditableSpecimen } from '../../../../schema/specimen'
-import { type TEditableVolume } from '../../../../schema/volume'
-import ModalContainer from '../../../../components/ModalContainer'
-import { TabSelect } from '../../../../components/TabSelect'
+import ModalContainer from './ModalContainer'
+import { TabSelect } from './TabSelect'
 import Checkbox from '@mui/material/Checkbox'
 import { toast } from 'react-toastify'
 import {
@@ -19,21 +17,21 @@ const marks = ['●', '○', '■', '□', '★', '☆', '△', '▲', '✶'] as
 type TMarks = (typeof marks)[number]
 
 interface MutationMarkSelectorModalProps {
-  row: TEditableSpecimen | TEditableVolume
+  value: TMutationMark | null | undefined
   open: boolean
   onClose: () => void
-  onSave: (data: TEditableSpecimen | TEditableVolume) => void
+  onSave: (value: TMutationMark) => void
 }
 
 const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
-  row,
+  value,
   open,
   onClose,
   onSave,
 }) => {
   const { t } = useTranslation()
   const [inputMarkState, setInputMarkState] = useState<TMutationMark>(
-    row.mutationMark ?? createEmptyMutationMark()
+    value ?? createEmptyMutationMark()
   )
   const [inputNumberImpossible, setInputNumberImpossible] = useState(
     inputMarkState.mark === '?'
@@ -53,10 +51,7 @@ const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
           }
         : inputMarkState
 
-    onSave({
-      ...row,
-      mutationMark: normalizedMutationMark,
-    })
+    onSave(normalizedMutationMark)
     doClose()
   }
 

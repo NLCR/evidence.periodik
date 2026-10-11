@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useOwnerListQuery } from '@/api/owner'
 import GroupedSectionItemsTable from './GroupedSectionItemsTable'
 import { getSectionMetadata, getSectionTitle } from './groupedSectionViewModel'
 import { type TGroupedScanSection } from '../templateGrouping'
@@ -16,8 +17,18 @@ type Props = {
 
 const GroupedSectionCard: FC<Props> = ({ compact, section }) => {
   const { t } = useTranslation()
+  const { data: owners } = useOwnerListQuery()
   const title = getSectionTitle(section, t)
-  const metadata = getSectionMetadata(section, t)
+  const metadata = getSectionMetadata(section, t).map((item) =>
+    item.label === t('common.fields.owner')
+      ? {
+          ...item,
+          value:
+            owners?.find((owner) => owner.sigla === item.value)?.shorthand ??
+            item.value,
+        }
+      : item
+  )
 
   return (
     <Card

@@ -29,6 +29,7 @@ export type TVirtualizedSpecimenRowData = {
   items: TTemplateItemWithFormIndex[]
   viewOnly: boolean
   showOnlyRescans: boolean
+  showOnlyUnlocked: boolean
   replacementSourceCandidates: TReplacementSource[]
   disabled?: boolean
 }
@@ -146,12 +147,14 @@ const VirtualizedSpecimenList = ({
       items: visibleItems,
       viewOnly,
       showOnlyRescans,
+      showOnlyUnlocked,
       replacementSourceCandidates,
       disabled,
     }),
     [
       replacementSourceCandidates,
       showOnlyRescans,
+      showOnlyUnlocked,
       viewOnly,
       visibleItems,
       disabled,

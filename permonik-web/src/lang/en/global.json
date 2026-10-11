@@ -114,7 +114,7 @@
       "unlock_replacement_confirm_description": "After unlocking, the page replacement can be edited again and may be affected by template changes.",
       "lock_all_confirm_title": "Lock all items?",
       "lock_all_tooltip": "Lock all items",
-      "lock_all_confirm_description": "All items not marked as waiting for rescan will be locked. Locked items will no longer be editable.",
+      "lock_all_confirm_description": "All scan tasks, including replacements waiting for rescan, will be locked. Locked tasks cannot be edited until you unlock them.",
       "unlock_all_confirm_title": "Unlock all items?",
       "unlock_all_tooltip": "Unlock all items",
       "unlock_all_confirm_description": "This is a high-impact action. Unlocked items can be modified again and may be regenerated based on replacement sources in subsequent steps.",
@@ -161,7 +161,9 @@
       "waiting_for_rescan": "Before closing for rescan, each replacement must have a filled source, or be marked as unavailable, or marked as waiting for rescan.",
       "finalized": "To finalize, each replacement must have a filled source or be marked as unavailable and must not be marked as waiting for rescan.",
       "invalid_pages": "Pages must be non-empty, positive, unique numbers in ascending order.",
-      "overlapping_pages": "Pages must not overlap another replacement in this item."
+      "overlapping_pages": "Pages must not overlap another replacement in this item.",
+      "source_required": "Replacement source is missing.",
+      "rescan_pending": "The replacement is still waiting for a rescan."
     },
     "transition_confirm": {
       "to_waiting": {
@@ -194,7 +196,8 @@
       "step_template": "template",
       "previous_step": "Previous step",
       "next_step": "Next step",
-      "save_template": "Save template"
+      "save_template": "Save template",
+      "save_success": "The template was saved successfully."
     }
   },
   "fill_index_hint": {

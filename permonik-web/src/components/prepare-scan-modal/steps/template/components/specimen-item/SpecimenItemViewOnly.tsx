@@ -5,6 +5,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { Box, Card, CardContent, Stack, Typography } from '@mui/material'
 import { noop } from 'lodash'
 import { useTranslation } from 'react-i18next'
+import { useOwnerListQuery } from '@/api/owner'
 import IconCheckbox from '@/components/form/IconCheckbox'
 import ReplacementSourceInput from '@/components/prepare-scan-modal/steps/common/ReplacementSourceInput'
 import type {
@@ -27,6 +28,9 @@ type TSpecimenReplacementViewOnlyRow = {
 
 type Props = {
   specimen: TTemplateSpecimen
+  isMainReplacement: boolean
+  mainScanVisible: boolean
+  showHiddenTasks?: boolean
   replacementRows: TSpecimenReplacementViewOnlyRow[]
   mainReplacement: TMainReplacement | null
   allowVisibilityChanges?: boolean
@@ -36,6 +40,9 @@ type Props = {
 
 const SpecimenItemViewOnly = ({
   specimen,
+  isMainReplacement,
+  mainScanVisible,
+  showHiddenTasks = false,
   replacementRows,
   mainReplacement,
   allowVisibilityChanges = false,
@@ -43,6 +50,7 @@ const SpecimenItemViewOnly = ({
   note,
 }: Props) => {
   const { t } = useTranslation()
+  const { data: owners } = useOwnerListQuery()
 
   if (allowVisibilityChanges && !itemPath)
     throw new Error('Cannot allow visibilityChanges without providing itemPath')
@@ -53,7 +61,7 @@ const SpecimenItemViewOnly = ({
       sx={{
         paddingX: 1,
         borderRadius: 0,
-        borderLeftColor: specimen.numExists ? 'green' : 'red',
+        borderLeftColor: isMainReplacement ? 'red' : 'green',
         borderLeftWidth: 3,
       }}
     >
@@ -75,15 +83,17 @@ const SpecimenItemViewOnly = ({
           </Stack>
           <Stack direction="row" spacing={1} alignItems="center">
             <Stack direction="row" spacing={1} alignItems="center">
-              {specimen.numExists ? (
-                <CheckIcon color="success" fontSize="small" />
-              ) : (
+              {isMainReplacement ? (
                 <WarningIcon color="error" fontSize="small" />
+              ) : (
+                <CheckIcon color="success" fontSize="small" />
               )}
               <Typography>
-                {specimen.numExists
-                  ? t('prepare_scan_modal.content_template.scan_from_volume')
-                  : t('prepare_scan_modal.content_template.replace_label')}
+                {t(
+                  isMainReplacement
+                    ? 'prepare_scan_modal.content_template.replace_label'
+                    : 'prepare_scan_modal.content_template.scan_from_volume'
+                )}
               </Typography>
             </Stack>
             {allowVisibilityChanges && itemPath ? (
@@ -99,7 +109,7 @@ const SpecimenItemViewOnly = ({
           </Stack>
         </Stack>
 
-        {specimen.numMissing && (
+        {isMainReplacement && (showHiddenTasks || mainScanVisible) && (
           <ReplacementSourceInput
             viewOnly
             value={mainReplacement?.volume ?? {}}
@@ -165,7 +175,14 @@ const SpecimenItemViewOnly = ({
                       ({ replacement, replacementIndex }) => (
                         <tr key={replacementIndex}>
                           <td>{replacement.volume.signature || '-'}</td>
-                          <td>{replacement.volume.owner || '-'}</td>
+                          <td>
+                            {owners?.find(
+                              (owner) =>
+                                owner.sigla === replacement.volume.owner
+                            )?.shorthand ??
+                              replacement.volume.owner ??
+                              '-'}
+                          </td>
                           <td>{replacement.volume.barcode || '-'}</td>
                           <td>{replacement.volume.mutation || '-'}</td>
                           <td>{replacement.pages.join(', ') || '-'}</td>

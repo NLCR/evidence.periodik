@@ -76,13 +76,15 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
   const nextStep = async () => {
     if (step === 1) {
       try {
+        const latestTemplate = (await refetchTemplate()).data
         const template = await generateTemplateMutation.mutateAsync({
           ...settingsMethods.getValues(),
-          version: volumeTemplate?.version ?? null,
-          previousTemplate: volumeTemplate ?? undefined,
+          version: latestTemplate?.version ?? null,
+          previousTemplate: latestTemplate ?? undefined,
         })
         resetTemplate(template)
       } catch {
+        toast.error(t('common.error_occurred_somewhere'))
         return
       }
     }
@@ -127,84 +129,100 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
       width={step === 0 ? 'fit-content' : '80vw'}
       header={`${t('prepare_scan_modal.wizard.title')} - ${stepTitle}`}
       opened={isOpen}
-      onClose={() => setIsOpen(false)}
-      closeButton={{ callback: () => setIsOpen(false) }}
+      onClose={() => {
+        setIsOpen(false)
+      }}
+      closeButton={{
+        callback: () => {
+          setIsOpen(false)
+        },
+      }}
       customDialogActions={
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingTop: '16px',
+            width: '100%',
           }}
         >
           <Box
             sx={{
-              width: '10rem',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingTop: '16px',
             }}
           >
-            {step === 2 ? (
-              <ConfirmDialog
-                title={t('prepare_scan_modal.back_warning.title')}
-                description={t('prepare_scan_modal.back_warning.message')}
-                onConfirm={previousStep}
-                TriggerButton={
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    disabled={state !== TemplateState.CREATED}
-                  >
-                    {t('prepare_scan_modal.wizard.previous_step')}
-                  </Button>
-                }
-                confirmLabel={t(
-                  'prepare_scan_modal.back_warning.proceed_button'
-                )}
-                refuseLabel={t('prepare_scan_modal.back_warning.stay_button')}
-              />
-            ) : step > 0 ? (
-              <Button fullWidth variant="outlined" onClick={previousStep}>
-                {t('prepare_scan_modal.wizard.previous_step')}
-              </Button>
-            ) : (
-              <Box />
-            )}
-          </Box>
-          <Typography>{step + 1} / 3</Typography>
-          <Box
-            sx={{
-              width: '10rem',
-            }}
-          >
-            {step < 2 ? (
-              <Button
-                fullWidth
-                variant="outlined"
-                onClick={nextStep}
-                disabled={step === 1 && generateTemplateMutation.isPending}
-              >
-                {t('prepare_scan_modal.wizard.next_step')}
-              </Button>
-            ) : step === 2 ? (
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={() =>
-                  saveTemplateMutation.mutate(getTemplateValues(), {
-                    onSuccess: () =>
-                      toast.success(t('common.saved_successfully')),
-                  })
-                }
-                disabled={
-                  saveTemplateMutation.isPending ||
-                  state === TemplateState.FINALIZED
-                }
-              >
-                {t('prepare_scan_modal.wizard.save_template')}
-              </Button>
-            ) : (
-              <div />
-            )}
+            <Box
+              sx={{
+                width: '10rem',
+              }}
+            >
+              {step === 2 ? (
+                <ConfirmDialog
+                  title={t('prepare_scan_modal.back_warning.title')}
+                  description={t('prepare_scan_modal.back_warning.message')}
+                  onConfirm={previousStep}
+                  TriggerButton={
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      disabled={state !== TemplateState.CREATED}
+                    >
+                      {t('prepare_scan_modal.wizard.previous_step')}
+                    </Button>
+                  }
+                  confirmLabel={t(
+                    'prepare_scan_modal.back_warning.proceed_button'
+                  )}
+                  refuseLabel={t('prepare_scan_modal.back_warning.stay_button')}
+                />
+              ) : step > 0 ? (
+                <Button fullWidth variant="outlined" onClick={previousStep}>
+                  {t('prepare_scan_modal.wizard.previous_step')}
+                </Button>
+              ) : (
+                <Box />
+              )}
+            </Box>
+            <Typography>{step + 1} / 3</Typography>
+            <Box
+              sx={{
+                width: '10rem',
+              }}
+            >
+              {step < 2 ? (
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={nextStep}
+                  disabled={step === 1 && generateTemplateMutation.isPending}
+                >
+                  {t('prepare_scan_modal.wizard.next_step')}
+                </Button>
+              ) : step === 2 ? (
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={() => {
+                    saveTemplateMutation.mutate(getTemplateValues(), {
+                      onSuccess: () => {
+                        toast.success(t('common.saved_successfully'))
+                      },
+                      onError: () => {
+                        toast.error(t('common.error_occurred_somewhere'))
+                      },
+                    })
+                  }}
+                  disabled={
+                    saveTemplateMutation.isPending ||
+                    state === TemplateState.FINALIZED
+                  }
+                >
+                  {t('prepare_scan_modal.wizard.save_template')}
+                </Button>
+              ) : (
+                <div />
+              )}
+            </Box>
           </Box>
         </Box>
       }

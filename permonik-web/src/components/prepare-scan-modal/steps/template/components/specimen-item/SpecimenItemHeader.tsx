@@ -54,6 +54,7 @@ const SpecimenItemHeader = ({ specimen, itemPath, canManageLocks }: Props) => {
     ? item.mainScan.locked ||
       item.pageReplacements.some((replacement) => replacement.locked)
     : false
+  const scansFromPrimary = item?.mainScan.type === 'PRIMARY'
 
   return (
     <>
@@ -117,13 +118,13 @@ const SpecimenItemHeader = ({ specimen, itemPath, canManageLocks }: Props) => {
 
       <Box mt={1}>
         <Stack direction="row" spacing={1} alignItems="center">
-          {specimen.numExists ? (
+          {scansFromPrimary ? (
             <CheckIcon color="success" fontSize="small" />
           ) : (
             <WarningIcon color="error" fontSize="small" />
           )}
           <Typography>
-            {specimen.numExists
+            {scansFromPrimary
               ? t('prepare_scan_modal.content_template.scan_from_volume')
               : t('prepare_scan_modal.content_template.replace_label')}
           </Typography>
