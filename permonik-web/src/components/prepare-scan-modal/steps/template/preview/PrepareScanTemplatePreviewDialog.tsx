@@ -23,7 +23,6 @@ type Props = {
   barCode?: string
   items: TTemplateItem[]
   showOnlyRescans: boolean
-  showOnlyUnlocked: boolean
 }
 
 const PrepareScanTemplatePreviewDialog: FC<Props> = ({
@@ -33,7 +32,6 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
   primaryVolume,
   items,
   showOnlyRescans,
-  showOnlyUnlocked,
 }) => {
   const { t } = useTranslation()
   const printContentRef = useRef<HTMLDivElement>(null)
@@ -112,15 +110,15 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
           {groupByVolumes ? (
             <GroupedTemplateSections
               items={items}
-              showOnlyRescans={showOnlyRescans}
-              showOnlyUnlocked={showOnlyUnlocked}
+              showOnlyRescans={false}
+              showOnlyUnlocked={false}
             />
           ) : (
             <VirtualizedSpecimenList
               items={items}
               viewOnly
-              showOnlyRescans={showOnlyRescans}
-              showOnlyUnlocked={showOnlyUnlocked}
+              showOnlyRescans={false}
+              showOnlyUnlocked={false}
             />
           )}
         </Box>
@@ -145,7 +143,7 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
             barCode={barCode}
             items={items}
             showOnlyRescans={showOnlyRescans}
-            showOnlyUnlocked={showOnlyUnlocked}
+            showOnlyUnlocked={false}
             groupByVolumes={groupByVolumes}
           />
         </Box>

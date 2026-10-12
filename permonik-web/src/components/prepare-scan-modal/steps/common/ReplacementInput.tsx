@@ -196,13 +196,23 @@ const ReplacementInput = ({
                       isReadOnly ||
                       field.value === ResolutionStatus.WAITING_FOR_RESCAN
                     }
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      if (event.target.checked) {
+                        setValue(
+                          `${name}.volume`,
+                          createEmptyReplacementSource(),
+                          {
+                            shouldDirty: true,
+                          }
+                        )
+                        clearErrors(`${name}.volume`)
+                      }
                       field.onChange(
                         event.target.checked
                           ? ResolutionStatus.UNREPLACEABLE
                           : getReplacementSourceResolutionStatus(item?.volume)
                       )
-                    }
+                    }}
                   />
                 }
                 label={t(
@@ -219,13 +229,23 @@ const ReplacementInput = ({
                       isReadOnly ||
                       field.value === ResolutionStatus.UNREPLACEABLE
                     }
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      if (event.target.checked) {
+                        setValue(
+                          `${name}.volume`,
+                          createEmptyReplacementSource(),
+                          {
+                            shouldDirty: true,
+                          }
+                        )
+                        clearErrors(`${name}.volume`)
+                      }
                       field.onChange(
                         event.target.checked
                           ? ResolutionStatus.WAITING_FOR_RESCAN
                           : getReplacementSourceResolutionStatus(item?.volume)
                       )
-                    }
+                    }}
                   />
                 }
                 label={t(

@@ -8,7 +8,6 @@ import {
   type TMainReplacement,
   type TReplacementSource,
   type TTemplate,
-  type TTemplateSpecimen,
 } from '@/components/prepare-scan-modal/schemas/schemas'
 import ReplacementSourceInput from '../../../common/ReplacementSourceInput'
 
@@ -32,7 +31,8 @@ const getReplacementSourceResolutionStatus = (
 type Props = {
   control: Control<TTemplate>
   itemPath: `items.${number}`
-  specimen: TTemplateSpecimen
+  isMainReplacement: boolean
+  showOnlyUnlocked: boolean
   disabled: boolean
   isItemLocked: boolean
   mainReplacement: TMainReplacement | null | undefined
@@ -42,15 +42,16 @@ type Props = {
 const SpecimenMainReplacementSection = ({
   control,
   itemPath,
-  specimen,
+  isMainReplacement,
+  showOnlyUnlocked,
   disabled,
   isItemLocked,
   mainReplacement,
   replacementSourceCandidates,
 }: Props) => {
   const { t } = useTranslation()
-  const { setValue } = useFormContext<TTemplate>()
-  if (specimen.numExists) return null
+  const { setValue, clearErrors } = useFormContext<TTemplate>()
+  if (!isMainReplacement || (showOnlyUnlocked && isItemLocked)) return null
 
   const isReadOnly = disabled || isItemLocked
 
@@ -102,7 +103,15 @@ const SpecimenMainReplacementSection = ({
                       isReadOnly ||
                       field.value === ResolutionStatus.WAITING_FOR_RESCAN
                     }
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      if (event.target.checked) {
+                        setValue(
+                          `${itemPath}.mainScan.replacement.volume`,
+                          createEmptyReplacementSource(),
+                          { shouldDirty: true }
+                        )
+                        clearErrors(`${itemPath}.mainScan.replacement.volume`)
+                      }
                       field.onChange(
                         event.target.checked
                           ? ResolutionStatus.UNREPLACEABLE
@@ -110,7 +119,7 @@ const SpecimenMainReplacementSection = ({
                               mainReplacement?.volume
                             )
                       )
-                    }
+                    }}
                   />
                 }
                 label={t(
@@ -127,7 +136,15 @@ const SpecimenMainReplacementSection = ({
                       isReadOnly ||
                       field.value === ResolutionStatus.UNREPLACEABLE
                     }
-                    onChange={(event) =>
+                    onChange={(event) => {
+                      if (event.target.checked) {
+                        setValue(
+                          `${itemPath}.mainScan.replacement.volume`,
+                          createEmptyReplacementSource(),
+                          { shouldDirty: true }
+                        )
+                        clearErrors(`${itemPath}.mainScan.replacement.volume`)
+                      }
                       field.onChange(
                         event.target.checked
                           ? ResolutionStatus.WAITING_FOR_RESCAN
@@ -135,7 +152,7 @@ const SpecimenMainReplacementSection = ({
                               mainReplacement?.volume
                             )
                       )
-                    }
+                    }}
                   />
                 }
                 label={t(

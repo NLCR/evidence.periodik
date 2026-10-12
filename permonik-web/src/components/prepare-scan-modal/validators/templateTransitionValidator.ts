@@ -21,6 +21,7 @@ export type TTemplateTransitionState =
 export type TTemplateTransitionIssue = {
   path: string
   message: string
+  reason: 'status' | 'source' | 'pages' | 'overlapping_pages'
 }
 
 type TReplacementValidationOptions = {
@@ -80,7 +81,8 @@ const isValidForWaitingForRescan = (
   options: TReplacementValidationOptions
 ) =>
   replacement.status === ResolutionStatus.UNREPLACEABLE ||
-  replacement.status === ResolutionStatus.WAITING_FOR_RESCAN ||
+  (replacement.status === ResolutionStatus.WAITING_FOR_RESCAN &&
+    (!options.requirePages || hasValidPages(replacement.pages))) ||
   (replacement.status === ResolutionStatus.ASSIGNED &&
     isReplacementFilled(replacement, options))
 
@@ -125,12 +127,31 @@ export const validateTemplateForTransition = (
     path: string,
     options: TReplacementValidationOptions
   ) => {
-    if (!validateByState(replacement, options)) {
-      issues.push({
-        path,
-        message: i18next.t(messageKey),
-      })
-    }
+    if (validateByState(replacement, options)) return
+
+    const invalidPages =
+      options.requirePages &&
+      !hasValidPages(replacement.pages) &&
+      ((replacement.status === ResolutionStatus.ASSIGNED &&
+        hasReplacementSource(replacement)) ||
+        replacement.status === ResolutionStatus.WAITING_FOR_RESCAN)
+
+    issues.push({
+      path: invalidPages ? path.replace(/\.volume$/, '.pages') : path,
+      message: invalidPages
+        ? i18next.t('prepare_scan_modal.validation.invalid_pages')
+        : replacement.status === ResolutionStatus.ASSIGNED
+          ? i18next.t('prepare_scan_modal.validation.source_required')
+          : replacement.status === ResolutionStatus.WAITING_FOR_RESCAN &&
+              targetState === TemplateState.FINALIZED
+            ? i18next.t('prepare_scan_modal.validation.rescan_pending')
+            : i18next.t(messageKey),
+      reason: invalidPages
+        ? 'pages'
+        : replacement.status === ResolutionStatus.ASSIGNED
+          ? 'source'
+          : 'status',
+    })
   }
 
   template.items.forEach((item, itemIndex) => {
@@ -157,7 +178,8 @@ export const validateTemplateForTransition = (
         if (replacement.status !== ResolutionStatus.ASSIGNED) return
         issues.push({
           path: `items.${itemIndex}.pageReplacements.${pageReplacementIndex}.pages`,
-          message: i18next.t(messageKey),
+          message: i18next.t('prepare_scan_modal.validation.overlapping_pages'),
+          reason: 'overlapping_pages',
         })
       })
     }
@@ -172,6 +194,7 @@ type TValidateTemplateForNextStateArgs = {
   setError: UseFormSetError<TTemplate>
   getValues: UseFormGetValues<TTemplate>
   nextTemplateState: TTemplateTransitionState
+  onIssues?: (issues: TTemplateTransitionIssue[]) => void
 }
 
 export const validateTemplateForNextState = async ({
@@ -180,9 +203,15 @@ export const validateTemplateForNextState = async ({
   setError,
   getValues,
   nextTemplateState,
+  onIssues,
 }: TValidateTemplateForNextStateArgs): Promise<boolean> => {
   const isBaseValid = await trigger()
-  if (!isBaseValid) return false
+  if (!isBaseValid) {
+    console.warn(
+      '[PerMonik] Template form validation failed before transition checks'
+    )
+    return false
+  }
 
   clearErrors('items')
 
@@ -192,6 +221,15 @@ export const validateTemplateForNextState = async ({
   )
 
   if (transitionIssues.length > 0) {
+    console.warn('[PerMonik] Template validation failed', {
+      targetState: nextTemplateState,
+      count: transitionIssues.length,
+      issues: transitionIssues.slice(0, 20).map(({ path, reason }) => ({
+        path,
+        reason,
+      })),
+    })
+    onIssues?.(transitionIssues)
     transitionIssues.forEach((issue) => {
       setError(issue.path as FieldPath<TTemplate>, {
         type: 'manual',

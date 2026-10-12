@@ -8,9 +8,8 @@ import { Controller, type UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useMutationListQuery } from '@/api/mutation'
 import { useLanguageCode } from '@/hooks/useLanguageCode'
-import { type TEditableVolume } from '@/schema/volume'
 import { getMutationMarkCompoundValue } from '@/utils/mutationMark'
-import MutationMarkSelectorModal from '../../pages/volumeManagement/components/editCells/MutationMarkSelectorModal'
+import MutationMarkSelectorModal from '@/components/MutationMarkSelectorModal'
 import { type PlanDigitalizationFilters } from './schemas'
 
 type Props = {
@@ -145,10 +144,10 @@ const Filters: FC<Props> = ({ form, onSubmit }) => {
                   slotProps={{ input: { readOnly: true } }}
                 />
                 <MutationMarkSelectorModal
-                  row={{ mutationMark: field.value } as TEditableVolume}
+                  value={field.value}
                   open={mutationMarkModalOpened}
                   onClose={() => setMutationMarkModalOpened(false)}
-                  onSave={(data) => field.onChange(data.mutationMark)}
+                  onSave={field.onChange}
                 />
               </>
             )}

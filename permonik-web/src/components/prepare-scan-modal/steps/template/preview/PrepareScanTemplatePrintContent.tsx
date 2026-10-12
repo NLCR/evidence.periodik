@@ -86,6 +86,8 @@ const PrepareScanTemplatePrintContent: FC<Props> = ({
               >
                 <SpecimenItemViewOnly
                   specimen={item.specimen}
+                  isMainReplacement={item.mainScan.type === 'REPLACEMENT'}
+                  mainScanVisible={item.mainScan.visible}
                   mainReplacement={getMainReplacement(item)}
                   replacementRows={item.pageReplacements.map(
                     (replacement, replacementIndex) => ({

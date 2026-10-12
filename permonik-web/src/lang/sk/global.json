@@ -114,7 +114,7 @@
       "unlock_replacement_confirm_description": "Po odomknutí môže byť náhrada strán znovu upravovaná a ovplyvnená zmenami predlohy.",
       "lock_all_confirm_title": "Uzamknúť všetky položky?",
       "lock_all_tooltip": "Uzamknúť všetky položky",
-      "lock_all_confirm_description": "Uzamknú sa všetky položky, ktoré nie sú označené ako čaká na dosken. Uzamknuté položky už nebudú upraviteľné.",
+      "lock_all_confirm_description": "Uzamknú sa všetky úlohy vrátane náhrad čakajúcich na dosken. Uzamknuté úlohy nebude možné upravovať, kým ich neodomknete.",
       "unlock_all_confirm_title": "Odomknúť všetky položky?",
       "unlock_all_tooltip": "Odomknúť všetky položky",
       "unlock_all_confirm_description": "Táto akcia má vysoký dopad. Odomknuté položky bude možné znovu meniť a pri ďalších krokoch sa môžu pregenerovať podľa zdrojov náhrad.",
@@ -161,7 +161,9 @@
       "waiting_for_rescan": "Pred uzavretím na doskenovanie musí mať každá náhrada vyplnený zdroj, alebo byť označená ako nedostupná, alebo čakajúca na dosken.",
       "finalized": "Pre finalizáciu musí mať každá náhrada vyplnený zdroj alebo byť označená ako nedostupná a nesmie byť čakajúca na dosken.",
       "invalid_pages": "Strany musia byť neprázdne, kladné, unikátne a vzostupne zoradené čísla.",
-      "overlapping_pages": "Strany sa nesmú prekrývať s inou náhradou tejto položky."
+      "overlapping_pages": "Strany sa nesmú prekrývať s inou náhradou tejto položky.",
+      "source_required": "Chýba zdroj náhrady.",
+      "rescan_pending": "Náhrada stále čaká na doskenovanie."
     },
     "transition_confirm": {
       "to_waiting": {
@@ -194,7 +196,8 @@
       "step_template": "predloha",
       "previous_step": "Predchádzajúci krok",
       "next_step": "Ďalší krok",
-      "save_template": "Uložiť predlohu"
+      "save_template": "Uložiť predlohu",
+      "save_success": "Predloha bola úspešne uložená."
     }
   },
   "fill_index_hint": {

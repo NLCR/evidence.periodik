@@ -22,9 +22,9 @@ type Props = {
   itemPath: `items.${number}`
   viewOnly?: boolean
   showOnlyRescans?: boolean
+  showOnlyUnlocked?: boolean
   replacementSourceCandidates: TReplacementSource[]
   disabled?: boolean
-  replacementRows?: TReplacementRow[]
 }
 
 type TReplacementRow = {
@@ -38,9 +38,9 @@ const SpecimenItem = ({
   itemPath,
   viewOnly = false,
   showOnlyRescans = false,
+  showOnlyUnlocked = false,
   replacementSourceCandidates,
   disabled = false,
-  replacementRows: replacementRowsOverride = undefined,
 }: Props) => {
   const { control } = useFormContext<TTemplate>()
 
@@ -67,24 +67,29 @@ const SpecimenItem = ({
 
   const replacementRows = useMemo(
     () =>
-      replacementRowsOverride ??
-      pageReplacements.reduce<TReplacementRow[]>((acc, replacement, index) => {
-        if (
-          showOnlyRescans &&
-          replacement?.status !== ResolutionStatus.WAITING_FOR_RESCAN
-        ) {
+      pageReplacements
+        .reduce<TReplacementRow[]>((acc, replacement, index) => {
+          if (
+            showOnlyRescans &&
+            replacement.status !== ResolutionStatus.WAITING_FOR_RESCAN
+          ) {
+            return acc
+          }
+          if (showOnlyUnlocked && replacement.locked) return acc
+
+          acc.push({
+            replacement,
+            replacementIndex: index,
+            isVisible: replacement.visible,
+          })
+
           return acc
-        }
-
-        acc.push({
-          replacement,
-          replacementIndex: index,
-          isVisible: replacement.visible,
-        })
-
-        return acc
-      }, []),
-    [pageReplacements, replacementRowsOverride, showOnlyRescans]
+        }, [])
+        .filter(
+          ({ replacement }) =>
+            viewOnly || !showOnlyUnlocked || !replacement.locked
+        ),
+    [pageReplacements, showOnlyRescans, showOnlyUnlocked, viewOnly]
   )
 
   const filteredMainReplacementCandidates = replacementSourceCandidates
@@ -93,6 +98,9 @@ const SpecimenItem = ({
     return (
       <SpecimenItemViewOnly
         specimen={specimen}
+        isMainReplacement={item?.mainScan.type === 'REPLACEMENT'}
+        mainScanVisible={item?.mainScan.visible ?? false}
+        showHiddenTasks
         mainReplacement={mainReplacement ?? createEmptyMainReplacement()}
         replacementRows={replacementRows}
         allowVisibilityChanges
@@ -113,7 +121,8 @@ const SpecimenItem = ({
         <SpecimenMainReplacementSection
           control={control}
           itemPath={itemPath}
-          specimen={specimen}
+          isMainReplacement={item?.mainScan.type === 'REPLACEMENT'}
+          showOnlyUnlocked={showOnlyUnlocked}
           disabled={disabled}
           isItemLocked={isMainScanLocked}
           mainReplacement={mainReplacement}
@@ -124,6 +133,7 @@ const SpecimenItem = ({
           itemPath={itemPath}
           viewOnly={viewOnly}
           showOnlyRescans={showOnlyRescans}
+          showOnlyUnlocked={showOnlyUnlocked}
           disabled={disabled}
           replacementRows={replacementRows}
           replacementFields={replacementFields}
