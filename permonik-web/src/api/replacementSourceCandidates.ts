@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import {
   type TReplacementSource,
   type TScanTemplateSettings,
@@ -29,5 +29,4 @@ export const useReplacementSourceCandidatesQuery = (
         })
         .json<TReplacementSource[]>(),
     enabled: !!volumeId,
-    placeholderData: keepPreviousData,
   })
