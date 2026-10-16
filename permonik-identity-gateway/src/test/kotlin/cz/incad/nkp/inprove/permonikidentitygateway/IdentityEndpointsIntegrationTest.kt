@@ -8,6 +8,7 @@ import cz.incad.nkp.inprove.permonikidentitygateway.identity.UserRepository
 import cz.incad.nkp.inprove.permonikidentitygateway.identity.UserRole
 import cz.incad.nkp.inprove.permonikidentitygateway.security.JwtService
 import java.util.UUID
+import org.hamcrest.Matchers.containsInAnyOrder
 import org.hamcrest.Matchers.containsString
 import org.hamcrest.Matchers.hasItem
 import org.hamcrest.Matchers.not
@@ -137,8 +138,9 @@ constructor(
             }
     }
 
+    /** Grants source editing and exports without user or reference administration. */
     @Test
-    fun regularUserCannotListUsers() {
+    fun regularUserCanEditSourcesAndManageTemplatesButCannotListUsers() {
         if (users.findByUsernameIgnoreCase("reader") == null) {
             users.save(
                 UserEntity(
@@ -154,12 +156,28 @@ constructor(
         }
 
         val session = login("reader", "reader-password")
+        mvc.get("/api/me") { this.session = session }
+            .andExpect {
+                status { isOk() }
+                jsonPath("\$.role") { value("user") }
+                jsonPath(
+                    "\$.authorities",
+                    containsInAnyOrder(
+                        "ROLE_USER",
+                        "VOLUME_WRITE",
+                        "VOLUME_DELETE",
+                        "SPECIMEN_DELETE",
+                        "TEMPLATE_MANAGE",
+                    ),
+                )
+            }
         mvc.get("/api/user/list/all") { this.session = session }
             .andExpect {
                 status { isForbidden() }
             }
     }
 
+    /** Keeps digitalization accounts limited to export operations. */
     @Test
     fun digitalizationRoleOnlyGetsTemplatePermissions() {
         val user = saveUser("digitizer", UserRole.DIGITALIZATION)
@@ -169,9 +187,11 @@ constructor(
         mvc.get("/api/me") { this.session = session }
             .andExpect {
                 status { isOk() }
-                jsonPath("\$.authorities", hasItem("TEMPLATE_MANAGE"))
-                jsonPath("\$.authorities", not(hasItem("VOLUME_WRITE")))
-                jsonPath("\$.authorities", not(hasItem("USER_READ")))
+                jsonPath("\$.role") { value("digitalization") }
+                jsonPath(
+                    "\$.authorities",
+                    containsInAnyOrder("ROLE_DIGITALIZATION", "TEMPLATE_MANAGE"),
+                )
             }
     }
 

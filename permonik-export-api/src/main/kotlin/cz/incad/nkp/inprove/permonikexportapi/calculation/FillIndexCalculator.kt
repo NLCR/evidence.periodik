@@ -5,9 +5,10 @@ import kotlin.math.roundToInt
 
 class FillIndexCalculator {
     /**
-     * Calculates the packed fill index and preserves data-quality problems as structured warnings.
+     * Calculates recorded quality and coverage, excluding selected whole-specimen defects from
+     * coverage when replacement issues are supplied.
      */
-    fun calculate(volume: VolumeSnapshot): FillIndex {
+    fun calculate(volume: VolumeSnapshot, issues: IssueSelection? = null): FillIndex {
         val warnings = volume.specimens.flatMap { it.unknownDamageWarnings() }.toMutableList()
         val expected =
             volume.specimens.filter { specimen ->
@@ -33,12 +34,13 @@ class FillIndexCalculator {
             }
 
         val existing = expected.filter(SpecimenSnapshot::numExists)
+        val covered = existing.count { issues == null || !it.requiresWholeReplacement(issues) }
         val coverage =
             if (expected.isEmpty()) {
                 warnings += CalculationWarning(CalculationWarningCode.NO_EXPECTED_SPECIMENS)
                 0
             } else {
-                (existing.size * 100.0 / expected.size).roundToInt()
+                (covered * 100.0 / expected.size).roundToInt()
             }
 
         val pageQuality = mutableListOf<Double>()

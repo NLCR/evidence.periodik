@@ -1,6 +1,7 @@
 package cz.incad.nkp.inprove.permonikexportapi.calculation
 
 import cz.incad.nkp.inprove.permonikdomain.SpecimenDamageType
+import cz.incad.nkp.inprove.permonikdomain.SpecimenDamageType.*
 import java.time.LocalDate
 
 data class VolumeSnapshot(
@@ -140,6 +141,19 @@ internal data class NormalizedPages(
     val invalid: Set<Int>,
     val hasDuplicates: Boolean,
 )
+
+/** Shares whole-specimen replacement eligibility between coverage and replacement planning. */
+internal fun SpecimenSnapshot.requiresWholeReplacement(issues: IssueSelection): Boolean =
+    (issues.missingSpecimen && numMissing) ||
+        (issues.missingPages &&
+            MISSING_PAGES.code in damageTypes &&
+            normalizePages(missingPages, pagesCount).values.isEmpty()) ||
+        (issues.damagedPages &&
+            DAMAGED_DOCUMENT.code in damageTypes &&
+            normalizePages(damagedPages, pagesCount).values.isEmpty()) ||
+        (issues.illegiblyBound && ILLEGIBLE_BINDING.code in damageTypes) ||
+        (issues.censored && (CENSORED.code in damageTypes || CENSORED_COPY.code in damageTypes)) ||
+        (issues.degradation && DEGRADATION.code in damageTypes)
 
 /**
  * Reports unrecognized damage codes without modifying the specimen or assigning an invented

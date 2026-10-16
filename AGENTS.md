@@ -96,7 +96,7 @@ Permissions:
 - roles are `user`, `admin` and `digitalization`; do not introduce a super-administrator role
 - keep the permission set small and operation-oriented; do not regenerate unused CRUD/read matrices
 - permissions must be enforced by the owning backend; frontend checks are presentational only
-- `admin` receives all application permissions, `digitalization` receives only `TEMPLATE_MANAGE`, and `user` receives no protected-operation permissions
+- `admin` receives all application permissions; `user` receives `VOLUME_WRITE`, `VOLUME_DELETE`, `SPECIMEN_DELETE` and `TEMPLATE_MANAGE`; `digitalization` receives only `TEMPLATE_MANAGE`. Source-data writes still require an assigned owner for both `user` and `admin`.
 - export operations use the single global `TEMPLATE_MANAGE` permission, with no primary-owner checks; this deliberately allows one export operator to prepare templates across all libraries. `/api/integration/**` remains public
 - `USER_*` and `REFERENCE_WRITE` are global administration permissions. Core volume and specimen writes still require one of the principal's owner IDs for every role, including `admin`; export's global access does not weaken those core checks
 - trusted internal batch and replacement-search reads are cross-owner and service-token protected; they do not grant end-user permissions
