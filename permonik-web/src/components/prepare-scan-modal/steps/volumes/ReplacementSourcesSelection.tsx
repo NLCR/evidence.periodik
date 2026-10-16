@@ -5,18 +5,13 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import Loader from '../../../Loader'
 import ShowError from '../../../ShowError'
 import { useReplacementSourceCandidatesQuery } from '@/api/replacementSourceCandidates'
-import {
-  Controller,
-  useFieldArray,
-  useFormContext,
-  useWatch,
-} from 'react-hook-form'
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import {
   createEmptyReplacementSource,
   type TReplacementSource,
   type TScanTemplateSettings,
 } from '@/components/prepare-scan-modal/schemas/schemas'
-import ReplacementSourceInput from '../common/ReplacementSourceInput'
+import ReplacementSourceSelectionInput from './ReplacementSourceSelectionInput'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 
@@ -37,16 +32,8 @@ const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
   })
 
   const {
-    data: replacementSourceCandidates,
-    isPending: replacementSourceCandidatesPending,
-    isError: replacementSourceCandidatesError,
-  } = useReplacementSourceCandidatesQuery(volumeId, {
-    issues,
-    replacementSourcesParameters,
-    replacementSources,
-  })
-  const {
     data: validReplacementSourceCandidates,
+    isPending: validReplacementSourceCandidatesPending,
     isError: validReplacementSourceCandidatesError,
   } = useReplacementSourceCandidatesQuery(volumeId, {
     issues,
@@ -106,10 +93,16 @@ const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
     validReplacementSourceCandidatesError,
   ])
 
-  if (replacementSourceCandidatesPending && !replacementSourceCandidates) {
+  if (
+    validReplacementSourceCandidatesPending &&
+    !validReplacementSourceCandidates
+  ) {
     return <Loader size="small" />
   }
-  if (replacementSourceCandidatesError && !replacementSourceCandidates) {
+  if (
+    validReplacementSourceCandidatesError &&
+    !validReplacementSourceCandidates
+  ) {
     return <ShowError />
   }
 
@@ -119,30 +112,9 @@ const ReplacementSourcesSelection = ({ volumeId }: { volumeId: string }) => {
         <Box key={field.fieldId} display={'flex'} gap={1} alignItems={'center'}>
           <Box flexGrow={0}>{index + 1}: </Box>
           <Box flexGrow={1}>
-            <Controller
-              control={control}
-              name={`replacementSources.${index}`}
-              render={({ field: fieldProps }) => (
-                <ReplacementSourceInput
-                  showReplacementOrderLabel={false}
-                  value={fieldProps.value}
-                  candidates={[
-                    ...(fieldProps.value.volumeId ? [fieldProps.value] : []),
-                    ...(replacementSourceCandidates ?? []),
-                  ].filter(
-                    (candidate, candidateIndex, candidates) =>
-                      candidates.findIndex(
-                        (option) => option.volumeId === candidate.volumeId
-                      ) === candidateIndex &&
-                      !replacementSources.some(
-                        (src, srcIndex) =>
-                          srcIndex !== index &&
-                          src.volumeId === candidate.volumeId
-                      )
-                  )}
-                  onChange={fieldProps.onChange}
-                />
-              )}
+            <ReplacementSourceSelectionInput
+              volumeId={volumeId}
+              index={index}
             />
           </Box>
           <Box flexGrow={0}>
