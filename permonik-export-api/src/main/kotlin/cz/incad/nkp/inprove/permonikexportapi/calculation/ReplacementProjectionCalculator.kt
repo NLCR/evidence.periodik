@@ -16,7 +16,7 @@ class ReplacementProjectionCalculator(
         issues: IssueSelection,
         rules: SpecimenMatchingRules,
     ): CombinedVolume {
-        val primaryFillIndex = fillIndexCalculator.calculate(primary)
+        val primaryFillIndex = fillIndexCalculator.calculate(primary, issues)
         val warnings = primaryFillIndex.warnings.toMutableList()
         val requiredUnits = requirements(primary, issues).size
         var projection = AppliedProjection(primary)
@@ -25,10 +25,10 @@ class ReplacementProjectionCalculator(
             if (isEligible(primary, source, rules)) {
                 projection = applySource(current = projection, source, issues, rules, warnings)
                 dependentFillIndexes[source.id] =
-                    fillIndexCalculator.calculate(projection.snapshot).value
+                    fillIndexCalculator.calculate(projection.snapshot, issues).value
             }
         }
-        val fillIndex = fillIndexCalculator.calculate(projection.snapshot)
+        val fillIndex = fillIndexCalculator.calculate(projection.snapshot, issues)
         val remaining = requirements(projection.snapshot, issues)
         return CombinedVolume(
             snapshot = projection.snapshot,
@@ -92,7 +92,7 @@ class ReplacementProjectionCalculator(
             }
         val fillIndex =
             if (eligible) {
-                fillIndexCalculator.calculate(projected)
+                fillIndexCalculator.calculate(projected, issues)
             } else {
                 baseline.fillIndex
             }
@@ -158,7 +158,8 @@ class ReplacementProjectionCalculator(
         val specimens =
             current.snapshot.specimens.map { target ->
                 if (
-                    !hasWholeRequirement(target, issues) && requiredPages(target, issues).isEmpty()
+                    !target.requiresWholeReplacement(issues) &&
+                        requiredPages(target, issues).isEmpty()
                 ) {
                     return@map target
                 }
@@ -226,10 +227,10 @@ class ReplacementProjectionCalculator(
         source: SpecimenSnapshot,
         issues: IssueSelection,
     ): AppliedSpecimen? {
-        if (!source.numExists || source.numMissing || hasWholeRequirement(source, issues)) {
+        if (!source.numExists || source.numMissing || source.requiresWholeReplacement(issues)) {
             return null
         }
-        if (hasWholeRequirement(target, issues)) {
+        if (target.requiresWholeReplacement(issues)) {
             return AppliedSpecimen(
                 target.copy(
                     numExists = source.numExists,
@@ -289,7 +290,7 @@ class ReplacementProjectionCalculator(
     private fun requirements(volume: VolumeSnapshot, issues: IssueSelection): Set<RequiredUnit> =
         buildSet {
             volume.specimens.forEach { specimen ->
-                if (hasWholeRequirement(specimen, issues)) {
+                if (specimen.requiresWholeReplacement(issues)) {
                     add(RequiredUnit(specimen.id))
                 }
                 requiredPages(specimen, issues).forEach { page ->
@@ -297,19 +298,6 @@ class ReplacementProjectionCalculator(
                 }
             }
         }
-
-    /** Determines whether selected issue categories require replacing an entire specimen. */
-    private fun hasWholeRequirement(specimen: SpecimenSnapshot, issues: IssueSelection): Boolean =
-        (issues.missingSpecimen && specimen.numMissing) ||
-            (issues.missingPages &&
-                MISSING_PAGES.code in specimen.damageTypes &&
-                normalizePages(specimen.missingPages, specimen.pagesCount).values.isEmpty()) ||
-            (issues.damagedPages &&
-                DAMAGED_DOCUMENT.code in specimen.damageTypes &&
-                normalizePages(specimen.damagedPages, specimen.pagesCount).values.isEmpty()) ||
-            (issues.illegiblyBound && ILLEGIBLE_BINDING.code in specimen.damageTypes) ||
-            (issues.censored && specimen.damageTypes.any(CENSORSHIP_TYPES::contains)) ||
-            (issues.degradation && DEGRADATION.code in specimen.damageTypes)
 
     /**
      * Returns distinct positive page numbers requiring replacement under the selected issue
@@ -341,5 +329,3 @@ private data class AppliedSpecimen(
 )
 
 private data class RequiredUnit(val specimenId: String, val page: Int? = null)
-
-private val CENSORSHIP_TYPES = setOf(CENSORED.code, CENSORED_COPY.code)

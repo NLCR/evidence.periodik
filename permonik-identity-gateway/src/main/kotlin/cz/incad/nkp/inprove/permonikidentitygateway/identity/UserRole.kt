@@ -10,8 +10,14 @@ enum class UserRole(@get:JsonValue val value: String) {
     val permissions: Set<Permission>
         get() =
             when (this) {
-                USER -> emptySet()
                 ADMIN -> Permission.entries.toSet()
+                USER ->
+                    setOf(
+                        Permission.VOLUME_WRITE,
+                        Permission.VOLUME_DELETE,
+                        Permission.SPECIMEN_DELETE,
+                        Permission.TEMPLATE_MANAGE,
+                    )
                 DIGITALIZATION -> setOf(Permission.TEMPLATE_MANAGE)
             }
 }

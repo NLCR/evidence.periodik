@@ -9,6 +9,73 @@ import org.junit.jupiter.api.Test
 class ReplacementProjectionCalculatorTest {
     private val calculator = ReplacementProjectionCalculator()
 
+    /** Counts selected degradation as uncovered until healthy sources replace each whole issue. */
+    @Test
+    fun restoresDegradedCoverageOnlyFromUsableReplacements() {
+        val first = specimen(id = "first", damageTypes = setOf("Deg"))
+        val second = first.copy(id = "second", number = "2")
+        val primary = volume(specimens = listOf(first, second))
+        val issues = missingSpecimenOnly.copy(missingSpecimen = false, degradation = true)
+        val firstSource =
+            volume(
+                id = "first-source",
+                specimens = listOf(first.copy(id = "first-replacement", damageTypes = emptySet())),
+            )
+        val secondSource =
+            volume(
+                id = "second-source",
+                specimens =
+                    listOf(second.copy(id = "second-replacement", damageTypes = emptySet())),
+            )
+
+        val unselected =
+            calculator.combine(
+                primary,
+                sources = emptyList(),
+                issues = issues.copy(degradation = false),
+                rules = noOptionalMatching,
+            )
+        val baseline =
+            calculator.combine(primary, sources = emptyList(), issues, rules = noOptionalMatching)
+        val candidates =
+            calculator.evaluateCandidates(
+                primary,
+                selectedSources = emptyList(),
+                candidates = listOf(primary.copy(id = "degraded-source"), firstSource),
+                issues,
+                rules = noOptionalMatching,
+            )
+        val replaced =
+            calculator.combine(
+                primary,
+                sources = listOf(firstSource, secondSource),
+                issues,
+                rules = noOptionalMatching,
+            )
+
+        assertEquals(100969, unselected.fillIndex.value)
+        assertEquals(0, unselected.requiredUnits)
+        assertEquals(969, baseline.primaryFillIndex.value)
+        assertEquals(969, baseline.fillIndex.value)
+        assertEquals(2, baseline.remainingUnits)
+        assertEquals(
+            listOf(UnresolvedReplacement("first"), UnresolvedReplacement("second")),
+            baseline.replacementPlan.unresolved,
+        )
+        assertEquals(listOf("first-source", "degraded-source"), candidates.map { it.volumeId })
+        assertEquals(listOf(50989, 969), candidates.map { it.dependentFillIndex })
+        assertEquals(listOf(1, 0), candidates.map { it.coveredRequiredUnits })
+        assertEquals(
+            mapOf("first-source" to 50989, "second-source" to 100999),
+            replaced.replacementPlan.dependentFillIndexes,
+        )
+        assertEquals(100999, replaced.fillIndex.value)
+        assertEquals(0, replaced.remainingUnits)
+        assertEquals(2, replaced.replacementPlan.items.count { it.mainReplacement != null })
+        assertTrue(replaced.replacementPlan.unresolved.isEmpty())
+        assertTrue(primary.specimens.all { it.numExists && it.damageTypes == setOf("Deg") })
+    }
+
     /**
      * Verifies that prioritized sources can resolve separate pages and produce the projected
      * combined index.
