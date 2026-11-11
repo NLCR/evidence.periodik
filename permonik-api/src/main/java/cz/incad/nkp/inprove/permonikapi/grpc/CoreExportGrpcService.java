@@ -395,6 +395,7 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
         present(source.rawAttachmentNumber(), target::setAttachmentNumber);
         present(source.rawName(), target::setName);
         present(source.rawSubName(), target::setSubName);
+        present(source.rawNote(), target::setNote);
         return target.addAllMissingPages(source.getMissingPages())
                 .addAllDamagedPages(source.getDamagedPages())
                 .addAllDamageTypes(source.getDamageTypes())

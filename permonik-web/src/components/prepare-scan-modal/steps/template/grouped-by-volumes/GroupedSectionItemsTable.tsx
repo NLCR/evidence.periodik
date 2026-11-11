@@ -76,7 +76,7 @@ const GroupedSectionItemsTable: FC<Props> = ({ compact, section }) => {
                   </Typography>
                 </Stack>
               </TableCell>
-              <TableCell>{pages}</TableCell>
+              <TableCell>{pages?.join(', ')}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -142,7 +142,11 @@ class CoreVolumeGrpcIntegrationTest {
                                             specimen(
                                                     "s%04d".formatted(index),
                                                     index == 1000 ? second : first);
-                                    specimen.setNumExists(index > 1);
+                                     specimen.setNumExists(index > 1);
+                                     specimen.setNote(
+                                             index == 0
+                                                     ? "Two identical copies bound together"
+                                                     : index == 1 ? "" : null);
                                     specimen.setNumMissing(index == 2);
                                     specimen.setPagesCount(index == 1 ? 0 : 10);
                                     specimen.setMissingPages(List.of(0, 2, 2));
@@ -205,6 +209,9 @@ class CoreVolumeGrpcIntegrationTest {
         assertEquals("deleted-owner", raw.getOwner().getId());
         assertEquals("Stored owner label", raw.getOwner().getName());
         var unknown = raw.getSpecimens().getFirst();
+        assertEquals("Two identical copies bound together", unknown.getNote());
+        assertEquals("", raw.getSpecimens().get(1).getNote());
+        assertNull(raw.getSpecimens().get(2).getNote());
         assertFalse(unknown.getNumExists());
         assertFalse(unknown.getNumMissing());
         assertFalse(unknown.isAttachment());

@@ -188,6 +188,11 @@ public class Specimen extends Auditable {
         return note == null ? "" : note;
     }
 
+    /** Preserves absent source notes for internal export reads. */
+    public @Nullable String rawNote() {
+        return note;
+    }
+
     // Custom getter for `name`
     public String getName() {
         return name == null ? "" : name;

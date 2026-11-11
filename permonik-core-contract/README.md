@@ -292,7 +292,9 @@ stored data as calculated ideal data. This gap does not block a raw-data contrac
   signature, note, mutation-mark text/description, updated and updated-by.
 - Required specimen metadata: ID, publication date, attachment flag, edition and
   mutation IDs, mutation-mark type, existence/missing flags and page count. Optional:
-  number, attachment number, name, subname and mutation-mark text/description.
+   number, attachment number, name, subname, note and mutation-mark text/description.
+   Source specimen notes prefill new template item notes; regeneration preserves
+   existing template notes, including user edits and deliberate clearing.
 - Message fields have native presence. Required timestamps, owner, localized name,
   mutation mark and periodicity must be present. Empty periodicity is valid; missing
    or malformed JSON is not an empty schedule. Periodicity entries require all seven

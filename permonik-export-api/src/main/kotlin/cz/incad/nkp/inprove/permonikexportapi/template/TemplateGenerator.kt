@@ -110,6 +110,7 @@ class TemplateGenerator {
                     ReplacementMainScan(locked = false, visible = false, replacement = it)
                 } ?: PrimaryMainScan(locked = false, visible = false),
             pageReplacements = pageReplacements,
+            note = note,
         )
     }
 
@@ -206,6 +207,7 @@ class TemplateGenerator {
             id = id,
             number = number,
             attachmentNumber = attachmentNumber,
+            name = name,
             publicationDate = publicationDate.toString(),
             mutationMark = mutationMark.toTemplateMark(),
             isAttachment = isAttachment,

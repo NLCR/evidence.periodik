@@ -44,6 +44,7 @@ data class TemplateSpecimen(
     @field:NotBlank val id: String,
     val number: String? = null,
     val attachmentNumber: String? = null,
+    val name: String? = null,
     val publicationDate: String,
     @field:Valid val mutationMark: MutationMark,
     @get:JsonProperty("isAttachment") @param:JsonProperty("isAttachment") val isAttachment: Boolean,

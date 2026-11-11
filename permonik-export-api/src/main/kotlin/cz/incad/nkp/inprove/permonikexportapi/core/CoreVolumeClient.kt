@@ -344,6 +344,7 @@ private fun GrpcVolumeContents.toSnapshot(): StoredVolumeSnapshot = volume.let {
                     missingPages = item.missingPagesList.toList(),
                     damagedPages = item.damagedPagesList.toList(),
                     damageTypes = item.damageTypesList.toList(),
+                    note = item.note.takeIf { item.hasNote() },
                 )
             },
     )

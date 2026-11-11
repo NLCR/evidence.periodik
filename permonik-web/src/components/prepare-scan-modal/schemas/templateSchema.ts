@@ -14,6 +14,7 @@ export const TemplateSpecimenSchema = z.object({
   id: z.string(),
   number: z.string().nullish(),
   attachmentNumber: z.string().nullish(),
+  name: z.string().nullish(),
   publicationDate: z.string().nullish(),
   mutationMark: MutationMarkSchema.nullable(),
   isAttachment: z.boolean(),

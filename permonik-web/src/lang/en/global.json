@@ -144,6 +144,7 @@
       "unknown_signature": "Unknown signature",
       "issue_number_label": "No. {{number}}",
       "attachment_number_label": "Supplement No. {{number}}",
+      "named_attachment_number_label": "Supplement {{name}} No. {{number}}",
       "unknown_number_label": "Unknown issue",
       "pages_label": "pages",
       "all_pages_label": "all",

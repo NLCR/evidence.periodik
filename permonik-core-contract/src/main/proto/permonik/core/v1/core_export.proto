@@ -140,7 +140,7 @@ message GrpcPeriodicityItem {
 }
 
 message GrpcSpecimen {
-  // Required except number, attachment_number, name, sub_name and optional mark text.
+  // Required except number, attachment_number, name, sub_name, note and optional mark text.
   // Absent page/damage lists mean empty; absent scalar flags/page count are invalid.
   string id = 1;
   google.protobuf.Timestamp publication_date = 2;
@@ -160,4 +160,5 @@ message GrpcSpecimen {
   repeated int32 damaged_pages = 15;
   // Exact SpecimenDamageType.code strings, NEVER enum names. Unknown codes survive.
   repeated string damage_types = 16;
+  optional string note = 17;
 }

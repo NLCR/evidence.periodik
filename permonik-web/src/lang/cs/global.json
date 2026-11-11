@@ -144,6 +144,7 @@
       "unknown_signature": "Neznámá signatura",
       "issue_number_label": "č. {{number}}",
       "attachment_number_label": "Příloha č. {{number}}",
+      "named_attachment_number_label": "Příloha {{name}} č. {{number}}",
       "unknown_number_label": "Neznámé číslo",
       "pages_label": "strany",
       "all_pages_label": "všechny",
