@@ -49,6 +49,7 @@ data class StoredSpecimenSnapshot(
     val missingPages: List<Int>,
     val damagedPages: List<Int>,
     val damageTypes: List<String>,
+    val note: String?,
 )
 
 data class StoredOwner(val id: String, val name: String, val shorthand: String, val sigla: String)

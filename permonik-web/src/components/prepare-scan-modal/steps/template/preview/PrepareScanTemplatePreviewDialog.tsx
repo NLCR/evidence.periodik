@@ -110,14 +110,14 @@ const PrepareScanTemplatePreviewDialog: FC<Props> = ({
           {groupByVolumes ? (
             <GroupedTemplateSections
               items={items}
-              showOnlyRescans={false}
+              showOnlyRescans={showOnlyRescans}
               showOnlyUnlocked={false}
             />
           ) : (
             <VirtualizedSpecimenList
               items={items}
               viewOnly
-              showOnlyRescans={false}
+              showOnlyRescans={showOnlyRescans}
               showOnlyUnlocked={false}
             />
           )}

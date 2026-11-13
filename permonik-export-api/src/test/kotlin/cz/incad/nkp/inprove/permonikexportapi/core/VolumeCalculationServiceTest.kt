@@ -189,6 +189,7 @@ class VolumeCalculationServiceTest {
                         mutationMark = mark,
                         name = null,
                         subName = null,
+                        note = null,
                         numExists = true,
                         numMissing = false,
                         pagesCount = 4,

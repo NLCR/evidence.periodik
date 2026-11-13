@@ -18,13 +18,16 @@ import org.junit.jupiter.api.Test
 
 class TemplateGeneratorTest {
     /**
-     * Verifies that the generator preserves barcode metadata and uses the calculated source
-     * decision.
+     * Verifies calculated assignments and source notes while retaining edited notes on regeneration.
      */
     @Test
     fun generatesTemplateContentFromCalculationPlan() {
         val primary =
-            storedVolume("primary", "PRIMARY-BARCODE", storedSpecimen(missingPages = listOf(1, 2)))
+            storedVolume(
+                "primary",
+                "PRIMARY-BARCODE",
+                storedSpecimen(missingPages = listOf(1, 2), note = "Two identical copies bound together"),
+            )
         val source =
             storedVolume("source", "SOURCE-BARCODE", storedSpecimen(id = "source-specimen"))
         val calculation =
@@ -93,6 +96,15 @@ class TemplateGeneratorTest {
             TemplateGenerator().generate(primary, sources = listOf(source), calculation, settings)
 
         assertEquals("PRIMARY-BARCODE", content.primaryVolume.barCode)
+        assertEquals("Daily issue", content.items.single().specimen.name)
+        assertEquals("Two identical copies bound together", content.items.single().note)
+        val editedItems = content.items.map { it.copy(note = "Operator's note") }
+        assertEquals(
+            "Operator's note",
+            TemplateRules.mergeLockedItems(editedItems, content.items).single().note,
+        )
+        val clearedItems = content.items.map { it.copy(note = null) }
+        assertEquals(null, TemplateRules.mergeLockedItems(clearedItems, content.items).single().note)
         assertEquals(
             calculation.fillIndex.value,
             content.replacementSources.single().dependentFillIndex,
@@ -162,6 +174,7 @@ private fun storedVolume(id: String, barcode: String, specimen: StoredSpecimenSn
 private fun storedSpecimen(
     id: String = "specimen",
     missingPages: List<Int> = emptyList(),
+    note: String? = null,
 ) =
     StoredSpecimenSnapshot(
         id = id,
@@ -174,6 +187,7 @@ private fun storedSpecimen(
         mutationMark = StoredMutationMark("A", "MARK", null),
         name = "Daily issue",
         subName = "Morning",
+        note = note,
         numExists = true,
         numMissing = false,
         pagesCount = 2,

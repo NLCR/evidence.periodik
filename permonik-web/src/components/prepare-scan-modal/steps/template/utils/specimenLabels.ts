@@ -8,9 +8,15 @@ export const getNumberLabel = (specimen: TTemplateSpecimen, t: TFunction) => {
       number: specimen.number,
     })
   if (specimen.attachmentNumber)
-    return t('prepare_scan_modal.content_template.attachment_number_label', {
-      number: specimen.attachmentNumber,
-    })
+    return t(
+      specimen.name
+        ? 'prepare_scan_modal.content_template.named_attachment_number_label'
+        : 'prepare_scan_modal.content_template.attachment_number_label',
+      {
+        name: specimen.name,
+        number: specimen.attachmentNumber,
+      }
+    )
   return t('prepare_scan_modal.content_template.unknown_number_label')
 }
 
