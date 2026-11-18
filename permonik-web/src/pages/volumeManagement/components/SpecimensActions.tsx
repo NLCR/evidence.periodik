@@ -366,8 +366,9 @@ const SpecimensActions = ({
         <VolumeStatsModalContent volumeId={volumeId} />
       </ModalContainer>
 
-      {canReadTemplate ? (
+      {canReadTemplate && prepareScanModalOpened ? (
         <PrepareScanModal
+          key={volumeId}
           volumeId={volumeId ?? ''}
           isOpen={prepareScanModalOpened}
           setIsOpen={setPrepareScanModalOpened}

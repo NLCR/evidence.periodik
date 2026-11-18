@@ -476,6 +476,8 @@ constructor(
             version = stored.version,
             state = stored.state,
             primaryVolume = stored.content.primaryVolume,
+            issues = stored.content.issues,
+            replacementSources = stored.content.replacementSources,
             replacementSourcesParameters = stored.content.replacementSourcesParameters,
             primaryVolumeFillIndex = stored.content.primaryVolumeFillIndex,
             combinedFillIndex = stored.content.combinedFillIndex,

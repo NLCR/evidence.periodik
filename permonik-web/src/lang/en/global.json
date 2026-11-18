@@ -188,7 +188,7 @@
       "title": "Warning",
       "stay_button": "Stay in template step",
       "proceed_button": "Go to previous step",
-      "message": "If you now move to the preparation steps and then return, you will lose manually entered data in unlocked items of this template step. The template will be regenerated according to the settings in steps 1 and 2. Do you really want to continue?"
+      "message": "If you now move to the preparation steps and then return, the template will be regenerated according to the settings in steps 1 and 2. Save it first to preserve locked items and notes. However, manual changes to unlocked items will be lost even if you save the template. Do you really want to continue?"
     },
     "wizard": {
       "title": "Preparation for scanning",

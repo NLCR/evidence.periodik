@@ -31,15 +31,42 @@ type Props = {
   volumeId: string
 }
 
-const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
-  const { t } = useTranslation()
-  // TODO doplnit do BE struktury ty scan settings atd, abych to mel kde uloziti
-  // TODO default step needs to be fetched from BE
-  const [step, setStep] = useState<number>(0)
-  const settingsMethods = useForm<TScanTemplateSettings>({
-    defaultValues: createDefaultScanSettings(),
+const PrepareScanModal = (props: Props) => {
+  const templateQuery = usePrepareScanTemplateQuery(props.volumeId, {
+    enabled: props.isOpen,
   })
-  const templateMethods = useForm<TTemplate>()
+
+  if (templateQuery.isLoading) return <Loader />
+  if (templateQuery.isError) return <ShowError />
+
+  return <PrepareScanWizard {...props} templateQuery={templateQuery} />
+}
+
+const PrepareScanWizard = ({
+  isOpen,
+  setIsOpen,
+  volumeId,
+  templateQuery,
+}: Props & {
+  templateQuery: ReturnType<typeof usePrepareScanTemplateQuery>
+}) => {
+  const { t } = useTranslation()
+  const { data: volumeTemplate, refetch: refetchTemplate } = templateQuery
+  const [step, setStep] = useState(volumeTemplate ? 2 : 0)
+  const settingsMethods = useForm<TScanTemplateSettings>({
+    defaultValues: volumeTemplate
+      ? {
+          issues: volumeTemplate.issues,
+          replacementSources: volumeTemplate.replacementSources,
+          replacementSourcesParameters:
+            volumeTemplate.replacementSourcesParameters,
+          primaryVolumeFillIndex: volumeTemplate.primaryVolumeFillIndex,
+        }
+      : createDefaultScanSettings(),
+  })
+  const templateMethods = useForm<TTemplate>({
+    defaultValues: volumeTemplate ? withVisible(volumeTemplate) : undefined,
+  })
   const {
     reset: resetTemplate,
     getValues: getTemplateValues,
@@ -47,12 +74,6 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
   } = templateMethods
   const state = useWatch({ control: templateMethods.control, name: 'state' })
 
-  const {
-    data: volumeTemplate,
-    isLoading: templateLoading,
-    isError: templateError,
-    refetch: refetchTemplate,
-  } = usePrepareScanTemplateQuery(volumeId, { enabled: isOpen })
   const generateTemplateMutation =
     useGeneratePrepareScanTemplateMutation(volumeId)
   const saveTemplateMutation = useSavePrepareScanTemplateMutation(volumeId)
@@ -110,9 +131,6 @@ const PrepareScanModal = ({ isOpen, setIsOpen, volumeId }: Props) => {
     resetTemplate(result.data ?? undefined)
     return true
   }
-
-  if (templateLoading) return <Loader />
-  if (templateError) return <ShowError />
 
   const stepTitle =
     step === 0

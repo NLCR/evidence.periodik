@@ -18,6 +18,8 @@ data class Template(
     val version: Long? = null,
     val state: TemplateState,
     @field:Valid val primaryVolume: Volume,
+    @field:Valid val issues: TemplateIssues,
+    @field:Valid val replacementSources: List<ReplacementSource>,
     @field:Valid val replacementSourcesParameters: ReplacementSourcesParameters,
     @field:Min(0) @field:Max(100999) val primaryVolumeFillIndex: Int,
     @field:Min(0) @field:Max(100999) val combinedFillIndex: Int,

@@ -188,7 +188,7 @@
       "title": "Upozornenie",
       "stay_button": "Zostať v kroku predlohy",
       "proceed_button": "Prejsť na predchádzajúci krok",
-      "message": "Ak teraz prejdete do prípravných krokov a potom sa vrátite späť, prídete o ručne vyplnené údaje v neuzamknutých položkách tohto kroku predlohy. Predloha sa znovu vygeneruje podľa nastavení v krokoch 1 a 2. Naozaj chcete pokračovať?"
+      "message": "Ak teraz prejdete do prípravných krokov a potom sa vrátite späť, predloha sa znovu vygeneruje podľa nastavení v krokoch 1 a 2. Uložte ju preto najprv, aby sa zachovali uzamknuté položky a poznámky. O ručné úpravy neuzamknutých položiek však prídete aj po uložení. Naozaj chcete pokračovať?"
     },
     "wizard": {
       "title": "Príprava na skenovanie",
