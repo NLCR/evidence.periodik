@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import i18next from '../i18next'
 
 export const MutationMarkTypeSchema = z.enum(['MARK', 'NUMBER', 'UNMARKED'])
 export type TMutationMarkType = z.infer<typeof MutationMarkTypeSchema>
@@ -36,8 +37,15 @@ export function hasMutationMark(
   return !!value.mark?.trim()
 }
 
-export function getMutationMarkLabel(value: TMutationMark): string {
-  if (isUnmarkedMutationMark(value)) return UNMARKED_MUTATION_MARK_SYMBOL
+export function getMutationMarkLabel(
+  value: TMutationMark,
+  unmarkedFormat: 'short' | 'long' = 'short'
+): string {
+  if (isUnmarkedMutationMark(value)) {
+    return unmarkedFormat === 'long'
+      ? i18next.t('common.unmarked')
+      : UNMARKED_MUTATION_MARK_SYMBOL
+  }
   if (!value || !value.mark) return '-'
 
   return value.mark + (value.description ? ` (${value.description})` : '')

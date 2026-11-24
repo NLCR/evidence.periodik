@@ -39,7 +39,8 @@ Core now includes `org.springframework.boot:spring-boot-starter-grpc-server` and
 export includes `org.springframework.boot:spring-boot-starter-grpc-client`, both
 resolved to 4.1.1 by existing Boot dependency management. Neither starter belongs
 in this contract-only library. `CoreExportGrpcService` implements
-`BatchGetVolumeContents`, `SearchReplacementVolumes` and `QueryPlanningVolumes`; other RPCs are denied by the global
+`BatchGetVolumeContents`, `SearchReplacementVolumes`, `QueryPlanningVolumes` and
+`QueryPlanningFacets`; other RPCs are denied by the global
 `CoreExportSecurityConfiguration` native Spring gRPC security chain, including for authenticated callers.
 Reflection and health services are explicitly disabled. Netty listens on 9090,
 separate from HTTP 8080; servlet gRPC is disabled and Compose does not publish 9090.
@@ -221,15 +222,30 @@ in export's `SpecimenMatcher` and `ReplacementProjectionCalculator`.
 
 ### Planning Filter
 
+Both planning REST endpoints require numeric year bounds in `1–9999`, in
+ascending order. The internal `QueryPlanningVolumes` RPC still allows missing bounds.
+
 Absent mutation ID means no filter; a present blank ID is invalid. An absent
 `mutational_edition` means no filter. A nonblank mark is matched exactly; type, if
 present, must be `MARK`, `NUMBER` or `UNMARKED` and also match exactly. An absent or
 blank mark is allowed only with type `UNMARKED`, which then filters only by type.
-Description never participates. Export translates the FE's empty filter object to
-absence before calling core. Invalid combinations return `INVALID_ARGUMENT`.
+Description never participates. At the REST boundary, use `null` or omit the
+field for no edition filter; an empty object returns HTTP 400. Invalid gRPC
+filter combinations return `INVALID_ARGUMENT`.
 
-Export drains the query, batch-loads contents, computes each volume's own fill index
-and groups by stored year and owner ID. Core neither sums indexes nor returns a
+`QueryPlanningFacets` uses the same volume overlap filters and requires both year
+bounds. A single Solr request counts each volume once. Mutation counts apply the
+selected edition, and edition counts apply the selected mutation. Editions are
+distinguished by type and mark; `UNMARKED` counts records with no stored mark.
+Mutation buckets include the localized names already stored on the matching
+volumes. If stored names differ, the most frequent value per language is used.
+Core returns no volume or specimen records and rejects partial counts.
+
+Export drains the query and batch-loads contents. It computes each volume's own
+fill index and sums recorded pages of existing specimens from those contents.
+Export groups by owner and every selected UTC calendar year the stored date range
+overlaps, clipping the inclusive month range to each row's year. The page total
+always describes the whole volume. Core neither sums indexes nor returns a
 combined index. Public planning exposes the stored `Volume.barCode` as `barCode`;
 it is not a specimen number, first/last issue number, signature or computed ordinal.
 

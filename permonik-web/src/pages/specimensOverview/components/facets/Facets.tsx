@@ -230,7 +230,6 @@ const Facets: FC<TProps> = ({ metaTitle }) => {
         color="error"
         onClick={() => {
           resetAll([publicationDateMin, publicationDateMax])
-          setSliderRange([publicationDateMin, publicationDateMax])
           setCalendarDate(dayjs(specimens?.publicationDayMin))
         }}
       >

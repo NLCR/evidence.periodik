@@ -11,6 +11,8 @@
     "mutations": "mutations"
   },
   "common": {
+    "unmarked": "Bez označení",
+    "all": "Vše",
     "error_occurred_when_loading_data": "Nastala chyba při načítání dat",
     "error_occurred_somewhere": "Někde nastala chyba, zkuste to prosím znovu později",
     "yes": "Ano",
@@ -49,12 +51,24 @@
     "mutation": "Mutace",
     "mutational_edition": "Mutační vydání",
     "year": "Rok",
+    "open_volume": "Otevřít svazek {{barcode}}",
+    "selected_pages": "Součet stran vybraných svazků: {{pages, number}}",
+    "clear_selection": "Zrušit výběr",
+    "selection_help": "Zaškrtněte svazky, jejichž stránky chcete sečíst. Svazek zobrazený ve více letech se započítá jen jednou.",
+    "continues_from_previous_year": "Svazek začal v předchozím roce",
+    "continues_into_next_year": "Svazek pokračuje do dalšího roku",
+    "continuation_legend": "Šipky u měsíců ukazují, že svazek zasahuje do předchozího (←) nebo následujícího (→) roku.",
+    "page_count_one": "{{count}} strana",
+    "page_count_few": "{{count}} strany",
+    "page_count_other": "{{count}} stran",
+    "fill_index_sum": "Souhrnný index vyplnění",
     "select_filters": "Nastavte filtry a spusťte vyhledávání",
     "no_results": "Nic nebylo nalezeno",
     "combined_fill_index": "Kombinovaný index vyplnění",
-    "year_required": "Zadejte rok",
-    "year_invalid": "Zadejte platný číselný rok",
-    "year_range_invalid": "Rok od nesmí být vyšší než rok do"
+    "year_range_invalid": "Rok od nesmí být vyšší než rok do",
+    "year_range_unavailable": "Rozsah let periodika není k dispozici.",
+    "results_loading": "Načítají se výsledky plánování…",
+    "timeout": "Vyhledávání trvalo příliš dlouho. Zkuste zúžit rozsah let nebo vybrat mutaci."
   },
   "prepare_scan_modal": {
     "content_preparation": {
@@ -536,6 +550,9 @@
     "first_number_min": "První číslo musí být alespoň 0",
     "last_number_min": "Poslední číslo musí být alespoň 0",
     "year_min": "Rok musí být alespoň 0",
+    "calendar_year_invalid": "Zadejte platný číselný rok",
+    "calendar_year_min": "Nejstarší povolený rok je {{year}}",
+    "calendar_year_max": "Nejnovější povolený rok je {{year}}",
     "meta_title_empty": "Vyplňte prosím pole 'Metatitul'",
     "mutation_empty": "Vyplňte prosím pole 'Mutace'",
     "owner_empty": "Vyplňte prosím pole 'Vlastník'",

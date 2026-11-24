@@ -17,6 +17,24 @@ service CoreExportService {
   rpc SearchReplacementVolumes(SearchReplacementVolumesRequest) returns (stream GrpcVolume);
   // Lists volumes across owners by stored year, mutation and mutational edition.
   rpc QueryPlanningVolumes(QueryPlanningVolumesRequest) returns (stream GrpcVolume);
+  rpc QueryPlanningFacets(QueryPlanningVolumesRequest) returns (QueryPlanningFacetsResponse);
+}
+
+message QueryPlanningFacetsResponse {
+  repeated GrpcPlanningMutationCount mutations = 1;
+  repeated GrpcPlanningEditionCount mutational_editions = 2;
+}
+
+message GrpcPlanningMutationCount {
+  string mutation_id = 1;
+  int64 count = 2;
+  GrpcLocalizedName name = 3;
+}
+
+message GrpcPlanningEditionCount {
+  string type = 1;
+  optional string mark = 2;
+  int64 count = 3;
 }
 
 message BatchGetVolumeContentsRequest {

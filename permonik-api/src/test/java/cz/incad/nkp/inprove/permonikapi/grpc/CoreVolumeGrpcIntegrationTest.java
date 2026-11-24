@@ -24,7 +24,6 @@ import cz.incad.nkp.inprove.permonikcorecontract.v1.*;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcPeriodicityItem;
 import cz.incad.nkp.inprove.permonikexportapi.calculation.SpecimenMatchingRules;
 import cz.incad.nkp.inprove.permonikexportapi.core.*;
-import cz.incad.nkp.inprove.permonikexportapi.planning.MutationalEditionFilter;
 import cz.incad.nkp.inprove.permonikexportapi.planning.TemplatePlanningQuery;
 import io.grpc.*;
 import io.grpc.stub.MetadataUtils;
@@ -339,15 +338,14 @@ class CoreVolumeGrpcIntegrationTest {
                 Status.Code.UNAVAILABLE, () -> client.searchReplacementVolumeIds(FIRST, rules));
     }
 
-    /**
-     * Verifies planning date bounds and UTC calendar-year grouping even when the stored year is
-     * zero.
-     */
+    /** Verifies planning uses date-overlap bounds and returns full stored volume dates. */
     @Test
     void planningQueryUsesStoredFiltersAndReturnsVolumeMetadata() throws Exception {
         first.setMetaTitleId("title");
         first.setYear(1960);
         second.setYear(1961);
+        second.setDateFrom(Date.from(Instant.parse("1960-03-01T00:00:00Z")));
+        second.setDateTo(Date.from(Instant.parse("1961-06-30T00:00:00Z")));
         first.setNote("f".repeat(70000));
         second.setNote("s".repeat(70000));
         var searches = new ArrayList<SolrQuery>();
@@ -377,21 +375,17 @@ class CoreVolumeGrpcIntegrationTest {
         authenticated.queryPlanningVolumes(request).forEachRemaining(streamed::add);
 
         assertEquals(List.of(FIRST, SECOND), streamed.stream().map(GrpcVolume::getId).toList());
+        assertEquals(
+                second.getDateFrom().toInstant().getEpochSecond(),
+                streamed.get(1).getDateFrom().getSeconds());
+        assertEquals(
+                second.getDateTo().toInstant().getEpochSecond(),
+                streamed.get(1).getDateTo().getSeconds());
         var planning =
                 client.queryPlanningVolumes(
-                        new TemplatePlanningQuery(
-                                "title",
-                                "1960",
-                                "1965",
-                                null,
-                                new MutationalEditionFilter(null, null, null)));
+                        new TemplatePlanningQuery("title", 1960, 1965, null, null));
         assertEquals(
-                1960,
-                planning.stream()
-                        .filter(volume -> volume.getId().equals(SECOND))
-                        .findFirst()
-                        .orElseThrow()
-                        .getYear());
+                List.of(FIRST, SECOND), planning.stream().map(volume -> volume.getId()).toList());
         var filters = Arrays.asList(searches.getFirst().getFilterQueries());
         assertTrue(filters.contains("metatitle_id:\"title\""), filters.toString());
         assertTrue(filters.contains("date_to:[1960-01-01T00:00:00Z TO *]"), filters.toString());
@@ -413,12 +407,53 @@ class CoreVolumeGrpcIntegrationTest {
                 Status.Code.UNAVAILABLE,
                 () ->
                         client.queryPlanningVolumes(
-                                new TemplatePlanningQuery(
-                                        "title",
-                                        "1960",
-                                        "1965",
-                                        null,
-                                        new MutationalEditionFilter(null, null, null))));
+                                new TemplatePlanningQuery("title", 1960, 1965, null, null)));
+    }
+
+    @Test
+    void planningFacetsCarryNamesAndCountsThroughGrpc() throws Exception {
+        var mutation =
+                new NamedList<>(
+                        Map.of(
+                                "val", "prague", "count", 2L,
+                                "cs", nameBucket("Praha"),
+                                "sk", nameBucket("Praha"),
+                                "en", nameBucket("Prague")));
+        var ids = new NamedList<>(Map.of("buckets", List.of(mutation)));
+        var noMatches = new NamedList<>(Map.of("count", 0L));
+        var editions =
+                new NamedList<>(
+                        Map.of(
+                                "count", 2L,
+                                "MARK", noMatches,
+                                "NUMBER", noMatches,
+                                "UNMARKED", new NamedList<>(Map.of("count", 2L))));
+        var facets =
+                new NamedList<>(
+                        Map.of(
+                                "count", 2L,
+                                "mutations", new NamedList<>(Map.of("count", 2L, "ids", ids)),
+                                "editions", editions));
+        var response =
+                new QueryResponse(
+                        new NamedList<>(Map.of("responseHeader", new NamedList<>(), "facets", facets)));
+        when(solr.query(eq("volume"), any(SolrQuery.class))).thenReturn(response);
+
+        var result =
+                client.queryPlanningFacets(
+                        new TemplatePlanningQuery("title", 1960, 1965, null, null));
+
+        var option = result.getMutations().getFirst();
+        assertEquals("prague", option.getItem().getId());
+        assertEquals("Prague", option.getItem().getName().getEn());
+        assertEquals(2L, option.getCount());
+        assertEquals(
+                "UNMARKED", result.getMutationalEditions().getFirst().getItem().getType().name());
+    }
+
+    private static NamedList<?> nameBucket(String name) {
+        var bucket = new NamedList<>(Map.of("val", name, "count", 2L));
+        return new NamedList<>(Map.of("buckets", List.of(bucket)));
     }
 
     /**

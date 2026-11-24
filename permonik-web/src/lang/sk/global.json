@@ -11,6 +11,8 @@
     "mutations": "mutations"
   },
   "common": {
+    "unmarked": "Bez označenia",
+    "all": "Všetko",
     "error_occurred_when_loading_data": "Nastala chyba pri načítaní údajov",
     "error_occurred_somewhere": "Niekde nastala chyba, skúste to prosím neskôr",
     "yes": "Áno",
@@ -49,12 +51,24 @@
     "mutation": "Mutácia",
     "mutational_edition": "Mutačné vydanie",
     "year": "Rok",
+    "open_volume": "Otvoriť zväzok {{barcode}}",
+    "selected_pages": "Súčet strán vybraných zväzkov: {{pages, number}}",
+    "clear_selection": "Zrušiť výber",
+    "selection_help": "Začiarknite zväzky, ktorých strany chcete sčítať. Zväzok zobrazený vo viacerých rokoch sa započíta len raz.",
+    "continues_from_previous_year": "Zväzok sa začal v predchádzajúcom roku",
+    "continues_into_next_year": "Zväzok pokračuje do ďalšieho roka",
+    "continuation_legend": "Šípky pri mesiacoch ukazujú, že zväzok zasahuje do predchádzajúceho (←) alebo nasledujúceho (→) roka.",
+    "page_count_one": "{{count}} strana",
+    "page_count_few": "{{count}} strany",
+    "page_count_other": "{{count}} strán",
+    "fill_index_sum": "Súhrnný index vyplnenia",
     "select_filters": "Nastavte filtre a spustite vyhľadávanie",
     "no_results": "Nič sa nenašlo",
     "combined_fill_index": "Kombinovaný index vyplnenia",
-    "year_required": "Zadajte rok",
-    "year_invalid": "Zadajte platný číselný rok",
-    "year_range_invalid": "Rok od nesmie byť vyšší ako rok do"
+    "year_range_invalid": "Rok od nesmie byť vyšší ako rok do",
+    "year_range_unavailable": "Rozsah rokov periodika nie je k dispozícii.",
+    "results_loading": "Načítavajú sa výsledky plánovania…",
+    "timeout": "Vyhľadávanie trvalo príliš dlho. Skúste zúžiť rozsah rokov alebo vybrať mutáciu."
   },
   "prepare_scan_modal": {
     "content_preparation": {
@@ -536,6 +550,9 @@
     "first_number_min": "Prvé číslo musí byť aspoň 0",
     "last_number_min": "Posledné číslo musí byť aspoň 0",
     "year_min": "Rok musí byť aspoň 0",
+    "calendar_year_invalid": "Zadajte platný číselný rok",
+    "calendar_year_min": "Najstarší povolený rok je {{year}}",
+    "calendar_year_max": "Najnovší povolený rok je {{year}}",
     "meta_title_empty": "Vyplňte prosím pole 'Metatitul'",
     "mutation_empty": "Vyplňte prosím pole 'Mutace'",
     "owner_empty": "Vyplňte prosím pole 'Vlastník'",

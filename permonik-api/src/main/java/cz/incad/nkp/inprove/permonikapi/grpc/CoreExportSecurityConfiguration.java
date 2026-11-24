@@ -55,6 +55,8 @@ public class CoreExportSecurityConfiguration {
                                         CoreExportServiceGrpc.getSearchReplacementVolumesMethod()
                                                 .getFullMethodName(),
                                         CoreExportServiceGrpc.getQueryPlanningVolumesMethod()
+                                                .getFullMethodName(),
+                                        CoreExportServiceGrpc.getQueryPlanningFacetsMethod()
                                                 .getFullMethodName())
                                 .authenticated()
                                 .allRequests()

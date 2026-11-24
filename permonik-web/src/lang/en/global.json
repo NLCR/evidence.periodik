@@ -11,6 +11,8 @@
     "mutations": "mutations"
   },
   "common": {
+    "unmarked": "Unmarked",
+    "all": "All",
     "error_occurred_when_loading_data": "An error occurred while loading data",
     "error_occurred_somewhere": "An error occurred somewhere, please try again later",
     "yes": "Yes",
@@ -49,12 +51,23 @@
     "mutation": "Mutation",
     "mutational_edition": "Mutational edition",
     "year": "Year",
+    "open_volume": "Open volume {{barcode}}",
+    "selected_pages": "Total pages in selected volumes: {{pages, number}}",
+    "clear_selection": "Clear selection",
+    "selection_help": "Select the volumes whose pages you want to add up. A volume shown in multiple years is counted only once.",
+    "continues_from_previous_year": "Volume started in the previous year",
+    "continues_into_next_year": "Volume continues into the next year",
+    "continuation_legend": "Arrows next to the months show that the volume extends into the previous year (←) or the next year (→).",
+    "page_count_one": "{{count}} page",
+    "page_count_other": "{{count}} pages",
+    "fill_index_sum": "Summary fill index",
     "select_filters": "Set filters and start the search",
     "no_results": "Nothing was found",
     "combined_fill_index": "Combined fill index",
-    "year_required": "Enter a year",
-    "year_invalid": "Enter a valid numeric year",
-    "year_range_invalid": "Year from must not be greater than year to"
+    "year_range_invalid": "Year from must not be greater than year to",
+    "year_range_unavailable": "The periodical’s year range is unavailable.",
+    "results_loading": "Loading planning results…",
+    "timeout": "The search took too long. Try narrowing the year range or selecting a mutation."
   },
   "prepare_scan_modal": {
     "content_preparation": {
@@ -536,6 +549,9 @@
     "first_number_min": "The first number must be at least 0",
     "last_number_min": "The last number must be at least 0",
     "year_min": "Year must be at least 0",
+    "calendar_year_invalid": "Enter a valid numeric year",
+    "calendar_year_min": "The earliest allowed year is {{year}}",
+    "calendar_year_max": "The latest allowed year is {{year}}",
     "meta_title_empty": "Please fill out the 'Meta title' field",
     "mutation_empty": "Please fill out the 'Mutation' field",
     "owner_empty": "Please fill out the 'Owner' field",
