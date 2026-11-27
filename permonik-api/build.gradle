@@ -1,8 +1,12 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.7'
-    id 'io.spring.dependency-management' version '1.1.7'
-//    id "io.sentry.jvm.gradle" version "5.12.2"
+    id 'pmd'
+    id 'com.diffplug.spotless'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+    id 'io.github.ben-manes.versions'
+    id 'io.sentry.jvm.gradle'
+    id 'com.google.cloud.tools.jib'
 }
 
 group = 'cz.incad.nkp.inprove'
@@ -20,111 +24,133 @@ configurations {
     }
 }
 
-//sentry {
-//    // Enables more detailed log output, e.g. for sentry-cli.
-//    //
-//    // Default is false.
-//    debug = false
-//    // Generates a source bundle and uploads it to Sentry.
-//    // This enables source context, allowing you to see your source
-//    // code as part of your stack traces in Sentry.
-//    //
-//    // Default is disabled. To enable, see the source context guide.
-//    includeSourceContext = true
-//    // Includes additional source directories into the source bundle.
-//    // These directories are resolved relative to the project directory.
-////    additionalSourceDirsForSourceContext = ["mysrc/java", "other-source-dir/main/kotlin"]
-//    // Disables or enables dependencies metadata reporting for Sentry.
-//    // If enabled, the plugin will collect external dependencies and
-//    // upload them to Sentry as part of events. If disabled, all the logic
-//    // related to the dependencies metadata report will be excluded.
-//    //
-//    // Default is enabled.
-//    includeDependenciesReport = true
-//    // Automatically adds Sentry dependencies to your project.
-//    autoInstallation {
-//        enabled = true
-//    }
-//}
+def sentryAuthToken = providers.environmentVariable("SENTRY_AUTH_TOKEN").orNull
+def hostArchitecture = System.getProperty('os.arch').toLowerCase() in ['aarch64', 'arm64'] ? 'arm64' : 'amd64'
+def jibArchitecture = providers.gradleProperty('jibArchitecture').getOrElse(hostArchitecture)
 
-ext {
-    lombok = '1.18.42'
-    openapi = "2.8.14"
-    solrj = '9.10.0'
-    mapstruct = '1.6.3'
-    slf4j = '2.0.17'
-    logback = '1.5.18'
-    hibernate = '7.1.1.Final'
-    redisSession = "3.5.2"
+sentry {
+    includeSourceContext = sentryAuthToken != null && !sentryAuthToken.isBlank()
+
+    org = "inqool"
+    projectName = "permonik-api"
+    authToken = sentryAuthToken
 }
 
 repositories {
     mavenCentral()
 }
 
-bootJar {
-    archiveFileName.set("permonik-api.jar")
-    layered {
-        enabled = true
-    }
-    manifest {
-        attributes(
-                'Implementation-Title': 'Permonik BE',
-                'Implementation-Version': archiveVersion
-        )
+pmd {
+    toolVersion = versions.pmd
+    ruleSets = []
+    ruleSetFiles = files(rootProject.file('config/pmd/pmd.xml'))
+    ignoreFailures = false
+}
+
+spotless {
+    ratchetFrom('origin/main')
+
+    java {
+        target('src/**/*.java')
+        googleJavaFormat(versions.googleJavaFormat).aosp()
+        removeUnusedImports()
     }
 }
 
-jar {
-    // disabled generating *-plain.jar version during build
-    // https://stackoverflow.com/questions/67663728/spring-boot-2-5-0-generates-plain-jar-file-can-i-remove-it
-    enabled = false
+tasks.withType(Pmd).configureEach {
+    classpath += files(javaLauncher.map { it.metadata.installationPath.file('lib/jrt-fs.jar') })
+    reports {
+        html.required = true
+        xml.required = true
+    }
 }
+
 
 dependencies {
-    // SPRING BOOT
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation project(':permonik-domain')
+    implementation project(':permonik-core-contract')
 
-    // HIBERNATE (preCreate, preUpdate, preRemove)
-    implementation "org.hibernate.orm:hibernate-envers:${hibernate}"
+    // SPRING BOOT
+    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-grpc-server'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server'
 
     // SOLR
-    implementation "org.apache.solr:solr-solrj:${solrj}"
-
-    // REDIS
-    implementation "org.springframework.session:spring-session-data-redis:${redisSession}"
-    implementation "org.springframework.boot:spring-boot-starter-data-redis"
-
-    // JACKSON
-    implementation "com.fasterxml.jackson.core:jackson-core:2.20.1"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.20.1"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:2.20"
+    implementation "org.apache.solr:solr-solrj:${versions.solrj}"
 
     // LOMBOK
-    compileOnly "org.projectlombok:lombok:${lombok}"
-    annotationProcessor "org.projectlombok:lombok:${lombok}"
+    compileOnly "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     // MAPSTRUCT
-    implementation "org.mapstruct:mapstruct:${mapstruct}"
-    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct}"
+    implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
 
     // SWAGGER / OpenAPI
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openapi}"
-
-    // LOGGING
-    implementation "ch.qos.logback:logback-classic:${logback}"
-    implementation "org.slf4j:slf4j-api:${slf4j}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${versions.openapi}"
 
     // DEVELOPMENT
     developmentOnly "org.springframework.boot:spring-boot-devtools"
 
     // TESTING
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    // Exercise the real export client without importing its JDBC/Liquibase application runtime.
+    testImplementation(project(':permonik-export-api')) { transitive = false }
+    testImplementation 'org.jetbrains.kotlin:kotlin-reflect'
+    testImplementation 'org.springframework.boot:spring-boot-starter-grpc-client'
+    testImplementation 'io.grpc:grpc-inprocess'
+    testImplementation "org.testcontainers:testcontainers-solr:${versions.testcontainersSolr}"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 
 tasks.named('test') {
     useJUnitPlatform()
+    systemProperty 'IDENTITY_JWT_SECRET', 'permonik-api-test-jwt-secret-at-least-32-bytes'
+    systemProperty 'CORE_EXPORT_GRPC_TOKEN', UUID.randomUUID().toString().replace('-', '') + UUID.randomUUID().toString().replace('-', '')
+    systemProperty 'spring.grpc.server.port', '0'
+}
+
+tasks.named('bootJar') {
+    archiveFileName = 'permonik-api.jar'
+}
+
+jib {
+    from {
+        image = 'gcr.io/distroless/java25-debian13:nonroot'
+        platforms {
+            platform {
+                architecture = jibArchitecture
+                os = 'linux'
+            }
+        }
+    }
+    to {
+        image = providers.gradleProperty('jibImage').getOrElse('periodik-permonik-api:latest')
+        tags = providers.gradleProperty('jibTags')
+                .map { it.split(',').findAll { tag -> !tag.isBlank() } as Set }
+                .getOrElse([] as Set)
+    }
+    container {
+        mainClass = 'cz.incad.nkp.inprove.permonikapi.PermonikApiApplication'
+        user = '65532:65532'
+        ports = ['8080']
+    }
+}
+
+def isNonStable = { version ->
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { keyword ->
+        version.toUpperCase().contains(keyword)
+    }
+    def regex = /^[0-9,.v-]+(-r)?$/
+    return !stableKeyword && !(version ==~ regex)
+}
+
+tasks.named("dependencyUpdates").configure {
+    rejectVersionIf {
+        isNonStable(it.candidate.version)
+    }
 }

@@ -1,6 +1,6 @@
 import { Controller, useFormContext } from 'react-hook-form'
 import { useInputDataEditabilityContext } from './InputDataEditabilityContextProvider'
-import Checkbox, { CheckboxProps } from '@mui/material/Checkbox'
+import Checkbox, { type CheckboxProps } from '@mui/material/Checkbox'
 import Box from '@mui/material/Box'
 
 type Props = {

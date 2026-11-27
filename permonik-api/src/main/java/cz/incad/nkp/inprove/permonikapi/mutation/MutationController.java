@@ -1,5 +1,6 @@
 package cz.incad.nkp.inprove.permonikapi.mutation;
 
+import cz.incad.nkp.inprove.permonikapi.common.LanguageResolver;
 import cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,8 +22,10 @@ public class MutationController {
 
     @Operation(summary = "Lists all mutations")
     @GetMapping("/list/all")
-    public List<MutationDTO> getMutations() throws SolrServerException, IOException {
-        return mutationService.getMutations();
+    public List<MutationDTO> getMutations(
+        @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage
+    ) throws SolrServerException, IOException {
+        return mutationService.getMutations(LanguageResolver.resolve(acceptLanguage));
     }
 
     @Operation(summary = "Updates existing mutation")

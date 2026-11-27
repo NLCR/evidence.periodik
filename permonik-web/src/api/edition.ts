@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import clone from 'lodash/clone'
 import { api, queryClient } from './index'
-import { TEditableEdition, TEdition } from '../schema/edition'
+import { type TEditableEdition, type TEdition } from '../schema/edition'
 
 export const useEditionListQuery = () => {
   return useQuery({

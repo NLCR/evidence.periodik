@@ -1,35 +1,19 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import clone from 'lodash/clone'
 import { api, queryClient } from './index'
-import { TMe, TUser } from '../schema/user'
+import { MeSchema, type TBasicLogin, type TMe, type TUser } from '@/schema/user'
 // import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
 
 // const { MODE } = import.meta.env
 
 export const useMeQuery = () => {
-  // const useMock = MODE === 'development' && APP_WITH_EDITING_ENABLED
-  const useMock = false
-
   return useQuery({
     queryKey: ['me'],
-    queryFn: (): Promise<TMe> => {
-      return useMock
-        ? new Promise((res) => {
-            res({
-              id: '407a3bc0-db76-4cce-aebc-4291ca5af0d3',
-              name: 'Admin 1',
-              email: 'kretek@inqool.cz',
-              authorities: [],
-              owners: null,
-              enabled: true,
-              username: 'admin',
-              role: 'super_admin',
-              accountNonExpired: true,
-              accountNonLocked: true,
-              credentialsNonExpired: true,
-            })
-          })
-        : api().get(`me`).json<TMe>()
+    queryFn: async (): Promise<TMe | null> => {
+      const body = await api()
+        .get(`me`, { headers: { Accept: 'application/json' } })
+        .text()
+      return body ? MeSchema.parse(JSON.parse(body)) : null
     },
   })
 }
@@ -37,7 +21,23 @@ export const useMeQuery = () => {
 export const useLogoutMutation = () =>
   useMutation({
     mutationFn: () => {
-      return api().post(`auth/logout`)
+      return api({ throwErrorFromKy: false }).post(`auth/logout`, {
+        redirect: 'manual',
+      })
+    },
+  })
+
+export const useBasicLoginMutation = () =>
+  useMutation({
+    mutationFn: (payload: TBasicLogin) => {
+      return api({ throwErrorFromKy: false }).post(`auth/login/basic`, {
+        json: payload,
+      })
+    },
+    onSuccess: (response) => {
+      if (response.ok) {
+        queryClient.invalidateQueries({ queryKey: ['me'] })
+      }
     },
   })
 

@@ -1,9 +1,10 @@
-import React, { Suspense } from 'react'
+import { Suspense } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import Loader from '../../components/Loader'
+import { hasPermission, type TMe } from '../../schema/user'
 
 const Container = styled('div')(({ theme }) => ({
   backgroundColor: 'white',
@@ -48,37 +49,43 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
   borderColor: theme.palette.grey[300],
 }))
 
-const Administration = () => {
+const Administration = ({ me }: { me: TMe }) => {
   const { t, i18n } = useTranslation()
 
   return (
     <Container>
       <Menu>
-        <Link
-          to={`/${i18n.resolvedLanguage}/${t('urls.administration')}/${t('urls.users')}`}
-        >
-          {t('administration.users')}
-        </Link>
-        <Link
-          to={`/${i18n.resolvedLanguage}/${t('urls.administration')}/${t('urls.owners')}`}
-        >
-          {t('administration.owners')}
-        </Link>
-        <Link
-          to={`/${i18n.resolvedLanguage}/${t('urls.administration')}/${t('urls.meta_titles')}`}
-        >
-          {t('administration.meta_titles')}
-        </Link>
-        <Link
-          to={`/${i18n.resolvedLanguage}/${t('urls.administration')}/${t('urls.editions')}`}
-        >
-          {t('administration.editions')}
-        </Link>
-        <Link
-          to={`/${i18n.resolvedLanguage}/${t('urls.administration')}/${t('urls.mutations')}`}
-        >
-          {t('administration.mutations')}
-        </Link>
+        {hasPermission(me, 'USER_READ') ? (
+          <Link
+            to={`/${i18n.resolvedLanguage}/${t('urls.administration')}/${t('urls.users')}`}
+          >
+            {t('administration.users')}
+          </Link>
+        ) : null}
+        {hasPermission(me, 'REFERENCE_WRITE') ? (
+          <>
+            <Link
+              to={`/${i18n.resolvedLanguage}/${t('urls.administration')}/${t('urls.owners')}`}
+            >
+              {t('administration.owners')}
+            </Link>
+            <Link
+              to={`/${i18n.resolvedLanguage}/${t('urls.administration')}/${t('urls.meta_titles')}`}
+            >
+              {t('administration.meta_titles')}
+            </Link>
+            <Link
+              to={`/${i18n.resolvedLanguage}/${t('urls.administration')}/${t('urls.editions')}`}
+            >
+              {t('administration.editions')}
+            </Link>
+            <Link
+              to={`/${i18n.resolvedLanguage}/${t('urls.administration')}/${t('urls.mutations')}`}
+            >
+              {t('administration.mutations')}
+            </Link>
+          </>
+        ) : null}
       </Menu>
       <StyledDivider />
       <Suspense fallback={<Loader />}>

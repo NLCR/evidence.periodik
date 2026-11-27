@@ -25,7 +25,7 @@ const MutationFacetGroup = () => {
               ],
             }))
       }
-      header={t('specimens_overview.mutation')}
+      header={t('common.fields.mutation')}
       onChange={(value) => setParams({ ...params, mutationIds: value })}
       values={params.mutationIds}
     />

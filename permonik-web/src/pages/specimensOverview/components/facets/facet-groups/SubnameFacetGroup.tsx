@@ -12,7 +12,7 @@ const SubnameFacetGroup = () => {
           ? facets.subNames
           : params.subNames.map((p) => ({ name: p, count: 0 }))
       }
-      header={t('specimens_overview.sub_name')}
+      header={t('common.fields.sub_name')}
       onChange={(value) => setParams({ ...params, subNames: value })}
       values={params.subNames}
     />

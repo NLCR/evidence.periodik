@@ -1,0 +1,16 @@
+.git
+.gradle
+.idea
+.kotlin
+.playwright-mcp
+.env
+.env.local
+**/build
+**/node_modules
+**/dist
+**/.yarn/cache
+**/.yarn/install-state.gz
+**/.yarn/unplugged
+*.log
+solr-data
+permonik-database/reindex/new-solr-data

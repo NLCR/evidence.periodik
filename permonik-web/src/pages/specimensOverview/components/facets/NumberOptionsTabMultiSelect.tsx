@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { SpecimenStateEnum, TSpecimenState } from '../../../../schema/specimen'
+import {
+  SpecimenStateEnum,
+  type TSpecimenState,
+} from '../../../../schema/specimen'
 import { useSpecimensOverviewStore } from '../../../../slices/useSpecimensOverviewStore'
 import { FormTabMultiSelect } from '../FormTabMultiSelect'
 

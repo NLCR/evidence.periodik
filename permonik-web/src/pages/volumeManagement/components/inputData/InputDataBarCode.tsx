@@ -3,7 +3,7 @@ import TableRow from '@mui/material/TableRow'
 import InputDataTextField from './InputDataTextField'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { useTranslation } from 'react-i18next'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
 
 const InputDataBarCode = () => {
@@ -19,9 +19,9 @@ const InputDataBarCode = () => {
     (state) => state.specimensActions.setSpecimensState
   )
 
-  const { watch } = useFormContext()
+  const { control } = useFormContext()
   const isDuplicated = location.href.includes('duplicated')
-  const isEmpty = !watch('barCode')
+  const isEmpty = !useWatch({ name: 'barCode', control })
 
   return (
     <TableRow
@@ -31,11 +31,11 @@ const InputDataBarCode = () => {
         ),
       }}
     >
-      <TableCell>{t('volume_overview.bar_code')}</TableCell>
+      <TableCell>{t('common.fields.bar_code')}</TableCell>
       <TableCell>
         <InputDataTextField
           editableData={{
-            fieldName: t('volume_overview.bar_code'),
+            fieldName: t('common.fields.bar_code'),
             saveChange: (value: string) => {
               setBarCode(value)
               setSpecimensState(

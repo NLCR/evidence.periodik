@@ -1,7 +1,9 @@
 package cz.incad.nkp.inprove.permonikapi.mutation.model;
 
+import static cz.incad.nkp.inprove.permonikapi.mutation.model.MutationDefinition.*;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
 
@@ -13,17 +15,19 @@ import org.apache.solr.client.solrj.beans.Field;
 @Getter
 public class Mutation extends Auditable {
 
-    @Field
+    @Field(ID_FIELD)
+    @NotNull
     private String id; // UUID
 
-    // as string
-    //    {
-//        cs: "Brno",
-//        sk: "Brno",
-//        en: "Brno"
-//    }
-    @Field
-    private String name;
+    @Field(NAME_CS_FIELD)
+    @NotNull
+    private String nameCs;
 
+    @Field(NAME_SK_FIELD)
+    @NotNull
+    private String nameSk;
 
+    @Field(NAME_EN_FIELD)
+    @NotNull
+    private String nameEn;
 }

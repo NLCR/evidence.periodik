@@ -1,12 +1,9 @@
 services:
   permonik-api:
     image: eu.gcr.io/inqool-1301/permonik/prod/permonik-api:${PERMONIK_TAG}
+    restart: unless-stopped
     depends_on:
       - permonik-database
-      - permonik-redis
-    build:
-      context: .
-      dockerfile: permonik-api/docker/Dockerfile
     networks:
       - permonik
     expose:
@@ -19,15 +16,75 @@ services:
           memory: '2048M'
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      REDIS_HOST: permonik-redis
+      IDENTITY_JWT_SECRET:
+      SOLR_USERNAME:
+      SOLR_PASSWORD:
+      CORE_EXPORT_GRPC_TOKEN:
+      LOGGING_FILE_NAME: /tmp/permonik-api.log
+      SENTRY_DSN:
+      SENTRY_ENVIRONMENT: production
+      SENTRY_RELEASE:
       TZ: "Europe/Prague"
       SERVER_PORT: "8080"
 
+  permonik-export-api:
+    image: eu.gcr.io/inqool-1301/permonik/prod/permonik-export-api:${PERMONIK_TAG}
+    restart: unless-stopped
+    depends_on:
+      permonik-api:
+        condition: service_started
+      permonik-export-api-database:
+        condition: service_healthy
+    networks:
+      - permonik
+    expose:
+      - 8080
+    deploy:
+      resources:
+        reservations:
+          memory: '256M'
+        limits:
+          memory: '1024M'
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SERVER_PORT: "8080"
+      EXPORT_API_DATABASE_URL: jdbc:postgresql://permonik-export-api-database:5432/permonik_export
+      EXPORT_API_DATABASE_PASSWORD:
+      IDENTITY_JWT_SECRET:
+      CORE_EXPORT_GRPC_TOKEN:
+      CORE_EXPORT_GRPC_TARGET: static://permonik-api:9090
+      SENTRY_DSN:
+      SENTRY_ENVIRONMENT: production
+      SENTRY_RELEASE:
+      TZ: "Europe/Prague"
+
+  permonik-export-api-database:
+    image: postgres:19.0-alpine
+    restart: unless-stopped
+    networks:
+      - permonik
+    deploy:
+      resources:
+        reservations:
+          memory: '256M'
+        limits:
+          memory: '512M'
+    environment:
+      POSTGRES_DB: permonik_export
+      POSTGRES_USER: permonik
+      POSTGRES_PASSWORD:
+    volumes:
+      - /data/postgresql/export:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U permonik -d permonik_export" ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
   permonik-web-admin:
     image: eu.gcr.io/inqool-1301/permonik/prod/permonik-web-admin:${PERMONIK_TAG}
-    build:
-      context: .
-      dockerfile: permonik-web/docker/admin/Dockerfile
+    restart: unless-stopped
     networks:
       - permonik
     expose:
@@ -41,9 +98,7 @@ services:
 
   permonik-web-public:
     image: eu.gcr.io/inqool-1301/permonik/prod/permonik-web-public:${PERMONIK_TAG}
-    build:
-      context: .
-      dockerfile: permonik-web/docker/public/Dockerfile
+    restart: unless-stopped
     networks:
       - permonik
     expose:
@@ -55,11 +110,16 @@ services:
         limits:
           memory: '24M'
 
-  permonik-gateway:
-    image: eu.gcr.io/inqool-1301/permonik/prod/permonik-gateway:${PERMONIK_TAG}
-    build:
-      context: .
-      dockerfile: permonik-gateway/Dockerfile
+  permonik-identity-gateway:
+    image: eu.gcr.io/inqool-1301/permonik/prod/permonik-identity-gateway:${PERMONIK_TAG}
+    restart: unless-stopped
+    depends_on:
+      - permonik-api
+      - permonik-export-api
+      - permonik-identity-database
+      - permonik-identity-redis
+      - permonik-web-admin
+      - permonik-web-public
     networks:
       - permonik
     ports:
@@ -69,15 +129,50 @@ services:
         reservations:
           memory: '96M'
         limits:
-          memory: '192M'
+          memory: '512M'
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SERVER_PORT: "8080"
+      IDENTITY_DATABASE_URL: jdbc:postgresql://permonik-identity-database:5432/permonik_identity
+      IDENTITY_DATABASE_PASSWORD:
+      SPRING_DATA_REDIS_HOST: permonik-identity-redis
+      PERMONIK_CORE_URL: http://permonik-api:8080
+      PERMONIK_EXPORT_URL: http://permonik-export-api:8080
+      PERMONIK_ADMIN_WEB_URL: http://permonik-web-admin:8080
+      PERMONIK_PUBLIC_WEB_URL: http://permonik-web-public:8080
+      PERMONIK_ADMIN_HOSTS: app.permonik.nkp.cz
+      PERMONIK_PUBLIC_HOSTS: permonik.nkp.cz
+      IDENTITY_JWT_SECRET:
+      SAML_SP_ENTITY_ID: https://app.permonik.nkp.cz/shibboleth
+      SAML_SP_ACS: https://app.permonik.nkp.cz/Shibboleth.sso/SAML2/POST
+      SENTRY_DSN:
+      SENTRY_ENVIRONMENT: production
+      SENTRY_RELEASE:
+      TZ: "Europe/Prague"
     volumes:
-      - /opt/shibboleth-sp-config:/etc/shibboleth:ro
-      - /var/log/supervisor:/var/log/supervisor
-      - /var/log/apache2:/var/log/apache2
-      - /var/log/shibboleth:/var/log/shibboleth
+      - /opt/shibboleth-sp-config:/run/secrets/shibboleth:ro
+
+  permonik-identity-database:
+    image: postgres:19.0-alpine
+    restart: unless-stopped
+    networks:
+      - permonik
+    deploy:
+      resources:
+        reservations:
+          memory: '256M'
+        limits:
+          memory: '512M'
+    environment:
+      POSTGRES_DB: permonik_identity
+      POSTGRES_USER: permonik
+      POSTGRES_PASSWORD:
+    volumes:
+      - /data/postgresql/identity:/var/lib/postgresql
 
   permonik-database:
-    image: solr:9.10.0
+    image: solr:10.1.0
+    restart: unless-stopped
     networks:
       - permonik
     ports:
@@ -91,11 +186,19 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
       SOLR_MODULES: analysis-extras
+      SOLR_ZOOKEEPER_SERVER_ENABLED: "false"
+      SOLR_USERNAME:
+      SOLR_PASSWORD:
+    command:
+      - bash
+      - /opt/permonik/start-solr.sh
     volumes:
       - /data/solr:/var/solr
+      - ./scripts/start-solr.sh:/opt/permonik/start-solr.sh:ro
 
-  permonik-redis:
-    image: redis:8-alpine
+  permonik-identity-redis:
+    image: redis:8.12-alpine
+    restart: unless-stopped
     networks:
       - permonik
     ports:
@@ -105,11 +208,11 @@ services:
         limits:
           memory: 100m
     volumes:
-      - redis-volume:/data
+      - identity-session-volume:/data
     command: [ "redis-server", "--appendonly", "yes" ]
 
 networks:
   permonik:
 
 volumes:
-  redis-volume:
+  identity-session-volume:

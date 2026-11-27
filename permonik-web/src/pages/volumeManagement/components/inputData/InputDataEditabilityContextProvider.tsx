@@ -2,13 +2,13 @@ import {
   createContext,
   useContext,
   useState,
-  ReactNode,
+  type ReactNode,
   useMemo,
   useEffect,
 } from 'react'
-import { TMe } from '../../../../schema/user'
-import { TUpdatableVolume } from '../../../../api/volume'
-import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
+import { hasPermission, type TMe } from '@/schema/user'
+import { type TUpdatableVolume } from '@/api/volume'
+import { useVolumeManagementStore } from '@/slices/useVolumeManagementStore'
 
 type InputDataEditabilityContextType = {
   disabled: boolean
@@ -35,9 +35,9 @@ export function InputDataEditabilityContextProvider({
 }) {
   const canEdit = useMemo(
     () =>
-      me?.owners?.some((o) => o === volume?.volume?.ownerId) ||
-      !volumeId?.length ||
-      me?.role === 'super_admin',
+      hasPermission(me, 'VOLUME_WRITE') &&
+      (!volumeId?.length ||
+        !!me.owners?.some((o) => o === volume?.volume?.ownerId)),
     [me, volume?.volume, volumeId?.length]
   )
   const [locked, setLocked] = useState(lockedInitial)
@@ -48,11 +48,15 @@ export function InputDataEditabilityContextProvider({
   const setSpeciemnsState = useVolumeManagementStore(
     (state) => state.specimensActions.setSpecimensState
   )
+  const setPeriodicityGenerationUsed = useVolumeManagementStore(
+    (state) => state.volumePeriodicityActions.setPeriodicityGenerationUsed
+  )
 
   useEffect(() => {
     if (volume) {
       setVolumeState({ ...volume.volume, isLoading: false }, false)
       setSpeciemnsState(volume.specimens, false)
+      setPeriodicityGenerationUsed(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

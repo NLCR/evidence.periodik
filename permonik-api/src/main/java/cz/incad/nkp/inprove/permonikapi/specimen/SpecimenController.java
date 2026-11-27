@@ -1,8 +1,9 @@
 package cz.incad.nkp.inprove.permonikapi.specimen;
 
+import cz.incad.nkp.inprove.permonikapi.common.LanguageResolver;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.FacetsDTO;
 import cz.incad.nkp.inprove.permonikapi.specimen.dto.NamesDTO;
-import cz.incad.nkp.inprove.permonikapi.specimen.dto.SearchedSpecimensDTO;
+import cz.incad.nkp.inprove.permonikapi.specimen.dto.SpecimensOverviewDTO;
 import cz.incad.nkp.inprove.permonikapi.specimen.enums.SpecimenTableViewEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,14 +24,22 @@ public class SpecimenController {
 
     @Operation(summary = "Gets searched specimens for result table")
     @PostMapping("/{id}/list")
-    public SearchedSpecimensDTO getSearchedSpecimens(
+    public SpecimensOverviewDTO getSpecimensOverview(
         @PathVariable String id,
         @RequestParam Integer offset,
         @RequestParam Integer rows,
         @RequestParam String facets,
-        @RequestParam SpecimenTableViewEnum view
+        @RequestParam SpecimenTableViewEnum view,
+        @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage
     ) throws IOException, SolrServerException {
-        return specimenService.getSearchedSpecimens(id, offset, rows, facets, view);
+        return specimenService.getSpecimensOverview(
+            id,
+            offset,
+            rows,
+            facets,
+            view,
+            LanguageResolver.resolve(acceptLanguage)
+        );
     }
 
     @Operation(summary = "Gets facets for searched specimens")

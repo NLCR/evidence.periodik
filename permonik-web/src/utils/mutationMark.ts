@@ -1,23 +1,24 @@
 import { z } from 'zod'
+import i18next from '../i18next'
 
-export const mutationMarkTypeSchema = z.enum(['MARK', 'NUMBER', 'UNMARKED'])
-export type TMutationMarkType = z.infer<typeof mutationMarkTypeSchema>
+export const MutationMarkTypeSchema = z.enum(['MARK', 'NUMBER', 'UNMARKED'])
+export type TMutationMarkType = z.infer<typeof MutationMarkTypeSchema>
 
-export const mutationMarkSchema = z.object({
+export const MutationMarkSchema = z.object({
   mark: z.string().nullish(),
-  type: mutationMarkTypeSchema.nullish(),
+  type: MutationMarkTypeSchema.nullish(),
   description: z.string().nullish(),
 })
 
-export const MutationMarkTypeEnum = mutationMarkTypeSchema.Enum
+export const MutationMarkTypeEnum = MutationMarkTypeSchema.enum
 
-export type TMutationMark = z.infer<typeof mutationMarkSchema>
+export type TMutationMark = z.infer<typeof MutationMarkSchema>
 
-export const emptyMutationMark: TMutationMark = {
+export const createEmptyMutationMark = (): TMutationMark => ({
   mark: '',
   type: MutationMarkTypeEnum.MARK,
   description: '',
-}
+})
 
 export const UNMARKED_MUTATION_MARK_SYMBOL = '✓'
 
@@ -36,8 +37,15 @@ export function hasMutationMark(
   return !!value.mark?.trim()
 }
 
-export function getMutationMarkLabel(value: TMutationMark): string {
-  if (isUnmarkedMutationMark(value)) return UNMARKED_MUTATION_MARK_SYMBOL
+export function getMutationMarkLabel(
+  value: TMutationMark,
+  unmarkedFormat: 'short' | 'long' = 'short'
+): string {
+  if (isUnmarkedMutationMark(value)) {
+    return unmarkedFormat === 'long'
+      ? i18next.t('common.unmarked')
+      : UNMARKED_MUTATION_MARK_SYMBOL
+  }
   if (!value || !value.mark) return '-'
 
   return value.mark + (value.description ? ` (${value.description})` : '')
@@ -55,7 +63,7 @@ export function getMutationMarkCompoundValue(
 export function repairMutationMark(
   value: TMutationMark | undefined
 ): TMutationMark {
-  if (!value) return emptyMutationMark
+  if (!value) return createEmptyMutationMark()
 
   return {
     ...value,

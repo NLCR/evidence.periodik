@@ -3,9 +3,9 @@ import TableRow from '@mui/material/TableRow'
 import { useTranslation } from 'react-i18next'
 import InputDataSelect from './InputDataSelect'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
-import { TMutation } from '../../../../schema/mutation'
+import { type TMutation } from '../../../../schema/mutation'
 import { useLanguageCode } from '../../../../hooks/useLanguageCode'
-import { useFormContext } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { mapTintToColor } from './utils/tint'
 
 type Props = { mutations: TMutation[] }
@@ -24,9 +24,9 @@ const InputDataMutation = ({ mutations }: Props) => {
     (state) => state.specimensActions.setSpecimensState
   )
 
-  const { watch } = useFormContext()
+  const { control } = useFormContext()
   const isDuplicated = location.href.includes('duplicated')
-  const isEmpty = !watch('mutationId')
+  const isEmpty = !useWatch({ name: 'mutationId', control })
 
   return (
     <TableRow
@@ -36,7 +36,7 @@ const InputDataMutation = ({ mutations }: Props) => {
         ),
       }}
     >
-      <TableCell>{t('volume_overview.mutation')}</TableCell>
+      <TableCell>{t('common.fields.mutation')}</TableCell>
       <TableCell>
         <InputDataSelect
           editableData={{
@@ -50,7 +50,7 @@ const InputDataMutation = ({ mutations }: Props) => {
                 true
               )
             },
-            fieldName: t('volume_overview.mutation'),
+            fieldName: t('common.fields.mutation'),
           }}
           name={'mutationId'}
           options={mutations.map((mutation) => ({

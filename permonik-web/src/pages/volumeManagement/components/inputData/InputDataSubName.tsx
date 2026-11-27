@@ -4,7 +4,7 @@ import InputDataTextField from './InputDataTextField'
 import { useVolumeManagementStore } from '../../../../slices/useVolumeManagementStore'
 import { useTranslation } from 'react-i18next'
 import { useFormContext } from 'react-hook-form'
-import { TEditableVolume } from '../../../../schema/volume'
+import { type TEditableVolume } from '../../../../schema/volume'
 
 const InputDataSubName = () => {
   const setSubName = useVolumeManagementStore(
@@ -23,11 +23,11 @@ const InputDataSubName = () => {
 
   return (
     <TableRow>
-      <TableCell>{t('volume_overview.sub_name')}</TableCell>
+      <TableCell>{t('common.fields.sub_name')}</TableCell>
       <TableCell>
         <InputDataTextField
           editableData={{
-            fieldName: t('volume_overview.sub_name'),
+            fieldName: t('common.fields.sub_name'),
             saveChange: (value: string) => {
               setSubName(value)
               setSpecimensState(

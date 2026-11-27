@@ -1,14 +1,14 @@
 import { useTranslation } from 'react-i18next'
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import clone from 'lodash/clone'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
-import { GridRenderEditCellParams } from '@mui/x-data-grid/models/params/gridCellParams'
+import { type GridRenderEditCellParams } from '@mui/x-data-grid-pro'
 import {
-  TEditableSpecimen,
-  TSpecimenDamageTypes,
-} from '../../../../schema/specimen'
+  type TEditableSpecimen,
+  type TSpecimenDamageTypes,
+} from '@/schema/specimen'
 import ModalContainer from '../../../../components/ModalContainer'
 import IconButton from '@mui/material/IconButton'
 import EditIcon from '@mui/icons-material/Edit'
@@ -35,11 +35,6 @@ const DamagedPagesAndMissingPagesEditModal = ({
   const [damageTypes, setDamageTypes] = useState(row.damageTypes || [])
   const [damagedPages, setDamagedPages] = useState(row.damagedPages || [])
   const [missingPages, setMissingPages] = useState(row.missingPages || [])
-
-  useEffect(() => {
-    setDamageTypes(row.damageTypes || [])
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [row.damageTypes.toString()])
 
   const handleDamageTypeChange = (
     type: TSpecimenDamageTypes,
@@ -183,13 +178,15 @@ const DamagedAndMissingPagesEditCell = (
       <IconButton color="primary" onClick={() => setOpen(true)}>
         <EditIcon />
       </IconButton>
-      <DamagedPagesAndMissingPagesEditModal
-        field={field as TSpecimenDamageTypes}
-        open={open}
-        onClose={() => setOpen(false)}
-        row={row}
-        onSave={handleSave}
-      />
+      {open && (
+        <DamagedPagesAndMissingPagesEditModal
+          field={field as TSpecimenDamageTypes}
+          open={open}
+          onClose={() => setOpen(false)}
+          row={row}
+          onSave={handleSave}
+        />
+      )}
     </>
   )
 }

@@ -1,14 +1,17 @@
 package cz.incad.nkp.inprove.permonikapi.edition;
 
 
+import cz.incad.nkp.inprove.permonikapi.common.DenormalizationService;
 import cz.incad.nkp.inprove.permonikapi.edition.model.Edition;
 import cz.incad.nkp.inprove.permonikapi.edition.model.EditionDTO;
+import cz.incad.nkp.inprove.permonikapi.edition.model.EditionDefinition;
 import cz.incad.nkp.inprove.permonikapi.edition.model.EditionMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.request.SolrQuery;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,23 +29,31 @@ public class EditionService implements EditionDefinition {
 
     private final EditionMapper editionMapper;
     private final SolrClient solrClient;
+    private final DenormalizationService denormalizationService;
 
-
-    public List<EditionDTO> getEditions() throws SolrServerException, IOException {
+    public List<EditionDTO> getEditions(String lang) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
         solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
         solrQuery.setRows(100000);
+        solrQuery.setSort(nameSortField(lang), SolrQuery.ORDER.asc);
 
         QueryResponse response = solrClient.query(EDITION_CORE_NAME, solrQuery);
 
         return response.getBeans(Edition.class).stream().map(editionMapper::toDTO).toList();
     }
 
+    private String nameSortField(String lang) {
+        return switch (lang) {
+            case "sk" -> NAME_SK_SORT_FIELD;
+            case "en" -> NAME_EN_SORT_FIELD;
+            default -> NAME_CS_SORT_FIELD;
+        };
+    }
+
     public void updateEdition(String editionId, EditionDTO edition) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        solrQuery.addFilterQuery(ID_FIELD + ":\"" + editionId + "\"");
+        solrQuery.addFilterQuery(ID_FIELD + ":\"" + ClientUtils.escapeQueryChars(editionId) + "\"");
         solrQuery.setRows(1);
-        // TODO: handle is isAttachment changes -> volume and specimens data or make it not changeable
         QueryResponse response = solrClient.query(EDITION_CORE_NAME, solrQuery);
 
         List<Edition> editionList = response.getBeans(Edition.class);
@@ -51,11 +62,20 @@ public class EditionService implements EditionDefinition {
             throw new RuntimeException("Edition not found");
         }
 
+        Edition oldEdition = editionList.getFirst();
+
         edition.preUpdate();
+        // dont allow to change this fields
+        edition.setIsAttachment(oldEdition.getIsAttachment());
+        edition.setIsPeriodicAttachment(oldEdition.getIsPeriodicAttachment());
+        edition.setIsDefault(oldEdition.getIsDefault());
 
         try {
             solrClient.addBean(EDITION_CORE_NAME, editionMapper.toModel(edition));
             solrClient.commit(EDITION_CORE_NAME);
+
+            denormalizationService.updateEditionInSpecimens(editionId, edition.getName().cs(), edition.getName().sk(), edition.getName().en());
+
             logger.info("Edition {} successfully updated", edition.getId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to update edition", e);
@@ -66,8 +86,8 @@ public class EditionService implements EditionDefinition {
 
     public void createEdition(EditionDTO edition) throws SolrServerException, IOException {
         SolrQuery solrQuery = new SolrQuery("*:*");
-        // TODO: this filter is not working
-        solrQuery.addFilterQuery(NAME_FIELD + ":\"" + edition.getName() + "\"");
+        solrQuery.addFilterQuery("-" + DELETED_FIELD + ":[* TO *]");
+        solrQuery.addFilterQuery(NAME_CS_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(edition.getName().cs()) + "\" OR " + NAME_SK_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(edition.getName().sk()) + "\" OR " + NAME_EN_SEARCH_FIELD + ":\"" + ClientUtils.escapeQueryChars(edition.getName().en()) + "\"");
         solrQuery.setRows(1);
 
         QueryResponse response = solrClient.query(EDITION_CORE_NAME, solrQuery);

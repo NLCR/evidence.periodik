@@ -1,9 +1,10 @@
-import { ReactNode, useEffect, useMemo, useState } from 'react'
+import ScannerIcon from '@mui/icons-material/AdfScanner'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
-import { useVolumeManagementStore } from '../../../slices/useVolumeManagementStore'
-import { TEdition } from '../../../schema/edition'
-import { TUpdatableVolume } from '../../../api/volume'
+import { useVolumeManagementStore } from '@/slices/useVolumeManagementStore'
+import { type TEdition } from '@/schema/edition'
+import { type TUpdatableVolume } from '@/api/volume'
 import Box from '@mui/material/Box'
 import SaveIcon from '@mui/icons-material/Save'
 import SaveAsIcon from '@mui/icons-material/SaveAs'
@@ -13,12 +14,15 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import Button from '@mui/material/Button'
 import ModalContainer from '../../../components/ModalContainer'
 import Typography from '@mui/material/Typography'
-import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
 import { validate as uuidValidate } from 'uuid'
-import { BACK_META_TITLE_ID } from '../../../utils/constants'
+import { BACK_META_TITLE_ID } from '@/utils/constants'
 import { useInputDataEditabilityContext } from './inputData/InputDataEditabilityContextProvider'
+import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
+import PrepareScanModal from '../../../components/prepare-scan-modal/PrepareScanModal'
+import { type FieldsToReset } from '@/utils/duplicateVolume/types'
 import DuplicateVolumeModal from '../../../components/DuplicateVolumeModal'
-import { FieldsToReset } from '../../../utils/duplicateVolume/types'
+import { useMeQuery } from '@/api/user'
+import { hasPermission } from '@/schema/user'
 
 type Props = {
   duplicated: boolean
@@ -43,7 +47,12 @@ const SpecimensActions = ({
 }: Props) => {
   const { volumeId } = useParams()
   const [searchParams] = useSearchParams()
+  const searchParamsBackMetaTitleId = searchParams.get(BACK_META_TITLE_ID)
   const { t, i18n } = useTranslation()
+  const { data: me } = useMeQuery()
+  const canWriteVolume = hasPermission(me, 'VOLUME_WRITE')
+  const canDeleteVolume = hasPermission(me, 'VOLUME_DELETE')
+  const canReadTemplate = hasPermission(me, 'TEMPLATE_MANAGE')
 
   const { locked: isInputDataLocked, disabled } =
     useInputDataEditabilityContext()
@@ -54,6 +63,7 @@ const SpecimensActions = ({
     opened: false,
     stage: 1,
   })
+  const [prepareScanModalOpened, setPrepareScanModalOpened] = useState(false)
 
   const setInitialState = useVolumeManagementStore(
     (state) => state.setInitialState
@@ -69,12 +79,13 @@ const SpecimensActions = ({
     (state) => state.periodicityGenerationUsed
   )
 
-  const backMetaTitle = useMemo(
+  const volumeMetaTitleId = volume?.volume.metaTitleId
+  const backMetaTitleId = useMemo(
     () =>
-      uuidValidate(searchParams.get(BACK_META_TITLE_ID) || '')
-        ? searchParams.get(BACK_META_TITLE_ID)
-        : volume?.volume.metaTitleId,
-    [searchParams, volume?.volume.metaTitleId]
+      uuidValidate(searchParamsBackMetaTitleId || '')
+        ? searchParamsBackMetaTitleId
+        : volumeMetaTitleId,
+    [searchParamsBackMetaTitleId, volumeMetaTitleId]
   )
 
   // useEffect(() => {
@@ -110,73 +121,94 @@ const SpecimensActions = ({
       name: string
       color: 'primary' | 'secondary' | 'error'
       onClick: () => void
+      disabled: boolean
     }[] = []
 
-    if (volumeId && volumeOvergenerated) {
+    if (volumeId && volumeOvergenerated && canWriteVolume && !disabled) {
       actionsArray.push(
         {
           icon: <ContentCopyIcon />,
           name: t('administration.duplicate_volume'),
           color: 'primary',
           onClick: () => setDuplicationModalOpened(true),
+          disabled: !isInputDataLocked,
         },
         {
           icon: <CheckCircleIcon />,
           name: t('administration.verified'),
           color: 'primary',
           onClick: () => doOvergeneratedUpdate(true),
+          disabled: !isInputDataLocked,
         },
         {
           icon: <SaveAsIcon />,
           name: t('administration.save'),
           color: 'primary',
           onClick: () => doOvergeneratedUpdate(),
+          disabled: !isInputDataLocked,
         }
       )
     }
     if (volumeId && !volumeOvergenerated) {
-      actionsArray.push(
-        {
-          icon: <ContentCopyIcon />,
-          name: t('administration.duplicate_volume'),
+      if (canReadTemplate) {
+        actionsArray.push({
+          icon: <ScannerIcon />,
+          name: t('prepare_scan_modal.wizard.title'),
           color: 'primary',
-          onClick: () => setDuplicationModalOpened(true),
-        },
-        {
-          icon: <CheckCircleIcon />,
-          name: t('administration.verified'),
-          color: 'primary',
-          onClick: () => doUpdate(true),
-        },
-        {
-          icon: <SaveAsIcon />,
-          name: t('administration.save'),
-          color: 'primary',
-          onClick: () => doUpdate(),
-        }
-      )
+          onClick: () => setPrepareScanModalOpened(true),
+          disabled: !isInputDataLocked,
+        })
+      }
+      if (canWriteVolume && !disabled) {
+        actionsArray.push(
+          {
+            icon: <ContentCopyIcon />,
+            name: t('administration.duplicate_volume'),
+            color: 'primary',
+            onClick: () => setDuplicationModalOpened(true),
+            disabled: !isInputDataLocked,
+          },
+          {
+            icon: <CheckCircleIcon />,
+            name: t('administration.verified'),
+            color: 'primary',
+            onClick: () => doUpdate(true),
+            disabled: !isInputDataLocked,
+          },
+          {
+            icon: <SaveAsIcon />,
+            name: t('administration.save'),
+            color: 'primary',
+            onClick: () => doUpdate(),
+            disabled: !isInputDataLocked,
+          }
+        )
+      }
     }
-    if (volumeId) {
+    if (volumeId && canDeleteVolume && !disabled) {
       actionsArray.push({
         icon: <DeleteForeverIcon />,
         name: t('administration.delete'),
         color: 'error',
         onClick: () => setConfirmDeletionModalStage({ opened: true, stage: 1 }),
+        disabled: !isInputDataLocked,
       })
     }
-    if (!volumeId) {
+    if (!volumeId && canWriteVolume && !disabled) {
       actionsArray.push(
         {
           icon: <CheckCircleIcon />,
           name: t('administration.verified'),
           color: 'primary',
           onClick: () => doCreate(true),
+          disabled: !isInputDataLocked,
         },
         {
           icon: <SaveIcon />,
           name: t('administration.save'),
           color: 'primary',
           onClick: () => doCreate(),
+          disabled: !isInputDataLocked,
         }
       )
     }
@@ -184,8 +216,13 @@ const SpecimensActions = ({
     return actionsArray
   }, [
     doCreate,
+    canDeleteVolume,
+    canReadTemplate,
+    canWriteVolume,
+    disabled,
     doOvergeneratedUpdate,
     doUpdate,
+    isInputDataLocked,
     t,
     volumeId,
     volumeOvergenerated,
@@ -210,11 +247,11 @@ const SpecimensActions = ({
             alignItems: 'center',
           }}
         >
-          {backMetaTitle?.length ? (
+          {backMetaTitleId?.length ? (
             <Button
               component={Link}
               variant="outlined"
-              to={`/${i18n.resolvedLanguage}/${t('urls.specimens_overview')}/${backMetaTitle}`}
+              to={`/${i18n.resolvedLanguage}/${t('urls.specimens_overview')}/${backMetaTitleId}`}
             >
               {t('volume_overview.back_to_specimens_overview')}
             </Button>
@@ -237,22 +274,18 @@ const SpecimensActions = ({
             alignItems: 'center',
           }}
         >
-          {!disabled ? (
-            <>
-              {actions.map((action) => (
-                <Button
-                  disabled={!isInputDataLocked}
-                  variant="contained"
-                  color={action.color}
-                  key={action.name}
-                  startIcon={action.icon}
-                  onClick={action.onClick}
-                >
-                  {action.name}
-                </Button>
-              ))}
-            </>
-          ) : null}
+          {actions.map((action) => (
+            <Button
+              disabled={action.disabled}
+              variant="contained"
+              color={action.color}
+              key={action.name}
+              startIcon={action.icon}
+              onClick={action.onClick}
+            >
+              {action.name}
+            </Button>
+          ))}
         </Box>
       </Box>
       <ModalContainer
@@ -332,6 +365,15 @@ const SpecimensActions = ({
       >
         <VolumeStatsModalContent volumeId={volumeId} />
       </ModalContainer>
+
+      {canReadTemplate && prepareScanModalOpened ? (
+        <PrepareScanModal
+          key={volumeId}
+          volumeId={volumeId ?? ''}
+          isOpen={prepareScanModalOpened}
+          setIsOpen={setPrepareScanModalOpened}
+        />
+      ) : null}
 
       <DuplicateVolumeModal
         doDuplicate={doDuplicate}

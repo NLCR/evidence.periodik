@@ -3,20 +3,25 @@
     "target": "es2017",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": ["node", "vite/client"],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,
+    "ignoreDeprecations": "6.0",
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "importHelpers": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["./.eslintrc.cjs", "src"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

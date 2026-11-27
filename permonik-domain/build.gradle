@@ -1,0 +1,14 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+group = 'cz.incad.nkp.inprove'
+version = '0.0.1'
+
+kotlin {
+    jvmToolchain(25)
+}
+
+repositories {
+    mavenCentral()
+}

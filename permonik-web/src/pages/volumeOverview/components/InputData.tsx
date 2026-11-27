@@ -8,13 +8,13 @@ import ModalContainer from '../../../components/ModalContainer'
 import VolumeStatsModalContent from '../../../components/VolumeStatsModalContent'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
-import React, { FC, useMemo, useState } from 'react'
-import { TMutation } from '../../../schema/mutation'
-import { TOwner } from '../../../schema/owner'
-import { TMetaTitle } from '../../../schema/metaTitle'
+import { type FC, useMemo, useState } from 'react'
+import { type TMutation } from '../../../schema/mutation'
+import { type TOwner } from '../../../schema/owner'
+import { type TMetaTitle } from '../../../schema/metaTitle'
 import { useTranslation } from 'react-i18next'
 import { useLanguageCode } from '../../../hooks/useLanguageCode'
-import { TVolumeDetail } from '../../../schema/volume'
+import { type TVolumeDetail } from '../../../schema/volume'
 import { Link, useSearchParams } from 'react-router-dom'
 import { validate as uuidValidate } from 'uuid'
 import { BACK_META_TITLE_ID } from '../../../utils/constants'
@@ -43,13 +43,14 @@ const InputData: FC<InputDataProps> = ({
   const { languageCode } = useLanguageCode()
 
   const [searchParams] = useSearchParams()
+  const backMetaTitleId = searchParams.get(BACK_META_TITLE_ID)
 
   const backMetaTitle = useMemo(
     () =>
-      uuidValidate(searchParams.get(BACK_META_TITLE_ID) || '')
-        ? searchParams.get(BACK_META_TITLE_ID)
+      uuidValidate(backMetaTitleId || '')
+        ? backMetaTitleId
         : volume?.volume.metaTitleId,
-    [searchParams, volume?.volume.metaTitleId]
+    [backMetaTitleId, volume.volume.metaTitleId]
   )
 
   const [modalOpened, setModalOpened] = useState(false)
@@ -92,7 +93,7 @@ const InputData: FC<InputDataProps> = ({
             <TableHead>
               <TableRow>
                 <TableCell sx={{ fontWeight: 'bold' }}>
-                  {t('volume_overview.name')}
+                  {t('common.fields.name')}
                 </TableCell>
                 <TableCell sx={{ fontWeight: 'bold' }}>
                   {t('volume_overview.value')}
@@ -101,7 +102,7 @@ const InputData: FC<InputDataProps> = ({
             </TableHead>
             <TableBody>
               <TableRow>
-                <TableCell>{t('volume_overview.meta_title')}</TableCell>
+                <TableCell>{t('common.fields.meta_title')}</TableCell>
                 <TableCell>
                   {
                     metaTitles.find((m) => m.id === volume.volume.metaTitleId)
@@ -110,11 +111,11 @@ const InputData: FC<InputDataProps> = ({
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>{t('volume_overview.sub_name')}</TableCell>
+                <TableCell>{t('common.fields.sub_name')}</TableCell>
                 <TableCell>{volume.volume.subName}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>{t('volume_overview.mutation')}</TableCell>
+                <TableCell>{t('common.fields.mutation')}</TableCell>
                 <TableCell>
                   {
                     mutations.find((m) => m.id === volume.volume.mutationId)
@@ -123,17 +124,17 @@ const InputData: FC<InputDataProps> = ({
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>{t('specimens_overview.mutation_mark')}</TableCell>
+                <TableCell>{t('common.fields.mutation_mark')}</TableCell>
                 <TableCell>
                   {getMutationMarkLabel(volume.volume.mutationMark)}
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>{t('volume_overview.bar_code')}</TableCell>
+                <TableCell>{t('common.fields.bar_code')}</TableCell>
                 <TableCell>{volume.volume.barCode}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>{t('volume_overview.signature')}</TableCell>
+                <TableCell>{t('common.fields.signature')}</TableCell>
                 <TableCell>{volume.volume.signature}</TableCell>
               </TableRow>
               <TableRow>
@@ -157,7 +158,7 @@ const InputData: FC<InputDataProps> = ({
                 <TableCell>{volume.volume.lastNumber}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>{t('volume_overview.owner')}</TableCell>
+                <TableCell>{t('common.fields.owner')}</TableCell>
                 <TableCell>
                   {
                     owners.find((o) => o.id === volume.volume.ownerId)

@@ -1,6 +1,6 @@
 import Switch from '@mui/material/Switch'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import React from 'react'
+
 import { useSpecimensOverviewStore } from '../../../slices/useSpecimensOverviewStore'
 import { useTranslation } from 'react-i18next'
 import { useSpecimenListQuery } from '../../../api/specimen'

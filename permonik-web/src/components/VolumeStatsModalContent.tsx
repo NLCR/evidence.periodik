@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { FC, useMemo } from 'react'
+import { type FC, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import { useVolumeOverviewStatsQuery } from '../api/volume'
@@ -134,7 +134,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.meta_title')}:
+          {t('common.fields.meta_title')}:
         </Typography>
         <Typography variant="body2">{volumeStats.metaTitleName}</Typography>
       </Box>
@@ -144,7 +144,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.owner')}:
+          {t('common.fields.owner')}:
         </Typography>
         <Typography variant="body2">
           {owners.find((o) => o.id === volumeStats.ownerId)?.shorthand}
@@ -156,7 +156,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.signature')}:
+          {t('common.fields.signature')}:
         </Typography>
         <Typography variant="body2">{volumeStats.signature}</Typography>
       </Box>
@@ -166,7 +166,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.bar_code')}:
+          {t('common.fields.bar_code')}:
         </Typography>
         <Typography variant="body2">{volumeStats.barCode}</Typography>
       </Box>
@@ -176,7 +176,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.mutation')}:
+          {t('common.fields.mutation')}:
         </Typography>
         {volumeStats.mutationIds.map((m) => (
           <Box
@@ -288,7 +288,7 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
         }}
       >
         <Typography sx={bolderTextStyle}>
-          {t('volume_overview.mutation_mark')}:
+          {t('common.fields.mutation_mark')}:
         </Typography>
         {volumeStats.mutationMarks.map((pm) => (
           <Box
@@ -479,6 +479,38 @@ const VolumeStatsModalContent: FC<TProps> = ({ volumeId = undefined }) => {
               <Typography variant="body2">—</Typography>
               <Typography variant="body2">
                 {formatDate(s.publicationDate, { includeDayName: true })}
+              </Typography>
+            </Box>
+          ))}
+      </Box>
+      <Box
+        sx={{
+          marginBottom: '10px',
+        }}
+      >
+        <Typography sx={bolderTextStyle}>{t('facet_states.ChS')}:</Typography>
+        {volumeStats.specimens
+          .filter((s) => s.numExists && s.damageTypes?.includes('ChS'))
+          .map((s) => (
+            <Box key={`missingPages-${s.id}`}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  width: '9rem',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Typography variant="body2" sx={{ fontWeight: 'semibold' }}>
+                  {t('volume_overview.number_super_short').toLowerCase()}{' '}
+                  {s.isAttachment ? s.attachmentNumber : s.number}
+                </Typography>
+                <Typography variant="body2">—</Typography>
+                <Typography variant="body2">
+                  {formatDate(s.publicationDate, { includeDayName: true })}
+                </Typography>
+              </Box>
+              <Typography variant="body2" sx={{ marginLeft: 3 }}>
+                {[...s.missingPages].sort((a, b) => a - b).join(', ')}
               </Typography>
             </Box>
           ))}

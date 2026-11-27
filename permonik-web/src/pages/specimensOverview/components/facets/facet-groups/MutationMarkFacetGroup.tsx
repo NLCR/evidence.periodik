@@ -12,7 +12,7 @@ const MutationMarkFacetGroup = () => {
           ? facets.mutationMarks
           : params.mutationMarks.map((p) => ({ name: p, count: 0 }))
       }
-      header={t('specimens_overview.mutation_mark')}
+      header={t('common.fields.mutation_mark')}
       onChange={(value) =>
         setParams({
           ...params,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
@@ -13,15 +13,15 @@ import Loader from '../../components/Loader'
 import ShowError from '../../components/ShowError'
 import {
   EditableMutationSchema,
-  TEditableMutation,
-} from '../../schema/mutation'
+  type TEditableMutation,
+} from '@/schema/mutation'
 import {
   useCreateMutationMutation,
   useMutationListQuery,
   useUpdateMutationMutation,
-} from '../../api/mutation'
+} from '@/api/mutation'
 
-import { useLanguageCode } from '../../hooks/useLanguageCode'
+import { useLanguageCode } from '@/hooks/useLanguageCode'
 
 const Container = styled('div')(() => ({
   position: 'relative',
@@ -59,18 +59,20 @@ const SaveButton = styled(LoadingButton)(() => ({
   width: 'fit-content',
 }))
 
-const initialState: TEditableMutation = {
+const createInitialMutationState = (): TEditableMutation => ({
   name: {
     cs: '',
     sk: '',
     en: '',
   },
-}
+})
 
 const Mutations = () => {
   const { t } = useTranslation()
   const theme = useTheme()
-  const [mutation, setMutation] = useState<TEditableMutation>(initialState)
+  const [mutation, setMutation] = useState<TEditableMutation>(
+    createInitialMutationState()
+  )
   const { languageCode } = useLanguageCode()
 
   const {
@@ -89,7 +91,7 @@ const Mutations = () => {
   const handleSubmit = async () => {
     const validation = EditableMutationSchema.safeParse(mutation)
     if (!validation.success) {
-      validation.error.errors.map((e) => toast.error(e.message))
+      validation.error.issues.map((e) => toast.error(e.message))
       return
     }
     try {
@@ -122,7 +124,9 @@ const Mutations = () => {
               component="div"
               className={clsx({ active: !mutation.id })}
               onClick={() =>
-                !pendingMutation ? setMutation(initialState) : null
+                !pendingMutation
+                  ? setMutation(createInitialMutationState())
+                  : null
               }
               sx={{
                 marginTop: theme.spacing(0.875),

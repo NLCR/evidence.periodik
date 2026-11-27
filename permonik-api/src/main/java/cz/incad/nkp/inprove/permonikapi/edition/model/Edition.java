@@ -1,7 +1,9 @@
 package cz.incad.nkp.inprove.permonikapi.edition.model;
 
+import static cz.incad.nkp.inprove.permonikapi.edition.model.EditionDefinition.*;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
 
@@ -13,24 +15,31 @@ import org.apache.solr.client.solrj.beans.Field;
 @Getter
 public class Edition extends Auditable {
 
-    @Field
+    @Field(ID_FIELD)
+    @NotNull
     private String id; // UUID
 
-    // as string
-    //    {
-//        cs: "Ranní",
-//        sk: "Ranné",
-//        en: "Morning"
-//    }
-    @Field
-    private String name;
+    @Field(NAME_CS_FIELD)
+    @NotNull
+    private String nameCs;
 
-    @Field
+    @Field(NAME_SK_FIELD)
+    @NotNull
+    private String nameSk;
+
+    @Field(NAME_EN_FIELD)
+    @NotNull
+    private String nameEn;
+
+    @Field(IS_DEFAULT_FIELD)
+    @NotNull
     private Boolean isDefault;
 
-    @Field
+    @Field(IS_ATTACHMENT_FIELD)
+    @NotNull
     private Boolean isAttachment;
 
-    @Field
+    @Field(IS_PERIODIC_ATTACHMENT_FIELD)
+    @NotNull
     private Boolean isPeriodicAttachment;
 }

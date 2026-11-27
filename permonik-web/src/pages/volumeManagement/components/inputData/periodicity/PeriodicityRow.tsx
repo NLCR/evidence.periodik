@@ -5,21 +5,22 @@ import TableRow from '@mui/material/TableRow'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import { t } from 'i18next'
-import { TVolumePeriodicityDays } from '../../../../../schema/volume'
+import { type TVolumePeriodicityDays } from '../../../../../schema/volume'
 import InputDataAutocomplete from '../InputDataAutocomplete'
 import InputDataCheckbox from '../InputDataCheckbox'
 import InputDataSelect from '../InputDataSelect'
 import InputDataTextField from '../InputDataTextField'
 import {
-  FieldValues,
-  UseFieldArrayInsert,
-  UseFieldArrayRemove,
+  type FieldValues,
+  type UseFieldArrayInsert,
+  type UseFieldArrayRemove,
   useFormContext,
+  useWatch,
 } from 'react-hook-form'
 import useSortedSpecimensNamesAndSubNames from '../../../../../hooks/useSortedSpecimensNamesAndSubNames'
 import { useLanguageCode } from '../../../../../hooks/useLanguageCode'
 import { useInputDataEditabilityContext } from '../InputDataEditabilityContextProvider'
-import { TEdition } from '../../../../../schema/edition'
+import { type TEdition } from '../../../../../schema/edition'
 
 type Props = {
   index: number
@@ -36,7 +37,7 @@ const PeriodicityRow = ({
   editions,
   metaTitle,
 }: Props) => {
-  const { watch, getValues, resetField, setValue } = useFormContext()
+  const { control, getValues, resetField, setValue } = useFormContext()
   const { disabled, locked } = useInputDataEditabilityContext()
   const { names, subNames } = useSortedSpecimensNamesAndSubNames()
   const { languageCode } = useLanguageCode()
@@ -44,8 +45,11 @@ const PeriodicityRow = ({
   // The attachment must be a duplicated line as there cannot be an attachment without its specimen
   const canBeAttachment = getValues(`periodicity.${index}.duplicated`)
 
-  const disabledRow = !watch(`periodicity.${index}.numExists`)
-  const subname = watch('subName')
+  const disabledRow = !useWatch({
+    name: `periodicity.${index}.numExists`,
+    control,
+  })
+  const subname = useWatch({ name: 'subName', control })
 
   return (
     <TableRow>

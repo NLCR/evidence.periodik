@@ -1,0 +1,231 @@
+import { type FC, useState } from 'react'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import { useTranslation } from 'react-i18next'
+import ModalContainer from './ModalContainer'
+import { TabSelect } from './TabSelect'
+import Checkbox from '@mui/material/Checkbox'
+import { toast } from 'react-toastify'
+import {
+  createEmptyMutationMark,
+  type TMutationMark,
+  type TMutationMarkType,
+} from '@/utils/mutationMark'
+
+const marks = ['●', '○', '■', '□', '★', '☆', '△', '▲', '✶'] as const
+type TMarks = (typeof marks)[number]
+
+interface MutationMarkSelectorModalProps {
+  value: TMutationMark | null | undefined
+  open: boolean
+  onClose: () => void
+  onSave: (value: TMutationMark) => void
+}
+
+const MutationMarkSelectorModal: FC<MutationMarkSelectorModalProps> = ({
+  value,
+  open,
+  onClose,
+  onSave,
+}) => {
+  const { t } = useTranslation()
+  const [inputMarkState, setInputMarkState] = useState<TMutationMark>(
+    value ?? createEmptyMutationMark()
+  )
+  const [inputNumberImpossible, setInputNumberImpossible] = useState(
+    inputMarkState.mark === '?'
+  )
+
+  const doClose = () => {
+    onClose()
+  }
+
+  const handleSave = () => {
+    const normalizedMutationMark =
+      inputMarkState.type === 'UNMARKED'
+        ? {
+            ...inputMarkState,
+            mark: '',
+            description: '',
+          }
+        : inputMarkState
+
+    onSave(normalizedMutationMark)
+    doClose()
+  }
+
+  const handleSymbolSelect = (symbol: TMarks) => {
+    setInputMarkState((prevState) => ({
+      ...prevState,
+      mark: prevState.mark + symbol,
+    }))
+  }
+
+  const handleInputChange = (value: string) => {
+    if (
+      value === '' ||
+      (marks as readonly string[]).includes(value) ||
+      (inputMarkState.mark && value.length < inputMarkState.mark.length)
+    )
+      setInputMarkState((prev) => ({ ...prev, mark: value.trim() }))
+  }
+
+  const handleInputNumberChange = (value: string) => {
+    if (/^\d*$/.test(value)) {
+      setInputMarkState((prev) => ({ ...prev, mark: value }))
+    }
+  }
+
+  return (
+    <ModalContainer
+      header={t('common.fields.mutation_mark')}
+      opened={open}
+      onClose={doClose}
+      closeButton={{
+        callback: () => doClose(),
+      }}
+      acceptButton={{
+        callback: () => {
+          if (
+            inputMarkState.type === 'NUMBER' &&
+            inputMarkState.description &&
+            !inputMarkState.mark &&
+            !inputNumberImpossible
+          ) {
+            toast(t('volume_overview.mutation_mark_number_error'), {
+              type: 'error',
+            })
+            return
+          }
+          handleSave()
+        },
+      }}
+      style="fitted"
+      minWidth="35rem"
+      maxWidth="35rem"
+    >
+      <TabSelect<TMutationMarkType>
+        options={[
+          {
+            label: t('volume_overview.mutation_mark_tab_unmarked'),
+            value: 'UNMARKED',
+          },
+          {
+            label: t('volume_overview.mutation_mark_tab_symbol'),
+            value: 'MARK',
+          },
+          {
+            label: t('volume_overview.mutation_mark_tab_number'),
+            value: 'NUMBER',
+          },
+        ]}
+        selectedItem={inputMarkState.type ?? 'MARK'}
+        setSelectedItem={(value) => {
+          setInputMarkState((prev) =>
+            value === 'UNMARKED'
+              ? {
+                  ...prev,
+                  type: value,
+                  mark: '',
+                  description: '',
+                }
+              : { ...prev, type: value }
+          )
+        }}
+      />
+      <div style={{ height: 32 }} />
+      {inputMarkState.type === 'UNMARKED' && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          {t('volume_overview.mutation_mark_unmarked_warning')}
+        </Box>
+      )}
+      {inputMarkState.type === 'MARK' && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <TextField
+            value={inputMarkState.mark}
+            onChange={(e) => handleInputChange(e.target.value)}
+          />
+          <Box sx={{ maxWidth: 400 }}>
+            {marks.map((mark) => (
+              <Button
+                // disabled={inputMarks.length > 0 && !inputMarks.includes(mark)}
+                key={`mutation-mark-${mark}`}
+                onClick={() => handleSymbolSelect(mark)}
+                sx={{
+                  fontSize: '20px',
+                }}
+              >
+                {mark}
+              </Button>
+            ))}
+          </Box>
+        </Box>
+      )}
+      {inputMarkState.type === 'NUMBER' && (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 0,
+          }}
+        >
+          <TextField
+            label={t('volume_overview.mutation_mark_label_number_description')}
+            value={inputMarkState.mark}
+            disabled={inputNumberImpossible}
+            onChange={(e) => handleInputNumberChange(e.target.value)}
+          />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyItems: 'center',
+              marginBottom: 2,
+            }}
+          >
+            <Checkbox
+              checked={inputNumberImpossible}
+              disabled={!!inputMarkState.mark && inputMarkState.mark !== '?'}
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setInputMarkState((prev) => ({ ...prev, mark: '?' }))
+                } else {
+                  setInputMarkState((prev) => ({ ...prev, mark: '' }))
+                }
+                setInputNumberImpossible(e.target.checked)
+              }}
+            />
+            <div style={{ marginTop: 8 }}>
+              {t(
+                'volume_overview.mutation_mark_label_number_description_impossible'
+              )}
+            </div>
+          </Box>
+          <TextField
+            label={t('volume_overview.mutation_mark_label_number')}
+            value={inputMarkState.description}
+            onChange={(e) =>
+              setInputMarkState((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
+            }
+          />
+        </Box>
+      )}
+    </ModalContainer>
+  )
+}
+
+export default MutationMarkSelectorModal

@@ -1,18 +1,21 @@
-/* eslint-disable no-param-reassign */
 import { create } from 'zustand'
 import { produce } from 'immer'
 import { devtools } from 'zustand/middleware'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { type Dayjs } from 'dayjs'
 import {
-  TEditableVolume,
-  TEditableVolumePeriodicity,
-  TVolumePeriodicityDays,
-} from '../schema/volume'
-import { TEditableSpecimen } from '../schema/specimen'
-import { TEdition } from '../schema/edition'
-import { filterSpecimen } from '../utils/specimen'
+  type TEditableVolume,
+  type TEditableVolumePeriodicity,
+  type TVolumeAttachmentsSort,
+  type TVolumePeriodicityDays,
+} from '@/schema/volume'
+import { type TEditableSpecimen } from '@/schema/specimen'
+import { type TEdition } from '@/schema/edition'
+import { filterSpecimen } from '@/utils/specimen'
 import clone from 'lodash/clone'
-import { emptyMutationMark, TMutationMark } from '../utils/mutationMark'
+import {
+  createEmptyMutationMark,
+  type TMutationMark,
+} from '@/utils/mutationMark'
 
 const periodicityDays: TVolumePeriodicityDays[] = [
   'Monday',
@@ -24,8 +27,8 @@ const periodicityDays: TVolumePeriodicityDays[] = [
   'Sunday',
 ]
 
-const initialPeriodicity: TEditableVolumePeriodicity[] = [
-  ...periodicityDays.map((d) => ({
+const createInitialPeriodicity = (): TEditableVolumePeriodicity[] =>
+  periodicityDays.map((d) => ({
     numExists: false,
     editionId: null,
     day: d,
@@ -33,36 +36,36 @@ const initialPeriodicity: TEditableVolumePeriodicity[] = [
     name: '',
     subName: '',
     isAttachment: false,
-  })),
-]
+  }))
 
-export const initialState: TVariablesState = {
+export const createInitialVolumeState = (): TEditableVolume => ({
+  id: '',
+  isLoading: false,
+  barCode: '',
+  dateFrom: dayjs().subtract(1, 'month').startOf('month').format('YYYY-MM-DD'),
+  dateTo: dayjs().subtract(1, 'month').endOf('month').format('YYYY-MM-DD'),
+  firstNumber: '',
+  lastNumber: '',
+  metaTitleId: '',
+  subName: '',
+  mutationId: '',
+  note: '',
+  ownerId: '',
+  periodicity: createInitialPeriodicity(),
+  mutationMark: createEmptyMutationMark(),
+  attachmentsSort: 'NONE',
+  signature: '',
+  year: '',
+})
+
+export const createInitialVolumeManagementState = (): TVariablesState => ({
   volumeState: {
-    id: '',
-    isLoading: false,
-    barCode: '',
-    dateFrom: dayjs()
-      .subtract(1, 'month')
-      .startOf('month')
-      .format('YYYY-MM-DD'),
-    dateTo: dayjs().subtract(1, 'month').endOf('month').format('YYYY-MM-DD'),
-    firstNumber: '',
-    lastNumber: '',
-    metaTitleId: '',
-    subName: '',
-    mutationId: '',
-    note: '',
-    ownerId: '',
-    periodicity: initialPeriodicity,
-    mutationMark: emptyMutationMark,
-    showAttachmentsAtTheEnd: false,
-    signature: '',
-    year: '',
+    ...createInitialVolumeState(),
   },
   specimensState: [],
   periodicityGenerationUsed: false,
   stateHasUnsavedData: false,
-}
+})
 
 interface TVariablesState {
   volumeState: TEditableVolume
@@ -92,7 +95,7 @@ interface TState extends TVariablesState {
     setLastNumber: (value: string) => void
     setOwnerId: (value: string) => void
     setNote: (value: string) => void
-    setShowAttachmentsAtTheEnd: (value: boolean) => void
+    setAttachmentsSort: (value: TVolumeAttachmentsSort) => void
   }
   volumePeriodicityActions: {
     setDefaultPeriodicityEdition: (values: TEdition[]) => void
@@ -117,15 +120,17 @@ interface TState extends TVariablesState {
 
 export const useVolumeManagementStore = create<TState>()(
   devtools((set) => ({
-    ...initialState,
+    ...createInitialVolumeManagementState(),
     setInitialState: () =>
       set(
         produce((state: TState) => {
+          const initialState = createInitialVolumeManagementState()
+
           state.volumeState = initialState.volumeState
           state.specimensState = initialState.specimensState
           state.periodicityGenerationUsed =
             initialState.periodicityGenerationUsed
-          state.stateHasUnsavedData = false
+          state.stateHasUnsavedData = initialState.stateHasUnsavedData
         })
       ),
     volumeActions: {
@@ -196,13 +201,9 @@ export const useVolumeManagementStore = create<TState>()(
           produce((state: TState) => {
             if (value?.isValid()) {
               state.volumeState.dateFrom = value.format('YYYY-MM-DD')
-              state.volumeState.dateTo = value
-                .endOf('month')
-                .format('YYYY-MM-DD')
               state.stateHasUnsavedData = true
             } else {
               state.volumeState.dateFrom = ''
-              state.volumeState.dateTo = ''
             }
           })
         ),
@@ -245,10 +246,10 @@ export const useVolumeManagementStore = create<TState>()(
             state.stateHasUnsavedData = true
           })
         ),
-      setShowAttachmentsAtTheEnd: (value) =>
+      setAttachmentsSort: (value) =>
         set(
           produce((state: TState) => {
-            state.volumeState.showAttachmentsAtTheEnd = value
+            state.volumeState.attachmentsSort = value
             state.stateHasUnsavedData = true
           })
         ),

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { Dayjs } from 'dayjs'
-import { SpecimenStateEnum, TSpecimenState } from '../schema/specimen'
+import { type Dayjs } from 'dayjs'
+import { SpecimenStateEnum, type TSpecimenState } from '../schema/specimen'
 import { APP_WITH_EDITING_ENABLED } from '../utils/constants'
 
 export type TParams = {
@@ -86,6 +86,7 @@ export const useSpecimensOverviewStore = create<TState>()(
     resetAll: (calendarDates) =>
       set((state) => ({
         barCodeInput: '',
+        sliderRange: calendarDates ?? null,
         params: {
           ...initialParams,
           dateStart: calendarDates?.[0] ?? null,

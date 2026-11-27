@@ -1,7 +1,7 @@
-import { TSpecimen } from '../../../../schema/specimen'
+import { type TSpecimenOverview } from '../../../../schema/specimen'
 
 export type TMainModalData = {
-  data: TSpecimen[]
+  data: TSpecimenOverview[]
   day: string
 } | null
 

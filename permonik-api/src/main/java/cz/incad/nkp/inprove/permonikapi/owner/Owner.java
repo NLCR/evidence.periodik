@@ -1,7 +1,9 @@
 package cz.incad.nkp.inprove.permonikapi.owner;
 
+import static cz.incad.nkp.inprove.permonikapi.owner.OwnerDefinition.*;
 
 import cz.incad.nkp.inprove.permonikapi.audit.Auditable;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
 
@@ -13,15 +15,19 @@ import org.apache.solr.client.solrj.beans.Field;
 @Getter
 public class Owner extends Auditable {
 
-    @Field
+    @Field(ID_FIELD)
+    @NotNull
     private String id; // UUID
 
-    @Field
+    @Field(NAME_FIELD)
+    @NotNull
     private String name;
 
-    @Field
+    @Field(SHORTHAND_FIELD)
+    @NotNull
     private String shorthand;
 
-    @Field
+    @Field(SIGLA_FIELD)
+    @NotNull
     private String sigla;
 }
