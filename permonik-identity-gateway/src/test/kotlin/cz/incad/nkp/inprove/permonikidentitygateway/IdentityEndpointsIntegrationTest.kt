@@ -281,7 +281,7 @@ constructor(
 
     companion object {
         private val postgres =
-            PostgreSQLContainer("postgres:18.6").withPassword(UUID.randomUUID().toString()).apply {
+                  PostgreSQLContainer("postgres:19.0").withPassword(UUID.randomUUID().toString()).apply {
                 start()
             }
 

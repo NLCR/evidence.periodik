@@ -40,11 +40,11 @@
 
     <field name="name" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="name_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="name_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="name_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="name" dest="name_search"/>
     <copyField source="name" dest="name_sort"/>
 
-    <field name="note" type="string" indexed="false" stored="true" required="false" multiValued="false"/>
+    <field name="note" type="string" indexed="false" stored="true" docValues="false" required="false" multiValued="false"/>
     <field name="is_public" type="boolean" indexed="true" stored="true" required="true" multiValued="false"/>
 
     <field name="created" type="pdate" indexed="true" stored="true" required="true" multiValued="false"/>

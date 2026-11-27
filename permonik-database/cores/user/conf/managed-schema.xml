@@ -40,25 +40,25 @@
 
     <field name="email" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="email_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="email_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="email_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="email" dest="email_search"/>
     <copyField source="email" dest="email_sort"/>
 
     <field name="username" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="username_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="username_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="username_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="username" dest="username_search"/>
     <copyField source="username" dest="username_sort"/>
 
     <field name="first_name" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="first_name_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="first_name_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="first_name_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="first_name" dest="first_name_search"/>
     <copyField source="first_name" dest="first_name_sort"/>
 
     <field name="last_name" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="last_name_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="last_name_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="last_name_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="last_name" dest="last_name_search"/>
     <copyField source="last_name" dest="last_name_sort"/>
 
@@ -66,7 +66,7 @@
     <field name="active" type="boolean" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="owners" type="uuid" indexed="true" stored="true" required="false" multiValued="true"/>
     <!-- NOTE: password is for development purposes and local accounts, on production is used shibboleth authentication -->
-    <field name="password" type="string" indexed="false" stored="true" required="false" multiValued="false"/>
+    <field name="password" type="string" indexed="false" stored="true" docValues="false" required="false" multiValued="false"/>
 
     <field name="_version_" type="plong" indexed="false" stored="false"/>
 

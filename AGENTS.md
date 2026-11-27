@@ -68,7 +68,7 @@ Export API:
 - persisted `TemplateContent` reuses existing nested domain models and keeps generation inputs; its storage-only Jackson configuration omits `visible` without changing HTTP JSON. Evolve JSONB through Liquibase data migrations, not speculative format-version compatibility
 - source models in `TemplateModels.kt` also represent already stored Solr records: require source creation audit, publication dates and mutation-mark types according to the schema, not frontend form optionality. Planning filters are separate input types with optional criteria; they must not weaken persisted source models
 - periodicity entries require all seven members per the FE contract, corroborated by the 2026-09-11 full local data audit. `VolumePeriodicity` and `StoredPeriodicityItem` are non-null; validate protobuf presence on both boundaries and retain false/zero/empty text. This nested JSON rule is application-enforced, not a Solr schema constraint
-- export persistence tests start an isolated PostgreSQL 18.6 Testcontainer; they never use the Compose development database
+- export persistence tests start an isolated PostgreSQL 19.0 Testcontainer; they never use the Compose development database
 
 ## Code Style And Configuration
 
@@ -89,7 +89,7 @@ Export API:
 - Document export-module functions with concise English KDoc describing their purpose and domain effect, including private helpers and test functions.
 - Stable protocol constants may be hardcoded. Deployment-specific URLs, credentials and secrets must be mandatory configuration without repository fallback values.
 - This is a public repository. Never commit `.env` files, private keys, certificates, passwords or usable development credentials.
-- New relational schemas use PostgreSQL 18.6 and Liquibase. Do not introduce Flyway.
+- New relational schemas use PostgreSQL 19.0 and Liquibase. Do not introduce Flyway.
 - Java runtime images use Google's Distroless Java 25 non-root image unless a concrete runtime requirement prevents it.
 
 Permissions:

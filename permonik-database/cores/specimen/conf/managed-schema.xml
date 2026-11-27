@@ -41,7 +41,7 @@
     <field name="metatitle_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="metatitle_name" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="metatitle_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="metatitle_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="metatitle_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="metatitle_name" dest="metatitle_search"/>
     <copyField source="metatitle_name" dest="metatitle_sort"/>
 
@@ -53,17 +53,17 @@
     <field name="owner_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="owner_name" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="owner_name_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="owner_name_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="owner_name_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="owner_name" dest="owner_name_search"/>
     <copyField source="owner_name" dest="owner_name_sort"/>
     <field name="owner_shorthand" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="owner_shorthand_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="owner_shorthand_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="owner_shorthand_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="owner_shorthand" dest="owner_shorthand_search"/>
     <copyField source="owner_shorthand" dest="owner_shorthand_sort"/>
     <field name="owner_sigla" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="owner_sigla_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="owner_sigla_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="owner_sigla_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="owner_sigla" dest="owner_sigla_search"/>
     <copyField source="owner_sigla" dest="owner_sigla_sort"/>
 
@@ -78,47 +78,47 @@
 
     <field name="name" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
     <field name="name_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="name_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="name_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="name" dest="name_search"/>
     <copyField source="name" dest="name_sort"/>
 
     <field name="subname" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
     <field name="subname_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="subname_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="subname_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="subname" dest="subname_search"/>
     <copyField source="subname" dest="subname_sort"/>
 
     <field name="edition_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="edition_name_cs" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="edition_name_cs_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="edition_name_cs_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="edition_name_cs_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="edition_name_cs" dest="edition_name_cs_search"/>
     <copyField source="edition_name_cs" dest="edition_name_cs_sort"/>
     <field name="edition_name_sk" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="edition_name_sk_search" type="text_sk" indexed="true" stored="false"/>
-    <field name="edition_name_sk_sort" type="icu_sk_sort" indexed="true" stored="false"/>
+    <field name="edition_name_sk_sort" type="icu_sk_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="edition_name_sk" dest="edition_name_sk_search"/>
     <copyField source="edition_name_sk" dest="edition_name_sk_sort"/>
     <field name="edition_name_en" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="edition_name_en_search" type="text_en" indexed="true" stored="false"/>
-    <field name="edition_name_en_sort" type="icu_en_sort" indexed="true" stored="false"/>
+    <field name="edition_name_en_sort" type="icu_en_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="edition_name_en" dest="edition_name_en_search"/>
     <copyField source="edition_name_en" dest="edition_name_en_sort"/>
 
     <field name="mutation_id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="mutation_name_cs" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="mutation_name_cs_search" type="text_cz" indexed="true" stored="false"/>
-    <field name="mutation_name_cs_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <field name="mutation_name_cs_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="mutation_name_cs" dest="mutation_name_cs_search"/>
     <copyField source="mutation_name_cs" dest="mutation_name_cs_sort"/>
     <field name="mutation_name_sk" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="mutation_name_sk_search" type="text_sk" indexed="true" stored="false"/>
-    <field name="mutation_name_sk_sort" type="icu_sk_sort" indexed="true" stored="false"/>
+    <field name="mutation_name_sk_sort" type="icu_sk_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="mutation_name_sk" dest="mutation_name_sk_search"/>
     <copyField source="mutation_name_sk" dest="mutation_name_sk_sort"/>
     <field name="mutation_name_en" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="mutation_name_en_search" type="text_en" indexed="true" stored="false"/>
-    <field name="mutation_name_en_sort" type="icu_en_sort" indexed="true" stored="false"/>
+    <field name="mutation_name_en_sort" type="icu_en_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="mutation_name_en" dest="mutation_name_en_search"/>
     <copyField source="mutation_name_en" dest="mutation_name_en_sort"/>
 
@@ -130,7 +130,7 @@
     <!-- NOTE: here we choose number or attachment_number, that's why these fields are optional; a string type is used, because number can be 1-2, 1a, 1, etc. -->
     <field name="number" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
     <field name="attachment_number" type="string" indexed="true" stored="true" required="false" multiValued="false"/>
-    <field name="number_sort_key" type="string" indexed="true" stored="false" required="false" multiValued="false"/>
+    <field name="number_sort_key" type="string" indexed="false" stored="false" docValues="true" useDocValuesAsStored="true" required="false" multiValued="false"/>
     <field name="pages_count" type="pint" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="is_attachment" type="boolean" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="created" type="pdate" indexed="true" stored="true" required="true" multiValued="false"/>

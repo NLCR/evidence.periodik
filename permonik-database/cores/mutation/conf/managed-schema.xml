@@ -42,20 +42,20 @@
     <field name="name_cs" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <!-- searching like Ranní, ranní, ranni -->
     <field name="name_cs_search" type="text_cz" indexed="true" stored="false"/>
-    <!-- sorting, range queries -->
-    <field name="name_cs_sort" type="icu_cs_sort" indexed="true" stored="false"/>
+    <!-- Locale-aware sorting through DocValues; searches use name_cs_search. -->
+    <field name="name_cs_sort" type="icu_cs_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="name_cs" dest="name_cs_search"/>
     <copyField source="name_cs" dest="name_cs_sort"/>
 
     <field name="name_sk" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="name_sk_search" type="text_sk" indexed="true" stored="false"/>
-    <field name="name_sk_sort" type="icu_sk_sort" indexed="true" stored="false"/>
+    <field name="name_sk_sort" type="icu_sk_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="name_sk" dest="name_sk_search"/>
     <copyField source="name_sk" dest="name_sk_sort"/>
 
     <field name="name_en" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="name_en_search" type="text_en" indexed="true" stored="false"/>
-    <field name="name_en_sort" type="icu_en_sort" indexed="true" stored="false"/>
+    <field name="name_en_sort" type="icu_en_sort" indexed="false" stored="false" docValues="true" useDocValuesAsStored="false"/>
     <copyField source="name_en" dest="name_en_search"/>
     <copyField source="name_en" dest="name_en_sort"/>
 

@@ -1,5 +1,3 @@
-# Public deployment template. Replace variable references with concrete values only
-# in the server-local copy, or supply them through the shell/an external env file.
 services:
   permonik-api:
     image: eu.gcr.io/inqool-1301/permonik/test/permonik-api:latest
@@ -18,14 +16,14 @@ services:
           memory: '2048M'
     environment:
       SPRING_PROFILES_ACTIVE: test
-      IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
-      SOLR_USERNAME: ${SOLR_USERNAME:?SOLR_USERNAME is required}
-      SOLR_PASSWORD: ${SOLR_PASSWORD:?SOLR_PASSWORD is required}
-      CORE_EXPORT_GRPC_TOKEN: ${CORE_EXPORT_GRPC_TOKEN:?CORE_EXPORT_GRPC_TOKEN is required}
+      IDENTITY_JWT_SECRET:
+      SOLR_USERNAME:
+      SOLR_PASSWORD:
+      CORE_EXPORT_GRPC_TOKEN:
       LOGGING_FILE_NAME: /tmp/permonik-api.log
-      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_DSN:
       SENTRY_ENVIRONMENT: test
-      SENTRY_RELEASE: ${SENTRY_RELEASE:-}
+      SENTRY_RELEASE:
       TZ: "Europe/Prague"
       SERVER_PORT: "8080"
 
@@ -51,17 +49,17 @@ services:
       SPRING_PROFILES_ACTIVE: test
       SERVER_PORT: "8080"
       EXPORT_API_DATABASE_URL: jdbc:postgresql://permonik-export-api-database:5432/permonik_export
-      EXPORT_API_DATABASE_PASSWORD: ${EXPORT_API_DATABASE_PASSWORD:?EXPORT_API_DATABASE_PASSWORD is required}
-      IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
-      CORE_EXPORT_GRPC_TOKEN: ${CORE_EXPORT_GRPC_TOKEN:?CORE_EXPORT_GRPC_TOKEN is required}
+      EXPORT_API_DATABASE_PASSWORD:
+      IDENTITY_JWT_SECRET:
+      CORE_EXPORT_GRPC_TOKEN:
       CORE_EXPORT_GRPC_TARGET: static://permonik-api:9090
-      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_DSN:
       SENTRY_ENVIRONMENT: test
-      SENTRY_RELEASE: ${SENTRY_RELEASE:-}
+      SENTRY_RELEASE:
       TZ: "Europe/Prague"
 
   permonik-export-api-database:
-    image: postgres:18.6-alpine
+    image: postgres:19.0-alpine
     restart: unless-stopped
     networks:
       - permonik
@@ -74,7 +72,7 @@ services:
     environment:
       POSTGRES_DB: permonik_export
       POSTGRES_USER: permonik
-      POSTGRES_PASSWORD: ${EXPORT_API_DATABASE_PASSWORD:?EXPORT_API_DATABASE_PASSWORD is required}
+      POSTGRES_PASSWORD:
     volumes:
       - /data/postgresql/export:/var/lib/postgresql
     healthcheck:
@@ -136,7 +134,7 @@ services:
       SPRING_PROFILES_ACTIVE: test
       SERVER_PORT: "8080"
       IDENTITY_DATABASE_URL: jdbc:postgresql://permonik-identity-database:5432/permonik_identity
-      IDENTITY_DATABASE_PASSWORD: ${IDENTITY_DATABASE_PASSWORD:?IDENTITY_DATABASE_PASSWORD is required}
+      IDENTITY_DATABASE_PASSWORD:
       SPRING_DATA_REDIS_HOST: permonik-identity-redis
       PERMONIK_CORE_URL: http://permonik-api:8080
       PERMONIK_EXPORT_URL: http://permonik-export-api:8080
@@ -144,18 +142,18 @@ services:
       PERMONIK_PUBLIC_WEB_URL: http://permonik-web-public:8080
       PERMONIK_ADMIN_HOSTS: app.permonik-test.nkp.cz
       PERMONIK_PUBLIC_HOSTS: permonik-test.nkp.cz
-      IDENTITY_JWT_SECRET: ${IDENTITY_JWT_SECRET:?IDENTITY_JWT_SECRET is required}
+      IDENTITY_JWT_SECRET:
       SAML_SP_ENTITY_ID: https://app.permonik-test.nkp.cz/shibboleth
       SAML_SP_ACS: https://app.permonik-test.nkp.cz/Shibboleth.sso/SAML2/POST
-      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_DSN:
       SENTRY_ENVIRONMENT: test
-      SENTRY_RELEASE: ${SENTRY_RELEASE:-}
+      SENTRY_RELEASE:
       TZ: "Europe/Prague"
     volumes:
       - /opt/shibboleth-sp-config:/run/secrets/shibboleth:ro
 
   permonik-identity-database:
-    image: postgres:18.6-alpine
+    image: postgres:19.0-alpine
     restart: unless-stopped
     networks:
       - permonik
@@ -168,12 +166,12 @@ services:
     environment:
       POSTGRES_DB: permonik_identity
       POSTGRES_USER: permonik
-      POSTGRES_PASSWORD: ${IDENTITY_DATABASE_PASSWORD:?IDENTITY_DATABASE_PASSWORD is required}
+      POSTGRES_PASSWORD:
     volumes:
       - /data/postgresql/identity:/var/lib/postgresql
 
   permonik-database:
-    image: solr:10.0.0
+    image: solr:10.1.0
     restart: unless-stopped
     networks:
       - permonik
@@ -188,8 +186,9 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms2g -Xmx2g"
       SOLR_MODULES: analysis-extras
-      SOLR_USERNAME: ${SOLR_USERNAME:?SOLR_USERNAME is required}
-      SOLR_PASSWORD: ${SOLR_PASSWORD:?SOLR_PASSWORD is required}
+      SOLR_ZOOKEEPER_SERVER_ENABLED: "false"
+      SOLR_USERNAME:
+      SOLR_PASSWORD:
     command:
       - bash
       - /opt/permonik/start-solr.sh
@@ -198,7 +197,7 @@ services:
       - ./scripts/start-solr.sh:/opt/permonik/start-solr.sh:ro
 
   permonik-identity-redis:
-    image: redis:8.10-alpine
+    image: redis:8.12-alpine
     restart: unless-stopped
     networks:
       - permonik

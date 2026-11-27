@@ -30,7 +30,10 @@ public abstract class AbstractSolrIntegrationTest {
 
     // analysis-extras module enables ICUCollationField (icu_cs_sort) used in production schemas
     static final SolrContainer SOLR =
-            new SolrContainer(DockerImageName.parse("solr:10.0.0"))
+            new SolrContainer(DockerImageName.parse("solr:10.1.0"))
+                    .withEnv("SOLR_ZOOKEEPER_SERVER_ENABLED", "true")
+                    .withCreateContainerCmdModifier(
+                            command -> command.withCmd("solr", "start", "-f", "--cloud"))
                     .withEnv("SOLR_MODULES", "analysis-extras");
     private static final Logger log = LoggerFactory.getLogger(AbstractSolrIntegrationTest.class);
     private static final List<String> CORES =

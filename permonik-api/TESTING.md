@@ -33,7 +33,7 @@ handwritten sources under `src/`. `spotlessCheck` also runs as part of `check`.
 
 ### Shared Solr base class
 All integration tests extend a common base class that:
-- Starts a single `SolrContainer("solr:10.0.0")` per test suite (static, shared)
+- Starts a single `SolrContainer("solr:10.1.0")` per test suite (static, shared)
 - Registers `solr.host` via `@DynamicPropertySource`
 - Mocks Redis via `@MockitoBean` (not under test)
 - Creates required Solr cores before tests run
