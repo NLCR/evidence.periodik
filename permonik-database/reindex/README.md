@@ -134,14 +134,12 @@ skipped-document reason before continuing.
 
 ## 4. Reindex into the new helper
 
-Only run `--delete-target` against the disposable new helper. It deletes all documents
-from each target core before importing its replacement data.
+Only run `--apply` against the disposable new helper. The wrapper removes and recreates
+the complete `new-solr-data/` directory first. This is required when field index options
+changed: deleting documents alone leaves old Lucene segments with the previous schema.
 
 ```bash
-./.venv/bin/python reindex.py \
-  --old-url http://localhost:8983/solr \
-  --new-url http://localhost:8990/solr \
-  --delete-target \
+./migrate-local.sh --apply \
   2>&1 | tee migration-$(date +%Y%m%d-%H%M%S).log
 ```
 
