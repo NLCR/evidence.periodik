@@ -180,11 +180,17 @@ On production:
 1. stop the application and Solr during the maintenance window;
 2. preserve the old `/data/solr` as the rollback copy;
 3. replace it with the verified Solr 10.1 helper data;
-4. ensure the server-local Compose directory contains the matching read-only
+4. fix ownership for the Solr container user:
+
+   ```bash
+   chown -R 8983:8983 /data/solr
+   ```
+
+5. ensure the server-local Compose directory contains the matching read-only
    `scripts/start-solr.sh`;
-5. start the Solr 10.1 service with the production Solr credentials;
-6. wait for real core queries to stop returning `503`;
-7. start the backend services and run application smoke checks.
+6. start the Solr 10.1 service with the production Solr credentials;
+7. wait for real core queries to stop returning `503`;
+8. start the backend services and run application smoke checks.
 
 The production Compose file recreates `security.json` on startup from
 `SOLR_USERNAME` and `SOLR_PASSWORD`. The credentials must remain identical to those
