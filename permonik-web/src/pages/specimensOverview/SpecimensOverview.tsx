@@ -29,6 +29,7 @@ import PlanDigitalizationModal from '@/components/plan-digitalization-modal/Plan
 import ResponsiveActionButton from '@/components/prepare-scan-modal/steps/template/components/ResponsiveActionButton'
 import { useMeQuery } from '@/api/user'
 import { hasPermission } from '@/schema/user'
+import { useSpecimenListQuery } from '@/api/specimen'
 
 const Table = lazy(() => import('./components/Table'))
 
@@ -46,6 +47,11 @@ const SpecimensOverview = () => {
     isLoading: metaTitleLoading,
     isError: metaTitleError,
   } = useMetaTitleQuery(metaTitleId)
+  const {
+    data: specimens,
+    isPending: specimensPending,
+    isPlaceholderData,
+  } = useSpecimenListQuery(metaTitle?.id)
 
   const isMobile = !useMediaQuery(theme.breakpoints.up('sm'))
 
@@ -198,14 +204,27 @@ const SpecimensOverview = () => {
                   variant="contained"
                   icon={<ChecklistIcon />}
                   label={t('plan_digitalization_modal.title')}
+                  disabled={specimensPending || isPlaceholderData}
                   onClick={() => setIsPlanModalOpen(true)}
                 />
-                <PlanDigitalizationModal
-                  isOpen={isPlanModalOpen}
-                  setIsOpen={setIsPlanModalOpen}
-                  metaTitleId={metaTitle.id}
-                  metatitle={metaTitle.name}
-                />
+                {isPlanModalOpen && (
+                  <PlanDigitalizationModal
+                    key={metaTitle.id}
+                    onClose={() => setIsPlanModalOpen(false)}
+                    metaTitleId={metaTitle.id}
+                    metatitle={metaTitle.name}
+                    minYear={
+                      specimens?.publicationDayMin
+                        ? Number(specimens.publicationDayMin.slice(0, 4))
+                        : undefined
+                    }
+                    maxYear={
+                      specimens?.publicationDayMax
+                        ? Number(specimens.publicationDayMax.slice(0, 4))
+                        : undefined
+                    }
+                  />
+                )}
               </>
             ) : null}
             {view === 'CALENDAR' && (

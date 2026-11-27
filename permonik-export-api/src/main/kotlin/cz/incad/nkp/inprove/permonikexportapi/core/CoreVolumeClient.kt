@@ -10,12 +10,16 @@ import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolumeContents
 import cz.incad.nkp.inprove.permonikcorecontract.v1.QueryPlanningVolumesRequest
 import cz.incad.nkp.inprove.permonikcorecontract.v1.SearchReplacementVolumesRequest
 import cz.incad.nkp.inprove.permonikexportapi.calculation.SpecimenMatchingRules
+import cz.incad.nkp.inprove.permonikexportapi.planning.PlanningFacet
+import cz.incad.nkp.inprove.permonikexportapi.planning.PlanningFacets
+import cz.incad.nkp.inprove.permonikexportapi.planning.PlanningMutation
 import cz.incad.nkp.inprove.permonikexportapi.planning.TemplatePlanningQuery
+import cz.incad.nkp.inprove.permonikexportapi.template.LocalizedName
+import cz.incad.nkp.inprove.permonikexportapi.template.MutationMark
 import cz.incad.nkp.inprove.permonikexportapi.template.MutationMarkType
 import io.grpc.Context
 import io.grpc.Status
 import java.time.Instant
-import java.time.ZoneOffset
 import java.util.concurrent.TimeUnit
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -43,10 +47,9 @@ class CoreVolumeClient(
     private val stub: CoreExportServiceGrpc.CoreExportServiceBlockingStub,
     private val properties: CoreExportClientProperties,
 ) {
-    /** Metadata needed to group planning volumes by their calendar start year and owner. */
+    /** Metadata identifying the planning volume and its owner. */
     data class PlanningVolumeMetadata(
         val id: String,
-        val year: Int,
         val barCode: String,
         val ownerId: String,
         val ownerShorthand: String,
@@ -149,35 +152,58 @@ class CoreVolumeClient(
         }
     }
 
-    /**
-     * Drains the core planning stream and validates the required stored metadata without
-     * calculating indexes.
-     */
+    /** Shares exact filter encoding between the plan and its facet counts. */
+    private fun planningRequest(query: TemplatePlanningQuery): QueryPlanningVolumesRequest {
+        val request =
+            QueryPlanningVolumesRequest.newBuilder()
+                .setMetaTitleId(query.metaTitleId)
+                .setYearFrom(query.yearFrom)
+                .setYearTo(query.yearTo)
+        query.mutation?.id?.let(request::setMutationId)
+        query.mutationalEdition?.let { edition ->
+            val filter = GrpcMutationalEditionFilter.newBuilder()
+            edition.mark?.let(filter::setMark)
+            edition.type?.let { filter.setType(it.name) }
+            request.setMutationalEdition(filter)
+        }
+        return request.build()
+    }
+
+    /** Reads both planning facets without loading stored volumes or specimens. */
+    fun queryPlanningFacets(query: TemplatePlanningQuery): PlanningFacets {
+        val response =
+            stub.withDeadlineAfter(2, TimeUnit.SECONDS).queryPlanningFacets(planningRequest(query))
+        return PlanningFacets(
+            mutations =
+                response.mutationsList.map {
+                    val name = it.name
+                    if (
+                        !it.hasName() || name.cs.isBlank() || name.sk.isBlank() || name.en.isBlank()
+                    ) {
+                        throw Status.DATA_LOSS.withDescription("Missing planning mutation name")
+                            .asRuntimeException()
+                    }
+                    PlanningFacet(
+                        PlanningMutation(it.mutationId, LocalizedName(name.cs, name.sk, name.en)),
+                        it.count,
+                    )
+                },
+            mutationalEditions =
+                response.mutationalEditionsList.map {
+                    PlanningFacet(
+                        MutationMark(
+                            type = MutationMarkType.valueOf(it.type),
+                            mark = it.mark.takeIf { _ -> it.hasMark() },
+                        ),
+                        it.count,
+                    )
+                },
+        )
+    }
+
+    /** Drains the core planning stream without calculating indexes. */
     fun queryPlanningVolumes(query: TemplatePlanningQuery): List<PlanningVolumeMetadata> {
-        val yearFrom = query.yearFrom.toOptionalInt("yearFrom")
-        val yearTo = query.yearTo.toOptionalInt("yearTo")
-        require(yearFrom == null || yearTo == null || yearFrom <= yearTo) {
-            "yearFrom must be less than or equal to yearTo"
-        }
-        require(query.metaTitleId.isNotBlank()) { "metaTitleId is required" }
-        val request = QueryPlanningVolumesRequest.newBuilder().setMetaTitleId(query.metaTitleId)
-        yearFrom?.let(request::setYearFrom)
-        yearTo?.let(request::setYearTo)
-        query.mutation?.id?.let {
-            require(it.isNotBlank()) { "mutation ID must not be blank" }
-            request.setMutationId(it)
-        }
-        val edition = query.mutationalEdition
-        val mark = edition.mark?.takeIf(String::isNotBlank)
-        if (mark != null || edition.type == MutationMarkType.UNMARKED) {
-            GrpcMutationalEditionFilter.newBuilder()
-                .apply {
-                    mark?.let(::setMark)
-                    edition.type?.let { setType(it.name) }
-                }
-                .build()
-                .also(request::setMutationalEdition)
-        }
+        val request = planningRequest(query)
         val context = Context.current().withCancellation()
         return try {
             context.call {
@@ -186,7 +212,7 @@ class CoreVolumeClient(
                 val stream =
                     stub
                         .withDeadlineAfter(properties.deadline.toNanos(), TimeUnit.NANOSECONDS)
-                        .queryPlanningVolumes(request.build())
+                        .queryPlanningVolumes(request)
                 try {
                     for (volume in stream) {
                         val metadata = volume.toPlanningMetadata()
@@ -208,29 +234,19 @@ class CoreVolumeClient(
     }
 }
 
-/** Converts an optional planning year without imposing a project-specific calendar range. */
-private fun String.toOptionalInt(field: String): Int? =
-    if (isBlank()) {
-        null
-    } else {
-        toIntOrNull() ?: throw IllegalArgumentException("$field must be an integer")
-    }
-
-/** Validates planning metadata and groups by the UTC year of the volume's start date. */
+/** Validates metadata returned for a planning volume. */
 private fun GrpcVolume.toPlanningMetadata(): CoreVolumeClient.PlanningVolumeMetadata {
     require(
         id.isNotBlank() &&
             hasBarcode() &&
             hasDateFrom() &&
+            hasDateTo() &&
             hasOwner() &&
             owner.hasId() &&
             owner.hasShorthand()
     )
-    val calendarYear =
-        Instant.ofEpochSecond(dateFrom.seconds, dateFrom.nanos.toLong()).atZone(ZoneOffset.UTC).year
     return CoreVolumeClient.PlanningVolumeMetadata(
         id,
-        year = calendarYear,
         barCode = barcode,
         ownerId = owner.id,
         ownerShorthand = owner.shorthand,

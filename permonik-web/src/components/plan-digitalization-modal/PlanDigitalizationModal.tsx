@@ -1,23 +1,28 @@
-import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { type PropsWithChildren, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { hashKey } from '@tanstack/react-query'
+import { type PropsWithChildren, useCallback, useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useSpecimensOverviewStore } from '@/slices/useSpecimensOverviewStore'
 import ModalContainer from '../ModalContainer'
 import { usePlanDigitalizationQuery } from './api'
 import Filters from './Filters'
 import LibrariesTable from './LibrariesTable'
-import { type PlanDigitalizationFilters } from './schemas'
-import { createEmptyMutationMark } from '@/utils/mutationMark'
+import {
+  createPlanDigitalizationFiltersSchema,
+  type PlanDigitalizationFilters,
+} from './schemas'
 
 type Props = {
-  isOpen: boolean
-  setIsOpen: (isOpen: boolean) => void
+  onClose: () => void
   metaTitleId: string
   metatitle: string
+  minYear: number | undefined
+  maxYear: number | undefined
 }
 
 const EmptyState = ({ children }: PropsWithChildren) => (
@@ -39,66 +44,103 @@ const EmptyState = ({ children }: PropsWithChildren) => (
 )
 
 const PlanDigitalizationModal = ({
-  isOpen,
-  setIsOpen,
+  onClose,
   metaTitleId,
   metatitle,
+  minYear,
+  maxYear,
 }: Props) => {
   const { t } = useTranslation()
+  const sliderRange = useSpecimensOverviewStore((state) =>
+    state.view === 'TABLE' && state.lastViewedMetaTitleId === metaTitleId
+      ? state.sliderRange
+      : null
+  )
+  const [from, to] = sliderRange ?? []
   const [submittedFilters, setSubmittedFilters] =
     useState<PlanDigitalizationFilters | null>(null)
 
+  const filtersSchema = useMemo(
+    () => createPlanDigitalizationFiltersSchema(minYear, maxYear),
+    [minYear, maxYear]
+  )
   const form = useForm<PlanDigitalizationFilters>({
+    mode: 'onChange',
+    resolver: zodResolver(filtersSchema),
     defaultValues: {
       metaTitleId,
-      yearFrom: '',
-      yearTo: '',
+      yearFrom: (from?.isValid() ? from.year() : minYear) ?? NaN,
+      yearTo: (to?.isValid() ? to.year() : maxYear) ?? NaN,
       mutation: null,
-      mutationalEdition: createEmptyMutationMark(),
+      mutationalEdition: null,
     },
   })
+  const draftFilters = useWatch({ control: form.control })
 
   const {
     data = [],
-    isLoading,
+    isFetching,
     isError,
+    refetch,
   } = usePlanDigitalizationQuery(submittedFilters)
+
+  const submitFilters = useCallback(
+    (values: PlanDigitalizationFilters, automatic = false) => {
+      if (isFetching) return
+
+      if (hashKey([values]) !== hashKey([submittedFilters])) {
+        setSubmittedFilters(values)
+      } else if (!automatic) {
+        void refetch()
+      }
+    },
+    [isFetching, refetch, submittedFilters]
+  )
 
   return (
     <ModalContainer
-      opened={isOpen}
-      onClose={() => setIsOpen(false)}
-      closeButton={{ callback: () => setIsOpen(false) }}
+      opened
+      onClose={onClose}
+      closeButton={{ callback: onClose }}
       header={`${t('plan_digitalization_modal.title')} - ${metatitle}`}
       minWidth="70vw"
       maxWidth="1200px"
       maxHeight="85vh"
     >
       <Stack spacing={2}>
-        <Filters form={form} onSubmit={setSubmittedFilters} />
+        <Filters
+          form={form}
+          onSubmit={submitFilters}
+          disabled={isFetching}
+          hasSubmitted={submittedFilters !== null}
+          minYear={minYear}
+          maxYear={maxYear}
+        />
 
-        {isLoading ? <CircularProgress size={24} /> : null}
+        {isFetching && (
+          <Box sx={{ display: 'grid', placeItems: 'center', minHeight: 160 }}>
+            <CircularProgress
+              aria-label={t('plan_digitalization_modal.results_loading')}
+            />
+          </Box>
+        )}
 
-        {isError ? (
-          <Alert severity="error">
-            {t('common.error_occurred', {
-              defaultValue: 'Nastala chyba při načítání dat',
-            })}
-          </Alert>
-        ) : null}
-
-        {!isLoading && !isError && !submittedFilters ? (
+        {!isFetching && !isError && !submittedFilters ? (
           <EmptyState>
-            {t('plan_digitalization_modal.select_filters')}
+            {minYear !== undefined &&
+            maxYear !== undefined &&
+            minYear <= maxYear
+              ? t('plan_digitalization_modal.select_filters')
+              : t('plan_digitalization_modal.year_range_unavailable')}
           </EmptyState>
         ) : null}
 
-        {!isLoading && !isError && submittedFilters && !data.length ? (
+        {!isFetching && !isError && submittedFilters && !data.length ? (
           <EmptyState>{t('plan_digitalization_modal.no_results')}</EmptyState>
         ) : null}
 
-        {!isLoading && !isError && submittedFilters && data.length ? (
-          <LibrariesTable data={data} />
+        {!isFetching && !isError && submittedFilters && data.length ? (
+          <LibrariesTable key={hashKey([draftFilters])} data={data} />
         ) : null}
       </Stack>
     </ModalContainer>

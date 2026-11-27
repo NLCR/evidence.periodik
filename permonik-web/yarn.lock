@@ -2001,6 +2001,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@uidotdev/usehooks@npm:^2.4.1":
+  version: 2.4.1
+  resolution: "@uidotdev/usehooks@npm:2.4.1"
+  peerDependencies:
+    react: ">=18.0.0"
+    react-dom: ">=18.0.0"
+  checksum: 10/7f2e1dcfcaf654841150fde36556a257afb2240bca0145586b4e1e9385b85fea108a7dd17c2cbc4c2bd46d136126ffdf84267118933120fe54ad2e028c2dfa68
+  languageName: node
+  linkType: hard
+
 "@unrs/resolver-binding-android-arm-eabi@npm:1.12.2":
   version: 1.12.2
   resolution: "@unrs/resolver-binding-android-arm-eabi@npm:1.12.2"
@@ -7339,6 +7349,7 @@ __metadata:
     "@types/react-router-dom": "npm:^5.3.3"
     "@typescript-eslint/eslint-plugin": "npm:^8.60.0"
     "@typescript-eslint/parser": "npm:^8.60.0"
+    "@uidotdev/usehooks": "npm:^2.4.1"
     "@vitejs/plugin-react": "npm:^6.0.2"
     "@welldone-software/why-did-you-render": "npm:^10.0.1"
     babel-plugin-react-compiler: "npm:^1.0.0"

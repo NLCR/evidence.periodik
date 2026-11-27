@@ -1,7 +1,11 @@
 import { z } from 'zod'
 import { MutationMarkSchema } from '@/utils/mutationMark'
 import { TemplateState } from './templateStateSchema'
-import { mainReplacementSchema, replacementSchema } from './commonSchemas'
+import {
+  mainReplacementSchema,
+  replacementSchema,
+  replacementSourceSchema,
+} from './commonSchemas'
 import { VolumeSchema } from '@/schema/volume'
 
 const TemplateVolumeSchema = VolumeSchema.extend({
@@ -52,6 +56,15 @@ export const TemplateSchema = z.object({
   version: z.number().int().nullable(),
   state: z.nativeEnum(TemplateState),
   primaryVolume: TemplateVolumeSchema,
+  issues: z.object({
+    missingPages: z.boolean(),
+    damagedPages: z.boolean(),
+    illegiblyBound: z.boolean(),
+    missingSpecimen: z.boolean(),
+    censored: z.boolean(),
+    degradation: z.boolean(),
+  }),
+  replacementSources: z.array(replacementSourceSchema),
   replacementSourcesParameters: z.object({
     metatitle: z.boolean(),
     mutation: z.boolean(),

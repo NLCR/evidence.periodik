@@ -1,7 +1,27 @@
 services:
-  # used for precreating new solr version
+  # Reads the manually copied production data with the old Solr version.
+  permonik-database-old:
+    image: ${OLD_SOLR_IMAGE:-solr:9.10.0}
+    ports:
+      - "8983:8983"
+    deploy:
+      resources:
+        limits:
+          memory: '2048M'
+    environment:
+      SOLR_JAVA_MEM: "-Xms1g -Xmx1g"
+      SOLR_MODULES: analysis-extras
+      SOLR_ZOOKEEPER_SERVER_ENABLED: "false"
+    command:
+      - solr-fg
+      - --user-managed
+    volumes:
+      - ./old-solr-data:/var/solr
+
+  # Disposable upstream reference instance for comparing the new Solr defaults.
+  # It is not the migration target and must not receive production data.
   permonik-database-precreate:
-    image: solr:10.0.0
+    image: solr:10.1.0
     ports:
       - "8991:8983"
     deploy:
@@ -10,13 +30,14 @@ services:
           memory: '2048M'
     environment:
       SOLR_JAVA_MEM: "-Xms1g -Xmx1g"
+      SOLR_ZOOKEEPER_SERVER_ENABLED: "false"
     command:
       - solr-precreate
       - gettingstarted
 
-  # used for reindexing new solr version
+  # Actual migration target, built from the current ../cores configsets.
   permonik-database-new:
-    image: solr:10.0.0
+    image: solr:10.1.0
     ports:
       - "8990:8983"
     deploy:
@@ -26,6 +47,7 @@ services:
     environment:
       SOLR_JAVA_MEM: "-Xms1g -Xmx1g"
       SOLR_MODULES: analysis-extras
+      SOLR_ZOOKEEPER_SERVER_ENABLED: "false"
     command:
       - solr-fg
       - --user-managed

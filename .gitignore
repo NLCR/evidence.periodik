@@ -17,6 +17,7 @@
 ### Development ###
 solr-data/*
 permonik-database/reindex/new-solr-data/*
+permonik-database/reindex/old-solr-data/*
 __pycache__/
 *.pyc
 

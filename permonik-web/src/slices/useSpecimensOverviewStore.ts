@@ -86,6 +86,7 @@ export const useSpecimensOverviewStore = create<TState>()(
     resetAll: (calendarDates) =>
       set((state) => ({
         barCodeInput: '',
+        sliderRange: calendarDates ?? null,
         params: {
           ...initialParams,
           dateStart: calendarDates?.[0] ?? null,

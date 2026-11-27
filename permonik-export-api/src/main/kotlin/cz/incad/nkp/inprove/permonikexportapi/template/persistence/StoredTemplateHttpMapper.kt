@@ -20,6 +20,8 @@ fun StoredTemplate.toHttpTemplate(): Template {
         version = persistedVersion,
         state = state,
         primaryVolume = content.primaryVolume,
+        issues = content.issues,
+        replacementSources = content.replacementSources,
         replacementSourcesParameters = content.replacementSourcesParameters,
         primaryVolumeFillIndex = content.primaryVolumeFillIndex,
         combinedFillIndex = content.combinedFillIndex,

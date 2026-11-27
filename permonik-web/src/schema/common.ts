@@ -1,4 +1,19 @@
 import { z } from 'zod'
+import i18next from '../i18next'
+
+export const createYearSchema = (minYear?: number, maxYear?: number) => {
+  const min = Math.max(1, minYear ?? 1)
+  const max = Math.min(9999, maxYear ?? 9999)
+
+  return z
+    .int({ error: () => i18next.t('schema.calendar_year_invalid') })
+    .min(min, {
+      error: () => i18next.t('schema.calendar_year_min', { year: min }),
+    })
+    .max(max, {
+      error: () => i18next.t('schema.calendar_year_max', { year: max }),
+    })
+}
 
 export const AuditableSchema = z
   .object({

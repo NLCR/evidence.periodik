@@ -14,9 +14,12 @@ import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcMutationMark;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcOwner;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcPeriodicity;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcPeriodicityItem;
+import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcPlanningEditionCount;
+import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcPlanningMutationCount;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcSpecimen;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolume;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.GrpcVolumeSpecimen;
+import cz.incad.nkp.inprove.permonikcorecontract.v1.QueryPlanningFacetsResponse;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.QueryPlanningVolumesRequest;
 import cz.incad.nkp.inprove.permonikcorecontract.v1.SearchReplacementVolumesRequest;
 import io.grpc.Context;
@@ -115,54 +118,14 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
     public void queryPlanningVolumes(
             QueryPlanningVolumesRequest request, StreamObserver<GrpcVolume> observer) {
         try {
-            Integer yearFrom = request.hasYearFrom() ? request.getYearFrom() : null;
-            Integer yearTo = request.hasYearTo() ? request.getYearTo() : null;
-            if (request.getMetaTitleId().isBlank()
-                    || (yearFrom != null && yearTo != null && yearFrom > yearTo)) {
-                throw Status.INVALID_ARGUMENT
-                        .withDescription("Invalid planning filters")
-                        .asRuntimeException();
-            }
-            String mutationId =
-                    request.hasMutationId()
-                            ? nonBlank(request.getMutationId(), "mutation ID")
-                            : null;
-            String mutationMark = null;
-            String mutationMarkType = null;
-            if (request.hasMutationalEdition()) {
-                var filter = request.getMutationalEdition();
-                mutationMark =
-                        filter.hasMark() && !filter.getMark().isBlank() ? filter.getMark() : null;
-                mutationMarkType =
-                        filter.hasType() ? nonBlank(filter.getType(), "mutation mark type") : null;
-                if (mutationMarkType != null
-                        && !List.of("MARK", "NUMBER", "UNMARKED").contains(mutationMarkType)) {
-                    throw Status.INVALID_ARGUMENT
-                            .withDescription("Unknown mutation mark type")
-                            .asRuntimeException();
-                }
-                if (mutationMark == null && !"UNMARKED".equals(mutationMarkType)) {
-                    throw Status.INVALID_ARGUMENT
-                            .withDescription("A blank mutation mark requires UNMARKED type")
-                            .asRuntimeException();
-                }
-            }
+            var filters = planningFilters(request);
             String token = "";
             var tokens = new HashSet<String>();
             do {
                 if (Context.current().isCancelled()) {
                     throw Status.CANCELLED.asRuntimeException();
                 }
-                var page =
-                        references.searchPlanningVolumes(
-                                request.getMetaTitleId(),
-                                yearFrom,
-                                yearTo,
-                                mutationId,
-                                mutationMark,
-                                mutationMarkType,
-                                100,
-                                token);
+                var page = references.searchPlanningVolumes(filters, 100, token);
                 for (var volume : page.volumes()) {
                     var message = toVolumeMessage(volume);
                     checkBudget(message.getSerializedSize());
@@ -194,6 +157,91 @@ public class CoreExportGrpcService extends CoreExportServiceGrpc.CoreExportServi
                             .withDescription("Cannot query planning volumes")
                             .asRuntimeException());
         }
+    }
+
+    @Override
+    public void queryPlanningFacets(
+            QueryPlanningVolumesRequest request,
+            StreamObserver<QueryPlanningFacetsResponse> observer) {
+        try {
+            var filters = planningFilters(request);
+            if (filters.yearFrom() == null || filters.yearTo() == null) {
+                throw Status.INVALID_ARGUMENT
+                        .withDescription("Both facet year bounds are required")
+                        .asRuntimeException();
+            }
+            var message = toPlanningFacetsResponse(references.queryPlanningFacets(filters));
+            checkBudget(message.getSerializedSize());
+            observer.onNext(message);
+            observer.onCompleted();
+        } catch (StatusRuntimeException exception) {
+            observer.onError(exception);
+        } catch (SolrServerException | IOException exception) {
+            observer.onError(
+                    Status.UNAVAILABLE
+                            .withDescription("Core data store unavailable or incomplete")
+                            .asRuntimeException());
+        } catch (Exception exception) {
+            observer.onError(
+                    Status.INTERNAL
+                            .withDescription("Cannot query planning facets")
+                            .asRuntimeException());
+        }
+    }
+
+    private static QueryPlanningFacetsResponse toPlanningFacetsResponse(
+            ReferenceDataService.PlanningFacets facets) {
+        var response = QueryPlanningFacetsResponse.newBuilder();
+        for (var mutation : facets.mutations()) {
+            var name = mutation.name();
+            response.addMutations(
+                    GrpcPlanningMutationCount.newBuilder()
+                            .setMutationId(mutation.id())
+                            .setName(
+                                    GrpcLocalizedName.newBuilder()
+                                            .setCs(name.cs())
+                                            .setSk(name.sk())
+                                            .setEn(name.en()))
+                            .setCount(mutation.count()));
+        }
+        for (var edition : facets.editions()) {
+            var bucket =
+                    GrpcPlanningEditionCount.newBuilder()
+                            .setType(edition.type())
+                            .setCount(edition.count());
+            if (edition.mark() != null) bucket.setMark(edition.mark());
+            response.addMutationalEditions(bucket);
+        }
+        return response.build();
+    }
+
+    private static ReferenceDataService.PlanningFilters planningFilters(
+            QueryPlanningVolumesRequest request) {
+        Integer yearFrom = request.hasYearFrom() ? request.getYearFrom() : null;
+        Integer yearTo = request.hasYearTo() ? request.getYearTo() : null;
+        if (request.getMetaTitleId().isBlank()
+                || (yearFrom != null && yearTo != null && yearFrom > yearTo)) {
+            throw Status.INVALID_ARGUMENT
+                    .withDescription("Invalid planning filters")
+                    .asRuntimeException();
+        }
+        String mutationId =
+                request.hasMutationId() ? nonBlank(request.getMutationId(), "mutation ID") : null;
+        var edition = request.getMutationalEdition();
+        String mark = edition.getMark().isBlank() ? null : edition.getMark();
+        String type = edition.hasType() ? nonBlank(edition.getType(), "mutation mark type") : null;
+        if (type != null && !List.of("MARK", "NUMBER", "UNMARKED").contains(type)) {
+            throw Status.INVALID_ARGUMENT
+                    .withDescription("Unknown mutation mark type")
+                    .asRuntimeException();
+        }
+        if (request.hasMutationalEdition() && mark == null && !"UNMARKED".equals(type)) {
+            throw Status.INVALID_ARGUMENT
+                    .withDescription("A blank mutation mark requires UNMARKED type")
+                    .asRuntimeException();
+        }
+        return new ReferenceDataService.PlanningFilters(
+                request.getMetaTitleId(), yearFrom, yearTo, mutationId, mark, type);
     }
 
     /** Streams stored records using native gRPC completion and error signaling. */

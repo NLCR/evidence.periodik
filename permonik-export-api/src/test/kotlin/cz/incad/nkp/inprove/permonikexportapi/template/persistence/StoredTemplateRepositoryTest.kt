@@ -476,6 +476,8 @@ constructor(
             version = stored.version,
             state = stored.state,
             primaryVolume = stored.content.primaryVolume,
+            issues = stored.content.issues,
+            replacementSources = stored.content.replacementSources,
             replacementSourcesParameters = stored.content.replacementSourcesParameters,
             primaryVolumeFillIndex = stored.content.primaryVolumeFillIndex,
             combinedFillIndex = stored.content.combinedFillIndex,
@@ -596,7 +598,7 @@ constructor(
 
     companion object {
         private val postgres =
-            PostgreSQLContainer("postgres:18.6").withPassword(UUID.randomUUID().toString()).apply {
+                  PostgreSQLContainer("postgres:19.0").withPassword(UUID.randomUUID().toString()).apply {
                 start()
             }
 

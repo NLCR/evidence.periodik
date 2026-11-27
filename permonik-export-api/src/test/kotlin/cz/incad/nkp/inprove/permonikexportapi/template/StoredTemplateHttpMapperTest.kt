@@ -27,6 +27,8 @@ class StoredTemplateHttpMapperTest {
         assertEquals(created, result.createdDate)
         assertEquals(modified, result.modifiedDate)
         assertEquals("BARCODE", result.primaryVolume.barCode)
+        assertEquals(aggregate.content.issues, result.issues)
+        assertEquals(aggregate.content.replacementSources, result.replacementSources)
     }
 
     /**
@@ -95,10 +97,11 @@ class StoredTemplateHttpMapperTest {
                         damagedPages = false,
                         illegiblyBound = false,
                         missingSpecimen = false,
-                        censored = false,
+                        censored = true,
                         degradation = false
                     ),
-                    replacementSources = emptyList(),
+                    replacementSources =
+                        listOf(ReplacementSource(volumeId = "replacement", priority = 1)),
                 ),
             createdDate = createdDate,
             createdBy = "user",
