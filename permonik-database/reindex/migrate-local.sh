@@ -71,6 +71,11 @@ prepare_target_configsets() {
     done
 }
 
+reset_target() {
+    docker compose -f "$COMPOSE_FILE" rm --force --stop permonik-database-new >/dev/null 2>&1 || true
+    rm -rf "$SCRIPT_DIR/new-solr-data"
+}
+
 while (($# > 0)); do
     case "$1" in
         --dry-run)
@@ -114,6 +119,11 @@ done
     die "copy the production Solr data into $SCRIPT_DIR/old-solr-data first"
 [[ -x "$SCRIPT_DIR/.venv/bin/python" ]] || \
     die "create the virtualenv first: python3 -m venv $SCRIPT_DIR/.venv"
+
+if [[ "$mode" == "delete-target" ]]; then
+    printf 'Resetting disposable target data in %s\n' "$SCRIPT_DIR/new-solr-data"
+    reset_target
+fi
 
 prepare_target_configsets
 

@@ -134,14 +134,12 @@ skipped-document reason before continuing.
 
 ## 4. Reindex into the new helper
 
-Only run `--delete-target` against the disposable new helper. It deletes all documents
-from each target core before importing its replacement data.
+Only run `--apply` against the disposable new helper. The wrapper removes and recreates
+the complete `new-solr-data/` directory first. This is required when field index options
+changed: deleting documents alone leaves old Lucene segments with the previous schema.
 
 ```bash
-./.venv/bin/python reindex.py \
-  --old-url http://localhost:8983/solr \
-  --new-url http://localhost:8990/solr \
-  --delete-target \
+./migrate-local.sh --apply \
   2>&1 | tee migration-$(date +%Y%m%d-%H%M%S).log
 ```
 
@@ -182,11 +180,17 @@ On production:
 1. stop the application and Solr during the maintenance window;
 2. preserve the old `/data/solr` as the rollback copy;
 3. replace it with the verified Solr 10.1 helper data;
-4. ensure the server-local Compose directory contains the matching read-only
+4. fix ownership for the Solr container user:
+
+   ```bash
+   chown -R 8983:8983 /data/solr
+   ```
+
+5. ensure the server-local Compose directory contains the matching read-only
    `scripts/start-solr.sh`;
-5. start the Solr 10.1 service with the production Solr credentials;
-6. wait for real core queries to stop returning `503`;
-7. start the backend services and run application smoke checks.
+6. start the Solr 10.1 service with the production Solr credentials;
+7. wait for real core queries to stop returning `503`;
+8. start the backend services and run application smoke checks.
 
 The production Compose file recreates `security.json` on startup from
 `SOLR_USERNAME` and `SOLR_PASSWORD`. The credentials must remain identical to those
